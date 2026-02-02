@@ -1,17 +1,19 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:diplomka/utils/error.dart';
 
 class GeminiRestClient {
   final Dio _dio = Dio();
   final String apiUrl = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"; // TODO: Check if this is the correct endpoint for Gemini
-  String? geminiApiKey;
+  String? geminiApiKey = dotenv.env['GEMINI_API_KEY'];
 
   final String context = 'You are an AI food analyzer. Always respond in JSON format.';
 
-  Future<Map<String, dynamic>> generateResponse({List<File>? imageFiles}) async {
+  Future<Map<String, dynamic>> generateResponse({List<File>? imageFiles, String? textPrompt}) async {
     final List<Map<String, dynamic>> imageContents = (imageFiles ?? []).map((file) {
       final List<int> imageBytes = file.readAsBytesSync();
       final String base64Image = base64Encode(imageBytes);
@@ -22,6 +24,9 @@ class GeminiRestClient {
     }).toList();
 
     String prompt = "Recognize the food/ingredients in the input photo and give me their names and nutritional values, both for the whole meal and for the individual ingredients. The output must be a text representation in JSON format.";
+    if (textPrompt != null && textPrompt.trim().isNotEmpty) {
+      prompt = '$prompt\\nUser description: ${textPrompt.trim()}';
+    }
 
     try {
       await fetchGeminiApiKey();
@@ -43,7 +48,7 @@ class GeminiRestClient {
             {
               "parts": [
                 {"text": prompt},
-                ...imageContents.map((img) => {"inline_data": {"mime_type": "image/jpeg", "database": img["image_url"]["url"].split(",").last}}).toList(),
+                ...imageContents.map((img) => {"inline_data": {"mime_type": "image/jpeg", "database": img["image_url"]["url"].split(",").last}}),
               ]
             }
           ],
@@ -55,7 +60,7 @@ class GeminiRestClient {
       );
 
       if (response.statusCode == 200) {
-        print(response.data);
+        debugPrint(response.data.toString());
         return response.data;
       } else {
         throw Error.generic();
@@ -63,13 +68,14 @@ class GeminiRestClient {
     } on DioError catch (e) {
       throw Error.fromDioError(e);
     } catch (e) {
-      if (e is Error) //
+      if (e is Error) {
         rethrow;
+      }
       throw Error.generic();
     }
   }
 
   Future<void> fetchGeminiApiKey() async {
-    geminiApiKey ??= "YOUR_GEMINI_API_KEY"; // Replace with your actual Gemini API key
+    geminiApiKey ??= dotenv.env['GEMINI_API_KEY'];
   }
 }

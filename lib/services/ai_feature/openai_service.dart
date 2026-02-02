@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:dio/dio.dart';
 
+import 'package:flutter/foundation.dart';
 import 'package:diplomka/model/ai_response.dart';
 import 'package:diplomka/network/openai_rest_client.dart';
 import 'package:diplomka/services/ai_feature/ai_service.dart';
@@ -10,13 +10,17 @@ class OpenAiService implements AiService {
   final restClient = OpenaiRestClient();
 
   @override
-  Future<AiResponse?> generateResponse({List<File>? imageFiles}) async {
+  Future<AiResponse?> generateResponse({List<File>? imageFiles, String? textPrompt}) async {
     try {
-      final data = await restClient.generateResponse(imageFiles: imageFiles);
+      final data = await restClient.generateResponse(
+        imageFiles: imageFiles,
+        textPrompt: textPrompt,
+      );
       return responseContentParser(data);
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
+    return null;
   }
 
   String? extractJsonFromContent(String content) {

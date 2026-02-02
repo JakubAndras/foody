@@ -1,62 +1,69 @@
 import 'package:flutter/material.dart';
+import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/widgets/progress_ring.dart';
 
 class MacrosCard extends StatelessWidget {
-  final String title;
-  final String value;
+  final String label;
+  final double current;
+  final double goal;
   final IconData icon;
-  final Color iconColor;
+  final Color color;
 
   const MacrosCard({
     super.key,
-    required this.title,
-    required this.value,
+    required this.label,
+    required this.current,
+    required this.goal,
     required this.icon,
-    required this.iconColor,
+    required this.color,
   });
 
   @override
   Widget build(BuildContext context) {
+    final double progress = goal <= 0 ? 0 : (current / goal).clamp(0.0, 1.0);
+
     return Expanded(
-      child: Card(
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+      child: Container(
+        height: AppSizes.macroCardHeight,
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(AppRadii.md),
+          boxShadow: AppShadows.cardSmall,
         ),
-        color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                value,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            RichText(
+              text: TextSpan(
+                text: current.toStringAsFixed(0),
+                style: AppTextStyles.h3,
+                children: [
+                  TextSpan(
+                    text: '/${goal.toStringAsFixed(0)}g',
+                    style: AppTextStyles.caption12.copyWith(color: AppColors.textTertiary),
+                  ),
+                ],
               ),
-              const SizedBox(height: 4),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey,
-                ),
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              label,
+              style: AppTextStyles.caption12.copyWith(color: AppColors.textMuted),
+            ),
+            const Spacer(),
+            Align(
+              alignment: Alignment.center,
+              child: ProgressRing(
+                size: AppSizes.macroRingSize,
+                strokeWidth: AppSizes.macroRingStroke,
+                value: progress,
+                backgroundColor: AppColors.outline.withValues(alpha: 0.6),
+                foregroundColor: color,
+                child: Icon(icon, color: color, size: AppSizes.iconLg),
               ),
-              const SizedBox(height: 32),
-              // const SizedBox(height: 16),
-              // Align(
-              //   alignment: Alignment.bottomRight,
-              //   child: CircleAvatar(
-              //     backgroundColor: iconColor.withOpacity(0.1),
-              //     child: Icon(
-              //       icon,
-              //       color: iconColor,
-              //     ),
-              //   ),
-              // ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

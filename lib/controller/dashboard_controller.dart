@@ -7,10 +7,9 @@ import 'package:get/get.dart';
 import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/model/streak_info.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:diplomka/model/ai_response.dart';
 import 'package:diplomka/model/meal.dart';
-import 'package:diplomka/screens/edit_meal_screen.dart';
-import 'package:diplomka/services/ai_feature/openai_service.dart';
+import 'package:diplomka/services/ai_feature/ai_pipeline_service.dart';
+import 'package:diplomka/utils/media_storage.dart';
 import 'base_controller.dart';
 import 'package:image_picker/image_picker.dart';
 import 'day_record_controller.dart';
@@ -125,17 +124,30 @@ class DashboardController extends BaseController {
 
     try {
       newMealAnalyzeLoading.value = true;
-      final File file = File(imageFile.path);
-      final aiService = OpenAiService(); // AiServiceManager.to.currentServiceType.value;
-      final AiResponse? analyzedData = await aiService.generateResponse(imageFiles: [file]);
+      final String? persistedPath = await MediaStorage.persistMealPhoto(imageFile.path);
+      final String analysisPath = persistedPath ?? imageFile.path;
+      final File file = File(analysisPath);
+      final result = await AiPipelineService.to.analyzeMeal(imageFiles: [file]);
 
-      if (analyzedData != null && analyzedData.valid) {
-        final Meal meal = Meal.fromAnswer(analyzedData.answer);
-        final DateTime selectedDate = DateTime.now();
-        await DayRecordController.to.addMealToDayRecord(dayRecord: dayRecord.value ?? DayRecord.initial(selectedDate), mealToSave: meal, isNewMeal: true);
-        refresh(); // Assuming refresh() is a method in this controller to update data.
+      if (result.isSuccess && result.response != null) {
+        if (result.status == AiAnalysisStatus.lowConfidence) {
+          Get.snackbar('Low confidence', result.message ?? 'Please review the result.');
+        }
+        final Meal meal = Meal.fromAnswer(result.response!.answer).copyWith(
+          photoPath: analysisPath,
+        );
+        final DateTime selectedDate = this.selectedDate.value;
+        await DayRecordController.to.saveMealForDate(
+          date: selectedDate,
+          mealToSave: meal,
+        );
+        refresh();
       } else {
-        debugPrint('Failed to analyze image or invalid database.');
+        Get.snackbar(
+          'Analysis failed',
+          result.message ?? 'Could not analyze the image. Please try again.',
+          duration: const Duration(seconds: 3),
+        );
       }
     } catch (e) {
       Get.snackbar(
@@ -150,6 +162,7 @@ class DashboardController extends BaseController {
   }
 
   // Placeholder for refresh method, if it needs to be part of this controller
+  @override
   void refresh() {
     _fetchDayRecord(selectedDate.value);
     _fetchStreakInfo();

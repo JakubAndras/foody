@@ -1,20 +1,23 @@
 import 'package:diplomka/model/ai_response.dart';
 import 'package:diplomka/model/ingredient.dart';
-import 'package:floor/floor.dart';
 
-@entity
 class Meal {
-  @PrimaryKey(autoGenerate: true)
   final int? id;
+  final int? dayRecordId;
   final String name;
   final List<Ingredient> ingredients;
   final DateTime timestamp;
+  final String? photoPath;
+  final bool isFavorite;
 
   Meal({
     this.id,
+    this.dayRecordId,
     required this.name,
     required this.ingredients,
     required this.timestamp,
+    this.photoPath,
+    this.isFavorite = false,
   });
 
   // Factory constructor for creating a new Meal instance from a map.
@@ -23,9 +26,12 @@ class Meal {
     List<Ingredient> ingredients = ingredientsList.map((i) => Ingredient.fromJson(i as Map<String, dynamic>)).toList();
     return Meal(
       id: json['id'] as int?,
+      dayRecordId: json['dayRecordId'] as int?,
       name: json['name'] as String,
       ingredients: ingredients,
       timestamp: DateTime.parse(json['timestamp'] as String),
+      photoPath: json['photoPath'] as String?,
+      isFavorite: json['isFavorite'] as bool? ?? false,
     );
   }
 
@@ -61,23 +67,32 @@ class Meal {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'dayRecordId': dayRecordId,
       'name': name,
       'ingredients': ingredients.map((i) => i.toJson()).toList(),
       'timestamp': timestamp.toIso8601String(),
+      'photoPath': photoPath,
+      'isFavorite': isFavorite,
     };
   }
 
   Meal copyWith({
     int? id,
+    int? dayRecordId,
     String? name,
     List<Ingredient>? ingredients,
     DateTime? timestamp,
+    String? photoPath,
+    bool? isFavorite,
   }) {
     return Meal(
       id: id ?? this.id,
+      dayRecordId: dayRecordId ?? this.dayRecordId,
       name: name ?? this.name,
       ingredients: ingredients ?? this.ingredients,
       timestamp: timestamp ?? this.timestamp,
+      photoPath: photoPath ?? this.photoPath,
+      isFavorite: isFavorite ?? this.isFavorite,
     );
   }
 

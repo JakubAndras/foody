@@ -1,9 +1,6 @@
-import 'package:floor/floor.dart';
-
-@entity
 class Ingredient {
-  @PrimaryKey(autoGenerate: true)
   final int? id;
+  final int? mealId;
   final String name;
   final double weight;
   final double calories;
@@ -13,6 +10,7 @@ class Ingredient {
 
   Ingredient({
     this.id,
+    this.mealId,
     required this.name,
     required this.weight,
     required this.calories,
@@ -25,6 +23,7 @@ class Ingredient {
   factory Ingredient.fromJson(Map<String, dynamic> json) {
     return Ingredient(
       id: json['id'] as int?,
+      mealId: json['mealId'] as int?,
       name: json['name'] as String,
       weight: (json['weight'] as num).toDouble(),
       calories: (json['calories'] as num).toDouble(),
@@ -38,6 +37,7 @@ class Ingredient {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'mealId': mealId,
       'name': name,
       'weight': weight,
       'calories': calories,
@@ -50,6 +50,7 @@ class Ingredient {
   // Method to create a copy of this Ingredient instance with an optional new value for each field.
   Ingredient copyWith({
     int? id,
+    int? mealId,
     String? name,
     double? weight,
     double? calories,
@@ -59,6 +60,7 @@ class Ingredient {
   }) {
     return Ingredient(
       id: id ?? this.id,
+      mealId: mealId ?? this.mealId,
       name: name ?? this.name,
       weight: weight ?? this.weight,
       calories: calories ?? this.calories,

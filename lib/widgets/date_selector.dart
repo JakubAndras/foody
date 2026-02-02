@@ -1,8 +1,5 @@
-import 'package:dotted_border/dotted_border.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/controller/day_record_controller.dart';
 import 'package:diplomka/app_theme.dart';
@@ -60,7 +57,7 @@ class _DateSelectorState extends State<DateSelector> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 76,
+      height: AppSizes.calendarStripHeight,
       child: PageView.builder(
         controller: _pageController,
         itemCount: _totalPages,
@@ -70,42 +67,32 @@ class _DateSelectorState extends State<DateSelector> {
         },
         itemBuilder: (context, pageIndex) {
           final mondayOfWeek = _getMondayForWeekContaining(DateTime.now()).add(Duration(days: (pageIndex - _initialPageIndex) * 7));
-          // Use Obx to listen to changes in weekStatuses
-          return Obx(() => _buildWeekView(mondayOfWeek, DayRecordController.to.weekStatuses));
+          return _buildWeekView(mondayOfWeek);
         },
       ),
     );
   }
 
-  Widget _buildWeekView(DateTime mondayOfWeek, RxMap<DateTime, bool> mealStatuses) {
+  Widget _buildWeekView(DateTime mondayOfWeek) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppTheme.paddingXS),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: List.generate(7, (dayIndex) {
           final date = mondayOfWeek.add(Duration(days: dayIndex));
-          final normalized = DateTime(date.year, date.month, date.day);
           final isSelected = date.year == widget.selectedDate.year &&
               date.month == widget.selectedDate.month &&
               date.day == widget.selectedDate.day;
-          final today = DateTime.now();
-          final isToday = date.year == today.year &&
-              date.month == today.month &&
-              date.day == today.day;
-
-          // Access the value from the RxMap
-          final hasSomeMealRecorded = mealStatuses[normalized] ?? false;
-
           return GestureDetector(
             onTap: () => _handleDateTap(date),
-            child: _buildDate(date, isSelected, isToday, hasSomeMealRecorded),
+            child: _buildDate(date, isSelected),
           );
         }),
       ),
     );
   }
 
-  Widget _buildDate(DateTime date, bool isSelected, bool isToday, bool hasSomeMealRecorded) {
+  Widget _buildDate(DateTime date, bool isSelected) {
     final dayNames = [
       tr(LocaleKeys.day_monday_short),
       tr(LocaleKeys.day_tuesday_short),
@@ -116,42 +103,31 @@ class _DateSelectorState extends State<DateSelector> {
       tr(LocaleKeys.day_sunday_short),
     ];
 
-    Widget dayNameWidget = SizedBox(
-      height: 20,
-      width: 20,
-      child: Center(
-        child: Text(
-          dayNames[date.weekday - 1],
-          style: TextStyle(
-            fontSize: 12,
-            color: isSelected ? Colors.black : (Colors.grey.shade700),
-            fontWeight: isSelected || isToday ? FontWeight.bold : FontWeight.normal,
-          ),
-        ),
-      ),
-    );
-
-    Widget circleWidget = DottedBorder(
-      borderType: BorderType.Circle,
-      padding: const EdgeInsets.all(6),
-      dashPattern: [5, isSelected ? 0 : (isToday ? 0 : hasSomeMealRecorded ? 0 : 3)],
-      strokeWidth: 1.5,
-      color: isSelected ? Colors.black : (hasSomeMealRecorded ? Colors.green.shade300 : Colors.grey.shade300),
-      child: dayNameWidget,
-    );
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Flexible(child: circleWidget),
-        const SizedBox(height: 4),
-        Flexible(
-          child: Text(
-            date.day.toString(),
-            style: TextStyle(
-              fontSize: 14,
-              color: isSelected ? Colors.black : (Colors.grey.shade700),
-              fontWeight: isSelected || isToday ? FontWeight.bold : FontWeight.normal,
+        Text(
+          dayNames[date.weekday - 1].toUpperCase(),
+          style: AppTextStyles.label11.copyWith(
+            color: AppColors.textTertiary,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        Container(
+          width: AppSizes.minTap,
+          height: AppSizes.minTap,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: isSelected ? Border.all(color: AppColors.primary, width: AppSizes.borderThick) : null,
+            color: isSelected ? AppColors.surface : Colors.transparent,
+          ),
+          child: Center(
+            child: Text(
+              date.day.toString(),
+              style: AppTextStyles.body16.copyWith(
+                fontWeight: FontWeight.w700,
+                color: AppColors.textPrimary,
+              ),
             ),
           ),
         ),

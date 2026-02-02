@@ -43,4 +43,6 @@ class AiServiceManager extends GetxController {
   void switchService(AiServiceProviderType type) {
     currentServiceType.value = type;
   }
+
+  AiService get currentService => Get.find<AiService>();
 }

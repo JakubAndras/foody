@@ -1,10 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:html_character_entities/html_character_entities.dart';
-import 'package:diplomka/generated/locale_keys.g.dart';
 
 /// DTO class that parses and holds data about server errors.
 class Error {

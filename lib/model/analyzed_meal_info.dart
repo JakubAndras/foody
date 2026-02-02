@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class AnalyzedMealInfo {
   final String dishName;
   final List<AnalyzedIngredientInfo> ingredients;

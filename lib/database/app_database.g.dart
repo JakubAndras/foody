@@ -78,13 +78,15 @@ class _$AppDatabase extends AppDatabase {
 
   IngredientDao? _ingredientDaoInstance;
 
+  WeightEntryDao? _weightEntryDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 1,
+      version: 5,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -100,11 +102,15 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `DayRecord` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` INTEGER NOT NULL, `meals` TEXT NOT NULL, `calorieGoal` REAL NOT NULL, `proteinGoal` REAL NOT NULL, `carbsGoal` REAL NOT NULL, `fatGoal` REAL NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `DayRecord` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` INTEGER NOT NULL, `calorieGoal` REAL NOT NULL, `proteinGoal` REAL NOT NULL, `carbsGoal` REAL NOT NULL, `fatGoal` REAL NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Meal` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `ingredients` TEXT NOT NULL, `timestamp` INTEGER NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `Meal` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `dayRecordId` INTEGER NOT NULL, `name` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `photoPath` TEXT, `isFavorite` INTEGER NOT NULL DEFAULT 0, FOREIGN KEY (`dayRecordId`) REFERENCES `DayRecord` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Ingredient` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `weight` REAL NOT NULL, `calories` REAL NOT NULL, `proteins` REAL NOT NULL, `carbs` REAL NOT NULL, `fats` REAL NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `Ingredient` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `mealId` INTEGER NOT NULL, `name` TEXT NOT NULL, `weight` REAL NOT NULL, `calories` REAL NOT NULL, `proteins` REAL NOT NULL, `carbs` REAL NOT NULL, `fats` REAL NOT NULL, FOREIGN KEY (`mealId`) REFERENCES `Meal` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `WeightEntry` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` INTEGER NOT NULL, `weight` REAL NOT NULL)');
+        await database.execute(
+            'CREATE UNIQUE INDEX `index_DayRecord_date` ON `DayRecord` (`date`)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -126,6 +132,11 @@ class _$AppDatabase extends AppDatabase {
   IngredientDao get ingredientDao {
     return _ingredientDaoInstance ??= _$IngredientDao(database, changeListener);
   }
+
+  @override
+  WeightEntryDao get weightEntryDao {
+    return _weightEntryDaoInstance ??= _$WeightEntryDao(database, changeListener);
+  }
 }
 
 class _$DayRecordDao extends DayRecordDao {
@@ -133,41 +144,38 @@ class _$DayRecordDao extends DayRecordDao {
     this.database,
     this.changeListener,
   )   : _queryAdapter = QueryAdapter(database, changeListener),
-        _dayRecordInsertionAdapter = InsertionAdapter(
+        _dayRecordEntityInsertionAdapter = InsertionAdapter(
             database,
             'DayRecord',
-            (DayRecord item) => <String, Object?>{
+            (DayRecordEntity item) => <String, Object?>{
                   'id': item.id,
                   'date': _dateTimeConverter.encode(item.date),
-                  'meals': _mealListConverter.encode(item.meals),
                   'calorieGoal': item.calorieGoal,
                   'proteinGoal': item.proteinGoal,
                   'carbsGoal': item.carbsGoal,
                   'fatGoal': item.fatGoal
                 },
             changeListener),
-        _dayRecordUpdateAdapter = UpdateAdapter(
+        _dayRecordEntityUpdateAdapter = UpdateAdapter(
             database,
             'DayRecord',
             ['id'],
-            (DayRecord item) => <String, Object?>{
+            (DayRecordEntity item) => <String, Object?>{
                   'id': item.id,
                   'date': _dateTimeConverter.encode(item.date),
-                  'meals': _mealListConverter.encode(item.meals),
                   'calorieGoal': item.calorieGoal,
                   'proteinGoal': item.proteinGoal,
                   'carbsGoal': item.carbsGoal,
                   'fatGoal': item.fatGoal
                 },
             changeListener),
-        _dayRecordDeletionAdapter = DeletionAdapter(
+        _dayRecordEntityDeletionAdapter = DeletionAdapter(
             database,
             'DayRecord',
             ['id'],
-            (DayRecord item) => <String, Object?>{
+            (DayRecordEntity item) => <String, Object?>{
                   'id': item.id,
                   'date': _dateTimeConverter.encode(item.date),
-                  'meals': _mealListConverter.encode(item.meals),
                   'calorieGoal': item.calorieGoal,
                   'proteinGoal': item.proteinGoal,
                   'carbsGoal': item.carbsGoal,
@@ -181,19 +189,18 @@ class _$DayRecordDao extends DayRecordDao {
 
   final QueryAdapter _queryAdapter;
 
-  final InsertionAdapter<DayRecord> _dayRecordInsertionAdapter;
+  final InsertionAdapter<DayRecordEntity> _dayRecordEntityInsertionAdapter;
 
-  final UpdateAdapter<DayRecord> _dayRecordUpdateAdapter;
+  final UpdateAdapter<DayRecordEntity> _dayRecordEntityUpdateAdapter;
 
-  final DeletionAdapter<DayRecord> _dayRecordDeletionAdapter;
+  final DeletionAdapter<DayRecordEntity> _dayRecordEntityDeletionAdapter;
 
   @override
-  Stream<List<DayRecord>> watchDayRecords() {
+  Stream<List<DayRecordEntity>> watchDayRecords() {
     return _queryAdapter.queryListStream('SELECT * FROM DayRecord',
-        mapper: (Map<String, Object?> row) => DayRecord(
+        mapper: (Map<String, Object?> row) => DayRecordEntity(
             id: row['id'] as int?,
             date: _dateTimeConverter.decode(row['date'] as int),
-            meals: _mealListConverter.decode(row['meals'] as String),
             calorieGoal: row['calorieGoal'] as double,
             proteinGoal: row['proteinGoal'] as double,
             carbsGoal: row['carbsGoal'] as double,
@@ -203,12 +210,11 @@ class _$DayRecordDao extends DayRecordDao {
   }
 
   @override
-  Future<DayRecord?> findDayRecordByDate(int date) async {
+  Future<DayRecordEntity?> findDayRecordByDate(int date) async {
     return _queryAdapter.query('SELECT * FROM DayRecord WHERE date = ?1',
-        mapper: (Map<String, Object?> row) => DayRecord(
+        mapper: (Map<String, Object?> row) => DayRecordEntity(
             id: row['id'] as int?,
             date: _dateTimeConverter.decode(row['date'] as int),
-            meals: _mealListConverter.decode(row['meals'] as String),
             calorieGoal: row['calorieGoal'] as double,
             proteinGoal: row['proteinGoal'] as double,
             carbsGoal: row['carbsGoal'] as double,
@@ -217,12 +223,24 @@ class _$DayRecordDao extends DayRecordDao {
   }
 
   @override
-  Future<List<DayRecord>> getAllDayRecords() async {
-    return _queryAdapter.queryList('SELECT * FROM DayRecord ORDER BY date DESC',
-        mapper: (Map<String, Object?> row) => DayRecord(
+  Future<DayRecordEntity?> findDayRecordById(int id) async {
+    return _queryAdapter.query('SELECT * FROM DayRecord WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => DayRecordEntity(
             id: row['id'] as int?,
             date: _dateTimeConverter.decode(row['date'] as int),
-            meals: _mealListConverter.decode(row['meals'] as String),
+            calorieGoal: row['calorieGoal'] as double,
+            proteinGoal: row['proteinGoal'] as double,
+            carbsGoal: row['carbsGoal'] as double,
+            fatGoal: row['fatGoal'] as double),
+        arguments: [id]);
+  }
+
+  @override
+  Future<List<DayRecordEntity>> getAllDayRecords() async {
+    return _queryAdapter.queryList('SELECT * FROM DayRecord ORDER BY date DESC',
+        mapper: (Map<String, Object?> row) => DayRecordEntity(
+            id: row['id'] as int?,
+            date: _dateTimeConverter.decode(row['date'] as int),
             calorieGoal: row['calorieGoal'] as double,
             proteinGoal: row['proteinGoal'] as double,
             carbsGoal: row['carbsGoal'] as double,
@@ -230,19 +248,20 @@ class _$DayRecordDao extends DayRecordDao {
   }
 
   @override
-  Future<int> insertDayRecord(DayRecord dayRecord) {
-    return _dayRecordInsertionAdapter.insertAndReturnId(
+  Future<int> insertDayRecord(DayRecordEntity dayRecord) {
+    return _dayRecordEntityInsertionAdapter.insertAndReturnId(
         dayRecord, OnConflictStrategy.replace);
   }
 
   @override
-  Future<void> updateDayRecord(DayRecord dayRecord) async {
-    await _dayRecordUpdateAdapter.update(dayRecord, OnConflictStrategy.abort);
+  Future<void> updateDayRecord(DayRecordEntity dayRecord) async {
+    await _dayRecordEntityUpdateAdapter.update(
+        dayRecord, OnConflictStrategy.abort);
   }
 
   @override
-  Future<void> deleteDayRecord(DayRecord dayRecord) async {
-    await _dayRecordDeletionAdapter.delete(dayRecord);
+  Future<void> deleteDayRecord(DayRecordEntity dayRecord) async {
+    await _dayRecordEntityDeletionAdapter.delete(dayRecord);
   }
 }
 
@@ -251,37 +270,40 @@ class _$MealDao extends MealDao {
     this.database,
     this.changeListener,
   )   : _queryAdapter = QueryAdapter(database),
-        _mealInsertionAdapter = InsertionAdapter(
+        _mealEntityInsertionAdapter = InsertionAdapter(
             database,
             'Meal',
-            (Meal item) => <String, Object?>{
+            (MealEntity item) => <String, Object?>{
                   'id': item.id,
+                  'dayRecordId': item.dayRecordId,
                   'name': item.name,
-                  'ingredients':
-                      _ingredientListConverter.encode(item.ingredients),
-                  'timestamp': _dateTimeConverter.encode(item.timestamp)
+                  'timestamp': _dateTimeConverter.encode(item.timestamp),
+                  'photoPath': item.photoPath,
+                  'isFavorite': item.isFavorite ? 1 : 0
                 }),
-        _mealUpdateAdapter = UpdateAdapter(
+        _mealEntityUpdateAdapter = UpdateAdapter(
             database,
             'Meal',
             ['id'],
-            (Meal item) => <String, Object?>{
+            (MealEntity item) => <String, Object?>{
                   'id': item.id,
+                  'dayRecordId': item.dayRecordId,
                   'name': item.name,
-                  'ingredients':
-                      _ingredientListConverter.encode(item.ingredients),
-                  'timestamp': _dateTimeConverter.encode(item.timestamp)
+                  'timestamp': _dateTimeConverter.encode(item.timestamp),
+                  'photoPath': item.photoPath,
+                  'isFavorite': item.isFavorite ? 1 : 0
                 }),
-        _mealDeletionAdapter = DeletionAdapter(
+        _mealEntityDeletionAdapter = DeletionAdapter(
             database,
             'Meal',
             ['id'],
-            (Meal item) => <String, Object?>{
+            (MealEntity item) => <String, Object?>{
                   'id': item.id,
+                  'dayRecordId': item.dayRecordId,
                   'name': item.name,
-                  'ingredients':
-                      _ingredientListConverter.encode(item.ingredients),
-                  'timestamp': _dateTimeConverter.encode(item.timestamp)
+                  'timestamp': _dateTimeConverter.encode(item.timestamp),
+                  'photoPath': item.photoPath,
+                  'isFavorite': item.isFavorite ? 1 : 0
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -290,44 +312,70 @@ class _$MealDao extends MealDao {
 
   final QueryAdapter _queryAdapter;
 
-  final InsertionAdapter<Meal> _mealInsertionAdapter;
+  final InsertionAdapter<MealEntity> _mealEntityInsertionAdapter;
 
-  final UpdateAdapter<Meal> _mealUpdateAdapter;
+  final UpdateAdapter<MealEntity> _mealEntityUpdateAdapter;
 
-  final DeletionAdapter<Meal> _mealDeletionAdapter;
+  final DeletionAdapter<MealEntity> _mealEntityDeletionAdapter;
 
   @override
-  Future<List<Meal>> findMealsForDayRecord(int dayRecordId) async {
+  Future<List<MealEntity>> findMealsForDayRecord(int dayRecordId) async {
     return _queryAdapter.queryList('SELECT * FROM Meal WHERE dayRecordId = ?1',
-        mapper: (Map<String, Object?> row) => Meal(
+        mapper: (Map<String, Object?> row) => MealEntity(
             id: row['id'] as int?,
+            dayRecordId: row['dayRecordId'] as int,
             name: row['name'] as String,
-            ingredients:
-                _ingredientListConverter.decode(row['ingredients'] as String),
-            timestamp: _dateTimeConverter.decode(row['timestamp'] as int)),
+            timestamp: _dateTimeConverter.decode(row['timestamp'] as int),
+            photoPath: row['photoPath'] as String?,
+            isFavorite: (row['isFavorite'] as int) != 0),
         arguments: [dayRecordId]);
   }
 
   @override
-  Future<int> insertMeal(Meal meal) {
-    return _mealInsertionAdapter.insertAndReturnId(
+  Future<MealEntity?> findMealById(int id) async {
+    return _queryAdapter.query('SELECT * FROM Meal WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => MealEntity(
+            id: row['id'] as int?,
+            dayRecordId: row['dayRecordId'] as int,
+            name: row['name'] as String,
+            timestamp: _dateTimeConverter.decode(row['timestamp'] as int),
+            photoPath: row['photoPath'] as String?,
+            isFavorite: (row['isFavorite'] as int) != 0),
+        arguments: [id]);
+  }
+
+  @override
+  Future<void> deleteMealById(int id) async {
+    await _queryAdapter
+        .queryNoReturn('DELETE FROM Meal WHERE id = ?1', arguments: [id]);
+  }
+
+  @override
+  Future<void> deleteMealsForDayRecord(int dayRecordId) async {
+    await _queryAdapter.queryNoReturn('DELETE FROM Meal WHERE dayRecordId = ?1',
+        arguments: [dayRecordId]);
+  }
+
+  @override
+  Future<int> insertMeal(MealEntity meal) {
+    return _mealEntityInsertionAdapter.insertAndReturnId(
         meal, OnConflictStrategy.replace);
   }
 
   @override
-  Future<List<int>> insertMeals(List<Meal> meals) {
-    return _mealInsertionAdapter.insertListAndReturnIds(
+  Future<List<int>> insertMeals(List<MealEntity> meals) {
+    return _mealEntityInsertionAdapter.insertListAndReturnIds(
         meals, OnConflictStrategy.replace);
   }
 
   @override
-  Future<void> updateMeal(Meal meal) async {
-    await _mealUpdateAdapter.update(meal, OnConflictStrategy.abort);
+  Future<void> updateMeal(MealEntity meal) async {
+    await _mealEntityUpdateAdapter.update(meal, OnConflictStrategy.abort);
   }
 
   @override
-  Future<void> deleteMeal(Meal meal) async {
-    await _mealDeletionAdapter.delete(meal);
+  Future<void> deleteMeal(MealEntity meal) async {
+    await _mealEntityDeletionAdapter.delete(meal);
   }
 }
 
@@ -336,11 +384,12 @@ class _$IngredientDao extends IngredientDao {
     this.database,
     this.changeListener,
   )   : _queryAdapter = QueryAdapter(database),
-        _ingredientInsertionAdapter = InsertionAdapter(
+        _ingredientEntityInsertionAdapter = InsertionAdapter(
             database,
             'Ingredient',
-            (Ingredient item) => <String, Object?>{
+            (IngredientEntity item) => <String, Object?>{
                   'id': item.id,
+                  'mealId': item.mealId,
                   'name': item.name,
                   'weight': item.weight,
                   'calories': item.calories,
@@ -348,12 +397,13 @@ class _$IngredientDao extends IngredientDao {
                   'carbs': item.carbs,
                   'fats': item.fats
                 }),
-        _ingredientUpdateAdapter = UpdateAdapter(
+        _ingredientEntityUpdateAdapter = UpdateAdapter(
             database,
             'Ingredient',
             ['id'],
-            (Ingredient item) => <String, Object?>{
+            (IngredientEntity item) => <String, Object?>{
                   'id': item.id,
+                  'mealId': item.mealId,
                   'name': item.name,
                   'weight': item.weight,
                   'calories': item.calories,
@@ -361,12 +411,13 @@ class _$IngredientDao extends IngredientDao {
                   'carbs': item.carbs,
                   'fats': item.fats
                 }),
-        _ingredientDeletionAdapter = DeletionAdapter(
+        _ingredientEntityDeletionAdapter = DeletionAdapter(
             database,
             'Ingredient',
             ['id'],
-            (Ingredient item) => <String, Object?>{
+            (IngredientEntity item) => <String, Object?>{
                   'id': item.id,
+                  'mealId': item.mealId,
                   'name': item.name,
                   'weight': item.weight,
                   'calories': item.calories,
@@ -381,17 +432,18 @@ class _$IngredientDao extends IngredientDao {
 
   final QueryAdapter _queryAdapter;
 
-  final InsertionAdapter<Ingredient> _ingredientInsertionAdapter;
+  final InsertionAdapter<IngredientEntity> _ingredientEntityInsertionAdapter;
 
-  final UpdateAdapter<Ingredient> _ingredientUpdateAdapter;
+  final UpdateAdapter<IngredientEntity> _ingredientEntityUpdateAdapter;
 
-  final DeletionAdapter<Ingredient> _ingredientDeletionAdapter;
+  final DeletionAdapter<IngredientEntity> _ingredientEntityDeletionAdapter;
 
   @override
-  Future<List<Ingredient>> findIngredientsForMeal(int mealId) async {
+  Future<List<IngredientEntity>> findIngredientsForMeal(int mealId) async {
     return _queryAdapter.queryList('SELECT * FROM Ingredient WHERE mealId = ?1',
-        mapper: (Map<String, Object?> row) => Ingredient(
+        mapper: (Map<String, Object?> row) => IngredientEntity(
             id: row['id'] as int?,
+            mealId: row['mealId'] as int,
             name: row['name'] as String,
             weight: row['weight'] as double,
             calories: row['calories'] as double,
@@ -402,29 +454,128 @@ class _$IngredientDao extends IngredientDao {
   }
 
   @override
-  Future<int> insertIngredient(Ingredient ingredient) {
-    return _ingredientInsertionAdapter.insertAndReturnId(
+  Future<void> deleteIngredientsForMeal(int mealId) async {
+    await _queryAdapter.queryNoReturn(
+        'DELETE FROM Ingredient WHERE mealId = ?1',
+        arguments: [mealId]);
+  }
+
+  @override
+  Future<int> insertIngredient(IngredientEntity ingredient) {
+    return _ingredientEntityInsertionAdapter.insertAndReturnId(
         ingredient, OnConflictStrategy.replace);
   }
 
   @override
-  Future<List<int>> insertIngredients(List<Ingredient> ingredients) {
-    return _ingredientInsertionAdapter.insertListAndReturnIds(
+  Future<List<int>> insertIngredients(List<IngredientEntity> ingredients) {
+    return _ingredientEntityInsertionAdapter.insertListAndReturnIds(
         ingredients, OnConflictStrategy.replace);
   }
 
   @override
-  Future<void> updateIngredient(Ingredient ingredient) async {
-    await _ingredientUpdateAdapter.update(ingredient, OnConflictStrategy.abort);
+  Future<void> updateIngredient(IngredientEntity ingredient) async {
+    await _ingredientEntityUpdateAdapter.update(
+        ingredient, OnConflictStrategy.abort);
   }
 
   @override
-  Future<void> deleteIngredient(Ingredient ingredient) async {
-    await _ingredientDeletionAdapter.delete(ingredient);
+  Future<void> deleteIngredient(IngredientEntity ingredient) async {
+    await _ingredientEntityDeletionAdapter.delete(ingredient);
+  }
+}
+
+class _$WeightEntryDao extends WeightEntryDao {
+  _$WeightEntryDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database, changeListener),
+        _weightEntryEntityInsertionAdapter = InsertionAdapter(
+            database,
+            'WeightEntry',
+            (WeightEntryEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'date': _dateTimeConverter.encode(item.date),
+                  'weight': item.weight
+                },
+            changeListener),
+        _weightEntryEntityUpdateAdapter = UpdateAdapter(
+            database,
+            'WeightEntry',
+            ['id'],
+            (WeightEntryEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'date': _dateTimeConverter.encode(item.date),
+                  'weight': item.weight
+                },
+            changeListener),
+        _weightEntryEntityDeletionAdapter = DeletionAdapter(
+            database,
+            'WeightEntry',
+            ['id'],
+            (WeightEntryEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'date': _dateTimeConverter.encode(item.date),
+                  'weight': item.weight
+                },
+            changeListener);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<WeightEntryEntity> _weightEntryEntityInsertionAdapter;
+
+  final UpdateAdapter<WeightEntryEntity> _weightEntryEntityUpdateAdapter;
+
+  final DeletionAdapter<WeightEntryEntity> _weightEntryEntityDeletionAdapter;
+
+  @override
+  Future<List<WeightEntryEntity>> getAllEntries() async {
+    return _queryAdapter.queryList('SELECT * FROM WeightEntry ORDER BY date DESC',
+        mapper: (Map<String, Object?> row) => WeightEntryEntity(
+            id: row['id'] as int?,
+            date: _dateTimeConverter.decode(row['date'] as int),
+            weight: row['weight'] as double));
+  }
+
+  @override
+  Stream<List<WeightEntryEntity>> watchEntries() {
+    return _queryAdapter.queryListStream(
+        'SELECT * FROM WeightEntry ORDER BY date DESC',
+        mapper: (Map<String, Object?> row) => WeightEntryEntity(
+            id: row['id'] as int?,
+            date: _dateTimeConverter.decode(row['date'] as int),
+            weight: row['weight'] as double),
+        queryableName: 'WeightEntry',
+        isView: false);
+  }
+
+  @override
+  Future<int> insertEntry(WeightEntryEntity entry) {
+    return _weightEntryEntityInsertionAdapter.insertAndReturnId(
+        entry, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> updateEntry(WeightEntryEntity entry) async {
+    await _weightEntryEntityUpdateAdapter.update(
+        entry, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> deleteEntry(WeightEntryEntity entry) async {
+    await _weightEntryEntityDeletionAdapter.delete(entry);
+  }
+
+  @override
+  Future<void> deleteEntryById(int id) async {
+    await _queryAdapter.queryNoReturn(
+        'DELETE FROM WeightEntry WHERE id = ?1',
+        arguments: [id]);
   }
 }
 
 // ignore_for_file: unused_element
 final _dateTimeConverter = DateTimeConverter();
-final _mealListConverter = MealListConverter();
-final _ingredientListConverter = IngredientListConverter();

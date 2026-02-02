@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/model/day_record.dart';
+import 'package:diplomka/widgets/progress_ring.dart';
 
 class CaloriesCard extends StatelessWidget {
   const CaloriesCard({super.key, required this.dayRecord, this.caloriesPlanEnabled = true});
@@ -10,50 +11,118 @@ class CaloriesCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double goal = dayRecord.calorieGoal <= 0 ? 1 : dayRecord.calorieGoal;
+    final double total = dayRecord.totalCalories;
+    final double remaining = dayRecord.caloriesLeft;
+    final double progress = caloriesPlanEnabled ? (total / goal).clamp(0.0, 1.0) : 0.0;
+
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadii.lg),
+        boxShadow: AppShadows.cardSmall,
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Calories',
+                  style: AppTextStyles.body16.copyWith(color: AppColors.textMuted, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: AppSpacing.md),
+                ProgressRing(
+                  size: AppSizes.summaryRingSize,
+                  strokeWidth: AppSizes.ringStroke,
+                  value: progress,
+                  backgroundColor: AppColors.outline.withValues(alpha: 0.6),
+                  foregroundColor: AppColors.primarySoft,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        (caloriesPlanEnabled ? remaining : total).toStringAsFixed(0),
+                        style: AppTextStyles.h2.copyWith(color: AppColors.textPrimary),
+                      ),
+                      Text(
+                        caloriesPlanEnabled ? 'Remaining' : 'Calories',
+                        style: AppTextStyles.caption12.copyWith(color: AppColors.textMuted),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: AppSpacing.md),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                caloriesPlanEnabled
-                  ? dayRecord.caloriesLeft.toStringAsFixed(0)
-                  : dayRecord.totalCalories.toStringAsFixed(0),
-                style: const TextStyle(
-                  fontSize: 48,
-                  fontWeight: FontWeight.bold,
-                ),
+              _StatItem(
+                icon: Icons.flag_outlined,
+                label: 'Base Goal',
+                value: goal.toStringAsFixed(0),
+                color: AppColors.textMuted,
               ),
-              caloriesPlanEnabled
-                ? const Text('Calories left')
-                : const Text('Calories eaten'),
+              const SizedBox(height: AppSpacing.sm),
+              _StatItem(
+                icon: Icons.restaurant_rounded,
+                label: 'Food',
+                value: total.toStringAsFixed(0),
+                color: AppColors.info,
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              _StatItem(
+                icon: Icons.directions_run_rounded,
+                label: 'Exercise',
+                value: '0',
+                color: AppColors.warning,
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              _StatItem(
+                icon: Icons.history_rounded,
+                label: 'Rollover',
+                value: '0',
+                color: AppColors.info,
+              ),
             ],
           ),
-          // Container(
-          //   width: 80,
-          //   height: 80,
-          //   decoration: BoxDecoration(
-          //     shape: BoxShape.circle,
-          //     border: Border.all(
-          //       color: Colors.grey.shade300,
-          //       width: 4,
-          //     ),
-          //   ),
-          //   child: Icon(
-          //     Icons.local_fire_department,
-          //     size: 40,
-          //     color: Colors.grey.shade400,
-          //   ),
-          // ),
         ],
       ),
+    );
+  }
+}
+
+class _StatItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+  final Color color;
+
+  const _StatItem({
+    required this.icon,
+    required this.label,
+    required this.value,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(icon, size: AppSizes.iconMd, color: color),
+        const SizedBox(width: AppSpacing.xs),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(label, style: AppTextStyles.caption12.copyWith(color: AppColors.textMuted)),
+            Text(value, style: AppTextStyles.caption12.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w600)),
+          ],
+        ),
+      ],
     );
   }
 }

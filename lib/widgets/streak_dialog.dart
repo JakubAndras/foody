@@ -1,7 +1,6 @@
 import 'package:diplomka/model/streak_info.dart';
 import 'package:diplomka/controller/streak_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 // Displays streak information in a dialog.
 class StreakDialog extends StatelessWidget {
@@ -53,7 +52,7 @@ class StreakDialog extends StatelessWidget {
                         Text(
                           dayLetters[index],
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: isActive ? Colors.orange : theme.textTheme.bodySmall?.color?.withOpacity(0.5),
+                            color: isActive ? Colors.orange : theme.textTheme.bodySmall?.color?.withValues(alpha: 0.5),
                             fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
                           ),
                         ),
@@ -63,9 +62,9 @@ class StreakDialog extends StatelessWidget {
                           height: 24,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: isActive ? Colors.orange.withOpacity(0.2) : Colors.grey.withOpacity(0.1),
+                            color: isActive ? Colors.orange.withValues(alpha: 0.2) : Colors.grey.withValues(alpha: 0.1),
                             border: Border.all(
-                              color: isActive ? Colors.orange : Colors.grey.withOpacity(0.3),
+                              color: isActive ? Colors.orange : Colors.grey.withValues(alpha: 0.3),
                               width: 1,
                             ),
                           ),
@@ -81,7 +80,7 @@ class StreakDialog extends StatelessWidget {
                 Text(
                   'Every day matters for hitting your goal!',
                   textAlign: TextAlign.center,
-                  style: theme.textTheme.bodyMedium?.copyWith(color: theme.textTheme.bodyMedium?.color?.withOpacity(0.7)),
+                  style: theme.textTheme.bodyMedium?.copyWith(color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7)),
                 ),
                 const SizedBox(height: 32),
                 ElevatedButton(

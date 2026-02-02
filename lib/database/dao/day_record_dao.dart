@@ -1,23 +1,26 @@
-import 'package:diplomka/model/day_record.dart';
+import 'package:diplomka/database/entities/day_record_entity.dart';
 import 'package:floor/floor.dart';
 
 @dao
 abstract class DayRecordDao {
   @Query('SELECT * FROM DayRecord')
-  Stream<List<DayRecord>> watchDayRecords();
+  Stream<List<DayRecordEntity>> watchDayRecords();
 
   @Query('''SELECT * FROM DayRecord WHERE date = :date''')
-  Future<DayRecord?> findDayRecordByDate(int date);
+  Future<DayRecordEntity?> findDayRecordByDate(int date);
+
+  @Query('''SELECT * FROM DayRecord WHERE id = :id''')
+  Future<DayRecordEntity?> findDayRecordById(int id);
 
   @Query('''SELECT * FROM DayRecord ORDER BY date DESC''')
-  Future<List<DayRecord>> getAllDayRecords();
+  Future<List<DayRecordEntity>> getAllDayRecords();
 
   @Insert(onConflict: OnConflictStrategy.replace)
-  Future<int> insertDayRecord(DayRecord dayRecord);
+  Future<int> insertDayRecord(DayRecordEntity dayRecord);
 
   @update
-  Future<void> updateDayRecord(DayRecord dayRecord);
+  Future<void> updateDayRecord(DayRecordEntity dayRecord);
 
   @delete
-  Future<void> deleteDayRecord(DayRecord dayRecord);
+  Future<void> deleteDayRecord(DayRecordEntity dayRecord);
 }

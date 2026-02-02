@@ -3,8 +3,10 @@ import 'dart:math';
 
 import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/model/meal.dart';
+import 'package:diplomka/widgets/progress_ring.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:diplomka/app_theme.dart';
 
 class RecentlyUploadedCard extends StatelessWidget {
@@ -18,14 +20,11 @@ class RecentlyUploadedCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppTheme.paddingS),
-          child: Text(
-            "Today's meals",
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-          ),
+        Text(
+          "Today's meals",
+          style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700),
         ),
-        const SizedBox(height: AppTheme.paddingS),
+        const SizedBox(height: AppSpacing.sm),
         Obx(() {
           final isLoading = DashboardController.to.newMealAnalyzeLoading.value;
           final hasMeals = meals.isNotEmpty;
@@ -39,7 +38,7 @@ class RecentlyUploadedCard extends StatelessWidget {
           if (isLoading) {
             if (hasMeals) {
               // Add spacing if there are meals and we are showing the loader
-              children.add(const SizedBox(height: AppTheme.paddingS));
+              children.add(const SizedBox(height: AppSpacing.xs));
             }
             children.add(const AnalyzingMealCard());
           }
@@ -55,41 +54,36 @@ class RecentlyUploadedCard extends StatelessWidget {
   }
 
   Widget _buildEmptyState() {
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
+    return Container(
+      height: AppSizes.emptyStateHeight,
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadii.xl),
+        border: Border.all(color: AppColors.border),
+        boxShadow: AppShadows.cardSoft,
       ),
-      color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          children: [
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Icon(
-                Icons.food_bank_outlined,
-                size: 30,
-                color: Colors.grey[600],
-              ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: AppSizes.emptyStateIconSize,
+            height: AppSizes.emptyStateIconSize,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: AppColors.outline),
             ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Text(
-                'Tap + to add your first meal of the day',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[700],
-                ),
-              ),
+            child: const Icon(Icons.add, color: AppColors.textTertiary),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
+            child: Text(
+              'Tap + to add your first meal of the day',
+              style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary),
+              textAlign: TextAlign.center,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -101,78 +95,93 @@ class RecentlyUploadedCard extends StatelessWidget {
   }
 
   Widget _buildMealItem(BuildContext context, Meal meal) {
-    String mealTime = "${meal.timestamp.hour}:${meal.timestamp.minute.toString().padLeft(2, '0')}";
+    final String mealTime = DateFormat('h:mm a').format(meal.timestamp);
 
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      color: Colors.white,
-      margin: const EdgeInsets.symmetric(vertical: AppTheme.paddingXS),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-          child: Icon(
-            Icons.restaurant_menu,
-            color: Theme.of(context).colorScheme.onPrimaryContainer,
+    return GestureDetector(
+      onTap: () => onMealTap?.call(meal),
+      child: Container(
+        height: AppSizes.mealCardHeight,
+        margin: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(AppRadii.lg),
+          border: Border.all(color: AppColors.border),
+          boxShadow: AppShadows.cardSoft,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+          child: Row(
+            children: [
+              Container(
+                width: AppSizes.mealImageSize,
+                height: AppSizes.mealImageSize,
+                decoration: BoxDecoration(
+                  color: AppColors.surfaceMuted,
+                  borderRadius: BorderRadius.circular(AppRadii.md),
+                ),
+                child: const Icon(Icons.restaurant, color: AppColors.textTertiary),
+              ),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                meal.name,
+                                style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: AppSpacing.xs),
+                              Text(
+                                mealTime,
+                                style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              meal.totalCalories.toStringAsFixed(0),
+                              style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w700),
+                            ),
+                            Text(
+                              'kcal',
+                              style: AppTextStyles.caption12.copyWith(color: AppColors.textTertiary),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    Container(
+                      height: AppSizes.dividerThin,
+                      color: AppColors.border,
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Row(
+                      children: [
+                        _MacroDot(value: meal.totalProteins.toStringAsFixed(0), color: AppColors.macroProtein),
+                        const SizedBox(width: AppSpacing.sm),
+                        _MacroDot(value: meal.totalCarbs.toStringAsFixed(0), color: AppColors.macroCarbs),
+                        const SizedBox(width: AppSpacing.sm),
+                        _MacroDot(value: meal.totalFats.toStringAsFixed(0), color: AppColors.macroFats),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Text(
-                meal.name,
-                style: Theme.of(context).textTheme.titleSmall,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            SizedBox(width: 4,),
-            Text(
-              mealTime, // Assumed field for time
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
-          ],
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 2),
-            Text('${meal.totalCalories.toStringAsFixed(0)} Calories', style: Theme.of(context).textTheme.bodySmall),
-            const SizedBox(height: 4),
-            Row(
-              children: [
-                CircleAvatar(backgroundColor: Colors.red.shade300.withOpacity(0.2), radius: 12, child: Text('P', style: TextStyle(color: Colors.red.shade300, fontWeight: FontWeight.bold, fontSize: 12))),
-                SizedBox(width: 2,),
-                Text(
-                  '${meal.totalProteins.toStringAsFixed(0)}g',
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-                SizedBox(width: 12,),
-
-                CircleAvatar(backgroundColor: Colors.orange.shade300.withOpacity(0.2), radius: 12, child: Text('C', style: TextStyle(color: Colors.orange.shade300, fontWeight: FontWeight.bold, fontSize: 12))),
-                SizedBox(width: 2,),
-                Text(
-                  '${meal.totalCarbs.toStringAsFixed(0)}g',
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-                SizedBox(width: 12,),
-
-                CircleAvatar(backgroundColor: Colors.blue.shade300.withOpacity(0.2), radius: 12, child: Text('F', style: TextStyle(color: Colors.blue.shade300, fontWeight: FontWeight.bold, fontSize: 12))),
-                SizedBox(width: 2,),
-                Text(
-                  '${meal.totalFats.toStringAsFixed(0)}g',
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-              ],
-            )
-          ],
-        ),
-        onTap: () {
-          onMealTap?.call(meal);
-        },
-        contentPadding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
       ),
     );
   }
@@ -228,52 +237,126 @@ class _AnalyzingMealCardState extends State<AnalyzingMealCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
+    return Container(
+      height: AppSizes.mealCardHeight,
+      margin: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadii.lg),
+        border: Border.all(color: AppColors.border),
+        boxShadow: AppShadows.cardSoft,
       ),
-      color: Colors.white,
-      margin: const EdgeInsets.symmetric(vertical: AppTheme.paddingXS),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
         child: Row(
           children: [
-            SizedBox(
-              width: 60,
-              height: 60,
+            Container(
+              width: AppSizes.mealImageSize,
+              height: AppSizes.mealImageSize,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(AppRadii.sm2),
+                color: AppColors.surfaceMuted,
+              ),
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  CircularProgressIndicator(
-                    value: _progress,
-                    strokeWidth: 3.0,
-                    valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.primary),
-                    backgroundColor: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(AppRadii.sm2),
+                      color: AppColors.overlayDark60,
+                    ),
                   ),
-                  Text(
-                    '${(_progress * 100).toInt()}%',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
+                  ProgressRing(
+                    size: AppSizes.macroRingSize,
+                    strokeWidth: AppSizes.progressRingStroke,
+                    value: _progress,
+                    backgroundColor: AppColors.onPrimary.withValues(alpha: 0.2),
+                    foregroundColor: AppColors.onPrimary,
+                    child: Text(
+                      '${(_progress * 100).toInt()}%',
+                      style: AppTextStyles.body14.copyWith(color: AppColors.onPrimary, fontWeight: FontWeight.w600),
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: AppSpacing.md),
             Expanded(
-              child: Text(
-                'Analyzing your meal, please wait...',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[700],
-                ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Recognising meal',
+                    style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  Row(
+                    children: [
+                      _ProgressSegment(width: AppSizes.progressSegmentMd, opacity: 0.8),
+                      const SizedBox(width: AppSpacing.xs),
+                      _ProgressSegment(width: AppSizes.progressSegmentSm, opacity: 0.72),
+                      const SizedBox(width: AppSpacing.xs),
+                      _ProgressSegment(width: AppSizes.progressSegmentLg, opacity: 0.64),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  Text(
+                    "We’ll notify you when it’s done!",
+                    style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary),
+                  ),
+                ],
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _MacroDot extends StatelessWidget {
+  final String value;
+  final Color color;
+
+  const _MacroDot({required this.value, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: AppSizes.macroDot,
+          height: AppSizes.macroDot,
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.7),
+            shape: BoxShape.circle,
+          ),
+        ),
+        const SizedBox(width: AppSpacing.xs),
+        Text(
+          '${value}g',
+          style: AppTextStyles.caption12.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w500),
+        ),
+      ],
+    );
+  }
+}
+
+class _ProgressSegment extends StatelessWidget {
+  final double width;
+  final double opacity;
+
+  const _ProgressSegment({required this.width, required this.opacity});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      height: AppSizes.progressBarHeight,
+      decoration: BoxDecoration(
+        color: AppColors.outline.withValues(alpha: opacity),
+        borderRadius: BorderRadius.circular(AppRadii.pill),
       ),
     );
   }

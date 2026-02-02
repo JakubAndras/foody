@@ -1,6 +1,5 @@
 import 'package:diplomka/controller/dashboard_controller.dart';
-import 'package:diplomka/screens/edit_meal_screen.dart';
-import 'package:diplomka/screens/profile_screen.dart';
+import 'package:diplomka/screens/meals/meal_detail_screen.dart';
 import 'package:diplomka/widgets/calories_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -24,109 +23,112 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
         builder: (_DashboardScreenController controller) {
           final dashboardController = DashboardController.to;
           return Scaffold(
-            appBar: AppBar(
-              centerTitle: false,
-              actions: [
-                Obx(() {
-                  if (dashboardController.isLoadingStreak.value) {
-                    return const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0),
-                      child: SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(Colors.orange))),
-                    );
+            backgroundColor: AppColors.background,
+            body: Container(
+              decoration: const BoxDecoration(gradient: AppGradients.background),
+              child: SafeArea(
+                bottom: false,
+                child: Obx(() {
+                  if (dashboardController.isLoadingDayRecord.value) {
+                    return const Center(child: CircularProgressIndicator());
                   }
-                  if (dashboardController.streakError.isNotEmpty) {
-                    return IconButton(
-                      icon: const Icon(Icons.error_outline, color: Colors.red),
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext dialogContext) => const StreakDialog(),
-                        );
-                      },
-                    );
+                  if (dashboardController.dayRecordError.isNotEmpty) {
+                    return Center(child: Text('Error: ${dashboardController.dayRecordError.value}'));
                   }
-                  if (dashboardController.streakInfo.value != null) {
-                    return Padding(
-                      padding: const EdgeInsets.all(AppTheme.paddingXS),
-                      child: TextButton.icon(
-                        icon: const Icon(Icons.local_fire_department, color: Colors.orange, size: 20),
-                        label: Text(
-                          '${dashboardController.streakInfo.value!.currentStreak}',
-                          style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14),
+
+                  final recordToShow = dashboardController.dayRecord.value ?? DayRecord.initial(dashboardController.selectedDate.value);
+
+                  return SingleChildScrollView(
+                    padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.md, AppSpacing.lg, AppSpacing.huge),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildHeader(context, dashboardController),
+                        const SizedBox(height: AppSpacing.md),
+                        DateSelector(
+                          selectedDate: dashboardController.selectedDate.value,
+                          onDateSelected: (date) {
+                            dashboardController.updateDate(date);
+                          },
                         ),
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext dialogContext) => const StreakDialog(),
-                          );
-                        },
-                        style: TextButton.styleFrom(
-                          foregroundColor: Colors.orange,
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                          minimumSize: const Size(40, 32),
-                          backgroundColor: Colors.white,
+                        const SizedBox(height: AppSpacing.lg),
+                        _caloriesTrackerWidget(recordToShow),
+                        const SizedBox(height: AppSpacing.md),
+                        RecentlyUploadedCard(
+                          meals: recordToShow.meals,
+                          onMealTap: (meal) async {
+                            await Get.to(() => MealDetailScreen(meal: meal));
+                          },
                         ),
-                      ),
-                    );
-                  }
-                  return const SizedBox.shrink(); // Fallback for no data
+                      ],
+                    ),
+                  );
                 }),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppTheme.paddingS),
-                  child: IconButton(
-                    icon: const Icon(Icons.account_circle, size: 28),
-                    tooltip: 'Profile',
-                    onPressed: () {
-                      Get.to(() => const ProfileScreen());
-                    },
-                  ),
-                ),
-              ],
-              elevation: 0,
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            ),
-            body: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppTheme.paddingM),
-              child: Column(
-                children: [
-                  Obx(() => DateSelector(
-                        selectedDate: dashboardController.selectedDate.value,
-                        onDateSelected: (date) {
-                          dashboardController.updateDate(date);
-                        },
-                      )),
-                  Expanded(
-                    child: Obx(() {
-                      if (dashboardController.isLoadingDayRecord.value) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                      if (dashboardController.dayRecordError.isNotEmpty) {
-                        return Center(child: Text('Error: ${dashboardController.dayRecordError.value}'));
-                      }
-
-                      final recordToShow = dashboardController.dayRecord.value ?? DayRecord.initial(dashboardController.selectedDate.value);
-
-                      return SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            _caloriesTrackerWidget(recordToShow),
-                            const SizedBox(height: 16),
-                            RecentlyUploadedCard(
-                              meals: recordToShow.meals,
-                              onMealTap: (meal) async {
-                                await Get.to(() => EditMealScreen(dayRecord: recordToShow, meal: meal, isNewMeal: false));
-                              },
-                            ),
-                          ],
-                        ),
-                      );
-                    }),
-                  ),
-                ],
               ),
             ),
           );
         });
+  }
+
+  Widget _buildHeader(BuildContext context, DashboardController dashboardController) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          'Calories AI app',
+          style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w700),
+        ),
+        Obx(() {
+          if (dashboardController.isLoadingStreak.value) {
+            return _streakPill(
+              child: const SizedBox(
+                width: AppSizes.iconSm,
+                height: AppSizes.iconSm,
+                child: CircularProgressIndicator(strokeWidth: AppSizes.borderThick, color: AppColors.orange),
+              ),
+            );
+          }
+          if (dashboardController.streakError.isNotEmpty) {
+            return _streakPill(
+              child: const Icon(Icons.error_outline, color: AppColors.error, size: AppSizes.iconSm),
+              onTap: () => showDialog(context: context, builder: (_) => const StreakDialog()),
+            );
+          }
+          final streak = dashboardController.streakInfo.value?.currentStreak ?? 0;
+          return _streakPill(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.local_fire_department, color: AppColors.orange, size: AppSizes.iconSm),
+                const SizedBox(width: AppSpacing.xs),
+                Text(
+                  '$streak',
+                  style: AppTextStyles.caption12.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w700),
+                ),
+              ],
+            ),
+            onTap: () => showDialog(context: context, builder: (_) => const StreakDialog()),
+          );
+        }),
+      ],
+    );
+  }
+
+  Widget _streakPill({required Widget child, VoidCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: AppSizes.streakPillHeight,
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(AppRadii.pill),
+          border: Border.all(color: AppColors.border),
+          boxShadow: AppShadows.cardSmall,
+        ),
+        child: Center(child: child),
+      ),
+    );
   }
 
   Widget _caloriesTrackerWidget(DayRecord recordToShow) {
@@ -135,7 +137,7 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
       caloriesTrackerWidget = Column(
         children: [
           CaloriesCard(dayRecord: recordToShow),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.xs),
           MacrosRow(dayRecord: recordToShow),
         ],
       );
@@ -143,7 +145,7 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
       caloriesTrackerWidget = Column(
         children: [
           CaloriesCard(dayRecord: recordToShow, caloriesPlanEnabled: false),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.xs),
           MacrosRow(dayRecord: recordToShow, caloriesPlanEnabled: false),
         ],
       );

@@ -1,0 +1,109 @@
+import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
+import 'package:flutter/material.dart';
+
+class OnboardingCalorieBurnScreen extends StatelessWidget {
+  const OnboardingCalorieBurnScreen({
+    super.key,
+    required this.onNext,
+    required this.onBack,
+    required this.step,
+    required this.totalSteps,
+  });
+
+  final VoidCallback onNext;
+  final VoidCallback onBack;
+  final int step;
+  final int totalSteps;
+
+  @override
+  Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+
+    return OnboardingPage(
+      progress: step / totalSteps,
+      onBack: onBack,
+      bottom: Row(
+        children: [
+          Expanded(
+            child: OnboardingPrimaryButton(label: 'No', onPressed: onNext),
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: OnboardingPrimaryButton(label: 'Yes', onPressed: onNext),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Add calories burned back\nto your daily goal?',
+            style: textTheme.headlineLarge?.copyWith(height: 1.25),
+          ),
+          const SizedBox(height: AppSpacing.xxl),
+          SizedBox(
+            height: AppSizes.calorieBurnImageSize,
+            child: Stack(
+              children: [
+                OnboardingPlaceholderImage(height: AppSizes.calorieBurnImageSize),
+                Positioned(
+                  left: AppSpacing.sm,
+                  bottom: AppSpacing.sm,
+                  child: SizedBox(
+                    width: AppSizes.infoCardWidth,
+                    child: OnboardingSurfaceCard(
+                      padding: const EdgeInsets.all(AppSpacing.md),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Today's Goal",
+                            style: textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
+                          ),
+                          const SizedBox(height: AppSpacing.sm),
+                          Row(
+                            children: [
+                              const Icon(Icons.local_fire_department, color: AppColors.textPrimary, size: AppSizes.iconLg),
+                              const SizedBox(width: AppSpacing.sm),
+                              Text(
+                                '500 Cals',
+                                style: textTheme.headlineLarge,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: AppSpacing.sm),
+                          Row(
+                            children: [
+                              Container(
+                                width: AppSizes.iconXl,
+                                height: AppSizes.iconXl,
+                                decoration: const BoxDecoration(
+                                  color: AppColors.primaryDark,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(Icons.directions_run, color: AppColors.onPrimary, size: AppSizes.iconMd),
+                              ),
+                              const SizedBox(width: AppSpacing.sm),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Running', style: textTheme.titleSmall?.copyWith(color: AppColors.textPrimary)),
+                                  Text('+ 100 cals', style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

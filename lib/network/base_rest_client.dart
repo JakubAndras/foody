@@ -1,10 +1,10 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:dio/dio.dart' as DioPackage;
+import 'package:dio/dio.dart' as dio_package;
 import 'package:get/get.dart';
 import 'package:diplomka/utils/error.dart';
 
 abstract class BaseRestClient extends GetxService {
-  final DioPackage.Dio dio = DioPackage.Dio();
+  final dio_package.Dio dio = dio_package.Dio();
   RxBool hasNetworkConnection = false.obs;
 
   @override

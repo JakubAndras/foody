@@ -25,7 +25,6 @@ class _RecipeCardState extends State<RecipeCard> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final cardInnerPadding = _isExpanded ? const EdgeInsets.all(12.0) : const EdgeInsets.all(16.0);
     final borderRadius = BorderRadius.circular(16.0);
 
     return GestureDetector(
@@ -83,8 +82,8 @@ class _RecipeCardState extends State<RecipeCard> {
           begin: Alignment.bottomCenter,
           end: Alignment.topCenter,
           colors: [
-            Colors.black.withOpacity(0.7),
-            Colors.black.withOpacity(0.0),
+            Colors.black.withValues(alpha: 0.7),
+            Colors.black.withValues(alpha: 0.0),
           ],
           stops: const [0.0, 0.6],
         ),
@@ -109,7 +108,7 @@ class _RecipeCardState extends State<RecipeCard> {
   // Builds the nutritional details overlay when the card is expanded.
   Widget _buildExpandedDetails(ThemeData theme) {
     return Container(
-      color: Colors.black.withOpacity(0.6), // Semi-transparent overlay
+      color: Colors.black.withValues(alpha: 0.6), // Semi-transparent overlay
       padding: const EdgeInsets.all(12.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

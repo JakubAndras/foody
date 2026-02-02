@@ -1,0 +1,105 @@
+import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
+import 'package:flutter/material.dart';
+
+class OnboardingWorkoutsScreen extends StatefulWidget {
+  const OnboardingWorkoutsScreen({
+    super.key,
+    required this.onNext,
+    required this.onBack,
+    required this.step,
+    required this.totalSteps,
+  });
+
+  final VoidCallback onNext;
+  final VoidCallback onBack;
+  final int step;
+  final int totalSteps;
+
+  @override
+  State<OnboardingWorkoutsScreen> createState() => _OnboardingWorkoutsScreenState();
+}
+
+class _OnboardingWorkoutsScreenState extends State<OnboardingWorkoutsScreen> {
+  String? _selected;
+
+  @override
+  Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+
+    return OnboardingPage(
+      progress: widget.step / widget.totalSteps,
+      onBack: widget.onBack,
+      bottom: OnboardingPrimaryButton(
+        label: 'Continue',
+        isEnabled: _selected != null,
+        onPressed: _selected != null ? widget.onNext : null,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'How many workouts\ndo you do per week?',
+            style: textTheme.headlineLarge?.copyWith(height: 1.25),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            'This will be used to calibrate your custom plan.',
+            style: textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
+          ),
+          const SizedBox(height: AppSpacing.xl),
+          OnboardingOptionCard(
+            title: '0-2',
+            subtitle: 'Workouts now and then',
+            selected: _selected == '0-2',
+            height: AppSizes.workoutCardHeight,
+            leading: _WorkoutIcon(selected: _selected == '0-2', icon: Icons.circle_outlined),
+            onTap: () => setState(() => _selected = '0-2'),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          OnboardingOptionCard(
+            title: '3-5',
+            subtitle: 'A few workouts per week',
+            selected: _selected == '3-5',
+            height: AppSizes.workoutCardHeight,
+            leading: _WorkoutIcon(selected: _selected == '3-5', icon: Icons.more_horiz),
+            onTap: () => setState(() => _selected = '3-5'),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          OnboardingOptionCard(
+            title: '6+',
+            subtitle: 'Dedicated athlete',
+            selected: _selected == '6+',
+            height: AppSizes.workoutCardHeight,
+            leading: _WorkoutIcon(selected: _selected == '6+', icon: Icons.apps_outlined),
+            onTap: () => setState(() => _selected = '6+'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _WorkoutIcon extends StatelessWidget {
+  const _WorkoutIcon({required this.selected, required this.icon});
+
+  final bool selected;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: AppSizes.iconXl,
+      height: AppSizes.iconXl,
+      decoration: BoxDecoration(
+        color: selected ? AppColors.onPrimary.withValues(alpha: 0.2) : AppColors.primary.withValues(alpha: 0.1),
+        shape: BoxShape.circle,
+      ),
+      child: Icon(
+        icon,
+        color: selected ? AppColors.onPrimary : AppColors.textPrimary,
+        size: AppSizes.iconLg,
+      ),
+    );
+  }
+}

@@ -1,0 +1,84 @@
+import 'dart:ui';
+
+import 'package:diplomka/app_theme.dart';
+import 'package:flutter/material.dart';
+
+class ExerciseDetailOptionsSheet extends StatelessWidget {
+  const ExerciseDetailOptionsSheet({
+    super.key,
+    required this.onReport,
+    required this.onDelete,
+  });
+
+  final VoidCallback onReport;
+  final VoidCallback onDelete;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(AppRadii.lg),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+        child: Container(
+          padding: const EdgeInsets.all(AppSpacing.md),
+          decoration: BoxDecoration(
+            color: AppColors.glassSheet,
+            borderRadius: BorderRadius.circular(AppRadii.lg),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _OptionRow(
+                icon: Icons.report_gmailerrorred_outlined,
+                label: 'Report',
+                color: AppColors.textPrimary,
+                onTap: onReport,
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              _OptionRow(
+                icon: Icons.delete_outline,
+                label: 'Delete',
+                color: AppColors.destructive,
+                onTap: onDelete,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _OptionRow extends StatelessWidget {
+  const _OptionRow({
+    required this.icon,
+    required this.label,
+    required this.color,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final Color color;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Row(
+        children: [
+          Icon(icon, color: color, size: AppSizes.iconMd),
+          const SizedBox(width: AppSpacing.md),
+          Text(
+            label,
+            style: AppTextStyles.body16.copyWith(
+              fontWeight: FontWeight.w600,
+              color: color,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

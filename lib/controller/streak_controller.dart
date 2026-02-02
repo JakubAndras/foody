@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/model/streak_info.dart';
@@ -74,7 +75,7 @@ class StreakController extends BaseController {
       );
     } catch (e) {
       // Log the error and return initial/empty state or rethrow a custom exception
-      print('Error calculating streak info: $e');
+      debugPrint('Error calculating streak info: $e');
       // Consider returning StreakInfo.initial() or a specific error state
       // depending on how you want the UI to react.
       return StreakInfo.initial(); // Fallback to initial state on error

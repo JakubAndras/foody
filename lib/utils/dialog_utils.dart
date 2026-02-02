@@ -56,8 +56,8 @@ class DialogUtils {
 
     try {
       await Get.dialog(
-        WillPopScope(
-          onWillPop: () => Future.value(barrierDismissible),
+        PopScope(
+          canPop: barrierDismissible,
           child: PlatformAlertDialog(
             title: title != null ? Text(title, style: Platform.isAndroid ? Get.textTheme.displaySmall : null) : null,
             content: content ??
@@ -88,8 +88,8 @@ class DialogUtils {
       builder: (BuildContext context) {
         final accentColor = Get.theme.colorScheme.secondary;
 
-        return WillPopScope(
-          onWillPop: () async => false,
+        return PopScope(
+          canPop: false,
           child: Center(
             child: SizedBox(
               width: content != null ? contentWidth : 150.0,

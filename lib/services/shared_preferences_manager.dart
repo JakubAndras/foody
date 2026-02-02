@@ -1,9 +1,14 @@
-import 'dart:convert';
-
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const String themeModeKey = "themeModeKey";
+const String onboardingCompleteKey = "onboardingCompleteKey";
+const String scanOnboardingCompleteKey = "scanOnboardingCompleteKey";
+const String profileHeightCmKey = "profileHeightCmKey";
+const String profileWeightKgKey = "profileWeightKgKey";
+const String profileGoalWeightKgKey = "profileGoalWeightKgKey";
+const String profileSexKey = "profileSexKey";
+const String profileDobKey = "profileDobKey";
 
 class SharedPreferencesService extends GetxService {
   static SharedPreferencesService get to => Get.find();

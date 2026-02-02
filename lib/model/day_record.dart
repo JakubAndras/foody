@@ -1,11 +1,6 @@
 import 'package:diplomka/model/meal.dart';
-import 'package:floor/floor.dart';
-import 'package:json_annotation/json_annotation.dart';
 
-@JsonSerializable()
-@entity
 class DayRecord {
-  @PrimaryKey(autoGenerate: true)
   final int? id;
   final DateTime date;
   final List<Meal> meals;
@@ -31,7 +26,7 @@ class DayRecord {
     );
   }
 
-  // Factory constructor for creating a new DayRecord instance from a map (mainly for TypeConverter).
+  // Factory constructor for creating a new DayRecord instance from a map (used for export/import).
   factory DayRecord.fromJson(Map<String, dynamic> json) {
     var mealsList = json['meals'] as List;
     List<Meal> meals = mealsList.map((i) => Meal.fromJson(i as Map<String, dynamic>)).toList();
@@ -46,7 +41,7 @@ class DayRecord {
     );
   }
 
-  // Method for converting a DayRecord instance to a map (mainly for TypeConverter).
+  // Method for converting a DayRecord instance to a map (used for export/import).
   Map<String, dynamic> toJson() {
     return {
       'id': id,

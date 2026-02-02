@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:diplomka/utils/error.dart';
 import 'package:diplomka/utils/prompt.dart';
@@ -8,14 +10,13 @@ import 'package:diplomka/utils/prompt.dart';
 class OpenaiRestClient {
   final Dio _dio = Dio();
   final String apiUrl = "https://api.openai.com/v1/chat/completions";
-  // NEPUSHOVAT na GIT !!!
-  String? chatGptApiKey = "***REMOVED***";
+  String? chatGptApiKey = dotenv.env['OPENAI_API_KEY'];
 
   final String context = 'You are an AI food analyzer. Never include anything outside of the JSON response.';
 
   final String prompt = Prompt().analyzeMeal;
 
-  Future<Map<String, dynamic>> generateResponse({List<File>? imageFiles}) async {
+  Future<Map<String, dynamic>> generateResponse({List<File>? imageFiles, String? textPrompt}) async {
     final List<Map<String, dynamic>> imageContents = (imageFiles ?? []).map((file) {
       final List<int> imageBytes = file.readAsBytesSync();
       final String base64Image = base64Encode(imageBytes);
@@ -51,15 +52,17 @@ class OpenaiRestClient {
               "role": "user",
               "content": [
                 {"type": "text", "text": prompt},
-                if (true) ...imageContents
-              ]
+                if (textPrompt != null && textPrompt.trim().isNotEmpty)
+                  {"type": "text", "text": "User description: ${textPrompt.trim()}"},
+                ...imageContents
+              ],
             }
           ]
         },
       );
 
       if (response.statusCode == 200) {
-        print(response.data);
+        debugPrint(response.data.toString());
         return response.data;
       } else {
         throw Error.generic();
@@ -67,13 +70,14 @@ class OpenaiRestClient {
     } on DioError catch (e) {
       throw Error.fromDioError(e);
     } catch (e) {
-      if (e is Error) //
+      if (e is Error) {
         rethrow;
+      }
       throw Error.generic();
     }
   }
 
   Future<void> fetchChatGptApiKey() async {
-    //chatGptApiKey ??= PremiumController.to.chatGPTApiKey ?? await PremiumController.to.getChatGPTKey();
+    chatGptApiKey ??= dotenv.env['OPENAI_API_KEY'];
   }
 }

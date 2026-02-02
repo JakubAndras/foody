@@ -1,5 +1,6 @@
 import 'package:diplomka/widgets/macros_card.dart';
 import 'package:flutter/material.dart';
+import 'package:diplomka/app_theme.dart';
 
 import '../model/day_record.dart';
 
@@ -14,24 +15,27 @@ class MacrosRow extends StatelessWidget {
     return Row(
       children: [
         MacrosCard(
-          title: caloriesPlanEnabled ? 'Protein left' : 'Proteins',
-          value: caloriesPlanEnabled ? '${dayRecord.proteinsLeft.toStringAsFixed(0)}g' : '${dayRecord.totalProteins.toStringAsFixed(0)}g',
-          icon: Icons.fastfood,
-          iconColor: Colors.red,
+          label: 'Protein eaten',
+          current: caloriesPlanEnabled ? dayRecord.totalProteins : dayRecord.totalProteins,
+          goal: dayRecord.proteinGoal,
+          icon: Icons.fitness_center_rounded,
+          color: AppColors.macroProtein,
         ),
-        const SizedBox(width: 4),
+        const SizedBox(width: AppSpacing.sm),
         MacrosCard(
-          title: caloriesPlanEnabled ? 'Carbs left' : 'Carbs',
-          value: caloriesPlanEnabled ? '${dayRecord.carbsLeft.toStringAsFixed(0)}g' : '${dayRecord.totalCarbs.toStringAsFixed(0)}g',
-          icon: Icons.bakery_dining,
-          iconColor: Colors.orange,
+          label: 'Carbs eaten',
+          current: caloriesPlanEnabled ? dayRecord.totalCarbs : dayRecord.totalCarbs,
+          goal: dayRecord.carbsGoal,
+          icon: Icons.spa_rounded,
+          color: AppColors.macroCarbs,
         ),
-        const SizedBox(width: 4),
+        const SizedBox(width: AppSpacing.sm),
         MacrosCard(
-          title: caloriesPlanEnabled ? 'Fats left' : 'Fats',
-          value: caloriesPlanEnabled ? '${dayRecord.fatsLeft.toStringAsFixed(0)}g' : '${dayRecord.totalFats.toStringAsFixed(0)}g',
-          icon: Icons.icecream,
-          iconColor: Colors.blue,
+          label: 'Fat eaten',
+          current: caloriesPlanEnabled ? dayRecord.totalFats : dayRecord.totalFats,
+          goal: dayRecord.fatGoal,
+          icon: Icons.opacity_rounded,
+          color: AppColors.macroFats,
         ),
       ],
     );

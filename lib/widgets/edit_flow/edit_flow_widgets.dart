@@ -1,0 +1,259 @@
+import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/model/ingredient.dart';
+import 'package:diplomka/screens/meals/meal_components.dart';
+import 'package:flutter/material.dart';
+
+class InlineErrorText extends StatelessWidget {
+  final String message;
+
+  const InlineErrorText({super.key, required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: AppSpacing.xs),
+      child: Text(
+        message,
+        style: AppTextStyles.body14Regular.copyWith(color: AppColors.errorText),
+      ),
+    );
+  }
+}
+
+class EditBottomActionBar extends StatelessWidget {
+  final String primaryLabel;
+  final VoidCallback? onPrimary;
+  final String? secondaryLabel;
+  final IconData? secondaryIcon;
+  final VoidCallback? onSecondary;
+  final EdgeInsetsGeometry? padding;
+
+  const EditBottomActionBar({
+    super.key,
+    required this.primaryLabel,
+    this.onPrimary,
+    this.secondaryLabel,
+    this.secondaryIcon,
+    this.onSecondary,
+    this.padding,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: padding ?? const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.sm, AppSpacing.md, AppSpacing.md),
+      child: Row(
+        children: [
+          if (secondaryLabel != null) ...[
+            Expanded(
+              child: OutlinePillButton(
+                label: secondaryLabel!,
+                icon: secondaryIcon,
+                onTap: onSecondary,
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+          ],
+          Expanded(
+            child: GradientPillButton(
+              label: primaryLabel,
+              gradient: AppGradients.primary,
+              onTap: onPrimary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class EditConfirmSheet extends StatelessWidget {
+  final String title;
+  final String message;
+  final String confirmLabel;
+  final String cancelLabel;
+  final Color confirmColor;
+  final VoidCallback onConfirm;
+  final VoidCallback onCancel;
+
+  const EditConfirmSheet({
+    super.key,
+    required this.title,
+    required this.message,
+    required this.confirmLabel,
+    required this.cancelLabel,
+    this.confirmColor = AppColors.destructive,
+    required this.onConfirm,
+    required this.onCancel,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadii.lg),
+        boxShadow: AppShadows.sheet,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: AppTextStyles.title18Tight.copyWith(color: AppColors.textPrimary)),
+          const SizedBox(height: AppSpacing.xs),
+          Text(message, style: AppTextStyles.body14Regular.copyWith(color: AppColors.textSecondary)),
+          const SizedBox(height: AppSpacing.lg),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinePillButton(
+                  label: cancelLabel,
+                  onTap: onCancel,
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: GradientPillButton(
+                  label: confirmLabel,
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      confirmColor,
+                      confirmColor.withValues(alpha: 0.85),
+                    ],
+                  ),
+                  onTap: onConfirm,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class EditIngredientRow extends StatelessWidget {
+  final Ingredient ingredient;
+  final bool highlighted;
+  final String? alertText;
+  final VoidCallback? onTap;
+
+  const EditIngredientRow({
+    super.key,
+    required this.ingredient,
+    this.highlighted = false,
+    this.alertText,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final background = highlighted ? AppColors.warningSurface : AppColors.surface;
+    final border = highlighted ? AppColors.warningStrong : Colors.transparent;
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(AppRadii.lg),
+      child: Container(
+        height: highlighted ? AppSizes.ingredientRowAlertHeight : AppSizes.ingredientRowHeight,
+        padding: const EdgeInsets.all(AppSpacing.md),
+        decoration: BoxDecoration(
+          color: background,
+          borderRadius: BorderRadius.circular(AppRadii.lg),
+          border: Border.all(color: border, width: AppSizes.dividerThin),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      if (highlighted) ...[
+                        const Icon(Icons.warning_amber_rounded, size: AppSizes.iconSm, color: AppColors.warningStrong),
+                        const SizedBox(width: AppSpacing.xs),
+                      ],
+                      Text(
+                        ingredient.name,
+                        style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+                      ),
+                    ],
+                  ),
+                  if (alertText != null) ...[
+                    const SizedBox(height: AppSpacing.xxs),
+                    Text(
+                      alertText!,
+                      style: AppTextStyles.macroDotLabel11.copyWith(color: AppColors.orange),
+                    ),
+                  ],
+                  const Spacer(),
+                  _MacroDotsRow(ingredient: ingredient),
+                ],
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  ingredient.calories.toStringAsFixed(0),
+                  style: AppTextStyles.kcalValue18,
+                ),
+                Text('kcal', style: AppTextStyles.kcalLabel12),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _MacroDotsRow extends StatelessWidget {
+  final Ingredient ingredient;
+
+  const _MacroDotsRow({required this.ingredient});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        _MacroDotLabel(color: AppColors.macroProtein, value: '${ingredient.proteins.toStringAsFixed(0)}g'),
+        const SizedBox(width: AppSpacing.xs),
+        _MacroDotLabel(color: AppColors.macroCarbsStrong, value: '${ingredient.carbs.toStringAsFixed(0)}g'),
+        const SizedBox(width: AppSpacing.xs),
+        _MacroDotLabel(color: AppColors.macroFats, value: '${ingredient.fats.toStringAsFixed(0)}g'),
+      ],
+    );
+  }
+}
+
+class _MacroDotLabel extends StatelessWidget {
+  final Color color;
+  final String value;
+
+  const _MacroDotLabel({required this.color, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: AppSizes.macroDotSm,
+          height: AppSizes.macroDotSm,
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: AppOpacities.macroDot),
+            shape: BoxShape.circle,
+          ),
+        ),
+        const SizedBox(width: AppSpacing.xxs),
+        Text(value, style: AppTextStyles.macroDotLabel11),
+      ],
+    );
+  }
+}
