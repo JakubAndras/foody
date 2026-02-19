@@ -15,7 +15,7 @@ class ExerciseSearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: AppSizes.exerciseSearchHeight,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg),
@@ -25,7 +25,7 @@ class ExerciseSearchBar extends StatelessWidget {
       child: Row(
         children: [
           const Icon(Icons.search, color: AppColors.textTertiary, size: AppSizes.iconMd),
-          const SizedBox(width: AppSpacing.sm),
+          const SizedBox(width: AppSpacing.s),
           Expanded(
             child: TextField(
               controller: controller,
@@ -64,7 +64,7 @@ class ExerciseFilterChip extends StatelessWidget {
       onTap: onTap,
       child: Container(
         height: AppSizes.chipHeight,
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
         decoration: BoxDecoration(
           color: selected ? AppColors.primary : AppColors.surface,
           borderRadius: BorderRadius.circular(AppRadii.pill),
@@ -113,7 +113,7 @@ class ExerciseListCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         height: AppSizes.exerciseCardHeight,
-        padding: const EdgeInsets.all(AppSpacing.md),
+        padding: const EdgeInsets.all(AppSpacing.m),
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(AppRadii.lg),
@@ -137,7 +137,7 @@ class ExerciseListCard extends StatelessWidget {
                         value: '$kcal',
                         unit: 'kcal',
                       ),
-                      const SizedBox(width: AppSpacing.sm),
+                      const SizedBox(width: AppSpacing.s),
                       _MetricPill(
                         gradient: AppGradients.exerciseDuration,
                         icon: Icons.schedule,
@@ -189,7 +189,7 @@ class ExerciseStatCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: AppSizes.exerciseStatCardHeight,
-      padding: const EdgeInsets.all(AppSpacing.md),
+      padding: const EdgeInsets.all(AppSpacing.m),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg),
@@ -243,7 +243,7 @@ class ExerciseInfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.md),
+      padding: const EdgeInsets.all(AppSpacing.m),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg),
@@ -261,7 +261,7 @@ class ExerciseInfoCard extends StatelessWidget {
             ),
             child: Icon(icon, color: AppColors.onPrimary, size: AppSizes.iconMd),
           ),
-          const SizedBox(width: AppSpacing.md),
+          const SizedBox(width: AppSpacing.m),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -297,7 +297,7 @@ class ExerciseCalculationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.lg),
+      padding: const EdgeInsets.all(AppSpacing.l),
       decoration: BoxDecoration(
         color: AppColors.surfaceMuted,
         borderRadius: BorderRadius.circular(AppRadii.lg),
@@ -306,11 +306,11 @@ class ExerciseCalculationCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Calculation', style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600)),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.s),
           _CalcRow(label: 'Rate', value: rate),
           _CalcRow(label: 'Duration', value: duration),
           const Padding(
-            padding: EdgeInsets.symmetric(vertical: AppSpacing.sm),
+            padding: EdgeInsets.symmetric(vertical: AppSpacing.s),
             child: Divider(color: AppColors.outline, height: 1),
           ),
           _CalcRow(label: 'Total Calories', value: total, emphasize: true),
@@ -337,7 +337,7 @@ class ExerciseBottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.md, AppSpacing.lg, AppSpacing.lg),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.m, AppSpacing.l, AppSpacing.l),
       color: AppColors.backgroundAlt,
       child: Row(
         children: [
@@ -360,7 +360,7 @@ class ExerciseBottomBar extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(width: AppSpacing.md),
+          const SizedBox(width: AppSpacing.m),
           Expanded(
             child: GestureDetector(
               onTap: onSecondary,
@@ -414,7 +414,7 @@ class ExerciseTrackingOptionCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         height: AppSizes.exerciseOptionCardHeight,
-        padding: const EdgeInsets.all(AppSpacing.md),
+        padding: const EdgeInsets.all(AppSpacing.m),
         decoration: BoxDecoration(
           color: selected ? AppColors.surfaceSelected : AppColors.surface,
           borderRadius: BorderRadius.circular(AppRadii.lg),
@@ -467,7 +467,7 @@ class ExerciseInputCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: AppSizes.exerciseInputHeight,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg),
@@ -485,7 +485,7 @@ class ExerciseInputCard extends StatelessWidget {
             ),
             child: Icon(icon, color: AppColors.onPrimary, size: AppSizes.iconSm),
           ),
-          const SizedBox(width: AppSpacing.md),
+          const SizedBox(width: AppSpacing.m),
           Expanded(
             child: Text(
               value,

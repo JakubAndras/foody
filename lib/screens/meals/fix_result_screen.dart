@@ -43,21 +43,21 @@ class _FixResultScreenState extends State<FixResultScreen> {
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: AppSpacing.s),
               _BackButtonCircle(onTap: () => Navigator.of(context).maybePop()),
-              const SizedBox(height: AppSpacing.lg),
+              const SizedBox(height: AppSpacing.l),
               Row(
                 children: [
                   const Icon(Icons.auto_fix_high, size: AppSizes.iconMd, color: AppColors.textPrimary),
-                  const SizedBox(width: AppSpacing.sm),
+                  const SizedBox(width: AppSpacing.s),
                   Text('Fix result', style: AppTextStyles.h1Alt),
                 ],
               ),
-              const SizedBox(height: AppSpacing.lg),
+              const SizedBox(height: AppSpacing.l),
               _FeedbackInput(
                 controller: _controller,
                 hintText: 'Describe what needs to be fixed.',
@@ -71,24 +71,24 @@ class _FixResultScreenState extends State<FixResultScreen> {
                   style: AppTextStyles.body15.copyWith(color: AppColors.textTertiary),
                 ),
               ),
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.m),
               _ExampleCard(
                 text: 'The smoothie is missing the strawberry and almond milk.',
               ),
               if (widget.showSyncCards) ...[
-                const SizedBox(height: AppSpacing.lg),
+                const SizedBox(height: AppSpacing.l),
                 SyncCard(
                   title: 'Calories changed. Sync macros to match?',
                   primaryLabel: 'Sync',
                   secondaryLabel: "Don't sync",
                 ),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.m),
                 SyncCard(
                   title: 'Macros changed. Sync calories to match?',
                   primaryLabel: 'Sync',
                   secondaryLabel: "Don't sync",
                 ),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.m),
                 SyncCard(
                   title: 'Always sync automatically?',
                   primaryLabel: 'Always sync',
@@ -195,7 +195,7 @@ class _FeedbackInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: AppSizes.feedbackInputHeight,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.lg),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.l),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppRadii.md),
         border: Border.all(color: AppColors.textPrimary, width: 2),
@@ -224,7 +224,7 @@ class _ExampleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.lg),
+      padding: const EdgeInsets.all(AppSpacing.l),
       decoration: BoxDecoration(
         color: AppColors.surfaceSubtle,
         borderRadius: BorderRadius.circular(AppRadii.md),

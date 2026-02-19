@@ -103,12 +103,12 @@ class AskAiPromptCard extends StatelessWidget {
     return ProfileCard(
       radius: AppRadii.lg,
       shadow: AppShadows.cardSubtle,
-      padding: const EdgeInsets.all(AppSpacing.md),
+      padding: const EdgeInsets.all(AppSpacing.m),
       child: Column(
         children: [
           Container(
             height: AppSizes.askAiInputHeight,
-            padding: const EdgeInsets.all(AppSpacing.md),
+            padding: const EdgeInsets.all(AppSpacing.m),
             decoration: BoxDecoration(
               color: AppColors.surfaceMuted,
               borderRadius: BorderRadius.circular(AppRadii.md),
@@ -117,7 +117,7 @@ class AskAiPromptCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Icon(Icons.search, size: AppSizes.iconMd, color: AppColors.violet),
-                const SizedBox(width: AppSpacing.sm),
+                const SizedBox(width: AppSpacing.s),
                 Expanded(
                   child: Text(
                     'Ask about your nutrition data in natural language...',
@@ -134,7 +134,7 @@ class AskAiPromptCard extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.m),
           AskAiPrimaryButton(
             label: 'Ask AI',
             leading: const Icon(Icons.auto_awesome, size: AppSizes.iconMd, color: AppColors.onPrimary),
@@ -207,7 +207,7 @@ class AskAiExampleQuestionCard extends StatelessWidget {
           ),
           child: Container(
             constraints: BoxConstraints(minHeight: height ?? 48),
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.s),
             alignment: Alignment.centerLeft,
             child: Text(
               label,
@@ -244,7 +244,7 @@ class AskAiResponseCard extends StatelessWidget {
             iconRadius: AppRadii.pill,
             iconSize: 32,
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.s),
           Text(
             text,
             style: AppTextStyles.body15.copyWith(
@@ -292,10 +292,10 @@ class AskAiSummaryCard extends StatelessWidget {
             iconRadius: AppRadii.xs,
             iconSize: 28,
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.s),
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.l),
             decoration: BoxDecoration(
               gradient: panelGradient,
               borderRadius: BorderRadius.circular(AppRadii.md),
@@ -356,16 +356,16 @@ class AskAiCalendarCard extends StatelessWidget {
             iconRadius: AppRadii.xs,
             iconSize: 28,
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.s),
           _MonthSelector(label: monthLabel),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.s),
           AskAiCalendarGrid(
             affectedDays: affectedDays,
             affectedGradient: affectedGradient,
             year: year,
             month: month,
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.s),
           _LegendRow(affectedGradient: affectedGradient),
         ],
       ),
@@ -516,7 +516,7 @@ class _MonthSelector extends StatelessWidget {
         color: AppColors.surfaceMuted,
         borderRadius: BorderRadius.circular(AppRadii.sm),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
       child: Row(
         children: [
           _MonthButton(icon: Icons.chevron_left),
@@ -562,7 +562,7 @@ class _LegendRow extends StatelessWidget {
         color: AppColors.surfaceMuted,
         borderRadius: BorderRadius.circular(AppRadii.sm),
       ),
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -571,7 +571,7 @@ class _LegendRow extends StatelessWidget {
             gradient: affectedGradient,
             useShadow: true,
           ),
-          const SizedBox(width: AppSpacing.lg),
+          const SizedBox(width: AppSpacing.l),
           _LegendItem(
             label: 'Normal',
             gradient: null,

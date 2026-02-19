@@ -28,7 +28,7 @@ class OnboardingCalorieBurnScreen extends StatelessWidget {
           Expanded(
             child: OnboardingPrimaryButton(label: 'No', onPressed: onNext),
           ),
-          const SizedBox(width: AppSpacing.sm),
+          const SizedBox(width: AppSpacing.s),
           Expanded(
             child: OnboardingPrimaryButton(label: 'Yes', onPressed: onNext),
           ),
@@ -48,12 +48,12 @@ class OnboardingCalorieBurnScreen extends StatelessWidget {
               children: [
                 OnboardingPlaceholderImage(height: AppSizes.calorieBurnImageSize),
                 Positioned(
-                  left: AppSpacing.sm,
-                  bottom: AppSpacing.sm,
+                  left: AppSpacing.s,
+                  bottom: AppSpacing.s,
                   child: SizedBox(
                     width: AppSizes.infoCardWidth,
                     child: OnboardingSurfaceCard(
-                      padding: const EdgeInsets.all(AppSpacing.md),
+                      padding: const EdgeInsets.all(AppSpacing.m),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -61,18 +61,18 @@ class OnboardingCalorieBurnScreen extends StatelessWidget {
                             "Today's Goal",
                             style: textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
                           ),
-                          const SizedBox(height: AppSpacing.sm),
+                          const SizedBox(height: AppSpacing.s),
                           Row(
                             children: [
                               const Icon(Icons.local_fire_department, color: AppColors.textPrimary, size: AppSizes.iconLg),
-                              const SizedBox(width: AppSpacing.sm),
+                              const SizedBox(width: AppSpacing.s),
                               Text(
                                 '500 Cals',
                                 style: textTheme.headlineLarge,
                               ),
                             ],
                           ),
-                          const SizedBox(height: AppSpacing.sm),
+                          const SizedBox(height: AppSpacing.s),
                           Row(
                             children: [
                               Container(
@@ -84,7 +84,7 @@ class OnboardingCalorieBurnScreen extends StatelessWidget {
                                 ),
                                 child: const Icon(Icons.directions_run, color: AppColors.onPrimary, size: AppSizes.iconMd),
                               ),
-                              const SizedBox(width: AppSpacing.sm),
+                              const SizedBox(width: AppSpacing.s),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [

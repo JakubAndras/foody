@@ -11,12 +11,12 @@ class ConfirmUsernameScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProfileGradientScaffold(
       scroll: true,
-      padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.lg, AppSpacing.lg, AppSpacing.xl),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.l, AppSpacing.l, AppSpacing.xl),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ProfileBackButton(onPressed: () => Get.back()),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.l),
           Text(
             'Confirm your username',
             style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w700),
@@ -26,7 +26,7 @@ class ConfirmUsernameScreen extends StatelessWidget {
             'This is the name others will see in groups.',
             style: AppTextStyles.body16.copyWith(color: AppColors.textTertiary, fontWeight: FontWeight.w500),
           ),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.l),
           Container(
             height: AppSizes.inputHeightMd,
             decoration: BoxDecoration(
@@ -34,7 +34,7 @@ class ConfirmUsernameScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(AppRadii.md),
               border: Border.all(color: AppColors.borderStrong),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
             alignment: Alignment.centerLeft,
             child: Text(
               'Your username',

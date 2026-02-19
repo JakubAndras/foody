@@ -21,16 +21,16 @@ class AskAiResponseScreen extends StatelessWidget {
 
     return ProfileGradientScaffold(
       scroll: true,
-      padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.lg, AppSpacing.md, AppSpacing.xl),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.l, AppSpacing.m, AppSpacing.xl),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const AskAiTopBar(),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.m),
           const AskAiPromptCard(),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.l),
           AskAiResponseCard(text: data.responseText),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.m),
           AskAiSummaryCard(
             value: data.summaryValue,
             label: data.summaryLabel,
@@ -39,7 +39,7 @@ class AskAiResponseScreen extends StatelessWidget {
             panelGradient: data.summarySurfaceGradient,
             valueGradient: data.summaryGradient,
           ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.m),
           AskAiCalendarCard(
             affectedDays: data.affectedDays,
             affectedGradient: data.summaryGradient,
@@ -47,7 +47,7 @@ class AskAiResponseScreen extends StatelessWidget {
             year: data.year,
             month: data.month,
           ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.m),
           Row(
             children: [
               Expanded(
@@ -56,7 +56,7 @@ class AskAiResponseScreen extends StatelessWidget {
                   icon: Icons.file_download_outlined,
                 ),
               ),
-              const SizedBox(width: AppSpacing.sm),
+              const SizedBox(width: AppSpacing.s),
               Expanded(
                 child: AskAiPrimaryButton(
                   label: 'Share',

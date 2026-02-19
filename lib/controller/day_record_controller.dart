@@ -1,7 +1,9 @@
 import 'package:get/get.dart';
 
 import 'package:diplomka/model/calendar_day.dart';
+import 'package:diplomka/model/calendar_day_ring_style.dart';
 import 'package:diplomka/model/day_record.dart';
+import 'package:diplomka/services/calendar_day_ring_service.dart';
 import 'package:diplomka/services/day_record_repository.dart';
 
 import '../model/meal.dart';
@@ -12,9 +14,12 @@ class DayRecordController extends BaseController {
 
   DayRecordController({
     required DayRecordRepository repository,
-  }) : _repository = repository;
+    CalendarDayRingService? calendarDayRingService,
+  })  : _repository = repository,
+        _calendarDayRingService = calendarDayRingService;
 
   final DayRecordRepository _repository;
+  final CalendarDayRingService? _calendarDayRingService;
 
   @override
   void onInit() {
@@ -23,18 +28,18 @@ class DayRecordController extends BaseController {
   }
 
   final RxList<DayRecord> dayRecords = RxList<DayRecord>();
-  final RxMap<DateTime, bool> weekStatuses = <DateTime, bool>{}.obs;
+  final RxMap<DateTime, CalendarDayRingStyle> weekRingStyles = <DateTime, CalendarDayRingStyle>{}.obs;
 
-  // Method to load statuses for a week
+  // Method to load ring states for a week
   Future<void> loadWeek(DateTime mondayOfWeek) async {
-    final Map<DateTime, bool> newStatuses = {};
+    final Map<DateTime, CalendarDayRingStyle> newStatuses = {};
     for (int i = 0; i < 7; i++) {
       final currentDay = mondayOfWeek.add(Duration(days: i));
       final normalizedDay = DateTime(currentDay.year, currentDay.month, currentDay.day);
       final dayRecord = await getDayRecord(normalizedDay);
-      newStatuses[normalizedDay] = dayRecord != null && dayRecord.meals.isNotEmpty;
+      newStatuses[normalizedDay] = _resolveRingStyle(dayRecord);
     }
-    weekStatuses.addAll(newStatuses);
+    weekRingStyles.addAll(newStatuses);
   }
 
   Future<DayRecord?> getDayRecord(DateTime date) async {
@@ -50,7 +55,7 @@ class DayRecordController extends BaseController {
   Future<void> addOrUpdateDayRecord(DayRecord dayRecord) async {
     final normalizedDate = DateTime(dayRecord.date.year, dayRecord.date.month, dayRecord.date.day);
     await _repository.upsertDayRecord(dayRecord.copyWith(date: normalizedDate));
-    weekStatuses[normalizedDate] = dayRecord.meals.isNotEmpty;
+    weekRingStyles[normalizedDate] = _resolveRingStyle(dayRecord);
     await refreshDayRecords();
   }
 
@@ -58,7 +63,7 @@ class DayRecordController extends BaseController {
   Future<void> updateDayRecord(DayRecord updatedRecord) async {
     final normalizedDate = DateTime(updatedRecord.date.year, updatedRecord.date.month, updatedRecord.date.day);
     await _repository.upsertDayRecord(updatedRecord.copyWith(date: normalizedDate));
-    weekStatuses[normalizedDate] = updatedRecord.meals.isNotEmpty;
+    weekRingStyles[normalizedDate] = _resolveRingStyle(updatedRecord);
     await refreshDayRecords();
   }
 
@@ -73,6 +78,7 @@ class DayRecordController extends BaseController {
               date: record.date,
               hasMeals: record.meals.isNotEmpty,
               dayRecord: record,
+              ringStyle: _resolveRingStyle(record),
             ))
         .toList();
   }
@@ -81,7 +87,8 @@ class DayRecordController extends BaseController {
     try {
       await _repository.saveMealForDate(date: date, meal: mealToSave);
       final normalizedDate = DateTime(date.year, date.month, date.day);
-      weekStatuses[normalizedDate] = true;
+      final dayRecord = await getDayRecord(normalizedDate);
+      weekRingStyles[normalizedDate] = _resolveRingStyle(dayRecord);
       await refreshDayRecords();
     } catch (e) {
       Get.snackbar(
@@ -121,10 +128,15 @@ class DayRecordController extends BaseController {
   Future<void> refreshDayRecords() async {
     final records = await _repository.getAllDayRecords();
     dayRecords.assignAll(records);
+    weekRingStyles.clear();
     for (final record in records) {
       final normalizedDate = DateTime(record.date.year, record.date.month, record.date.day);
-      weekStatuses[normalizedDate] = record.meals.isNotEmpty;
+      weekRingStyles[normalizedDate] = _resolveRingStyle(record);
     }
+  }
+
+  CalendarDayRingStyle _resolveRingStyle(DayRecord? dayRecord) {
+    return _calendarDayRingService?.resolve(dayRecord) ?? CalendarDayRingService.emptyStyle;
   }
 
   @override

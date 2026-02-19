@@ -1,11 +1,13 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/screens/onboarding/onboarding_signin_modal_screen.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingWelcomeScreen extends StatelessWidget {
-  const OnboardingWelcomeScreen({super.key, this.onNext});
+  const OnboardingWelcomeScreen({super.key, this.onNext, this.onSkip});
 
   final VoidCallback? onNext;
+  final Future<void> Function()? onSkip;
 
   @override
   Widget build(BuildContext context) {
@@ -16,13 +18,13 @@ class OnboardingWelcomeScreen extends StatelessWidget {
       body: SafeArea(
         child: Stack(
           children: [
-            Positioned(
-              top: AppSpacing.md,
-              right: AppSpacing.md,
-              child: const OnboardingLanguageChip(label: 'EN'),
-            ),
+            // Positioned(
+            //   top: AppSpacing.md,
+            //   right: AppSpacing.md,
+            //   child: const OnboardingLanguageChip(label: 'EN'),
+            // ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
               child: Column(
                 children: [
                   const Spacer(),
@@ -36,19 +38,31 @@ class OnboardingWelcomeScreen extends StatelessWidget {
                     label: 'Get Started',
                     onPressed: onNext,
                   ),
-                  const SizedBox(height: AppSpacing.lg),
-                  RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                      style: textTheme.bodyLarge?.copyWith(color: AppColors.textPrimary),
-                      children: [
-                        const TextSpan(text: 'Already have an account? '),
-                        TextSpan(
-                          text: 'Sign In',
+                  const SizedBox(height: AppSpacing.s),
+                  OnboardingOutlinedButton(
+                    label: 'Skip onboarding (Dummy)',
+                    onPressed: onSkip == null
+                        ? null
+                        : () async {
+                            await onSkip!.call();
+                          },
+                  ),
+                  const SizedBox(height: AppSpacing.l),
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    children: [
+                      Text(
+                        'Already have an account? ',
+                        style: textTheme.bodyLarge?.copyWith(color: AppColors.textPrimary),
+                      ),
+                      InkWell(
+                        onTap: () => _showSignInModal(context),
+                        child: Text(
+                          'Sign In',
                           style: textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: AppSpacing.xxl),
                 ],
@@ -56,6 +70,22 @@ class OnboardingWelcomeScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _showSignInModal(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      barrierColor: AppColors.overlayDark40,
+      builder: (context) => OnboardingSignInSheetContent(
+        onClose: () => Navigator.of(context).pop(),
+        onContinue: () {
+          Navigator.of(context).pop();
+          onNext?.call();
+        },
       ),
     );
   }

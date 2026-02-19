@@ -1,8 +1,13 @@
+import 'dart:math' as math;
+
+import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/controller/day_record_controller.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
+import 'package:diplomka/model/calendar_day_ring_style.dart';
+import 'package:diplomka/services/calendar_day_ring_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:diplomka/generated/locale_keys.g.dart';
-import 'package:diplomka/controller/day_record_controller.dart';
-import 'package:diplomka/app_theme.dart';
+import 'package:get/get.dart';
 
 class DateSelector extends StatefulWidget {
   final DateTime selectedDate;
@@ -20,6 +25,7 @@ class DateSelector extends StatefulWidget {
 
 class _DateSelectorState extends State<DateSelector> {
   late PageController _pageController;
+  final DayRecordController _dayRecordController = DayRecordController.to;
 
   static const int _totalPages = 10400; // Roughly 100 years past/future
   static const int _initialPageIndex = _totalPages ~/ 2;
@@ -30,7 +36,7 @@ class _DateSelectorState extends State<DateSelector> {
     _initializePageController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final mondayOfWeek = _getMondayForWeekContaining(widget.selectedDate);
-      DayRecordController.to.loadWeek(mondayOfWeek);
+      _dayRecordController.loadWeek(mondayOfWeek);
     });
   }
 
@@ -52,6 +58,8 @@ class _DateSelectorState extends State<DateSelector> {
     return normalized.subtract(Duration(days: normalized.weekday - DateTime.monday));
   }
 
+  DateTime _normalizeDate(DateTime date) => DateTime(date.year, date.month, date.day);
+
   void _handleDateTap(DateTime date) => widget.onDateSelected(date);
 
   @override
@@ -63,7 +71,7 @@ class _DateSelectorState extends State<DateSelector> {
         itemCount: _totalPages,
         onPageChanged: (pageIndex) {
           final mondayOfWeek = _getMondayForWeekContaining(DateTime.now()).add(Duration(days: (pageIndex - _initialPageIndex) * 7));
-          DayRecordController.to.loadWeek(mondayOfWeek);
+          _dayRecordController.loadWeek(mondayOfWeek);
         },
         itemBuilder: (context, pageIndex) {
           final mondayOfWeek = _getMondayForWeekContaining(DateTime.now()).add(Duration(days: (pageIndex - _initialPageIndex) * 7));
@@ -74,25 +82,24 @@ class _DateSelectorState extends State<DateSelector> {
   }
 
   Widget _buildWeekView(DateTime mondayOfWeek) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: List.generate(7, (dayIndex) {
-          final date = mondayOfWeek.add(Duration(days: dayIndex));
-          final isSelected = date.year == widget.selectedDate.year &&
-              date.month == widget.selectedDate.month &&
-              date.day == widget.selectedDate.day;
-          return GestureDetector(
+    return Row(
+      children: List.generate(7, (dayIndex) {
+        final date = mondayOfWeek.add(Duration(days: dayIndex));
+        final isSelected =
+            date.year == widget.selectedDate.year && date.month == widget.selectedDate.month && date.day == widget.selectedDate.day;
+        return Expanded(
+          child: GestureDetector(
             onTap: () => _handleDateTap(date),
-            child: _buildDate(date, isSelected),
-          );
-        }),
-      ),
+            child: Center(child: _buildDate(date, isSelected)),
+          ),
+        );
+      }),
     );
   }
 
   Widget _buildDate(DateTime date, bool isSelected) {
+    final normalizedDate = _normalizeDate(date);
+    final labelAndNumberColor = isSelected ? AppColors.textPrimary : AppColors.borderStrong;
     final dayNames = [
       tr(LocaleKeys.day_monday_short),
       tr(LocaleKeys.day_tuesday_short),
@@ -103,41 +110,102 @@ class _DateSelectorState extends State<DateSelector> {
       tr(LocaleKeys.day_sunday_short),
     ];
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          dayNames[date.weekday - 1].toUpperCase(),
-          style: AppTextStyles.label11.copyWith(
-            color: AppColors.textTertiary,
+    return Obx(() {
+      final ringStyle = _dayRecordController.weekRingStyles[normalizedDate] ?? CalendarDayRingService.emptyStyle;
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            dayNames[date.weekday - 1].toUpperCase(),
+            style: AppTextStyles.label11.copyWith(
+              color: labelAndNumberColor,
+            ),
           ),
-        ),
-        const SizedBox(height: AppSpacing.sm),
-        Container(
-          width: AppSizes.minTap,
-          height: AppSizes.minTap,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: isSelected ? Border.all(color: AppColors.primary, width: AppSizes.borderThick) : null,
-            color: isSelected ? AppColors.surface : Colors.transparent,
-          ),
-          child: Center(
-            child: Text(
-              date.day.toString(),
-              style: AppTextStyles.body16.copyWith(
-                fontWeight: FontWeight.w700,
-                color: AppColors.textPrimary,
+          const SizedBox(height: AppSpacing.s),
+          SizedBox(
+            width: AppSizes.minTap,
+            height: AppSizes.minTap,
+            child: Center(
+              child: SizedBox(
+                width: AppSizes.dateCircleSize,
+                height: AppSizes.dateCircleSize,
+                child: CustomPaint(
+                  painter: _CalendarDayRingPainter(
+                    ringStyle: ringStyle,
+                    strokeWidth: AppSizes.dateCircleBorder,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(AppSizes.dateCircleBorder),
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.transparent,
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        date.day.toString(),
+                        style: AppTextStyles.body16.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: labelAndNumberColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    });
   }
 
   @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
+  }
+}
+
+class _CalendarDayRingPainter extends CustomPainter {
+  const _CalendarDayRingPainter({
+    required this.ringStyle,
+    required this.strokeWidth,
+  });
+
+  final CalendarDayRingStyle ringStyle;
+  final double strokeWidth;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.round;
+    final radius = (size.shortestSide - strokeWidth) / 2;
+    final center = Offset(size.width / 2, size.height / 2);
+    final rect = Rect.fromCircle(center: center, radius: radius);
+    final segmentSweep = (2 * math.pi) / ringStyle.totalSegments;
+    final gapSweep = segmentSweep * 0.28;
+    final drawSweep = segmentSweep - gapSweep;
+    const startAngleOffset = -math.pi / 2;
+
+    for (int i = 0; i < ringStyle.totalSegments; i++) {
+      if (i < ringStyle.overflowSegments) {
+        paint.color = AppColors.error;
+      } else if (i < ringStyle.filledSegments) {
+        paint.color = AppColors.primarySoft;
+      } else {
+        paint.color = AppColors.borderStrong;
+      }
+
+      final start = startAngleOffset + i * segmentSweep + (gapSweep / 2);
+      canvas.drawArc(rect, start, drawSweep, false, paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _CalendarDayRingPainter oldDelegate) {
+    return oldDelegate.ringStyle != ringStyle || oldDelegate.strokeWidth != strokeWidth;
   }
 }

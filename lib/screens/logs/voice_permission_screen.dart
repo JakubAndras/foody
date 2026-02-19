@@ -18,13 +18,13 @@ class VoicePermissionScreen extends StatelessWidget {
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.lg),
+          padding: const EdgeInsets.all(AppSpacing.l),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: AppSpacing.xl),
               Text('Microphone access', style: AppTextStyles.h3),
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.m),
               Text(
                 isPermanentlyDenied
                     ? 'Microphone access is disabled. Enable it in Settings to record your voice logs.'

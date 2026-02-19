@@ -24,7 +24,6 @@ class RecentlyUploadedCard extends StatelessWidget {
           "Today's meals",
           style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700),
         ),
-        const SizedBox(height: AppSpacing.sm),
         Obx(() {
           final isLoading = DashboardController.to.newMealAnalyzeLoading.value;
           final hasMeals = meals.isNotEmpty;
@@ -55,6 +54,7 @@ class RecentlyUploadedCard extends StatelessWidget {
 
   Widget _buildEmptyState() {
     return Container(
+      width: double.infinity,
       height: AppSizes.emptyStateHeight,
       decoration: BoxDecoration(
         color: AppColors.surface,
@@ -74,7 +74,7 @@ class RecentlyUploadedCard extends StatelessWidget {
             ),
             child: const Icon(Icons.add, color: AppColors.textTertiary),
           ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.m),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
             child: Text(
@@ -101,7 +101,7 @@ class RecentlyUploadedCard extends StatelessWidget {
       onTap: () => onMealTap?.call(meal),
       child: Container(
         height: AppSizes.mealCardHeight,
-        margin: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+        margin: const EdgeInsets.symmetric(vertical: AppSpacing.xxs + 1),
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(AppRadii.lg),
@@ -109,7 +109,7 @@ class RecentlyUploadedCard extends StatelessWidget {
           boxShadow: AppShadows.cardSoft,
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
           child: Row(
             children: [
               Container(
@@ -121,7 +121,7 @@ class RecentlyUploadedCard extends StatelessWidget {
                 ),
                 child: const Icon(Icons.restaurant, color: AppColors.textTertiary),
               ),
-              const SizedBox(width: AppSpacing.md),
+              const SizedBox(width: AppSpacing.m),
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -161,7 +161,7 @@ class RecentlyUploadedCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: AppSpacing.sm),
+                    const SizedBox(height: AppSpacing.s),
                     Container(
                       height: AppSizes.dividerThin,
                       color: AppColors.border,
@@ -170,9 +170,9 @@ class RecentlyUploadedCard extends StatelessWidget {
                     Row(
                       children: [
                         _MacroDot(value: meal.totalProteins.toStringAsFixed(0), color: AppColors.macroProtein),
-                        const SizedBox(width: AppSpacing.sm),
+                        const SizedBox(width: AppSpacing.s),
                         _MacroDot(value: meal.totalCarbs.toStringAsFixed(0), color: AppColors.macroCarbs),
-                        const SizedBox(width: AppSpacing.sm),
+                        const SizedBox(width: AppSpacing.s),
                         _MacroDot(value: meal.totalFats.toStringAsFixed(0), color: AppColors.macroFats),
                       ],
                     ),
@@ -247,7 +247,7 @@ class _AnalyzingMealCardState extends State<AnalyzingMealCard> {
         boxShadow: AppShadows.cardSoft,
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
         child: Row(
           children: [
             Container(
@@ -280,7 +280,7 @@ class _AnalyzingMealCardState extends State<AnalyzingMealCard> {
                 ],
               ),
             ),
-            const SizedBox(width: AppSpacing.md),
+            const SizedBox(width: AppSpacing.m),
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -290,7 +290,7 @@ class _AnalyzingMealCardState extends State<AnalyzingMealCard> {
                     'Recognising meal',
                     style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w600),
                   ),
-                  const SizedBox(height: AppSpacing.sm),
+                  const SizedBox(height: AppSpacing.s),
                   Row(
                     children: [
                       _ProgressSegment(width: AppSizes.progressSegmentMd, opacity: 0.8),
@@ -300,7 +300,7 @@ class _AnalyzingMealCardState extends State<AnalyzingMealCard> {
                       _ProgressSegment(width: AppSizes.progressSegmentLg, opacity: 0.64),
                     ],
                   ),
-                  const SizedBox(height: AppSpacing.sm),
+                  const SizedBox(height: AppSpacing.s),
                   Text(
                     "We’ll notify you when it’s done!",
                     style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary),

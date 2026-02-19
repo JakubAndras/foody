@@ -11,35 +11,35 @@ class EditNutritionGoalsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProfileGradientScaffold(
       scroll: true,
-      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.lg, AppSpacing.screen, AppSpacing.xl),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.l, AppSpacing.screen, AppSpacing.xl),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ProfileBackButton(onPressed: () => Get.back()),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.m),
           Text('Edit nutrition goals', style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w700)),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.l),
           const _GoalRow(
             label: 'Calorie goal',
             value: '2086',
             color: AppColors.primarySoft,
             icon: Icons.local_fire_department_outlined,
           ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.m),
           const _GoalRow(
             label: 'Protein goal',
             value: '188',
             color: AppColors.error,
             icon: Icons.fitness_center_outlined,
           ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.m),
           const _GoalRow(
             label: 'Carb goal',
             value: '203',
             color: AppColors.macroCarbs,
             icon: Icons.grain,
           ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.m),
           const _GoalRow(
             label: 'Fat goal',
             value: '57',
@@ -79,7 +79,7 @@ class _GoalRow extends StatelessWidget {
       child: Row(
         children: [
           _MacroIcon(color: color, icon: icon),
-          const SizedBox(width: AppSpacing.md),
+          const SizedBox(width: AppSpacing.m),
           Expanded(
             child: Container(
               height: AppSizes.goalRowHeight,
@@ -88,7 +88,7 @@ class _GoalRow extends StatelessWidget {
                 borderRadius: BorderRadius.circular(AppRadii.md2),
                 border: Border.all(color: AppColors.outline),
               ),
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,

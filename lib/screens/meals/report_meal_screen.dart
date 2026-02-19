@@ -27,20 +27,20 @@ class _ReportMealScreenState extends State<ReportMealScreen> {
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.sm, AppSpacing.screen, AppSpacing.xl),
+          padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.s, AppSpacing.screen, AppSpacing.xl),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _BackButtonCircle(onTap: () => Navigator.of(context).maybePop()),
-              const SizedBox(height: AppSpacing.lg),
+              const SizedBox(height: AppSpacing.l),
               Row(
                 children: [
                   const Icon(Icons.report_outlined, size: AppSizes.iconMd, color: AppColors.textPrimary),
-                  const SizedBox(width: AppSpacing.sm),
+                  const SizedBox(width: AppSpacing.s),
                   Text('Report Meal', style: AppTextStyles.h1Alt),
                 ],
               ),
-              const SizedBox(height: AppSpacing.lg),
+              const SizedBox(height: AppSpacing.l),
               _FeedbackInput(
                 controller: _controller,
                 hintText: 'Tell us what is the issue with this meal log?',
@@ -65,7 +65,7 @@ class _ReportMealScreenState extends State<ReportMealScreen> {
                     style: AppTextStyles.body14Regular.copyWith(color: AppColors.errorText),
                   ),
                 ),
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.m),
               _ExampleCard(
                 text: 'This is chicken breast, not turkey. The portion is about 150g, not 250g.',
               ),
@@ -78,9 +78,9 @@ class _ReportMealScreenState extends State<ReportMealScreen> {
         child: Padding(
           padding: EdgeInsets.fromLTRB(
             AppSpacing.edge,
-            AppSpacing.sm,
+            AppSpacing.s,
             AppSpacing.edge,
-            AppSpacing.lg + MediaQuery.of(context).viewInsets.bottom,
+            AppSpacing.l + MediaQuery.of(context).viewInsets.bottom,
           ),
           child: GradientPillButton(
             label: _isSubmitting ? 'Reporting...' : 'Report',
@@ -148,7 +148,7 @@ class _FeedbackInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: AppSizes.feedbackInputHeight,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.lg),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.l),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppRadii.md),
         border: Border.all(color: AppColors.textPrimary, width: 2),
@@ -178,7 +178,7 @@ class _ExampleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.lg),
+      padding: const EdgeInsets.all(AppSpacing.l),
       decoration: BoxDecoration(
         color: AppColors.surfaceSubtle,
         borderRadius: BorderRadius.circular(AppRadii.md),

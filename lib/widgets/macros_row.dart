@@ -21,7 +21,7 @@ class MacrosRow extends StatelessWidget {
           icon: Icons.fitness_center_rounded,
           color: AppColors.macroProtein,
         ),
-        const SizedBox(width: AppSpacing.sm),
+        const SizedBox(width: AppSpacing.s),
         MacrosCard(
           label: 'Carbs eaten',
           current: caloriesPlanEnabled ? dayRecord.totalCarbs : dayRecord.totalCarbs,
@@ -29,7 +29,7 @@ class MacrosRow extends StatelessWidget {
           icon: Icons.spa_rounded,
           color: AppColors.macroCarbs,
         ),
-        const SizedBox(width: AppSpacing.sm),
+        const SizedBox(width: AppSpacing.s),
         MacrosCard(
           label: 'Fat eaten',
           current: caloriesPlanEnabled ? dayRecord.totalFats : dayRecord.totalFats,

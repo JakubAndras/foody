@@ -11,16 +11,16 @@ class PreferencesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProfileGradientScaffold(
       scroll: true,
-      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.lg, AppSpacing.screen, AppSpacing.xl),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.l, AppSpacing.screen, AppSpacing.xl),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ProfileTopBar(title: 'Preferences', onBack: () => Get.back()),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.m),
           ProfileCard(
             radius: AppRadii.lg,
             shadow: AppShadows.cardSubtle,
-            padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.md, AppSpacing.screen, AppSpacing.screen),
+            padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.m, AppSpacing.screen, AppSpacing.screen),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: const [
@@ -30,19 +30,19 @@ class PreferencesScreen extends StatelessWidget {
                   'Choose light, dark, or system appearance',
                   style: AppTextStyles.body13,
                 ),
-                SizedBox(height: AppSpacing.md),
+                SizedBox(height: AppSpacing.m),
                 _AppearanceSegmented(),
               ],
             ),
           ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.m),
           ProfileCard(
             radius: AppRadii.lg,
             shadow: AppShadows.cardSubtle,
             padding: const EdgeInsets.all(AppSpacing.screen),
             child: const Text('Language', style: AppTextStyles.body15),
           ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.m),
           ProfileCard(
             radius: AppRadii.lg,
             shadow: AppShadows.cardSubtle,
@@ -94,9 +94,9 @@ class _AppearanceSegmented extends StatelessWidget {
       child: Row(
         children: const [
           _SegmentItem(label: 'System', icon: Icons.computer, isActive: false),
-          SizedBox(width: AppSpacing.sm),
+          SizedBox(width: AppSpacing.s),
           _SegmentItem(label: 'Light', icon: Icons.light_mode, isActive: true),
-          SizedBox(width: AppSpacing.sm),
+          SizedBox(width: AppSpacing.s),
           _SegmentItem(label: 'Dark', icon: Icons.dark_mode, isActive: false),
         ],
       ),
@@ -158,7 +158,7 @@ class _ToggleRow extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

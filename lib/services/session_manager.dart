@@ -26,7 +26,10 @@ class SessionManager extends GetxService {
   final RxnDouble weightKg = RxnDouble();
   final RxnDouble goalWeightKg = RxnDouble();
   final Rxn<ProfileSex> sex = Rxn<ProfileSex>();
+  final Rxn<ProfileGoal> goal = Rxn<ProfileGoal>();
+  final RxBool prefersMetric = true.obs;
   final Rxn<DateTime> dateOfBirth = Rxn<DateTime>();
+  final RxnDouble weightChangeRateKgPerWeek = RxnDouble();
 
   Future<void> onAppInit() async {
     themeModeIndex.value = ThemeMode.values[await SharedPreferencesService.to.getInt(key: themeModeKey) ?? 0];
@@ -37,8 +40,12 @@ class SessionManager extends GetxService {
     goalWeightKg.value = await SharedPreferencesService.to.getDouble(key: profileGoalWeightKgKey);
     final sexCode = await SharedPreferencesService.to.getString(key: profileSexKey);
     sex.value = profileSexFromCode(sexCode);
+    final goalCode = await SharedPreferencesService.to.getString(key: profileGoalKey);
+    goal.value = profileGoalFromCode(goalCode);
+    prefersMetric.value = await SharedPreferencesService.to.getBool(key: profilePrefersMetricKey) ?? true;
     final dobMillis = await SharedPreferencesService.to.getInt(key: profileDobKey);
     dateOfBirth.value = dobMillis == null ? null : DateTime.fromMillisecondsSinceEpoch(dobMillis);
+    weightChangeRateKgPerWeek.value = await SharedPreferencesService.to.getDouble(key: profileWeightChangeRateKgPerWeekKey);
   }
 
   Future<void> setOnboardingComplete(bool value) async {
@@ -74,12 +81,36 @@ class SessionManager extends GetxService {
     );
   }
 
+  Future<void> setGoal(ProfileGoal? value) async {
+    goal.value = value;
+    await SharedPreferencesService.to.setString(
+      key: profileGoalKey,
+      value: value?.code,
+    );
+  }
+
+  Future<void> setPrefersMetric(bool value) async {
+    prefersMetric.value = value;
+    await SharedPreferencesService.to.setBool(
+      key: profilePrefersMetricKey,
+      value: value,
+    );
+  }
+
   Future<void> setDateOfBirth(DateTime? value) async {
     final normalized = value == null ? null : DateTime(value.year, value.month, value.day);
     dateOfBirth.value = normalized;
     await SharedPreferencesService.to.setInt(
       key: profileDobKey,
       value: normalized?.millisecondsSinceEpoch,
+    );
+  }
+
+  Future<void> setWeightChangeRateKgPerWeek(double? value) async {
+    weightChangeRateKgPerWeek.value = value;
+    await SharedPreferencesService.to.setDouble(
+      key: profileWeightChangeRateKgPerWeekKey,
+      value: value,
     );
   }
 }

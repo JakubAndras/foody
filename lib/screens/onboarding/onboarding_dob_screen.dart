@@ -23,6 +23,7 @@ class OnboardingDobScreen extends StatefulWidget {
 }
 
 class _OnboardingDobScreenState extends State<OnboardingDobScreen> {
+  static const int _defaultYear = 2000;
   static const List<String> _months = [
     'January',
     'February',
@@ -43,6 +44,21 @@ class _OnboardingDobScreenState extends State<OnboardingDobScreen> {
   int _dayIndex = 0;
   int _yearIndex = 0;
 
+  int get _selectedYear => _years[_yearIndex];
+
+  int get _selectedMonth => _monthIndex + 1;
+
+  int get _maxDaysInSelectedMonth =>
+      DateUtils.getDaysInMonth(_selectedYear, _selectedMonth);
+
+  List<String> get _dayValues =>
+      List.generate(_maxDaysInSelectedMonth, (index) => '${index + 1}');
+
+  void _clampDayIndexToValidRange() {
+    final int maxDayIndex = _maxDaysInSelectedMonth - 1;
+    _dayIndex = _dayIndex.clamp(0, maxDayIndex);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -51,15 +67,19 @@ class _OnboardingDobScreenState extends State<OnboardingDobScreen> {
     final storedDob = SessionManager.to.dateOfBirth.value;
     if (storedDob != null) {
       _monthIndex = storedDob.month - 1;
-      _dayIndex = (storedDob.day - 1).clamp(0, 30);
       final yearIndex = _years.indexOf(storedDob.year);
       _yearIndex = yearIndex < 0 ? (_years.length / 2).floor() : yearIndex;
+      _dayIndex = (storedDob.day - 1).clamp(0, _maxDaysInSelectedMonth - 1);
     } else {
-      _monthIndex = (_months.length / 2).floor();
+      _monthIndex = 0;
       _dayIndex = 14;
-      _yearIndex = (_years.length / 2).floor();
+      final defaultYearIndex = _years.indexOf(_defaultYear);
+      _yearIndex =
+          defaultYearIndex < 0 ? (_years.length / 2).floor() : defaultYearIndex;
     }
+    _clampDayIndexToValidRange();
   }
+
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
@@ -70,10 +90,9 @@ class _OnboardingDobScreenState extends State<OnboardingDobScreen> {
       bottom: OnboardingPrimaryButton(
         label: 'Continue',
         onPressed: () async {
-          final int year = _years[_yearIndex];
-          final int month = _monthIndex + 1;
-          final int maxDay = DateUtils.getDaysInMonth(year, month);
-          final int day = (_dayIndex + 1).clamp(1, maxDay);
+          final int day = _dayIndex + 1;
+          final int year = _selectedYear;
+          final int month = _selectedMonth;
           await SessionManager.to.setDateOfBirth(DateTime(year, month, day));
           widget.onNext();
         },
@@ -82,10 +101,11 @@ class _OnboardingDobScreenState extends State<OnboardingDobScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('When were you born?', style: textTheme.headlineLarge),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.s),
           Text(
             'This will be used to calibrate your custom plan.',
-            style: textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
+            style:
+                textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
           ),
           const SizedBox(height: AppSpacing.xl),
           Row(
@@ -94,24 +114,30 @@ class _OnboardingDobScreenState extends State<OnboardingDobScreen> {
                 flex: 2,
                 child: _DobPickerColumn(
                   values: _months,
-                  initialIndex: _monthIndex,
-                  onChanged: (index) => setState(() => _monthIndex = index),
+                  selectedIndex: _monthIndex,
+                  onChanged: (index) => setState(() {
+                    _monthIndex = index;
+                    _clampDayIndexToValidRange();
+                  }),
                 ),
               ),
-              const SizedBox(width: AppSpacing.sm),
+              const SizedBox(width: AppSpacing.s),
               Expanded(
                 child: _DobPickerColumn(
-                  values: List.generate(31, (index) => '${index + 1}'),
-                  initialIndex: _dayIndex,
+                  values: _dayValues,
+                  selectedIndex: _dayIndex,
                   onChanged: (index) => setState(() => _dayIndex = index),
                 ),
               ),
-              const SizedBox(width: AppSpacing.sm),
+              const SizedBox(width: AppSpacing.s),
               Expanded(
                 child: _DobPickerColumn(
                   values: _years.map((value) => '$value').toList(),
-                  initialIndex: _yearIndex,
-                  onChanged: (index) => setState(() => _yearIndex = index),
+                  selectedIndex: _yearIndex,
+                  onChanged: (index) => setState(() {
+                    _yearIndex = index;
+                    _clampDayIndexToValidRange();
+                  }),
                 ),
               ),
             ],
@@ -125,12 +151,12 @@ class _OnboardingDobScreenState extends State<OnboardingDobScreen> {
 class _DobPickerColumn extends StatefulWidget {
   const _DobPickerColumn({
     required this.values,
-    required this.initialIndex,
+    required this.selectedIndex,
     required this.onChanged,
   });
 
   final List<String> values;
-  final int initialIndex;
+  final int selectedIndex;
   final ValueChanged<int> onChanged;
 
   @override
@@ -139,27 +165,52 @@ class _DobPickerColumn extends StatefulWidget {
 
 class _DobPickerColumnState extends State<_DobPickerColumn> {
   int _selectedIndex = 0;
+  late FixedExtentScrollController _controller;
 
   @override
   void initState() {
     super.initState();
-    _selectedIndex = widget.initialIndex.clamp(0, widget.values.length - 1);
+    _selectedIndex = widget.selectedIndex.clamp(0, widget.values.length - 1);
+    _controller = FixedExtentScrollController(initialItem: _selectedIndex);
+  }
+
+  @override
+  void didUpdateWidget(covariant _DobPickerColumn oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final int nextSelected =
+        widget.selectedIndex.clamp(0, widget.values.length - 1);
+    if (nextSelected == _selectedIndex) return;
+    _selectedIndex = nextSelected;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && _controller.hasClients) {
+        _controller.jumpToItem(nextSelected);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final TextStyle selectedStyle = Theme.of(context).textTheme.titleMedium!.copyWith(
-          fontWeight: FontWeight.w600,
-          color: AppColors.textPrimary,
-        );
+    final TextStyle selectedStyle =
+        Theme.of(context).textTheme.titleMedium!.copyWith(
+              fontWeight: FontWeight.w600,
+              color: AppColors.textPrimary,
+            );
 
-    final TextStyle unselectedStyle = Theme.of(context).textTheme.bodyLarge!.copyWith(
-          color: AppColors.textTertiary,
-        );
+    final TextStyle unselectedStyle =
+        Theme.of(context).textTheme.bodyLarge!.copyWith(
+              color: AppColors.textTertiary,
+            );
 
     return SizedBox(
       height: AppSizes.dobPickerHeight,
       child: CupertinoPicker(
+        scrollController: _controller,
         itemExtent: AppSizes.pickerItemHeight,
         squeeze: 1.05,
         useMagnifier: true,
@@ -167,7 +218,8 @@ class _DobPickerColumnState extends State<_DobPickerColumn> {
         selectionOverlay: Container(
           margin: const EdgeInsets.symmetric(horizontal: AppSpacing.xxs),
           decoration: BoxDecoration(
-            color: AppColors.surfaceSubtle,
+            color: Colors.transparent,
+            border: Border.all(color: AppColors.outline),
             borderRadius: BorderRadius.circular(AppRadii.sm),
           ),
         ),

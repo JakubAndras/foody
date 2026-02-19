@@ -26,7 +26,7 @@ class _ScanOnboardingScreenState extends State<ScanOnboardingScreen> {
       ],
     ),
     _ScanOnboardingPageData(
-      title: 'AI analyzes your food',
+      title: 'AI analyzes your food:',
       bullets: [
         _BulletData(icon: Icons.camera_outlined, label: 'Ingredients are identified'),
         _BulletData(icon: Icons.flash_on_outlined, label: 'Takes a few seconds'),
@@ -34,7 +34,7 @@ class _ScanOnboardingScreenState extends State<ScanOnboardingScreen> {
       ],
     ),
     _ScanOnboardingPageData(
-      title: 'Fix results, if necessary',
+      title: 'Fix results, if necessary:',
       bullets: [
         _BulletData(icon: Icons.auto_awesome_outlined, label: 'Check that the AI analysis is accurate'),
         _BulletData(icon: Icons.add_circle_outline, label: 'Add or remove ingredients as needed'),
@@ -52,9 +52,9 @@ class _ScanOnboardingScreenState extends State<ScanOnboardingScreen> {
     _ScanOnboardingPageData(
       title: 'For fastest process:',
       bullets: [
-        _BulletData(icon: Icons.emoji_food_beverage_outlined, label: 'When cooking your own meal'),
-        // _BulletData(icon: Icons.photo_library_outlined, label: 'Capture all ingredients together in one photo'),
-        // _BulletData(icon: Icons.bolt_outlined, label: 'Save time by logging everything at once'),
+        _BulletData(icon: Icons.soup_kitchen_outlined, label: 'When cooking your own meal'), // Icons.emoji_food_beverage_outlined
+        _BulletData(icon: Icons.photo_library_outlined, label: 'Capture all ingredients together in one photo'),
+        _BulletData(icon: Icons.bolt_outlined, label: 'Save time by logging everything at once'),
       ],
     ),
   ];
@@ -86,8 +86,31 @@ class _ScanOnboardingScreenState extends State<ScanOnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isLastPage = _activeIndex == _pages.length - 1;
     return Scaffold(
       backgroundColor: AppColors.background,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ScanIndicatorDots(count: _pages.length, activeIndex: _activeIndex),
+              const SizedBox(height: AppSpacing.m),
+              SizedBox(
+                width: double.infinity,
+                child: ScanPrimaryButton(
+                  label: isLastPage ? 'Scan now' : 'Next',
+                  onPressed: _next,
+                  height: AppSizes.buttonHeightCompact,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
       body: SafeArea(
         bottom: false,
         child: Column(
@@ -99,7 +122,9 @@ class _ScanOnboardingScreenState extends State<ScanOnboardingScreen> {
                 onPageChanged: (index) => setState(() => _activeIndex = index),
                 itemBuilder: (context, index) {
                   final data = _pages[index];
-                  return _ScanOnboardingPage(data: data, index: index);
+                  return _ScanOnboardingPage(
+                    data: data,
+                  );
                 },
               ),
             ),
@@ -113,58 +138,38 @@ class _ScanOnboardingScreenState extends State<ScanOnboardingScreen> {
 class _ScanOnboardingPage extends StatelessWidget {
   const _ScanOnboardingPage({
     required this.data,
-    required this.index,
   });
 
   final _ScanOnboardingPageData data;
-  final int index;
 
   @override
   Widget build(BuildContext context) {
-    final isLast = index == 4;
+    const bottomOverlayReserve = AppSpacing.xl + AppSizes.scanIndicatorDot + AppSpacing.m + AppSizes.buttonHeightCompact + AppSpacing.m;
     return Column(
       children: [
-        _buildImageHeader(),
+        _buildImageHeader(context),
         Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildContent(context),
-                const Spacer(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-                  child: ScanIndicatorDots(count: 5, activeIndex: index),
-                ),
-                const SizedBox(height: AppSpacing.xl),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-                  child: ScanPrimaryButton(
-                    label: isLast ? 'Scan now' : 'Next',
-                    onPressed: () {
-                      final state = context.findAncestorStateOfType<_ScanOnboardingScreenState>();
-                      state?._next();
-                    },
-                    height: AppSizes.buttonHeightCompact,
-                  ),
-                ),
-              ],
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.only(
+              top: AppSpacing.xl,
+              bottom: bottomOverlayReserve,
             ),
+            child: _buildContent(context),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildImageHeader() {
+  Widget _buildImageHeader(BuildContext context) {
+    final imageHeight = (MediaQuery.sizeOf(context).height * 0.42).clamp(300.0, 440.0);
     return ClipRRect(
       borderRadius: const BorderRadius.only(
         bottomLeft: Radius.circular(AppRadii.xl),
         bottomRight: Radius.circular(AppRadii.xl),
       ),
       child: Container(
-        height: 497,
+        height: imageHeight,
         width: double.infinity,
         decoration: const BoxDecoration(
           gradient: AppGradients.scanPlaceholder,
@@ -181,12 +186,12 @@ class _ScanOnboardingPage extends StatelessWidget {
 
   Widget _buildContent(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(data.title, style: AppTextStyles.scanTitle),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.l),
           for (final bullet in data.bullets) ...[
             ScanBulletRow(icon: bullet.icon, label: bullet.label),
             const SizedBox(height: AppSpacing.screen),

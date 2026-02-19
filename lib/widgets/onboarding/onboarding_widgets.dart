@@ -26,49 +26,68 @@ class OnboardingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final EdgeInsetsGeometry resolvedPadding = padding ??
         const EdgeInsets.symmetric(
-          horizontal: AppSpacing.md,
-          vertical: AppSpacing.lg,
+          horizontal: AppSpacing.m,
+          vertical: AppSpacing.l,
         );
+    final bool hasTopChrome = progress != null || showBack;
+    final double contentTopInset = hasTopChrome ? AppSizes.topBarHeight : 0;
+
+    final media = MediaQuery.of(context);
+    final double topInset = media.padding.top;
+    final double bottomInset = media.padding.bottom;
+    final double bottomBarHeight = bottom == null ? 0 : AppSizes.buttonHeight + AppSpacing.l + bottomInset;
+    final Widget? floatingActionButton = bottom == null
+        ? null
+        : SafeArea(
+            top: false,
+            bottom: false,
+            minimum: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+            child: SizedBox(
+              width: double.infinity,
+              child: bottom,
+            ),
+          );
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            SingleChildScrollView(
-              padding: EdgeInsets.only(
-                top: AppSizes.topBarHeight + AppSpacing.lg,
-                bottom: AppSpacing.xl,
-              ),
-              child: Padding(
-                padding: resolvedPadding,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    child,
-                    if (bottom != null) ...[
-                      const SizedBox(height: AppSpacing.xl),
-                      bottom!,
+      floatingActionButton: floatingActionButton,
+      floatingActionButtonLocation: bottom == null ? null : FloatingActionButtonLocation.centerFloat,
+      body: Stack(
+        children: [
+          SafeArea(
+            bottom: false,
+            child: Padding(
+              padding: EdgeInsets.only(top: contentTopInset),
+              child: SingleChildScrollView(
+                padding: EdgeInsets.only(
+                  bottom: AppSpacing.xl + bottomBarHeight,
+                ),
+                child: Padding(
+                  padding: resolvedPadding,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      child,
                     ],
-                  ],
+                  ),
                 ),
               ),
             ),
-            if (progress != null)
-              Positioned(
-                left: AppSpacing.lg,
-                right: AppSpacing.md,
-                top: AppSpacing.sm,
-                child: OnboardingProgressBar(value: progress!),
-              ),
-            if (showBack)
-              Positioned(
-                left: AppSpacing.md,
-                top: 0,
-                child: OnboardingBackButton(onPressed: onBack),
-              ),
-          ],
-        ),
+          ),
+          if (progress != null)
+            Positioned(
+              left: AppSpacing.xl + 32,
+              right: AppSpacing.m,
+              top: topInset + AppSpacing.m + 2,
+              child: OnboardingProgressBar(value: progress!),
+            ),
+          if (showBack)
+            Positioned(
+              left: AppSpacing.m,
+              top: topInset,
+              child: OnboardingBackButton(onPressed: onBack),
+            ),
+        ],
       ),
     );
   }
@@ -152,11 +171,8 @@ class OnboardingPrimaryButton extends StatelessWidget {
           fontWeight: FontWeight.w600,
         );
 
-    final List<Color> colors = isEnabled
-        ? AppGradients.primary.colors
-        : AppGradients.primary.colors
-            .map((color) => color.withValues(alpha: 0.5))
-            .toList();
+    final List<Color> colors =
+        isEnabled ? AppGradients.primary.colors : AppGradients.primary.colors.map((color) => color.withValues(alpha: 0.5)).toList();
 
     return SizedBox(
       height: AppSizes.buttonHeight,
@@ -181,7 +197,7 @@ class OnboardingPrimaryButton extends StatelessWidget {
                 children: [
                   if (leading != null) ...[
                     leading!,
-                    const SizedBox(width: AppSpacing.sm),
+                    const SizedBox(width: AppSpacing.s),
                   ],
                   Text(label, style: labelStyle),
                 ],
@@ -232,7 +248,7 @@ class OnboardingSolidButton extends StatelessWidget {
               children: [
                 if (leading != null) ...[
                   leading!,
-                  const SizedBox(width: AppSpacing.sm),
+                  const SizedBox(width: AppSpacing.s),
                 ],
                 Text(label, style: labelStyle),
               ],
@@ -281,7 +297,7 @@ class OnboardingOutlinedButton extends StatelessWidget {
               children: [
                 if (leading != null) ...[
                   leading!,
-                  const SizedBox(width: AppSpacing.sm),
+                  const SizedBox(width: AppSpacing.s),
                 ],
                 Text(label, style: labelStyle),
               ],
@@ -332,7 +348,7 @@ class OnboardingLanguageChip extends StatelessWidget {
         filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
         child: Container(
           padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.sm,
+            horizontal: AppSpacing.s,
             vertical: AppSpacing.xs,
           ),
           decoration: BoxDecoration(
@@ -388,12 +404,12 @@ class OnboardingOptionCard extends StatelessWidget {
           height: height,
           width: double.infinity,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
             child: Row(
               children: [
                 if (leading != null) ...[
                   leading!,
-                  const SizedBox(width: AppSpacing.md),
+                  const SizedBox(width: AppSpacing.m),
                 ],
                 Expanded(
                   child: Column(
@@ -429,26 +445,80 @@ class OnboardingOptionCard extends StatelessWidget {
   }
 }
 
-class OnboardingPillChip extends StatelessWidget {
-  const OnboardingPillChip({super.key, required this.label, this.textColor, this.backgroundColor});
+class OnboardingPillChipSmall extends StatelessWidget {
+  const OnboardingPillChipSmall({
+    super.key,
+    required this.label,
+    this.textColor,
+    this.backgroundColor,
+    this.leading,
+  });
 
   final String label;
   final Color? textColor;
   final Color? backgroundColor;
+  final Widget? leading;
 
   @override
   Widget build(BuildContext context) {
     final TextStyle? style = Theme.of(context).textTheme.bodyLarge?.copyWith(
           color: textColor ?? AppColors.textPrimary,
         );
-
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xxs),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.xxs),
       decoration: BoxDecoration(
         color: backgroundColor ?? AppColors.surfaceChip,
         borderRadius: BorderRadius.circular(AppRadii.lg),
       ),
-      child: Text(label, style: style),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (leading != null) ...[
+            leading!,
+            const SizedBox(width: AppSpacing.xxs),
+          ],
+          Text(label, style: style),
+        ],
+      ),
+    );
+  }
+}
+
+class OnboardingPillChipBig extends StatelessWidget {
+  const OnboardingPillChipBig({
+    super.key,
+    required this.label,
+    this.textColor,
+    this.backgroundColor,
+    this.leading,
+  });
+
+  final String label;
+  final Color? textColor;
+  final Color? backgroundColor;
+  final Widget? leading;
+
+  @override
+  Widget build(BuildContext context) {
+    final TextStyle? style = Theme.of(context).textTheme.titleLarge?.copyWith(
+          color: textColor ?? AppColors.textPrimary,
+        );
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.xs),
+      decoration: BoxDecoration(
+        color: backgroundColor ?? AppColors.surfaceChip,
+        borderRadius: BorderRadius.circular(AppRadii.lg),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (leading != null) ...[
+            leading!,
+            const SizedBox(width: AppSpacing.xxs),
+          ],
+          Text(label, style: style),
+        ],
+      ),
     );
   }
 }
@@ -457,7 +527,7 @@ class OnboardingSurfaceCard extends StatelessWidget {
   const OnboardingSurfaceCard({
     super.key,
     required this.child,
-    this.padding = const EdgeInsets.all(AppSpacing.md),
+    this.padding = const EdgeInsets.all(AppSpacing.m),
     this.radius = AppRadii.lg,
   });
 
@@ -547,6 +617,7 @@ class OnboardingRingChart extends StatelessWidget {
     required this.unit,
     this.size = AppSizes.ringSize,
     this.strokeWidth = AppSizes.ringStroke,
+    this.centerChild,
   });
 
   final double value;
@@ -555,6 +626,7 @@ class OnboardingRingChart extends StatelessWidget {
   final String unit;
   final double size;
   final double strokeWidth;
+  final Widget? centerChild;
 
   @override
   Widget build(BuildContext context) {
@@ -573,21 +645,22 @@ class OnboardingRingChart extends StatelessWidget {
               strokeWidth: strokeWidth,
             ),
             child: Center(
-              child: RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: label,
-                      style: textTheme.headlineMedium?.copyWith(color: AppColors.textPrimary),
+              child: centerChild ??
+                  RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: label,
+                          style: textTheme.headlineMedium?.copyWith(color: AppColors.textPrimary),
+                        ),
+                        TextSpan(
+                          text: unit,
+                          style: textTheme.titleSmall?.copyWith(color: AppColors.textMuted),
+                        ),
+                      ],
                     ),
-                    TextSpan(
-                      text: unit,
-                      style: textTheme.titleSmall?.copyWith(color: AppColors.textMuted),
-                    ),
-                  ],
-                ),
-              ),
+                  ),
             ),
           ),
         ),
@@ -664,8 +737,7 @@ class _RulerPainter extends CustomPainter {
       ..color = AppColors.textTertiary.withValues(alpha: 0.6)
       ..strokeWidth = 2;
 
-    final Paint highlightPaint = Paint()
-      ..color = AppColors.border;
+    final Paint highlightPaint = Paint()..color = AppColors.border;
 
     final double centerX = size.width / 2;
     final Rect highlightRect = Rect.fromCenter(
@@ -768,7 +840,7 @@ class OnboardingSmallBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.xxs),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s, vertical: AppSpacing.xxs),
       decoration: BoxDecoration(
         color: AppColors.surfaceSubtle,
         borderRadius: BorderRadius.circular(AppRadii.md),
@@ -776,32 +848,6 @@ class OnboardingSmallBadge extends StatelessWidget {
       child: Text(
         label,
         style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
-      ),
-    );
-  }
-}
-
-class OnboardingGoogleMark extends StatelessWidget {
-  const OnboardingGoogleMark({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final TextStyle style = Theme.of(context).textTheme.titleMedium!.copyWith(
-          fontWeight: FontWeight.w700,
-          color: AppColors.textPrimary,
-        );
-
-    return RichText(
-      text: TextSpan(
-        style: style,
-        children: const [
-          TextSpan(text: 'G', style: TextStyle(color: AppColors.googleBlue)),
-          TextSpan(text: 'o', style: TextStyle(color: AppColors.googleRed)),
-          TextSpan(text: 'o', style: TextStyle(color: AppColors.googleYellow)),
-          TextSpan(text: 'g', style: TextStyle(color: AppColors.googleBlue)),
-          TextSpan(text: 'l', style: TextStyle(color: AppColors.googleGreen)),
-          TextSpan(text: 'e', style: TextStyle(color: AppColors.googleRed)),
-        ],
       ),
     );
   }

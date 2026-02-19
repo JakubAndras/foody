@@ -55,7 +55,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/translations/
-    - assets/figma/
+    - assets/images/
     - .env
 
   fonts:

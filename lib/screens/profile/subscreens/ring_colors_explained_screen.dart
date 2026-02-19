@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -11,18 +13,18 @@ class RingColorsExplainedScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProfileGradientScaffold(
       scroll: true,
-      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.lg, AppSpacing.screen, AppSpacing.xl),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.l, AppSpacing.screen, AppSpacing.xl),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ProfileBackButton(onPressed: () => Get.back()),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.m),
           Text('Ring Colors Explained', style: AppTextStyles.h1Tight.copyWith(fontWeight: FontWeight.w700)),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.l),
           ProfileCard(
             color: AppColors.surfaceCard,
             radius: AppRadii.xl,
-            padding: const EdgeInsets.all(AppSpacing.lg),
+            padding: const EdgeInsets.all(AppSpacing.l),
             child: Column(
               children: [
                 Row(
@@ -32,24 +34,52 @@ class RingColorsExplainedScreen extends StatelessWidget {
                     _FirePill(),
                   ],
                 ),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.m),
                 const _WeekStrip(),
               ],
             ),
           ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.m),
           Text(
-            'On the homepage calendar, the colored rings around each date show how close you were to your daily calorie goal:',
+            'Each day ring has 10 segments.',
             style: AppTextStyles.body14Relaxed,
           ),
-          const SizedBox(height: AppSpacing.lg),
-          const _LegendItem(color: AppColors.successStrong, title: 'Green', description: 'Up to 50 calories over your deficit target'),
-          const SizedBox(height: AppSpacing.md),
-          const _LegendItem(color: AppColors.warning, title: 'Yellow', description: '50–300 calories over your goal'),
-          const SizedBox(height: AppSpacing.md),
-          const _LegendItem(color: AppColors.error, title: 'Red', description: 'More than 300 calories over your goal'),
-          const SizedBox(height: AppSpacing.md),
-          const _LegendItem(color: AppColors.borderStrong, title: 'Dotted', description: 'No meals logged that day', isDotted: true),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            '1 segment = 10% of your daily goal.',
+            style: AppTextStyles.body14Relaxed,
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            'Example: 1500 / 2000 kcal -> 75% -> 8 segments.',
+            style: AppTextStyles.body14Relaxed,
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            'Red starts after 105%. Example: 125% -> 3 red segments.',
+            style: AppTextStyles.body14Relaxed,
+          ),
+          const SizedBox(height: AppSpacing.l),
+          const _LegendItem(
+            title: 'Dark Segment',
+            description: 'Calories eaten within goal.',
+            filledSegments: 8,
+            overflowSegments: 0,
+          ),
+          const SizedBox(height: AppSpacing.m),
+          const _LegendItem(
+            title: 'Red Segment',
+            description: 'Calories above goal.',
+            filledSegments: 10,
+            overflowSegments: 3,
+          ),
+          const SizedBox(height: AppSpacing.m),
+          const _LegendItem(
+            title: 'Gray Segment',
+            description: 'Not eaten yet.',
+            filledSegments: 3,
+            overflowSegments: 0,
+          ),
         ],
       ),
     );
@@ -61,7 +91,7 @@ class _FirePill extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: AppSizes.buttonHeightXs,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.pill),
@@ -71,7 +101,7 @@ class _FirePill extends StatelessWidget {
         children: [
           const Text('🔥', style: TextStyle(fontSize: 16)),
           const SizedBox(width: 6),
-          Text('15', style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w700)),
+          Text('6', style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w700)),
         ],
       ),
     );
@@ -84,13 +114,13 @@ class _WeekStrip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final days = [
-      _DayData('Sun', '10', ring: AppColors.error),
-      _DayData('Mon', '11', ring: AppColors.outline),
-      _DayData('Tue', '12', ring: AppColors.successStrong),
-      _DayData('Wed', '13', ring: AppColors.primarySoft, filled: true),
-      _DayData('Thu', '14', ring: AppColors.outline),
-      _DayData('Fri', '15', ring: AppColors.outline),
-      _DayData('Sat', '16', ring: AppColors.outline),
+      _DayData('Mon', '10', filledSegments: 0, overflowSegments: 0),
+      _DayData('Tue', '11', filledSegments: 8, overflowSegments: 0),
+      _DayData('Wed', '12', filledSegments: 10, overflowSegments: 0),
+      _DayData('Thu', '13', filledSegments: 6, overflowSegments: 0),
+      _DayData('Fri', '14', filledSegments: 10, overflowSegments: 1),
+      _DayData('Sat', '15', filledSegments: 3, overflowSegments: 0),
+      _DayData('Sun', '16', filledSegments: 10, overflowSegments: 4, selected: true),
     ];
 
     return Row(
@@ -101,12 +131,19 @@ class _WeekStrip extends StatelessWidget {
 }
 
 class _DayData {
-  const _DayData(this.label, this.value, {required this.ring, this.filled = false});
+  const _DayData(
+    this.label,
+    this.value, {
+    required this.filledSegments,
+    required this.overflowSegments,
+    this.selected = false,
+  });
 
   final String label;
   final String value;
-  final Color ring;
-  final bool filled;
+  final int filledSegments;
+  final int overflowSegments;
+  final bool selected;
 }
 
 class _WeekDay extends StatelessWidget {
@@ -116,24 +153,34 @@ class _WeekDay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textColor = day.selected ? AppColors.textPrimary : AppColors.borderStrong;
+
     return Column(
       children: [
-        Text(day.label, style: AppTextStyles.label11.copyWith(color: AppColors.textSecondary)),
+        Text(day.label, style: AppTextStyles.label11.copyWith(color: textColor)),
         const SizedBox(height: AppSpacing.xs),
-        Container(
+        SizedBox(
           width: AppSizes.dateCircleSize,
           height: AppSizes.dateCircleSize,
-          decoration: BoxDecoration(
-            color: day.filled ? AppColors.primarySoft : Colors.transparent,
-            shape: BoxShape.circle,
-            border: Border.all(color: day.ring, width: AppSizes.dateCircleBorder),
-          ),
-          alignment: Alignment.center,
-          child: Text(
-            day.value,
-            style: AppTextStyles.body14.copyWith(
-              fontWeight: FontWeight.w600,
-              color: day.filled ? AppColors.onPrimary : AppColors.textPrimary,
+          child: CustomPaint(
+            painter: _SegmentRingPainter(
+              filledSegments: day.filledSegments,
+              overflowSegments: day.overflowSegments,
+              strokeWidth: AppSizes.dateCircleBorder,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(AppSizes.dateCircleBorder),
+              child: Container(
+                decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.transparent),
+                alignment: Alignment.center,
+                child: Text(
+                  day.value,
+                  style: AppTextStyles.body14.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: textColor,
+                  ),
+                ),
+              ),
             ),
           ),
         ),
@@ -144,35 +191,34 @@ class _WeekDay extends StatelessWidget {
 
 class _LegendItem extends StatelessWidget {
   const _LegendItem({
-    required this.color,
     required this.title,
     required this.description,
-    this.isDotted = false,
+    required this.filledSegments,
+    required this.overflowSegments,
   });
 
-  final Color color;
   final String title;
   final String description;
-  final bool isDotted;
+  final int filledSegments;
+  final int overflowSegments;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
+        SizedBox(
           width: 44,
           height: 44,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: color,
-              width: AppSizes.dateCircleBorder,
-              style: isDotted ? BorderStyle.solid : BorderStyle.solid,
+          child: CustomPaint(
+            painter: _SegmentRingPainter(
+              filledSegments: filledSegments,
+              overflowSegments: overflowSegments,
+              strokeWidth: AppSizes.dateCircleBorder,
             ),
           ),
         ),
-        const SizedBox(width: AppSpacing.md),
+        const SizedBox(width: AppSpacing.m),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,5 +231,54 @@ class _LegendItem extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class _SegmentRingPainter extends CustomPainter {
+  const _SegmentRingPainter({
+    required this.filledSegments,
+    required this.overflowSegments,
+    required this.strokeWidth,
+  });
+
+  final int filledSegments;
+  final int overflowSegments;
+  final double strokeWidth;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.round;
+
+    final radius = (size.shortestSide - strokeWidth) / 2;
+    final center = Offset(size.width / 2, size.height / 2);
+    final rect = Rect.fromCircle(center: center, radius: radius);
+    const int totalSegments = 10;
+    final segmentSweep = (2 * math.pi) / totalSegments;
+    final gapSweep = segmentSweep * 0.28;
+    final drawSweep = segmentSweep - gapSweep;
+    const startAngleOffset = -math.pi / 2;
+
+    for (int i = 0; i < totalSegments; i++) {
+      if (i < overflowSegments) {
+        paint.color = AppColors.error;
+      } else if (i < filledSegments) {
+        paint.color = AppColors.primarySoft;
+      } else {
+        paint.color = AppColors.borderStrong;
+      }
+
+      final start = startAngleOffset + i * segmentSweep + (gapSweep / 2);
+      canvas.drawArc(rect, start, drawSweep, false, paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _SegmentRingPainter oldDelegate) {
+    return oldDelegate.filledSegments != filledSegments ||
+        oldDelegate.overflowSegments != overflowSegments ||
+        oldDelegate.strokeWidth != strokeWidth;
   }
 }

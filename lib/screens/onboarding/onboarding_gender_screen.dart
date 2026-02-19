@@ -11,28 +11,37 @@ class OnboardingGenderScreen extends StatefulWidget {
     required this.onBack,
     required this.step,
     required this.totalSteps,
+    this.onCanProceedChanged,
   });
 
   final VoidCallback onNext;
   final VoidCallback onBack;
   final int step;
   final int totalSteps;
+  final ValueChanged<bool>? onCanProceedChanged;
 
   @override
   State<OnboardingGenderScreen> createState() => _OnboardingGenderScreenState();
 }
 
-class _OnboardingGenderScreenState extends State<OnboardingGenderScreen> {
+class _OnboardingGenderScreenState extends State<OnboardingGenderScreen> with AutomaticKeepAliveClientMixin {
   ProfileSex? _selected;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
     super.initState();
     _selected = SessionManager.to.sex.value;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.onCanProceedChanged?.call(_selected != null);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     return OnboardingPage(
@@ -52,7 +61,7 @@ class _OnboardingGenderScreenState extends State<OnboardingGenderScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Choose your Gender', style: textTheme.headlineLarge),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.s),
           Text(
             'This will be used to calibrate your custom plan.',
             style: textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
@@ -61,19 +70,28 @@ class _OnboardingGenderScreenState extends State<OnboardingGenderScreen> {
           OnboardingOptionCard(
             title: 'Male',
             selected: _selected == ProfileSex.male,
-            onTap: () => setState(() => _selected = ProfileSex.male),
+            onTap: () {
+              setState(() => _selected = ProfileSex.male);
+              widget.onCanProceedChanged?.call(true);
+            },
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.s),
           OnboardingOptionCard(
             title: 'Female',
             selected: _selected == ProfileSex.female,
-            onTap: () => setState(() => _selected = ProfileSex.female),
+            onTap: () {
+              setState(() => _selected = ProfileSex.female);
+              widget.onCanProceedChanged?.call(true);
+            },
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.s),
           OnboardingOptionCard(
             title: 'Other',
             selected: _selected == ProfileSex.other,
-            onTap: () => setState(() => _selected = ProfileSex.other),
+            onTap: () {
+              setState(() => _selected = ProfileSex.other);
+              widget.onCanProceedChanged?.call(true);
+            },
           ),
         ],
       ),

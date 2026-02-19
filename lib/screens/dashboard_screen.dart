@@ -29,39 +29,58 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
               child: SafeArea(
                 bottom: false,
                 child: Obx(() {
-                  if (dashboardController.isLoadingDayRecord.value) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  if (dashboardController.dayRecordError.isNotEmpty) {
-                    return Center(child: Text('Error: ${dashboardController.dayRecordError.value}'));
-                  }
-
                   final recordToShow = dashboardController.dayRecord.value ?? DayRecord.initial(dashboardController.selectedDate.value);
 
-                  return SingleChildScrollView(
-                    padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.md, AppSpacing.lg, AppSpacing.huge),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildHeader(context, dashboardController),
-                        const SizedBox(height: AppSpacing.md),
-                        DateSelector(
-                          selectedDate: dashboardController.selectedDate.value,
-                          onDateSelected: (date) {
-                            dashboardController.updateDate(date);
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.m, AppSpacing.l, AppSpacing.xs),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildHeader(context, dashboardController),
+                            const SizedBox(height: AppSpacing.m),
+                            DateSelector(
+                              selectedDate: dashboardController.selectedDate.value,
+                              onDateSelected: (date) {
+                                dashboardController.updateDate(date);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Builder(
+                          builder: (context) {
+                            if (dashboardController.isLoadingDayRecord.value) {
+                              return const Center(child: CircularProgressIndicator());
+                            }
+                            if (dashboardController.dayRecordError.isNotEmpty) {
+                              return Center(child: Text('Error: ${dashboardController.dayRecordError.value}'));
+                            }
+
+                            return SingleChildScrollView(
+                              padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.xs, AppSpacing.l, AppSpacing.mega + 42),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _caloriesTrackerWidget(recordToShow),
+                                  const SizedBox(height: AppSpacing.m),
+                                  RecentlyUploadedCard(
+                                    meals: recordToShow.meals,
+                                    onMealTap: (meal) async {
+                                      await Get.to(() => MealDetailScreen(meal: meal));
+                                      dashboardController.refresh();
+                                    },
+                                  ),
+                                ],
+                              ),
+                            );
                           },
                         ),
-                        const SizedBox(height: AppSpacing.lg),
-                        _caloriesTrackerWidget(recordToShow),
-                        const SizedBox(height: AppSpacing.md),
-                        RecentlyUploadedCard(
-                          meals: recordToShow.meals,
-                          onMealTap: (meal) async {
-                            await Get.to(() => MealDetailScreen(meal: meal));
-                          },
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   );
                 }),
               ),
@@ -119,7 +138,7 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
       onTap: onTap,
       child: Container(
         height: AppSizes.streakPillHeight,
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(AppRadii.pill),
@@ -137,7 +156,7 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
       caloriesTrackerWidget = Column(
         children: [
           CaloriesCard(dayRecord: recordToShow),
-          const SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: AppSpacing.s),
           MacrosRow(dayRecord: recordToShow),
         ],
       );
@@ -145,7 +164,7 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
       caloriesTrackerWidget = Column(
         children: [
           CaloriesCard(dayRecord: recordToShow, caloriesPlanEnabled: false),
-          const SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: AppSpacing.s),
           MacrosRow(dayRecord: recordToShow, caloriesPlanEnabled: false),
         ],
       );
@@ -155,7 +174,6 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
 }
 
 class _DashboardScreenController extends BaseController {
-
   @override
   void onHidden() {
     // TODO: implement onHidden

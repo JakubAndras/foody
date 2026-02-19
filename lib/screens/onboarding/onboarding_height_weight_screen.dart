@@ -1,4 +1,5 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/model/user_profile.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,34 +20,119 @@ class OnboardingHeightWeightScreen extends StatefulWidget {
   final int totalSteps;
 
   @override
-  State<OnboardingHeightWeightScreen> createState() => _OnboardingHeightWeightScreenState();
+  State<OnboardingHeightWeightScreen> createState() =>
+      _OnboardingHeightWeightScreenState();
 }
 
-class _OnboardingHeightWeightScreenState extends State<OnboardingHeightWeightScreen> {
+class _OnboardingHeightWeightScreenState
+    extends State<OnboardingHeightWeightScreen> {
   bool _metric = true;
-  late final List<int> _heightValues;
-  late final List<int> _weightValues;
-  int _heightIndex = 0;
-  int _weightIndex = 0;
+  late final List<int> _heightCmValues;
+  late final List<int> _weightKgValues;
+  late final List<int> _heightInchValues;
+  late final List<int> _weightLbValues;
+  int _selectedHeightCm = 175;
+  int _selectedWeightKg = 80;
+
+  static const int _maleDefaultHeightCm = 175;
+  static const int _maleDefaultWeightKg = 80;
+  static const int _femaleDefaultHeightCm = 160;
+  static const int _femaleDefaultWeightKg = 60;
 
   @override
   void initState() {
     super.initState();
-    _heightValues = List.generate(120, (index) => 140 + index);
-    _weightValues = List.generate(140, (index) => 40 + index);
-    _heightIndex = (_heightValues.length / 2).floor();
-    _weightIndex = (_weightValues.length / 2).floor();
+    _metric = SessionManager.to.prefersMetric.value;
+    _heightCmValues = List.generate(120, (index) => 140 + index);
+    _weightKgValues = List.generate(140, (index) => 40 + index);
+    _heightInchValues = List.generate(
+      _cmToInches(_heightCmValues.last) -
+          _cmToInches(_heightCmValues.first) +
+          1,
+      (index) => _cmToInches(_heightCmValues.first) + index,
+    );
+    _weightLbValues = List.generate(
+      _kgToPounds(_weightKgValues.last) -
+          _kgToPounds(_weightKgValues.first) +
+          1,
+      (index) => _kgToPounds(_weightKgValues.first) + index,
+    );
 
     final double? storedHeight = SessionManager.to.heightCm.value;
     final double? storedWeight = SessionManager.to.weightKg.value;
     if (storedHeight != null) {
-      final int index = storedHeight.round() - _heightValues.first;
-      _heightIndex = index.clamp(0, _heightValues.length - 1);
+      _selectedHeightCm = storedHeight.round();
+    } else {
+      final sex = SessionManager.to.sex.value;
+      if (sex == ProfileSex.female) {
+        _selectedHeightCm = _femaleDefaultHeightCm;
+      } else if (sex == ProfileSex.male) {
+        _selectedHeightCm = _maleDefaultHeightCm;
+      }
     }
     if (storedWeight != null) {
-      final int index = storedWeight.round() - _weightValues.first;
-      _weightIndex = index.clamp(0, _weightValues.length - 1);
+      _selectedWeightKg = storedWeight.round();
+    } else {
+      final sex = SessionManager.to.sex.value;
+      if (sex == ProfileSex.female) {
+        _selectedWeightKg = _femaleDefaultWeightKg;
+      } else if (sex == ProfileSex.male) {
+        _selectedWeightKg = _maleDefaultWeightKg;
+      }
     }
+
+    _selectedHeightCm =
+        _selectedHeightCm.clamp(_heightCmValues.first, _heightCmValues.last);
+    _selectedWeightKg =
+        _selectedWeightKg.clamp(_weightKgValues.first, _weightKgValues.last);
+  }
+
+  int _cmToInches(int cm) => (cm / 2.54).round();
+
+  int _inchesToCm(int inches) => (inches * 2.54).round();
+
+  int _kgToPounds(int kg) => (kg * 2.20462262185).round();
+
+  int _poundsToKg(int pounds) => (pounds / 2.20462262185).round();
+
+  String _formatFeetInches(int totalInches) {
+    final int feet = totalInches ~/ 12;
+    final int inches = totalInches % 12;
+    return '$feet\'$inches"';
+  }
+
+  int get _heightSelectedIndex {
+    if (_metric) {
+      return (_selectedHeightCm - _heightCmValues.first)
+          .clamp(0, _heightCmValues.length - 1);
+    }
+    final int selectedInches = _cmToInches(_selectedHeightCm);
+    return (selectedInches - _heightInchValues.first)
+        .clamp(0, _heightInchValues.length - 1);
+  }
+
+  int get _weightSelectedIndex {
+    if (_metric) {
+      return (_selectedWeightKg - _weightKgValues.first)
+          .clamp(0, _weightKgValues.length - 1);
+    }
+    final int selectedPounds = _kgToPounds(_selectedWeightKg);
+    return (selectedPounds - _weightLbValues.first)
+        .clamp(0, _weightLbValues.length - 1);
+  }
+
+  List<String> get _heightDisplayValues {
+    if (_metric) {
+      return _heightCmValues.map((value) => '$value cm').toList();
+    }
+    return _heightInchValues.map(_formatFeetInches).toList();
+  }
+
+  List<String> get _weightDisplayValues {
+    if (_metric) {
+      return _weightKgValues.map((value) => '$value kg').toList();
+    }
+    return _weightLbValues.map((value) => '$value lb').toList();
   }
 
   @override
@@ -59,8 +145,9 @@ class _OnboardingHeightWeightScreenState extends State<OnboardingHeightWeightScr
       bottom: OnboardingPrimaryButton(
         label: 'Continue',
         onPressed: () async {
-          await SessionManager.to.setHeightCm(_heightValues[_heightIndex].toDouble());
-          await SessionManager.to.setWeightKg(_weightValues[_weightIndex].toDouble());
+          await SessionManager.to.setHeightCm(_selectedHeightCm.toDouble());
+          await SessionManager.to.setWeightKg(_selectedWeightKg.toDouble());
+          await SessionManager.to.setPrefersMetric(_metric);
           widget.onNext();
         },
       ),
@@ -68,10 +155,11 @@ class _OnboardingHeightWeightScreenState extends State<OnboardingHeightWeightScr
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Height & weight', style: textTheme.headlineLarge),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.s),
           Text(
             'This will be used to calibrate your custom plan.',
-            style: textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
+            style:
+                textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
           ),
           const SizedBox(height: AppSpacing.xl),
           Center(
@@ -87,25 +175,45 @@ class _OnboardingHeightWeightScreenState extends State<OnboardingHeightWeightScr
                 child: Column(
                   children: [
                     Text('Height', style: textTheme.titleMedium),
-                    const SizedBox(height: AppSpacing.sm),
+                    const SizedBox(height: AppSpacing.s),
                     _PickerColumn(
-                      values: _heightValues.map((value) => '$value cm').toList(),
-                      initialIndex: _heightIndex,
-                      onSelected: (index) => _heightIndex = index,
+                      key:
+                          ValueKey('height-${_metric ? 'metric' : 'imperial'}'),
+                      values: _heightDisplayValues,
+                      selectedIndex: _heightSelectedIndex,
+                      onSelected: (index) {
+                        if (_metric) {
+                          _selectedHeightCm = _heightCmValues[index];
+                        } else {
+                          _selectedHeightCm =
+                              _inchesToCm(_heightInchValues[index]);
+                        }
+                      },
                     ),
                   ],
                 ),
               ),
-              const SizedBox(width: AppSpacing.md),
+              const SizedBox(width: AppSpacing.m),
               Expanded(
                 child: Column(
                   children: [
                     Text('Weight', style: textTheme.titleMedium),
-                    const SizedBox(height: AppSpacing.sm),
+                    const SizedBox(height: AppSpacing.s),
                     _PickerColumn(
-                      values: _weightValues.map((value) => '$value kg').toList(),
-                      initialIndex: _weightIndex,
-                      onSelected: (index) => _weightIndex = index,
+                      key:
+                          ValueKey('weight-${_metric ? 'metric' : 'imperial'}'),
+                      values: _weightDisplayValues,
+                      selectedIndex: _weightSelectedIndex,
+                      onSelected: (index) {
+                        if (_metric) {
+                          _selectedWeightKg = _weightKgValues[index];
+                        } else {
+                          _selectedWeightKg =
+                              _poundsToKg(_weightLbValues[index]);
+                        }
+                        _selectedWeightKg = _selectedWeightKg.clamp(
+                            _weightKgValues.first, _weightKgValues.last);
+                      },
                     ),
                   ],
                 ),
@@ -137,7 +245,7 @@ class _UnitToggle extends StatelessWidget {
             color: metric ? AppColors.textTertiary : AppColors.textPrimary,
           ),
         ),
-        const SizedBox(width: AppSpacing.sm),
+        const SizedBox(width: AppSpacing.s),
         GestureDetector(
           onTap: () => onChanged(!metric),
           child: Container(
@@ -162,7 +270,7 @@ class _UnitToggle extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: AppSpacing.sm),
+        const SizedBox(width: AppSpacing.s),
         Text(
           'Metric',
           style: textTheme.titleSmall?.copyWith(
@@ -176,13 +284,14 @@ class _UnitToggle extends StatelessWidget {
 
 class _PickerColumn extends StatefulWidget {
   const _PickerColumn({
+    super.key,
     required this.values,
-    required this.initialIndex,
+    required this.selectedIndex,
     required this.onSelected,
   });
 
   final List<String> values;
-  final int initialIndex;
+  final int selectedIndex;
   final ValueChanged<int> onSelected;
 
   @override
@@ -191,27 +300,53 @@ class _PickerColumn extends StatefulWidget {
 
 class _PickerColumnState extends State<_PickerColumn> {
   int _selectedIndex = 0;
+  late FixedExtentScrollController _controller;
 
   @override
   void initState() {
     super.initState();
-    _selectedIndex = widget.initialIndex.clamp(0, widget.values.length - 1);
+    _selectedIndex = widget.selectedIndex.clamp(0, widget.values.length - 1);
+    _controller = FixedExtentScrollController(initialItem: _selectedIndex);
+  }
+
+  @override
+  void didUpdateWidget(covariant _PickerColumn oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final int nextSelected =
+        widget.selectedIndex.clamp(0, widget.values.length - 1);
+    if (nextSelected == _selectedIndex) return;
+    _selectedIndex = nextSelected;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && _controller.hasClients) {
+        _controller.jumpToItem(nextSelected);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final TextStyle selectedStyle = Theme.of(context).textTheme.titleMedium!.copyWith(
-          fontWeight: FontWeight.w600,
-          color: AppColors.textPrimary,
-        );
+    final TextStyle selectedStyle =
+        Theme.of(context).textTheme.titleMedium!.copyWith(
+              fontWeight: FontWeight.w700,
+              color: AppColors.primary,
+            );
 
-    final TextStyle unselectedStyle = Theme.of(context).textTheme.bodyLarge!.copyWith(
-          color: AppColors.textTertiary,
-        );
+    final TextStyle unselectedStyle =
+        Theme.of(context).textTheme.bodyLarge!.copyWith(
+              color: AppColors.textSecondary,
+            );
 
     return SizedBox(
       height: AppSizes.pickerHeight,
       child: CupertinoPicker(
+        scrollController: _controller,
+        backgroundColor: Colors.transparent,
         itemExtent: AppSizes.pickerItemHeight,
         squeeze: 1.1,
         useMagnifier: true,
@@ -219,7 +354,8 @@ class _PickerColumnState extends State<_PickerColumn> {
         selectionOverlay: Container(
           margin: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
           decoration: BoxDecoration(
-            color: AppColors.surfaceSubtle,
+            color: Colors.transparent,
+            border: Border.all(color: AppColors.outline),
             borderRadius: BorderRadius.circular(AppRadii.sm),
           ),
         ),

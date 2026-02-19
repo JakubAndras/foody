@@ -19,13 +19,13 @@ class ScanPermissionScreen extends StatelessWidget {
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.lg),
+          padding: const EdgeInsets.all(AppSpacing.l),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: AppSpacing.xl),
               Text('Camera access', style: AppTextStyles.h3),
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: AppSpacing.m),
               Text(
                 isPermanentlyDenied
                     ? 'Camera access is disabled. Enable it in Settings to scan meals.'

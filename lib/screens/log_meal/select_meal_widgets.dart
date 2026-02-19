@@ -20,7 +20,7 @@ class SelectMealSearchBar extends StatelessWidget {
     final hasValue = controller.text.isNotEmpty;
     return Container(
       height: AppSizes.searchBarHeight,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
       decoration: BoxDecoration(
         color: AppColors.surfaceSearch,
         borderRadius: BorderRadius.circular(AppRadii.pill),
@@ -28,7 +28,7 @@ class SelectMealSearchBar extends StatelessWidget {
       child: Row(
         children: [
           const Icon(Icons.search, color: AppColors.textSecondary, size: AppSizes.iconMd),
-          const SizedBox(width: AppSpacing.sm),
+          const SizedBox(width: AppSpacing.s),
           Expanded(
             child: TextField(
               controller: controller,
@@ -82,7 +82,7 @@ class SelectMealSegmentedTabs extends StatelessWidget {
         children: List.generate(labels.length, (index) {
           final isActive = index == activeIndex;
           return Padding(
-            padding: EdgeInsets.only(right: index == labels.length - 1 ? 0 : AppSpacing.lg),
+            padding: EdgeInsets.only(right: index == labels.length - 1 ? 0 : AppSpacing.l),
             child: GestureDetector(
               onTap: () => onTap(index),
               child: IntrinsicWidth(
@@ -252,7 +252,7 @@ class SelectMealCard extends StatelessWidget {
                     : null,
               ),
             ),
-            const SizedBox(width: AppSpacing.md),
+            const SizedBox(width: AppSpacing.m),
             Expanded(
               child: Row(
                 children: [
@@ -266,9 +266,9 @@ class SelectMealCard extends StatelessWidget {
                         Row(
                           children: [
                             SelectMealMacroDot(color: AppColors.macroProtein, label: protein),
-                            const SizedBox(width: AppSpacing.sm),
+                            const SizedBox(width: AppSpacing.s),
                             SelectMealMacroDot(color: AppColors.macroCarbs, label: carbs),
-                            const SizedBox(width: AppSpacing.sm),
+                            const SizedBox(width: AppSpacing.s),
                             SelectMealMacroDot(color: AppColors.macroFats, label: fats),
                           ],
                         ),
@@ -324,7 +324,7 @@ class SelectMealInlineMacroCard extends StatelessWidget {
         boxShadow: AppShadows.cardSubtle,
       ),
       child: Padding(
-        padding: const EdgeInsets.only(right: AppSpacing.md),
+        padding: const EdgeInsets.only(right: AppSpacing.m),
         child: Row(
           children: [
             Container(
@@ -341,7 +341,7 @@ class SelectMealInlineMacroCard extends StatelessWidget {
                     : null,
               ),
             ),
-            const SizedBox(width: AppSpacing.md),
+            const SizedBox(width: AppSpacing.m),
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -383,7 +383,7 @@ class SelectMealInlineMacroCard extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(width: AppSpacing.sm),
+            const SizedBox(width: AppSpacing.s),
             GestureDetector(
               onTap: onAdd,
               child: Container(
@@ -423,7 +423,7 @@ class SelectMealIngredientRow extends StatelessWidget {
       onTap: onTap,
       child: Container(
         height: AppSizes.selectMealIngredientRowHeight,
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(AppRadii.md),
@@ -475,12 +475,12 @@ class SelectMealEmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        padding: const EdgeInsets.all(AppSpacing.l),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             const Icon(Icons.search_off, color: AppColors.textTertiary, size: AppSizes.emptyStateIconSize),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.m),
             Text(title, style: AppTextStyles.title18Tight, textAlign: TextAlign.center),
             const SizedBox(height: AppSpacing.xs),
             Text(
@@ -527,12 +527,12 @@ class SelectMealErrorState extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        padding: const EdgeInsets.all(AppSpacing.l),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             const Icon(Icons.error_outline, color: AppColors.error, size: AppSizes.emptyStateIconSize),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.m),
             Text('Something went wrong', style: AppTextStyles.title18Tight, textAlign: TextAlign.center),
             const SizedBox(height: AppSpacing.xs),
             Text(
@@ -540,7 +540,7 @@ class SelectMealErrorState extends StatelessWidget {
               style: AppTextStyles.body14Regular.copyWith(color: AppColors.textSecondary),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.m),
             TextButton(
               onPressed: onRetry,
               child: Text('Try again', style: AppTextStyles.body14.copyWith(color: AppColors.accent)),
@@ -573,7 +573,7 @@ class SelectMealPickerSheet extends StatelessWidget {
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.md),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s, vertical: AppSpacing.m),
           decoration: BoxDecoration(
             color: AppColors.surface,
             borderRadius: BorderRadius.circular(AppRadii.lg),
@@ -586,7 +586,7 @@ class SelectMealPickerSheet extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(title, style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary)),
                 ),
-                const SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: AppSpacing.s),
               ],
               ...List.generate(options.length, (index) {
                 final isSelected = index == selectedIndex;

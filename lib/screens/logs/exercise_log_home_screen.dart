@@ -42,7 +42,7 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.md, AppSpacing.lg, AppSpacing.sm),
+              padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.m, AppSpacing.l, AppSpacing.s),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -60,15 +60,15 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
               child: ExerciseSearchBar(
                 controller: _searchController,
                 onChanged: (_) => setState(() {}),
               ),
             ),
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.s),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
               child: Row(
                 children: [
                   ExerciseFilterChip(
@@ -76,7 +76,7 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
                     selected: !_showFavorites,
                     onTap: () => setState(() => _showFavorites = false),
                   ),
-                  const SizedBox(width: AppSpacing.sm),
+                  const SizedBox(width: AppSpacing.s),
                   ExerciseFilterChip(
                     label: 'Favorites',
                     selected: _showFavorites,
@@ -86,12 +86,12 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.s),
             Expanded(
               child: ListView.separated(
-                padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.sm, AppSpacing.lg, AppSpacing.xl),
+                padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.s, AppSpacing.l, AppSpacing.xl),
                 itemCount: filtered.length,
-                separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.sm),
+                separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.s),
                 itemBuilder: (context, index) {
                   final item = filtered[index];
                   return ExerciseListCard(
@@ -105,7 +105,7 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(AppSpacing.lg, 0, AppSpacing.lg, AppSpacing.lg),
+              padding: const EdgeInsets.fromLTRB(AppSpacing.l, 0, AppSpacing.l, AppSpacing.l),
               child: GestureDetector(
                 onTap: () => Get.to(() => const AddExerciseScreen()),
                 child: Container(

@@ -12,22 +12,22 @@ class ExportPdfDateRangeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProfileGradientScaffold(
       scroll: true,
-      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.lg, AppSpacing.screen, AppSpacing.xl),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.l, AppSpacing.screen, AppSpacing.xl),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ProfileBackButton(onPressed: () => Get.back()),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.l),
           Text('Select date range', style: AppTextStyles.h2.copyWith(fontWeight: FontWeight.w700)),
           const SizedBox(height: AppSpacing.xs),
           Text('Choose the time range for your report.', style: AppTextStyles.body16.copyWith(color: AppColors.textTertiary)),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.l),
           const _DateRangeButton(label: 'Last 7 Days', isSelected: true),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.m),
           const _DateRangeButton(label: 'Last 30 Days'),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.m),
           const _DateRangeButton(label: 'All Time'),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.m),
           const _DateRangeButton(label: 'Custom Date Range'),
           const Spacer(),
           ProfilePrimaryButton(

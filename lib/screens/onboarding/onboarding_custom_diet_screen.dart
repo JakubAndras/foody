@@ -20,8 +20,11 @@ class OnboardingCustomDietScreen extends StatefulWidget {
   State<OnboardingCustomDietScreen> createState() => _OnboardingCustomDietScreenState();
 }
 
-class _OnboardingCustomDietScreenState extends State<OnboardingCustomDietScreen> {
+class _OnboardingCustomDietScreenState extends State<OnboardingCustomDietScreen> with AutomaticKeepAliveClientMixin {
   final TextEditingController _controller = TextEditingController();
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void dispose() {
@@ -31,6 +34,7 @@ class _OnboardingCustomDietScreenState extends State<OnboardingCustomDietScreen>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     return OnboardingPage(
@@ -41,7 +45,7 @@ class _OnboardingCustomDietScreenState extends State<OnboardingCustomDietScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Custom diet\npreferences', style: textTheme.headlineLarge?.copyWith(height: 1.25)),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.s),
           Text(
             "Tell us about any food you don't eat, allergies, or dietary restrictions.",
             style: textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
@@ -49,7 +53,7 @@ class _OnboardingCustomDietScreenState extends State<OnboardingCustomDietScreen>
           const SizedBox(height: AppSpacing.xl),
           Container(
             height: AppSizes.customDietFieldHeight,
-            padding: const EdgeInsets.all(AppSpacing.md),
+            padding: const EdgeInsets.all(AppSpacing.m),
             decoration: BoxDecoration(
               color: AppColors.surfaceSubtle,
               borderRadius: BorderRadius.circular(AppRadii.md),

@@ -14,10 +14,10 @@ class CaloriesCard extends StatelessWidget {
     final double goal = dayRecord.calorieGoal <= 0 ? 1 : dayRecord.calorieGoal;
     final double total = dayRecord.totalCalories;
     final double remaining = dayRecord.caloriesLeft;
-    final double progress = caloriesPlanEnabled ? (total / goal).clamp(0.0, 1.0) : 0.0;
+    final double progress = (total / goal).clamp(0.0, 1.0);
 
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.lg),
+      padding: const EdgeInsets.all(AppSpacing.l),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg),
@@ -33,31 +33,36 @@ class CaloriesCard extends StatelessWidget {
                   'Calories',
                   style: AppTextStyles.body16.copyWith(color: AppColors.textMuted, fontWeight: FontWeight.w600),
                 ),
-                const SizedBox(height: AppSpacing.md),
-                ProgressRing(
-                  size: AppSizes.summaryRingSize,
-                  strokeWidth: AppSizes.ringStroke,
-                  value: progress,
-                  backgroundColor: AppColors.outline.withValues(alpha: 0.6),
-                  foregroundColor: AppColors.primarySoft,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        (caloriesPlanEnabled ? remaining : total).toStringAsFixed(0),
-                        style: AppTextStyles.h2.copyWith(color: AppColors.textPrimary),
+                const SizedBox(height: AppSpacing.m),
+                SizedBox(
+                  width: double.infinity,
+                  child: Center(
+                    child: ProgressRing(
+                      size: AppSizes.summaryRingSize,
+                      strokeWidth: AppSizes.ringStroke,
+                      value: progress,
+                      backgroundColor: AppColors.outline.withValues(alpha: 0.6),
+                      foregroundColor: AppColors.primarySoft,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            (caloriesPlanEnabled ? remaining : total).toStringAsFixed(0),
+                            style: AppTextStyles.h2.copyWith(color: AppColors.textPrimary),
+                          ),
+                          Text(
+                            caloriesPlanEnabled ? 'Remaining' : 'Calories',
+                            style: AppTextStyles.caption12.copyWith(color: AppColors.textMuted),
+                          ),
+                        ],
                       ),
-                      Text(
-                        caloriesPlanEnabled ? 'Remaining' : 'Calories',
-                        style: AppTextStyles.caption12.copyWith(color: AppColors.textMuted),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(width: AppSpacing.md),
+          const SizedBox(width: AppSpacing.m),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -67,21 +72,21 @@ class CaloriesCard extends StatelessWidget {
                 value: goal.toStringAsFixed(0),
                 color: AppColors.textMuted,
               ),
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: AppSpacing.s),
               _StatItem(
                 icon: Icons.restaurant_rounded,
                 label: 'Food',
                 value: total.toStringAsFixed(0),
                 color: AppColors.info,
               ),
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: AppSpacing.s),
               _StatItem(
                 icon: Icons.directions_run_rounded,
                 label: 'Exercise',
                 value: '0',
                 color: AppColors.warning,
               ),
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: AppSpacing.s),
               _StatItem(
                 icon: Icons.history_rounded,
                 label: 'Rollover',

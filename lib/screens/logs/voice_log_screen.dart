@@ -146,105 +146,92 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
-        child: VoiceLogFrostedSurface(
-          child: Column(
-            children: [
-              const SizedBox(height: AppSpacing.sm),
-              Center(
-                child: Container(
-                  width: AppSizes.voiceTopHandleWidth,
-                  height: AppSizes.voiceTopHandleHeight,
-                  decoration: BoxDecoration(
-                    color: AppColors.textTertiary,
-                    borderRadius: BorderRadius.circular(AppRadii.pill),
+        child: Column(
+          children: [
+            const SizedBox(height: AppSpacing.l),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  VoiceLogIconButton(
+                    icon: Icons.close,
+                    onTap: () => Navigator.of(context).maybePop(),
                   ),
-                ),
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    VoiceLogIconButton(
-                      icon: Icons.close,
-                      onTap: () => Navigator.of(context).maybePop(),
+                  VoiceLogIconButton(
+                    icon: Icons.help_outline,
+                    onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Voice log tips coming soon.')),
                     ),
-                    VoiceLogIconButton(
-                      icon: Icons.help_outline,
-                      onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Voice log tips coming soon.')),
-                      ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xl),
+            VoiceLogToggle(
+              isExercise: isExercise,
+              onSelectMeals: () => _toggleMode(VoiceLogMode.meals),
+              onSelectExercise: () => _toggleMode(VoiceLogMode.exercise),
+            ),
+            const SizedBox(height: AppSpacing.l),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+              child: Container(
+                padding: const EdgeInsets.all(AppSpacing.m),
+                decoration: BoxDecoration(
+                  color: AppColors.surface,
+                  borderRadius: BorderRadius.circular(AppRadii.lg),
+                  boxShadow: AppShadows.cardSubtle,
+                ),
+                child: Column(
+                  children: [
+                    VoiceLogTextArea(
+                      controller: _controller,
+                      hintText: isExercise
+                          ? "Dictate your exercise here... e.g., '30 minutes of running on a flat road, 1 hour of average training in the gym'"
+                          : "Dictate your meals here... e.g., 'one banana, average chicken breast with rice'",
+                      onChanged: (_) => setState(() {}),
+                      enabled: !_isRecording,
+                    ),
+                    const SizedBox(height: AppSpacing.m),
+                    VoiceLogAnalyzeButton(
+                      label: isExercise ? 'Analyze Exercise' : 'Analyze Meals',
+                      onTap: _handleAnalyze,
+                      enabled: hasText,
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: AppSpacing.xl),
-              VoiceLogToggle(
-                isExercise: isExercise,
-                onSelectMeals: () => _toggleMode(VoiceLogMode.meals),
-                onSelectExercise: () => _toggleMode(VoiceLogMode.exercise),
+            ),
+            const SizedBox(height: AppSpacing.l),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
+              child: Text(
+                isExercise
+                    ? 'Tap the microphone to start recording, or type your exercise directly into the field above.'
+                    : 'Tap the microphone to start recording, or type your meals directly into the field above.',
+                textAlign: TextAlign.center,
+                style: AppTextStyles.body14Relaxed,
               ),
-              const SizedBox(height: AppSpacing.lg),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-                child: Container(
-                  padding: const EdgeInsets.all(AppSpacing.md),
-                  decoration: BoxDecoration(
-                    color: AppColors.surface,
-                    borderRadius: BorderRadius.circular(AppRadii.lg),
-                    boxShadow: AppShadows.cardSubtle,
-                  ),
-                  child: Column(
-                    children: [
-                      VoiceLogTextArea(
-                        controller: _controller,
-                        hintText: isExercise
-                            ? "Dictate your exercise here... e.g., '30 minutes of running on a flat road, 1 hour of average training in the gym'"
-                            : "Dictate your meals here... e.g., 'one banana, average chicken breast with rice'",
-                        onChanged: (_) => setState(() {}),
-                        enabled: !_isRecording,
-                      ),
-                      const SizedBox(height: AppSpacing.md),
-                      VoiceLogAnalyzeButton(
-                        label: isExercise ? 'Analyze Exercise' : 'Analyze Meals',
-                        onTap: _handleAnalyze,
-                        enabled: hasText,
-                      ),
-                    ],
-                  ),
+            ),
+            const Spacer(),
+            VoiceMicButton(
+              gradient: !isExercise && !_isRecording ? AppGradients.primary : null,
+              color: isExercise || _isRecording ? AppColors.violetStrong : null,
+              onTap: _isRecording ? _stopRecording : _startRecording,
+              onLongPress: _togglePause,
+            ),
+            const SizedBox(height: AppSpacing.s),
+            if (_isRecording || _isPaused)
+              Text(
+                _isPaused ? 'Paused' : 'Listening...',
+                style: AppTextStyles.body14.copyWith(
+                  color: AppColors.violetStrong,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(height: AppSpacing.lg),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
-                child: Text(
-                  isExercise
-                      ? 'Tap the microphone to start recording, or type your exercise directly into the field above.'
-                      : 'Tap the microphone to start recording, or type your meals directly into the field above.',
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.body14Relaxed,
-                ),
-              ),
-              const Spacer(),
-              VoiceMicButton(
-                gradient: !isExercise && !_isRecording ? AppGradients.primary : null,
-                color: isExercise || _isRecording ? AppColors.violetStrong : null,
-                onTap: _isRecording ? _stopRecording : _startRecording,
-                onLongPress: _togglePause,
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              if (_isRecording || _isPaused)
-                Text(
-                  _isPaused ? 'Paused' : 'Listening...',
-                  style: AppTextStyles.body14.copyWith(
-                    color: AppColors.violetStrong,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              const SizedBox(height: AppSpacing.xl),
-            ],
-          ),
+            const SizedBox(height: AppSpacing.xl),
+          ],
         ),
       ),
     );

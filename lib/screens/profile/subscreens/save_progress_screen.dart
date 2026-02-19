@@ -11,7 +11,7 @@ class SaveProgressScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProfileGradientScaffold(
       scroll: true,
-      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.lg, AppSpacing.screen, AppSpacing.xl),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.l, AppSpacing.screen, AppSpacing.xl),
       child: Column(
         children: [
           Align(
@@ -24,7 +24,7 @@ class SaveProgressScreen extends StatelessWidget {
             textAlign: TextAlign.center,
             style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w700),
           ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.m),
           Text(
             'Sign in with Apple or Google to save your data to the cloud and access it from any device.\n\nOr skip this step to save your data locally on your phone only.',
             textAlign: TextAlign.center,
@@ -36,10 +36,14 @@ class SaveProgressScreen extends StatelessWidget {
             leading: const Icon(Icons.apple, color: AppColors.onPrimary, size: AppSizes.iconMd),
             height: AppSizes.buttonHeight,
           ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.m),
           ProfileOutlineButton(
             label: 'Sign in with Google',
-            leading: const Icon(Icons.g_mobiledata, color: AppColors.googleBlue, size: AppSizes.iconLg),
+            leading: SizedBox(
+              width: AppSizes.iconLg,
+              height: AppSizes.iconLg,
+              child: Image.asset('assets/images/google_icon.png'),
+            ),
             height: AppSizes.buttonHeight,
           ),
           const Spacer(),

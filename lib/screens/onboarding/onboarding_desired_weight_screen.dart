@@ -1,4 +1,5 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/model/user_profile.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
 import 'package:flutter/material.dart';
@@ -22,20 +23,66 @@ class OnboardingDesiredWeightScreen extends StatefulWidget {
 }
 
 class _OnboardingDesiredWeightScreenState extends State<OnboardingDesiredWeightScreen> {
-  double _value = 82.5;
+  static const double _minKg = 40;
+  static const double _maxKg = 120;
+  static const double _goalDeltaKg = 5;
+
+  double _valueKg = 82.5;
+  bool _metric = true;
+
+  double _kgToPounds(double kg) => kg * 2.20462262185;
+
+  double _poundsToKg(double pounds) => pounds / 2.20462262185;
+
+  double get _minDisplayValue => _metric ? _minKg : _kgToPounds(_minKg).roundToDouble();
+
+  double get _maxDisplayValue => _metric ? _maxKg : _kgToPounds(_maxKg).roundToDouble();
+
+  double get _displayValue {
+    final converted = _metric ? _valueKg : _kgToPounds(_valueKg);
+    return converted.clamp(_minDisplayValue, _maxDisplayValue);
+  }
+
+  String get _displayWeightText {
+    final int roundedValue = _displayValue.round();
+    final String unit = _metric ? 'kg' : 'lb';
+    return '$roundedValue $unit';
+  }
 
   @override
   void initState() {
     super.initState();
-    final existing = SessionManager.to.goalWeightKg.value ?? SessionManager.to.weightKg.value;
-    if (existing != null) {
-      _value = existing.clamp(40, 180);
+    _metric = SessionManager.to.prefersMetric.value;
+
+    final double? existingGoalWeight = SessionManager.to.goalWeightKg.value;
+    if (existingGoalWeight != null) {
+      _valueKg = existingGoalWeight;
+    } else {
+      final double? currentWeightKg = SessionManager.to.weightKg.value;
+      final ProfileGoal? goal = SessionManager.to.goal.value;
+      if (currentWeightKg != null) {
+        switch (goal) {
+          case ProfileGoal.lose:
+            _valueKg = currentWeightKg - _goalDeltaKg;
+            break;
+          case ProfileGoal.gain:
+            _valueKg = currentWeightKg + _goalDeltaKg;
+            break;
+          case ProfileGoal.maintain:
+          case null:
+            _valueKg = currentWeightKg;
+            break;
+        }
+      }
     }
+
+    _valueKg = _valueKg.clamp(_minKg, _maxKg);
   }
 
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
+    final double sliderHostHeight = (MediaQuery.of(context).size.height * 0.4).clamp(180.0, 320.0).toDouble();
 
     return OnboardingPage(
       progress: widget.step / widget.totalSteps,
@@ -43,7 +90,7 @@ class _OnboardingDesiredWeightScreenState extends State<OnboardingDesiredWeightS
       bottom: OnboardingPrimaryButton(
         label: 'Continue',
         onPressed: () async {
-          await SessionManager.to.setGoalWeightKg(_value);
+          await SessionManager.to.setGoalWeightKg(_valueKg);
           widget.onNext();
         },
       ),
@@ -51,32 +98,36 @@ class _OnboardingDesiredWeightScreenState extends State<OnboardingDesiredWeightS
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('What is your desired weight?', style: textTheme.headlineLarge),
-          const SizedBox(height: AppSpacing.xxl),
-          Center(
-            child: Text(
-              '${_value.toStringAsFixed(1)} kg',
-              style: textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w700),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          const OnboardingRuler(),
-          const SizedBox(height: AppSpacing.lg),
-          SliderTheme(
-            data: SliderTheme.of(context).copyWith(
-              trackHeight: 2,
-              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 8),
-              overlayShape: const RoundSliderOverlayShape(overlayRadius: 16),
-              activeTrackColor: AppColors.primary,
-              inactiveTrackColor: AppColors.border,
-              thumbColor: AppColors.primary,
-              overlayColor: AppColors.primary.withValues(alpha: 0.2),
-            ),
-            child: Slider(
-              min: 40,
-              max: 180,
-              divisions: 140,
-              value: _value,
-              onChanged: (value) => setState(() => _value = value),
+          const SizedBox(height: AppSpacing.l),
+          SizedBox(
+            height: sliderHostHeight,
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 420),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      _displayWeightText,
+                      style: textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w700),
+                    ),
+                    const SizedBox(height: AppSpacing.l),
+                    OnboardingSlider(
+                      value: _displayValue,
+                      min: _minDisplayValue,
+                      max: _maxDisplayValue,
+                      onChanged: (value) => setState(() {
+                        if (_metric) {
+                          _valueKg = value;
+                        } else {
+                          _valueKg = _poundsToKg(value);
+                        }
+                        _valueKg = _valueKg.clamp(_minKg, _maxKg);
+                      }),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ],

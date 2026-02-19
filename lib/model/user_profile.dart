@@ -35,3 +35,30 @@ ProfileSex? profileSexFromCode(String? code) {
   }
   return null;
 }
+
+enum ProfileGoal { lose, maintain, gain }
+
+extension ProfileGoalX on ProfileGoal {
+  String get code {
+    switch (this) {
+      case ProfileGoal.lose:
+        return 'lose';
+      case ProfileGoal.maintain:
+        return 'maintain';
+      case ProfileGoal.gain:
+        return 'gain';
+    }
+  }
+}
+
+ProfileGoal? profileGoalFromCode(String? code) {
+  switch (code) {
+    case 'lose':
+      return ProfileGoal.lose;
+    case 'maintain':
+      return ProfileGoal.maintain;
+    case 'gain':
+      return ProfileGoal.gain;
+  }
+  return null;
+}

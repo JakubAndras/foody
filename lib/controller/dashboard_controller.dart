@@ -9,6 +9,7 @@ import 'package:diplomka/model/streak_info.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:diplomka/model/meal.dart';
 import 'package:diplomka/services/ai_feature/ai_pipeline_service.dart';
+import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/utils/media_storage.dart';
 import 'base_controller.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,8 +20,9 @@ class DashboardController extends BaseController {
 
   final _dayRecordController = DayRecordController.to;
   final _streakController = StreakController.to;
+  final _selectedDateService = SelectedDateService.to;
 
-  final Rx<DateTime> selectedDate = Rx<DateTime>(DateTime.now());
+  late final Rx<DateTime> selectedDate = _selectedDateService.selectedDate;
 
   final Rx<DayRecord?> dayRecord = Rx<DayRecord?>(null);
   final RxBool isLoadingDayRecord = false.obs;
@@ -31,13 +33,11 @@ class DashboardController extends BaseController {
   final RxString streakError = ''.obs;
 
   final RxBool newMealAnalyzeLoading = false.obs;
+  int _activeMealAnalyses = 0;
 
   @override
   void onInit() {
     super.onInit();
-    final now = DateTime.now();
-    selectedDate.value = DateTime(now.year, now.month, now.day);
-
     _fetchDayRecord(selectedDate.value);
     _fetchStreakInfo();
 
@@ -76,7 +76,7 @@ class DashboardController extends BaseController {
   }
 
   void updateDate(DateTime newDate) {
-    selectedDate.value = DateTime(newDate.year, newDate.month, newDate.day);
+    _selectedDateService.setSelectedDate(newDate);
   }
 
   @override
@@ -104,9 +104,7 @@ class DashboardController extends BaseController {
           duration: const Duration(seconds: 5),
         );
       } else {
-        message = source == ImageSource.camera
-            ? 'Camera permission denied.'
-            : 'Photo library permission denied.';
+        message = source == ImageSource.camera ? 'Camera permission denied.' : 'Photo library permission denied.';
         Get.snackbar('Permission Denied', message, duration: const Duration(seconds: 3));
       }
       debugPrint(message);
@@ -123,20 +121,48 @@ class DashboardController extends BaseController {
     }
 
     try {
-      newMealAnalyzeLoading.value = true;
-      final String? persistedPath = await MediaStorage.persistMealPhoto(imageFile.path);
-      final String analysisPath = persistedPath ?? imageFile.path;
-      final File file = File(analysisPath);
-      final result = await AiPipelineService.to.analyzeMeal(imageFiles: [file]);
+      await analyzeMealFromImage(
+        selectedDate: selectedDate.value,
+        imagePath: imageFile.path,
+      );
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Error analyzing image: $e',
+        duration: const Duration(seconds: 3),
+      );
+      debugPrint('Error calling AI Service: $e');
+    }
+  }
+
+  Future<void> analyzeMealFromImage({
+    required DateTime selectedDate,
+    String? imagePath,
+    String? description,
+    String? preferredMealName,
+  }) async {
+    _beginMealAnalysis();
+    try {
+      final String? resolvedPhotoPath = await _resolvePhotoPath(imagePath);
+      final List<File>? imageFiles = resolvedPhotoPath == null ? null : [File(resolvedPhotoPath)];
+      final result = await AiPipelineService.to.analyzeMeal(
+        imageFiles: imageFiles,
+        description: description,
+      );
 
       if (result.isSuccess && result.response != null) {
         if (result.status == AiAnalysisStatus.lowConfidence) {
           Get.snackbar('Low confidence', result.message ?? 'Please review the result.');
         }
-        final Meal meal = Meal.fromAnswer(result.response!.answer).copyWith(
-          photoPath: analysisPath,
+        Meal meal = Meal.fromAnswer(result.response!.answer).copyWith(
+          timestamp: _applyDateToTime(DateTime.now(), selectedDate),
+          photoPath: resolvedPhotoPath,
         );
-        final DateTime selectedDate = this.selectedDate.value;
+        final String trimmedName = preferredMealName?.trim() ?? '';
+        if (trimmedName.isNotEmpty) {
+          meal = meal.copyWith(name: trimmedName);
+        }
+
         await DayRecordController.to.saveMealForDate(
           date: selectedDate,
           mealToSave: meal,
@@ -157,8 +183,45 @@ class DashboardController extends BaseController {
       );
       debugPrint('Error calling AI Service: $e');
     } finally {
-      newMealAnalyzeLoading.value = false;
+      _endMealAnalysis();
     }
+  }
+
+  Future<String?> _resolvePhotoPath(String? rawPath) async {
+    if (rawPath == null || rawPath.isEmpty) return null;
+    final persisted = await MediaStorage.persistMealPhoto(rawPath);
+    if (persisted != null) {
+      return persisted;
+    }
+    if (await File(rawPath).exists()) {
+      return rawPath;
+    }
+    return null;
+  }
+
+  DateTime _applyDateToTime(DateTime source, DateTime targetDate) {
+    return DateTime(
+      targetDate.year,
+      targetDate.month,
+      targetDate.day,
+      source.hour,
+      source.minute,
+      source.second,
+      source.millisecond,
+      source.microsecond,
+    );
+  }
+
+  void _beginMealAnalysis() {
+    _activeMealAnalyses += 1;
+    newMealAnalyzeLoading.value = true;
+  }
+
+  void _endMealAnalysis() {
+    if (_activeMealAnalyses > 0) {
+      _activeMealAnalyses -= 1;
+    }
+    newMealAnalyzeLoading.value = _activeMealAnalyses > 0;
   }
 
   // Placeholder for refresh method, if it needs to be part of this controller

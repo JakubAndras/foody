@@ -9,22 +9,36 @@ class OnboardingWorkoutsScreen extends StatefulWidget {
     required this.onBack,
     required this.step,
     required this.totalSteps,
+    this.onCanProceedChanged,
   });
 
   final VoidCallback onNext;
   final VoidCallback onBack;
   final int step;
   final int totalSteps;
+  final ValueChanged<bool>? onCanProceedChanged;
 
   @override
   State<OnboardingWorkoutsScreen> createState() => _OnboardingWorkoutsScreenState();
 }
 
-class _OnboardingWorkoutsScreenState extends State<OnboardingWorkoutsScreen> {
+class _OnboardingWorkoutsScreenState extends State<OnboardingWorkoutsScreen> with AutomaticKeepAliveClientMixin {
   String? _selected;
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.onCanProceedChanged?.call(_selected != null);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     return OnboardingPage(
@@ -42,7 +56,7 @@ class _OnboardingWorkoutsScreenState extends State<OnboardingWorkoutsScreen> {
             'How many workouts\ndo you do per week?',
             style: textTheme.headlineLarge?.copyWith(height: 1.25),
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.s),
           Text(
             'This will be used to calibrate your custom plan.',
             style: textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
@@ -54,25 +68,34 @@ class _OnboardingWorkoutsScreenState extends State<OnboardingWorkoutsScreen> {
             selected: _selected == '0-2',
             height: AppSizes.workoutCardHeight,
             leading: _WorkoutIcon(selected: _selected == '0-2', icon: Icons.circle_outlined),
-            onTap: () => setState(() => _selected = '0-2'),
+            onTap: () {
+              setState(() => _selected = '0-2');
+              widget.onCanProceedChanged?.call(true);
+            },
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.s),
           OnboardingOptionCard(
             title: '3-5',
             subtitle: 'A few workouts per week',
             selected: _selected == '3-5',
             height: AppSizes.workoutCardHeight,
             leading: _WorkoutIcon(selected: _selected == '3-5', icon: Icons.more_horiz),
-            onTap: () => setState(() => _selected = '3-5'),
+            onTap: () {
+              setState(() => _selected = '3-5');
+              widget.onCanProceedChanged?.call(true);
+            },
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.s),
           OnboardingOptionCard(
             title: '6+',
             subtitle: 'Dedicated athlete',
             selected: _selected == '6+',
             height: AppSizes.workoutCardHeight,
             leading: _WorkoutIcon(selected: _selected == '6+', icon: Icons.apps_outlined),
-            onTap: () => setState(() => _selected = '6+'),
+            onTap: () {
+              setState(() => _selected = '6+');
+              widget.onCanProceedChanged?.call(true);
+            },
           ),
         ],
       ),

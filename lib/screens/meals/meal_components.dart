@@ -12,12 +12,14 @@ class MealHeroHeader extends StatelessWidget {
   final String title;
   final String timeLabel;
   final ImageProvider? image;
+  final Alignment imageAlignment;
 
   const MealHeroHeader({
     super.key,
     required this.title,
     required this.timeLabel,
     this.image,
+    this.imageAlignment = Alignment.center,
   });
 
   @override
@@ -31,7 +33,11 @@ class MealHeroHeader extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               image: image != null
-                  ? DecorationImage(image: image!, fit: BoxFit.cover)
+                  ? DecorationImage(
+                      image: image!,
+                      fit: BoxFit.cover,
+                      alignment: imageAlignment,
+                    )
                   : null,
               color: AppColors.surfaceMuted,
             ),
@@ -54,9 +60,9 @@ class MealHeroHeader extends StatelessWidget {
             ),
           ),
           Positioned(
-            left: AppSpacing.lg,
-            right: AppSpacing.lg,
-            bottom: AppSpacing.lg,
+            left: AppSpacing.l,
+            right: AppSpacing.l,
+            bottom: AppSpacing.l,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -159,7 +165,7 @@ class CaloriesSummaryCard extends StatelessWidget {
     return Container(
       margin: margin,
       height: height,
-      padding: padding ?? const EdgeInsets.all(AppSpacing.lg),
+      padding: padding ?? const EdgeInsets.all(AppSpacing.l),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg),
@@ -213,6 +219,7 @@ class MacroStatCard extends StatelessWidget {
   final String value;
   final IconData icon;
   final Color iconColor;
+  final double? height;
 
   const MacroStatCard({
     super.key,
@@ -220,14 +227,15 @@ class MacroStatCard extends StatelessWidget {
     required this.value,
     required this.icon,
     required this.iconColor,
+    this.height,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: AppSizes.macroCardSize,
-      height: AppSizes.macroCardSize,
-      padding: const EdgeInsets.all(AppSpacing.lg),
+      width: double.infinity,
+      height: height ?? AppSizes.macroCardSize,
+      padding: const EdgeInsets.all(AppSpacing.l),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg),
@@ -240,7 +248,14 @@ class MacroStatCard extends StatelessWidget {
             children: [
               Icon(icon, size: AppSizes.iconMd, color: iconColor),
               const SizedBox(width: AppSpacing.xs),
-              Text(label, style: AppTextStyles.caption12.copyWith(color: AppColors.textSecondary)),
+              Expanded(
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.caption12.copyWith(color: AppColors.textSecondary),
+                ),
+              ),
             ],
           ),
           const Spacer(),
@@ -275,7 +290,7 @@ class MealRecordCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: margin,
-      padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.md, AppSpacing.lg, AppSpacing.md),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.m, AppSpacing.l, AppSpacing.m),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg),
@@ -290,14 +305,14 @@ class MealRecordCard extends StatelessWidget {
             onTap: onAmountTap,
             showChevron: true,
           ),
-          const Divider(color: AppColors.separator, height: AppSpacing.md, thickness: AppSizes.dividerThin),
+          const Divider(color: AppColors.separator, height: AppSpacing.m, thickness: AppSizes.dividerThin),
           _RecordRow(
             label: 'Mealtime',
             value: mealtime,
             onTap: onMealtimeTap,
             showChevron: true,
           ),
-          const Divider(color: AppColors.separator, height: AppSpacing.md, thickness: AppSizes.dividerThin),
+          const Divider(color: AppColors.separator, height: AppSpacing.m, thickness: AppSizes.dividerThin),
           _RecordRow(
             label: 'Date',
             value: date,
@@ -389,7 +404,7 @@ class IngredientRow extends StatelessWidget {
       borderRadius: BorderRadius.circular(AppRadii.lg),
       child: Container(
         height: highlighted ? AppSizes.ingredientRowAlertHeight : AppSizes.ingredientRowHeight,
-        padding: const EdgeInsets.all(AppSpacing.md),
+        padding: const EdgeInsets.all(AppSpacing.m),
         decoration: BoxDecoration(
           color: background,
           borderRadius: BorderRadius.circular(AppRadii.lg),
@@ -425,7 +440,7 @@ class IngredientRow extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(width: AppSpacing.sm),
+            const SizedBox(width: AppSpacing.s),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -508,7 +523,7 @@ class AllergyAlertCard extends StatelessWidget {
     return Container(
       margin: margin,
       height: AppSizes.alertCardHeight,
-      padding: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.sm, AppSpacing.md, AppSpacing.sm),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.s, AppSpacing.m, AppSpacing.s),
       decoration: BoxDecoration(
         color: AppColors.warningSurface,
         borderRadius: BorderRadius.circular(AppRadii.lg),
@@ -554,12 +569,12 @@ class MeasurementChips extends StatelessWidget {
         children: List.generate(options.length, (index) {
           final isSelected = index == selectedIndex;
           return Padding(
-            padding: EdgeInsets.only(right: index == options.length - 1 ? 0 : AppSpacing.sm),
+            padding: EdgeInsets.only(right: index == options.length - 1 ? 0 : AppSpacing.s),
             child: GestureDetector(
               onTap: onChanged == null ? null : () => onChanged!(index),
               child: Container(
                 height: AppSizes.chipHeight,
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
                 decoration: BoxDecoration(
                   color: isSelected ? AppColors.primary : AppColors.surfaceMuted,
                   borderRadius: BorderRadius.circular(AppRadii.pill),
@@ -703,7 +718,7 @@ class GlassActionSheet extends StatelessWidget {
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.md),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s, vertical: AppSpacing.m),
           decoration: BoxDecoration(
             color: AppColors.glassSheet,
             borderRadius: BorderRadius.circular(AppRadii.lg),
@@ -712,7 +727,7 @@ class GlassActionSheet extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: items
                 .map((item) => Padding(
-                      padding: EdgeInsets.only(bottom: item == items.last ? 0 : AppSpacing.sm),
+                      padding: EdgeInsets.only(bottom: item == items.last ? 0 : AppSpacing.s),
                       child: InkWell(
                         onTap: item.onTap,
                         borderRadius: BorderRadius.circular(AppRadii.sm),
@@ -721,7 +736,7 @@ class GlassActionSheet extends StatelessWidget {
                           child: Row(
                             children: [
                               Icon(item.icon, color: item.color ?? AppColors.textPrimary, size: AppSizes.iconMd),
-                              const SizedBox(width: AppSpacing.sm),
+                              const SizedBox(width: AppSpacing.s),
                               Expanded(
                                 child: Text(
                                   item.label,
@@ -776,7 +791,7 @@ class SyncCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.md),
+      padding: const EdgeInsets.all(AppSpacing.m),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg3),
@@ -787,7 +802,7 @@ class SyncCard extends StatelessWidget {
           Row(
             children: [
               const Icon(Icons.sync, size: AppSizes.iconMd, color: AppColors.textPrimary),
-              const SizedBox(width: AppSpacing.sm),
+              const SizedBox(width: AppSpacing.s),
               Expanded(
                 child: Text(
                   title,
@@ -796,7 +811,7 @@ class SyncCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.s),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -809,7 +824,7 @@ class SyncCard extends StatelessWidget {
                   onTap: onPrimary,
                 ),
               ),
-              const SizedBox(width: AppSpacing.sm),
+              const SizedBox(width: AppSpacing.s),
               InkWell(
                 onTap: onSecondary,
                 child: Text(

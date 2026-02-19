@@ -41,7 +41,7 @@ class EditBottomActionBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: padding ?? const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.sm, AppSpacing.md, AppSpacing.md),
+      padding: padding ?? const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.s, AppSpacing.m, AppSpacing.m),
       child: Row(
         children: [
           if (secondaryLabel != null) ...[
@@ -52,7 +52,7 @@ class EditBottomActionBar extends StatelessWidget {
                 onTap: onSecondary,
               ),
             ),
-            const SizedBox(width: AppSpacing.sm),
+            const SizedBox(width: AppSpacing.s),
           ],
           Expanded(
             child: GradientPillButton(
@@ -90,7 +90,7 @@ class EditConfirmSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.lg),
+      padding: const EdgeInsets.all(AppSpacing.l),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg),
@@ -103,7 +103,7 @@ class EditConfirmSheet extends StatelessWidget {
           Text(title, style: AppTextStyles.title18Tight.copyWith(color: AppColors.textPrimary)),
           const SizedBox(height: AppSpacing.xs),
           Text(message, style: AppTextStyles.body14Regular.copyWith(color: AppColors.textSecondary)),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.l),
           Row(
             children: [
               Expanded(
@@ -112,7 +112,7 @@ class EditConfirmSheet extends StatelessWidget {
                   onTap: onCancel,
                 ),
               ),
-              const SizedBox(width: AppSpacing.sm),
+              const SizedBox(width: AppSpacing.s),
               Expanded(
                 child: GradientPillButton(
                   label: confirmLabel,
@@ -159,7 +159,7 @@ class EditIngredientRow extends StatelessWidget {
       borderRadius: BorderRadius.circular(AppRadii.lg),
       child: Container(
         height: highlighted ? AppSizes.ingredientRowAlertHeight : AppSizes.ingredientRowHeight,
-        padding: const EdgeInsets.all(AppSpacing.md),
+        padding: const EdgeInsets.all(AppSpacing.m),
         decoration: BoxDecoration(
           color: background,
           borderRadius: BorderRadius.circular(AppRadii.lg),
@@ -195,7 +195,7 @@ class EditIngredientRow extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(width: AppSpacing.sm),
+            const SizedBox(width: AppSpacing.s),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.end,

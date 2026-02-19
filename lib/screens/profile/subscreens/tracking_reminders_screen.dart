@@ -11,14 +11,14 @@ class TrackingRemindersScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProfileGradientScaffold(
       scroll: true,
-      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.lg, AppSpacing.screen, AppSpacing.xl),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.l, AppSpacing.screen, AppSpacing.xl),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ProfileBackButton(onPressed: () => Get.back()),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.m),
           Text('Tracking Reminders', style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w700)),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.l),
           ProfileCard(
             radius: AppRadii.lg,
             shadow: AppShadows.cardSubtle,
@@ -32,15 +32,15 @@ class TrackingRemindersScreen extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.l),
           ProfileCard(
             radius: AppRadii.lg,
             shadow: AppShadows.cardSubtle,
-            padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.md, AppSpacing.screen, AppSpacing.md),
+            padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.m, AppSpacing.screen, AppSpacing.m),
             child: Column(
               children: const [
                 _ReminderRow(title: 'End of Day', time: '9:00 PM', isOn: false, showDivider: false),
-                SizedBox(height: AppSpacing.sm),
+                SizedBox(height: AppSpacing.s),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -85,7 +85,7 @@ class _ReminderRow extends StatelessWidget {
                 ),
               ),
               ProfileTimeChip(label: time),
-              const SizedBox(width: AppSpacing.sm),
+              const SizedBox(width: AppSpacing.s),
               ProfileToggle(isOn: isOn),
             ],
           ),

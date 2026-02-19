@@ -26,7 +26,7 @@ class ExerciseDetailScreen extends StatelessWidget {
           SafeArea(
             bottom: false,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.md, AppSpacing.lg, AppSpacing.sm),
+              padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.m, AppSpacing.l, AppSpacing.s),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -38,7 +38,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                   Row(
                     children: [
                       _CircleButton(icon: Icons.bookmark_border, onTap: () {}),
-                      const SizedBox(width: AppSpacing.sm),
+                      const SizedBox(width: AppSpacing.s),
                       _CircleButton(
                         icon: Icons.more_horiz,
                         onTap: () => _showOptions(context),
@@ -51,13 +51,13 @@ class ExerciseDetailScreen extends StatelessWidget {
           ),
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.sm, AppSpacing.lg, AppSpacing.lg),
+              padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.s, AppSpacing.l, AppSpacing.l),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
                     height: 118,
-                    padding: const EdgeInsets.all(AppSpacing.lg),
+                    padding: const EdgeInsets.all(AppSpacing.l),
                     decoration: BoxDecoration(
                       gradient: AppGradients.primary,
                       borderRadius: BorderRadius.circular(AppRadii.lg),
@@ -72,7 +72,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.md),
+                  const SizedBox(height: AppSpacing.m),
                   Row(
                     children: [
                       Expanded(
@@ -84,7 +84,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                           unit: 'kcal',
                         ),
                       ),
-                      const SizedBox(width: AppSpacing.md),
+                      const SizedBox(width: AppSpacing.m),
                       Expanded(
                         child: ExerciseStatCard(
                           gradient: AppGradients.exerciseDuration,
@@ -96,7 +96,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: AppSpacing.md),
+                  const SizedBox(height: AppSpacing.m),
                   ExerciseInfoCard(
                     gradient: AppGradients.exerciseCaloriesAlt,
                     icon: Icons.trending_up,
@@ -104,7 +104,7 @@ class ExerciseDetailScreen extends StatelessWidget {
                     value: '$rate',
                     unit: 'kcal/min',
                   ),
-                  const SizedBox(height: AppSpacing.md),
+                  const SizedBox(height: AppSpacing.m),
                   ExerciseCalculationCard(
                     rate: '$rate kcal/min',
                     duration: '$minutes min',
@@ -131,7 +131,7 @@ class ExerciseDetailScreen extends StatelessWidget {
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (_) => Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        padding: const EdgeInsets.all(AppSpacing.l),
         child: ExerciseDetailOptionsSheet(
           onReport: () {
             Navigator.of(context).pop();

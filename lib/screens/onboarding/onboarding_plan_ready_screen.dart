@@ -1,6 +1,8 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class OnboardingPlanReadyScreen extends StatelessWidget {
   const OnboardingPlanReadyScreen({
@@ -16,13 +18,59 @@ class OnboardingPlanReadyScreen extends StatelessWidget {
   final int step;
   final int totalSteps;
 
+  String _formatKg(double value) {
+    if (value == value.roundToDouble()) {
+      return value.toStringAsFixed(0);
+    }
+    return value.toStringAsFixed(1);
+  }
+
+  String _buildGoalSummaryLabel() {
+    final double? currentWeightKg = SessionManager.to.weightKg.value;
+    final double? desiredWeightKg = SessionManager.to.goalWeightKg.value;
+    final double speedKgPerWeek = (SessionManager.to.weightChangeRateKgPerWeek.value ?? 0.8).clamp(0.1, 1.5);
+
+    if (currentWeightKg == null || desiredWeightKg == null) {
+      return 'Set your goal to see estimate';
+    }
+
+    final double deltaKg = (currentWeightKg - desiredWeightKg).abs();
+    if (deltaKg < 0.1) {
+      return 'Maintain current weight';
+    }
+
+    final bool isLosingWeight = desiredWeightKg < currentWeightKg;
+    final double weeksToGoal = deltaKg / speedKgPerWeek;
+    final int daysToGoal = (weeksToGoal * 7).ceil();
+    final DateTime targetDate = DateTime.now().add(Duration(days: daysToGoal));
+    final String formattedDate = DateFormat('MMMM d, y').format(targetDate);
+    final String action = isLosingWeight ? 'Lose' : 'Gain';
+
+    return '$action ${_formatKg(deltaKg)} kg by $formattedDate';
+  }
+
+  String _buildGoalHeading() {
+    final double? currentWeightKg = SessionManager.to.weightKg.value;
+    final double? desiredWeightKg = SessionManager.to.goalWeightKg.value;
+    if (currentWeightKg == null || desiredWeightKg == null) {
+      return 'Your goal:';
+    }
+    if ((currentWeightKg - desiredWeightKg).abs() < 0.1) {
+      return 'You should maintain:';
+    }
+    return desiredWeightKg < currentWeightKg ? 'You should lose:' : 'You should gain:';
+  }
+
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
+    final String goalSummaryLabel = _buildGoalSummaryLabel();
+    final String goalHeading = _buildGoalHeading();
 
     return OnboardingPage(
       progress: step / totalSteps,
       onBack: onBack,
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
       bottom: OnboardingPrimaryButton(label: "Let's get started!", onPressed: onNext),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -32,11 +80,11 @@ class OnboardingPlanReadyScreen extends StatelessWidget {
             textAlign: TextAlign.center,
             style: textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
-          const SizedBox(height: AppSpacing.md),
-          Text('You should lose:', style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
-          const SizedBox(height: AppSpacing.sm),
-          const OnboardingPillChip(
-            label: 'Lose 9 kg by March 4, 2026',
+          const SizedBox(height: AppSpacing.l),
+          Text(goalHeading, style: textTheme.bodyLarge),
+          const SizedBox(height: AppSpacing.xs),
+          OnboardingPillChipBig(
+            label: goalSummaryLabel,
             backgroundColor: AppColors.surfacePill,
           ),
           const SizedBox(height: AppSpacing.xl),
@@ -44,7 +92,7 @@ class OnboardingPlanReadyScreen extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Text('Daily recommendation', style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
           ),
-          const SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: AppSpacing.xxs),
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
@@ -52,13 +100,13 @@ class OnboardingPlanReadyScreen extends StatelessWidget {
               style: textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
             ),
           ),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.xl),
           GridView.count(
             crossAxisCount: 2,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            mainAxisSpacing: AppSpacing.lg,
-            crossAxisSpacing: AppSpacing.lg,
+            mainAxisSpacing: AppSpacing.xs,
+            crossAxisSpacing: AppSpacing.xs,
             childAspectRatio: 0.9,
             children: const [
               _MacroTile(
@@ -69,7 +117,7 @@ class OnboardingPlanReadyScreen extends StatelessWidget {
                 color: AppColors.primaryDark,
               ),
               _MacroTile(
-                icon: Icons.grid_view_rounded,
+                icon: Icons.grain,
                 label: 'Carbs',
                 value: '203',
                 unit: 'g',
@@ -83,7 +131,7 @@ class OnboardingPlanReadyScreen extends StatelessWidget {
                 color: AppColors.macroProtein,
               ),
               _MacroTile(
-                icon: Icons.water_drop_rounded,
+                icon: Icons.opacity,
                 label: 'Fats',
                 value: '57',
                 unit: 'g',
@@ -118,20 +166,26 @@ class _MacroTile extends StatelessWidget {
 
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: AppSizes.iconSm, color: AppColors.textPrimary),
-            const SizedBox(width: AppSpacing.xs),
-            Text(label, style: textTheme.titleSmall?.copyWith(color: AppColors.textPrimary)),
-          ],
+        SizedBox(
+          width: AppSizes.widgetRingSize,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Icon(icon, size: AppSizes.iconSm, color: AppColors.textPrimary),
+              ),
+              Text(label, style: textTheme.titleSmall?.copyWith(color: AppColors.textPrimary)),
+            ],
+          ),
         ),
-        const SizedBox(height: AppSpacing.sm),
+        const SizedBox(height: AppSpacing.s),
         OnboardingRingChart(
           value: 0.75,
           color: color,
           label: value,
           unit: unit,
+          size: AppSizes.widgetRingSize,
         ),
       ],
     );

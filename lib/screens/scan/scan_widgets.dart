@@ -11,6 +11,7 @@ class ScanPrimaryButton extends StatelessWidget {
     this.gradient,
     this.icon,
     this.height,
+    this.hasShadow = true,
   });
 
   final String label;
@@ -18,6 +19,7 @@ class ScanPrimaryButton extends StatelessWidget {
   final Gradient? gradient;
   final IconData? icon;
   final double? height;
+  final bool hasShadow;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class ScanPrimaryButton extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: gradient ?? AppGradients.primary,
           borderRadius: BorderRadius.circular(AppRadii.pill),
-          boxShadow: AppShadows.button,
+          boxShadow: hasShadow ? AppShadows.button : null,
         ),
         child: Center(
           child: Row(
@@ -38,7 +40,7 @@ class ScanPrimaryButton extends StatelessWidget {
             children: [
               if (icon != null) ...[
                 Icon(icon, color: AppColors.onPrimary, size: AppSizes.iconLg),
-                const SizedBox(width: AppSpacing.sm),
+                const SizedBox(width: AppSpacing.s),
               ],
               Text(
                 label,
@@ -101,7 +103,7 @@ class ScanBulletRow extends StatelessWidget {
           height: AppSizes.iconLg,
           child: Icon(icon, size: AppSizes.iconLg, color: AppColors.primary),
         ),
-        const SizedBox(width: AppSpacing.md),
+        const SizedBox(width: AppSpacing.m),
         Expanded(
           child: Text(
             label,
@@ -123,6 +125,7 @@ class ScanCircleButton extends StatelessWidget {
     this.size = AppSizes.scanTopButtonSize,
     this.iconSize = AppSizes.scanTopIconSize,
     this.shadow = AppShadows.cameraControl,
+    this.border,
   });
 
   final IconData icon;
@@ -132,6 +135,7 @@ class ScanCircleButton extends StatelessWidget {
   final double size;
   final double iconSize;
   final List<BoxShadow> shadow;
+  final BoxBorder? border;
 
   @override
   Widget build(BuildContext context) {
@@ -144,6 +148,7 @@ class ScanCircleButton extends StatelessWidget {
           color: backgroundColor,
           borderRadius: BorderRadius.circular(AppRadii.pill),
           boxShadow: shadow,
+          border: border,
         ),
         child: Icon(icon, color: iconColor, size: iconSize),
       ),
@@ -393,21 +398,29 @@ class ScanTipOverlay extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (child != null) ...[
-            child!,
-            const SizedBox(height: AppSpacing.lg),
-          ],
-          Text(title, style: AppTextStyles.scanHeading20, textAlign: TextAlign.center),
-          const SizedBox(height: AppSpacing.sm),
-          SizedBox(
-            width: 280,
-            child: Text(
-              body,
-              style: AppTextStyles.body14Regular,
-              textAlign: TextAlign.center,
+          IgnorePointer(
+            ignoring: true,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (child != null) ...[
+                  child!,
+                  const SizedBox(height: AppSpacing.l),
+                ],
+                Text(title, style: AppTextStyles.scanHeading20, textAlign: TextAlign.center),
+                const SizedBox(height: AppSpacing.s),
+                SizedBox(
+                  width: 280,
+                  child: Text(
+                    body,
+                    style: AppTextStyles.body14Regular,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.l),
           GestureDetector(
             onTap: onDismiss,
             child: Container(
@@ -505,16 +518,18 @@ class ScanPreviewImage extends StatelessWidget {
   const ScanPreviewImage({
     super.key,
     required this.imagePath,
+    this.hasShadow = true,
   });
 
   final String? imagePath;
+  final bool hasShadow;
 
   @override
   Widget build(BuildContext context) {
     final decoration = BoxDecoration(
       color: AppColors.surfaceMuted,
       borderRadius: BorderRadius.circular(AppRadii.lg),
-      boxShadow: AppShadows.previewImage,
+      boxShadow: hasShadow ? AppShadows.previewImage : null,
       image: imagePath != null
           ? DecorationImage(
               image: FileImage(File(imagePath!)),
@@ -539,23 +554,25 @@ class ScanInputField extends StatelessWidget {
     required this.controller,
     required this.height,
     this.maxLines = 1,
+    this.hasShadow = true,
   });
 
   final String hint;
   final TextEditingController controller;
   final double height;
   final int maxLines;
+  final bool hasShadow;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: height,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.md),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l, vertical: AppSpacing.m),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.md),
         border: Border.all(color: AppColors.outline, width: 1.08),
-        boxShadow: AppShadows.cardSmall,
+        boxShadow: hasShadow ? AppShadows.cardSmall : null,
       ),
       child: TextField(
         controller: controller,
@@ -580,7 +597,7 @@ class ScanStatusBar extends StatelessWidget {
     return SizedBox(
       height: AppSizes.scanStatusBarHeight,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

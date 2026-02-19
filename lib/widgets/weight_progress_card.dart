@@ -99,7 +99,7 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
         border: Border.all(color: AppColors.border),
         boxShadow: AppShadows.cardSoft,
       ),
-      padding: const EdgeInsets.all(AppSpacing.lg),
+      padding: const EdgeInsets.all(AppSpacing.l),
       child: Column(
         children: [
           Row(
@@ -108,7 +108,7 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
               Text('Weight Progress', style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700)),
               Container(
                 height: AppSizes.badgeHeight,
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
                 decoration: BoxDecoration(
                   color: AppColors.surfaceSubtle,
                   borderRadius: BorderRadius.circular(AppRadii.pill),
@@ -126,10 +126,10 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.l),
           if (!hasEntries)
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.l),
               child: Text('No weight data yet.', style: AppTextStyles.body15.copyWith(color: AppColors.textSecondary)),
             )
           else
@@ -138,7 +138,7 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
               ticks: ticks,
               formatWeight: _formatWeight,
             ),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.l),
           _SegmentedControl(
             labels: _rangeLabels,
             selectedIndex: _selectedIndex,
@@ -200,7 +200,7 @@ class _WeightLineChart extends StatelessWidget {
                 .toList(),
           ),
         ),
-        const SizedBox(width: AppSpacing.sm),
+        const SizedBox(width: AppSpacing.s),
         Expanded(
           child: SizedBox(
             height: chartHeight,

@@ -20,7 +20,7 @@ class ExerciseDetailOptionsSheet extends StatelessWidget {
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
         child: Container(
-          padding: const EdgeInsets.all(AppSpacing.md),
+          padding: const EdgeInsets.all(AppSpacing.m),
           decoration: BoxDecoration(
             color: AppColors.glassSheet,
             borderRadius: BorderRadius.circular(AppRadii.lg),
@@ -34,7 +34,7 @@ class ExerciseDetailOptionsSheet extends StatelessWidget {
                 color: AppColors.textPrimary,
                 onTap: onReport,
               ),
-              const SizedBox(height: AppSpacing.sm),
+              const SizedBox(height: AppSpacing.s),
               _OptionRow(
                 icon: Icons.delete_outline,
                 label: 'Delete',
@@ -69,7 +69,7 @@ class _OptionRow extends StatelessWidget {
       child: Row(
         children: [
           Icon(icon, color: color, size: AppSizes.iconMd),
-          const SizedBox(width: AppSpacing.md),
+          const SizedBox(width: AppSpacing.m),
           Text(
             label,
             style: AppTextStyles.body16.copyWith(

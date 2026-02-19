@@ -12,44 +12,47 @@ class ExportPdfIntroScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProfileGradientScaffold(
       scroll: true,
-      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.lg, AppSpacing.screen, AppSpacing.lg),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.l, AppSpacing.screen, AppSpacing.l),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: SizedBox(
+        width: MediaQuery.of(context).size.width - (AppSpacing.screen * 2),
+        child: ProfilePrimaryButton(
+          label: 'Next',
+          height: AppSizes.buttonHeightCompact,
+          radius: AppRadii.md,
+          onPressed: () => Get.to(() => const ExportPdfDateRangeScreen()),
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ProfileBackButton(onPressed: () => Get.back()),
-          const SizedBox(height: AppSpacing.lg),
-          const Center(child: _ReportIllustration()),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.l),
           Text('Get your PDF\nSummary Report', style: AppTextStyles.h2.copyWith(fontWeight: FontWeight.w700)),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.s),
           Text(
             "Here's what you'll get in your summary report:",
             style: AppTextStyles.body16.copyWith(color: AppColors.textTertiary, fontWeight: FontWeight.w500),
           ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.m),
           ProfileCard(
-            padding: const EdgeInsets.all(AppSpacing.md),
+            padding: const EdgeInsets.all(AppSpacing.m),
             radius: AppRadii.lg,
             shadow: AppShadows.cardSubtle,
             child: Column(
               children: const [
                 _FeatureItem(icon: Icons.restaurant_menu, title: 'Meal history', subtitle: 'All logged meals and nutrition details'),
-                SizedBox(height: AppSpacing.md),
+                SizedBox(height: AppSpacing.m),
                 _FeatureItem(icon: Icons.directions_run, title: 'Exercise history', subtitle: 'Logged workouts and activity sessions'),
-                SizedBox(height: AppSpacing.md),
+                SizedBox(height: AppSpacing.m),
                 _FeatureItem(icon: Icons.show_chart, title: 'Weight progress', subtitle: 'Weekly trend of recorded weight changes'),
-                SizedBox(height: AppSpacing.md),
+                SizedBox(height: AppSpacing.m),
                 _FeatureItem(icon: Icons.pie_chart_outline, title: 'Calorie & macros breakdown', subtitle: 'Historical breakdown of calories and macros'),
               ],
             ),
           ),
-          const Spacer(),
-          ProfilePrimaryButton(
-            label: 'Next',
-            height: AppSizes.buttonHeightCompact,
-            radius: AppRadii.md,
-            onPressed: () => Get.to(() => const ExportPdfDateRangeScreen()),
-          ),
+          const SizedBox(height: AppSpacing.huge),
+          //const Center(child: _ReportIllustration()),
         ],
       ),
     );
@@ -83,7 +86,7 @@ class _ReportIllustration extends StatelessWidget {
               borderRadius: BorderRadius.circular(AppRadii.md),
               boxShadow: AppShadows.button,
             ),
-            padding: const EdgeInsets.all(AppSpacing.md),
+            padding: const EdgeInsets.all(AppSpacing.m),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -94,13 +97,13 @@ class _ReportIllustration extends StatelessWidget {
                     _miniPill(width: 64),
                   ],
                 ),
-                const SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: AppSpacing.s),
                 _miniLine(width: 80),
                 const SizedBox(height: AppSpacing.xs),
                 _miniLine(width: 96),
                 const SizedBox(height: AppSpacing.xs),
                 _miniLine(width: 64),
-                const SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: AppSpacing.s),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: List.generate(
@@ -117,19 +120,19 @@ class _ReportIllustration extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: AppSpacing.s),
                 Row(
                   children: const [
                     _LegendDot(),
                     SizedBox(width: 6),
                     Text('Draft', style: TextStyle(fontSize: 8, color: AppColors.textTertiary)),
-                    SizedBox(width: AppSpacing.sm),
+                    SizedBox(width: AppSpacing.s),
                     _LegendDot(),
                     SizedBox(width: 6),
                     Text('Draft', style: TextStyle(fontSize: 8, color: AppColors.textTertiary)),
                   ],
                 ),
-                const SizedBox(height: AppSpacing.sm),
+                const SizedBox(height: AppSpacing.s),
                 Container(height: AppSizes.reportPlaceholderHeight, decoration: BoxDecoration(color: AppColors.surfaceSubtle, borderRadius: BorderRadius.circular(4))),
                 const SizedBox(height: AppSpacing.xs),
                 Container(height: AppSizes.reportPlaceholderHeight, decoration: BoxDecoration(color: AppColors.surfaceSubtle, borderRadius: BorderRadius.circular(4))),
@@ -192,7 +195,7 @@ class _FeatureItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Icon(icon, size: AppSizes.iconLg, color: AppColors.textPrimary),
-        const SizedBox(width: AppSpacing.md),
+        const SizedBox(width: AppSpacing.m),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

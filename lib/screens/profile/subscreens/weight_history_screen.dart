@@ -15,7 +15,7 @@ class WeightHistoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProfileGradientScaffold(
       scroll: true,
-      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.lg, AppSpacing.screen, AppSpacing.xl),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.l, AppSpacing.screen, AppSpacing.xl),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: SizedBox(
         width: MediaQuery.of(context).size.width - (AppSpacing.screen * 2),
@@ -28,13 +28,13 @@ class WeightHistoryScreen extends StatelessWidget {
       child: Column(
         children: [
           ProfileTopBar(title: 'Weight History', onBack: () => Get.back()),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.l),
           Obx(() {
             final entries = WeightEntryController.to.entries;
             return Column(
               children: [
                 WeightProgressCard(entries: entries),
-                const SizedBox(height: AppSpacing.lg),
+                const SizedBox(height: AppSpacing.l),
                 if (entries.isEmpty)
                   const _WeightHistoryEmptyState()
                 else
@@ -63,7 +63,7 @@ class WeightHistoryListView extends StatelessWidget {
     return Column(
       children: entries
           .map((entry) => Padding(
-                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                padding: const EdgeInsets.only(bottom: AppSpacing.s),
                 child: _WeightHistoryEntryCard(
                   weight: _formatWeight(entry.weight),
                   date: _formatDate(entry.date),

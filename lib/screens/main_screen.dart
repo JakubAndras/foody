@@ -21,6 +21,7 @@ class MainScreen extends GetView<MainScreenController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       body: Obx(() => MainScreenController.to.widgetOptions.elementAt(controller._selectedIndex.value)),
       bottomNavigationBar: Obx(() => BottomNavBar(
             currentIndex: controller._selectedIndex.value,
@@ -45,11 +46,15 @@ class MainScreenController extends BaseController {
     _selectedIndex.value = index;
   }
 
+  void showDashboardTab() {
+    _selectedIndex.value = 0;
+  }
+
   void _showQuickActions(BuildContext context) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      isScrollControlled: true,
+      isScrollControlled: false,
       builder: (_) => QuickActionSheet(
         onLogMeal: () {
           Navigator.of(context).pop();
@@ -73,7 +78,7 @@ class MainScreenController extends BaseController {
         },
         onWeight: () {
           Navigator.of(context).pop();
-          showWeightLogSheet(context);
+          Get.to(() => const WeightLogSheet());
         },
         onExercise: () {
           Navigator.of(context).pop();

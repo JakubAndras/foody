@@ -9,6 +9,9 @@ const String profileWeightKgKey = "profileWeightKgKey";
 const String profileGoalWeightKgKey = "profileGoalWeightKgKey";
 const String profileSexKey = "profileSexKey";
 const String profileDobKey = "profileDobKey";
+const String profileGoalKey = "profileGoalKey";
+const String profilePrefersMetricKey = "profilePrefersMetricKey";
+const String profileWeightChangeRateKgPerWeekKey = "profileWeightChangeRateKgPerWeekKey";
 
 class SharedPreferencesService extends GetxService {
   static SharedPreferencesService get to => Get.find();

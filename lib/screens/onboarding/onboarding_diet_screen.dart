@@ -9,22 +9,38 @@ class OnboardingDietScreen extends StatefulWidget {
     required this.onBack,
     required this.step,
     required this.totalSteps,
+    this.onCanProceedChanged,
+    this.onDietChanged,
   });
 
   final VoidCallback onNext;
   final VoidCallback onBack;
   final int step;
   final int totalSteps;
+  final ValueChanged<bool>? onCanProceedChanged;
+  final ValueChanged<String>? onDietChanged;
 
   @override
   State<OnboardingDietScreen> createState() => _OnboardingDietScreenState();
 }
 
-class _OnboardingDietScreenState extends State<OnboardingDietScreen> {
+class _OnboardingDietScreenState extends State<OnboardingDietScreen> with AutomaticKeepAliveClientMixin {
   String? _selected;
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.onCanProceedChanged?.call(_selected != null);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     return OnboardingPage(
@@ -48,35 +64,51 @@ class _OnboardingDietScreenState extends State<OnboardingDietScreen> {
             selected: _selected == 'classic',
             height: AppSizes.optionCardHeightLarge,
             leading: const _DietIcon(icon: Icons.restaurant),
-            onTap: () => setState(() => _selected = 'classic'),
+            onTap: () {
+              setState(() => _selected = 'classic');
+              widget.onDietChanged?.call('classic');
+              widget.onCanProceedChanged?.call(true);
+            },
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.s),
           OnboardingOptionCard(
             title: 'Vegetarian',
             selected: _selected == 'vegetarian',
             height: AppSizes.optionCardHeightLarge,
             leading: const _DietIcon(icon: Icons.eco_outlined),
-            onTap: () => setState(() => _selected = 'vegetarian'),
+            onTap: () {
+              setState(() => _selected = 'vegetarian');
+              widget.onDietChanged?.call('vegetarian');
+              widget.onCanProceedChanged?.call(true);
+            },
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.s),
           OnboardingOptionCard(
             title: 'Vegan',
             selected: _selected == 'vegan',
             height: AppSizes.optionCardHeightLarge,
             leading: const _DietIcon(icon: Icons.energy_savings_leaf_outlined),
-            onTap: () => setState(() => _selected = 'vegan'),
+            onTap: () {
+              setState(() => _selected = 'vegan');
+              widget.onDietChanged?.call('vegan');
+              widget.onCanProceedChanged?.call(true);
+            },
           ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.m),
           Center(
             child: Text('Or', style: textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary)),
           ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.m),
           OnboardingOptionCard(
             title: 'Custom',
             selected: _selected == 'custom',
             height: AppSizes.optionCardHeightLarge,
             leading: const _DietIcon(icon: Icons.add),
-            onTap: () => setState(() => _selected = 'custom'),
+            onTap: () {
+              setState(() => _selected = 'custom');
+              widget.onDietChanged?.call('custom');
+              widget.onCanProceedChanged?.call(true);
+            },
           ),
         ],
       ),

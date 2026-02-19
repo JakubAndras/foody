@@ -57,7 +57,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
           SafeArea(
             bottom: false,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.md, AppSpacing.lg, AppSpacing.sm),
+              padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.m, AppSpacing.l, AppSpacing.s),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -76,7 +76,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
           ),
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.sm, AppSpacing.lg, AppSpacing.xl),
+              padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.s, AppSpacing.l, AppSpacing.xl),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -86,7 +86,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
                     controller: _nameController,
                     hintText: 'Exercise name',
                   ),
-                  const SizedBox(height: AppSpacing.lg),
+                  const SizedBox(height: AppSpacing.l),
                   Text('How would you like to track calories?', style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
                   const SizedBox(height: AppSpacing.xs),
                   Row(
@@ -101,7 +101,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
                           onTap: () => setState(() => _mode = ExerciseTrackingMode.total),
                         ),
                       ),
-                      const SizedBox(width: AppSpacing.md),
+                      const SizedBox(width: AppSpacing.m),
                       Expanded(
                         child: ExerciseTrackingOptionCard(
                           selected: _mode == ExerciseTrackingMode.perMinute,
@@ -114,7 +114,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: AppSpacing.lg),
+                  const SizedBox(height: AppSpacing.l),
                   if (_mode == ExerciseTrackingMode.total) ...[
                     Text('Total Calories Burned', style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
                     const SizedBox(height: AppSpacing.xs),
@@ -125,7 +125,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
                       gradient: AppGradients.exerciseCalories,
                       icon: Icons.local_fire_department,
                     ),
-                    const SizedBox(height: AppSpacing.sm),
+                    const SizedBox(height: AppSpacing.s),
                     Text(
                       'Enter the total amount of calories burned',
                       style: AppTextStyles.label12.copyWith(color: AppColors.textTertiary),
@@ -141,7 +141,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
                       icon: Icons.trending_up,
                       onChanged: (_) => setState(() {}),
                     ),
-                    const SizedBox(height: AppSpacing.md),
+                    const SizedBox(height: AppSpacing.m),
                     Text('Duration', style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
                     const SizedBox(height: AppSpacing.xs),
                     _InputCard(
@@ -152,7 +152,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
                       icon: Icons.schedule,
                       onChanged: (_) => setState(() {}),
                     ),
-                    const SizedBox(height: AppSpacing.md),
+                    const SizedBox(height: AppSpacing.m),
                     Text('Total Calories Burned', style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
                     const SizedBox(height: AppSpacing.xs),
                     ExerciseTotalSummaryCard(value: '$_calculatedTotal'),
@@ -162,7 +162,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.sm, AppSpacing.lg, AppSpacing.lg),
+            padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.s, AppSpacing.l, AppSpacing.l),
             child: GestureDetector(
               onTap: () => _showSnack(context, 'Exercise added'),
               child: Container(
@@ -204,7 +204,7 @@ class _TextInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: AppSizes.exerciseInputHeight,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg),
@@ -245,7 +245,7 @@ class _InputCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: AppSizes.exerciseInputHeight,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg),
@@ -263,7 +263,7 @@ class _InputCard extends StatelessWidget {
             ),
             child: Icon(icon, color: AppColors.onPrimary, size: AppSizes.iconSm),
           ),
-          const SizedBox(width: AppSpacing.md),
+          const SizedBox(width: AppSpacing.m),
           Expanded(
             child: TextField(
               controller: controller,

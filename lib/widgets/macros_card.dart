@@ -30,7 +30,7 @@ class MacrosCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppRadii.md),
           boxShadow: AppShadows.cardSmall,
         ),
-        padding: const EdgeInsets.all(AppSpacing.md),
+        padding: const EdgeInsets.all(AppSpacing.m),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

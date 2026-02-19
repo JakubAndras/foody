@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:camera/camera.dart';
 import 'package:diplomka/app_theme.dart';
@@ -6,6 +8,7 @@ import 'package:diplomka/screens/scan/scan_permission_screen.dart';
 import 'package:diplomka/screens/scan/scan_preview_screen.dart';
 import 'package:diplomka/screens/scan/scan_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -25,7 +28,12 @@ class ScanCameraScreen extends StatefulWidget {
 }
 
 class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBindingObserver {
+  final GlobalKey _previewBoundaryKey = GlobalKey();
   CameraController? _cameraController;
+  List<CameraDescription>? _availableCameras;
+  CameraDescription? _activeBackCamera;
+  CameraDescription? _wideBackCamera;
+  CameraDescription? _ultraWideBackCamera;
   bool _isInitialized = false;
   bool _isInitializing = false;
   bool _hasPermission = false;
@@ -33,6 +41,11 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
   bool _showTip = false;
   bool _showNutritionTip = false;
   bool _isZoomed = true;
+  bool _isFlashOn = false;
+  Uint8List? _frozenPreviewBytes;
+  int _freezeFrameToken = 0;
+  double _minZoomLevel = 1.0;
+  double _maxZoomLevel = 1.0;
   ScanMode _mode = ScanMode.scanMeal;
 
   @override
@@ -40,25 +53,67 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _mode = widget.initialMode;
-    _showTip = _mode != ScanMode.scanMeal;
-    _showNutritionTip = _mode == ScanMode.foodLabel;
+    _showTip = false;
+    _showNutritionTip = false;
     _initPermissionAndCamera();
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _cameraController?.dispose();
+    _releaseCameraController();
     super.dispose();
+  }
+
+  void _releaseCameraController() {
+    final controller = _cameraController;
+    _cameraController = null;
+    _activeBackCamera = null;
+    _isInitialized = false;
+    _isFlashOn = false;
+    _isZoomed = true;
+    _minZoomLevel = 1.0;
+    _maxZoomLevel = 1.0;
+    controller?.dispose().catchError((_) {});
+  }
+
+  Future<List<CameraDescription>> _getAvailableCameras() async {
+    final cached = _availableCameras;
+    if (cached != null) return cached;
+    final cameras = await availableCameras();
+    _availableCameras = cameras;
+    return cameras;
+  }
+
+  Future<void> _capturePreviewFreezeFrame() async {
+    final boundary = _previewBoundaryKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+    if (boundary == null) return;
+    try {
+      final image = await boundary.toImage(pixelRatio: 1.0);
+      final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      if (byteData == null || !mounted) return;
+      final token = _freezeFrameToken + 1;
+      setState(() {
+        _freezeFrameToken = token;
+        _frozenPreviewBytes = byteData.buffer.asUint8List();
+      });
+    } catch (_) {}
+  }
+
+  Future<void> _clearFrozenPreviewWhenStable(int token) async {
+    // Keep the frozen frame briefly after init so first frames from new lens
+    // are already stable when we reveal the live preview.
+    await Future<void>.delayed(const Duration(milliseconds: 250));
+    if (!mounted || token != _freezeFrameToken) return;
+    setState(() {
+      _frozenPreviewBytes = null;
+    });
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (_cameraController == null || !_cameraController!.value.isInitialized) {
-      return;
-    }
     if (state == AppLifecycleState.inactive) {
-      _cameraController?.dispose();
+      _releaseCameraController();
     } else if (state == AppLifecycleState.resumed) {
       _initCamera();
     }
@@ -88,37 +143,81 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
   }
 
   Future<void> _initCamera() async {
-    if (_isInitializing) {
+    return _initCameraWithPreferredBackCamera();
+  }
+
+  Future<void> _initCameraWithPreferredBackCamera({
+    CameraDescription? preferredBackCamera,
+    bool preserveFlash = false,
+  }) async {
+    if (mounted) {
       setState(() {
         _isInitializing = true;
       });
     }
 
     try {
-      final cameras = await availableCameras();
-      final backCamera = cameras.firstWhere(
-        (camera) => camera.lensDirection == CameraLensDirection.back,
-        orElse: () => cameras.first,
-      );
+      final shouldRestoreFlash = preserveFlash && _isFlashOn;
+      _releaseCameraController();
+      final cameras = await _getAvailableCameras();
+      final backCameras = cameras.where((camera) => camera.lensDirection == CameraLensDirection.back).toList();
+      if (backCameras.isEmpty) {
+        throw Exception('No back camera found');
+      }
+
+      CameraDescription? wideBackCamera;
+      CameraDescription? ultraWideBackCamera;
+      for (final camera in backCameras) {
+        final cameraName = camera.name.toLowerCase();
+        if (wideBackCamera == null &&
+            (camera.lensType == CameraLensType.wide || (camera.lensType == CameraLensType.unknown && cameraName.contains('wide')))) {
+          wideBackCamera = camera;
+        }
+        if (ultraWideBackCamera == null &&
+            (camera.lensType == CameraLensType.ultraWide || (camera.lensType == CameraLensType.unknown && cameraName.contains('ultra')))) {
+          ultraWideBackCamera = camera;
+        }
+      }
+      wideBackCamera ??= backCameras.first;
+      final isSelectingNormal = preferredBackCamera == null ? _isZoomed : preferredBackCamera != ultraWideBackCamera;
+      final targetBackCamera = preferredBackCamera ?? (isSelectingNormal ? wideBackCamera : (ultraWideBackCamera ?? wideBackCamera));
 
       final controller = CameraController(
-        backCamera,
+        targetBackCamera,
         ResolutionPreset.high,
         enableAudio: false,
       );
 
       await controller.initialize();
+      final minZoom = await controller.getMinZoomLevel();
+      final maxZoom = await controller.getMaxZoomLevel();
+      final normalZoom = 1.0.clamp(minZoom, maxZoom).toDouble();
+      await controller.setZoomLevel(normalZoom);
+      try {
+        await controller.setFlashMode(shouldRestoreFlash ? FlashMode.torch : FlashMode.off);
+      } catch (_) {}
       if (!mounted) return;
       setState(() {
         _cameraController = controller;
+        _activeBackCamera = targetBackCamera;
+        _wideBackCamera = wideBackCamera;
+        _ultraWideBackCamera = ultraWideBackCamera;
         _isInitialized = true;
         _isInitializing = false;
+        _isFlashOn = shouldRestoreFlash;
+        _isZoomed = targetBackCamera != ultraWideBackCamera;
+        _minZoomLevel = minZoom;
+        _maxZoomLevel = maxZoom;
       });
+      if (_frozenPreviewBytes != null) {
+        _clearFrozenPreviewWhenStable(_freezeFrameToken);
+      }
     } catch (_) {
       if (!mounted) return;
       setState(() {
         _isInitialized = false;
         _isInitializing = false;
+        _frozenPreviewBytes = null;
       });
     }
   }
@@ -165,17 +264,59 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
   void _toggleMode(ScanMode mode) {
     setState(() {
       _mode = mode;
-      if (mode == ScanMode.barcode) {
-        _showTip = true;
-        _showNutritionTip = false;
-      } else if (mode == ScanMode.foodLabel) {
-        _showTip = true;
-        _showNutritionTip = true;
-      } else {
-        _showTip = false;
-        _showNutritionTip = false;
-      }
+      // Never auto-open help. It should only appear from explicit help tap.
+      _showTip = false;
+      _showNutritionTip = false;
     });
+  }
+
+  Future<void> _setFlash(bool enabled) async {
+    final controller = _cameraController;
+    if (controller == null || !controller.value.isInitialized) return;
+    try {
+      await controller.setFlashMode(enabled ? FlashMode.torch : FlashMode.off);
+      if (!mounted) return;
+      setState(() => _isFlashOn = enabled);
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _isFlashOn = false);
+    }
+  }
+
+  Future<void> _toggleFlash() async {
+    await _setFlash(!_isFlashOn);
+  }
+
+  double _zoomLevelForSelection(bool isNormalZoom) {
+    final target = isNormalZoom ? 1.0 : 0.5;
+    return target.clamp(_minZoomLevel, _maxZoomLevel).toDouble();
+  }
+
+  Future<void> _setZoomSelection(bool isNormalZoom) async {
+    final wideBackCamera = _wideBackCamera;
+    final ultraWideBackCamera = _ultraWideBackCamera;
+    if (wideBackCamera != null && ultraWideBackCamera != null) {
+      final targetBackCamera = isNormalZoom ? wideBackCamera : ultraWideBackCamera;
+      if (_activeBackCamera != targetBackCamera) {
+        await _capturePreviewFreezeFrame();
+        await _initCameraWithPreferredBackCamera(
+          preferredBackCamera: targetBackCamera,
+          preserveFlash: true,
+        );
+        return;
+      }
+    }
+
+    final controller = _cameraController;
+    if (controller == null || !controller.value.isInitialized) return;
+    final level = _zoomLevelForSelection(isNormalZoom);
+    try {
+      await controller.setZoomLevel(level);
+      if (!mounted || _cameraController != controller) return;
+      setState(() {
+        _isZoomed = isNormalZoom;
+      });
+    } catch (_) {}
   }
 
   @override
@@ -200,7 +341,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
                   children: [
                     _buildCameraTopBar(),
                     _buildScanFrame(),
-                    _buildHandleBar(),
+                    //_buildHandleBar(),
                     _buildZoomToggle(),
                   ],
                 ),
@@ -215,37 +356,75 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
   }
 
   Widget _buildCameraSurface() {
-    if (_isInitialized && _cameraController != null) {
-      final previewSize = _cameraController!.value.previewSize ?? const Size(1, 1);
-      return SizedBox.expand(
-        child: FittedBox(
-          fit: BoxFit.cover,
-          child: SizedBox(
-            width: previewSize.height,
-            height: previewSize.width,
-            child: CameraPreview(_cameraController!),
-          ),
-        ),
-      );
-    }
+    final hasLivePreview = _isInitialized && _cameraController != null;
+    final hasFrozenPreview = _frozenPreviewBytes != null;
 
-    return Container(
-      decoration: const BoxDecoration(gradient: AppGradients.scanCameraSurface),
-      child: _isInitializing
-          ? const Center(child: CircularProgressIndicator())
-          : Center(
-              child: Text(
-                'Camera unavailable',
-                style: AppTextStyles.body14Regular.copyWith(color: AppColors.textSecondary),
-              ),
+    return Stack(
+      children: [
+        if (hasLivePreview)
+          RepaintBoundary(
+            key: _previewBoundaryKey,
+            child: _buildLiveCameraPreview(_cameraController!),
+          )
+        else if (hasFrozenPreview)
+          _buildFrozenPreview()
+        else
+          Container(
+            decoration: const BoxDecoration(gradient: AppGradients.scanCameraSurface),
+            child: !_isInitializing
+                ? Center(
+                    child: Text(
+                      'Camera unavailable',
+                      style: AppTextStyles.body14Regular.copyWith(color: AppColors.textSecondary),
+                    ),
+                  )
+                : null,
+          ),
+        if (hasFrozenPreview)
+          Positioned.fill(
+            child: IgnorePointer(
+              child: _buildFrozenPreview(),
             ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildLiveCameraPreview(CameraController controller) {
+    final previewSize = controller.value.previewSize ?? const Size(1, 1);
+    return SizedBox.expand(
+      child: FittedBox(
+        fit: BoxFit.cover,
+        child: SizedBox(
+          width: previewSize.height,
+          height: previewSize.width,
+          child: CameraPreview(controller),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFrozenPreview() {
+    return SizedBox.expand(
+      child: FittedBox(
+        fit: BoxFit.cover,
+        child: Image.memory(
+          _frozenPreviewBytes!,
+          gaplessPlayback: true,
+        ),
+      ),
     );
   }
 
   Widget _buildCameraTopBar() {
     return SafeArea(
+      top: false,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.screen),
+        padding: const EdgeInsets.only(
+          left: AppSpacing.xl,
+          right: AppSpacing.xl,
+          top: AppSpacing.xl,
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -295,12 +474,12 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
       case ScanMode.barcode:
         frameWidth = 340;
         frameHeight = 200;
-        frameColor = AppColors.textEmphasisAlt;
+        frameColor = AppColors.primary;
         break;
       case ScanMode.foodLabel:
         frameWidth = 288;
         frameHeight = 458;
-        frameColor = AppColors.textEmphasisAlt;
+        frameColor = AppColors.primary;
         break;
       case ScanMode.scanMeal:
         frameWidth = 340;
@@ -316,15 +495,17 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
   }
 
   Widget _buildZoomToggle() {
-    final enabled = _mode == ScanMode.scanMeal;
+    final hasLensSwitchOption = _wideBackCamera != null && _ultraWideBackCamera != null;
+    final hasDifferentZoomSteps = hasLensSwitchOption || (_zoomLevelForSelection(true) - _zoomLevelForSelection(false)).abs() > 0.01;
+    final enabled = _isInitialized && hasDifferentZoomSteps;
     return Align(
-      alignment: const Alignment(0, 0.55),
+      alignment: const Alignment(0, 0.94),
       child: ScanZoomToggle(
         isEnabled: enabled,
         isZoomed: _isZoomed,
-        onToggle: (value) {
+        onToggle: (value) async {
           if (!enabled) return;
-          setState(() => _isZoomed = value);
+          await _setZoomSelection(value);
         },
       ),
     );
@@ -339,7 +520,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
       ),
       child: Column(
         children: [
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.l),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -350,7 +531,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
                 onTap: () => _toggleMode(ScanMode.scanMeal),
                 activeColor: AppColors.primary,
               ),
-              const SizedBox(width: AppSpacing.sm),
+              const SizedBox(width: AppSpacing.s),
               ScanModeTile(
                 label: 'Barcode',
                 icon: Icons.qr_code_2,
@@ -358,7 +539,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
                 onTap: () => _toggleMode(ScanMode.barcode),
                 activeColor: AppColors.textHeading,
               ),
-              const SizedBox(width: AppSpacing.sm),
+              const SizedBox(width: AppSpacing.s),
               ScanModeTile(
                 label: 'Food label',
                 icon: Icons.description_outlined,
@@ -368,22 +549,22 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.l),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Opacity(
-                  opacity: _mode == ScanMode.scanMeal ? 1 : AppOpacities.disabled,
+                  opacity: 1,
                   child: ScanCircleButton(
-                    icon: Icons.flash_on,
-                    onPressed: _mode == ScanMode.scanMeal ? () {} : null,
-                    backgroundColor: AppColors.surfaceMuted,
+                    icon: _isFlashOn ? Icons.flash_on : Icons.flash_off,
+                    onPressed: _toggleFlash,
+                    backgroundColor: _isFlashOn ? AppColors.primary : AppColors.surfaceMuted,
                     shadow: const <BoxShadow>[],
                     size: AppSizes.scanAuxButtonSize,
                     iconSize: AppSizes.scanModeIconSize,
-                    iconColor: AppColors.textEmphasisAlt,
+                    iconColor: _isFlashOn ? AppColors.onPrimary : AppColors.textEmphasisAlt,
                   ),
                 ),
                 ScanShutterButton(onPressed: _capturePhoto),
@@ -407,21 +588,16 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
   Widget _buildTipOverlay() {
     final isBarcode = _mode == ScanMode.barcode;
     final title = isBarcode ? 'Barcode Scanner' : 'Nutrition Label Scanner';
-    final body = isBarcode
-        ? 'Align the barcode within the frame.'
-        : 'Get nutrition details from any label to track your intake accurately.';
+    final body =
+        isBarcode ? 'Align the barcode within the frame.' : 'Get nutrition details from any label to track your intake accurately.';
     return Positioned.fill(
-      child: IgnorePointer(
-        ignoring: false,
-        child: Container(
-          color: Colors.transparent,
-          alignment: Alignment.center,
-          child: ScanTipOverlay(
-            title: title,
-            body: body,
-            onDismiss: () => setState(() => _showTip = false),
-            child: _showNutritionTip ? const ScanNutritionLabelCard() : null,
-          ),
+      child: Align(
+        alignment: const Alignment(0, 0.8),
+        child: ScanTipOverlay(
+          title: title,
+          body: body,
+          onDismiss: () => setState(() => _showTip = false),
+          child: _showNutritionTip ? const ScanNutritionLabelCard() : null,
         ),
       ),
     );

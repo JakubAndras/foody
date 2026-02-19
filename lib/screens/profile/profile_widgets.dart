@@ -22,7 +22,7 @@ class ProfileGradientScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Widget content = Padding(
-      padding: padding ?? const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.lg, AppSpacing.screen, AppSpacing.xl),
+      padding: padding ?? const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.l, AppSpacing.screen, AppSpacing.xl),
       child: child,
     );
 
@@ -295,13 +295,13 @@ class ProfileSettingsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Widget row = Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen, vertical: AppSpacing.sm),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen, vertical: AppSpacing.s),
       child: Row(
         crossAxisAlignment: subtitle == null ? CrossAxisAlignment.center : CrossAxisAlignment.start,
         children: [
           if (leading != null) ...[
             leading!,
-            const SizedBox(width: AppSpacing.sm),
+            const SizedBox(width: AppSpacing.s),
           ],
           Expanded(
             child: Column(
@@ -394,7 +394,7 @@ class ProfileTimeChip extends StatelessWidget {
         color: AppColors.surfaceMuted,
         borderRadius: BorderRadius.circular(AppRadii.xs),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
       alignment: Alignment.center,
       child: Text(
         label,

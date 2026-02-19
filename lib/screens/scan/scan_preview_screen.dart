@@ -1,13 +1,8 @@
-import 'dart:io';
-
 import 'package:diplomka/app_theme.dart';
-import 'package:diplomka/model/ai_response.dart';
-import 'package:diplomka/model/meal.dart';
-import 'package:diplomka/screens/meals/edit_meal_screen.dart';
-import 'package:diplomka/screens/meals/fix_result_screen.dart';
+import 'package:diplomka/controller/dashboard_controller.dart';
+import 'package:diplomka/screens/main_screen.dart';
 import 'package:diplomka/screens/scan/scan_widgets.dart';
-import 'package:diplomka/services/ai_feature/ai_pipeline_service.dart';
-import 'package:diplomka/utils/media_storage.dart';
+import 'package:diplomka/services/selected_date_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -27,7 +22,7 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
   bool _isAnalyzing = false;
-  String? _persistedPhotoPath;
+  DateTime get _selectedDate => SelectedDateService.to.selectedDate.value;
 
   @override
   void dispose() {
@@ -36,35 +31,22 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
     super.dispose();
   }
 
-  Future<void> _analyze() async {
+  void _analyze() {
+    if (_isAnalyzing) return;
     setState(() => _isAnalyzing = true);
     final description = _buildDescription();
-    final String? resolvedPhotoPath = await _resolvePhotoPath();
-    final imageFiles = resolvedPhotoPath == null ? null : [File(resolvedPhotoPath)];
-    final result = await AiPipelineService.to.analyzeMeal(
-      imageFiles: imageFiles,
+
+    DashboardController.to.analyzeMealFromImage(
+      selectedDate: _selectedDate,
+      imagePath: widget.imagePath,
       description: description,
+      preferredMealName: _nameController.text.trim(),
     );
-    if (!mounted) return;
-    setState(() => _isAnalyzing = false);
 
-    if (result.status == AiAnalysisStatus.failure || result.response == null) {
-      await _showAnalysisFailure();
-      return;
+    if (Get.isRegistered<MainScreenController>()) {
+      MainScreenController.to.showDashboardTab();
     }
-
-    if (result.status == AiAnalysisStatus.lowConfidence) {
-      Get.snackbar('Low confidence', result.message ?? 'Please review the result.');
-    }
-
-    final meal = _mealFromResponse(result.response!, description).copyWith(
-      photoPath: resolvedPhotoPath,
-    );
-    Get.to(() => EditMealScreen(
-          meal: meal,
-          isNewMeal: true,
-          selectedDate: DateTime.now(),
-        ));
+    Get.until((route) => route.isFirst);
   }
 
   @override
@@ -75,25 +57,23 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
         child: Stack(
           children: [
             SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.lg, AppSpacing.lg, AppSpacing.xxxl),
+              padding: const EdgeInsets.fromLTRB(AppSpacing.l, 0, AppSpacing.l, AppSpacing.s),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   _buildTopBar(),
-                  const SizedBox(height: AppSpacing.lg),
-                  ScanPreviewImage(imagePath: widget.imagePath),
-                  const SizedBox(height: AppSpacing.lg),
-                  ScanInputField(
-                    hint: 'Meal name (optional)',
-                    controller: _nameController,
-                    height: AppSizes.scanInputHeight,
+                  const SizedBox(height: AppSpacing.l),
+                  ScanPreviewImage(
+                    imagePath: widget.imagePath,
+                    hasShadow: false,
                   ),
-                  const SizedBox(height: AppSpacing.sm),
+                  const SizedBox(height: AppSpacing.l),
                   ScanInputField(
                     hint: 'Add notes or description (optional)',
                     controller: _notesController,
                     height: AppSizes.scanTextAreaHeight,
                     maxLines: 3,
+                    hasShadow: false,
                   ),
                   const SizedBox(height: AppSpacing.xl),
                   ScanPrimaryButton(
@@ -102,6 +82,7 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
                     gradient: AppGradients.scanAnalyze,
                     onPressed: _isAnalyzing ? null : _analyze,
                     height: AppSizes.scanAnalyzeButtonHeight,
+                    hasShadow: false,
                   ),
                 ],
               ),
@@ -127,15 +108,16 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
           icon: Icons.close,
           onPressed: () => Get.back(),
           backgroundColor: AppColors.surface,
+          shadow: const <BoxShadow>[],
+          border: Border.all(color: AppColors.outline, width: 1.08),
         ),
         Container(
           height: AppSizes.scanTopButtonSize,
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
           decoration: BoxDecoration(
             color: AppColors.surface,
             borderRadius: BorderRadius.circular(AppRadii.pill),
             border: Border.all(color: AppColors.outline, width: 1.08),
-            boxShadow: AppShadows.cameraControl,
           ),
           child: Row(
             children: [
@@ -143,7 +125,7 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
                 onTap: () => Get.back(),
                 child: Text('Retake', style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w500)),
               ),
-              const SizedBox(width: AppSpacing.sm),
+              const SizedBox(width: AppSpacing.s),
               GestureDetector(
                 onTap: () => Get.snackbar('Help', 'Tips for better scans are available on the onboarding screens.'),
                 child: Text('Help', style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w500)),
@@ -163,84 +145,5 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
       return '$name. $notes';
     }
     return name.isNotEmpty ? name : notes;
-  }
-
-  Meal _mealFromResponse(AiResponse response, String? description) {
-    final meal = Meal.fromAnswer(response.answer);
-    if (description == null || description.trim().isEmpty) {
-      return meal;
-    }
-    if (_nameController.text.trim().isNotEmpty) {
-      return meal.copyWith(name: _nameController.text.trim());
-    }
-    return meal;
-  }
-
-  Future<void> _showAnalysisFailure() async {
-    await showDialog<void>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Analysis failed'),
-        content: const Text('We could not analyze this meal. You can retry or log it manually.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Close'),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.of(context).pop();
-              final photoPath = await _resolvePhotoPath();
-              final meal = Meal(
-                name: _nameController.text.trim(),
-                ingredients: const [],
-                timestamp: DateTime.now(),
-                photoPath: photoPath,
-              );
-              Get.to(() => EditMealScreen(
-                    meal: meal,
-                    isNewMeal: true,
-                    selectedDate: DateTime.now(),
-                  ));
-            },
-            child: const Text('Manual entry'),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.of(context).pop();
-              final photoPath = await _resolvePhotoPath();
-              final meal = Meal(
-                name: _nameController.text.trim(),
-                ingredients: const [],
-                timestamp: DateTime.now(),
-                photoPath: photoPath,
-              );
-              Get.to(() => FixResultScreen(
-                    baseMeal: meal,
-                    selectedDate: DateTime.now(),
-                    isNewMeal: true,
-                  ));
-            },
-            child: const Text('Try text fix'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<String?> _resolvePhotoPath() async {
-    if (_persistedPhotoPath != null) return _persistedPhotoPath;
-    final rawPath = widget.imagePath;
-    if (rawPath == null || rawPath.isEmpty) return null;
-    final persisted = await MediaStorage.persistMealPhoto(rawPath);
-    if (persisted != null) {
-      _persistedPhotoPath = persisted;
-      return persisted;
-    }
-    if (await File(rawPath).exists()) {
-      _persistedPhotoPath = rawPath;
-      return rawPath;
-    }
-    return null;
   }
 }

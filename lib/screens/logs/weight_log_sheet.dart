@@ -8,12 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-Future<void> showWeightLogSheet(BuildContext context, {WeightEntry? entry}) {
-  return showModalBottomSheet<void>(
-    context: context,
-    isScrollControlled: true,
-    backgroundColor: Colors.transparent,
-    builder: (_) => WeightLogSheet(entry: entry),
+Future<void> showWeightLogSheet(BuildContext context, {WeightEntry? entry}) async {
+  await Navigator.of(context, rootNavigator: true).push(
+    MaterialPageRoute<void>(
+      builder: (_) => WeightLogSheet(entry: entry),
+    ),
   );
 }
 
@@ -30,15 +29,28 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
   late final TextEditingController _weightController;
   late DateTime _selectedDate;
   String? _errorText;
+  bool _isSaving = false;
+  bool _hasTypedWeight = false;
 
   @override
   void initState() {
     super.initState();
-    final initialWeight = widget.entry?.weight;
+    final latestWeight = WeightEntryController.to.latestEntry?.weight;
+    final initialWeight = widget.entry?.weight ?? latestWeight;
     _weightController = TextEditingController(
       text: initialWeight == null ? '' : _formatWeight(initialWeight),
     );
-    _selectedDate = widget.entry?.date ?? DateTime.now();
+    final now = DateTime.now();
+    _selectedDate = widget.entry?.date ?? DateTime(now.year, now.month, now.day);
+
+    if (widget.entry == null && initialWeight == null) {
+      WeightEntryController.to.refreshEntries().then((_) {
+        if (!mounted || _hasTypedWeight || _weightController.text.trim().isNotEmpty) return;
+        final refreshedLatest = WeightEntryController.to.latestEntry?.weight;
+        if (refreshedLatest == null) return;
+        _weightController.text = _formatWeight(refreshedLatest);
+      });
+    }
   }
 
   @override
@@ -71,6 +83,8 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
   }
 
   Future<void> _handleSave() async {
+    if (_isSaving) return;
+
     final weight = _parseWeight();
     if (weight == null) {
       setState(() => _errorText = 'Enter a valid weight.');
@@ -84,9 +98,21 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
       date: date,
       weight: weight,
     );
-    await WeightEntryController.to.saveEntry(entry);
-    if (!mounted) return;
-    Navigator.of(context).pop();
+    setState(() => _isSaving = true);
+    try {
+      await WeightEntryController.to.saveEntry(entry);
+      if (!mounted) return;
+      Navigator.of(context).pop();
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not save weight entry. Please try again.')),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _isSaving = false);
+      }
+    }
   }
 
   Future<void> _handleDelete() async {
@@ -96,7 +122,7 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
       context: context,
       backgroundColor: Colors.transparent,
       builder: (context) => Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
+        padding: const EdgeInsets.all(AppSpacing.m),
         child: EditConfirmSheet(
           title: 'Delete entry?',
           message: 'This weight record will be removed.',
@@ -116,13 +142,19 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
   }
 
   void _openDatePicker() {
+    FocusScope.of(context).unfocus();
     showModalBottomSheet<void>(
       context: context,
-      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.lg3)),
+      ),
+      clipBehavior: Clip.antiAlias,
       builder: (context) {
         DateTime month = DateTime(_selectedDate.year, _selectedDate.month);
-        return Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
+        return SafeArea(
+          top: false,
           child: StatefulBuilder(
             builder: (context, setSheetState) => DatePickerCard(
               month: month,
@@ -148,103 +180,136 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
     final title = _isEditing ? 'Edit Entry' : 'Log Weight';
 
-    return Padding(
-      padding: EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.screen, AppSpacing.screen, AppSpacing.screen + bottomInset),
-      child: Material(
-        color: Colors.transparent,
-        child: Container(
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(AppRadii.xl),
-            boxShadow: AppShadows.modal,
-          ),
-          padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.lg, AppSpacing.lg, AppSpacing.lg),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Scaffold(
+      backgroundColor: AppColors.backgroundAlt,
+      body: Column(
+        children: [
+          SafeArea(
+            bottom: false,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.m, AppSpacing.l, AppSpacing.s),
+              child: Row(
                 children: [
-                  Text(title, style: AppTextStyles.h4.copyWith(fontWeight: FontWeight.w700)),
-                  SizedBox(
-                    width: AppSizes.iconButtonSm,
-                    height: AppSizes.iconButtonSm,
-                    child: Material(
-                      color: AppColors.surfaceMuted,
-                      shape: const CircleBorder(),
-                      child: InkWell(
-                        onTap: () => Navigator.of(context).pop(),
-                        customBorder: const CircleBorder(),
-                        child: const Icon(Icons.close, size: AppSizes.iconMd, color: AppColors.textSecondary),
-                      ),
-                    ),
+                  _CircleButton(
+                    icon: Icons.chevron_left,
+                    onTap: () => Navigator.of(context).maybePop(),
+                    showShadow: false,
                   ),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              _LabelledField(
-                label: 'WEIGHT',
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _weightController,
-                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]')),
-                        ],
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          isCollapsed: true,
-                          hintText: '0',
-                        ),
-                        style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w600),
-                        onChanged: (_) => setState(() => _errorText = null),
-                      ),
-                    ),
-                    const SizedBox(width: AppSpacing.xs),
-                    Text('kg', style: AppTextStyles.body15.copyWith(color: AppColors.textSecondary)),
-                  ],
-                ),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              _LabelledField(
-                label: 'DATE',
-                onTap: _openDatePicker,
-                child: Text(
-                  _formatDate(_selectedDate),
-                  style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w600),
-                ),
-              ),
-              if (_errorText != null) ...[
-                const SizedBox(height: AppSpacing.sm),
-                Text(_errorText!, style: AppTextStyles.body14.copyWith(color: AppColors.error)),
-              ],
-              const SizedBox(height: AppSpacing.lg),
-              Row(
-                children: [
-                  if (_isEditing) ...[
-                    Expanded(
-                      child: _DangerButton(label: 'Delete', icon: Icons.delete_outline, onPressed: _handleDelete),
-                    ),
-                    const SizedBox(width: AppSpacing.sm),
-                  ],
                   Expanded(
-                    child: ProfilePrimaryButton(
-                      label: 'Save',
-                      height: AppSizes.buttonHeightSm,
-                      radius: AppRadii.md,
-                      onPressed: _handleSave,
+                    child: Center(
+                      child: Text(title, style: AppTextStyles.title18Tight),
                     ),
                   ),
+                  const SizedBox(width: AppSizes.backButtonSize, height: AppSizes.backButtonSize),
                 ],
               ),
-            ],
+            ),
           ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.s, AppSpacing.l, AppSpacing.xl),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _LabelledField(
+                    label: 'WEIGHT',
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _weightController,
+                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]')),
+                            ],
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              isCollapsed: true,
+                              hintText: '0',
+                            ),
+                            style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w600),
+                            onChanged: (_) => setState(() {
+                              _hasTypedWeight = true;
+                              _errorText = null;
+                            }),
+                          ),
+                        ),
+                        const SizedBox(width: AppSpacing.xs),
+                        Text('kg', style: AppTextStyles.body15.copyWith(color: AppColors.textSecondary)),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.m),
+                  _LabelledField(
+                    label: 'DATE',
+                    onTap: _openDatePicker,
+                    child: Text(
+                      _formatDate(_selectedDate),
+                      style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  if (_errorText != null) ...[
+                    const SizedBox(height: AppSpacing.s),
+                    Text(_errorText!, style: AppTextStyles.body14.copyWith(color: AppColors.error)),
+                  ],
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.s, AppSpacing.l, AppSpacing.l),
+            child: Row(
+              children: [
+                if (_isEditing) ...[
+                  Expanded(
+                    child: _DangerButton(label: 'Delete', icon: Icons.delete_outline, onPressed: _handleDelete),
+                  ),
+                  const SizedBox(width: AppSpacing.s),
+                ],
+                Expanded(
+                  child: ProfilePrimaryButton(
+                    label: _isSaving ? 'Saving...' : 'Save',
+                    height: AppSizes.buttonHeightCompact,
+                    radius: AppRadii.pill,
+                    onPressed: _isSaving ? null : _handleSave,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CircleButton extends StatelessWidget {
+  const _CircleButton({
+    required this.icon,
+    required this.onTap,
+    this.showShadow = true,
+  });
+
+  final IconData icon;
+  final VoidCallback onTap;
+  final bool showShadow;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: AppSizes.backButtonSize,
+        height: AppSizes.backButtonSize,
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(AppRadii.pill),
+          border: Border.all(color: AppColors.outline, width: 1),
+          boxShadow: showShadow ? AppShadows.control : null,
         ),
+        child: Icon(icon, color: AppColors.textPrimary, size: AppSizes.iconMd),
       ),
     );
   }
@@ -275,7 +340,7 @@ class _LabelledField extends StatelessWidget {
               border: Border.all(color: AppColors.surfaceCardBorder),
             ),
             alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
             child: child,
           ),
         ),

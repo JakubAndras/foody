@@ -17,7 +17,7 @@ class PersonalDetailsScreen extends StatelessWidget {
     final media = MediaQuery.of(context);
     return ProfileGradientScaffold(
       scroll: true,
-      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.lg, AppSpacing.screen, AppSpacing.xl),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.l, AppSpacing.screen, AppSpacing.xl),
       child: Obx(() {
         final entries = WeightEntryController.to.entries;
         final double? profileWeight = SessionManager.to.weightKg.value;
@@ -39,11 +39,11 @@ class PersonalDetailsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ProfileTopBar(title: 'Personal Details', onBack: () => Get.back()),
-            const SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: AppSpacing.l),
             ProfileCard(
               radius: AppRadii.lg2,
               shadow: AppShadows.cardSubtle,
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen, vertical: AppSpacing.md),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen, vertical: AppSpacing.m),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -71,7 +71,7 @@ class PersonalDetailsScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.m),
             ProfileCard(
               radius: AppRadii.lg2,
               shadow: AppShadows.cardSubtle,
@@ -176,7 +176,7 @@ class PersonalDetailsScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(AppRadii.xl),
                 boxShadow: AppShadows.modal,
               ),
-              padding: const EdgeInsets.all(AppSpacing.lg),
+              padding: const EdgeInsets.all(AppSpacing.l),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -184,7 +184,7 @@ class PersonalDetailsScreen extends StatelessWidget {
                     title: 'Date of Birth',
                     onClose: () => Navigator.of(context).pop(),
                   ),
-                  const SizedBox(height: AppSpacing.md),
+                  const SizedBox(height: AppSpacing.m),
                   SizedBox(
                     height: AppSizes.pickerHeight,
                     child: CupertinoDatePicker(
@@ -194,7 +194,7 @@ class PersonalDetailsScreen extends StatelessWidget {
                       onDateTimeChanged: (value) => selected = value,
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.md),
+                  const SizedBox(height: AppSpacing.m),
                   ProfilePrimaryButton(
                     label: 'Save',
                     onPressed: () async {
@@ -216,7 +216,7 @@ class PersonalDetailsScreen extends StatelessWidget {
       context: context,
       backgroundColor: Colors.transparent,
       builder: (_) => Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
+        padding: const EdgeInsets.all(AppSpacing.m),
         child: Material(
           color: Colors.transparent,
           child: Container(
@@ -225,7 +225,7 @@ class PersonalDetailsScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(AppRadii.lg),
               boxShadow: AppShadows.sheet,
             ),
-            padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.md, AppSpacing.lg, AppSpacing.md),
+            padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.m, AppSpacing.l, AppSpacing.m),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: ProfileSex.values.map((sex) {
@@ -312,7 +312,7 @@ class _SmallGradientButton extends StatelessWidget {
               gradient: AppGradients.primary,
               borderRadius: BorderRadius.circular(AppRadii.pill),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
             child: Center(
               child: Text(
                 label,
@@ -349,14 +349,14 @@ class _DetailRow extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
             child: Row(
               children: [
                 Expanded(
                   child: Text(label, style: AppTextStyles.body15.copyWith(fontWeight: FontWeight.w400)),
                 ),
                 Text(value, style: AppTextStyles.body15.copyWith(fontWeight: FontWeight.w600)),
-                const SizedBox(width: AppSpacing.sm),
+                const SizedBox(width: AppSpacing.s),
                 const Icon(Icons.edit_outlined, size: AppSizes.iconSm, color: AppColors.textTertiary),
               ],
             ),
@@ -475,12 +475,12 @@ class _ProfileNumberSheetState extends State<_ProfileNumberSheet> {
             borderRadius: BorderRadius.circular(AppRadii.xl),
             boxShadow: AppShadows.modal,
           ),
-          padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.lg, AppSpacing.lg, AppSpacing.lg),
+          padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.l, AppSpacing.l, AppSpacing.l),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               _SheetHeader(title: widget.title, onClose: () => Navigator.of(context).pop()),
-              const SizedBox(height: AppSpacing.lg),
+              const SizedBox(height: AppSpacing.l),
               _NumberField(
                 controller: _controller,
                 unit: widget.unit,
@@ -493,7 +493,7 @@ class _ProfileNumberSheetState extends State<_ProfileNumberSheet> {
                   style: AppTextStyles.body14Regular.copyWith(color: AppColors.errorText),
                 ),
               ],
-              const SizedBox(height: AppSpacing.lg),
+              const SizedBox(height: AppSpacing.l),
               ProfilePrimaryButton(
                 label: 'Save',
                 onPressed: _handleSave,
@@ -516,7 +516,7 @@ class _NumberField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.s),
       decoration: BoxDecoration(
         color: AppColors.surfaceSubtle,
         borderRadius: BorderRadius.circular(AppRadii.md),

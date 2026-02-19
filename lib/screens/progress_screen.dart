@@ -25,9 +25,7 @@ double? _computeGoalProgress({
   if (goal == start) {
     return current == goal ? 1.0 : 0.0;
   }
-  final double progress = goal > start
-      ? (current - start) / (goal - start)
-      : (start - current) / (start - goal);
+  final double progress = goal > start ? (current - start) / (goal - start) : (start - current) / (start - goal);
   return progress.clamp(0.0, 1.0);
 }
 
@@ -127,12 +125,12 @@ class ProgressScreen extends StatelessWidget {
         child: SafeArea(
           bottom: false,
           child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.lg, AppSpacing.lg, AppSpacing.huge),
+            padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.s, AppSpacing.l, AppSpacing.mega + 42),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Progress', style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w700)),
-                const SizedBox(height: AppSpacing.lg),
+                const SizedBox(height: AppSpacing.l),
                 Obx(() {
                   final weightEntries = WeightEntryController.to.entries.toList(growable: false);
                   final dayRecords = DayRecordController.to.dayRecords.toList(growable: false);
@@ -144,14 +142,13 @@ class ProgressScreen extends StatelessWidget {
                   final earliestWeight = sortedWeights.isNotEmpty ? sortedWeights.last : null;
                   final double? currentWeight = latestWeight?.weight ?? profileWeight;
                   final double? startWeight = earliestWeight?.weight ?? profileWeight;
-                  final goalProgress =
-                      currentWeight != null && startWeight != null && goalWeight != null
-                          ? _computeGoalProgress(
-                              current: currentWeight,
-                              start: startWeight,
-                              goal: goalWeight,
-                            )
-                          : null;
+                  final goalProgress = currentWeight != null && startWeight != null && goalWeight != null
+                      ? _computeGoalProgress(
+                          current: currentWeight,
+                          start: startWeight,
+                          goal: goalWeight,
+                        )
+                      : null;
                   final streakMetrics = _computeStreakMetrics(dayRecords);
 
                   return Row(
@@ -164,7 +161,7 @@ class ProgressScreen extends StatelessWidget {
                           nextWeighInLabel: _nextWeighInLabel(latestWeight),
                         ),
                       ),
-                      const SizedBox(width: AppSpacing.md),
+                      const SizedBox(width: AppSpacing.m),
                       Expanded(
                         child: _DayStreakCard(
                           currentStreak: streakMetrics.currentStreak,
@@ -174,7 +171,7 @@ class ProgressScreen extends StatelessWidget {
                     ],
                   );
                 }),
-                const SizedBox(height: AppSpacing.lg),
+                const SizedBox(height: AppSpacing.l),
                 Obx(() {
                   final entries = WeightEntryController.to.entries;
                   if (entries.isEmpty) {
@@ -182,9 +179,9 @@ class ProgressScreen extends StatelessWidget {
                   }
                   return WeightProgressCard(entries: entries.toList(growable: false));
                 }),
-                const SizedBox(height: AppSpacing.lg),
+                const SizedBox(height: AppSpacing.l),
                 const _DailyAverageCard(),
-                const SizedBox(height: AppSpacing.lg),
+                const SizedBox(height: AppSpacing.l),
                 Obx(() {
                   final weightEntries = WeightEntryController.to.entries.toList(growable: false);
                   final sorted = _sortWeightEntries(weightEntries);
@@ -229,7 +226,7 @@ class _MyWeightCard extends StatelessWidget {
         border: Border.all(color: AppColors.border),
         boxShadow: AppShadows.cardSoft,
       ),
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg, horizontal: AppSpacing.md),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.l, horizontal: AppSpacing.m),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -282,7 +279,7 @@ class _MyWeightCard extends StatelessWidget {
           ),
           Container(
             height: AppSizes.segmentedHeight,
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
             decoration: BoxDecoration(
               color: AppColors.surfaceSubtle,
               borderRadius: BorderRadius.circular(AppRadii.sm2),
@@ -323,14 +320,14 @@ class _DayStreakCard extends StatelessWidget {
         border: Border.all(color: AppColors.border),
         boxShadow: AppShadows.cardSoft,
       ),
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.m),
       child: Column(
         children: [
           const SizedBox(height: AppSpacing.xs),
           Icon(Icons.local_fire_department, color: AppColors.orange, size: AppSizes.streakIconSize),
           const SizedBox(height: AppSpacing.xs),
           Text(title, style: AppTextStyles.title.copyWith(color: AppColors.orange, fontWeight: FontWeight.w700)),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.s),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(7, (index) {
@@ -429,7 +426,7 @@ class _DailyAverageCardState extends State<_DailyAverageCard> {
           border: Border.all(color: AppColors.border),
           boxShadow: AppShadows.cardSoft,
         ),
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        padding: const EdgeInsets.all(AppSpacing.l),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -447,7 +444,7 @@ class _DailyAverageCardState extends State<_DailyAverageCard> {
                     ),
                     child: const Icon(Icons.bar_chart_rounded, color: AppColors.textTertiary),
                   ),
-                  const SizedBox(height: AppSpacing.md),
+                  const SizedBox(height: AppSpacing.m),
                   if (stats.hasMeals)
                     Text('${stats.average.round()} kcal', style: AppTextStyles.weightValue)
                   else
@@ -565,7 +562,7 @@ class _BmiCard extends StatelessWidget {
         border: Border.all(color: AppColors.border),
         boxShadow: AppShadows.cardSoft,
       ),
-      padding: const EdgeInsets.all(AppSpacing.lg),
+      padding: const EdgeInsets.all(AppSpacing.l),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -576,7 +573,7 @@ class _BmiCard extends StatelessWidget {
               const Icon(Icons.info_outline, size: AppSizes.iconMd, color: AppColors.textTertiary),
             ],
           ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.m),
           if (bmi == null)
             Text(
               missingLabel,
@@ -586,7 +583,7 @@ class _BmiCard extends StatelessWidget {
             Row(
               children: [
                 Text(bmi.toStringAsFixed(1), style: AppTextStyles.bmiValue),
-                const SizedBox(width: AppSpacing.sm),
+                const SizedBox(width: AppSpacing.s),
                 Text('Your weight is', style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary)),
                 const SizedBox(width: AppSpacing.xs),
                 Container(
@@ -602,7 +599,7 @@ class _BmiCard extends StatelessWidget {
                 ),
               ],
             ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.m),
           LayoutBuilder(
             builder: (context, constraints) {
               double indicatorX = 0;
@@ -636,7 +633,7 @@ class _BmiCard extends StatelessWidget {
               );
             },
           ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.m),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: const [

@@ -35,52 +35,123 @@ class EditIngredientScreen extends StatefulWidget {
 }
 
 class _EditIngredientScreenState extends State<EditIngredientScreen> {
+  late final TextEditingController _nameController;
   late final TextEditingController _amountController;
+  late final TextEditingController _caloriesController;
+  late final TextEditingController _proteinController;
+  late final TextEditingController _carbsController;
+  late final TextEditingController _fatController;
   late Ingredient _baseIngredient;
   int _selectedMeasurement = 1;
-  double _currentWeight = 0;
+  bool _showValidationError = false;
 
   @override
   void initState() {
     super.initState();
     _baseIngredient = widget.ingredient;
-    _currentWeight = _baseIngredient.weight > 0 ? _baseIngredient.weight : 0;
-    _amountController = TextEditingController(text: _formatAmount(_currentWeight));
+    _nameController = TextEditingController(text: _baseIngredient.name);
+    _amountController = TextEditingController(text: _formatNumber(_baseIngredient.weight));
+    _caloriesController = TextEditingController(text: _formatNumber(_baseIngredient.calories));
+    _proteinController = TextEditingController(text: _formatNumber(_baseIngredient.proteins));
+    _carbsController = TextEditingController(text: _formatNumber(_baseIngredient.carbs));
+    _fatController = TextEditingController(text: _formatNumber(_baseIngredient.fats));
+    _registerInputListeners();
   }
 
   @override
   void dispose() {
+    _nameController.dispose();
     _amountController.dispose();
+    _caloriesController.dispose();
+    _proteinController.dispose();
+    _carbsController.dispose();
+    _fatController.dispose();
     super.dispose();
   }
 
-  String _formatAmount(double value) {
-    if (value <= 0) return '';
-    return '${value.toStringAsFixed(0)}g';
+  void _registerInputListeners() {
+    final controllers = [
+      _nameController,
+      _amountController,
+      _caloriesController,
+      _proteinController,
+      _carbsController,
+      _fatController,
+    ];
+    for (final controller in controllers) {
+      controller.addListener(_handleInputChanged);
+    }
   }
 
-  double _parseAmount(String text) {
-    final match = RegExp(r'\d+(?:\.\d+)?').firstMatch(text);
-    if (match == null) return 0;
-    return double.tryParse(match.group(0)!) ?? 0;
+  void _handleInputChanged() {
+    if (!mounted) return;
+    setState(() {});
   }
 
-  Ingredient _scaledIngredient() {
-    final baseWeight = _baseIngredient.weight <= 0 ? 1 : _baseIngredient.weight;
-    final factor = _currentWeight / baseWeight;
+  String _formatNumber(double value) {
+    final asInt = value.toInt();
+    if ((value - asInt).abs() < 0.000001) {
+      return '$asInt';
+    }
+    final fixed = value.toStringAsFixed(2);
+    return fixed.replaceFirst(RegExp(r'\.?0+$'), '');
+  }
+
+  double? _parseNumber(String text) {
+    final normalized = text.trim().replaceAll(',', '.');
+    if (normalized.isEmpty) return null;
+    final match = RegExp(r'[-+]?\d*\.?\d+').firstMatch(normalized);
+    if (match == null) return null;
+    return double.tryParse(match.group(0)!);
+  }
+
+  Ingredient? _buildIngredientFromInputs() {
+    final name = _nameController.text.trim();
+    final weight = _parseNumber(_amountController.text);
+    final calories = _parseNumber(_caloriesController.text);
+    final protein = _parseNumber(_proteinController.text);
+    final carbs = _parseNumber(_carbsController.text);
+    final fat = _parseNumber(_fatController.text);
+
+    if (name.isEmpty || weight == null || calories == null || protein == null || carbs == null || fat == null) {
+      return null;
+    }
+
+    if (weight <= 0 || calories < 0 || protein < 0 || carbs < 0 || fat < 0) {
+      return null;
+    }
+
     return _baseIngredient.copyWith(
-      weight: _currentWeight,
-      calories: _baseIngredient.calories * factor,
-      proteins: _baseIngredient.proteins * factor,
-      carbs: _baseIngredient.carbs * factor,
-      fats: _baseIngredient.fats * factor,
+      name: name,
+      weight: weight,
+      calories: calories,
+      proteins: protein,
+      carbs: carbs,
+      fats: fat,
     );
   }
 
-  void _handleAmountChanged(String value) {
-    setState(() {
-      _currentWeight = _parseAmount(value);
-    });
+  bool get _isValid => _buildIngredientFromInputs() != null;
+
+  String? get _validationMessage {
+    if (_nameController.text.trim().isEmpty) {
+      return 'Ingredient name is required.';
+    }
+    final weight = _parseNumber(_amountController.text);
+    if (weight == null || weight <= 0) {
+      return 'Enter a valid amount greater than 0.';
+    }
+    final calories = _parseNumber(_caloriesController.text);
+    final protein = _parseNumber(_proteinController.text);
+    final carbs = _parseNumber(_carbsController.text);
+    final fat = _parseNumber(_fatController.text);
+    if (calories == null || protein == null || carbs == null || fat == null) {
+      return 'Calories, protein, carbs, and fat must be valid numbers.';
+    }
+    if (calories < 0 || protein < 0 || carbs < 0 || fat < 0) {
+      return 'Calories, protein, carbs, and fat cannot be negative.';
+    }
+    return null;
   }
 
   Future<void> _confirmDelete() async {
@@ -88,7 +159,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
       context: context,
       backgroundColor: Colors.transparent,
       builder: (context) => Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
+        padding: const EdgeInsets.all(AppSpacing.m),
         child: EditConfirmSheet(
           title: 'Delete ingredient?',
           message: 'This will remove the ingredient from the meal.',
@@ -107,15 +178,16 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
   }
 
   void _handleDone() {
-    if (_currentWeight <= 0) return;
-    Get.back(result: EditIngredientResult.updated(_scaledIngredient()));
+    final updated = _buildIngredientFromInputs();
+    if (updated == null) {
+      setState(() => _showValidationError = true);
+      return;
+    }
+    Get.back(result: EditIngredientResult.updated(updated));
   }
 
   @override
   Widget build(BuildContext context) {
-    final ingredient = _scaledIngredient();
-    final isValid = _currentWeight > 0;
-
     return Scaffold(
       backgroundColor: AppColors.backgroundAlt,
       body: SafeArea(
@@ -156,63 +228,82 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(height: AppSpacing.xs),
-                          Text(ingredient.name, style: AppTextStyles.headline36),
-                          const SizedBox(height: AppSpacing.lg),
+                          TextField(
+                            controller: _nameController,
+                            textCapitalization: TextCapitalization.words,
+                            style: AppTextStyles.headline36,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              isDense: true,
+                              contentPadding: EdgeInsets.zero,
+                              hintText: 'Ingredient name',
+                              hintStyle: AppTextStyles.headline36.copyWith(color: AppColors.textTertiary),
+                            ),
+                          ),
+                          const SizedBox(height: AppSpacing.l),
                           Text('Measurement', style: AppTextStyles.formLabel16),
-                          const SizedBox(height: AppSpacing.sm),
+                          const SizedBox(height: AppSpacing.s),
                           MeasurementChips(
                             options: const ['Fraction', 'G', 'Small', 'Medium', 'Large'],
                             selectedIndex: _selectedMeasurement,
                             onChanged: (index) => setState(() => _selectedMeasurement = index),
                           ),
-                          const SizedBox(height: AppSpacing.lg),
+                          const SizedBox(height: AppSpacing.l),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text('Amount', style: AppTextStyles.formLabel16),
                               _AmountInputField(
                                 controller: _amountController,
-                                onChanged: _handleAmountChanged,
+                                onChanged: (_) {},
                               ),
                             ],
                           ),
-                          if (!isValid) const InlineErrorText(message: 'Enter a valid amount.'),
+                          if (_showValidationError && _validationMessage != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: AppSpacing.s),
+                              child: InlineErrorText(message: _validationMessage!),
+                            ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: AppSpacing.lg),
+                    const SizedBox(height: AppSpacing.l),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.edge),
-                      child: CaloriesSummaryCard(
-                        label: 'Calories',
-                        value: ingredient.calories.toStringAsFixed(0),
-                        height: AppSizes.caloriesCardHeight,
+                      child: _EditableCaloriesCard(
+                        controller: _caloriesController,
                       ),
                     ),
-                    const SizedBox(height: AppSpacing.md),
+                    const SizedBox(height: AppSpacing.m),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.edge),
                       child: Row(
                         children: [
-                          MacroStatCard(
-                            label: 'Protein',
-                            value: '${ingredient.proteins.toStringAsFixed(0)}g',
-                            icon: Icons.bolt,
-                            iconColor: AppColors.macroProtein,
+                          Expanded(
+                            child: _EditableMacroCard(
+                              label: 'Protein',
+                              icon: Icons.bolt,
+                              iconColor: AppColors.macroProtein,
+                              controller: _proteinController,
+                            ),
                           ),
-                          const SizedBox(width: AppSpacing.sm),
-                          MacroStatCard(
-                            label: 'Carbs',
-                            value: '${ingredient.carbs.toStringAsFixed(0)}g',
-                            icon: Icons.grain,
-                            iconColor: AppColors.macroCarbsStrong,
+                          const SizedBox(width: AppSpacing.s),
+                          Expanded(
+                            child: _EditableMacroCard(
+                              label: 'Carbs',
+                              icon: Icons.grain,
+                              iconColor: AppColors.macroCarbsStrong,
+                              controller: _carbsController,
+                            ),
                           ),
-                          const SizedBox(width: AppSpacing.sm),
-                          MacroStatCard(
-                            label: 'Fats',
-                            value: '${ingredient.fats.toStringAsFixed(0)}g',
-                            icon: Icons.opacity,
-                            iconColor: AppColors.macroFats,
+                          const SizedBox(width: AppSpacing.s),
+                          Expanded(
+                            child: _EditableMacroCard(
+                              label: 'Fats',
+                              icon: Icons.opacity,
+                              iconColor: AppColors.macroFats,
+                              controller: _fatController,
+                            ),
                           ),
                         ],
                       ),
@@ -229,15 +320,15 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
         child: Padding(
           padding: EdgeInsets.fromLTRB(
             AppSpacing.edge,
-            AppSpacing.sm,
+            AppSpacing.s,
             AppSpacing.edge,
-            AppSpacing.lg + MediaQuery.of(context).viewInsets.bottom,
+            AppSpacing.l + MediaQuery.of(context).viewInsets.bottom,
           ),
           child: GradientPillButton(
             label: 'Done',
             gradient: AppGradients.primary,
             height: AppSizes.buttonHeightCompact,
-            onTap: isValid ? _handleDone : null,
+            onTap: _isValid ? _handleDone : null,
           ),
         ),
       ),
@@ -303,6 +394,126 @@ class _AmountInputField extends StatelessWidget {
             borderSide: const BorderSide(color: AppColors.primary, width: AppSizes.dividerThin),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _EditableCaloriesCard extends StatelessWidget {
+  final TextEditingController controller;
+
+  const _EditableCaloriesCard({required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: AppSizes.caloriesCardHeight,
+      padding: const EdgeInsets.all(AppSpacing.l),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadii.lg),
+        boxShadow: AppShadows.cardSmall,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Calories', style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary)),
+          const SizedBox(height: AppSpacing.xs),
+          Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: controller,
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    style: AppTextStyles.stat48.copyWith(color: AppColors.primary),
+                    decoration: const InputDecoration(
+                      isDense: true,
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+                  child: Text(
+                    'kcal',
+                    style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _EditableMacroCard extends StatelessWidget {
+  final String label;
+  final TextEditingController controller;
+  final IconData icon;
+  final Color iconColor;
+
+  const _EditableMacroCard({
+    required this.label,
+    required this.controller,
+    required this.icon,
+    required this.iconColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: AppSizes.macroCardSize,
+      padding: const EdgeInsets.all(AppSpacing.l),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadii.lg),
+        boxShadow: AppShadows.cardSmall,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, size: AppSizes.iconMd, color: iconColor),
+              const SizedBox(width: AppSpacing.xs),
+              Expanded(
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.caption12.copyWith(color: AppColors.textSecondary),
+                ),
+              ),
+            ],
+          ),
+          const Spacer(),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: controller,
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  style: AppTextStyles.title24.copyWith(color: AppColors.primary),
+                  decoration: const InputDecoration(
+                    isDense: true,
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                ),
+              ),
+              Text(
+                'g',
+                style: AppTextStyles.caption12.copyWith(color: AppColors.textSecondary),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

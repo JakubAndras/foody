@@ -68,7 +68,7 @@ class BottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       top: false,
-      minimum: const EdgeInsets.only(left: AppSpacing.md, right: AppSpacing.md, bottom: AppSpacing.sm),
+      minimum: const EdgeInsets.only(left: AppSpacing.m, right: AppSpacing.m, bottom: AppSpacing.s),
       child: Row(
         children: [
           Expanded(
@@ -80,20 +80,20 @@ class BottomNavBar extends StatelessWidget {
                 boxShadow: AppShadows.navBar,
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
                 child: Row(
                   children: [
                     _buildNavItem(icon: Icons.home_rounded, label: 'Home', index: 0),
-                    const SizedBox(width: AppSpacing.sm),
+                    const SizedBox(width: AppSpacing.s),
                     _buildNavItem(icon: Icons.bar_chart_rounded, label: 'Progress', index: 1),
-                    const SizedBox(width: AppSpacing.sm),
+                    const SizedBox(width: AppSpacing.s),
                     _buildNavItem(icon: Icons.person_outline_rounded, label: 'Profile', index: 2),
                   ],
                 ),
               ),
             ),
           ),
-          const SizedBox(width: AppSpacing.sm),
+          const SizedBox(width: AppSpacing.s),
           _buildAddButton(),
         ],
       ),

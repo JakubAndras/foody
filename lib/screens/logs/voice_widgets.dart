@@ -58,7 +58,7 @@ class VoiceLogToggle extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: AppSpacing.md),
+        const SizedBox(width: AppSpacing.m),
         GestureDetector(
           onTap: isExercise ? onSelectMeals : onSelectExercise,
           child: Container(
@@ -84,7 +84,7 @@ class VoiceLogToggle extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: AppSpacing.md),
+        const SizedBox(width: AppSpacing.m),
         GestureDetector(
           onTap: onSelectExercise,
           child: Text(
@@ -144,7 +144,7 @@ class VoiceLogTextArea extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: AppSizes.voiceTextAreaHeight,
-      padding: const EdgeInsets.all(AppSpacing.md),
+      padding: const EdgeInsets.all(AppSpacing.m),
       decoration: BoxDecoration(
         color: AppColors.surfaceMuted,
         borderRadius: BorderRadius.circular(AppRadii.md),
@@ -193,7 +193,7 @@ class VoiceLogAnalyzeButton extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Icon(Icons.auto_awesome, color: AppColors.onPrimary, size: AppSizes.iconMd),
-              const SizedBox(width: AppSpacing.sm),
+              const SizedBox(width: AppSpacing.s),
               Text(
                 label,
                 style: AppTextStyles.button18.copyWith(color: AppColors.onPrimary),

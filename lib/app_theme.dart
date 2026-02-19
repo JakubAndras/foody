@@ -129,16 +129,16 @@ class AppColors {
 class AppSpacing {
   static const double xxs = 4;
   static const double xs = 8;
-  static const double sm = 12;
-  static const double md = 16;
-  static const double lg = 24;
+  static const double s = 12;
+  static const double m = 16;
+  static const double l = 24;
   static const double xl = 32;
   static const double xxl = 40;
   static const double xxxl = 48;
   static const double huge = 56;
   static const double mega = 72;
-  static const double screen = lg;
-  static const double edge = md;
+  static const double screen = l;
+  static const double edge = m;
 }
 
 class AppRadii {
@@ -164,7 +164,7 @@ class AppSizes {
   static const double buttonHeightXxs = 32;
   static const double minTap = 48;
   static const double topBarHeight = 56;
-  static const double mealTopBarHeight = 72;
+  static const double mealTopBarHeight = 42;
   static const double editTopBarHeight = 80;
   static const double bottomNavHeight = 64;
   static const double backButtonSize = 40;
@@ -250,7 +250,7 @@ class AppSizes {
   static const double macroCardSize = 125.34;
   static const double caloriesCardHeight = 136;
   static const double actionSheetWidth = 220;
-  static const double emptyStateHeight = 222;
+  static const double emptyStateHeight = 168;
   static const double emptyStateIconSize = 64;
   static const double progressStatCardHeight = 210;
   static const double profileHeaderHeight = 96;
@@ -268,7 +268,7 @@ class AppSizes {
   static const double selectMealIngredientRowHeight = 70;
   static const double macroIconSize = 52;
   static const double goalRowHeight = 72;
-  static const double reportIllustrationSize = 320;
+  static const double reportIllustrationSize = 300;
   static const double reportCardWidth = 192;
   static const double reportCardHeight = 224;
   static const double reportPlaceholderHeight = 32;
@@ -287,8 +287,6 @@ class AppSizes {
   static const double quickActionIconSize = 28;
   static const double avatarSize = 64;
   static const double settingsDividerIndent = 52;
-  static const double rolloverCardWidth = 190;
-  static const double rolloverCardHeight = 270;
   static const double rolloverHeaderHeight = 46;
   static const double scanIndicatorDot = 6;
   static const double scanIndicatorGap = 6;
