@@ -11,9 +11,15 @@ import 'package:diplomka/app_theme.dart';
 
 class RecentlyUploadedCard extends StatelessWidget {
   final List<Meal> meals;
+  final DateTime selectedDate;
   final Function(Meal meal)? onMealTap;
 
-  const RecentlyUploadedCard({super.key, required this.meals, this.onMealTap});
+  const RecentlyUploadedCard({
+    super.key,
+    required this.meals,
+    required this.selectedDate,
+    this.onMealTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +27,7 @@ class RecentlyUploadedCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Today's meals",
+          "${DateFormat('MMM d').format(selectedDate)}'s meals",
           style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700),
         ),
         Obx(() {
@@ -45,7 +51,7 @@ class RecentlyUploadedCard extends StatelessWidget {
           if (!isLoading && !hasMeals) {
             children.add(_buildEmptyState());
           }
-          
+
           return Column(children: children);
         }),
       ],
@@ -211,7 +217,7 @@ class _AnalyzingMealCardState extends State<AnalyzingMealCard> {
     setState(() {
       _progress = 0.0;
       // Duration between 7 and 12 seconds (inclusive)
-      _durationInSeconds = _random.nextInt(6) + 7; 
+      _durationInSeconds = _random.nextInt(6) + 7;
     });
 
     const updateInterval = Duration(milliseconds: 100);

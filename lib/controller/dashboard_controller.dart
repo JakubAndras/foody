@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:diplomka/controller/streak_controller.dart';
 import 'package:diplomka/model/barcode_lookup_result.dart';
+import 'package:diplomka/model/meal_analysis_request.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -38,6 +39,8 @@ class DashboardController extends BaseController {
   final RxBool newMealAnalyzeLoading = false.obs;
   final RxInt scrollToTodayMealsRequestId = 0.obs;
   int _activeMealAnalyses = 0;
+  DateTime? _mealAnalysisLoadingStartedAt;
+  static const Duration _minMealLoadingVisible = Duration(milliseconds: 900);
 
   @override
   void onInit() {
@@ -139,40 +142,90 @@ class DashboardController extends BaseController {
     }
   }
 
-  Future<void> analyzeMealFromImage({
+  Future<MealAnalysisFlowResult> analyzeMealFromImage({
     required DateTime selectedDate,
     String? imagePath,
     String? description,
     String? preferredMealName,
     bool scrollToTodayMealsOnStart = false,
   }) async {
-    if (scrollToTodayMealsOnStart) {
-      requestScrollToTodayMealsBottom();
-    }
-    _beginMealAnalysis();
-    try {
-      final String? storedPhotoRef = await _resolvePhotoPath(imagePath);
-      if (imagePath != null && imagePath.isNotEmpty && storedPhotoRef == null) {
-        debugPrint('Meal photo could not be persisted. sourcePath=$imagePath');
-      }
-      final String? resolvedPhotoPath = await MediaStorage.resolveStoredMealPhotoPath(storedPhotoRef);
-      final List<File>? imageFiles = resolvedPhotoPath == null ? null : [File(resolvedPhotoPath)];
-      await _analyzeAndSaveMealWithAi(
+    return analyzeMeal(
+      MealAnalysisRequest(
         selectedDate: selectedDate,
-        imageFiles: imageFiles,
-        photoPathToSave: storedPhotoRef,
+        source: MealInputSource.photo,
+        imagePath: imagePath,
         description: description,
         preferredMealName: preferredMealName,
+        scrollToTodayMealsOnStart: scrollToTodayMealsOnStart,
+      ),
+    );
+  }
+
+  Future<MealAnalysisFlowResult> analyzeMealFromVoice({
+    required DateTime selectedDate,
+    required String description,
+    bool scrollToTodayMealsOnStart = false,
+  }) {
+    return analyzeMeal(
+      MealAnalysisRequest.voice(
+        selectedDate: selectedDate,
+        description: description,
+        scrollToTodayMealsOnStart: scrollToTodayMealsOnStart,
+      ),
+    );
+  }
+
+  Future<MealAnalysisFlowResult> analyzeMeal(MealAnalysisRequest request) async {
+    if (request.scrollToTodayMealsOnStart) {
+      requestScrollToTodayMealsBottom();
+    }
+
+    if (request.source == MealInputSource.photo && request.trimmedImagePath == null) {
+      return MealAnalysisFlowResult.failure(message: 'Photo input is required for this analysis.');
+    }
+    if (request.source == MealInputSource.voice && request.trimmedDescription == null) {
+      return MealAnalysisFlowResult.failure(message: 'Voice description is required for this analysis.');
+    }
+
+    _beginMealAnalysis();
+    try {
+      final String? rawImagePath = request.trimmedImagePath;
+      final String? storedPhotoRef = await _resolvePhotoPath(rawImagePath);
+      if (request.source == MealInputSource.photo && rawImagePath != null && storedPhotoRef == null) {
+        Get.snackbar(
+          'Analysis failed',
+          'Meal photo is required for photo analysis, but the image could not be loaded.',
+          duration: const Duration(seconds: 3),
+        );
+        return MealAnalysisFlowResult.failure(
+          message: 'Meal photo could not be loaded.',
+        );
+      }
+      if (rawImagePath != null && storedPhotoRef == null) {
+        debugPrint('Meal photo could not be persisted. sourcePath=$rawImagePath');
+      }
+
+      final String? resolvedPhotoPath = await MediaStorage.resolveStoredMealPhotoPath(storedPhotoRef);
+      final List<File>? imageFiles = resolvedPhotoPath == null ? null : <File>[File(resolvedPhotoPath)];
+
+      final flowResult = await _analyzeAndSaveMealWithAi(
+        selectedDate: request.selectedDate,
+        imageFiles: imageFiles,
+        photoPathToSave: storedPhotoRef,
+        description: request.trimmedDescription,
+        preferredMealName: request.preferredMealName,
       );
+      return flowResult;
     } catch (e) {
       Get.snackbar(
         'Error',
-        'Error analyzing image: $e',
+        'Error analyzing meal: $e',
         duration: const Duration(seconds: 3),
       );
       debugPrint('Error calling AI Service: $e');
+      return MealAnalysisFlowResult.failure(message: e.toString());
     } finally {
-      _endMealAnalysis();
+      await _endMealAnalysis();
     }
   }
 
@@ -221,7 +274,7 @@ class DashboardController extends BaseController {
       );
       debugPrint('Error calling barcode analysis flow: $e');
     } finally {
-      _endMealAnalysis();
+      await _endMealAnalysis();
     }
   }
 
@@ -235,7 +288,7 @@ class DashboardController extends BaseController {
     }
   }
 
-  Future<void> _analyzeAndSaveMealWithAi({
+  Future<MealAnalysisFlowResult> _analyzeAndSaveMealWithAi({
     required DateTime selectedDate,
     required List<File>? imageFiles,
     required String? photoPathToSave,
@@ -265,12 +318,14 @@ class DashboardController extends BaseController {
         mealToSave: meal,
       );
       refresh();
+      return MealAnalysisFlowResult.success(status: result.status);
     } else {
       Get.snackbar(
         'Analysis failed',
         result.message ?? 'Could not analyze the image. Please try again.',
         duration: const Duration(seconds: 3),
       );
+      return MealAnalysisFlowResult.failure(message: result.message);
     }
   }
 
@@ -364,14 +419,30 @@ class DashboardController extends BaseController {
 
   void _beginMealAnalysis() {
     _activeMealAnalyses += 1;
+    _mealAnalysisLoadingStartedAt ??= DateTime.now();
     newMealAnalyzeLoading.value = true;
   }
 
-  void _endMealAnalysis() {
+  Future<void> _endMealAnalysis() async {
     if (_activeMealAnalyses > 0) {
       _activeMealAnalyses -= 1;
     }
-    newMealAnalyzeLoading.value = _activeMealAnalyses > 0;
+
+    if (_activeMealAnalyses > 0) {
+      newMealAnalyzeLoading.value = true;
+      return;
+    }
+
+    final startedAt = _mealAnalysisLoadingStartedAt;
+    if (startedAt != null) {
+      final elapsed = DateTime.now().difference(startedAt);
+      if (elapsed < _minMealLoadingVisible) {
+        await Future<void>.delayed(_minMealLoadingVisible - elapsed);
+      }
+    }
+
+    _mealAnalysisLoadingStartedAt = null;
+    newMealAnalyzeLoading.value = false;
   }
 
   void requestScrollToTodayMealsBottom() {

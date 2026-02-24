@@ -100,6 +100,7 @@ class _DateSelectorState extends State<DateSelector> {
   Widget _buildDate(DateTime date, bool isSelected) {
     final normalizedDate = _normalizeDate(date);
     final labelAndNumberColor = isSelected ? AppColors.textPrimary : AppColors.borderStrong;
+    final ringStrokeWidth = AppSizes.dateCircleBorder * 0.8;
     final dayNames = [
       tr(LocaleKeys.day_monday_short),
       tr(LocaleKeys.day_tuesday_short),
@@ -132,7 +133,7 @@ class _DateSelectorState extends State<DateSelector> {
                 child: CustomPaint(
                   painter: _CalendarDayRingPainter(
                     ringStyle: ringStyle,
-                    strokeWidth: AppSizes.dateCircleBorder,
+                    strokeWidth: ringStrokeWidth,
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(AppSizes.dateCircleBorder),

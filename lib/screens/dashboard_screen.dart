@@ -56,7 +56,10 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
                       Expanded(
                         child: Builder(
                           builder: (context) {
-                            if (dashboardController.isLoadingDayRecord.value) {
+                            final isAnalyzingMeal = dashboardController.newMealAnalyzeLoading.value;
+                            final hasLoadedRecord = dashboardController.dayRecord.value != null;
+
+                            if (dashboardController.isLoadingDayRecord.value && !hasLoadedRecord && !isAnalyzingMeal) {
                               return const Center(child: CircularProgressIndicator());
                             }
                             if (dashboardController.dayRecordError.isNotEmpty) {
@@ -73,6 +76,7 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
                                   const SizedBox(height: AppSpacing.m),
                                   RecentlyUploadedCard(
                                     meals: recordToShow.meals,
+                                    selectedDate: dashboardController.selectedDate.value,
                                     onMealTap: (meal) async {
                                       await Get.to(() => MealDetailScreen(meal: meal));
                                       dashboardController.refresh();

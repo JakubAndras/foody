@@ -8,9 +8,17 @@ class AddExerciseScreen extends StatefulWidget {
   const AddExerciseScreen({
     super.key,
     this.initialName,
+    this.initialDurationMinutes,
+    this.initialCaloriesTotal,
+    this.initialCaloriesPerMinute,
+    this.initialTrackingMode,
   });
 
   final String? initialName;
+  final int? initialDurationMinutes;
+  final int? initialCaloriesTotal;
+  final double? initialCaloriesPerMinute;
+  final ExerciseTrackingMode? initialTrackingMode;
 
   @override
   State<AddExerciseScreen> createState() => _AddExerciseScreenState();
@@ -18,18 +26,39 @@ class AddExerciseScreen extends StatefulWidget {
 
 class _AddExerciseScreenState extends State<AddExerciseScreen> {
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _totalController = TextEditingController(text: '123');
-  final TextEditingController _rateController = TextEditingController(text: '10');
-  final TextEditingController _durationController = TextEditingController(text: '30');
+  final TextEditingController _totalController = TextEditingController();
+  final TextEditingController _rateController = TextEditingController();
+  final TextEditingController _durationController = TextEditingController();
   ExerciseTrackingMode _mode = ExerciseTrackingMode.total;
 
   @override
   void initState() {
     super.initState();
+    _mode = _resolveInitialMode();
     if (widget.initialName != null && widget.initialName!.isNotEmpty) {
       _nameController.text = widget.initialName!;
     } else {
       _nameController.text = 'Morning Run';
+    }
+
+    if (widget.initialCaloriesTotal != null) {
+      _totalController.text = widget.initialCaloriesTotal.toString();
+    }
+    if (widget.initialCaloriesPerMinute != null) {
+      _rateController.text = _formatNumber(widget.initialCaloriesPerMinute!);
+    }
+    if (widget.initialDurationMinutes != null) {
+      _durationController.text = widget.initialDurationMinutes.toString();
+    }
+
+    if (_totalController.text.isEmpty) {
+      _totalController.text = '123';
+    }
+    if (_rateController.text.isEmpty) {
+      _rateController.text = '10';
+    }
+    if (_durationController.text.isEmpty) {
+      _durationController.text = '30';
     }
   }
 
@@ -43,9 +72,29 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
   }
 
   int get _calculatedTotal {
-    final rate = int.tryParse(_rateController.text) ?? 0;
+    final rate = double.tryParse(_rateController.text) ?? 0;
     final duration = int.tryParse(_durationController.text) ?? 0;
-    return rate * duration;
+    return (rate * duration).round();
+  }
+
+  ExerciseTrackingMode _resolveInitialMode() {
+    if (widget.initialTrackingMode != null) {
+      return widget.initialTrackingMode!;
+    }
+    if (widget.initialCaloriesTotal != null) {
+      return ExerciseTrackingMode.total;
+    }
+    if (widget.initialCaloriesPerMinute != null) {
+      return ExerciseTrackingMode.perMinute;
+    }
+    return ExerciseTrackingMode.total;
+  }
+
+  String _formatNumber(double value) {
+    if (value == value.roundToDouble()) {
+      return value.toInt().toString();
+    }
+    return value.toStringAsFixed(1);
   }
 
   @override
@@ -267,7 +316,7 @@ class _InputCard extends StatelessWidget {
           Expanded(
             child: TextField(
               controller: controller,
-              keyboardType: TextInputType.number,
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
               onChanged: onChanged,
               style: AppTextStyles.title24.copyWith(color: AppColors.textDisabled),
               decoration: InputDecoration(

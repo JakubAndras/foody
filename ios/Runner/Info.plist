@@ -47,8 +47,10 @@
 	</array>
 	<key>NSCameraUsageDescription</key>
     <string>This app needs camera access to scan barcodes and take photos of your meals.</string>
-    <key>NSMicrophoneUsageDescription</key>
+	<key>NSMicrophoneUsageDescription</key>
     <string>This app needs microphone access to record voice logs.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+    <string>This app needs speech recognition to transcribe your voice logs.</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>This app needs photo library access to select meal images.</string>
     <key>NSPhotoLibraryAddUsageDescription</key>
