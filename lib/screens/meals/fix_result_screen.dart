@@ -1,10 +1,9 @@
-import 'dart:io';
-
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/model/meal.dart';
 import 'package:diplomka/screens/meals/edit_meal_screen.dart';
 import 'package:diplomka/screens/meals/meal_components.dart';
 import 'package:diplomka/services/ai_feature/ai_pipeline_service.dart';
+import 'package:diplomka/utils/media_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -118,7 +117,8 @@ class _FixResultScreenState extends State<FixResultScreen> {
 
     setState(() => _isSubmitting = true);
     final photoPath = widget.baseMeal?.photoPath;
-    final imageFiles = photoPath == null ? null : [File(photoPath)];
+    final photoFile = MediaStorage.existingMealPhotoFile(photoPath);
+    final imageFiles = photoFile == null ? null : [photoFile];
     final result = await AiPipelineService.to.analyzeMeal(
       imageFiles: imageFiles,
       description: text,

@@ -30,6 +30,9 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
                 bottom: false,
                 child: Obx(() {
                   final recordToShow = dashboardController.dayRecord.value ?? DayRecord.initial(dashboardController.selectedDate.value);
+                  controller.maybeHandleScrollToTodayMealsRequest(
+                    dashboardController.scrollToTodayMealsRequestId.value,
+                  );
 
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,6 +64,7 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
                             }
 
                             return SingleChildScrollView(
+                              controller: controller.scrollController,
                               padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.xs, AppSpacing.l, AppSpacing.mega + 42),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -174,6 +178,48 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
 }
 
 class _DashboardScreenController extends BaseController {
+  final ScrollController scrollController = ScrollController();
+  int _lastHandledScrollRequestId = 0;
+  bool _isDisposed = false;
+
+  void maybeHandleScrollToTodayMealsRequest(int requestId) {
+    if (requestId <= _lastHandledScrollRequestId) return;
+    _lastHandledScrollRequestId = requestId;
+    _scheduleScrollToTodayMealsBottom(attempt: 0);
+  }
+
+  void _scheduleScrollToTodayMealsBottom({required int attempt}) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (_isDisposed) return;
+      if (!scrollController.hasClients) {
+        if (attempt < 6) {
+          await Future<void>.delayed(const Duration(milliseconds: 120));
+          _scheduleScrollToTodayMealsBottom(attempt: attempt + 1);
+        }
+        return;
+      }
+
+      final target = scrollController.position.maxScrollExtent;
+      await scrollController.animateTo(
+        target,
+        duration: const Duration(milliseconds: 320),
+        curve: Curves.easeOutCubic,
+      );
+
+      if (attempt < 6) {
+        await Future<void>.delayed(const Duration(milliseconds: 120));
+        _scheduleScrollToTodayMealsBottom(attempt: attempt + 1);
+      }
+    });
+  }
+
+  @override
+  void onClose() {
+    _isDisposed = true;
+    scrollController.dispose();
+    super.onClose();
+  }
+
   @override
   void onHidden() {
     // TODO: implement onHidden

@@ -46,7 +46,7 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>NSCameraUsageDescription</key>
-    <string>This app needs camera access to take photos of your meals.</string>
+    <string>This app needs camera access to scan barcodes and take photos of your meals.</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>This app needs microphone access to record voice logs.</string>
     <key>NSPhotoLibraryUsageDescription</key>

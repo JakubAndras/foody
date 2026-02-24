@@ -4,13 +4,18 @@ import 'dart:ui' as ui;
 
 import 'package:camera/camera.dart';
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/controller/dashboard_controller.dart';
+import 'package:diplomka/screens/main_screen.dart';
 import 'package:diplomka/screens/scan/scan_permission_screen.dart';
 import 'package:diplomka/screens/scan/scan_preview_screen.dart';
 import 'package:diplomka/screens/scan/scan_widgets.dart';
+import 'package:diplomka/services/barcode_lookup_service.dart';
+import 'package:diplomka/services/selected_date_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 enum ScanMode { scanMeal, barcode, foodLabel }
@@ -29,6 +34,20 @@ class ScanCameraScreen extends StatefulWidget {
 
 class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBindingObserver {
   final GlobalKey _previewBoundaryKey = GlobalKey();
+  final BarcodeLookupService _barcodeLookupService = BarcodeLookupService.to;
+  final MobileScannerController _barcodeScannerController = MobileScannerController(
+    formats: const <BarcodeFormat>[
+      BarcodeFormat.ean8,
+      BarcodeFormat.ean13,
+      BarcodeFormat.upcA,
+      BarcodeFormat.upcE,
+      BarcodeFormat.code128,
+    ],
+    detectionSpeed: DetectionSpeed.noDuplicates,
+    facing: CameraFacing.back,
+    autoStart: false,
+  );
+
   CameraController? _cameraController;
   List<CameraDescription>? _availableCameras;
   CameraDescription? _activeBackCamera;
@@ -42,6 +61,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
   bool _showNutritionTip = false;
   bool _isZoomed = true;
   bool _isFlashOn = false;
+  bool _isBarcodeRecognitionTriggered = false;
   Uint8List? _frozenPreviewBytes;
   int _freezeFrameToken = 0;
   double _minZoomLevel = 1.0;
@@ -62,6 +82,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _releaseCameraController();
+    _barcodeScannerController.dispose();
     super.dispose();
   }
 
@@ -101,8 +122,6 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
   }
 
   Future<void> _clearFrozenPreviewWhenStable(int token) async {
-    // Keep the frozen frame briefly after init so first frames from new lens
-    // are already stable when we reveal the live preview.
     await Future<void>.delayed(const Duration(milliseconds: 250));
     if (!mounted || token != _freezeFrameToken) return;
     setState(() {
@@ -112,10 +131,15 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.inactive) {
+    if (state == AppLifecycleState.inactive || state == AppLifecycleState.paused) {
       _releaseCameraController();
+      _pauseBarcodeScanner();
     } else if (state == AppLifecycleState.resumed) {
-      _initCamera();
+      if (_mode == ScanMode.barcode) {
+        _resumeBarcodeScanner();
+      } else {
+        _initCamera();
+      }
     }
   }
 
@@ -139,17 +163,35 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
       _permissionPermanentlyDenied = false;
     });
 
+    if (_mode == ScanMode.barcode) {
+      _isBarcodeRecognitionTriggered = false;
+      await _resumeBarcodeScanner();
+      if (!mounted) return;
+      setState(() {
+        _isInitializing = false;
+      });
+      return;
+    }
+
     await _initCamera();
   }
 
   Future<void> _initCamera() async {
-    return _initCameraWithPreferredBackCamera();
+    if (_mode == ScanMode.barcode) {
+      if (!mounted) return;
+      setState(() {
+        _isInitializing = false;
+      });
+      return;
+    }
+    await _initCameraWithPreferredBackCamera();
   }
 
   Future<void> _initCameraWithPreferredBackCamera({
     CameraDescription? preferredBackCamera,
     bool preserveFlash = false,
   }) async {
+    if (_mode == ScanMode.barcode) return;
     if (mounted) {
       setState(() {
         _isInitializing = true;
@@ -223,6 +265,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
   }
 
   Future<void> _capturePhoto() async {
+    if (_mode == ScanMode.barcode) return;
     if (_cameraController == null || !_cameraController!.value.isInitialized) {
       return;
     }
@@ -261,13 +304,26 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
     return false;
   }
 
-  void _toggleMode(ScanMode mode) {
+  Future<void> _toggleMode(ScanMode mode) async {
+    if (mode == _mode) return;
     setState(() {
       _mode = mode;
-      // Never auto-open help. It should only appear from explicit help tap.
       _showTip = false;
       _showNutritionTip = false;
+      _isFlashOn = false;
     });
+
+    if (!_hasPermission) return;
+
+    if (mode == ScanMode.barcode) {
+      _isBarcodeRecognitionTriggered = false;
+      _releaseCameraController();
+      await _resumeBarcodeScanner();
+      return;
+    }
+
+    await _pauseBarcodeScanner();
+    await _initCamera();
   }
 
   Future<void> _setFlash(bool enabled) async {
@@ -284,7 +340,22 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
   }
 
   Future<void> _toggleFlash() async {
+    if (_mode == ScanMode.barcode) {
+      await _toggleBarcodeTorch();
+      return;
+    }
     await _setFlash(!_isFlashOn);
+  }
+
+  Future<void> _toggleBarcodeTorch() async {
+    try {
+      await _barcodeScannerController.toggleTorch();
+      if (!mounted) return;
+      setState(() => _isFlashOn = !_isFlashOn);
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _isFlashOn = false);
+    }
   }
 
   double _zoomLevelForSelection(bool isNormalZoom) {
@@ -293,6 +364,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
   }
 
   Future<void> _setZoomSelection(bool isNormalZoom) async {
+    if (_mode == ScanMode.barcode) return;
     final wideBackCamera = _wideBackCamera;
     final ultraWideBackCamera = _ultraWideBackCamera;
     if (wideBackCamera != null && ultraWideBackCamera != null) {
@@ -319,6 +391,67 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
     } catch (_) {}
   }
 
+  Future<void> _pauseBarcodeScanner() async {
+    try {
+      await _barcodeScannerController.stop();
+    } catch (_) {}
+  }
+
+  Future<void> _resumeBarcodeScanner() async {
+    if (_mode != ScanMode.barcode || !_hasPermission) return;
+    try {
+      await _barcodeScannerController.start();
+    } catch (_) {}
+  }
+
+  Future<void> _restartBarcodeScan() async {
+    _isBarcodeRecognitionTriggered = false;
+    await _resumeBarcodeScanner();
+    if (!mounted) return;
+    setState(() {});
+  }
+
+  Future<void> _onBarcodeDetected(BarcodeCapture capture) async {
+    if (_mode != ScanMode.barcode || _isBarcodeRecognitionTriggered) return;
+    final rawValue = _readFirstBarcode(capture);
+    if (rawValue == null) return;
+    final normalized = _barcodeLookupService.normalizeBarcode(rawValue);
+    if (normalized == null || !_barcodeLookupService.isSupportedBarcode(normalized)) {
+      return;
+    }
+    await _startUnifiedBarcodeFlow(barcode: normalized);
+  }
+
+  String? _readFirstBarcode(BarcodeCapture capture) {
+    for (final barcode in capture.barcodes) {
+      final raw = barcode.rawValue?.trim();
+      if (raw != null && raw.isNotEmpty) {
+        return raw;
+      }
+    }
+    return null;
+  }
+
+  Future<void> _startUnifiedBarcodeFlow({
+    required String barcode,
+  }) async {
+    if (_isBarcodeRecognitionTriggered) return;
+    _isBarcodeRecognitionTriggered = true;
+    _pauseBarcodeScanner();
+    if (!mounted) return;
+
+    final selectedDate = SelectedDateService.to.selectedDate.value;
+    DashboardController.to.analyzeMealFromBarcode(
+      selectedDate: selectedDate,
+      barcode: barcode,
+    );
+
+    if (Get.isRegistered<MainScreenController>()) {
+      MainScreenController.to.showDashboardTab();
+    }
+    Get.until((route) => route.isFirst);
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!_hasPermission) {
@@ -341,7 +474,6 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
                   children: [
                     _buildCameraTopBar(),
                     _buildScanFrame(),
-                    //_buildHandleBar(),
                     _buildZoomToggle(),
                   ],
                 ),
@@ -356,6 +488,10 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
   }
 
   Widget _buildCameraSurface() {
+    if (_mode == ScanMode.barcode) {
+      return _buildBarcodeSurface();
+    }
+
     final hasLivePreview = _isInitialized && _cameraController != null;
     final hasFrozenPreview = _frozenPreviewBytes != null;
 
@@ -378,7 +514,9 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
                       style: AppTextStyles.body14Regular.copyWith(color: AppColors.textSecondary),
                     ),
                   )
-                : null,
+                : const Center(
+                    child: CircularProgressIndicator(color: AppColors.onPrimary),
+                  ),
           ),
         if (hasFrozenPreview)
           Positioned.fill(
@@ -386,6 +524,36 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
               child: _buildFrozenPreview(),
             ),
           ),
+      ],
+    );
+  }
+
+  Widget _buildBarcodeSurface() {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        MobileScanner(
+          controller: _barcodeScannerController,
+          fit: BoxFit.cover,
+          onDetect: _onBarcodeDetected,
+        ),
+        Positioned.fill(
+          child: IgnorePointer(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: <Color>[
+                    AppColors.overlayDark40,
+                    Colors.transparent,
+                    AppColors.overlayDark40,
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -447,24 +615,6 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
     );
   }
 
-  Widget _buildHandleBar() {
-    return Positioned(
-      top: 12,
-      left: 0,
-      right: 0,
-      child: Center(
-        child: Container(
-          width: 48,
-          height: 4,
-          decoration: BoxDecoration(
-            color: AppColors.textTertiary,
-            borderRadius: BorderRadius.circular(AppRadii.pill),
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildScanFrame() {
     double frameWidth;
     double frameHeight;
@@ -495,6 +645,8 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
   }
 
   Widget _buildZoomToggle() {
+    if (_mode == ScanMode.barcode) return const SizedBox.shrink();
+
     final hasLensSwitchOption = _wideBackCamera != null && _ultraWideBackCamera != null;
     final hasDifferentZoomSteps = hasLensSwitchOption || (_zoomLevelForSelection(true) - _zoomLevelForSelection(false)).abs() > 0.01;
     final enabled = _isInitialized && hasDifferentZoomSteps;
@@ -552,44 +704,90 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
           const SizedBox(height: AppSpacing.l),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Opacity(
-                  opacity: 1,
-                  child: ScanCircleButton(
-                    icon: _isFlashOn ? Icons.flash_on : Icons.flash_off,
-                    onPressed: _toggleFlash,
-                    backgroundColor: _isFlashOn ? AppColors.primary : AppColors.surfaceMuted,
-                    shadow: const <BoxShadow>[],
-                    size: AppSizes.scanAuxButtonSize,
-                    iconSize: AppSizes.scanModeIconSize,
-                    iconColor: _isFlashOn ? AppColors.onPrimary : AppColors.textEmphasisAlt,
-                  ),
-                ),
-                ScanShutterButton(onPressed: _capturePhoto),
-                ScanCircleButton(
-                  icon: Icons.photo_library_outlined,
-                  onPressed: _pickFromGallery,
-                  backgroundColor: AppColors.surfaceMuted,
-                  shadow: const <BoxShadow>[],
-                  size: AppSizes.scanAuxButtonSize,
-                  iconSize: AppSizes.scanModeIconSize,
-                  iconColor: AppColors.textEmphasisAlt,
-                ),
-              ],
-            ),
+            child: _mode == ScanMode.barcode ? _buildBarcodeControls() : _buildPhotoControls(),
           ),
         ],
       ),
     );
   }
 
+  Widget _buildPhotoControls() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        ScanCircleButton(
+          icon: _isFlashOn ? Icons.flash_on : Icons.flash_off,
+          onPressed: _toggleFlash,
+          backgroundColor: _isFlashOn ? AppColors.primary : AppColors.surfaceMuted,
+          shadow: const <BoxShadow>[],
+          size: AppSizes.scanAuxButtonSize,
+          iconSize: AppSizes.scanModeIconSize,
+          iconColor: _isFlashOn ? AppColors.onPrimary : AppColors.textEmphasisAlt,
+        ),
+        ScanShutterButton(onPressed: _capturePhoto),
+        ScanCircleButton(
+          icon: Icons.photo_library_outlined,
+          onPressed: _pickFromGallery,
+          backgroundColor: AppColors.surfaceMuted,
+          shadow: const <BoxShadow>[],
+          size: AppSizes.scanAuxButtonSize,
+          iconSize: AppSizes.scanModeIconSize,
+          iconColor: AppColors.textEmphasisAlt,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBarcodeControls() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        ScanCircleButton(
+          icon: _isFlashOn ? Icons.flash_on : Icons.flash_off,
+          onPressed: _toggleFlash,
+          backgroundColor: _isFlashOn ? AppColors.primary : AppColors.surfaceMuted,
+          shadow: const <BoxShadow>[],
+          size: AppSizes.scanAuxButtonSize,
+          iconSize: AppSizes.scanModeIconSize,
+          iconColor: _isFlashOn ? AppColors.onPrimary : AppColors.textEmphasisAlt,
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
+            child: Container(
+              height: AppSizes.scanAuxButtonSize,
+              decoration: BoxDecoration(
+                color: AppColors.surfaceMuted,
+                borderRadius: BorderRadius.circular(AppRadii.pill),
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                'Align barcode in frame',
+                style: AppTextStyles.body14.copyWith(color: AppColors.textEmphasisAlt),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        ),
+        ScanCircleButton(
+          icon: Icons.refresh,
+          onPressed: _restartBarcodeScan,
+          backgroundColor: AppColors.surfaceMuted,
+          shadow: const <BoxShadow>[],
+          size: AppSizes.scanAuxButtonSize,
+          iconSize: AppSizes.scanModeIconSize,
+          iconColor: AppColors.textEmphasisAlt,
+        ),
+      ],
+    );
+  }
+
   Widget _buildTipOverlay() {
     final isBarcode = _mode == ScanMode.barcode;
     final title = isBarcode ? 'Barcode Scanner' : 'Nutrition Label Scanner';
-    final body =
-        isBarcode ? 'Align the barcode within the frame.' : 'Get nutrition details from any label to track your intake accurately.';
+    final body = isBarcode
+        ? 'Align the barcode within the frame and hold steady.'
+        : 'Get nutrition details from any label to track your intake accurately.';
     return Positioned.fill(
       child: Align(
         alignment: const Alignment(0, 0.8),

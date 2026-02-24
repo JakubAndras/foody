@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/screens/profile/ask_ai/ask_ai_widgets.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
+import 'package:diplomka/services/share/app_share_service.dart';
+import 'package:get/get.dart';
 
 enum AskAiResponseVariant {
   violations,
@@ -14,6 +16,36 @@ class AskAiResponseScreen extends StatelessWidget {
   const AskAiResponseScreen({super.key, required this.variant});
 
   final AskAiResponseVariant variant;
+
+  Future<void> _handleShare(BuildContext context, _AskAiVariantData data) async {
+    final text = _buildShareText(data);
+    try {
+      await AppShareService.shareText(
+        text: text,
+        title: 'Ask AI insight',
+        subject: 'Nutrition insight',
+        context: context,
+      );
+    } catch (_) {
+      Get.snackbar(
+        'Share unavailable',
+        'Unable to open the share sheet right now.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
+  }
+
+  String _buildShareText(_AskAiVariantData data) {
+    return [
+      'Ask AI nutrition insight',
+      '',
+      'Summary: ${data.summaryValue} ${data.summaryLabel}',
+      'Period: ${data.monthLabel}',
+      'Affected days: ${data.affectedDays.join(', ')}',
+      '',
+      data.responseText,
+    ].join('\n');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +94,7 @@ class AskAiResponseScreen extends StatelessWidget {
                   label: 'Share',
                   leading: const Icon(Icons.share, size: AppSizes.iconMd, color: AppColors.onPrimary),
                   gradient: AppGradients.primary,
+                  onPressed: () => _handleShare(context, data),
                 ),
               ),
             ],

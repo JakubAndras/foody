@@ -1,8 +1,11 @@
+import 'package:diplomka/controller/barcode_scan_controller.dart';
 import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/screens/main_screen.dart';
 import 'package:diplomka/controller/day_record_controller.dart';
 import 'package:diplomka/controller/recipe_service.dart';
 import 'package:diplomka/services/day_record_repository.dart';
+import 'package:diplomka/network/open_food_facts_client.dart';
+import 'package:diplomka/services/barcode_lookup_service.dart';
 import 'package:diplomka/services/calendar_day_ring_service.dart';
 import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/services/ai_feature/ai_service_manager.dart';
@@ -12,6 +15,7 @@ import 'package:diplomka/services/ai_feature/ai_pipeline_service.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/services/shared_preferences_manager.dart';
 import 'package:diplomka/services/weight_entry_repository.dart';
+import 'package:diplomka/utils/media_storage.dart';
 import 'package:get/get.dart';
 
 import 'controller/streak_controller.dart';
@@ -20,6 +24,7 @@ import 'database/app_database.dart';
 import 'database/migrations.dart';
 
 Future<void> setupServices() async {
+  await MediaStorage.initialize();
   final AppDatabase db = await Get.putAsync(() => $FloorAppDatabase
       .databaseBuilder(AppDatabase.databaseName)
       .addMigrations([migration1to2, migration2to3, migration3to4, migration4to5]).build());
@@ -30,6 +35,15 @@ Future<void> setupServices() async {
   Get.lazyPut<GeminiService>(() => GeminiService());
   Get.put(AiServiceManager(), permanent: true);
   Get.lazyPut<AiPipelineService>(() => AiPipelineService());
+  Get.put(OpenFoodFactsClient(), permanent: true);
+  Get.put(
+    BarcodeLookupService(client: OpenFoodFactsClient.to),
+    permanent: true,
+  );
+  Get.put(
+    BarcodeScanController(lookupService: BarcodeLookupService.to),
+    permanent: true,
+  );
   Get.lazyPut<MainScreenController>(() => MainScreenController());
   Get.lazyPut<SessionManager>(() => SessionManager());
   Get.lazyPut<RecipeService>(() => RecipeService());

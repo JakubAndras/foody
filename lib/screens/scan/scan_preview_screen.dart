@@ -41,6 +41,7 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
       imagePath: widget.imagePath,
       description: description,
       preferredMealName: _nameController.text.trim(),
+      scrollToTodayMealsOnStart: true,
     );
 
     if (Get.isRegistered<MainScreenController>()) {

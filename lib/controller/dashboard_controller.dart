@@ -1,13 +1,16 @@
 import 'dart:io';
 
 import 'package:diplomka/controller/streak_controller.dart';
+import 'package:diplomka/model/barcode_lookup_result.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:diplomka/model/day_record.dart';
+import 'package:diplomka/model/ingredient.dart';
 import 'package:diplomka/model/streak_info.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:diplomka/model/meal.dart';
+import 'package:diplomka/services/barcode_lookup_service.dart';
 import 'package:diplomka/services/ai_feature/ai_pipeline_service.dart';
 import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/utils/media_storage.dart';
@@ -33,6 +36,7 @@ class DashboardController extends BaseController {
   final RxString streakError = ''.obs;
 
   final RxBool newMealAnalyzeLoading = false.obs;
+  final RxInt scrollToTodayMealsRequestId = 0.obs;
   int _activeMealAnalyses = 0;
 
   @override
@@ -140,41 +144,26 @@ class DashboardController extends BaseController {
     String? imagePath,
     String? description,
     String? preferredMealName,
+    bool scrollToTodayMealsOnStart = false,
   }) async {
+    if (scrollToTodayMealsOnStart) {
+      requestScrollToTodayMealsBottom();
+    }
     _beginMealAnalysis();
     try {
-      final String? resolvedPhotoPath = await _resolvePhotoPath(imagePath);
-      final List<File>? imageFiles = resolvedPhotoPath == null ? null : [File(resolvedPhotoPath)];
-      final result = await AiPipelineService.to.analyzeMeal(
-        imageFiles: imageFiles,
-        description: description,
-      );
-
-      if (result.isSuccess && result.response != null) {
-        if (result.status == AiAnalysisStatus.lowConfidence) {
-          Get.snackbar('Low confidence', result.message ?? 'Please review the result.');
-        }
-        Meal meal = Meal.fromAnswer(result.response!.answer).copyWith(
-          timestamp: _applyDateToTime(DateTime.now(), selectedDate),
-          photoPath: resolvedPhotoPath,
-        );
-        final String trimmedName = preferredMealName?.trim() ?? '';
-        if (trimmedName.isNotEmpty) {
-          meal = meal.copyWith(name: trimmedName);
-        }
-
-        await DayRecordController.to.saveMealForDate(
-          date: selectedDate,
-          mealToSave: meal,
-        );
-        refresh();
-      } else {
-        Get.snackbar(
-          'Analysis failed',
-          result.message ?? 'Could not analyze the image. Please try again.',
-          duration: const Duration(seconds: 3),
-        );
+      final String? storedPhotoRef = await _resolvePhotoPath(imagePath);
+      if (imagePath != null && imagePath.isNotEmpty && storedPhotoRef == null) {
+        debugPrint('Meal photo could not be persisted. sourcePath=$imagePath');
       }
+      final String? resolvedPhotoPath = await MediaStorage.resolveStoredMealPhotoPath(storedPhotoRef);
+      final List<File>? imageFiles = resolvedPhotoPath == null ? null : [File(resolvedPhotoPath)];
+      await _analyzeAndSaveMealWithAi(
+        selectedDate: selectedDate,
+        imageFiles: imageFiles,
+        photoPathToSave: storedPhotoRef,
+        description: description,
+        preferredMealName: preferredMealName,
+      );
     } catch (e) {
       Get.snackbar(
         'Error',
@@ -187,16 +176,177 @@ class DashboardController extends BaseController {
     }
   }
 
+  Future<void> analyzeMealFromBarcode({
+    required DateTime selectedDate,
+    required String barcode,
+  }) async {
+    requestScrollToTodayMealsBottom();
+    _beginMealAnalysis();
+    try {
+      final BarcodeLookupResult? lookupResult = await _tryLookupBarcode(barcode);
+      final String? barcodePhotoRef = await _resolveBarcodePhotoPath(lookupResult);
+      final String? barcodePhotoPath = await MediaStorage.resolveStoredMealPhotoPath(barcodePhotoRef);
+      final List<File>? barcodeImageFiles = barcodePhotoPath == null ? null : <File>[File(barcodePhotoPath)];
+
+      if (lookupResult != null && lookupResult.hasCompleteNutrientsForDirectUse) {
+        final meal = _buildMealFromBarcodeLookup(
+          selectedDate: selectedDate,
+          result: lookupResult,
+          photoPath: barcodePhotoRef,
+        );
+        await DayRecordController.to.saveMealForDate(
+          date: selectedDate,
+          mealToSave: meal,
+        );
+        await Future<void>.delayed(const Duration(milliseconds: 300));
+        refresh();
+        return;
+      }
+
+      await _analyzeAndSaveMealWithAi(
+        selectedDate: selectedDate,
+        imageFiles: barcodeImageFiles,
+        photoPathToSave: barcodePhotoRef,
+        description: _buildBarcodeAiFallbackDescription(
+          barcode: barcode,
+          result: lookupResult,
+        ),
+        preferredMealName: lookupResult?.productName,
+      );
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Error analyzing barcode: $e',
+        duration: const Duration(seconds: 3),
+      );
+      debugPrint('Error calling barcode analysis flow: $e');
+    } finally {
+      _endMealAnalysis();
+    }
+  }
+
+  Future<BarcodeLookupResult?> _tryLookupBarcode(String barcode) async {
+    try {
+      return await BarcodeLookupService.to.lookupProductByBarcode(barcode);
+    } on BarcodeLookupException {
+      return null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> _analyzeAndSaveMealWithAi({
+    required DateTime selectedDate,
+    required List<File>? imageFiles,
+    required String? photoPathToSave,
+    String? description,
+    String? preferredMealName,
+  }) async {
+    final result = await AiPipelineService.to.analyzeMeal(
+      imageFiles: imageFiles,
+      description: description,
+    );
+
+    if (result.isSuccess && result.response != null) {
+      if (result.status == AiAnalysisStatus.lowConfidence) {
+        Get.snackbar('Low confidence', result.message ?? 'Please review the result.');
+      }
+      Meal meal = Meal.fromAnswer(result.response!.answer).copyWith(
+        timestamp: _applyDateToTime(DateTime.now(), selectedDate),
+        photoPath: photoPathToSave,
+      );
+      final String trimmedName = preferredMealName?.trim() ?? '';
+      if (trimmedName.isNotEmpty) {
+        meal = meal.copyWith(name: trimmedName);
+      }
+
+      await DayRecordController.to.saveMealForDate(
+        date: selectedDate,
+        mealToSave: meal,
+      );
+      refresh();
+    } else {
+      Get.snackbar(
+        'Analysis failed',
+        result.message ?? 'Could not analyze the image. Please try again.',
+        duration: const Duration(seconds: 3),
+      );
+    }
+  }
+
+  Meal _buildMealFromBarcodeLookup({
+    required DateTime selectedDate,
+    required BarcodeLookupResult result,
+    String? photoPath,
+  }) {
+    final timestamp = _applyDateToTime(DateTime.now(), selectedDate);
+    final nutriments = result.nutriments;
+
+    return Meal(
+      name: result.productName,
+      ingredients: <Ingredient>[
+        Ingredient(
+          name: result.productName,
+          weight: 100,
+          calories: nutriments.caloriesPer100g ?? 0,
+          proteins: nutriments.proteinsPer100g ?? 0,
+          carbs: nutriments.carbsPer100g ?? 0,
+          fats: nutriments.fatsPer100g ?? 0,
+        ),
+      ],
+      timestamp: timestamp,
+      photoPath: photoPath,
+    );
+  }
+
+  String _buildBarcodeAiFallbackDescription({
+    required String barcode,
+    BarcodeLookupResult? result,
+  }) {
+    final buffer = StringBuffer();
+    buffer.writeln('Barcode scan fallback request.');
+    buffer.writeln('barcode: $barcode');
+    if (result != null) {
+      buffer.writeln('product_name: ${result.productName}');
+      if (result.brand != null && result.brand!.isNotEmpty) {
+        buffer.writeln('brand: ${result.brand}');
+      }
+      if (result.quantity != null && result.quantity!.isNotEmpty) {
+        buffer.writeln('quantity: ${result.quantity}');
+      }
+      final nutriments = result.nutriments;
+      if (nutriments.caloriesPer100g != null) {
+        buffer.writeln('energy_kcal_100g_or_equivalent: ${nutriments.caloriesPer100g}');
+      }
+      if (nutriments.proteinsPer100g != null) {
+        buffer.writeln('proteins_100g_or_equivalent: ${nutriments.proteinsPer100g}');
+      }
+      if (nutriments.carbsPer100g != null) {
+        buffer.writeln('carbohydrates_100g_or_equivalent: ${nutriments.carbsPer100g}');
+      }
+      if (nutriments.fatsPer100g != null) {
+        buffer.writeln('fat_100g_or_equivalent: ${nutriments.fatsPer100g}');
+      }
+    }
+    buffer.writeln('Please infer a realistic meal and return structured ingredients with macros.');
+    return buffer.toString();
+  }
+
   Future<String?> _resolvePhotoPath(String? rawPath) async {
     if (rawPath == null || rawPath.isEmpty) return null;
-    final persisted = await MediaStorage.persistMealPhoto(rawPath);
-    if (persisted != null) {
-      return persisted;
+    try {
+      return await MediaStorage.persistMealPhoto(rawPath);
+    } catch (_) {
+      return null;
     }
-    if (await File(rawPath).exists()) {
-      return rawPath;
+  }
+
+  Future<String?> _resolveBarcodePhotoPath(BarcodeLookupResult? lookupResult) async {
+    final imageUrl = lookupResult?.imageUrl;
+    if (imageUrl == null || imageUrl.trim().isEmpty) {
+      return null;
     }
-    return null;
+    return MediaStorage.persistMealPhotoFromUrl(imageUrl);
   }
 
   DateTime _applyDateToTime(DateTime source, DateTime targetDate) {
@@ -222,6 +372,10 @@ class DashboardController extends BaseController {
       _activeMealAnalyses -= 1;
     }
     newMealAnalyzeLoading.value = _activeMealAnalyses > 0;
+  }
+
+  void requestScrollToTodayMealsBottom() {
+    scrollToTodayMealsRequestId.value += 1;
   }
 
   // Placeholder for refresh method, if it needs to be part of this controller

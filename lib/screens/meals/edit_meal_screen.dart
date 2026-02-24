@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/controller/day_record_controller.dart';
 import 'package:diplomka/model/ingredient.dart';
@@ -9,7 +7,10 @@ import 'package:diplomka/screens/meals/fix_result_screen.dart';
 import 'package:diplomka/screens/meals/report_meal_screen.dart';
 import 'package:diplomka/screens/meals/meal_components.dart';
 import 'package:diplomka/screens/meals/meal_sheets.dart';
+import 'package:diplomka/services/share/app_share_service.dart';
+import 'package:diplomka/services/share/meal_share_builder.dart';
 import 'package:diplomka/services/selected_date_service.dart';
+import 'package:diplomka/utils/media_storage.dart';
 import 'package:diplomka/widgets/edit_flow/edit_flow_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -108,9 +109,8 @@ class _EditMealScreenState extends State<EditMealScreen> {
   String get _mealTitle => _meal.name.trim().isEmpty ? 'Untitled meal' : _meal.name.trim();
 
   ImageProvider? _resolveHeroImage(String? path) {
-    if (path == null || path.isEmpty) return null;
-    final file = File(path);
-    if (!file.existsSync()) return null;
+    final file = MediaStorage.existingMealPhotoFile(path);
+    if (file == null) return null;
     return FileImage(file);
   }
 
@@ -307,6 +307,26 @@ class _EditMealScreenState extends State<EditMealScreen> {
     Get.back(result: true);
   }
 
+  Future<void> _handleShareMeal() async {
+    final mealToShare = _buildWorkingMeal();
+    final request = MealShareBuilder.fromMeal(
+      meal: mealToShare,
+      mealtimeLabel: _mealtime,
+      includePhoto: true,
+    );
+
+    try {
+      await AppShareService.share(request: request, context: context);
+    } catch (_) {
+      if (!mounted) return;
+      Get.snackbar(
+        'Share unavailable',
+        'Unable to open the share sheet right now.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
+  }
+
   void _openActionSheet() {
     final double topInset = MediaQuery.of(context).padding.top;
 
@@ -341,7 +361,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                           icon: Icons.share_outlined,
                           onTap: () {
                             Navigator.of(context).pop();
-                            Get.snackbar('Share', 'Sharing is not implemented yet.');
+                            _handleShareMeal();
                           },
                         ),
                         GlassActionSheetItem(
@@ -420,8 +440,6 @@ class _EditMealScreenState extends State<EditMealScreen> {
   Future<void> _openMealNameEditor() async {
     if (_isBusy) return;
     _ensureEditMode();
-
-    final TextEditingController controller = TextEditingController(text: _meal.name);
     final updatedName = await showModalBottomSheet<String>(
       context: context,
       backgroundColor: AppColors.surface,
@@ -431,69 +449,8 @@ class _EditMealScreenState extends State<EditMealScreen> {
       clipBehavior: Clip.antiAlias,
       showDragHandle: false,
       isScrollControlled: true,
-      builder: (context) => SafeArea(
-        top: false,
-        child: Padding(
-          padding: EdgeInsets.only(
-            left: AppSpacing.l,
-            right: AppSpacing.l,
-            top: AppSpacing.l,
-            bottom: AppSpacing.l + MediaQuery.viewInsetsOf(context).bottom,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Meal name',
-                style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700),
-              ),
-              const SizedBox(height: AppSpacing.m),
-              TextField(
-                controller: controller,
-                autofocus: true,
-                textInputAction: TextInputAction.done,
-                onSubmitted: (value) => Navigator.of(context).pop(value),
-                decoration: InputDecoration(
-                  hintText: 'Enter meal name',
-                  hintStyle: AppTextStyles.body16.copyWith(color: AppColors.textTertiary),
-                  filled: true,
-                  fillColor: AppColors.surfaceMuted,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(AppRadii.md),
-                    borderSide: BorderSide.none,
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.m,
-                    vertical: AppSpacing.m,
-                  ),
-                ),
-              ),
-              const SizedBox(height: AppSpacing.m),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinePillButton(
-                      label: 'Cancel',
-                      onTap: () => Navigator.of(context).pop(),
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.s),
-                  Expanded(
-                    child: GradientPillButton(
-                      label: 'Save',
-                      gradient: AppGradients.askAiPrimary,
-                      onTap: () => Navigator.of(context).pop(controller.text),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
+      builder: (context) => _MealNameEditorSheet(initialName: _meal.name),
     );
-    controller.dispose();
 
     if (updatedName == null) return;
     final nextName = updatedName.trim();
@@ -726,15 +683,6 @@ class _EditMealScreenState extends State<EditMealScreen> {
                           height: AppSizes.mealHeroHeight + AppSizes.caloriesCardHeight - heroOverlap,
                           child: Stack(
                             children: [
-                              GestureDetector(
-                                onTap: _isBusy ? null : _openMealNameEditor,
-                                child: MealHeroHeader(
-                                  title: _mealTitle,
-                                  timeLabel: _formatTime(_meal.timestamp),
-                                  image: _heroImage,
-                                  imageAlignment: _heroImageAlignment,
-                                ),
-                              ),
                               Positioned(
                                 left: AppSpacing.edge,
                                 right: AppSpacing.edge,
@@ -973,6 +921,96 @@ class _EditMealScreenState extends State<EditMealScreen> {
       case MatchBadgeVariant.good:
         return '94% Match';
     }
+  }
+}
+
+class _MealNameEditorSheet extends StatefulWidget {
+  final String initialName;
+
+  const _MealNameEditorSheet({required this.initialName});
+
+  @override
+  State<_MealNameEditorSheet> createState() => _MealNameEditorSheetState();
+}
+
+class _MealNameEditorSheetState extends State<_MealNameEditorSheet> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.initialName);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: AppSpacing.l,
+          right: AppSpacing.l,
+          top: AppSpacing.l,
+          bottom: AppSpacing.l + MediaQuery.viewInsetsOf(context).bottom,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Meal name',
+              style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700),
+            ),
+            const SizedBox(height: AppSpacing.m),
+            TextField(
+              controller: _controller,
+              autofocus: true,
+              textInputAction: TextInputAction.done,
+              onSubmitted: (value) => Navigator.of(context).pop(value),
+              decoration: InputDecoration(
+                hintText: 'Enter meal name',
+                hintStyle: AppTextStyles.body16.copyWith(color: AppColors.textTertiary),
+                filled: true,
+                fillColor: AppColors.surfaceMuted,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(AppRadii.md),
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.m,
+                  vertical: AppSpacing.m,
+                ),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.m),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinePillButton(
+                    label: 'Cancel',
+                    onTap: () => Navigator.of(context).pop(),
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.s),
+                Expanded(
+                  child: GradientPillButton(
+                    label: 'Save',
+                    gradient: AppGradients.askAiPrimary,
+                    onTap: () => Navigator.of(context).pop(_controller.text),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 

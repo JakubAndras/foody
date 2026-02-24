@@ -8,6 +8,7 @@ import 'package:diplomka/database/entities/meal_entity.dart';
 import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/model/ingredient.dart';
 import 'package:diplomka/model/meal.dart';
+import 'package:diplomka/utils/media_storage.dart';
 import 'package:get/get.dart';
 
 class DayRecordRepository extends GetxService {
@@ -132,6 +133,49 @@ class DayRecordRepository extends GetxService {
       isFavorite: isFavorite,
     );
     await _mealDao.updateMeal(entity);
+  }
+
+  Future<void> repairMealPhotoPaths() async {
+    final dayRecordEntities = await _dayRecordDao.getAllDayRecords();
+
+    for (final dayRecordEntity in dayRecordEntities) {
+      final dayRecordId = dayRecordEntity.id;
+      if (dayRecordId == null) continue;
+      final mealEntities = await _mealDao.findMealsForDayRecord(dayRecordId);
+
+      for (final mealEntity in mealEntities) {
+        final path = mealEntity.photoPath;
+        if (path == null || path.isEmpty) continue;
+
+        String? repairedPath;
+        try {
+          repairedPath = await MediaStorage.persistMealPhoto(path);
+        } catch (_) {
+          repairedPath = null;
+        }
+
+        // Keep original path when repair fails; never destroy user data on uncertain state.
+        if (repairedPath == null) {
+          continue;
+        }
+
+        final nextPhotoPath = repairedPath;
+        if (nextPhotoPath == mealEntity.photoPath) {
+          continue;
+        }
+
+        await _mealDao.updateMeal(
+          MealEntity(
+            id: mealEntity.id,
+            dayRecordId: mealEntity.dayRecordId,
+            name: mealEntity.name,
+            timestamp: mealEntity.timestamp,
+            photoPath: nextPhotoPath,
+            isFavorite: mealEntity.isFavorite,
+          ),
+        );
+      }
+    }
   }
 
   Future<int> _ensureDayRecordId(DateTime normalizedDate) async {
