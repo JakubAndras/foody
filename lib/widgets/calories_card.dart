@@ -12,9 +12,11 @@ class CaloriesCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double goal = dayRecord.calorieGoal <= 0 ? 1 : dayRecord.calorieGoal;
-    final double total = dayRecord.totalCalories;
+    final double food = dayRecord.totalCalories;
+    final double exercise = dayRecord.totalExerciseCalories;
+    final double net = dayRecord.netCalories;
     final double remaining = dayRecord.caloriesLeft;
-    final double progress = (total / goal).clamp(0.0, 1.0);
+    final double progress = (net / goal).clamp(0.0, 1.0);
 
     return Container(
       padding: const EdgeInsets.all(AppSpacing.l),
@@ -47,7 +49,7 @@ class CaloriesCard extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            (caloriesPlanEnabled ? remaining : total).toStringAsFixed(0),
+                            (caloriesPlanEnabled ? remaining : net).toStringAsFixed(0),
                             style: AppTextStyles.h2.copyWith(color: AppColors.textPrimary),
                           ),
                           Text(
@@ -76,14 +78,14 @@ class CaloriesCard extends StatelessWidget {
               _StatItem(
                 icon: Icons.restaurant_rounded,
                 label: 'Food',
-                value: total.toStringAsFixed(0),
+                value: food.toStringAsFixed(0),
                 color: AppColors.info,
               ),
               const SizedBox(height: AppSpacing.s),
               _StatItem(
                 icon: Icons.directions_run_rounded,
                 label: 'Exercise',
-                value: '0',
+                value: exercise.toStringAsFixed(0),
                 color: AppColors.warning,
               ),
               const SizedBox(height: AppSpacing.s),

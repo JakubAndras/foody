@@ -5,9 +5,7 @@ import 'dart:async';
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/screens/main_screen.dart';
-import 'package:diplomka/screens/logs/add_exercise_screen.dart';
 import 'package:diplomka/screens/logs/voice_widgets.dart';
-import 'package:diplomka/services/ai_feature/ai_pipeline_service.dart';
 import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/services/voice/voice_transcription_service.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -391,7 +389,14 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
   }
 
   void _startExerciseAnalysisAndNavigate(String description) {
-    unawaited(_analyzeExerciseInBackground(description));
+    final selectedDate = SelectedDateService.to.selectedDate.value;
+    unawaited(
+      DashboardController.to.analyzeExerciseFromVoice(
+        selectedDate: selectedDate,
+        description: description,
+        scrollToTodayMealsOnStart: true,
+      ),
+    );
     _navigateToDashboardRoot();
   }
 
@@ -404,41 +409,6 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
       setState(() {
         _isAnalyzing = false;
       });
-    }
-  }
-
-  Future<void> _analyzeExerciseInBackground(String description) async {
-    try {
-      final result = await AiPipelineService.to.analyzeExercise(description: description);
-      if (!result.isSuccess || result.analysis == null) {
-        Get.snackbar('Exercise analysis failed', result.message ?? 'Please try again.');
-        return;
-      }
-
-      if (result.status == AiExerciseAnalysisStatus.lowConfidence) {
-        Get.snackbar(
-          'Low confidence',
-          result.message ?? 'Please review values.',
-        );
-      }
-
-      final answer = result.analysis!.answer;
-      final initialMode = answer.caloriesTotal != null ? ExerciseTrackingMode.total : ExerciseTrackingMode.perMinute;
-
-      await Get.to(
-        () => AddExerciseScreen(
-          initialName: answer.name,
-          initialDurationMinutes: answer.durationMinutes,
-          initialCaloriesTotal: answer.caloriesTotal,
-          initialCaloriesPerMinute: answer.caloriesPerMinute,
-          initialTrackingMode: initialMode,
-        ),
-      );
-    } catch (_) {
-      Get.snackbar(
-        'Exercise analysis failed',
-        'Failed to open exercise form. Please try again.',
-      );
     }
   }
 

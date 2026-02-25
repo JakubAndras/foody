@@ -180,7 +180,48 @@
 4. Priorita interaktivity: jen tap-to-open, nebo i pokročilé interaktivní prvky (hlavně iOS 17+)?
 
 ## Poznámka ke stavu repozitáře
-- `mobile_scanner` už je v projektu přítomný, ale Home Screen Widgets infrastruktura v `ios`/`android` zatím chybí.
+- `mobile_scanner` je v projektu přítomný.
+- Home Screen Widgets infrastruktura je implementovaná pro iOS + Android.
+
+## Implementační update (2026-02-24)
+- Založen iOS WidgetKit extension target `HomeWidgetsExtension` a napojen na Runner target.
+- Implementované iOS widget kind mapování:
+  - `NutritionSummaryWidget`
+  - `ScanFoodShortcutWidget`
+  - `BarcodeShortcutWidget`
+- Flutter -> native bridge běží přes jednotný JSON contract `home_widget_payload` (`schemaVersion = 1`).
+- Scope je uzamčen na dnešní den: widgety vždy synchronizují a zobrazují dnešní agregace.
+- App Group ID bylo sjednoceno na produkční naming:
+  - `group.com.jakubandras.diplomka.widgets`
+
+## iOS QA checklist (krátký)
+- `Cold start`: klepnutí na každý widget otevře appku a správnou destinaci (dashboard / scan food / barcode).
+- `Stale data`: po změně jídla nebo cílů se widget do rozumného času aktualizuje; fallback text se zobrazuje korektně (`Updated...`).
+- `Deep links`: fungují v běžícím i ukončeném stavu appky a neotevírají špatný flow.
+- `Onboarding guard`: pokud onboarding není dokončen, widget akce neprolomí očekávaný onboarding tok.
+
+## Co ještě chybí (iOS ready-to-use na zařízení/TestFlight)
+- V Apple Developer účtu vytvořit/povolit App Group `group.com.jakubandras.diplomka.widgets` pro oba IDs (Runner + extension).
+- Pokud už byla dříve použita hodnota `group.com.example.diplomka.widgets`, provést migraci capability na nové App Group ID.
+- Přegenerovat provisioning profily se zapnutou App Group capability pro oba targety.
+- Otestovat na fyzickém iOS zařízení přidání widgetu a deep-link akce.
+
+## KRITICKÉ: Apple členství a blokery (k 24. únoru 2026)
+- Bez placeného členství lze normálně:
+  - vyvíjet v Xcode,
+  - buildit projekt,
+  - testovat v iOS simulátoru.
+- Pro tento projekt je kritický bod test na fyzickém iPhonu s App Group sdílením mezi appkou a Widget Extension.
+- Apple uvádí, že dostupnost capabilities závisí na typu membership a že pokročilé app capabilities jsou součást Apple Developer Programu (placené členství).
+- Praktický důsledek pro tuto implementaci:
+  - pokud v účtu/Teamu není možné zapnout `App Groups` pro oba targety a propsat je do provisioning profilů, widget data bridge na zařízení nebude fungovat.
+  - v takovém případě je nutné přejít na placené členství Apple Developer Program.
+- Tato diplomová práce nepotřebuje App Store/TestFlight publikaci, ale pro plnohodnotné ověření widgetů na fyzickém zařízení je capability/provisioning stále potřeba.
+
+### Oficiální reference (Apple)
+- Choosing a Membership: https://developer.apple.com/support/compare-memberships/
+- Supported capabilities (iOS): https://developer.apple.com/help/account/reference/supported-capabilities-ios
+- Enable app capabilities: https://developer.apple.com/help/account/identifiers/enable-app-capabilities/
 
 ## Finální pragmatické doporučení
 - Jít cestou `home_widget` jako základ.

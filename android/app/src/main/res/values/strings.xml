@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_nutrition_summary_label">Nutrition Summary</string>
+    <string name="widget_scan_food_label">Scan Food</string>
+    <string name="widget_barcode_label">Barcode</string>
+    <string name="widget_nutrition_summary_description">Shows calories and macros for today.</string>
+    <string name="widget_scan_food_description">Shortcut that opens meal scan.</string>
+    <string name="widget_barcode_description">Shortcut that opens barcode scan.</string>
+</resources>

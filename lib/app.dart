@@ -1,5 +1,6 @@
 import 'package:diplomka/screens/main_screen.dart';
 import 'package:diplomka/screens/onboarding/onboarding_flow_screen.dart';
+import 'package:diplomka/services/home_widget/widget_sync_service.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -64,6 +65,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       case AppLifecycleState.resumed:
         if (appPausedAt != null) {}
         appPausedAt = null;
+        await WidgetSyncService.to.syncToday(reason: 'app_resumed');
         break;
 
       case AppLifecycleState.paused:

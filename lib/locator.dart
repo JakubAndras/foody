@@ -12,6 +12,8 @@ import 'package:diplomka/services/ai_feature/ai_service_manager.dart';
 import 'package:diplomka/services/ai_feature/gemini_service.dart';
 import 'package:diplomka/services/ai_feature/openai_service.dart';
 import 'package:diplomka/services/ai_feature/ai_pipeline_service.dart';
+import 'package:diplomka/services/home_widget/widget_action_router.dart';
+import 'package:diplomka/services/home_widget/widget_sync_service.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/services/shared_preferences_manager.dart';
 import 'package:diplomka/services/weight_entry_repository.dart';
@@ -25,9 +27,8 @@ import 'database/migrations.dart';
 
 Future<void> setupServices() async {
   await MediaStorage.initialize();
-  final AppDatabase db = await Get.putAsync(() => $FloorAppDatabase
-      .databaseBuilder(AppDatabase.databaseName)
-      .addMigrations([migration1to2, migration2to3, migration3to4, migration4to5]).build());
+  final AppDatabase db = await Get.putAsync(
+      () => $FloorAppDatabase.databaseBuilder(AppDatabase.databaseName).addMigrations([migration1to2, migration2to3, migration3to4, migration4to5, migration5to6]).build());
 
   /// Inicializace singleton GetxService - jednodušší nalezení controlleru v paměti;
   Get.lazyPut<SharedPreferencesService>(() => SharedPreferencesService());
@@ -46,6 +47,8 @@ Future<void> setupServices() async {
   );
   Get.lazyPut<MainScreenController>(() => MainScreenController());
   Get.lazyPut<SessionManager>(() => SessionManager());
+  Get.put(WidgetActionRouter(), permanent: true);
+  Get.put(WidgetSyncService(), permanent: true);
   Get.lazyPut<RecipeService>(() => RecipeService());
   Get.lazyPut<StreakController>(() => StreakController());
   Get.put(SelectedDateService(), permanent: true);

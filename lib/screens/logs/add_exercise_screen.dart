@@ -1,5 +1,9 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/controller/dashboard_controller.dart';
+import 'package:diplomka/controller/day_record_controller.dart';
+import 'package:diplomka/model/exercise.dart';
 import 'package:diplomka/screens/logs/exercise_widgets.dart';
+import 'package:diplomka/services/selected_date_service.dart';
 import 'package:flutter/material.dart';
 
 enum ExerciseTrackingMode { total, perMinute }
@@ -30,6 +34,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
   final TextEditingController _rateController = TextEditingController();
   final TextEditingController _durationController = TextEditingController();
   ExerciseTrackingMode _mode = ExerciseTrackingMode.total;
+  bool _isSaving = false;
 
   @override
   void initState() {
@@ -213,7 +218,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
           Padding(
             padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.s, AppSpacing.l, AppSpacing.l),
             child: GestureDetector(
-              onTap: () => _showSnack(context, 'Exercise added'),
+              onTap: _isSaving ? null : _saveExercise,
               child: Container(
                 height: AppSizes.buttonHeightCompact,
                 decoration: BoxDecoration(
@@ -223,7 +228,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
                 ),
                 child: Center(
                   child: Text(
-                    'Add Exercise',
+                    _isSaving ? 'Saving...' : 'Add Exercise',
                     style: AppTextStyles.button18.copyWith(color: AppColors.onPrimary),
                   ),
                 ),
@@ -235,8 +240,63 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
     );
   }
 
-  void _showSnack(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  Future<void> _saveExercise() async {
+    final String exerciseName = _nameController.text.trim().isEmpty ? 'Exercise' : _nameController.text.trim();
+    final int? durationMinutes = int.tryParse(_durationController.text.trim());
+    final double caloriesBurned =
+        _mode == ExerciseTrackingMode.total ? (double.tryParse(_totalController.text.trim()) ?? 0) : (double.tryParse(_rateController.text.trim()) ?? 0) * (durationMinutes ?? 0);
+
+    if (caloriesBurned <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter valid exercise calories.')),
+      );
+      return;
+    }
+
+    setState(() {
+      _isSaving = true;
+    });
+
+    try {
+      final selectedDate = SelectedDateService.to.selectedDate.value;
+      final exercise = Exercise(
+        name: exerciseName,
+        timestamp: _applyDateToTime(DateTime.now(), selectedDate),
+        durationMinutes: durationMinutes,
+        caloriesBurned: caloriesBurned,
+      );
+
+      await DayRecordController.to.saveExerciseForDate(
+        date: selectedDate,
+        exerciseToSave: exercise,
+      );
+      DashboardController.to.refresh();
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Exercise added')),
+      );
+      Navigator.of(context).maybePop();
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSaving = false;
+        });
+      }
+    }
+  }
+
+  DateTime _applyDateToTime(DateTime source, DateTime targetDate) {
+    return DateTime(
+      targetDate.year,
+      targetDate.month,
+      targetDate.day,
+      source.hour,
+      source.minute,
+      source.second,
+      source.millisecond,
+      source.microsecond,
+    );
   }
 }
 

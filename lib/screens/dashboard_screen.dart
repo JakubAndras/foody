@@ -76,6 +76,7 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
                                   const SizedBox(height: AppSpacing.m),
                                   RecentlyUploadedCard(
                                     meals: recordToShow.meals,
+                                    exercises: recordToShow.exercises,
                                     selectedDate: dashboardController.selectedDate.value,
                                     onMealTap: (meal) async {
                                       await Get.to(() => MealDetailScreen(meal: meal));

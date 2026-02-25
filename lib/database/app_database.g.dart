@@ -80,13 +80,15 @@ class _$AppDatabase extends AppDatabase {
 
   WeightEntryDao? _weightEntryDaoInstance;
 
+  ExerciseDao? _exerciseDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 5,
+      version: 6,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -104,11 +106,13 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `DayRecord` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` INTEGER NOT NULL, `calorieGoal` REAL NOT NULL, `proteinGoal` REAL NOT NULL, `carbsGoal` REAL NOT NULL, `fatGoal` REAL NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Meal` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `dayRecordId` INTEGER NOT NULL, `name` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `photoPath` TEXT, `isFavorite` INTEGER NOT NULL DEFAULT 0, FOREIGN KEY (`dayRecordId`) REFERENCES `DayRecord` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `Meal` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `dayRecordId` INTEGER NOT NULL, `name` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `photoPath` TEXT, `isFavorite` INTEGER NOT NULL, FOREIGN KEY (`dayRecordId`) REFERENCES `DayRecord` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Ingredient` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `mealId` INTEGER NOT NULL, `name` TEXT NOT NULL, `weight` REAL NOT NULL, `calories` REAL NOT NULL, `proteins` REAL NOT NULL, `carbs` REAL NOT NULL, `fats` REAL NOT NULL, FOREIGN KEY (`mealId`) REFERENCES `Meal` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `WeightEntry` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` INTEGER NOT NULL, `weight` REAL NOT NULL)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `Exercise` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `dayRecordId` INTEGER NOT NULL, `name` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `durationMinutes` INTEGER, `caloriesBurned` REAL NOT NULL, FOREIGN KEY (`dayRecordId`) REFERENCES `DayRecord` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
             'CREATE UNIQUE INDEX `index_DayRecord_date` ON `DayRecord` (`date`)');
 
@@ -135,7 +139,13 @@ class _$AppDatabase extends AppDatabase {
 
   @override
   WeightEntryDao get weightEntryDao {
-    return _weightEntryDaoInstance ??= _$WeightEntryDao(database, changeListener);
+    return _weightEntryDaoInstance ??=
+        _$WeightEntryDao(database, changeListener);
+  }
+
+  @override
+  ExerciseDao get exerciseDao {
+    return _exerciseDaoInstance ??= _$ExerciseDao(database, changeListener);
   }
 }
 
@@ -533,7 +543,8 @@ class _$WeightEntryDao extends WeightEntryDao {
 
   @override
   Future<List<WeightEntryEntity>> getAllEntries() async {
-    return _queryAdapter.queryList('SELECT * FROM WeightEntry ORDER BY date DESC',
+    return _queryAdapter.queryList(
+        'SELECT * FROM WeightEntry ORDER BY date DESC',
         mapper: (Map<String, Object?> row) => WeightEntryEntity(
             id: row['id'] as int?,
             date: _dateTimeConverter.decode(row['date'] as int),
@@ -553,6 +564,12 @@ class _$WeightEntryDao extends WeightEntryDao {
   }
 
   @override
+  Future<void> deleteEntryById(int id) async {
+    await _queryAdapter.queryNoReturn('DELETE FROM WeightEntry WHERE id = ?1',
+        arguments: [id]);
+  }
+
+  @override
   Future<int> insertEntry(WeightEntryEntity entry) {
     return _weightEntryEntityInsertionAdapter.insertAndReturnId(
         entry, OnConflictStrategy.replace);
@@ -568,12 +585,97 @@ class _$WeightEntryDao extends WeightEntryDao {
   Future<void> deleteEntry(WeightEntryEntity entry) async {
     await _weightEntryEntityDeletionAdapter.delete(entry);
   }
+}
+
+class _$ExerciseDao extends ExerciseDao {
+  _$ExerciseDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _exerciseEntityInsertionAdapter = InsertionAdapter(
+            database,
+            'Exercise',
+            (ExerciseEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'dayRecordId': item.dayRecordId,
+                  'name': item.name,
+                  'timestamp': _dateTimeConverter.encode(item.timestamp),
+                  'durationMinutes': item.durationMinutes,
+                  'caloriesBurned': item.caloriesBurned
+                }),
+        _exerciseEntityUpdateAdapter = UpdateAdapter(
+            database,
+            'Exercise',
+            ['id'],
+            (ExerciseEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'dayRecordId': item.dayRecordId,
+                  'name': item.name,
+                  'timestamp': _dateTimeConverter.encode(item.timestamp),
+                  'durationMinutes': item.durationMinutes,
+                  'caloriesBurned': item.caloriesBurned
+                }),
+        _exerciseEntityDeletionAdapter = DeletionAdapter(
+            database,
+            'Exercise',
+            ['id'],
+            (ExerciseEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'dayRecordId': item.dayRecordId,
+                  'name': item.name,
+                  'timestamp': _dateTimeConverter.encode(item.timestamp),
+                  'durationMinutes': item.durationMinutes,
+                  'caloriesBurned': item.caloriesBurned
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<ExerciseEntity> _exerciseEntityInsertionAdapter;
+
+  final UpdateAdapter<ExerciseEntity> _exerciseEntityUpdateAdapter;
+
+  final DeletionAdapter<ExerciseEntity> _exerciseEntityDeletionAdapter;
 
   @override
-  Future<void> deleteEntryById(int id) async {
-    await _queryAdapter.queryNoReturn(
-        'DELETE FROM WeightEntry WHERE id = ?1',
-        arguments: [id]);
+  Future<List<ExerciseEntity>> findExercisesForDayRecord(
+      int dayRecordId) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM Exercise WHERE dayRecordId = ?1 ORDER BY timestamp DESC',
+        mapper: (Map<String, Object?> row) => ExerciseEntity(
+            id: row['id'] as int?,
+            dayRecordId: row['dayRecordId'] as int,
+            name: row['name'] as String,
+            timestamp: _dateTimeConverter.decode(row['timestamp'] as int),
+            durationMinutes: row['durationMinutes'] as int?,
+            caloriesBurned: row['caloriesBurned'] as double),
+        arguments: [dayRecordId]);
+  }
+
+  @override
+  Future<void> deleteExerciseById(int id) async {
+    await _queryAdapter
+        .queryNoReturn('DELETE FROM Exercise WHERE id = ?1', arguments: [id]);
+  }
+
+  @override
+  Future<int> insertExercise(ExerciseEntity exercise) {
+    return _exerciseEntityInsertionAdapter.insertAndReturnId(
+        exercise, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> updateExercise(ExerciseEntity exercise) async {
+    await _exerciseEntityUpdateAdapter.update(
+        exercise, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> deleteExercise(ExerciseEntity exercise) async {
+    await _exerciseEntityDeletionAdapter.delete(exercise);
   }
 }
 

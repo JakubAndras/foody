@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:diplomka/controller/streak_controller.dart';
 import 'package:diplomka/model/barcode_lookup_result.dart';
+import 'package:diplomka/model/exercise.dart';
 import 'package:diplomka/model/meal_analysis_request.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -37,10 +38,14 @@ class DashboardController extends BaseController {
   final RxString streakError = ''.obs;
 
   final RxBool newMealAnalyzeLoading = false.obs;
+  final RxBool newExerciseAnalyzeLoading = false.obs;
   final RxInt scrollToTodayMealsRequestId = 0.obs;
   int _activeMealAnalyses = 0;
+  int _activeExerciseAnalyses = 0;
   DateTime? _mealAnalysisLoadingStartedAt;
+  DateTime? _exerciseAnalysisLoadingStartedAt;
   static const Duration _minMealLoadingVisible = Duration(milliseconds: 900);
+  static const Duration _minExerciseLoadingVisible = Duration(milliseconds: 900);
 
   @override
   void onInit() {
@@ -278,6 +283,74 @@ class DashboardController extends BaseController {
     }
   }
 
+  Future<void> analyzeExerciseFromVoice({
+    required DateTime selectedDate,
+    required String description,
+    bool scrollToTodayMealsOnStart = true,
+  }) async {
+    final trimmedDescription = description.trim();
+    if (trimmedDescription.isEmpty) {
+      Get.snackbar(
+        'Exercise analysis failed',
+        'Exercise description cannot be empty.',
+      );
+      return;
+    }
+
+    if (scrollToTodayMealsOnStart) {
+      requestScrollToTodayMealsBottom();
+    }
+
+    _beginExerciseAnalysis();
+    try {
+      final result = await AiPipelineService.to.analyzeExercise(description: trimmedDescription);
+      if (!result.isSuccess || result.analysis == null) {
+        Get.snackbar('Exercise analysis failed', result.message ?? 'Please try again.');
+        return;
+      }
+
+      if (result.status == AiExerciseAnalysisStatus.lowConfidence) {
+        Get.snackbar(
+          'Low confidence',
+          result.message ?? 'Please review values.',
+        );
+      }
+
+      final answer = result.analysis!.answer;
+      final int? duration = answer.durationMinutes;
+      final double caloriesBurned = answer.caloriesTotal?.toDouble() ?? ((answer.caloriesPerMinute ?? 0) * (duration ?? 0));
+
+      if (caloriesBurned <= 0) {
+        Get.snackbar(
+          'Exercise analysis failed',
+          'Could not infer burned calories from the exercise description.',
+        );
+        return;
+      }
+
+      final exercise = Exercise(
+        name: answer.name,
+        timestamp: _applyDateToTime(DateTime.now(), selectedDate),
+        durationMinutes: duration,
+        caloriesBurned: caloriesBurned,
+      );
+
+      await DayRecordController.to.saveExerciseForDate(
+        date: selectedDate,
+        exerciseToSave: exercise,
+      );
+      refresh();
+    } catch (e) {
+      Get.snackbar(
+        'Exercise analysis failed',
+        'Failed to create exercise record. Please try again.',
+      );
+      debugPrint('Error in exercise voice analysis flow: $e');
+    } finally {
+      await _endExerciseAnalysis();
+    }
+  }
+
   Future<BarcodeLookupResult?> _tryLookupBarcode(String barcode) async {
     try {
       return await BarcodeLookupService.to.lookupProductByBarcode(barcode);
@@ -423,6 +496,12 @@ class DashboardController extends BaseController {
     newMealAnalyzeLoading.value = true;
   }
 
+  void _beginExerciseAnalysis() {
+    _activeExerciseAnalyses += 1;
+    _exerciseAnalysisLoadingStartedAt ??= DateTime.now();
+    newExerciseAnalyzeLoading.value = true;
+  }
+
   Future<void> _endMealAnalysis() async {
     if (_activeMealAnalyses > 0) {
       _activeMealAnalyses -= 1;
@@ -443,6 +522,28 @@ class DashboardController extends BaseController {
 
     _mealAnalysisLoadingStartedAt = null;
     newMealAnalyzeLoading.value = false;
+  }
+
+  Future<void> _endExerciseAnalysis() async {
+    if (_activeExerciseAnalyses > 0) {
+      _activeExerciseAnalyses -= 1;
+    }
+
+    if (_activeExerciseAnalyses > 0) {
+      newExerciseAnalyzeLoading.value = true;
+      return;
+    }
+
+    final startedAt = _exerciseAnalysisLoadingStartedAt;
+    if (startedAt != null) {
+      final elapsed = DateTime.now().difference(startedAt);
+      if (elapsed < _minExerciseLoadingVisible) {
+        await Future<void>.delayed(_minExerciseLoadingVisible - elapsed);
+      }
+    }
+
+    _exerciseAnalysisLoadingStartedAt = null;
+    newExerciseAnalyzeLoading.value = false;
   }
 
   void requestScrollToTodayMealsBottom() {

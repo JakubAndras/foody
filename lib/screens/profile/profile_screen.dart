@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/controller/dashboard_controller.dart';
+import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/screens/profile/subscreens/confirm_username_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/personal_details_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/preferences_screen.dart';
@@ -240,103 +242,116 @@ class _WidgetSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const dummyCalories = '1042';
-    const dummyProtein = '72g';
-    const dummyCarbs = '120g';
-    const dummyFat = '45g';
-    const dummyProgress = 0.42;
+    final dashboardController = DashboardController.to;
+    return Obx(() {
+      final record = dashboardController.dayRecord.value ?? DayRecord.initial(dashboardController.selectedDate.value);
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          flex: 5,
-          child: ProfileCard(
-            radius: AppRadii.lg,
-            shadow: AppShadows.cardSubtle,
-            padding: const EdgeInsets.all(AppSpacing.m),
-            child: Row(
+      final caloriesText = record.totalCalories.round().toString();
+      final proteinText = '${_formatMacro(record.totalProteins)}g';
+      final carbsText = '${_formatMacro(record.totalCarbs)}g';
+      final fatText = '${_formatMacro(record.totalFats)}g';
+      final progress = record.calorieGoal <= 0 ? 0.0 : (record.totalCalories / record.calorieGoal).clamp(0.0, 1.0);
+
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 5,
+            child: ProfileCard(
+              radius: AppRadii.lg,
+              shadow: AppShadows.cardSubtle,
+              padding: const EdgeInsets.all(AppSpacing.m),
+              child: Row(
+                children: [
+                  ProgressRing(
+                    size: 96,
+                    strokeWidth: 8,
+                    value: progress,
+                    backgroundColor: AppColors.outline.withValues(alpha: 0.7),
+                    foregroundColor: AppColors.primarySoft,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          caloriesText,
+                          style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w700),
+                        ),
+                        Text(
+                          'Calories',
+                          style: AppTextStyles.caption12.copyWith(color: AppColors.textSecondary),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.m),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _MacroLeftRow(
+                          icon: Icons.vpn_key_rounded,
+                          color: AppColors.macroProtein,
+                          value: proteinText,
+                          label: 'Protein eaten',
+                        ),
+                        const SizedBox(height: AppSpacing.s),
+                        _MacroLeftRow(
+                          icon: Icons.grain,
+                          color: AppColors.macroCarbs,
+                          value: carbsText,
+                          label: 'Carbs eaten',
+                        ),
+                        const SizedBox(height: AppSpacing.s),
+                        _MacroLeftRow(
+                          icon: Icons.water_drop,
+                          color: AppColors.macroFats,
+                          value: fatText,
+                          label: 'Fat eaten',
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(width: AppSpacing.s),
+          Expanded(
+            flex: 2,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                ProgressRing(
-                  size: 96,
-                  strokeWidth: 8,
-                  value: dummyProgress,
-                  backgroundColor: AppColors.outline.withValues(alpha: 0.7),
-                  foregroundColor: AppColors.primarySoft,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        dummyCalories,
-                        style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w700),
-                      ),
-                      Text(
-                        'Calories',
-                        style: AppTextStyles.caption12.copyWith(color: AppColors.textSecondary),
-                      ),
-                    ],
-                  ),
+                _WidgetShortcutCard(
+                  icon: Icons.center_focus_strong,
+                  label: 'Scan Food',
+                  onTap: () {
+                    if (SessionManager.to.scanOnboardingComplete.value) {
+                      Get.to(() => const ScanCameraScreen());
+                    } else {
+                      Get.to(() => const ScanOnboardingScreen());
+                    }
+                  },
                 ),
-                const SizedBox(width: AppSpacing.m),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      _MacroLeftRow(
-                        icon: Icons.vpn_key_rounded,
-                        color: AppColors.macroProtein,
-                        value: dummyProtein,
-                        label: 'Protein eaten',
-                      ),
-                      SizedBox(height: AppSpacing.s),
-                      _MacroLeftRow(
-                        icon: Icons.grain,
-                        color: AppColors.macroCarbs,
-                        value: dummyCarbs,
-                        label: 'Carbs eaten',
-                      ),
-                      SizedBox(height: AppSpacing.s),
-                      _MacroLeftRow(
-                        icon: Icons.water_drop,
-                        color: AppColors.macroFats,
-                        value: dummyFat,
-                        label: 'Fat eaten',
-                      ),
-                    ],
-                  ),
+                const SizedBox(height: AppSpacing.s),
+                _WidgetShortcutCard(
+                  icon: Icons.qr_code,
+                  label: 'Barcode',
+                  onTap: () => Get.to(() => const ScanCameraScreen(initialMode: ScanMode.barcode)),
                 ),
               ],
             ),
           ),
-        ),
-        const SizedBox(width: AppSpacing.s),
-        Expanded(
-          flex: 2,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _WidgetShortcutCard(
-                icon: Icons.center_focus_strong,
-                label: 'Scan Food',
-                onTap: () {
-                  if (SessionManager.to.scanOnboardingComplete.value) {
-                    Get.to(() => const ScanCameraScreen());
-                  } else {
-                    Get.to(() => const ScanOnboardingScreen());
-                  }
-                },
-              ),
-              const SizedBox(height: AppSpacing.s),
-              _WidgetShortcutCard(
-                icon: Icons.qr_code,
-                label: 'Barcode',
-                onTap: () => Get.to(() => const ScanCameraScreen(initialMode: ScanMode.barcode)),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
+        ],
+      );
+    });
+  }
+
+  String _formatMacro(double value) {
+    final rounded = value.roundToDouble();
+    if ((value - rounded).abs() < 0.05) {
+      return rounded.toStringAsFixed(0);
+    }
+    return value.toStringAsFixed(1);
   }
 }
 

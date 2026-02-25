@@ -1,11 +1,14 @@
 import 'package:diplomka/database/app_database.dart';
 import 'package:diplomka/database/dao/day_record_dao.dart';
+import 'package:diplomka/database/dao/exercise_dao.dart';
 import 'package:diplomka/database/dao/ingredient_dao.dart';
 import 'package:diplomka/database/dao/meal_dao.dart';
 import 'package:diplomka/database/entities/day_record_entity.dart';
+import 'package:diplomka/database/entities/exercise_entity.dart';
 import 'package:diplomka/database/entities/ingredient_entity.dart';
 import 'package:diplomka/database/entities/meal_entity.dart';
 import 'package:diplomka/model/day_record.dart';
+import 'package:diplomka/model/exercise.dart';
 import 'package:diplomka/model/ingredient.dart';
 import 'package:diplomka/model/meal.dart';
 import 'package:diplomka/utils/media_storage.dart';
@@ -21,6 +24,7 @@ class DayRecordRepository extends GetxService {
   DayRecordDao get _dayRecordDao => _database.dayRecordDao;
   MealDao get _mealDao => _database.mealDao;
   IngredientDao get _ingredientDao => _database.ingredientDao;
+  ExerciseDao get _exerciseDao => _database.exerciseDao;
 
   Stream<List<DayRecord>> watchDayRecords() {
     return _dayRecordDao.watchDayRecords().asyncMap((entities) async {
@@ -122,6 +126,29 @@ class DayRecordRepository extends GetxService {
     await _mealDao.deleteMealById(meal.id!);
   }
 
+  Future<DayRecord> saveExerciseForDate({required DateTime date, required Exercise exercise}) async {
+    final normalizedDate = _normalizeDate(date);
+    final dayRecordId = await _ensureDayRecordId(normalizedDate);
+
+    final exerciseEntity = ExerciseEntity(
+      id: exercise.id,
+      dayRecordId: dayRecordId,
+      name: exercise.name,
+      timestamp: exercise.timestamp,
+      durationMinutes: exercise.durationMinutes,
+      caloriesBurned: exercise.caloriesBurned,
+    );
+
+    if (exercise.id == null) {
+      await _exerciseDao.insertExercise(exerciseEntity);
+    } else {
+      await _exerciseDao.updateExercise(exerciseEntity);
+    }
+
+    final entity = await _dayRecordDao.findDayRecordById(dayRecordId);
+    return _buildDayRecordFromEntity(entity!);
+  }
+
   Future<void> updateMealFavorite({required Meal meal, required bool isFavorite}) async {
     if (meal.id == null || meal.dayRecordId == null) return;
     final entity = MealEntity(
@@ -192,11 +219,14 @@ class DayRecordRepository extends GetxService {
 
   Future<DayRecord> _buildDayRecordFromEntity(DayRecordEntity entity) async {
     final mealEntities = await _mealDao.findMealsForDayRecord(entity.id!);
+    final exerciseEntities = await _exerciseDao.findExercisesForDayRecord(entity.id!);
     final meals = await Future.wait(mealEntities.map(_buildMealFromEntity));
+    final exercises = exerciseEntities.map(_buildExerciseFromEntity).toList();
     return DayRecord(
       id: entity.id,
       date: entity.date,
       meals: meals,
+      exercises: exercises,
       calorieGoal: entity.calorieGoal,
       proteinGoal: entity.proteinGoal,
       carbsGoal: entity.carbsGoal,
@@ -229,6 +259,17 @@ class DayRecordRepository extends GetxService {
       timestamp: mealEntity.timestamp,
       photoPath: mealEntity.photoPath,
       isFavorite: mealEntity.isFavorite,
+    );
+  }
+
+  Exercise _buildExerciseFromEntity(ExerciseEntity exerciseEntity) {
+    return Exercise(
+      id: exerciseEntity.id,
+      dayRecordId: exerciseEntity.dayRecordId,
+      name: exerciseEntity.name,
+      timestamp: exerciseEntity.timestamp,
+      durationMinutes: exerciseEntity.durationMinutes,
+      caloriesBurned: exerciseEntity.caloriesBurned,
     );
   }
 

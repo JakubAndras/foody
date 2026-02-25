@@ -61,3 +61,17 @@ final Migration migration4to5 = Migration(4, 5, (database) async {
     ')',
   );
 });
+
+final Migration migration5to6 = Migration(5, 6, (database) async {
+  await database.execute(
+    'CREATE TABLE IF NOT EXISTS `Exercise` ('
+    '`id` INTEGER PRIMARY KEY AUTOINCREMENT, '
+    '`dayRecordId` INTEGER NOT NULL, '
+    '`name` TEXT NOT NULL, '
+    '`timestamp` INTEGER NOT NULL, '
+    '`durationMinutes` INTEGER, '
+    '`caloriesBurned` REAL NOT NULL, '
+    'FOREIGN KEY (`dayRecordId`) REFERENCES `DayRecord` (`id`) ON DELETE CASCADE'
+    ')',
+  );
+});

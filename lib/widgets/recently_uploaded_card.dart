@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:diplomka/controller/dashboard_controller.dart';
+import 'package:diplomka/model/exercise.dart';
 import 'package:diplomka/model/meal.dart';
 import 'package:diplomka/widgets/progress_ring.dart';
 import 'package:flutter/material.dart';
@@ -11,14 +12,18 @@ import 'package:diplomka/app_theme.dart';
 
 class RecentlyUploadedCard extends StatelessWidget {
   final List<Meal> meals;
+  final List<Exercise> exercises;
   final DateTime selectedDate;
   final Function(Meal meal)? onMealTap;
+  final Function(Exercise exercise)? onExerciseTap;
 
   const RecentlyUploadedCard({
     super.key,
     required this.meals,
+    required this.exercises,
     required this.selectedDate,
     this.onMealTap,
+    this.onExerciseTap,
   });
 
   @override
@@ -31,8 +36,10 @@ class RecentlyUploadedCard extends StatelessWidget {
           style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700),
         ),
         Obx(() {
-          final isLoading = DashboardController.to.newMealAnalyzeLoading.value;
+          final isMealLoading = DashboardController.to.newMealAnalyzeLoading.value;
+          final isExerciseLoading = DashboardController.to.newExerciseAnalyzeLoading.value;
           final hasMeals = meals.isNotEmpty;
+          final hasExercises = exercises.isNotEmpty;
 
           List<Widget> children = [];
 
@@ -40,15 +47,41 @@ class RecentlyUploadedCard extends StatelessWidget {
             children.add(_buildMealsList(context));
           }
 
-          if (isLoading) {
+          if (isMealLoading) {
             if (hasMeals) {
-              // Add spacing if there are meals and we are showing the loader
               children.add(const SizedBox(height: AppSpacing.xs));
             }
             children.add(const AnalyzingMealCard());
           }
 
-          if (!isLoading && !hasMeals) {
+          if (hasExercises || isExerciseLoading) {
+            if (children.isNotEmpty) {
+              children.add(const SizedBox(height: AppSpacing.m));
+            }
+            children.add(
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Exercises',
+                  style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w700),
+                ),
+              ),
+            );
+            children.add(const SizedBox(height: AppSpacing.xs));
+          }
+
+          if (hasExercises) {
+            children.add(_buildExercisesList(context));
+          }
+
+          if (isExerciseLoading) {
+            if (hasExercises) {
+              children.add(const SizedBox(height: AppSpacing.xs));
+            }
+            children.add(const AnalyzingMealCard(title: 'Recognising exercise'));
+          }
+
+          if (!isMealLoading && !isExerciseLoading && !hasMeals && !hasExercises) {
             children.add(_buildEmptyState());
           }
 
@@ -84,7 +117,7 @@ class RecentlyUploadedCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
             child: Text(
-              'Tap + to add your first meal of the day',
+              'Tap + to add your first meal or exercise of the day',
               style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary),
               textAlign: TextAlign.center,
             ),
@@ -191,10 +224,115 @@ class RecentlyUploadedCard extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildExercisesList(BuildContext context) {
+    return Column(
+      children: exercises.map((exercise) => _buildExerciseItem(context, exercise)).toList(),
+    );
+  }
+
+  Widget _buildExerciseItem(BuildContext context, Exercise exercise) {
+    final String exerciseTime = DateFormat('h:mm a').format(exercise.timestamp);
+    final String exerciseDuration = exercise.durationMinutes == null ? '-' : '${exercise.durationMinutes} min';
+
+    return GestureDetector(
+      onTap: () => onExerciseTap?.call(exercise),
+      child: Container(
+        height: AppSizes.exerciseCardHeight,
+        margin: const EdgeInsets.symmetric(vertical: AppSpacing.xxs + 1),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(AppRadii.lg),
+          border: Border.all(color: AppColors.border),
+          boxShadow: AppShadows.cardSoft,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+          child: Row(
+            children: [
+              Container(
+                width: AppSizes.mealImageSize,
+                height: AppSizes.mealImageSize,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(AppRadii.md),
+                  gradient: AppGradients.exerciseCalories,
+                ),
+                child: const Icon(Icons.directions_run_rounded, color: AppColors.onPrimary),
+              ),
+              const SizedBox(width: AppSpacing.m),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                exercise.name,
+                                style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: AppSpacing.xs),
+                              Text(
+                                exerciseTime,
+                                style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              exercise.caloriesBurned.toStringAsFixed(0),
+                              style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w700),
+                            ),
+                            Text(
+                              'kcal',
+                              style: AppTextStyles.caption12.copyWith(color: AppColors.textTertiary),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: AppSpacing.s),
+                    Container(
+                      height: AppSizes.dividerThin,
+                      color: AppColors.border,
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Duration: $exerciseDuration',
+                        style: AppTextStyles.caption12.copyWith(
+                          color: AppColors.textSecondary,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class AnalyzingMealCard extends StatefulWidget {
-  const AnalyzingMealCard({super.key});
+  const AnalyzingMealCard({
+    super.key,
+    this.title = 'Recognising meal',
+  });
+
+  final String title;
 
   @override
   State<AnalyzingMealCard> createState() => _AnalyzingMealCardState();
@@ -293,7 +431,7 @@ class _AnalyzingMealCardState extends State<AnalyzingMealCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Recognising meal',
+                    widget.title,
                     style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: AppSpacing.s),

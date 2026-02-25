@@ -1,10 +1,14 @@
+import 'dart:async';
+
 import 'package:get/get.dart';
 
 import 'package:diplomka/model/calendar_day.dart';
 import 'package:diplomka/model/calendar_day_ring_style.dart';
 import 'package:diplomka/model/day_record.dart';
+import 'package:diplomka/model/exercise.dart';
 import 'package:diplomka/services/calendar_day_ring_service.dart';
 import 'package:diplomka/services/day_record_repository.dart';
+import 'package:diplomka/services/home_widget/widget_sync_service.dart';
 
 import '../model/meal.dart';
 import 'base_controller.dart';
@@ -99,6 +103,22 @@ class DayRecordController extends BaseController {
     }
   }
 
+  Future<void> saveExerciseForDate({required DateTime date, required Exercise exerciseToSave}) async {
+    try {
+      await _repository.saveExerciseForDate(date: date, exercise: exerciseToSave);
+      final normalizedDate = DateTime(date.year, date.month, date.day);
+      final dayRecord = await getDayRecord(normalizedDate);
+      weekRingStyles[normalizedDate] = _resolveRingStyle(dayRecord);
+      await refreshDayRecords();
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Error saving exercise: ${e.toString()}',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
+  }
+
   Future<void> deleteMeal(Meal meal) async {
     try {
       await _repository.deleteMeal(meal);
@@ -133,6 +153,30 @@ class DayRecordController extends BaseController {
       final normalizedDate = DateTime(record.date.year, record.date.month, record.date.day);
       weekRingStyles[normalizedDate] = _resolveRingStyle(record);
     }
+    _syncHomeWidgetForToday(records);
+  }
+
+  void _syncHomeWidgetForToday(List<DayRecord> records) {
+    if (!Get.isRegistered<WidgetSyncService>()) return;
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+
+    DayRecord? todayRecord;
+    for (final record in records) {
+      final recordDate = DateTime(record.date.year, record.date.month, record.date.day);
+      if (recordDate == today) {
+        todayRecord = record;
+        break;
+      }
+    }
+
+    unawaited(
+      WidgetSyncService.to.syncFromRecordOrFallback(
+        todayRecord,
+        date: today,
+        reason: 'day_record_refresh',
+      ),
+    );
   }
 
   CalendarDayRingStyle _resolveRingStyle(DayRecord? dayRecord) {

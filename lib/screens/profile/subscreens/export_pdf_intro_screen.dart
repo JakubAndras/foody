@@ -59,21 +59,6 @@ class ExportPdfIntroScreen extends StatelessWidget {
   }
 }
 
-const List<Color> _barColors = [AppColors.reportRed, AppColors.reportPurple, AppColors.reportBlue];
-
-class _LegendDot extends StatelessWidget {
-  const _LegendDot();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 6,
-      height: 6,
-      decoration: const BoxDecoration(color: AppColors.primarySoft, shape: BoxShape.circle),
-    );
-  }
-}
-
 class _FeatureItem extends StatelessWidget {
   const _FeatureItem({required this.icon, required this.title, required this.subtitle});
 
