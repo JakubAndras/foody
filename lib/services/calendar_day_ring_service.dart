@@ -10,6 +10,7 @@ class CalendarDayRingService {
     filledSegments: 0,
     overflowSegments: 0,
     totalSegments: totalSegments,
+    roundedPercent: 0,
   );
 
   CalendarDayRingStyle resolve(DayRecord? dayRecord) {
@@ -18,7 +19,8 @@ class CalendarDayRingService {
     }
 
     final consumedPercent = (dayRecord.totalCalories / dayRecord.calorieGoal) * 100;
-    if (consumedPercent <= 0) {
+    final roundedPercent = consumedPercent.round();
+    if (roundedPercent <= 0) {
       return emptyStyle;
     }
 
@@ -34,6 +36,7 @@ class CalendarDayRingService {
       filledSegments: filledSegments,
       overflowSegments: overflowSegments,
       totalSegments: totalSegments,
+      roundedPercent: roundedPercent,
     );
   }
 }

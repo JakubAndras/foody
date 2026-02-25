@@ -51,6 +51,7 @@ class OpenaiRestClient {
 
   Future<Map<String, dynamic>> generateExerciseResponse({
     required String textPrompt,
+    Map<String, dynamic>? userAttributes,
   }) async {
     try {
       await fetchChatGptApiKey();
@@ -63,6 +64,7 @@ class OpenaiRestClient {
         prompt: exercisePrompt,
         textPrompt: textPrompt,
         imageContents: const <Map<String, dynamic>>[],
+        additionalTextContent: [if (userAttributes != null && userAttributes.isNotEmpty) 'User profile context for calorie estimation: ${jsonEncode(userAttributes)}'],
       );
     } on DioError catch (e) {
       throw Error.fromDioError(e);
@@ -79,6 +81,7 @@ class OpenaiRestClient {
     required String prompt,
     required String? textPrompt,
     required List<Map<String, dynamic>> imageContents,
+    List<String> additionalTextContent = const <String>[],
   }) async {
     final response = await _dio.post(
       apiUrl,
@@ -97,6 +100,7 @@ class OpenaiRestClient {
             "role": "user",
             "content": [
               {"type": "text", "text": prompt},
+              ...additionalTextContent.map((text) => {"type": "text", "text": text}),
               if (textPrompt != null && textPrompt.trim().isNotEmpty) {"type": "text", "text": "User description: ${textPrompt.trim()}"},
               ...imageContents
             ],

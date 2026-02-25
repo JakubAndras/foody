@@ -15,6 +15,7 @@ import 'package:diplomka/services/session_manager.dart';
 
 class DashboardScreen extends GetView<_DashboardScreenController> {
   const DashboardScreen({super.key});
+  static const bool _useSegmentedDateRing = false;
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +47,7 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
                             const SizedBox(height: AppSpacing.m),
                             DateSelector(
                               selectedDate: dashboardController.selectedDate.value,
+                              useSegmentedRing: _useSegmentedDateRing,
                               onDateSelected: (date) {
                                 dashboardController.updateDate(date);
                               },

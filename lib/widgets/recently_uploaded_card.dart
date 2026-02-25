@@ -38,56 +38,74 @@ class RecentlyUploadedCard extends StatelessWidget {
         Obx(() {
           final isMealLoading = DashboardController.to.newMealAnalyzeLoading.value;
           final isExerciseLoading = DashboardController.to.newExerciseAnalyzeLoading.value;
-          final hasMeals = meals.isNotEmpty;
-          final hasExercises = exercises.isNotEmpty;
+          final mealSection = _buildMealSection(
+            context,
+            isMealLoading: isMealLoading,
+          );
+          final exerciseSection = _buildExerciseSection(
+            context,
+            isExerciseLoading: isExerciseLoading,
+            hasMealSectionContent: mealSection.isNotEmpty,
+          );
 
-          List<Widget> children = [];
-
-          if (hasMeals) {
-            children.add(_buildMealsList(context));
-          }
-
-          if (isMealLoading) {
-            if (hasMeals) {
-              children.add(const SizedBox(height: AppSpacing.xs));
-            }
-            children.add(const AnalyzingMealCard());
-          }
-
-          if (hasExercises || isExerciseLoading) {
-            if (children.isNotEmpty) {
-              children.add(const SizedBox(height: AppSpacing.m));
-            }
-            children.add(
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Exercises',
-                  style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w700),
-                ),
-              ),
-            );
-            children.add(const SizedBox(height: AppSpacing.xs));
-          }
-
-          if (hasExercises) {
-            children.add(_buildExercisesList(context));
-          }
-
-          if (isExerciseLoading) {
-            if (hasExercises) {
-              children.add(const SizedBox(height: AppSpacing.xs));
-            }
-            children.add(const AnalyzingMealCard(title: 'Recognising exercise'));
-          }
-
-          if (!isMealLoading && !isExerciseLoading && !hasMeals && !hasExercises) {
-            children.add(_buildEmptyState());
-          }
-
-          return Column(children: children);
+          return Column(
+            children: [
+              ...mealSection,
+              ...exerciseSection,
+            ],
+          );
         }),
       ],
+    );
+  }
+
+  List<Widget> _buildMealSection(
+    BuildContext context, {
+    required bool isMealLoading,
+  }) {
+    final hasMeals = meals.isNotEmpty;
+    return <Widget>[
+      if (hasMeals) _buildMealsList(context),
+      if (isMealLoading) ...<Widget>[
+        if (hasMeals) const SizedBox(height: AppSpacing.xs),
+        const AnalyzingMealCard(),
+      ],
+      if (!isMealLoading && !hasMeals) ...<Widget>[
+        const SizedBox(height: AppSpacing.xs),
+        _buildEmptyState(),
+      ],
+    ];
+  }
+
+  List<Widget> _buildExerciseSection(
+    BuildContext context, {
+    required bool isExerciseLoading,
+    required bool hasMealSectionContent,
+  }) {
+    final hasExercises = exercises.isNotEmpty;
+    if (!hasExercises && !isExerciseLoading) {
+      return const <Widget>[];
+    }
+
+    return <Widget>[
+      if (hasMealSectionContent) const SizedBox(height: AppSpacing.m),
+      _buildExerciseHeader(),
+      const SizedBox(height: AppSpacing.xxs),
+      if (hasExercises) _buildExercisesList(context),
+      if (isExerciseLoading) ...<Widget>[
+        if (hasExercises) const SizedBox(height: AppSpacing.xs),
+        const AnalyzingMealCard(analysisType: AnalysisCardType.exercise),
+      ],
+    ];
+  }
+
+  Widget _buildExerciseHeader() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Text(
+        'Exercises',
+        style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700),
+      ),
     );
   }
 
@@ -326,13 +344,15 @@ class RecentlyUploadedCard extends StatelessWidget {
   }
 }
 
+enum AnalysisCardType { meal, exercise }
+
 class AnalyzingMealCard extends StatefulWidget {
   const AnalyzingMealCard({
     super.key,
-    this.title = 'Recognising meal',
+    this.analysisType = AnalysisCardType.meal,
   });
 
-  final String title;
+  final AnalysisCardType analysisType;
 
   @override
   State<AnalyzingMealCard> createState() => _AnalyzingMealCardState();
@@ -381,8 +401,19 @@ class _AnalyzingMealCardState extends State<AnalyzingMealCard> {
 
   @override
   Widget build(BuildContext context) {
+    final isExercise = widget.analysisType == AnalysisCardType.exercise;
+    final title = isExercise ? 'Recognising exercise' : 'Recognising meal';
+    final subtitle = isExercise ? "We'll add it to your exercise log soon." : "We’ll notify you when it’s done!";
+    final cardHeight = isExercise ? AppSizes.exerciseCardHeight : AppSizes.mealCardHeight;
+    final leadingDecoration = BoxDecoration(
+      borderRadius: BorderRadius.circular(AppRadii.sm2),
+      color: isExercise ? null : AppColors.surfaceMuted,
+      gradient: isExercise ? AppGradients.exerciseCalories : null,
+    );
+    final leadingIcon = isExercise ? Icons.directions_run_rounded : Icons.restaurant;
+
     return Container(
-      height: AppSizes.mealCardHeight,
+      height: cardHeight,
       margin: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
       decoration: BoxDecoration(
         color: AppColors.surface,
@@ -397,10 +428,7 @@ class _AnalyzingMealCardState extends State<AnalyzingMealCard> {
             Container(
               width: AppSizes.mealImageSize,
               height: AppSizes.mealImageSize,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(AppRadii.sm2),
-                color: AppColors.surfaceMuted,
-              ),
+              decoration: leadingDecoration,
               child: Stack(
                 alignment: Alignment.center,
                 children: [
@@ -409,6 +437,11 @@ class _AnalyzingMealCardState extends State<AnalyzingMealCard> {
                       borderRadius: BorderRadius.circular(AppRadii.sm2),
                       color: AppColors.overlayDark60,
                     ),
+                  ),
+                  Icon(
+                    leadingIcon,
+                    color: AppColors.onPrimary.withValues(alpha: 0.45),
+                    size: AppSizes.iconLg,
                   ),
                   ProgressRing(
                     size: AppSizes.macroRingSize,
@@ -431,7 +464,7 @@ class _AnalyzingMealCardState extends State<AnalyzingMealCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.title,
+                    title,
                     style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: AppSpacing.s),
@@ -446,7 +479,7 @@ class _AnalyzingMealCardState extends State<AnalyzingMealCard> {
                   ),
                   const SizedBox(height: AppSpacing.s),
                   Text(
-                    "We’ll notify you when it’s done!",
+                    subtitle,
                     style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary),
                   ),
                 ],

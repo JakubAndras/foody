@@ -49,7 +49,13 @@ class Prompt {
           "calories_per_minute": "double or null"
         }
       },
-      "rules": ["Return only JSON.", "At least one calories field should be present when possible.", "If duration is unclear, keep it null instead of guessing aggressively."]
+      "rules": [
+        "Return only JSON.",
+        "If user profile context is provided (sex, age_years, height_cm, weight_kg), use it when estimating calories.",
+        "When valid=true, calories must be usable: provide either calories_total, or both duration_minutes and calories_per_minute.",
+        "If calories cannot be estimated with reasonable confidence, return valid=false.",
+        "If duration is unclear, keep duration_minutes null instead of guessing aggressively."
+      ]
     }
   };
 }

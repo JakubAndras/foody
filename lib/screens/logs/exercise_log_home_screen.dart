@@ -1,7 +1,11 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/controller/dashboard_controller.dart';
+import 'package:diplomka/controller/day_record_controller.dart';
+import 'package:diplomka/model/exercise.dart';
 import 'package:diplomka/screens/logs/add_exercise_screen.dart';
 import 'package:diplomka/screens/logs/exercise_detail_screen.dart';
 import 'package:diplomka/screens/logs/exercise_widgets.dart';
+import 'package:diplomka/services/selected_date_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -25,6 +29,39 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  Future<void> _duplicateExerciseForSelectedDay(_ExerciseItem item) async {
+    final selectedDate = SelectedDateService.to.selectedDate.value;
+    final now = DateTime.now();
+    final timestamp = DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+      now.hour,
+      now.minute,
+      now.second,
+      now.millisecond,
+      now.microsecond,
+    );
+
+    final exercise = Exercise(
+      name: item.title,
+      timestamp: timestamp,
+      durationMinutes: item.minutes,
+      caloriesBurned: item.kcal.toDouble(),
+    );
+
+    await DayRecordController.to.saveExerciseForDate(
+      date: selectedDate,
+      exerciseToSave: exercise,
+    );
+    DashboardController.to.refresh();
+
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Exercise added')),
+    );
   }
 
   @override
@@ -98,7 +135,7 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
                     title: item.title,
                     kcal: item.kcal,
                     minutes: item.minutes,
-                    onAdd: () => Get.to(() => AddExerciseScreen(initialName: item.title)),
+                    onAdd: () => _duplicateExerciseForSelectedDay(item),
                     onTap: () => Get.to(() => ExerciseDetailScreen(title: item.title, kcal: item.kcal, minutes: item.minutes)),
                   );
                 },

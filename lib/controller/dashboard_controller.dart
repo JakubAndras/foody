@@ -323,7 +323,7 @@ class DashboardController extends BaseController {
       if (caloriesBurned <= 0) {
         Get.snackbar(
           'Exercise analysis failed',
-          'Could not infer burned calories from the exercise description.',
+          'Could not infer burned calories from AI response. Please try again with a more detailed description.',
         );
         return;
       }

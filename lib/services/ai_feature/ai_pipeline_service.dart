@@ -3,9 +3,11 @@ import 'dart:io';
 
 import 'package:diplomka/model/ai_response.dart';
 import 'package:diplomka/model/exercise_ai_analysis.dart';
+import 'package:diplomka/model/user_profile.dart';
 import 'package:diplomka/network/openai_rest_client.dart';
 import 'package:diplomka/services/ai_feature/ai_service.dart';
 import 'package:diplomka/services/ai_feature/openai_service.dart';
+import 'package:diplomka/services/session_manager.dart';
 import 'package:get/get.dart';
 
 class AiPipelineService extends GetxService {
@@ -56,8 +58,10 @@ class AiPipelineService extends GetxService {
     }
 
     try {
+      final userAttributes = _buildExerciseUserAttributes();
       final data = await OpenaiRestClient().generateExerciseResponse(
         textPrompt: trimmedDescription,
+        userAttributes: userAttributes,
       );
       final analysis = _parseExerciseAnalysis(data);
       if (analysis == null || !analysis.valid) {
@@ -104,6 +108,48 @@ class AiPipelineService extends GetxService {
     final regex = RegExp(r'\{[\s\S]*\}');
     final match = regex.firstMatch(content);
     return match?.group(0);
+  }
+
+  Map<String, dynamic> _buildExerciseUserAttributes() {
+    if (!Get.isRegistered<SessionManager>()) {
+      return <String, dynamic>{
+        'sex': null,
+        'age_years': null,
+        'height_cm': null,
+        'weight_kg': null,
+      };
+    }
+
+    final session = SessionManager.to;
+    final ageYears = _resolveAgeYears(session.dateOfBirth.value);
+    final sex = session.sex.value?.code;
+    final heightCm = session.heightCm.value;
+    final weightKg = session.weightKg.value;
+
+    return <String, dynamic>{
+      'sex': (sex != null && sex.isNotEmpty) ? sex : null,
+      'age_years': ageYears,
+      'height_cm': (heightCm != null && heightCm > 0) ? heightCm : null,
+      'weight_kg': (weightKg != null && weightKg > 0) ? weightKg : null,
+    };
+  }
+
+  int? _resolveAgeYears(DateTime? dob) {
+    if (dob == null) {
+      return null;
+    }
+
+    final now = DateTime.now();
+    int age = now.year - dob.year;
+    final birthdayPassedThisYear = now.month > dob.month || (now.month == dob.month && now.day >= dob.day);
+    if (!birthdayPassedThisYear) {
+      age -= 1;
+    }
+
+    if (age < 0 || age > 120) {
+      return null;
+    }
+    return age;
   }
 }
 
