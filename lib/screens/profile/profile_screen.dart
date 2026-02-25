@@ -7,9 +7,11 @@ import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/screens/profile/subscreens/confirm_username_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/personal_details_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/preferences_screen.dart';
+import 'package:diplomka/screens/profile/subscreens/language_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/edit_nutrition_goals_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/weight_history_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/ring_colors_explained_screen.dart';
+import 'package:diplomka/screens/profile/subscreens/tracking_reminders_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/export_pdf_intro_screen.dart';
 import 'package:diplomka/screens/profile/ask_ai/ask_ai_screen.dart';
 import 'package:diplomka/screens/scan/scan_camera_screen.dart';
@@ -52,7 +54,7 @@ class ProfileScreen extends StatelessWidget {
                 title: 'Language',
                 icon: Icons.translate_outlined,
                 showDivider: false,
-                onTap: () => Get.snackbar('Language', 'Language settings are coming soon.'),
+                onTap: () => Get.to(() => const LanguageScreen()),
               ),
             ],
           ),
@@ -75,6 +77,11 @@ class ProfileScreen extends StatelessWidget {
                 title: 'Weight History',
                 icon: Icons.history,
                 onTap: () => Get.to(() => const WeightHistoryScreen()),
+              ),
+              _ProfileActionRow(
+                title: 'Tracking Reminders',
+                icon: Icons.notifications_none_outlined,
+                onTap: () => Get.to(() => const TrackingRemindersScreen()),
               ),
               _ProfileActionRow(
                 title: 'Ring Colors Explained',

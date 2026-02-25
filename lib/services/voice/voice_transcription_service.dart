@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:speech_to_text/speech_to_text.dart';
+import 'package:diplomka/model/language_settings.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
 class VoiceTranscriptionService {
   VoiceTranscriptionService({SpeechToText? speechToText}) : _speechToText = speechToText ?? SpeechToText();
@@ -37,13 +38,17 @@ class VoiceTranscriptionService {
   Future<void> startListening({
     required void Function(SpeechRecognitionResult result) onResult,
     required Locale appLocale,
+    String? preferredLanguageCode,
   }) async {
     if (!_initialized) {
       throw StateError('VoiceTranscriptionService must be initialized before listening.');
     }
 
     try {
-      final localeId = await _resolveLocaleId(appLocale);
+      final localeId = await _resolveLocaleId(
+        appLocale,
+        preferredLanguageCode: preferredLanguageCode,
+      );
       await _speechToText.listen(
         onResult: onResult,
         localeId: localeId,
@@ -89,51 +94,89 @@ class VoiceTranscriptionService {
     return _cachedLocales!;
   }
 
-  Future<String?> _resolveLocaleId(Locale appLocale) async {
+  Future<String?> _resolveLocaleId(
+    Locale appLocale, {
+    String? preferredLanguageCode,
+  }) async {
     final locales = await _loadLocales();
     if (locales.isEmpty) {
       final system = await _speechToText.systemLocale();
       return system?.localeId;
     }
 
-    final normalized = <String, LocaleName>{
+    final normalizedLocales = <String, LocaleName>{
       for (final locale in locales) _normalizeLocaleId(locale.localeId): locale,
     };
 
-    final preferred = _preferredLocaleCandidates(appLocale);
-    for (final candidate in preferred) {
-      final match = normalized[_normalizeLocaleId(candidate)];
-      if (match != null) {
-        return match.localeId;
+    final systemLocale = await _speechToText.systemLocale();
+    final languagePriority = _buildLanguagePriority(
+      preferredLanguageCode: preferredLanguageCode,
+      appLocaleLanguage: appLocale.languageCode,
+      systemLocaleId: systemLocale?.localeId,
+    );
+
+    for (final languageCode in languagePriority) {
+      for (final candidate in _preferredLocaleCandidatesForLanguage(languageCode)) {
+        final match = normalizedLocales[_normalizeLocaleId(candidate)];
+        if (match != null) {
+          return match.localeId;
+        }
       }
     }
 
-    final languageCode = appLocale.languageCode.toLowerCase();
     for (final locale in locales) {
-      final localeLanguage = _normalizeLocaleId(locale.localeId).split('_').first;
-      if (localeLanguage == languageCode) {
+      final localeLanguage = _extractLanguageCode(locale.localeId);
+      if (supportedVoiceLanguageCodes.contains(localeLanguage)) {
         return locale.localeId;
       }
     }
 
-    final system = await _speechToText.systemLocale();
-    return system?.localeId ?? locales.first.localeId;
+    return systemLocale?.localeId ?? locales.first.localeId;
   }
 
-  List<String> _preferredLocaleCandidates(Locale appLocale) {
-    final language = appLocale.languageCode.toLowerCase();
-    final country = appLocale.countryCode?.toUpperCase();
+  List<String> _buildLanguagePriority({
+    required String? preferredLanguageCode,
+    required String appLocaleLanguage,
+    required String? systemLocaleId,
+  }) {
+    final preferredLanguage = preferredLanguageCode?.toLowerCase();
+    final appLanguage = appLocaleLanguage.toLowerCase();
+    final systemLanguage = systemLocaleId == null ? null : _extractLanguageCode(systemLocaleId);
 
-    final candidates = <String>[];
+    final result = <String>[];
+
+    void addIfSupported(String? code) {
+      if (code == null) return;
+      if (!supportedVoiceLanguageCodes.contains(code)) return;
+      if (!result.contains(code)) {
+        result.add(code);
+      }
+    }
+
+    addIfSupported(preferredLanguage);
+    addIfSupported(systemLanguage);
+    addIfSupported(appLanguage);
+
+    for (final code in supportedVoiceLanguageCodes) {
+      addIfSupported(code);
+    }
+
+    return result;
+  }
+
+  List<String> _preferredLocaleCandidatesForLanguage(String languageCode) {
+    final language = languageCode.toLowerCase();
     if (language == 'cs') {
-      candidates.addAll(<String>['cs_CZ', 'cs-CZ']);
-    } else if (language == 'en') {
-      candidates.addAll(<String>['en_US', 'en-US']);
+      return <String>['cs_CZ', 'cs-CZ', 'cs'];
     }
-    if (country != null && country.isNotEmpty) {
-      candidates.addAll(<String>['${language}_$country', '$language-$country']);
+    if (language == 'en') {
+      return <String>['en_US', 'en-US', 'en_GB', 'en-GB', 'en'];
     }
-    return candidates;
+    return <String>[language];
+  }
+
+  String _extractLanguageCode(String localeId) {
+    return _normalizeLocaleId(localeId).split('_').first;
   }
 
   String _normalizeLocaleId(String localeId) {

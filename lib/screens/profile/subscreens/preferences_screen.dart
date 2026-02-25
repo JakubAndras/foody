@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
+import 'package:diplomka/screens/profile/subscreens/language_screen.dart';
 
 class PreferencesScreen extends StatelessWidget {
   const PreferencesScreen({super.key});
@@ -34,13 +35,6 @@ class PreferencesScreen extends StatelessWidget {
                 _AppearanceSegmented(),
               ],
             ),
-          ),
-          const SizedBox(height: AppSpacing.m),
-          ProfileCard(
-            radius: AppRadii.lg,
-            shadow: AppShadows.cardSubtle,
-            padding: const EdgeInsets.all(AppSpacing.screen),
-            child: const Text('Language', style: AppTextStyles.body15),
           ),
           const SizedBox(height: AppSpacing.m),
           ProfileCard(
@@ -176,8 +170,7 @@ class _ToggleRow extends StatelessWidget {
             ],
           ),
         ),
-        if (showDivider)
-          Divider(height: AppSizes.dividerThin, color: AppColors.surfaceMuted),
+        if (showDivider) Divider(height: AppSizes.dividerThin, color: AppColors.surfaceMuted),
       ],
     );
   }

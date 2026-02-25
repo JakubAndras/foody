@@ -6,6 +6,7 @@ import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/screens/main_screen.dart';
 import 'package:diplomka/screens/logs/voice_widgets.dart';
+import 'package:diplomka/services/language_settings_service.dart';
 import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/services/voice/voice_transcription_service.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -270,6 +271,9 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
   Future<void> _startListening() async {
     if (_isAnalyzing) return;
     final appLocale = context.locale;
+    final preferredVoiceLanguageCode = LanguageSettingsService.to.resolveVoiceLogLanguageCode(
+      appLanguageCode: appLocale.languageCode,
+    );
 
     if (!_hasPermission) {
       await _showVoicePermissionDialog();
@@ -285,6 +289,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
       await _voiceService.startListening(
         onResult: _handleSpeechResult,
         appLocale: appLocale,
+        preferredLanguageCode: preferredVoiceLanguageCode,
       );
       if (!mounted) return;
       setState(() {

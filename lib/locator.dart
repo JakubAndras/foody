@@ -1,5 +1,7 @@
 import 'package:diplomka/controller/barcode_scan_controller.dart';
 import 'package:diplomka/controller/dashboard_controller.dart';
+import 'package:diplomka/controller/language_settings_controller.dart';
+import 'package:diplomka/controller/tracking_reminders_controller.dart';
 import 'package:diplomka/screens/main_screen.dart';
 import 'package:diplomka/controller/day_record_controller.dart';
 import 'package:diplomka/controller/recipe_service.dart';
@@ -14,8 +16,10 @@ import 'package:diplomka/services/ai_feature/openai_service.dart';
 import 'package:diplomka/services/ai_feature/ai_pipeline_service.dart';
 import 'package:diplomka/services/home_widget/widget_action_router.dart';
 import 'package:diplomka/services/home_widget/widget_sync_service.dart';
+import 'package:diplomka/services/language_settings_service.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/services/shared_preferences_manager.dart';
+import 'package:diplomka/services/tracking_reminder_service.dart';
 import 'package:diplomka/services/weight_entry_repository.dart';
 import 'package:diplomka/utils/media_storage.dart';
 import 'package:get/get.dart';
@@ -47,6 +51,8 @@ Future<void> setupServices() async {
   );
   Get.lazyPut<MainScreenController>(() => MainScreenController());
   Get.lazyPut<SessionManager>(() => SessionManager());
+  Get.put(LanguageSettingsService(), permanent: true);
+  Get.put(TrackingReminderService(), permanent: true);
   Get.put(WidgetActionRouter(), permanent: true);
   Get.put(WidgetSyncService(), permanent: true);
   Get.lazyPut<RecipeService>(() => RecipeService());
@@ -66,6 +72,19 @@ Future<void> setupServices() async {
     permanent: true,
   );
   Get.put(DashboardController(), permanent: true);
+  Get.lazyPut<LanguageSettingsController>(
+    () => LanguageSettingsController(
+      languageSettingsService: LanguageSettingsService.to,
+    ),
+    fenix: true,
+  );
+  Get.lazyPut<TrackingRemindersController>(
+    () => TrackingRemindersController(
+      sharedPreferencesService: SharedPreferencesService.to,
+      trackingReminderService: TrackingReminderService.to,
+    ),
+    fenix: true,
+  );
   Get.put(WeightEntryRepository(database: db), permanent: true);
   Get.put(WeightEntryController(repository: WeightEntryRepository.to), permanent: true);
 }

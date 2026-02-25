@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:diplomka/model/tracking_reminder_setting.dart';
 
 const String themeModeKey = "themeModeKey";
 const String onboardingCompleteKey = "onboardingCompleteKey";
@@ -72,5 +73,31 @@ class SharedPreferencesService extends GetxService {
 
   Future<int?> getInt({required String key}) async {
     return getPrefsInstance.then((prefs) => prefs.getInt(key));
+  }
+
+  String trackingReminderEnabledKey(TrackingReminderType type) => 'trackingReminder_${type.code}_enabled';
+
+  String trackingReminderHourKey(TrackingReminderType type) => 'trackingReminder_${type.code}_hour';
+
+  String trackingReminderMinuteKey(TrackingReminderType type) => 'trackingReminder_${type.code}_minute';
+
+  Future<TrackingReminderSetting> getTrackingReminderSetting(TrackingReminderType type) async {
+    final defaultSetting = TrackingReminderSetting.defaults(type);
+    final enabled = await getBool(key: trackingReminderEnabledKey(type)) ?? defaultSetting.enabled;
+    final hour = await getInt(key: trackingReminderHourKey(type)) ?? defaultSetting.hour;
+    final minute = await getInt(key: trackingReminderMinuteKey(type)) ?? defaultSetting.minute;
+
+    return TrackingReminderSetting(
+      type: type,
+      enabled: enabled,
+      hour: hour.clamp(0, 23),
+      minute: minute.clamp(0, 59),
+    );
+  }
+
+  Future<void> setTrackingReminderSetting(TrackingReminderSetting setting) async {
+    await setBool(key: trackingReminderEnabledKey(setting.type), value: setting.enabled);
+    await setInt(key: trackingReminderHourKey(setting.type), value: setting.hour);
+    await setInt(key: trackingReminderMinuteKey(setting.type), value: setting.minute);
   }
 }

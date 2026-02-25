@@ -1,5 +1,7 @@
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/services/home_widget/widget_sync_service.dart';
+import 'package:diplomka/services/language_settings_service.dart';
+import 'package:diplomka/services/tracking_reminder_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -15,6 +17,9 @@ Future<void> main() async {
   } catch (_) {}
   await setupServices();
   await SessionManager.to.onAppInit();
+  await LanguageSettingsService.to.load();
+  await TrackingReminderService.to.initialize();
+  await TrackingReminderService.to.rescheduleAllFromStorage();
   await WidgetSyncService.to.initialize();
 
   runApp(
