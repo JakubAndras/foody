@@ -12,6 +12,7 @@ import 'package:diplomka/widgets/recently_uploaded_card.dart';
 import 'package:diplomka/widgets/streak_dialog.dart';
 import 'package:diplomka/controller/base_controller.dart';
 import 'package:diplomka/services/session_manager.dart';
+import 'package:diplomka/services/nutrition_goals_service.dart';
 
 class DashboardScreen extends GetView<_DashboardScreenController> {
   const DashboardScreen({super.key});
@@ -30,7 +31,14 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
               child: SafeArea(
                 bottom: false,
                 child: Obx(() {
-                  final recordToShow = dashboardController.dayRecord.value ?? DayRecord.initial(dashboardController.selectedDate.value);
+                  final selectedDate = dashboardController.selectedDate.value;
+                  final existingDayRecord = dashboardController.dayRecord.value;
+                  final dayRecord = existingDayRecord ?? DayRecord.initial(selectedDate);
+                  final nutritionGoals = NutritionGoalsService.to.goalsForDate(
+                    selectedDate,
+                    fallbackRecord: existingDayRecord,
+                  );
+                  final recordToShow = nutritionGoals.applyToDayRecord(dayRecord);
                   controller.maybeHandleScrollToTodayMealsRequest(
                     dashboardController.scrollToTodayMealsRequestId.value,
                   );

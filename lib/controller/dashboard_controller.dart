@@ -14,6 +14,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:diplomka/model/meal.dart';
 import 'package:diplomka/services/barcode_lookup_service.dart';
 import 'package:diplomka/services/ai_feature/ai_pipeline_service.dart';
+import 'package:diplomka/services/nutrition_goals_service.dart';
 import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/utils/media_storage.dart';
 import 'base_controller.dart';
@@ -64,9 +65,11 @@ class DashboardController extends BaseController {
     try {
       final record = await _dayRecordController.getDayRecord(date);
       dayRecord.value = record;
+      NutritionGoalsService.to.syncFromDayRecord(date: date, dayRecord: record);
     } catch (e) {
       dayRecordError.value = "Failed to load daily record: ${e.toString()}";
       dayRecord.value = null;
+      NutritionGoalsService.to.syncFromDayRecord(date: date, dayRecord: null);
       Get.snackbar("Error", dayRecordError.value);
     } finally {
       isLoadingDayRecord.value = false;

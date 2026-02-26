@@ -17,6 +17,7 @@ import 'package:diplomka/services/ai_feature/ai_pipeline_service.dart';
 import 'package:diplomka/services/home_widget/widget_action_router.dart';
 import 'package:diplomka/services/home_widget/widget_sync_service.dart';
 import 'package:diplomka/services/language_settings_service.dart';
+import 'package:diplomka/services/nutrition_goals_service.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/services/shared_preferences_manager.dart';
 import 'package:diplomka/services/tracking_reminder_service.dart';
@@ -71,6 +72,7 @@ Future<void> setupServices() async {
     ),
     permanent: true,
   );
+  Get.put(NutritionGoalsService(), permanent: true);
   Get.put(DashboardController(), permanent: true);
   Get.lazyPut<LanguageSettingsController>(
     () => LanguageSettingsController(
