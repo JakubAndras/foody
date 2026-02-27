@@ -186,6 +186,9 @@ class AppSizes {
   static const double stepIndicatorHeight = 4;
   static const double badgeHeight = 30;
   static const double streakPillHeight = 34;
+  static const double streakPillMinWidth = 56;
+  static const double streakPillMinWidthDoubleDigit = 64;
+  static const double streakPillMinWidthTripleDigit = 72;
   static const double iconSm = 16;
   static const double iconXs = 14;
   static const double iconMd = 20;

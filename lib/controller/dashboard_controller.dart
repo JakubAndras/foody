@@ -41,6 +41,7 @@ class DashboardController extends BaseController {
   final RxBool newMealAnalyzeLoading = false.obs;
   final RxBool newExerciseAnalyzeLoading = false.obs;
   final RxInt scrollToTodayMealsRequestId = 0.obs;
+  Worker? _dayRecordsWorker;
   int _activeMealAnalyses = 0;
   int _activeExerciseAnalyses = 0;
   DateTime? _mealAnalysisLoadingStartedAt;
@@ -53,6 +54,10 @@ class DashboardController extends BaseController {
     super.onInit();
     _fetchDayRecord(selectedDate.value);
     _fetchStreakInfo();
+    _dayRecordsWorker = ever<List<DayRecord>>(
+      _dayRecordController.dayRecords,
+      _updateStreakFromRecords,
+    );
 
     selectedDate.listen((date) {
       _fetchDayRecord(date);
@@ -90,6 +95,18 @@ class DashboardController extends BaseController {
     }
   }
 
+  void _updateStreakFromRecords(List<DayRecord> records) {
+    try {
+      streakInfo.value = _streakController.calculateFromRecords(records);
+      streakError.value = '';
+    } catch (e) {
+      streakError.value = "Failed to update streak info: ${e.toString()}";
+      streakInfo.value = null;
+    } finally {
+      isLoadingStreak.value = false;
+    }
+  }
+
   void updateDate(DateTime newDate) {
     _selectedDateService.setSelectedDate(newDate);
   }
@@ -97,6 +114,12 @@ class DashboardController extends BaseController {
   @override
   void onHidden() {
     // TODO: implement onHidden
+  }
+
+  @override
+  void onClose() {
+    _dayRecordsWorker?.dispose();
+    super.onClose();
   }
 
   Future<void> pickImage(ImageSource source) async {

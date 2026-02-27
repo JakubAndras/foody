@@ -6,5 +6,6 @@ abstract class AiService {
   Future<AiResponse?> generateResponse({
     List<File>? imageFiles,
     String? textPrompt,
+    Map<String, dynamic>? mealUserAttributes,
   });
 }

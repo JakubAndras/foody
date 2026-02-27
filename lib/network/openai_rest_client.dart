@@ -18,7 +18,11 @@ class OpenaiRestClient {
   final String mealPrompt = Prompt().analyzeMeal;
   final String exercisePrompt = Prompt().analyzeExercise;
 
-  Future<Map<String, dynamic>> generateResponse({List<File>? imageFiles, String? textPrompt}) async {
+  Future<Map<String, dynamic>> generateResponse({
+    List<File>? imageFiles,
+    String? textPrompt,
+    Map<String, dynamic>? mealUserAttributes,
+  }) async {
     final List<Map<String, dynamic>> imageContents = (imageFiles ?? []).map((file) {
       final List<int> imageBytes = file.readAsBytesSync();
       final String base64Image = base64Encode(imageBytes);
@@ -38,6 +42,12 @@ class OpenaiRestClient {
         prompt: mealPrompt,
         textPrompt: textPrompt,
         imageContents: imageContents,
+        additionalTextContent: [
+          if (mealUserAttributes != null && mealUserAttributes.isNotEmpty) ...[
+            'User dietary context: ${jsonEncode(mealUserAttributes)}',
+            'Respect this dietary context when identifying the meal and ingredients.',
+          ],
+        ],
       );
     } on DioError catch (e) {
       throw Error.fromDioError(e);

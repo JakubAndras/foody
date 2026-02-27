@@ -1,34 +1,28 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/screens/profile/profile_widgets.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
 import 'package:flutter/material.dart';
 
-class OnboardingCustomDietScreen extends StatefulWidget {
-  const OnboardingCustomDietScreen({
+class PersonalDetailsCustomDietScreen extends StatefulWidget {
+  const PersonalDetailsCustomDietScreen({
     super.key,
     required this.onNext,
     required this.onBack,
-    required this.step,
-    required this.totalSteps,
     this.initialPreferences,
     this.onPreferencesSaved,
   });
 
   final VoidCallback onNext;
   final VoidCallback onBack;
-  final int step;
-  final int totalSteps;
   final String? initialPreferences;
   final ValueChanged<String>? onPreferencesSaved;
 
   @override
-  State<OnboardingCustomDietScreen> createState() => _OnboardingCustomDietScreenState();
+  State<PersonalDetailsCustomDietScreen> createState() => _PersonalDetailsCustomDietScreenState();
 }
 
-class _OnboardingCustomDietScreenState extends State<OnboardingCustomDietScreen> with AutomaticKeepAliveClientMixin {
+class _PersonalDetailsCustomDietScreenState extends State<PersonalDetailsCustomDietScreen> {
   final TextEditingController _controller = TextEditingController();
-
-  @override
-  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -44,29 +38,32 @@ class _OnboardingCustomDietScreenState extends State<OnboardingCustomDietScreen>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     final TextTheme textTheme = Theme.of(context).textTheme;
 
-    return OnboardingPage(
-      progress: widget.step / widget.totalSteps,
-      onBack: widget.onBack,
-      bottom: OnboardingPrimaryButton(
-        label: 'Continue',
-        onPressed: () {
-          widget.onPreferencesSaved?.call(_controller.text.trim());
-          widget.onNext();
-        },
+    return ProfileGradientScaffold(
+      scroll: true,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: SafeArea(
+        top: false,
+        minimum: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+        child: OnboardingPrimaryButton(
+          label: 'Continue',
+          onPressed: () {
+            widget.onPreferencesSaved?.call(_controller.text.trim());
+            widget.onNext();
+          },
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Custom diet\npreferences', style: textTheme.headlineLarge?.copyWith(height: 1.25)),
-          const SizedBox(height: AppSpacing.s),
+          ProfileTopBar(title: 'Custom Diet', onBack: widget.onBack),
+          const SizedBox(height: AppSpacing.xl),
           Text(
             "Tell us about any food you don't eat, allergies, or dietary restrictions.",
             style: textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
           ),
-          const SizedBox(height: AppSpacing.xl),
+          const SizedBox(height: AppSpacing.l),
           Container(
             height: AppSizes.customDietFieldHeight,
             padding: const EdgeInsets.all(AppSpacing.m),
@@ -84,6 +81,7 @@ class _OnboardingCustomDietScreenState extends State<OnboardingCustomDietScreen>
               ),
             ),
           ),
+          const SizedBox(height: AppSizes.buttonHeight + AppSpacing.xl),
         ],
       ),
     );

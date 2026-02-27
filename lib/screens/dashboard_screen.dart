@@ -119,6 +119,7 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
         Obx(() {
           if (dashboardController.isLoadingStreak.value) {
             return _streakPill(
+              minWidth: AppSizes.streakPillMinWidth,
               child: const SizedBox(
                 width: AppSizes.iconSm,
                 height: AppSizes.iconSm,
@@ -128,12 +129,14 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
           }
           if (dashboardController.streakError.isNotEmpty) {
             return _streakPill(
+              minWidth: AppSizes.streakPillMinWidth,
               child: const Icon(Icons.error_outline, color: AppColors.error, size: AppSizes.iconSm),
               onTap: () => showDialog(context: context, builder: (_) => const StreakDialog()),
             );
           }
           final streak = dashboardController.streakInfo.value?.currentStreak ?? 0;
           return _streakPill(
+            minWidth: _streakPillMinWidthFor(streak),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -152,11 +155,23 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
     );
   }
 
-  Widget _streakPill({required Widget child, VoidCallback? onTap}) {
+  double _streakPillMinWidthFor(int streak) {
+    final digits = streak.abs().toString().length;
+    if (digits >= 3) return AppSizes.streakPillMinWidthTripleDigit;
+    if (digits >= 2) return AppSizes.streakPillMinWidthDoubleDigit;
+    return AppSizes.streakPillMinWidth;
+  }
+
+  Widget _streakPill({
+    required Widget child,
+    required double minWidth,
+    VoidCallback? onTap,
+  }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
         height: AppSizes.streakPillHeight,
+        constraints: BoxConstraints(minWidth: minWidth),
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
         decoration: BoxDecoration(
           color: AppColors.surface,

@@ -19,6 +19,7 @@ import 'package:diplomka/services/home_widget/widget_sync_service.dart';
 import 'package:diplomka/services/language_settings_service.dart';
 import 'package:diplomka/services/nutrition_goals_service.dart';
 import 'package:diplomka/services/session_manager.dart';
+import 'package:diplomka/services/streak_service.dart';
 import 'package:diplomka/services/shared_preferences_manager.dart';
 import 'package:diplomka/services/tracking_reminder_service.dart';
 import 'package:diplomka/services/weight_entry_repository.dart';
@@ -54,6 +55,7 @@ Future<void> setupServices() async {
   Get.lazyPut<SessionManager>(() => SessionManager());
   Get.put(LanguageSettingsService(), permanent: true);
   Get.put(TrackingReminderService(), permanent: true);
+  Get.put(StreakService(), permanent: true);
   Get.put(WidgetActionRouter(), permanent: true);
   Get.put(WidgetSyncService(), permanent: true);
   Get.lazyPut<RecipeService>(() => RecipeService());

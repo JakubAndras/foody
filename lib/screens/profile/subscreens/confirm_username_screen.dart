@@ -15,12 +15,8 @@ class ConfirmUsernameScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ProfileBackButton(onPressed: () => Get.back()),
-          const SizedBox(height: AppSpacing.l),
-          Text(
-            'Confirm your username',
-            style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w700),
-          ),
+          ProfileTopBar(title: 'Confirm your username', onBack: () => Get.back()),
+          const SizedBox(height: AppSpacing.m),
           const SizedBox(height: AppSpacing.xs),
           Text(
             'This is the name others will see in groups.',

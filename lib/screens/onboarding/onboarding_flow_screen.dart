@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:diplomka/model/user_profile.dart';
 import 'package:diplomka/screens/onboarding/onboarding_calorie_burn_screen.dart';
 import 'package:diplomka/screens/onboarding/onboarding_custom_diet_screen.dart';
 import 'package:diplomka/screens/onboarding/onboarding_diet_screen.dart';
@@ -36,7 +39,10 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
 
   void _next() {
     if (_index >= _screens.length - 1) {
-      SessionManager.to.setOnboardingComplete(true);
+      if (SessionManager.to.dietType.value == null) {
+        unawaited(SessionManager.to.setDietType(ProfileDietType.classic));
+      }
+      unawaited(SessionManager.to.setOnboardingComplete(true));
       return;
     }
     _controller.nextPage(
@@ -46,6 +52,9 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
   }
 
   Future<void> _skipOnboarding() async {
+    if (SessionManager.to.dietType.value == null) {
+      await SessionManager.to.setDietType(ProfileDietType.classic);
+    }
     await SessionManager.to.setOnboardingComplete(true);
   }
 
@@ -53,8 +62,7 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
     if (_index <= 0) return;
 
     final List<Widget> screens = _screens;
-    final bool shouldSkipLoadingScreen =
-        _index > 0 && screens[_index] is OnboardingPlanReadyScreen && screens[_index - 1] is OnboardingLoadingPlanScreen;
+    final bool shouldSkipLoadingScreen = _index > 0 && screens[_index] is OnboardingPlanReadyScreen && screens[_index - 1] is OnboardingLoadingPlanScreen;
     final int targetIndex = shouldSkipLoadingScreen ? _index - 2 : _index - 1;
 
     _controller.animateToPage(
@@ -80,6 +88,14 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
   }
 
   void _handleDietChanged(String diet) {
+    final ProfileDietType? selectedDietType = profileDietTypeFromCode(diet);
+    if (selectedDietType != null) {
+      unawaited(SessionManager.to.setDietType(selectedDietType));
+      if (selectedDietType != ProfileDietType.custom) {
+        unawaited(SessionManager.to.setCustomDietPreferences(null));
+      }
+    }
+
     final bool shouldShowCustomDiet = diet == 'custom';
     if (_showCustomDiet == shouldShowCustomDiet) return;
     setState(() => _showCustomDiet = shouldShowCustomDiet);
@@ -96,26 +112,11 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
 
     return [
       OnboardingWelcomeScreen(onNext: _next, onSkip: _skipOnboarding),
-      OnboardingGenderScreen(
-          onNext: _next,
-          onBack: _previous,
-          step: 1,
-          totalSteps: totalSteps,
-          onCanProceedChanged: (canProceed) => _setCanProceed(1, canProceed)),
-      OnboardingWorkoutsScreen(
-          onNext: _next,
-          onBack: _previous,
-          step: 2,
-          totalSteps: totalSteps,
-          onCanProceedChanged: (canProceed) => _setCanProceed(2, canProceed)),
+      OnboardingGenderScreen(onNext: _next, onBack: _previous, step: 1, totalSteps: totalSteps, onCanProceedChanged: (canProceed) => _setCanProceed(1, canProceed)),
+      OnboardingWorkoutsScreen(onNext: _next, onBack: _previous, step: 2, totalSteps: totalSteps, onCanProceedChanged: (canProceed) => _setCanProceed(2, canProceed)),
       OnboardingHeightWeightScreen(onNext: _next, onBack: _previous, step: 3, totalSteps: totalSteps),
       OnboardingDobScreen(onNext: _next, onBack: _previous, step: 4, totalSteps: totalSteps),
-      OnboardingGoalScreen(
-          onNext: _next,
-          onBack: _previous,
-          step: 5,
-          totalSteps: totalSteps,
-          onCanProceedChanged: (canProceed) => _setCanProceed(5, canProceed)),
+      OnboardingGoalScreen(onNext: _next, onBack: _previous, step: 5, totalSteps: totalSteps, onCanProceedChanged: (canProceed) => _setCanProceed(5, canProceed)),
       OnboardingDesiredWeightScreen(onNext: _next, onBack: _previous, step: 6, totalSteps: totalSteps),
       OnboardingWeightLossSpeedScreen(onNext: _next, onBack: _previous, step: 7, totalSteps: totalSteps),
       OnboardingDietScreen(
@@ -126,7 +127,15 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
         onCanProceedChanged: (canProceed) => _setCanProceed(8, canProceed),
         onDietChanged: _handleDietChanged,
       ),
-      if (_showCustomDiet) OnboardingCustomDietScreen(onNext: _next, onBack: _previous, step: customStep, totalSteps: totalSteps),
+      if (_showCustomDiet)
+        OnboardingCustomDietScreen(
+          onNext: _next,
+          onBack: _previous,
+          step: customStep,
+          totalSteps: totalSteps,
+          initialPreferences: SessionManager.to.customDietPreferences.value,
+          onPreferencesSaved: (value) => unawaited(SessionManager.to.setCustomDietPreferences(value)),
+        ),
       OnboardingCalorieBurnScreen(onNext: _next, onBack: _previous, step: calorieBurnStep, totalSteps: totalSteps),
       OnboardingRolloverScreen(onNext: _next, onBack: _previous, step: rolloverStep, totalSteps: totalSteps),
       OnboardingLoadingPlanScreen(onNext: _next, step: loadingStep, totalSteps: totalSteps),

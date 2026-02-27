@@ -22,9 +22,11 @@ class AiPipelineService extends GetxService {
   }) async {
     try {
       final AiService service = Get.isRegistered<AiService>() ? Get.find<AiService>() : OpenAiService();
+      final mealUserAttributes = _buildMealUserAttributes();
       final response = await service.generateResponse(
         imageFiles: imageFiles,
         textPrompt: description,
+        mealUserAttributes: mealUserAttributes,
       );
 
       if (response == null || response.valid == false) {
@@ -131,6 +133,24 @@ class AiPipelineService extends GetxService {
       'age_years': ageYears,
       'height_cm': (heightCm != null && heightCm > 0) ? heightCm : null,
       'weight_kg': (weightKg != null && weightKg > 0) ? weightKg : null,
+    };
+  }
+
+  Map<String, dynamic> _buildMealUserAttributes() {
+    if (!Get.isRegistered<SessionManager>()) {
+      return <String, dynamic>{
+        'diet_type': ProfileDietType.classic.code,
+        'diet_custom_preferences': null,
+      };
+    }
+
+    final session = SessionManager.to;
+    final dietType = session.dietType.value ?? ProfileDietType.classic;
+    final customPreferences = session.customDietPreferences.value?.trim();
+
+    return <String, dynamic>{
+      'diet_type': dietType.code,
+      'diet_custom_preferences': (customPreferences != null && customPreferences.isNotEmpty) ? customPreferences : null,
     };
   }
 

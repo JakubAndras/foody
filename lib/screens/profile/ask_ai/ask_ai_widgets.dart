@@ -1,34 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
-
-class AskAiTopBar extends StatelessWidget {
-  const AskAiTopBar({super.key, this.onBack});
-
-  final VoidCallback? onBack;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: AppSizes.askAiTopBarHeight,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: ProfileBackButton(onPressed: onBack ?? () => Get.back()),
-          ),
-          Text(
-            'Ask AI',
-            style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w600),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 class AskAiPrimaryButton extends StatelessWidget {
   const AskAiPrimaryButton({

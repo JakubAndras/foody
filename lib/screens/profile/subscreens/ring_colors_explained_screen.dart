@@ -17,9 +17,7 @@ class RingColorsExplainedScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ProfileBackButton(onPressed: () => Get.back()),
-          const SizedBox(height: AppSpacing.m),
-          Text('Ring Colors Explained', style: AppTextStyles.h1Tight.copyWith(fontWeight: FontWeight.w700)),
+          ProfileTopBar(title: 'Ring Colors Explained', onBack: () => Get.back()),
           const SizedBox(height: AppSpacing.l),
           ProfileCard(
             color: AppColors.surfaceCard,
@@ -277,8 +275,6 @@ class _SegmentRingPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _SegmentRingPainter oldDelegate) {
-    return oldDelegate.filledSegments != filledSegments ||
-        oldDelegate.overflowSegments != overflowSegments ||
-        oldDelegate.strokeWidth != strokeWidth;
+    return oldDelegate.filledSegments != filledSegments || oldDelegate.overflowSegments != overflowSegments || oldDelegate.strokeWidth != strokeWidth;
   }
 }

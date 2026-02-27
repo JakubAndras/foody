@@ -39,7 +39,7 @@ class ProfileGradientScaffold extends StatelessWidget {
                   builder: (context, constraints) => SingleChildScrollView(
                     child: ConstrainedBox(
                       constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                      child: IntrinsicHeight(child: content),
+                      child: content,
                     ),
                   ),
                 )

@@ -125,9 +125,7 @@ class _EditNutritionGoalsScreenState extends State<EditNutritionGoalsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ProfileBackButton(onPressed: () => Get.back()),
-          const SizedBox(height: AppSpacing.m),
-          Text('Edit nutrition goals', style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w700)),
+          ProfileTopBar(title: 'Edit nutrition goals', onBack: () => Get.back()),
           const SizedBox(height: AppSpacing.l),
           _GoalRow(
             label: 'Calorie goal',

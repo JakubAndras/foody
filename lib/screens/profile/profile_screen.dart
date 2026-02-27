@@ -69,11 +69,6 @@ class ProfileScreen extends StatelessWidget {
                 onTap: () => Get.to(() => const EditNutritionGoalsScreen()),
               ),
               _ProfileActionRow(
-                title: 'Goals & Current Weight',
-                icon: Icons.flag_outlined,
-                onTap: () => Get.to(() => const PersonalDetailsScreen()),
-              ),
-              _ProfileActionRow(
                 title: 'Weight History',
                 icon: Icons.history,
                 onTap: () => Get.to(() => const WeightHistoryScreen()),

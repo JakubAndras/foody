@@ -10,11 +10,16 @@ class GeminiService implements AiService {
   final restClient = GeminiRestClient();
 
   @override
-  Future<AiResponse?> generateResponse({List<File>? imageFiles, String? textPrompt}) async {
+  Future<AiResponse?> generateResponse({
+    List<File>? imageFiles,
+    String? textPrompt,
+    Map<String, dynamic>? mealUserAttributes,
+  }) async {
     try {
       final data = await restClient.generateResponse(
         imageFiles: imageFiles,
         textPrompt: textPrompt,
+        mealUserAttributes: mealUserAttributes,
       );
       return responseContentParser(data);
     } catch (e) {
@@ -25,7 +30,7 @@ class GeminiService implements AiService {
 
   String? extractJsonFromContent(String content) {
     // This regex might need adjustment if Gemini wraps JSON in a different way or not at all.
-    final regex = RegExp(r'\{[\s\S]*?\}'); 
+    final regex = RegExp(r'\{[\s\S]*?\}');
     final match = regex.firstMatch(content);
     return match?.group(0);
   }

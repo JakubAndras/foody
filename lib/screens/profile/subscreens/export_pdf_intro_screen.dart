@@ -26,8 +26,8 @@ class ExportPdfIntroScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ProfileBackButton(onPressed: () => Get.back()),
-          const SizedBox(height: AppSpacing.l),
+          ProfileTopBar(title: 'Export PDF summary report', onBack: () => Get.back()),
+          const SizedBox(height: AppSpacing.m),
           Text('Get your PDF\nSummary Report', style: AppTextStyles.h2.copyWith(fontWeight: FontWeight.w700)),
           const SizedBox(height: AppSpacing.s),
           Text(

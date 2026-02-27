@@ -34,9 +34,7 @@ class TrackingRemindersScreen extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ProfileBackButton(onPressed: () => Get.back()),
-            const SizedBox(height: AppSpacing.m),
-            Text(easy.tr('tracking_reminders.title'), style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w700)),
+            ProfileTopBar(title: easy.tr('tracking_reminders.title'), onBack: () => Get.back()),
             const SizedBox(height: AppSpacing.l),
             ProfileCard(
               radius: AppRadii.lg,

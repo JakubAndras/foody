@@ -17,7 +17,7 @@ class AskAiScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const AskAiTopBar(),
+          ProfileTopBar(title: 'Ask AI', onBack: () => Get.back()),
           Expanded(
             child: SingleChildScrollView(
               child: Column(

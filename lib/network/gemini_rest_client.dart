@@ -13,7 +13,11 @@ class GeminiRestClient {
 
   final String context = 'You are an AI food analyzer. Always respond in JSON format.';
 
-  Future<Map<String, dynamic>> generateResponse({List<File>? imageFiles, String? textPrompt}) async {
+  Future<Map<String, dynamic>> generateResponse({
+    List<File>? imageFiles,
+    String? textPrompt,
+    Map<String, dynamic>? mealUserAttributes,
+  }) async {
     final List<Map<String, dynamic>> imageContents = (imageFiles ?? []).map((file) {
       final List<int> imageBytes = file.readAsBytesSync();
       final String base64Image = base64Encode(imageBytes);
@@ -23,9 +27,14 @@ class GeminiRestClient {
       };
     }).toList();
 
-    String prompt = "Recognize the food/ingredients in the input photo and give me their names and nutritional values, both for the whole meal and for the individual ingredients. The output must be a text representation in JSON format.";
+    String prompt =
+        "Recognize the food/ingredients in the input photo and give me their names and nutritional values, both for the whole meal and for the individual ingredients. The output must be a text representation in JSON format.";
     if (textPrompt != null && textPrompt.trim().isNotEmpty) {
       prompt = '$prompt\\nUser description: ${textPrompt.trim()}';
+    }
+    if (mealUserAttributes != null && mealUserAttributes.isNotEmpty) {
+      prompt = '$prompt\\nUser dietary context: ${jsonEncode(mealUserAttributes)}';
+      prompt = '$prompt\\nRespect this dietary context when identifying the meal and ingredients.';
     }
 
     try {
@@ -48,7 +57,9 @@ class GeminiRestClient {
             {
               "parts": [
                 {"text": prompt},
-                ...imageContents.map((img) => {"inline_data": {"mime_type": "image/jpeg", "database": img["image_url"]["url"].split(",").last}}),
+                ...imageContents.map((img) => {
+                      "inline_data": {"mime_type": "image/jpeg", "database": img["image_url"]["url"].split(",").last}
+                    }),
               ]
             }
           ],

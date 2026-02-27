@@ -2,8 +2,10 @@ import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/controller/day_record_controller.dart';
 import 'package:diplomka/controller/weight_entry_controller.dart';
 import 'package:diplomka/model/day_record.dart';
+import 'package:diplomka/model/streak_info.dart';
 import 'package:diplomka/model/weight_entry.dart';
 import 'package:diplomka/services/session_manager.dart';
+import 'package:diplomka/services/streak_service.dart';
 import 'package:diplomka/widgets/weight_progress_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -34,37 +36,8 @@ String _formatWeight(double value) {
   return value.toStringAsFixed(isInt ? 0 : 1);
 }
 
-_StreakMetrics _computeStreakMetrics(List<DayRecord> records) {
-  if (records.isEmpty) {
-    return const _StreakMetrics(currentStreak: 0, activeDaysThisWeek: [false, false, false, false, false, false, false]);
-  }
-
-  final Map<DateTime, DayRecord> byDate = {
-    for (final record in records) _dateOnly(record.date): record,
-  };
-
-  final DateTime today = _dateOnly(DateTime.now());
-  int currentStreak = 0;
-  DateTime cursor = today;
-
-  while (true) {
-    final record = byDate[cursor];
-    if (record == null || record.meals.isEmpty) {
-      break;
-    }
-    currentStreak += 1;
-    cursor = cursor.subtract(const Duration(days: 1));
-  }
-
-  final DateTime monday = today.subtract(Duration(days: today.weekday - 1));
-  final List<bool> activeDays = List<bool>.filled(7, false);
-  for (int i = 0; i < 7; i++) {
-    final date = monday.add(Duration(days: i));
-    final record = byDate[date];
-    activeDays[i] = record != null && record.meals.isNotEmpty;
-  }
-
-  return _StreakMetrics(currentStreak: currentStreak, activeDaysThisWeek: activeDays);
+StreakInfo _computeStreakMetrics(List<DayRecord> records) {
+  return StreakService.to.calculateStreakInfo(records);
 }
 
 String _nextWeighInLabel(WeightEntry? latestEntry) {
@@ -79,16 +52,6 @@ String _nextWeighInLabel(WeightEntry? latestEntry) {
   }
   final int remaining = 7 - (daysSince % 7);
   return 'Next weigh-in: ${remaining}d';
-}
-
-class _StreakMetrics {
-  final int currentStreak;
-  final List<bool> activeDaysThisWeek;
-
-  const _StreakMetrics({
-    required this.currentStreak,
-    required this.activeDaysThisWeek,
-  });
 }
 
 class _DailyAverageStats {

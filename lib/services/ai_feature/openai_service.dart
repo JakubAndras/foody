@@ -10,11 +10,16 @@ class OpenAiService implements AiService {
   final restClient = OpenaiRestClient();
 
   @override
-  Future<AiResponse?> generateResponse({List<File>? imageFiles, String? textPrompt}) async {
+  Future<AiResponse?> generateResponse({
+    List<File>? imageFiles,
+    String? textPrompt,
+    Map<String, dynamic>? mealUserAttributes,
+  }) async {
     try {
       final data = await restClient.generateResponse(
         imageFiles: imageFiles,
         textPrompt: textPrompt,
+        mealUserAttributes: mealUserAttributes,
       );
       return responseContentParser(data);
     } catch (e) {

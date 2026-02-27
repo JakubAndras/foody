@@ -15,8 +15,8 @@ class ExportPdfEmailScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ProfileBackButton(onPressed: () => Get.back()),
-          const SizedBox(height: AppSpacing.l),
+          ProfileTopBar(title: 'Enter an email', onBack: () => Get.back()),
+          const SizedBox(height: AppSpacing.m),
           Text('Enter an email', style: AppTextStyles.h2.copyWith(fontWeight: FontWeight.w700)),
           const SizedBox(height: AppSpacing.xs),
           Text(

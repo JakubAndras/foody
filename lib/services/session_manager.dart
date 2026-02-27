@@ -27,6 +27,8 @@ class SessionManager extends GetxService {
   final RxnDouble goalWeightKg = RxnDouble();
   final Rxn<ProfileSex> sex = Rxn<ProfileSex>();
   final Rxn<ProfileGoal> goal = Rxn<ProfileGoal>();
+  final Rxn<ProfileDietType> dietType = Rxn<ProfileDietType>();
+  final RxnString customDietPreferences = RxnString();
   final RxBool prefersMetric = true.obs;
   final Rxn<DateTime> dateOfBirth = Rxn<DateTime>();
   final RxnDouble weightChangeRateKgPerWeek = RxnDouble();
@@ -42,6 +44,9 @@ class SessionManager extends GetxService {
     sex.value = profileSexFromCode(sexCode);
     final goalCode = await SharedPreferencesService.to.getString(key: profileGoalKey);
     goal.value = profileGoalFromCode(goalCode);
+    final dietTypeCode = await SharedPreferencesService.to.getString(key: profileDietTypeKey);
+    dietType.value = profileDietTypeFromCode(dietTypeCode);
+    customDietPreferences.value = await SharedPreferencesService.to.getString(key: profileCustomDietPreferencesKey);
     prefersMetric.value = await SharedPreferencesService.to.getBool(key: profilePrefersMetricKey) ?? true;
     final dobMillis = await SharedPreferencesService.to.getInt(key: profileDobKey);
     dateOfBirth.value = dobMillis == null ? null : DateTime.fromMillisecondsSinceEpoch(dobMillis);
@@ -86,6 +91,23 @@ class SessionManager extends GetxService {
     await SharedPreferencesService.to.setString(
       key: profileGoalKey,
       value: value?.code,
+    );
+  }
+
+  Future<void> setDietType(ProfileDietType? value) async {
+    dietType.value = value;
+    await SharedPreferencesService.to.setString(
+      key: profileDietTypeKey,
+      value: value?.code,
+    );
+  }
+
+  Future<void> setCustomDietPreferences(String? value) async {
+    final normalized = value?.trim();
+    customDietPreferences.value = normalized == null || normalized.isEmpty ? null : normalized;
+    await SharedPreferencesService.to.setString(
+      key: profileCustomDietPreferencesKey,
+      value: customDietPreferences.value,
     );
   }
 

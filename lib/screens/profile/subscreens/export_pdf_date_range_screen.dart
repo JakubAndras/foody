@@ -16,8 +16,8 @@ class ExportPdfDateRangeScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ProfileBackButton(onPressed: () => Get.back()),
-          const SizedBox(height: AppSpacing.l),
+          ProfileTopBar(title: 'Select date range', onBack: () => Get.back()),
+          const SizedBox(height: AppSpacing.m),
           Text('Select date range', style: AppTextStyles.h2.copyWith(fontWeight: FontWeight.w700)),
           const SizedBox(height: AppSpacing.xs),
           Text('Choose the time range for your report.', style: AppTextStyles.body16.copyWith(color: AppColors.textTertiary)),

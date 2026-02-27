@@ -57,7 +57,7 @@ class AskAiResponseScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const AskAiTopBar(),
+          ProfileTopBar(title: 'Ask AI', onBack: () => Get.back()),
           const SizedBox(height: AppSpacing.m),
           const AskAiPromptCard(),
           const SizedBox(height: AppSpacing.l),
@@ -220,8 +220,7 @@ class _AskAiVariantData {
         );
       case AskAiResponseVariant.achieved:
         return _AskAiVariantData(
-          responseText:
-              'Your average protein intake last week was 142g per day, which is 95% of your daily goal of 150g. You met your protein target on 5 out of 7 days.',
+          responseText: 'Your average protein intake last week was 142g per day, which is 95% of your daily goal of 150g. You met your protein target on 5 out of 7 days.',
           summaryLabel: 'Days achieved',
           summaryValue: 5,
           summaryIcon: Icons.check_circle_outline,
@@ -234,8 +233,7 @@ class _AskAiVariantData {
         );
       case AskAiResponseVariant.tracked:
         return _AskAiVariantData(
-          responseText:
-              'You consumed dairy products on 8 days this month. The most common dairy items were milk in coffee, yogurt at breakfast, and cheese in dinner meals.',
+          responseText: 'You consumed dairy products on 8 days this month. The most common dairy items were milk in coffee, yogurt at breakfast, and cheese in dinner meals.',
           summaryLabel: 'Days tracked',
           summaryValue: 8,
           summaryIcon: Icons.info_outline,
