@@ -19,21 +19,16 @@ class ExportPdfIntroScreen extends StatelessWidget {
         child: ProfilePrimaryButton(
           label: 'Next',
           height: AppSizes.buttonHeightCompact,
-          radius: AppRadii.md,
+          radius: AppRadii.pill,
           onPressed: () => Get.to(() => const ExportPdfDateRangeScreen()),
         ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ProfileTopBar(title: 'Export PDF summary report', onBack: () => Get.back()),
-          const SizedBox(height: AppSpacing.m),
-          Text('Get your PDF\nSummary Report', style: AppTextStyles.h2.copyWith(fontWeight: FontWeight.w700)),
-          const SizedBox(height: AppSpacing.s),
-          Text(
-            "Here's what you'll get in your summary report:",
-            style: AppTextStyles.body16.copyWith(color: AppColors.textTertiary, fontWeight: FontWeight.w500),
-          ),
+          ProfileTopBar(title: 'Export summary report', onBack: () => Get.back()),
+          const SizedBox(height: AppSpacing.l),
+          Text("Export as PDF or CSV. Here's what's included:", style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w500)),
           const SizedBox(height: AppSpacing.m),
           ProfileCard(
             padding: const EdgeInsets.all(AppSpacing.m),
@@ -69,7 +64,7 @@ class _FeatureItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Icon(icon, size: AppSizes.iconLg, color: AppColors.textPrimary),
         const SizedBox(width: AppSpacing.m),

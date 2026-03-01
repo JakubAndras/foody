@@ -22,7 +22,10 @@
       "Bash(*)",
       "Edit",
       "Read",
-      "Write"
+      "Write",
+      "WebFetch(domain:platform.openai.com)",
+      "WebFetch(domain:docs.aimlapi.com)",
+      "WebFetch(domain:openai.com)"
     ]
   }
 }

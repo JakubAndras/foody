@@ -153,14 +153,8 @@
 - No dedicated "Favorites" view outside SelectMealScreen
 - Exercise favorites — bookmark icons exist but have empty `onTap: () {}` handlers (`exercise_detail_screen.dart:40`, `exercise_log_home_screen.dart:93`, `add_exercise_screen.dart:125`)
 
-### FR-28: Data Export (CSV/PDF) :warning:
-**Works:** Three-step export wizard UI (`export_pdf_intro_screen.dart`, `export_pdf_date_range_screen.dart`, `export_pdf_email_screen.dart`).
-**Missing:**
-- Actual PDF generation (no `pdf` package or similar)
-- CSV file creation
-- Data aggregation logic for reports
-- Email/share integration for generated files
-- "Export CSV" button in Ask AI response screen has empty handler (`ask_ai_response_screen.dart:150`)
+### FR-28: Data Export (CSV/PDF) :white_check_mark:
+**Implemented:** Full PDF and CSV export with date range selection (last 7/30 days, all time, custom). `ExportService` generates styled PDF reports (daily summary table, meal details with ingredients, exercise log, weight progress, period averages) and CSV files. `ExportController` manages date range state and export flow. Files shared via native share sheet (`share_plus`). Email screen removed in favor of share sheet.
 
 ### FR-29: Offline Tolerance :warning:
 **Works:** Floor DB fully functional offline. Past data viewable without connectivity.
@@ -277,8 +271,8 @@
 ## 5. Priority Suggestions
 
 ### High Priority (Core thesis requirements)
-1. **FR-31** — Ask AI (replace mock with real AI queries)
-2. **FR-28** — Data Export (implement actual PDF/CSV generation)
+1. **FR-31** — Ask AI (replace mock with real AI queries) // DONE
+2. **FR-28** — Data Export (implement actual PDF/CSV generation) // DONE
 3. **FR-05** — Account deletion & logout
 4. **FR-18** — Fix favorites listing (remove mock data fallback)
 5. **Localization** — Extract hardcoded strings to translation files

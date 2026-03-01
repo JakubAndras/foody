@@ -136,7 +136,7 @@ class OpenaiRestClient {
         receiveTimeout: 30000,
       ),
       data: {
-        "model": "gpt-4o",
+        "model": "gpt-5.2",
         "messages": [
           {"role": "system", "content": context},
           {

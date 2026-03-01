@@ -106,7 +106,7 @@ class ProfileScreen extends StatelessWidget {
           _ProfileGroupCard(
             children: [
               _ProfileActionRow(
-                title: 'Export PDF summary report',
+                title: 'Export summary report',
                 icon: Icons.ios_share_outlined,
                 onTap: () => Get.to(() => const ExportPdfIntroScreen()),
               ),
@@ -349,11 +349,7 @@ class _WidgetSection extends StatelessWidget {
   }
 
   String _formatMacro(double value) {
-    final rounded = value.roundToDouble();
-    if ((value - rounded).abs() < 0.05) {
-      return rounded.toStringAsFixed(0);
-    }
-    return value.toStringAsFixed(1);
+    return value.toStringAsFixed(0);
   }
 }
 

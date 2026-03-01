@@ -1,4 +1,5 @@
 import 'package:diplomka/controller/ask_ai_controller.dart';
+import 'package:diplomka/controller/export_controller.dart';
 import 'package:diplomka/controller/barcode_scan_controller.dart';
 import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/controller/language_settings_controller.dart';
@@ -93,4 +94,5 @@ Future<void> setupServices() async {
   Get.put(WeightEntryRepository(database: db), permanent: true);
   Get.put(WeightEntryController(repository: WeightEntryRepository.to), permanent: true);
   Get.lazyPut<AskAiController>(() => AskAiController(), fenix: true);
+  Get.lazyPut<ExportController>(() => ExportController(), fenix: true);
 }

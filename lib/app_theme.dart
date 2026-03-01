@@ -137,7 +137,7 @@ class AppSpacing {
   static const double xxxl = 48;
   static const double huge = 56;
   static const double mega = 72;
-  static const double screen = l;
+  static const double screen = m;
   static const double edge = m;
 }
 
