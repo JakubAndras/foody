@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:pub.dev)",
+      "WebFetch(domain:github.com)",
+      "Bash(grep -r \"import.*liquid_glass\" /Users/jakubandras/StudioProjects/diplomka/lib --include=\"*.dart\" 2>/dev/null | head -20)",
+      "Bash(flutter pub get 2>&1)",
+      "Bash(flutter analyze 2>&1)",
+      "Bash(flutter analyze lib/**)",
+      "Bash(flutter analyze lib/** | tail *)",
+      "Bash(xcrun simctl list devices available | grep -i \"iphone\" | head -10)",
+      "Bash(xcrun simctl boot 30154537-83F7-4F74-BCE4-C44F204D7918 2>&1)",
+      "Bash(flutter run -d 30154537-83F7-4F74-BCE4-C44F204D7918 --no-pub 2>&1)",
+      "Bash(find ~/.pub-cache -type d -name \"cupertino_native*\" 2>/dev/null | head -20)",
+      "Bash(flutter analyze lib/screens/meals/edit_meal_screen.dart 2>&1 | tail -3)",
+      "Bash(flutter analyze lib/screens/meals/edit_meal_screen.dart 2>&1 | tail -10)"
+    ]
+  }
+}

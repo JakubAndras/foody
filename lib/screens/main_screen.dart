@@ -22,12 +22,15 @@ class MainScreen extends GetView<MainScreenController> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
-      body: Obx(() => MainScreenController.to.widgetOptions.elementAt(controller._selectedIndex.value)),
-      bottomNavigationBar: Obx(() => BottomNavBar(
-            currentIndex: controller._selectedIndex.value,
-            onTap: controller._onItemTapped,
-            onAdd: () => controller._showQuickActions(context),
-          )),
+      body: Obx(() {
+        final activeBody = MainScreenController.to.widgetOptions.elementAt(controller._selectedIndex.value);
+        return BottomNavBar(
+          body: activeBody,
+          currentIndex: controller._selectedIndex.value,
+          onTap: controller._onItemTapped,
+          onAdd: () => controller._showQuickActions(context),
+        );
+      }),
     );
   }
 }
@@ -36,11 +39,7 @@ class MainScreenController extends BaseController {
   static MainScreenController get to => Get.find();
   final RxInt _selectedIndex = 0.obs;
 
-  final List<Widget> widgetOptions = <Widget>[
-    const DashboardScreen(),
-    const ProgressScreen(),
-    const ProfileScreen(),
-  ];
+  final List<Widget> widgetOptions = <Widget>[const DashboardScreen(), const ProgressScreen(), const ProfileScreen()];
 
   void _onItemTapped(int index) {
     _selectedIndex.value = index;

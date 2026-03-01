@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/model/exercise.dart';
 import 'package:diplomka/model/meal.dart';
+import 'package:diplomka/utils/media_storage.dart';
 import 'package:diplomka/widgets/progress_ring.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -169,15 +170,7 @@ class RecentlyUploadedCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
           child: Row(
             children: [
-              Container(
-                width: AppSizes.mealImageSize,
-                height: AppSizes.mealImageSize,
-                decoration: BoxDecoration(
-                  color: AppColors.surfaceMuted,
-                  borderRadius: BorderRadius.circular(AppRadii.md),
-                ),
-                child: const Icon(Icons.restaurant, color: AppColors.textTertiary),
-              ),
+              _buildMealImage(meal),
               const SizedBox(width: AppSpacing.m),
               Expanded(
                 child: Column(
@@ -240,6 +233,25 @@ class RecentlyUploadedCard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildMealImage(Meal meal) {
+    final file = MediaStorage.existingMealPhotoFile(meal.photoPath);
+    return Container(
+      width: AppSizes.mealImageSize,
+      height: AppSizes.mealImageSize,
+      decoration: BoxDecoration(
+        color: AppColors.surfaceMuted,
+        borderRadius: BorderRadius.circular(AppRadii.md),
+        image: file != null
+            ? DecorationImage(
+                image: FileImage(file),
+                fit: BoxFit.cover,
+              )
+            : null,
+      ),
+      child: file == null ? const Icon(Icons.restaurant, color: AppColors.textTertiary) : null,
     );
   }
 
@@ -438,11 +450,12 @@ class _AnalyzingMealCardState extends State<AnalyzingMealCard> {
                       color: AppColors.overlayDark60,
                     ),
                   ),
-                  Icon(
-                    leadingIcon,
-                    color: AppColors.onPrimary.withValues(alpha: 0.45),
-                    size: AppSizes.iconLg,
-                  ),
+                  if (isExercise)
+                    Icon(
+                      leadingIcon,
+                      color: AppColors.onPrimary.withValues(alpha: 0.45),
+                      size: AppSizes.iconLg,
+                    ),
                   ProgressRing(
                     size: AppSizes.macroRingSize,
                     strokeWidth: AppSizes.progressRingStroke,

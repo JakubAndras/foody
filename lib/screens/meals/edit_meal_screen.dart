@@ -336,7 +336,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
       barrierLabel: 'Meal actions',
       barrierColor: AppColors.overlayDark40.withValues(alpha: 0.2),
       transitionDuration: AppTheme.transitionDuration,
-      pageBuilder: (context, _, __) {
+      pageBuilder: (context, _, _) {
         return SafeArea(
           child: Stack(
             children: [
@@ -1075,3 +1075,4 @@ class _GlassIconButton extends StatelessWidget {
     );
   }
 }
+
