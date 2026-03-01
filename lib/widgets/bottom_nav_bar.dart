@@ -70,10 +70,10 @@ class BottomNavBar extends StatelessWidget {
         customBorder: const CircleBorder(),
         child: Center(
           child: Container(
-            width: AppSizes.fabSize - AppSpacing.s,
-            height: AppSizes.fabSize - AppSpacing.s,
-            decoration: BoxDecoration(gradient: AppGradients.primary, shape: BoxShape.circle, boxShadow: AppShadows.fab),
-            child: const Icon(Icons.add, color: AppColors.onPrimary, size: AppSizes.fabIconSize),
+            width: AppSizes.fabSize - AppSpacing.xxl,
+            height: AppSizes.fabSize - AppSpacing.xxl,
+            //decoration: BoxDecoration(gradient: AppGradients.primary, shape: BoxShape.circle, boxShadow: AppShadows.fab),
+            child: const Icon(Icons.add, color: AppColors.primary, size: AppSizes.fabIconSize),
           ),
         ),
       ),

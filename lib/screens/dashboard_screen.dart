@@ -1,9 +1,12 @@
 import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/screens/meals/meal_detail_screen.dart';
+import 'package:diplomka/screens/profile/profile_widgets.dart';
+import 'package:diplomka/services/day_record_repository.dart';
 import 'package:diplomka/widgets/calories_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:diplomka/app_theme.dart';
+import 'package:intl/intl.dart';
 
 import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/widgets/date_selector.dart';
@@ -253,5 +256,99 @@ class _DashboardScreenController extends BaseController {
   @override
   void onHidden() {
     // TODO: implement onHidden
+  }
+}
+
+/// Standalone read-only dashboard for a specific date.
+/// Used by Ask AI to preview an affected day.
+/// No streak widget, no date picker, no bottom tab bar.
+class DashboardPreviewScreen extends StatefulWidget {
+  const DashboardPreviewScreen({super.key, required this.date});
+
+  final DateTime date;
+
+  @override
+  State<DashboardPreviewScreen> createState() => _DashboardPreviewScreenState();
+}
+
+class _DashboardPreviewScreenState extends State<DashboardPreviewScreen> {
+  DayRecord? _dayRecord;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRecord();
+  }
+
+  Future<void> _loadRecord() async {
+    final record = await DayRecordRepository.to.getDayRecord(widget.date);
+    if (mounted) {
+      setState(() {
+        _dayRecord = record;
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final dayRecord = _dayRecord ?? DayRecord.initial(widget.date);
+    final nutritionGoals = NutritionGoalsService.to.goalsForDate(widget.date, fallbackRecord: _dayRecord);
+    final recordToShow = nutritionGoals.applyToDayRecord(dayRecord);
+    final dateLabel = DateFormat.yMMMd().format(widget.date);
+
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      body: Container(
+        decoration: const BoxDecoration(gradient: AppGradients.background),
+        child: SafeArea(
+          bottom: true,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.m, AppSpacing.l, AppSpacing.xs),
+                child: ProfileTopBar(
+                  title: dateLabel,
+                  onBack: () => Get.back(),
+                ),
+              ),
+              Expanded(
+                child: _isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : SingleChildScrollView(
+                        padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.xs, AppSpacing.l, AppSpacing.l),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildCaloriesTracker(recordToShow),
+                            const SizedBox(height: AppSpacing.m),
+                            RecentlyUploadedCard(
+                              meals: recordToShow.meals,
+                              exercises: recordToShow.exercises,
+                              selectedDate: widget.date,
+                              onMealTap: (meal) => Get.to(() => MealDetailScreen(meal: meal)),
+                            ),
+                          ],
+                        ),
+                      ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCaloriesTracker(DayRecord recordToShow) {
+    final planEnabled = SessionManager.to.caloriesPlanEnabled.value;
+    return Column(
+      children: [
+        CaloriesCard(dayRecord: recordToShow, caloriesPlanEnabled: planEnabled),
+        const SizedBox(height: AppSpacing.s),
+        MacrosRow(dayRecord: recordToShow, caloriesPlanEnabled: planEnabled),
+      ],
+    );
   }
 }

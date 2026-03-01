@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/controller/day_record_controller.dart';
 import 'package:diplomka/model/ingredient.dart';
 import 'package:diplomka/model/meal.dart';
@@ -183,6 +184,32 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
     }
     filtered.sort((a, b) => a.ingredient.name.compareTo(b.ingredient.name));
     return filtered;
+  }
+
+  Future<void> _addMealToToday(Meal meal) async {
+    final selectedDate = SelectedDateService.to.selectedDate.value;
+    final newMeal = meal.copyWith(
+      id: null,
+      dayRecordId: null,
+      timestamp: _applyDateToTime(DateTime.now(), selectedDate),
+    );
+    await DayRecordController.to.saveMealForDate(date: selectedDate, mealToSave: newMeal);
+    DashboardController.to.refresh();
+    Get.back();
+    Get.snackbar('Added', '${meal.name} added', snackPosition: SnackPosition.BOTTOM);
+  }
+
+  Future<void> _addIngredientToToday(Ingredient ingredient) async {
+    final selectedDate = SelectedDateService.to.selectedDate.value;
+    final meal = Meal(
+      name: ingredient.name,
+      ingredients: [ingredient],
+      timestamp: _applyDateToTime(DateTime.now(), selectedDate),
+    );
+    await DayRecordController.to.saveMealForDate(date: selectedDate, mealToSave: meal);
+    DashboardController.to.refresh();
+    Get.back();
+    Get.snackbar('Added', '${ingredient.name} added', snackPosition: SnackPosition.BOTTOM);
   }
 
   bool get _showMealsSection => _tab == SelectMealTab.all || _tab == SelectMealTab.meals || _tab == SelectMealTab.favorites;
@@ -377,6 +404,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                                           openedFromLogScreen: true,
                                           selectedDate: selectedDate,
                                         )),
+                                    onAdd: () => _addMealToToday(meal),
                                   ),
                                 );
                               },
@@ -405,7 +433,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                                   child: SelectMealIngredientRow(
                                     title: item.ingredient.name,
                                     subtitle: item.subtitle,
-                                    onAdd: () => Get.snackbar('Added', '${item.ingredient.name} added'),
+                                    onAdd: () => _addIngredientToToday(item.ingredient),
                                     onTap: () => Get.snackbar('Ingredient', item.ingredient.name),
                                   ),
                                 );

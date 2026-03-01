@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/model/ask_ai_query_response.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 
 class AskAiPrimaryButton extends StatelessWidget {
@@ -64,12 +65,18 @@ class AskAiPrimaryButton extends StatelessWidget {
 class AskAiPromptCard extends StatelessWidget {
   const AskAiPromptCard({
     super.key,
+    this.controller,
     this.onAsk,
     this.onClear,
+    this.readOnly = false,
+    this.isLoading = false,
   });
 
+  final TextEditingController? controller;
   final VoidCallback? onAsk;
   final VoidCallback? onClear;
+  final bool readOnly;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -89,30 +96,54 @@ class AskAiPromptCard extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.search, size: AppSizes.iconMd, color: AppColors.violet),
+                const Padding(
+                  padding: EdgeInsets.only(top: 2),
+                  child: Icon(Icons.search, size: AppSizes.iconMd, color: AppColors.violet),
+                ),
                 const SizedBox(width: AppSpacing.s),
                 Expanded(
-                  child: Text(
-                    'Ask about your nutrition data in natural language...',
+                  child: TextField(
+                    controller: controller,
+                    readOnly: readOnly,
+                    maxLines: null,
+                    maxLength: 500,
+                    expands: true,
+                    textAlignVertical: TextAlignVertical.top,
                     style: AppTextStyles.body14.copyWith(
                       fontWeight: FontWeight.w400,
-                      color: AppColors.textTertiary,
+                      color: AppColors.textBody,
+                    ),
+                    decoration: InputDecoration(
+                      hintText: 'Ask about your nutrition data in natural language...',
+                      hintStyle: AppTextStyles.body14.copyWith(
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.textTertiary,
+                      ),
+                      border: InputBorder.none,
+                      counterText: '',
+                      isDense: true,
+                      contentPadding: EdgeInsets.zero,
                     ),
                   ),
                 ),
-                InkWell(
-                  onTap: onClear,
-                  child: const Icon(Icons.close, size: AppSizes.iconMd, color: AppColors.textSecondaryAlt),
-                ),
+                if (!readOnly)
+                  InkWell(
+                    onTap: onClear,
+                    child: const Icon(Icons.close, size: AppSizes.iconMd, color: AppColors.textSecondaryAlt),
+                  ),
               ],
             ),
           ),
-          const SizedBox(height: AppSpacing.m),
-          AskAiPrimaryButton(
-            label: 'Ask AI',
-            leading: const Icon(Icons.auto_awesome, size: AppSizes.iconMd, color: AppColors.onPrimary),
-            onPressed: onAsk,
-          ),
+          if (!readOnly) ...[
+            const SizedBox(height: AppSpacing.m),
+            AskAiPrimaryButton(
+              label: isLoading ? 'Analyzing...' : 'Ask AI',
+              leading: isLoading
+                  ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.onPrimary))
+                  : const Icon(Icons.auto_awesome, size: AppSizes.iconMd, color: AppColors.onPrimary),
+              onPressed: isLoading ? null : onAsk,
+            ),
+          ],
         ],
       ),
     );
@@ -297,24 +328,83 @@ class AskAiSummaryCard extends StatelessWidget {
   }
 }
 
-class AskAiCalendarCard extends StatelessWidget {
+class AskAiCalendarCard extends StatefulWidget {
   const AskAiCalendarCard({
     super.key,
-    required this.affectedDays,
+    required this.allAffectedDays,
     required this.affectedGradient,
-    required this.monthLabel,
-    required this.year,
-    required this.month,
+    required this.initialYear,
+    required this.initialMonth,
+    this.onDayTap,
   });
 
-  final List<int> affectedDays;
+  /// All affected days across all months.
+  final List<AskAiAffectedDay> allAffectedDays;
   final LinearGradient affectedGradient;
-  final String monthLabel;
-  final int year;
-  final int month;
+  final int initialYear;
+  final int initialMonth;
+  final void Function(DateTime date)? onDayTap;
+
+  @override
+  State<AskAiCalendarCard> createState() => _AskAiCalendarCardState();
+}
+
+class _AskAiCalendarCardState extends State<AskAiCalendarCard> {
+  late int _year;
+  late int _month;
+
+  @override
+  void initState() {
+    super.initState();
+    _year = widget.initialYear;
+    _month = widget.initialMonth;
+  }
+
+  void _prevMonth() {
+    setState(() {
+      _month -= 1;
+      if (_month < 1) {
+        _month = 12;
+        _year -= 1;
+      }
+    });
+  }
+
+  void _nextMonth() {
+    setState(() {
+      _month += 1;
+      if (_month > 12) {
+        _month = 1;
+        _year += 1;
+      }
+    });
+  }
+
+  List<int> _affectedDaysForCurrentMonth() {
+    return widget.allAffectedDays
+        .where((d) => d.year == _year && d.month == _month)
+        .map((d) => d.day)
+        .toList();
+  }
+
+  String _monthLabel() {
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    return '${months[_month - 1]} $_year';
+  }
+
+  void _onHorizontalSwipe(DragEndDetails details) {
+    final velocity = details.primaryVelocity ?? 0;
+    if (velocity > 200) {
+      _prevMonth();
+    } else if (velocity < -200) {
+      _nextMonth();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final daysForMonth = _affectedDaysForCurrentMonth();
+
     return ProfileCard(
       radius: AppRadii.lg,
       shadow: AppShadows.cardSubtle,
@@ -330,16 +420,30 @@ class AskAiCalendarCard extends StatelessWidget {
             iconSize: 28,
           ),
           const SizedBox(height: AppSpacing.s),
-          _MonthSelector(label: monthLabel),
-          const SizedBox(height: AppSpacing.s),
-          AskAiCalendarGrid(
-            affectedDays: affectedDays,
-            affectedGradient: affectedGradient,
-            year: year,
-            month: month,
+          GestureDetector(
+            onHorizontalDragEnd: _onHorizontalSwipe,
+            child: Column(
+              children: [
+                _MonthSelector(
+                  label: _monthLabel(),
+                  onPrev: _prevMonth,
+                  onNext: _nextMonth,
+                ),
+                const SizedBox(height: AppSpacing.s),
+                AskAiCalendarGrid(
+                  affectedDays: daysForMonth,
+                  affectedGradient: widget.affectedGradient,
+                  year: _year,
+                  month: _month,
+                  onDayTap: widget.onDayTap != null
+                      ? (day) => widget.onDayTap!(DateTime(_year, _month, day))
+                      : null,
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: AppSpacing.s),
-          _LegendRow(affectedGradient: affectedGradient),
+          _LegendRow(affectedGradient: widget.affectedGradient),
         ],
       ),
     );
@@ -353,12 +457,14 @@ class AskAiCalendarGrid extends StatelessWidget {
     required this.affectedGradient,
     required this.year,
     required this.month,
+    this.onDayTap,
   });
 
   final List<int> affectedDays;
   final LinearGradient affectedGradient;
   final int year;
   final int month;
+  final void Function(int day)? onDayTap;
 
   @override
   Widget build(BuildContext context) {
@@ -390,6 +496,7 @@ class AskAiCalendarGrid extends StatelessWidget {
                 gap: gap,
                 affectedDays: affectedDays,
                 affectedGradient: affectedGradient,
+                onDayTap: onDayTap,
               ));
               if (i + 7 < cells.length) {
                 rows.add(const SizedBox(height: AppSpacing.xs));
@@ -433,6 +540,7 @@ class _DayRow extends StatelessWidget {
     required this.gap,
     required this.affectedDays,
     required this.affectedGradient,
+    this.onDayTap,
   });
 
   final List<int?> days;
@@ -440,6 +548,7 @@ class _DayRow extends StatelessWidget {
   final double gap;
   final List<int> affectedDays;
   final LinearGradient affectedGradient;
+  final void Function(int day)? onDayTap;
 
   @override
   Widget build(BuildContext context) {
@@ -447,7 +556,7 @@ class _DayRow extends StatelessWidget {
       children: List.generate(days.length, (index) {
         final day = days[index];
         final isAffected = day != null && affectedDays.contains(day);
-        final child = day == null
+        final label = day == null
             ? const SizedBox.shrink()
             : Text(
                 '$day',
@@ -456,20 +565,30 @@ class _DayRow extends StatelessWidget {
                   color: isAffected ? AppColors.onPrimary : AppColors.textPrimary,
                 ),
               );
+
+        Widget cell = Container(
+          width: cellSize,
+          height: cellSize,
+          decoration: BoxDecoration(
+            color: day == null ? Colors.transparent : AppColors.surfaceSubtle,
+            gradient: isAffected ? affectedGradient : null,
+            borderRadius: BorderRadius.circular(AppRadii.sm),
+            boxShadow: isAffected ? AppShadows.calendarDay : null,
+          ),
+          alignment: Alignment.center,
+          child: label,
+        );
+
+        if (isAffected && onDayTap != null) {
+          cell = GestureDetector(
+            onTap: () => onDayTap!(day),
+            child: cell,
+          );
+        }
+
         return Padding(
           padding: EdgeInsets.only(right: index == days.length - 1 ? 0 : gap),
-          child: Container(
-            width: cellSize,
-            height: cellSize,
-            decoration: BoxDecoration(
-              color: day == null ? Colors.transparent : AppColors.surfaceSubtle,
-              gradient: isAffected ? affectedGradient : null,
-              borderRadius: BorderRadius.circular(AppRadii.sm),
-              boxShadow: isAffected ? AppShadows.calendarDay : null,
-            ),
-            alignment: Alignment.center,
-            child: child,
-          ),
+          child: cell,
         );
       }),
     );
@@ -477,29 +596,34 @@ class _DayRow extends StatelessWidget {
 }
 
 class _MonthSelector extends StatelessWidget {
-  const _MonthSelector({required this.label});
+  const _MonthSelector({
+    required this.label,
+    this.onPrev,
+    this.onNext,
+  });
 
   final String label;
+  final VoidCallback? onPrev;
+  final VoidCallback? onNext;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 38,
+      height: 48,
       decoration: BoxDecoration(
         color: AppColors.surfaceMuted,
         borderRadius: BorderRadius.circular(AppRadii.sm),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
       child: Row(
         children: [
-          _MonthButton(icon: Icons.chevron_left),
+          _MonthButton(icon: Icons.chevron_left, onTap: onPrev),
           const Spacer(),
           Text(
             label,
             style: AppTextStyles.title.copyWith(fontSize: 18, height: 1.55),
           ),
           const Spacer(),
-          _MonthButton(icon: Icons.chevron_right),
+          _MonthButton(icon: Icons.chevron_right, onTap: onNext),
         ],
       ),
     );
@@ -507,17 +631,22 @@ class _MonthSelector extends StatelessWidget {
 }
 
 class _MonthButton extends StatelessWidget {
-  const _MonthButton({required this.icon});
+  const _MonthButton({required this.icon, this.onTap});
 
   final IconData icon;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 40,
-      height: 38,
-      child: Center(
-        child: Icon(icon, size: AppSizes.iconMd, color: AppColors.textPrimary),
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: SizedBox(
+        width: 48,
+        height: 48,
+        child: Center(
+          child: Icon(icon, size: AppSizes.iconMd, color: AppColors.textPrimary),
+        ),
       ),
     );
   }

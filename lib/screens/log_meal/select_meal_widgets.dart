@@ -214,6 +214,7 @@ class SelectMealCard extends StatelessWidget {
     required this.fats,
     this.imageProvider,
     this.onTap,
+    this.onAdd,
   });
 
   final String title;
@@ -223,6 +224,7 @@ class SelectMealCard extends StatelessWidget {
   final String fats;
   final ImageProvider? imageProvider;
   final VoidCallback? onTap;
+  final VoidCallback? onAdd;
 
   @override
   Widget build(BuildContext context) {
@@ -230,6 +232,7 @@ class SelectMealCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         height: AppSizes.selectMealCardHeight,
+        padding: const EdgeInsets.only(right: AppSpacing.m),
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(AppRadii.md),
@@ -254,36 +257,35 @@ class SelectMealCard extends StatelessWidget {
             ),
             const SizedBox(width: AppSpacing.m),
             Expanded(
-              child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(title, style: AppTextStyles.selectMealMealTitle, maxLines: 1, overflow: TextOverflow.ellipsis),
-                        const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            SelectMealMacroDot(color: AppColors.macroProtein, label: protein),
-                            const SizedBox(width: AppSpacing.s),
-                            SelectMealMacroDot(color: AppColors.macroCarbs, label: carbs),
-                            const SizedBox(width: AppSpacing.s),
-                            SelectMealMacroDot(color: AppColors.macroFats, label: fats),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                  Text(title, style: AppTextStyles.selectMealMealTitle, maxLines: 1, overflow: TextOverflow.ellipsis),
+                  const SizedBox(height: 4),
+                  Row(
                     children: [
-                      Text(kcal, style: AppTextStyles.selectMealKcalValue),
-                      Text('kcal', style: AppTextStyles.selectMealKcalLabel),
+                      SelectMealMacroDot(color: AppColors.macroProtein, label: protein),
+                      const SizedBox(width: AppSpacing.s),
+                      SelectMealMacroDot(color: AppColors.macroCarbs, label: carbs),
+                      const SizedBox(width: AppSpacing.s),
+                      SelectMealMacroDot(color: AppColors.macroFats, label: fats),
                     ],
                   ),
                 ],
+              ),
+            ),
+            const SizedBox(width: AppSpacing.s),
+            GestureDetector(
+              onTap: onAdd,
+              child: Container(
+                width: 32,
+                height: 32,
+                decoration: const BoxDecoration(
+                  color: AppColors.primary,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.add, color: AppColors.onPrimary, size: AppSizes.iconMd),
               ),
             ),
           ],

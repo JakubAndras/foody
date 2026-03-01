@@ -147,8 +147,9 @@ class RecentlyUploadedCard extends StatelessWidget {
   }
 
   Widget _buildMealsList(BuildContext context) {
+    final sorted = [...meals]..sort((a, b) => a.timestamp.compareTo(b.timestamp));
     return Column(
-      children: meals.map((meal) => _buildMealItem(context, meal)).toList(),
+      children: sorted.map((meal) => _buildMealItem(context, meal)).toList(),
     );
   }
 

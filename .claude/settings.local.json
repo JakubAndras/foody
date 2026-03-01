@@ -14,7 +14,15 @@
       "Bash(flutter run -d 30154537-83F7-4F74-BCE4-C44F204D7918 --no-pub 2>&1)",
       "Bash(find ~/.pub-cache -type d -name \"cupertino_native*\" 2>/dev/null | head -20)",
       "Bash(flutter analyze lib/screens/meals/edit_meal_screen.dart 2>&1 | tail -3)",
-      "Bash(flutter analyze lib/screens/meals/edit_meal_screen.dart 2>&1 | tail -10)"
+      "Bash(flutter analyze lib/screens/meals/edit_meal_screen.dart 2>&1 | tail -10)",
+      "Bash(flutter analyze lib/screens/log_meal/select_meal_screen.dart lib/screens/log_meal/select_meal_widgets.dart 2>&1 | tail -20)",
+      "Bash(flutter analyze lib/screens/log_meal/select_meal_screen.dart 2>&1 | tail -5)",
+      "Bash(grep -r \"onPressed: \\(\\)\" /Users/jakubandras/StudioProjects/diplomka/lib --include=\"*.dart\" 2>/dev/null | head -20)",
+      "Bash(grep -r \"unit\\\\|quantity\\\\|portion\" /Users/jakubandras/StudioProjects/diplomka/lib/model/*.dart | head -15)",
+      "Bash(*)",
+      "Edit",
+      "Read",
+      "Write"
     ]
   }
 }

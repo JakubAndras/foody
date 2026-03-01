@@ -200,7 +200,7 @@ class AppSizes {
   static const double macroDotSm = 6;
   static const double navItemHeight = 48;
   static const double fabSize = 64;
-  static const double fabIconSize = 32;
+  static const double fabIconSize = 24;
   static const double progressBarHeight = 8;
   static const double calendarStripHeight = 78;
   static const double borderThick = 2;

@@ -14,9 +14,11 @@ class OpenaiRestClient {
 
   final String mealContext = 'You are an AI food analyzer. Never include anything outside of the JSON response.';
   final String exerciseContext = 'You are an AI exercise analyzer. Never include anything outside of the JSON response.';
+  final String queryContext = 'You are a personal nutrition data analyst. Analyze the user\'s logged nutrition data to answer their question. Never include anything outside of the JSON response.';
 
   final String mealPrompt = Prompt().analyzeMeal;
   final String exercisePrompt = Prompt().analyzeExercise;
+  final String queryPrompt = Prompt().analyzeQuery;
 
   Future<Map<String, dynamic>> generateResponse({
     List<File>? imageFiles,
@@ -75,6 +77,37 @@ class OpenaiRestClient {
         textPrompt: textPrompt,
         imageContents: const <Map<String, dynamic>>[],
         additionalTextContent: [if (userAttributes != null && userAttributes.isNotEmpty) 'User profile context for calorie estimation: ${jsonEncode(userAttributes)}'],
+      );
+    } on DioError catch (e) {
+      throw Error.fromDioError(e);
+    } catch (e) {
+      if (e is Error) {
+        rethrow;
+      }
+      throw Error.generic();
+    }
+  }
+
+  Future<Map<String, dynamic>> generateQueryResponse({
+    required String query,
+    required String nutritionContext,
+    String? userProfileContext,
+  }) async {
+    try {
+      await fetchChatGptApiKey();
+      if (chatGptApiKey == null) {
+        throw Error.generic(message: "Failed to fetch the ChatGPT key.");
+      }
+
+      return _postChatCompletion(
+        context: queryContext,
+        prompt: queryPrompt,
+        textPrompt: query,
+        imageContents: const <Map<String, dynamic>>[],
+        additionalTextContent: [
+          'User nutrition data:\n$nutritionContext',
+          if (userProfileContext != null && userProfileContext.isNotEmpty) 'User profile context: $userProfileContext',
+        ],
       );
     } on DioError catch (e) {
       throw Error.fromDioError(e);
