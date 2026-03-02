@@ -34,23 +34,6 @@ class MealHeroHeader extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          Container(
-            decoration: BoxDecoration(
-              image: image != null
-                  ? DecorationImage(
-                      image: image!,
-                      fit: BoxFit.cover,
-                      alignment: imageAlignment,
-                    )
-                  : null,
-              color: AppColors.surfaceMuted,
-            ),
-            child: image == null
-                ? const Center(
-                    child: Icon(Icons.photo, size: AppSizes.iconXl, color: AppColors.textTertiary),
-                  )
-                : null,
-          ),
           DecoratedBox(
             decoration: const BoxDecoration(
               gradient: LinearGradient(

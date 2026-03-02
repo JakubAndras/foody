@@ -25,7 +25,8 @@
       "Write",
       "WebFetch(domain:platform.openai.com)",
       "WebFetch(domain:docs.aimlapi.com)",
-      "WebFetch(domain:openai.com)"
+      "WebFetch(domain:openai.com)",
+      "Bash(flutter analyze lib/screens/meals/edit_meal_screen.dart lib/screens/meals/meal_components.dart 2>&1 | tail -20)"
     ]
   }
 }

@@ -249,7 +249,7 @@ class AppSizes {
   static const double macroCardHeight = 160;
   static const double mealCardHeight = 132;
   static const double mealImageSize = 90;
-  static const double mealHeroHeight = 249;
+  static const double mealHeroHeight = 300;
   static const double macroCardSize = 125.34;
   static const double caloriesCardHeight = 136;
   static const double actionSheetWidth = 220;

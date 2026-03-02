@@ -77,10 +77,18 @@ final Migration migration5to6 = Migration(5, 6, (database) async {
 });
 
 final Migration migration6to7 = Migration(6, 7, (database) async {
-  await database.execute('ALTER TABLE `Exercise` ADD COLUMN `isFavorite` INTEGER NOT NULL DEFAULT 0');
+  try {
+    await database.execute('ALTER TABLE `Exercise` ADD COLUMN `isFavorite` INTEGER NOT NULL DEFAULT 0');
+  } catch (_) {
+    // Column may already exist if the table was created with a newer schema.
+  }
 });
 
 final Migration migration7to8 = Migration(7, 8, (database) async {
-  await database.execute('ALTER TABLE `Meal` ADD COLUMN `confidence` REAL');
-  await database.execute('ALTER TABLE `Ingredient` ADD COLUMN `confidence` REAL');
+  try {
+    await database.execute('ALTER TABLE `Meal` ADD COLUMN `confidence` REAL');
+  } catch (_) {}
+  try {
+    await database.execute('ALTER TABLE `Ingredient` ADD COLUMN `confidence` REAL');
+  } catch (_) {}
 });

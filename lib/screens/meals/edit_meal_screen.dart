@@ -162,7 +162,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
       top: 0,
       left: 0,
       right: 0,
-      height: AppSizes.mealHeroHeight,
+      height: AppSizes.mealHeroHeight + _topPullExtent,
       child: ClipRect(
         child: IgnorePointer(
           child: Stack(
@@ -665,28 +665,28 @@ class _EditMealScreenState extends State<EditMealScreen> {
         backgroundColor: AppColors.backgroundAlt,
         body: Stack(
           children: [
-           // _buildHeroBackdrop(),
+            _buildHeroBackdrop(),
             SingleChildScrollView(
               controller: _scrollController,
               padding: EdgeInsets.only(bottom: bottomActionClearance),
               child: Stack(
                 children: [
-                  // Positioned.fill(
-                  //   top: 24,
-                  //   child: Column(
-                  //     children: [
-                  //       SizedBox(height: AppSizes.mealHeroHeight - heroOverlap),
-                  //       Expanded(
-                  //         child: DecoratedBox(
-                  //           decoration: const BoxDecoration(
-                  //             color: AppColors.backgroundAlt,
-                  //           ),
-                  //           child: const SizedBox.expand(),
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
+                  Positioned.fill(
+                    top: 24,
+                    child: Column(
+                      children: [
+                        SizedBox(height: AppSizes.mealHeroHeight - heroOverlap),
+                        Expanded(
+                          child: DecoratedBox(
+                            decoration: const BoxDecoration(
+                              color: AppColors.backgroundAlt,
+                            ),
+                            child: const SizedBox.expand(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -702,8 +702,6 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                     child: MealHeroHeader(
                                       title: _mealTitle,
                                       timeLabel: _formatTime(_meal.timestamp),
-                                      image: _heroImage,
-                                      imageAlignment: _heroImageAlignment,
                                     ),
                                   ),
                                   Positioned(
@@ -744,8 +742,6 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                 child: MealHeroHeader(
                                   title: _mealTitle,
                                   timeLabel: _formatTime(_meal.timestamp),
-                                  image: _heroImage,
-                                  imageAlignment: _heroImageAlignment,
                                 ),
                               ),
                               Positioned(
