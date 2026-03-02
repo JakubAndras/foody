@@ -89,6 +89,7 @@ class DayRecordRepository extends GetxService {
       timestamp: meal.timestamp,
       photoPath: meal.photoPath,
       isFavorite: meal.isFavorite,
+      confidence: meal.confidence,
     );
 
     int mealId;
@@ -109,6 +110,7 @@ class DayRecordRepository extends GetxService {
               proteins: ingredient.proteins,
               carbs: ingredient.carbs,
               fats: ingredient.fats,
+              confidence: ingredient.confidence,
             ))
         .toList();
 
@@ -159,6 +161,7 @@ class DayRecordRepository extends GetxService {
       timestamp: meal.timestamp,
       photoPath: meal.photoPath,
       isFavorite: isFavorite,
+      confidence: meal.confidence,
     );
     await _mealDao.updateMeal(entity);
   }
@@ -214,6 +217,7 @@ class DayRecordRepository extends GetxService {
             timestamp: mealEntity.timestamp,
             photoPath: nextPhotoPath,
             isFavorite: mealEntity.isFavorite,
+            confidence: mealEntity.confidence,
           ),
         );
       }
@@ -262,6 +266,7 @@ class DayRecordRepository extends GetxService {
             proteins: ingredient.proteins,
             carbs: ingredient.carbs,
             fats: ingredient.fats,
+            confidence: ingredient.confidence,
           ),
         )
         .toList();
@@ -274,6 +279,7 @@ class DayRecordRepository extends GetxService {
       timestamp: mealEntity.timestamp,
       photoPath: mealEntity.photoPath,
       isFavorite: mealEntity.isFavorite,
+      confidence: mealEntity.confidence,
     );
   }
 

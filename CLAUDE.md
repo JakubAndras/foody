@@ -52,8 +52,8 @@ lib/
 │   └── home_widget/                   #   iOS/Android home screen widget sync
 │
 ├── database/                          # Floor ORM layer
-│   ├── app_database.dart              #   @Database definition, version 6
-│   ├── migrations.dart                #   migration1to2 … migration5to6
+│   ├── app_database.dart              #   @Database definition, version 8
+│   ├── migrations.dart                #   migration1to2 … migration7to8
 │   ├── entities/                      #   @Entity classes (DayRecord, Meal, Ingredient, WeightEntry, Exercise)
 │   └── dao/                           #   @dao classes (one per entity)
 │
@@ -147,8 +147,8 @@ dart format --line-length 180 lib/
 All state management uses GetX. Services extend `GetxService`, controllers extend `GetxController` (or `BaseController`). Access pattern: `static FooService get to => Get.find();`. All services/controllers are registered in `lib/locator.dart` via `Get.put()` (permanent) or `Get.lazyPut()`.
 
 ### Database: Floor ORM
-- Current DB version: **6** (`lib/database/app_database.dart`)
-- Migrations in `lib/database/migrations.dart` (migration1to2 through migration5to6)
+- Current DB version: **8** (`lib/database/app_database.dart`)
+- Migrations in `lib/database/migrations.dart` (migration1to2 through migration7to8)
 - Entities: `DayRecord`, `Meal`, `Ingredient`, `WeightEntry`, `Exercise` in `lib/database/entities/`
 - DAOs in `lib/database/dao/`
 - **Normalized FK schema**: `Meal.dayRecordId → DayRecord`, `Ingredient.mealId → Meal`, `Exercise.dayRecordId → DayRecord` — all CASCADE delete
@@ -239,7 +239,7 @@ Thesis requirements (FR-01 to FR-35). Status as of current codebase:
 | FR-05 | Data control and deletion | Partial — meal deletion works, no account deletion |
 | FR-06 | Photo-based meal entry | Done |
 | FR-07 | AI suggestions for items/portions | Done |
-| FR-08 | Uncertainty indication | Partial — low-confidence snackbar, no visual indicator |
+| FR-08 | Uncertainty indication | Done |
 | FR-09 | Explain AI limits | Partial — scan onboarding tips only |
 | FR-10 | AI error vs app error | Partial — pipeline distinguishes, UI limited |
 | FR-11 | Text fallback after photo failure | Done |

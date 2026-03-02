@@ -319,6 +319,8 @@
   "meal_manual_log": "Ruční záznam",
   "meal_share_meal": "Sdílet jídlo",
   "meal_share_summary": "Souhrn jídla: {title}",
+  "meal_duplicate_to_today": "Duplikovat na dnešek",
+  "meal_duplicated": "Jídlo duplikováno",
 
   "ingredient_title": "Upravit ingredienci",
   "ingredient_name": "Název ingredience",
@@ -584,5 +586,9 @@
   "ring_colors_red_segment": "Červený segment",
   "ring_colors_red_desc": "Kalorie nad cílem.",
   "ring_colors_gray_segment": "Šedý segment",
-  "ring_colors_gray_desc": "Zatím nesnědeno."
+  "ring_colors_gray_desc": "Zatím nesnědeno.",
+
+  "confidence_high": "Vysoká spolehlivost",
+  "confidence_medium": "Střední spolehlivost",
+  "confidence_low": "Nízká spolehlivost"
 }

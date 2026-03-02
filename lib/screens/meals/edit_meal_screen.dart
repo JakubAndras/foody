@@ -1,4 +1,5 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/controller/day_record_controller.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/ingredient.dart';
@@ -158,15 +159,27 @@ class _EditMealScreenState extends State<EditMealScreen> {
     if (_heroImage == null) return const SizedBox.shrink();
 
     return Positioned(
-      top: _heroBackdropTop,
+      top: 0,
       left: 0,
       right: 0,
-      height: _heroBackdropHeight,
-      child: IgnorePointer(
-        child: Image(
-          image: _heroImage!,
-          fit: BoxFit.cover,
-          alignment: _heroImageAlignment,
+      height: AppSizes.mealHeroHeight,
+      child: ClipRect(
+        child: IgnorePointer(
+          child: Stack(
+            children: [
+              Positioned(
+                top: _heroBackdropTop,
+                left: 0,
+                right: 0,
+                height: _heroBackdropHeight,
+                child: Image(
+                  image: _heroImage!,
+                  fit: BoxFit.cover,
+                  alignment: _heroImageAlignment,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -262,6 +275,24 @@ class _EditMealScreenState extends State<EditMealScreen> {
     if (!mounted) return;
     setState(() => _isSaving = false);
     Get.back(result: mealToSave);
+  }
+
+  Future<void> _handleDuplicateMeal() async {
+    final today = DateTime.now();
+    final todayNormalized = DateTime(today.year, today.month, today.day);
+    final duplicate = _buildWorkingMeal(forDate: todayNormalized).copyWith(
+      id: null,
+      dayRecordId: null,
+      timestamp: today,
+    );
+    await DayRecordController.to.saveMealForDate(
+      date: todayNormalized,
+      mealToSave: duplicate,
+    );
+    SelectedDateService.to.setSelectedDate(todayNormalized);
+    DashboardController.to.refresh();
+    if (!mounted) return;
+    Get.snackbar(tr(LocaleKeys.meal_duplicated), _meal.name, snackPosition: SnackPosition.BOTTOM);
   }
 
   Future<void> _handlePrimaryAction() async {
@@ -387,6 +418,14 @@ class _EditMealScreenState extends State<EditMealScreen> {
                           onTap: () {
                             Navigator.of(context).pop();
                             Get.to(() => const ReportMealScreen());
+                          },
+                        ),
+                        GlassActionSheetItem(
+                          label: tr(LocaleKeys.meal_duplicate_to_today),
+                          icon: Icons.content_copy_outlined,
+                          onTap: () {
+                            Navigator.of(context).pop();
+                            _handleDuplicateMeal();
                           },
                         ),
                         GlassActionSheetItem(
@@ -626,28 +665,28 @@ class _EditMealScreenState extends State<EditMealScreen> {
         backgroundColor: AppColors.backgroundAlt,
         body: Stack(
           children: [
-            _buildHeroBackdrop(),
+           // _buildHeroBackdrop(),
             SingleChildScrollView(
               controller: _scrollController,
               padding: EdgeInsets.only(bottom: bottomActionClearance),
               child: Stack(
                 children: [
-                  Positioned.fill(
-                    top: 24,
-                    child: Column(
-                      children: [
-                        SizedBox(height: AppSizes.mealHeroHeight - heroOverlap),
-                        Expanded(
-                          child: DecoratedBox(
-                            decoration: const BoxDecoration(
-                              color: AppColors.backgroundAlt,
-                            ),
-                            child: const SizedBox.expand(),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // Positioned.fill(
+                  //   top: 24,
+                  //   child: Column(
+                  //     children: [
+                  //       SizedBox(height: AppSizes.mealHeroHeight - heroOverlap),
+                  //       Expanded(
+                  //         child: DecoratedBox(
+                  //           decoration: const BoxDecoration(
+                  //             color: AppColors.backgroundAlt,
+                  //           ),
+                  //           child: const SizedBox.expand(),
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -700,6 +739,15 @@ class _EditMealScreenState extends State<EditMealScreen> {
                           height: AppSizes.mealHeroHeight + AppSizes.caloriesCardHeight - heroOverlap,
                           child: Stack(
                             children: [
+                              GestureDetector(
+                                onTap: _isBusy ? null : _openMealNameEditor,
+                                child: MealHeroHeader(
+                                  title: _mealTitle,
+                                  timeLabel: _formatTime(_meal.timestamp),
+                                  image: _heroImage,
+                                  imageAlignment: _heroImageAlignment,
+                                ),
+                              ),
                               Positioned(
                                 left: AppSpacing.edge,
                                 right: AppSpacing.edge,
@@ -932,11 +980,11 @@ class _EditMealScreenState extends State<EditMealScreen> {
   String _matchText(MatchBadgeVariant variant) {
     switch (variant) {
       case MatchBadgeVariant.medium:
-        return '72% Match';
+        return '72% Confidence';
       case MatchBadgeVariant.low:
-        return '48% Match';
+        return '48% Confidence';
       case MatchBadgeVariant.good:
-        return '94% Match';
+        return '94% Confidence';
     }
   }
 }

@@ -321,6 +321,8 @@ class CodegenLoader extends AssetLoader{
   "meal_manual_log": "Manual log",
   "meal_share_meal": "Share meal",
   "meal_share_summary": "Meal summary: {title}",
+  "meal_duplicate_to_today": "Duplicate to today",
+  "meal_duplicated": "Meal duplicated",
   "ingredient_title": "Edit Ingredient",
   "ingredient_name": "Ingredient name",
   "ingredient_measurement": "Measurement",
@@ -573,7 +575,10 @@ class CodegenLoader extends AssetLoader{
   "ring_colors_red_segment": "Red Segment",
   "ring_colors_red_desc": "Calories above goal.",
   "ring_colors_gray_segment": "Gray Segment",
-  "ring_colors_gray_desc": "Not eaten yet."
+  "ring_colors_gray_desc": "Not eaten yet.",
+  "confidence_high": "High confidence",
+  "confidence_medium": "Medium confidence",
+  "confidence_low": "Low confidence"
 };
 static const Map<String,dynamic> _cs = {
   "app_name": "Foody",
@@ -882,6 +887,8 @@ static const Map<String,dynamic> _cs = {
   "meal_manual_log": "Ruční záznam",
   "meal_share_meal": "Sdílet jídlo",
   "meal_share_summary": "Souhrn jídla: {title}",
+  "meal_duplicate_to_today": "Duplikovat na dnešek",
+  "meal_duplicated": "Jídlo duplikováno",
   "ingredient_title": "Upravit ingredienci",
   "ingredient_name": "Název ingredience",
   "ingredient_measurement": "Měření",
@@ -1134,7 +1141,10 @@ static const Map<String,dynamic> _cs = {
   "ring_colors_red_segment": "Červený segment",
   "ring_colors_red_desc": "Kalorie nad cílem.",
   "ring_colors_gray_segment": "Šedý segment",
-  "ring_colors_gray_desc": "Zatím nesnědeno."
+  "ring_colors_gray_desc": "Zatím nesnědeno.",
+  "confidence_high": "Vysoká spolehlivost",
+  "confidence_medium": "Střední spolehlivost",
+  "confidence_low": "Nízká spolehlivost"
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"en": _en, "cs": _cs};
 }

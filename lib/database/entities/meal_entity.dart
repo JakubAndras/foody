@@ -21,6 +21,7 @@ class MealEntity {
   final DateTime timestamp;
   final String? photoPath;
   final bool isFavorite;
+  final double? confidence;
 
   MealEntity({
     this.id,
@@ -29,6 +30,7 @@ class MealEntity {
     required this.timestamp,
     this.photoPath,
     this.isFavorite = false,
+    this.confidence,
   });
 
   MealEntity copyWith({
@@ -38,6 +40,7 @@ class MealEntity {
     DateTime? timestamp,
     String? photoPath,
     bool? isFavorite,
+    double? confidence,
   }) {
     return MealEntity(
       id: id ?? this.id,
@@ -46,6 +49,7 @@ class MealEntity {
       timestamp: timestamp ?? this.timestamp,
       photoPath: photoPath ?? this.photoPath,
       isFavorite: isFavorite ?? this.isFavorite,
+      confidence: confidence ?? this.confidence,
     );
   }
 }

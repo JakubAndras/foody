@@ -15,6 +15,7 @@ class MealHeroHeader extends StatelessWidget {
   final String timeLabel;
   final ImageProvider? image;
   final Alignment imageAlignment;
+  final double? confidence;
 
   const MealHeroHeader({
     super.key,
@@ -22,6 +23,7 @@ class MealHeroHeader extends StatelessWidget {
     required this.timeLabel,
     this.image,
     this.imageAlignment = Alignment.center,
+    this.confidence,
   });
 
   @override
@@ -70,19 +72,27 @@ class MealHeroHeader extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.access_time, size: AppSizes.iconSm, color: AppColors.onPrimary),
+                    Icon(Icons.access_time, size: AppSizes.iconSm, color: AppColors.onPrimary.withValues(alpha: 0.8)),
                     const SizedBox(width: AppSpacing.xs),
-                    Text(
-                      timeLabel,
-                      style: AppTextStyles.caption12.copyWith(color: AppColors.onPrimary.withValues(alpha: 0.8)),
-                    ),
+                    Column(
+                      children: [
+                        Text(
+                          timeLabel,
+                          style: AppTextStyles.caption12.copyWith(color: AppColors.onPrimary.withValues(alpha: 0.8)),
+                        ),
+                        const SizedBox(height: 0.5),
+                      ],
+                    )
                   ],
                 ),
                 const SizedBox(height: AppSpacing.xxs),
                 Text(
                   title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: AppTextStyles.title24.copyWith(color: AppColors.onPrimary),
                 ),
+                const SizedBox(height: AppSpacing.xxs),
               ],
             ),
           ),
@@ -139,6 +149,25 @@ class MatchBadge extends StatelessWidget {
         style: AppTextStyles.badge14.copyWith(color: _textColor),
       ),
     );
+  }
+}
+
+class ConfidenceBadge extends StatelessWidget {
+  final double confidence;
+
+  const ConfidenceBadge({super.key, required this.confidence});
+
+  MatchBadgeVariant get _variant {
+    if (confidence >= 0.7) return MatchBadgeVariant.good;
+    if (confidence >= 0.45) return MatchBadgeVariant.medium;
+    return MatchBadgeVariant.low;
+  }
+
+  String get _label => '${(confidence * 100).round()}%';
+
+  @override
+  Widget build(BuildContext context) {
+    return MatchBadge(text: _label, variant: _variant);
   }
 }
 

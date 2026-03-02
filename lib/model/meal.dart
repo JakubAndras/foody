@@ -9,6 +9,7 @@ class Meal {
   final DateTime timestamp;
   final String? photoPath;
   final bool isFavorite;
+  final double? confidence;
 
   Meal({
     this.id,
@@ -18,6 +19,7 @@ class Meal {
     required this.timestamp,
     this.photoPath,
     this.isFavorite = false,
+    this.confidence,
   });
 
   // Factory constructor for creating a new Meal instance from a map.
@@ -32,6 +34,7 @@ class Meal {
       timestamp: DateTime.parse(json['timestamp'] as String),
       photoPath: json['photoPath'] as String?,
       isFavorite: json['isFavorite'] as bool? ?? false,
+      confidence: (json['confidence'] as num?)?.toDouble(),
     );
   }
 
@@ -52,14 +55,16 @@ class Meal {
         calories: ingResponse.nutritionalValues.calories.toDouble(),
         proteins: ingResponse.nutritionalValues.proteins,
         carbs: ingResponse.nutritionalValues.carbs,
-        fats: ingResponse.nutritionalValues.fats, // Corrected from 'fats' to 'fat' if Ingredient model uses 'fat'
+        fats: ingResponse.nutritionalValues.fats,
+        confidence: ingResponse.confidence,
       );
     }).toList();
 
     return Meal(
       name: answer.name,
       ingredients: ingredients,
-      timestamp: DateTime.now(), // Defaulting to current time, adjust if needed
+      timestamp: DateTime.now(),
+      confidence: answer.confidence,
     );
   }
 
@@ -73,6 +78,7 @@ class Meal {
       'timestamp': timestamp.toIso8601String(),
       'photoPath': photoPath,
       'isFavorite': isFavorite,
+      'confidence': confidence,
     };
   }
 
@@ -84,6 +90,7 @@ class Meal {
     DateTime? timestamp,
     String? photoPath,
     bool? isFavorite,
+    double? confidence,
   }) {
     return Meal(
       id: id ?? this.id,
@@ -93,6 +100,7 @@ class Meal {
       timestamp: timestamp ?? this.timestamp,
       photoPath: photoPath ?? this.photoPath,
       isFavorite: isFavorite ?? this.isFavorite,
+      confidence: confidence ?? this.confidence,
     );
   }
 

@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/model/exercise.dart';
 import 'package:diplomka/model/meal.dart';
+import 'package:diplomka/screens/meals/meal_components.dart';
 import 'package:diplomka/utils/media_storage.dart';
 import 'package:diplomka/widgets/progress_ring.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -18,6 +19,7 @@ class RecentlyUploadedCard extends StatelessWidget {
   final List<Exercise> exercises;
   final DateTime selectedDate;
   final Function(Meal meal)? onMealTap;
+  final Function(Meal meal)? onMealLongPress;
   final Function(Exercise exercise)? onExerciseTap;
 
   const RecentlyUploadedCard({
@@ -26,6 +28,7 @@ class RecentlyUploadedCard extends StatelessWidget {
     required this.exercises,
     required this.selectedDate,
     this.onMealTap,
+    this.onMealLongPress,
     this.onExerciseTap,
   });
 
@@ -160,6 +163,7 @@ class RecentlyUploadedCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () => onMealTap?.call(meal),
+      onLongPress: () => onMealLongPress?.call(meal),
       child: Container(
         height: AppSizes.mealCardHeight,
         margin: const EdgeInsets.symmetric(vertical: AppSpacing.xxs + 1),
@@ -227,6 +231,10 @@ class RecentlyUploadedCard extends StatelessWidget {
                         _MacroDot(value: meal.totalCarbs.toStringAsFixed(0), color: AppColors.macroCarbs),
                         const SizedBox(width: AppSpacing.s),
                         _MacroDot(value: meal.totalFats.toStringAsFixed(0), color: AppColors.macroFats),
+                        if (meal.confidence != null) ...[
+                          const Spacer(),
+                          ConfidenceBadge(confidence: meal.confidence!),
+                        ],
                       ],
                     ),
                   ],

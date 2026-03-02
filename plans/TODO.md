@@ -24,12 +24,8 @@
 - UI to create/edit/delete custom presets
 - Quick-apply preset in ingredient edit screen
 
-### FR-19: Duplicate Previous Meal Record :x:
-**Current state:** Exercise duplication works (`exercise_log_home_screen.dart:34-65`). No meal duplication exists.
-**What's needed:**
-- "Duplicate to today" action on meal cards (dashboard + meal detail + select meal)
-- Clone meal + all ingredients with new timestamp
-- Date picker option for target day
+### FR-19: Duplicate Previous Meal Record :white_check_mark:
+**Done:** "Duplicate to today" action added in EditMealScreen action sheet (3-dot menu) and as long-press on dashboard meal cards. Uses `Meal.copyWith(id: null, dayRecordId: null)` pattern to clone meal + all ingredients with new timestamp to the currently selected date. SelectMealScreen already had `_addMealToToday()` which serves the same purpose for history items.
 
 ### FR-20: Name Autocomplete from History :white_check_mark:
 **Done:** Autocomplete suggestions implemented in `SelectMealScreen`. As the user types in the search bar, a floating dropdown shows up to 5 frequency-weighted suggestions derived from distinct meal and ingredient names in the user's history. Suggestions respect the active tab (Meals/Ingredients/All/Favorites). Tapping a suggestion fills the search field and filters results. Uses `FocusNode` to show/hide suggestions on focus changes.
@@ -110,13 +106,8 @@
 - Bulk data deletion ("delete all my data")
 - Export before delete option
 
-### FR-08: Uncertainty Indication :warning:
-**Works:** Confidence thresholds in `ai_pipeline_service.dart:16-17` (meal ≥ 0.45, exercise ≥ 0.35). Low-confidence snackbar shown.
-**Missing:**
-- Persistent visual indicator on meal/ingredient cards (badge, icon, color)
-- Per-ingredient confidence display
-- Confidence percentage visible to user
-- Visual distinction between high/medium/low confidence results
+### FR-08: Uncertainty Indication :white_check_mark:
+**Done:** Confidence scores from AI analysis are now persisted in DB (migration v7→v8) on both `Meal` and `Ingredient` models. `Meal.fromAnswer()` preserves `answer.confidence` and per-ingredient `ingResponse.confidence`. Visual indicators: `ConfidenceBadge` widget (colored pill with percentage) shown on `MealHeroHeader`, `IngredientRow`, and `EditIngredientRow`. Dashboard meal cards show a colored confidence dot (green/yellow/red). Thresholds: ≥70% green, ≥45% yellow, <45% red. Null confidence (manual entries, pre-migration data) shows no badge.
 
 ### FR-09: Explain AI Limits :warning:
 **Works:** Scan onboarding tips (`scan_onboarding_screen.dart:19-60`).
@@ -265,11 +256,11 @@
 5. **Localization** — Extract hardcoded strings to translation files // DONE
 
 ### Medium Priority (Important for completeness)
-6. **FR-08** — Visual confidence indicators on meals
+6. **FR-08** — Visual confidence indicators on meals // DONE
 7. **FR-27** — Goal exceedance alerts
 8. **FR-35** — Working feature toggles
 9. **FR-15** — Unit types beyond grams
-10. **FR-19** — Meal duplication
+10. **FR-19** — Meal duplication // DONE
 11. **FR-20** — Name autocomplete from history // DONE
 12. **Meal Report** — Wire up report submission
 13. **Dark Mode** — Theme toggle + system detection

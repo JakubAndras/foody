@@ -88,7 +88,7 @@ class _$AppDatabase extends AppDatabase {
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 7,
+      version: 8,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -106,9 +106,9 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `DayRecord` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` INTEGER NOT NULL, `calorieGoal` REAL NOT NULL, `proteinGoal` REAL NOT NULL, `carbsGoal` REAL NOT NULL, `fatGoal` REAL NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Meal` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `dayRecordId` INTEGER NOT NULL, `name` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `photoPath` TEXT, `isFavorite` INTEGER NOT NULL, FOREIGN KEY (`dayRecordId`) REFERENCES `DayRecord` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `Meal` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `dayRecordId` INTEGER NOT NULL, `name` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `photoPath` TEXT, `isFavorite` INTEGER NOT NULL, `confidence` REAL, FOREIGN KEY (`dayRecordId`) REFERENCES `DayRecord` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Ingredient` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `mealId` INTEGER NOT NULL, `name` TEXT NOT NULL, `weight` REAL NOT NULL, `calories` REAL NOT NULL, `proteins` REAL NOT NULL, `carbs` REAL NOT NULL, `fats` REAL NOT NULL, FOREIGN KEY (`mealId`) REFERENCES `Meal` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `Ingredient` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `mealId` INTEGER NOT NULL, `name` TEXT NOT NULL, `weight` REAL NOT NULL, `calories` REAL NOT NULL, `proteins` REAL NOT NULL, `carbs` REAL NOT NULL, `fats` REAL NOT NULL, `confidence` REAL, FOREIGN KEY (`mealId`) REFERENCES `Meal` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `WeightEntry` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` INTEGER NOT NULL, `weight` REAL NOT NULL)');
         await database.execute(
@@ -289,7 +289,8 @@ class _$MealDao extends MealDao {
                   'name': item.name,
                   'timestamp': _dateTimeConverter.encode(item.timestamp),
                   'photoPath': item.photoPath,
-                  'isFavorite': item.isFavorite ? 1 : 0
+                  'isFavorite': item.isFavorite ? 1 : 0,
+                  'confidence': item.confidence
                 }),
         _mealEntityUpdateAdapter = UpdateAdapter(
             database,
@@ -301,7 +302,8 @@ class _$MealDao extends MealDao {
                   'name': item.name,
                   'timestamp': _dateTimeConverter.encode(item.timestamp),
                   'photoPath': item.photoPath,
-                  'isFavorite': item.isFavorite ? 1 : 0
+                  'isFavorite': item.isFavorite ? 1 : 0,
+                  'confidence': item.confidence
                 }),
         _mealEntityDeletionAdapter = DeletionAdapter(
             database,
@@ -313,7 +315,8 @@ class _$MealDao extends MealDao {
                   'name': item.name,
                   'timestamp': _dateTimeConverter.encode(item.timestamp),
                   'photoPath': item.photoPath,
-                  'isFavorite': item.isFavorite ? 1 : 0
+                  'isFavorite': item.isFavorite ? 1 : 0,
+                  'confidence': item.confidence
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -337,7 +340,8 @@ class _$MealDao extends MealDao {
             name: row['name'] as String,
             timestamp: _dateTimeConverter.decode(row['timestamp'] as int),
             photoPath: row['photoPath'] as String?,
-            isFavorite: (row['isFavorite'] as int) != 0),
+            isFavorite: (row['isFavorite'] as int) != 0,
+            confidence: row['confidence'] as double?),
         arguments: [dayRecordId]);
   }
 
@@ -350,7 +354,8 @@ class _$MealDao extends MealDao {
             name: row['name'] as String,
             timestamp: _dateTimeConverter.decode(row['timestamp'] as int),
             photoPath: row['photoPath'] as String?,
-            isFavorite: (row['isFavorite'] as int) != 0),
+            isFavorite: (row['isFavorite'] as int) != 0,
+            confidence: row['confidence'] as double?),
         arguments: [id]);
   }
 
@@ -405,7 +410,8 @@ class _$IngredientDao extends IngredientDao {
                   'calories': item.calories,
                   'proteins': item.proteins,
                   'carbs': item.carbs,
-                  'fats': item.fats
+                  'fats': item.fats,
+                  'confidence': item.confidence
                 }),
         _ingredientEntityUpdateAdapter = UpdateAdapter(
             database,
@@ -419,7 +425,8 @@ class _$IngredientDao extends IngredientDao {
                   'calories': item.calories,
                   'proteins': item.proteins,
                   'carbs': item.carbs,
-                  'fats': item.fats
+                  'fats': item.fats,
+                  'confidence': item.confidence
                 }),
         _ingredientEntityDeletionAdapter = DeletionAdapter(
             database,
@@ -433,7 +440,8 @@ class _$IngredientDao extends IngredientDao {
                   'calories': item.calories,
                   'proteins': item.proteins,
                   'carbs': item.carbs,
-                  'fats': item.fats
+                  'fats': item.fats,
+                  'confidence': item.confidence
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -459,7 +467,8 @@ class _$IngredientDao extends IngredientDao {
             calories: row['calories'] as double,
             proteins: row['proteins'] as double,
             carbs: row['carbs'] as double,
-            fats: row['fats'] as double),
+            fats: row['fats'] as double,
+            confidence: row['confidence'] as double?),
         arguments: [mealId]);
   }
 

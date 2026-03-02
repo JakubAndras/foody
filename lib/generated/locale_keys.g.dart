@@ -309,6 +309,8 @@ abstract class  LocaleKeys {
   static const meal_manual_log = 'meal_manual_log';
   static const meal_share_meal = 'meal_share_meal';
   static const meal_share_summary = 'meal_share_summary';
+  static const meal_duplicate_to_today = 'meal_duplicate_to_today';
+  static const meal_duplicated = 'meal_duplicated';
   static const ingredient_title = 'ingredient_title';
   static const ingredient_name = 'ingredient_name';
   static const ingredient_measurement = 'ingredient_measurement';
@@ -562,5 +564,8 @@ abstract class  LocaleKeys {
   static const ring_colors_red_desc = 'ring_colors_red_desc';
   static const ring_colors_gray_segment = 'ring_colors_gray_segment';
   static const ring_colors_gray_desc = 'ring_colors_gray_desc';
+  static const confidence_high = 'confidence_high';
+  static const confidence_medium = 'confidence_medium';
+  static const confidence_low = 'confidence_low';
 
 }

@@ -1,7 +1,9 @@
 import 'package:diplomka/controller/dashboard_controller.dart';
+import 'package:diplomka/controller/day_record_controller.dart';
 import 'package:diplomka/screens/meals/meal_detail_screen.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 import 'package:diplomka/services/day_record_repository.dart';
+import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/widgets/calories_card.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
@@ -96,6 +98,15 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
                                     onMealTap: (meal) async {
                                       await Get.to(() => MealDetailScreen(meal: meal));
                                       dashboardController.refresh();
+                                    },
+                                    onMealLongPress: (meal) async {
+                                      final today = DateTime.now();
+                                      final todayNormalized = DateTime(today.year, today.month, today.day);
+                                      final duplicate = meal.copyWith(id: null, dayRecordId: null, timestamp: today);
+                                      await DayRecordController.to.saveMealForDate(date: todayNormalized, mealToSave: duplicate);
+                                      SelectedDateService.to.setSelectedDate(todayNormalized);
+                                      dashboardController.refresh();
+                                      Get.snackbar(tr(LocaleKeys.meal_duplicated), meal.name, snackPosition: SnackPosition.BOTTOM);
                                     },
                                   ),
                                 ],

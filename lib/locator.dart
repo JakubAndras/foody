@@ -36,7 +36,7 @@ import 'database/migrations.dart';
 Future<void> setupServices() async {
   await MediaStorage.initialize();
   final AppDatabase db = await Get.putAsync(
-      () => $FloorAppDatabase.databaseBuilder(AppDatabase.databaseName).addMigrations([migration1to2, migration2to3, migration3to4, migration4to5, migration5to6, migration6to7]).build());
+      () => $FloorAppDatabase.databaseBuilder(AppDatabase.databaseName).addMigrations([migration1to2, migration2to3, migration3to4, migration4to5, migration5to6, migration6to7, migration7to8]).build());
 
   /// Inicializace singleton GetxService - jednodušší nalezení controlleru v paměti;
   Get.lazyPut<SharedPreferencesService>(() => SharedPreferencesService());

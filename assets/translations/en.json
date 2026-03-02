@@ -319,6 +319,8 @@
   "meal_manual_log": "Manual log",
   "meal_share_meal": "Share meal",
   "meal_share_summary": "Meal summary: {title}",
+  "meal_duplicate_to_today": "Duplicate to today",
+  "meal_duplicated": "Meal duplicated",
 
   "ingredient_title": "Edit Ingredient",
   "ingredient_name": "Ingredient name",
@@ -584,5 +586,9 @@
   "ring_colors_red_segment": "Red Segment",
   "ring_colors_red_desc": "Calories above goal.",
   "ring_colors_gray_segment": "Gray Segment",
-  "ring_colors_gray_desc": "Not eaten yet."
+  "ring_colors_gray_desc": "Not eaten yet.",
+
+  "confidence_high": "High confidence",
+  "confidence_medium": "Medium confidence",
+  "confidence_low": "Low confidence"
 }
