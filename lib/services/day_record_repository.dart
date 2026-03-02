@@ -137,6 +137,7 @@ class DayRecordRepository extends GetxService {
       timestamp: exercise.timestamp,
       durationMinutes: exercise.durationMinutes,
       caloriesBurned: exercise.caloriesBurned,
+      isFavorite: exercise.isFavorite,
     );
 
     if (exercise.id == null) {
@@ -160,6 +161,20 @@ class DayRecordRepository extends GetxService {
       isFavorite: isFavorite,
     );
     await _mealDao.updateMeal(entity);
+  }
+
+  Future<void> updateExerciseFavorite({required Exercise exercise, required bool isFavorite}) async {
+    if (exercise.id == null || exercise.dayRecordId == null) return;
+    final entity = ExerciseEntity(
+      id: exercise.id,
+      dayRecordId: exercise.dayRecordId!,
+      name: exercise.name,
+      timestamp: exercise.timestamp,
+      durationMinutes: exercise.durationMinutes,
+      caloriesBurned: exercise.caloriesBurned,
+      isFavorite: isFavorite,
+    );
+    await _exerciseDao.updateExercise(entity);
   }
 
   Future<void> repairMealPhotoPaths() async {
@@ -270,6 +285,7 @@ class DayRecordRepository extends GetxService {
       timestamp: exerciseEntity.timestamp,
       durationMinutes: exerciseEntity.durationMinutes,
       caloriesBurned: exerciseEntity.caloriesBurned,
+      isFavorite: exerciseEntity.isFavorite,
     );
   }
 

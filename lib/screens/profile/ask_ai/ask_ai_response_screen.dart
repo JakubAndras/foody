@@ -1,6 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/ask_ai_query_response.dart';
 import 'package:diplomka/screens/dashboard_screen.dart';
 import 'package:diplomka/screens/profile/ask_ai/ask_ai_widgets.dart' show AskAiResponseCard, AskAiSummaryCard, AskAiCalendarCard, AskAiPrimaryButton;
@@ -20,13 +22,13 @@ class AskAiResponseScreen extends StatelessWidget {
 
   Future<void> _handleShare(BuildContext context) async {
     final text = [
-      'Ask AI nutrition insight',
+      tr(LocaleKeys.ask_ai_title),
       '',
-      'Question: $query',
+      '${tr(LocaleKeys.ask_ai_question_label)}: $query',
       '',
-      'Summary: ${response.summaryValue} ${response.summaryLabel}',
-      'Period: ${response.periodLabel}',
-      if (response.primaryMonthDays.isNotEmpty) 'Affected days: ${response.primaryMonthDays.join(', ')}',
+      '${tr(LocaleKeys.ask_ai_summary_label)}: ${response.summaryValue} ${response.summaryLabel}',
+      '${tr(LocaleKeys.ask_ai_period_label)}: ${response.periodLabel}',
+      if (response.primaryMonthDays.isNotEmpty) '${tr(LocaleKeys.ask_ai_affected_days_label)}: ${response.primaryMonthDays.join(', ')}',
       '',
       response.responseText,
     ].join('\n');
@@ -34,14 +36,14 @@ class AskAiResponseScreen extends StatelessWidget {
     try {
       await AppShareService.shareText(
         text: text,
-        title: 'Ask AI insight',
-        subject: 'Nutrition insight',
+        title: tr(LocaleKeys.ask_ai_title),
+        subject: tr(LocaleKeys.ask_ai_share_subject),
         context: context,
       );
     } catch (_) {
       Get.snackbar(
-        'Share unavailable',
-        'Unable to open the share sheet right now.',
+        tr(LocaleKeys.ask_ai_share_unavailable),
+        tr(LocaleKeys.ask_ai_share_error),
         snackPosition: SnackPosition.BOTTOM,
       );
     }
@@ -55,7 +57,7 @@ class AskAiResponseScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ProfileTopBar(title: 'Ask AI', onBack: () => Get.back()),
+          ProfileTopBar(title: tr(LocaleKeys.ask_ai_title), onBack: () => Get.back()),
           const SizedBox(height: AppSpacing.m),
           AskAiResponseCard(text: response.responseText),
           const SizedBox(height: AppSpacing.m),
@@ -81,7 +83,7 @@ class AskAiResponseScreen extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: AskAiPrimaryButton(
-              label: 'Share',
+              label: tr(LocaleKeys.common_share),
               leading: const Icon(Icons.share, size: AppSizes.iconMd, color: AppColors.onPrimary),
               gradient: AppGradients.primary,
               onPressed: () => _handleShare(context),

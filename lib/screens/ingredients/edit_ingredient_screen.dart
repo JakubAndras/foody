@@ -1,7 +1,9 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/ingredient.dart';
 import 'package:diplomka/screens/meals/meal_components.dart';
 import 'package:diplomka/widgets/edit_flow/edit_flow_widgets.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -135,21 +137,21 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
 
   String? get _validationMessage {
     if (_nameController.text.trim().isEmpty) {
-      return 'Ingredient name is required.';
+      return tr(LocaleKeys.ingredient_name_required);
     }
     final weight = _parseNumber(_amountController.text);
     if (weight == null || weight <= 0) {
-      return 'Enter a valid amount greater than 0.';
+      return tr(LocaleKeys.ingredient_valid_amount);
     }
     final calories = _parseNumber(_caloriesController.text);
     final protein = _parseNumber(_proteinController.text);
     final carbs = _parseNumber(_carbsController.text);
     final fat = _parseNumber(_fatController.text);
     if (calories == null || protein == null || carbs == null || fat == null) {
-      return 'Calories, protein, carbs, and fat must be valid numbers.';
+      return tr(LocaleKeys.ingredient_valid_numbers);
     }
     if (calories < 0 || protein < 0 || carbs < 0 || fat < 0) {
-      return 'Calories, protein, carbs, and fat cannot be negative.';
+      return tr(LocaleKeys.ingredient_no_negative);
     }
     return null;
   }
@@ -161,10 +163,10 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
       builder: (context) => Padding(
         padding: const EdgeInsets.all(AppSpacing.m),
         child: EditConfirmSheet(
-          title: 'Delete ingredient?',
-          message: 'This will remove the ingredient from the meal.',
-          confirmLabel: 'Delete',
-          cancelLabel: 'Cancel',
+          title: tr(LocaleKeys.ingredient_delete_title),
+          message: tr(LocaleKeys.ingredient_delete_message),
+          confirmLabel: tr(LocaleKeys.common_delete),
+          cancelLabel: tr(LocaleKeys.common_cancel),
           confirmColor: AppColors.destructive,
           onCancel: () => Navigator.of(context).pop(false),
           onConfirm: () => Navigator.of(context).pop(true),
@@ -204,7 +206,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
                       icon: Icons.chevron_left,
                       onTap: () => Navigator.of(context).maybePop(),
                     ),
-                    Text('Edit Ingredient', style: AppTextStyles.navTitle18),
+                    Text(tr(LocaleKeys.ingredient_title), style: AppTextStyles.navTitle18),
                     if (widget.allowDelete)
                       _CircleIconButton(
                         icon: Icons.delete_outline,
@@ -236,15 +238,15 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
                               border: InputBorder.none,
                               isDense: true,
                               contentPadding: EdgeInsets.zero,
-                              hintText: 'Ingredient name',
+                              hintText: tr(LocaleKeys.ingredient_name),
                               hintStyle: AppTextStyles.headline36.copyWith(color: AppColors.textTertiary),
                             ),
                           ),
                           const SizedBox(height: AppSpacing.l),
-                          Text('Measurement', style: AppTextStyles.formLabel16),
+                          Text(tr(LocaleKeys.ingredient_measurement), style: AppTextStyles.formLabel16),
                           const SizedBox(height: AppSpacing.s),
                           MeasurementChips(
-                            options: const ['Fraction', 'G', 'Small', 'Medium', 'Large'],
+                            options: [tr(LocaleKeys.ingredient_fraction), tr(LocaleKeys.common_g), tr(LocaleKeys.ingredient_small), tr(LocaleKeys.ingredient_medium), tr(LocaleKeys.ingredient_large)],
                             selectedIndex: _selectedMeasurement,
                             onChanged: (index) => setState(() => _selectedMeasurement = index),
                           ),
@@ -252,7 +254,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('Amount', style: AppTextStyles.formLabel16),
+                              Text(tr(LocaleKeys.ingredient_amount), style: AppTextStyles.formLabel16),
                               _AmountInputField(
                                 controller: _amountController,
                                 onChanged: (_) {},
@@ -281,7 +283,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
                         children: [
                           Expanded(
                             child: _EditableMacroCard(
-                              label: 'Protein',
+                              label: tr(LocaleKeys.common_protein),
                               icon: Icons.bolt,
                               iconColor: AppColors.macroProtein,
                               controller: _proteinController,
@@ -290,7 +292,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
                           const SizedBox(width: AppSpacing.s),
                           Expanded(
                             child: _EditableMacroCard(
-                              label: 'Carbs',
+                              label: tr(LocaleKeys.common_carbs),
                               icon: Icons.grain,
                               iconColor: AppColors.macroCarbsStrong,
                               controller: _carbsController,
@@ -299,7 +301,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
                           const SizedBox(width: AppSpacing.s),
                           Expanded(
                             child: _EditableMacroCard(
-                              label: 'Fats',
+                              label: tr(LocaleKeys.common_fats),
                               icon: Icons.opacity,
                               iconColor: AppColors.macroFats,
                               controller: _fatController,
@@ -325,7 +327,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
             AppSpacing.l + MediaQuery.of(context).viewInsets.bottom,
           ),
           child: GradientPillButton(
-            label: 'Done',
+            label: tr(LocaleKeys.common_done),
             gradient: AppGradients.primary,
             height: AppSizes.buttonHeightCompact,
             onTap: _isValid ? _handleDone : null,
@@ -417,7 +419,7 @@ class _EditableCaloriesCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Calories', style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary)),
+          Text(tr(LocaleKeys.common_calories), style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary)),
           const SizedBox(height: AppSpacing.xs),
           Expanded(
             child: Row(
@@ -438,7 +440,7 @@ class _EditableCaloriesCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(bottom: AppSpacing.xs),
                   child: Text(
-                    'kcal',
+                    tr(LocaleKeys.common_kcal),
                     style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary),
                   ),
                 ),
@@ -508,7 +510,7 @@ class _EditableMacroCard extends StatelessWidget {
                 ),
               ),
               Text(
-                'g',
+                tr(LocaleKeys.common_g),
                 style: AppTextStyles.caption12.copyWith(color: AppColors.textSecondary),
               ),
             ],

@@ -1,7 +1,9 @@
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/ingredient.dart';
 import 'package:diplomka/model/meal.dart';
 import 'package:diplomka/services/share/app_share_service.dart';
 import 'package:diplomka/utils/media_storage.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:share_plus/share_plus.dart';
 
 class MealShareBuilder {
@@ -20,20 +22,20 @@ class MealShareBuilder {
 
     final lines = <String>[
       title,
-      'Date: ${_formatDate(meal.timestamp)}',
+      '${tr(LocaleKeys.export_csv_date)}: ${_formatDate(meal.timestamp)}',
       'Time: ${_formatTime(meal.timestamp)}',
       if (mealtimeLabel != null && mealtimeLabel.trim().isNotEmpty) 'Meal time: ${mealtimeLabel.trim()}',
-      'Calories: ${totalCalories.toStringAsFixed(0)} kcal',
-      'Macros: P ${totalProteins.toStringAsFixed(0)} g | C ${totalCarbs.toStringAsFixed(0)} g | F ${totalFats.toStringAsFixed(0)} g',
+      '${tr(LocaleKeys.common_calories)}: ${totalCalories.toStringAsFixed(0)} ${tr(LocaleKeys.common_kcal)}',
+      '${tr(LocaleKeys.common_protein)} ${totalProteins.toStringAsFixed(0)}${tr(LocaleKeys.common_g)} | ${tr(LocaleKeys.common_carbs)} ${totalCarbs.toStringAsFixed(0)}${tr(LocaleKeys.common_g)} | ${tr(LocaleKeys.common_fats)} ${totalFats.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
       '',
-      'Ingredients:',
-      if (ingredients.isEmpty) '- No ingredients',
+      '${tr(LocaleKeys.common_ingredients)}:',
+      if (ingredients.isEmpty) '- ${tr(LocaleKeys.common_no_items_found)}',
       ...ingredients.map(_ingredientLine),
     ];
 
     return AppShareRequest(
-      title: 'Share meal',
-      subject: 'Meal summary: $title',
+      title: tr(LocaleKeys.meal_share_meal),
+      subject: '${tr(LocaleKeys.meal_share_summary)}: $title',
       text: lines.join('\n'),
       files: _photoFiles(includePhoto: includePhoto, photoPath: meal.photoPath),
     );
@@ -41,7 +43,7 @@ class MealShareBuilder {
 
   static String _mealTitle(String rawName) {
     final trimmed = rawName.trim();
-    return trimmed.isEmpty ? 'Untitled meal' : trimmed;
+    return trimmed.isEmpty ? tr(LocaleKeys.meal_untitled) : trimmed;
   }
 
   static String _formatDate(DateTime date) {
@@ -62,15 +64,15 @@ class MealShareBuilder {
   static String _ingredientLine(Ingredient ingredient) {
     final weight = _formatWeight(ingredient.weight);
     final calories = ingredient.calories.toStringAsFixed(0);
-    return '- ${ingredient.name}: $weight, $calories kcal';
+    return '- ${ingredient.name}: $weight, $calories ${tr(LocaleKeys.common_kcal)}';
   }
 
   static String _formatWeight(double value) {
     final rounded = value.roundToDouble();
     if ((value - rounded).abs() < 0.01) {
-      return '${rounded.toStringAsFixed(0)} g';
+      return '${rounded.toStringAsFixed(0)} ${tr(LocaleKeys.common_g)}';
     }
-    return '${value.toStringAsFixed(1)} g';
+    return '${value.toStringAsFixed(1)} ${tr(LocaleKeys.common_g)}';
   }
 
   static List<XFile>? _photoFiles({

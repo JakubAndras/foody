@@ -1,6 +1,8 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -55,7 +57,7 @@ class _OnboardingWeightLossSpeedScreenState extends State<OnboardingWeightLossSp
       progress: widget.step / widget.totalSteps,
       onBack: widget.onBack,
       bottom: OnboardingPrimaryButton(
-        label: 'Continue',
+        label: tr(LocaleKeys.common_continue_btn),
         onPressed: () async {
           await SessionManager.to.setWeightChangeRateKgPerWeek(_value);
           widget.onNext();

@@ -1,8 +1,9 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class OnboardingPlanReadyScreen extends StatelessWidget {
   const OnboardingPlanReadyScreen({
@@ -31,12 +32,12 @@ class OnboardingPlanReadyScreen extends StatelessWidget {
     final double speedKgPerWeek = (SessionManager.to.weightChangeRateKgPerWeek.value ?? 0.8).clamp(0.1, 1.5);
 
     if (currentWeightKg == null || desiredWeightKg == null) {
-      return 'Set your goal to see estimate';
+      return tr(LocaleKeys.onboarding_set_goal_hint);
     }
 
     final double deltaKg = (currentWeightKg - desiredWeightKg).abs();
     if (deltaKg < 0.1) {
-      return 'Maintain current weight';
+      return tr(LocaleKeys.onboarding_maintain_current);
     }
 
     final bool isLosingWeight = desiredWeightKg < currentWeightKg;
@@ -44,7 +45,7 @@ class OnboardingPlanReadyScreen extends StatelessWidget {
     final int daysToGoal = (weeksToGoal * 7).ceil();
     final DateTime targetDate = DateTime.now().add(Duration(days: daysToGoal));
     final String formattedDate = DateFormat('MMMM d, y').format(targetDate);
-    final String action = isLosingWeight ? 'Lose' : 'Gain';
+    final String action = isLosingWeight ? tr(LocaleKeys.onboarding_action_lose) : tr(LocaleKeys.onboarding_action_gain);
 
     return '$action ${_formatKg(deltaKg)} kg by $formattedDate';
   }
@@ -53,12 +54,12 @@ class OnboardingPlanReadyScreen extends StatelessWidget {
     final double? currentWeightKg = SessionManager.to.weightKg.value;
     final double? desiredWeightKg = SessionManager.to.goalWeightKg.value;
     if (currentWeightKg == null || desiredWeightKg == null) {
-      return 'Your goal:';
+      return tr(LocaleKeys.onboarding_your_goal);
     }
     if ((currentWeightKg - desiredWeightKg).abs() < 0.1) {
-      return 'You should maintain:';
+      return tr(LocaleKeys.onboarding_you_should_maintain);
     }
-    return desiredWeightKg < currentWeightKg ? 'You should lose:' : 'You should gain:';
+    return desiredWeightKg < currentWeightKg ? tr(LocaleKeys.onboarding_you_should_lose) : tr(LocaleKeys.onboarding_you_should_gain);
   }
 
   @override
@@ -71,12 +72,12 @@ class OnboardingPlanReadyScreen extends StatelessWidget {
       progress: step / totalSteps,
       onBack: onBack,
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
-      bottom: OnboardingPrimaryButton(label: "Let's get started!", onPressed: onNext),
+      bottom: OnboardingPrimaryButton(label: tr(LocaleKeys.onboarding_lets_get_started), onPressed: onNext),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            'Congratulations\nyour custom plan is ready!',
+            tr(LocaleKeys.onboarding_plan_ready_title),
             textAlign: TextAlign.center,
             style: textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
@@ -90,13 +91,13 @@ class OnboardingPlanReadyScreen extends StatelessWidget {
           const SizedBox(height: AppSpacing.xl),
           Align(
             alignment: Alignment.centerLeft,
-            child: Text('Daily recommendation', style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+            child: Text(tr(LocaleKeys.onboarding_daily_recommendation), style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
           ),
           const SizedBox(height: AppSpacing.xxs),
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              'You can edit your plan anytime in profile settings',
+              tr(LocaleKeys.onboarding_edit_plan_hint),
               style: textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
             ),
           ),
@@ -108,31 +109,31 @@ class OnboardingPlanReadyScreen extends StatelessWidget {
             mainAxisSpacing: AppSpacing.xs,
             crossAxisSpacing: AppSpacing.xs,
             childAspectRatio: 0.9,
-            children: const [
+            children: [
               _MacroTile(
                 icon: Icons.local_fire_department,
-                label: 'Calories',
+                label: tr(LocaleKeys.common_calories),
                 value: '2086',
                 unit: '',
                 color: AppColors.primaryDark,
               ),
               _MacroTile(
                 icon: Icons.grain,
-                label: 'Carbs',
+                label: tr(LocaleKeys.common_carbs),
                 value: '203',
                 unit: 'g',
                 color: AppColors.macroCarbs,
               ),
               _MacroTile(
                 icon: Icons.bolt,
-                label: 'Protein',
+                label: tr(LocaleKeys.common_protein),
                 value: '188',
                 unit: 'g',
                 color: AppColors.macroProtein,
               ),
               _MacroTile(
                 icon: Icons.opacity,
-                label: 'Fats',
+                label: tr(LocaleKeys.common_fats),
                 value: '57',
                 unit: 'g',
                 color: AppColors.macroFats,

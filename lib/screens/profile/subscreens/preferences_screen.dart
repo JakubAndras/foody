@@ -1,7 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 import 'package:diplomka/screens/profile/subscreens/language_screen.dart';
 
@@ -16,7 +18,7 @@ class PreferencesScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ProfileTopBar(title: 'Preferences', onBack: () => Get.back()),
+          ProfileTopBar(title: tr(LocaleKeys.preferences_title), onBack: () => Get.back()),
           const SizedBox(height: AppSpacing.m),
           ProfileCard(
             radius: AppRadii.lg,
@@ -24,15 +26,15 @@ class PreferencesScreen extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.m, AppSpacing.screen, AppSpacing.screen),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text('Appearance', style: AppTextStyles.body15),
-                SizedBox(height: AppSpacing.xs),
+              children: [
+                Text(tr(LocaleKeys.preferences_appearance), style: AppTextStyles.body15),
+                const SizedBox(height: AppSpacing.xs),
                 Text(
-                  'Choose light, dark, or system appearance',
+                  tr(LocaleKeys.preferences_appearance_hint),
                   style: AppTextStyles.body13,
                 ),
-                SizedBox(height: AppSpacing.m),
-                _AppearanceSegmented(),
+                const SizedBox(height: AppSpacing.m),
+                const _AppearanceSegmented(),
               ],
             ),
           ),
@@ -42,25 +44,25 @@ class PreferencesScreen extends StatelessWidget {
             shadow: AppShadows.cardSubtle,
             padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.xs, AppSpacing.screen, AppSpacing.xs),
             child: Column(
-              children: const [
+              children: [
                 _ToggleRow(
-                  title: 'Live activity',
-                  subtitle: 'Show your daily calories and macros on your lock screen and dynamic island',
+                  title: tr(LocaleKeys.preferences_live_activity),
+                  subtitle: tr(LocaleKeys.preferences_live_activity_desc),
                   isOn: false,
                 ),
                 _ToggleRow(
-                  title: 'Add burned calories',
-                  subtitle: 'Add burned calories back to daily goal',
+                  title: tr(LocaleKeys.preferences_burned_calories),
+                  subtitle: tr(LocaleKeys.preferences_burned_calories_desc),
                   isOn: true,
                 ),
                 _ToggleRow(
-                  title: 'Rollover calories',
-                  subtitle: "Add up to 500 left over calories from yesterday into today's daily goal",
+                  title: tr(LocaleKeys.preferences_rollover_calories),
+                  subtitle: tr(LocaleKeys.preferences_rollover_calories_desc),
                   isOn: false,
                 ),
                 _ToggleRow(
-                  title: 'Auto adjust macros',
-                  subtitle: 'When editing calories or macronutrients, automatically adjust the other values proportionally',
+                  title: tr(LocaleKeys.preferences_auto_adjust),
+                  subtitle: tr(LocaleKeys.preferences_auto_adjust_desc),
                   isOn: true,
                   showDivider: false,
                 ),
@@ -86,12 +88,12 @@ class _AppearanceSegmented extends StatelessWidget {
         boxShadow: AppShadows.control,
       ),
       child: Row(
-        children: const [
-          _SegmentItem(label: 'System', icon: Icons.computer, isActive: false),
-          SizedBox(width: AppSpacing.s),
-          _SegmentItem(label: 'Light', icon: Icons.light_mode, isActive: true),
-          SizedBox(width: AppSpacing.s),
-          _SegmentItem(label: 'Dark', icon: Icons.dark_mode, isActive: false),
+        children: [
+          _SegmentItem(label: tr(LocaleKeys.preferences_system), icon: Icons.computer, isActive: false),
+          const SizedBox(width: AppSpacing.s),
+          _SegmentItem(label: tr(LocaleKeys.preferences_light), icon: Icons.light_mode, isActive: true),
+          const SizedBox(width: AppSpacing.s),
+          _SegmentItem(label: tr(LocaleKeys.preferences_dark), icon: Icons.dark_mode, isActive: false),
         ],
       ),
     );

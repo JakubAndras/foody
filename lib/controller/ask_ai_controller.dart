@@ -1,11 +1,13 @@
 import 'dart:convert';
 
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/ask_ai_query_response.dart';
 import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/model/user_profile.dart';
 import 'package:diplomka/network/openai_rest_client.dart';
 import 'package:diplomka/services/day_record_repository.dart';
 import 'package:diplomka/services/session_manager.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
@@ -30,7 +32,7 @@ class AskAiController extends GetxController {
       final records = await DayRecordRepository.to.getAllDayRecords();
 
       if (records.isEmpty) {
-        errorMessage.value = 'You don\'t have any nutrition data logged yet. Start logging meals to use Ask AI.';
+        errorMessage.value = tr(LocaleKeys.ask_ai_no_data);
         return null;
       }
 
@@ -45,7 +47,7 @@ class AskAiController extends GetxController {
 
       final parsed = _parseQueryResponse(data);
       if (parsed == null) {
-        errorMessage.value = 'Failed to parse AI response. Please try again.';
+        errorMessage.value = tr(LocaleKeys.ask_ai_parse_error);
         return null;
       }
 
@@ -53,7 +55,7 @@ class AskAiController extends GetxController {
       return parsed;
     } catch (e) {
       debugPrint('AskAiController.submitQuery error: $e');
-      errorMessage.value = 'Failed to get AI response. Please check your connection and try again.';
+      errorMessage.value = tr(LocaleKeys.ask_ai_fetch_error);
       return null;
     } finally {
       isLoading.value = false;

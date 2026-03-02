@@ -3,6 +3,8 @@ import 'package:diplomka/screens/meals/meal_detail_screen.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 import 'package:diplomka/services/day_record_repository.dart';
 import 'package:diplomka/widgets/calories_card.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:diplomka/app_theme.dart';
@@ -76,7 +78,7 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
                               return const Center(child: CircularProgressIndicator());
                             }
                             if (dashboardController.dayRecordError.isNotEmpty) {
-                              return Center(child: Text('Error: ${dashboardController.dayRecordError.value}'));
+                              return Center(child: Text(tr(LocaleKeys.dashboard_error_loading, namedArgs: {'error': dashboardController.dayRecordError.value})));
                             }
 
                             return SingleChildScrollView(
@@ -116,7 +118,7 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          'Calories AI app',
+          tr(LocaleKeys.dashboard_title),
           style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w700),
         ),
         Obx(() {

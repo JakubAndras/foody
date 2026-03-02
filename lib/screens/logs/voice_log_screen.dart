@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/controller/dashboard_controller.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/screens/main_screen.dart';
 import 'package:diplomka/screens/logs/voice_widgets.dart';
 import 'package:diplomka/services/language_settings_service.dart';
@@ -115,7 +116,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
       setState(() {
         _hasPermission = false;
         _permissionPermanentlyDenied = false;
-        _speechErrorMessage = 'Unable to request voice permissions. Please try again.';
+        _speechErrorMessage = tr(LocaleKeys.voice_permission_request_failed);
       });
     }
   }
@@ -170,7 +171,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
                       ),
                       const SizedBox(height: AppSpacing.m),
                       Text(
-                        'Microphone Access',
+                        tr(LocaleKeys.voice_mic_access),
                         style: AppTextStyles.title18Tight.copyWith(
                           fontWeight: FontWeight.w700,
                           decoration: TextDecoration.none,
@@ -179,8 +180,8 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
                       const SizedBox(height: AppSpacing.s),
                       Text(
                         _permissionPermanentlyDenied
-                            ? 'Voice access is disabled. Open Settings to enable microphone and speech recognition.'
-                            : 'Allow microphone and speech recognition to dictate your meals or exercise.',
+                            ? tr(LocaleKeys.voice_mic_denied_message)
+                            : tr(LocaleKeys.voice_mic_request_message),
                         textAlign: TextAlign.center,
                         style: AppTextStyles.body14Relaxed.copyWith(
                           color: AppColors.textSecondary,
@@ -192,14 +193,14 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
                         children: [
                           Expanded(
                             child: _PermissionDialogButton(
-                              label: 'Not now',
+                              label: tr(LocaleKeys.voice_not_now),
                               onTap: () => Navigator.of(context).pop(),
                             ),
                           ),
                           const SizedBox(width: AppSpacing.s),
                           Expanded(
                             child: _PermissionDialogButton(
-                              label: _permissionPermanentlyDenied ? 'Open Settings' : 'Allow',
+                              label: _permissionPermanentlyDenied ? tr(LocaleKeys.voice_open_settings) : tr(LocaleKeys.voice_allow),
                               emphasized: true,
                               onTap: () async {
                                 Navigator.of(context).pop();
@@ -249,7 +250,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
 
       if (!available) {
         setState(() {
-          _speechErrorMessage = 'Speech recognition is unavailable on this device.';
+          _speechErrorMessage = tr(LocaleKeys.voice_speech_unavailable);
         });
         return false;
       }
@@ -262,7 +263,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
     } catch (_) {
       if (!mounted) return false;
       setState(() {
-        _speechErrorMessage = 'Failed to initialize speech recognition.';
+        _speechErrorMessage = tr(LocaleKeys.voice_speech_init_failed);
       });
       return false;
     }
@@ -302,7 +303,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
       setState(() {
         _isListening = false;
         _isPaused = false;
-        _speechErrorMessage = 'Could not start voice recognition. Please try again.';
+        _speechErrorMessage = tr(LocaleKeys.voice_start_failed);
       });
     }
   }
@@ -323,7 +324,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
       setState(() {
         _isListening = false;
         _isPaused = false;
-        _speechErrorMessage = 'Failed to stop voice recognition cleanly.';
+        _speechErrorMessage = tr(LocaleKeys.voice_stop_failed);
       });
     }
   }
@@ -346,7 +347,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
       try {
         await _voiceService.cancelListening();
       } catch (_) {
-        cancellationErrorMessage = 'Could not cancel current listening session.';
+        cancellationErrorMessage = tr(LocaleKeys.voice_cancel_failed);
       }
     }
 
@@ -447,9 +448,9 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
       _currentSessionTranscript = '';
       if (error.errorMsg.contains('permission')) {
         _hasPermission = false;
-        _speechErrorMessage = 'Microphone or speech permission is missing.';
+        _speechErrorMessage = tr(LocaleKeys.voice_permission_missing);
       } else {
-        _speechErrorMessage = 'Voice recognition error: ${error.errorMsg}';
+        _speechErrorMessage = '${tr(LocaleKeys.voice_recognition_error)}: ${error.errorMsg}';
       }
     });
   }
@@ -521,7 +522,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
                               VoiceLogIconButton(
                                 icon: Icons.help_outline,
                                 onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Voice log tips coming soon.')),
+                                  SnackBar(content: Text(tr(LocaleKeys.voice_tips_coming_soon))),
                                 ),
                               ),
                             ],
@@ -548,14 +549,14 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
                                 VoiceLogTextArea(
                                   controller: _controller,
                                   hintText: isExercise
-                                      ? "Dictate your exercise here... e.g., '30 minutes of running on a flat road, 1 hour of average training in the gym'"
-                                      : "Dictate your meals here... e.g., 'one banana, average chicken breast with rice'",
+                                      ? tr(LocaleKeys.voice_hint_exercise)
+                                      : tr(LocaleKeys.voice_hint_meals),
                                   onChanged: (_) => setState(() {}),
                                   enabled: !_isListening && !_isAnalyzing,
                                 ),
                                 const SizedBox(height: AppSpacing.m),
                                 VoiceLogAnalyzeButton(
-                                  label: _isAnalyzing ? (isExercise ? 'Analyzing Exercise...' : 'Analyzing Meals...') : (isExercise ? 'Analyze Exercise' : 'Analyze Meals'),
+                                  label: _isAnalyzing ? (isExercise ? tr(LocaleKeys.voice_analyzing_exercise) : tr(LocaleKeys.voice_analyzing_meals)) : (isExercise ? tr(LocaleKeys.voice_analyze_exercise) : tr(LocaleKeys.voice_analyze_meals)),
                                   onTap: _handleAnalyze,
                                   enabled: hasText && !_isAnalyzing,
                                 ),
@@ -568,8 +569,8 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
                           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
                           child: Text(
                             isExercise
-                                ? 'Tap the microphone to start recording, or type your exercise directly into the field above.'
-                                : 'Tap the microphone to start recording, or type your meals directly into the field above.',
+                                ? tr(LocaleKeys.voice_instruction_exercise)
+                                : tr(LocaleKeys.voice_instruction_meals),
                             textAlign: TextAlign.center,
                             style: AppTextStyles.body14Relaxed,
                           ),
@@ -594,7 +595,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
                         const SizedBox(height: AppSpacing.s),
                         if (_isListening || _isPaused || _isAnalyzing || _speechErrorMessage != null)
                           Text(
-                            _speechErrorMessage ?? (_isAnalyzing ? 'Analyzing...' : (_isPaused ? 'Paused' : 'Listening...')),
+                            _speechErrorMessage ?? (_isAnalyzing ? tr(LocaleKeys.voice_analyzing) : (_isPaused ? tr(LocaleKeys.voice_paused) : tr(LocaleKeys.voice_listening))),
                             style: AppTextStyles.body14.copyWith(
                               color: _speechErrorMessage == null ? AppColors.violetStrong : AppColors.error,
                               fontWeight: FontWeight.w600,

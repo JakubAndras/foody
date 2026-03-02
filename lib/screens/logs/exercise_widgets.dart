@@ -1,4 +1,6 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class ExerciseSearchBar extends StatelessWidget {
@@ -31,7 +33,7 @@ class ExerciseSearchBar extends StatelessWidget {
               controller: controller,
               onChanged: onChanged,
               decoration: InputDecoration(
-                hintText: 'Search exercises...',
+                hintText: tr(LocaleKeys.exercise_search_hint),
                 hintStyle: AppTextStyles.body16.copyWith(color: AppColors.textTertiary),
                 border: InputBorder.none,
               ),
@@ -305,15 +307,15 @@ class ExerciseCalculationCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Calculation', style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600)),
+          Text(tr(LocaleKeys.exercise_calculation), style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600)),
           const SizedBox(height: AppSpacing.s),
-          _CalcRow(label: 'Rate', value: rate),
-          _CalcRow(label: 'Duration', value: duration),
+          _CalcRow(label: tr(LocaleKeys.exercise_rate), value: rate),
+          _CalcRow(label: tr(LocaleKeys.common_duration), value: duration),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: AppSpacing.s),
             child: Divider(color: AppColors.outline, height: 1),
           ),
-          _CalcRow(label: 'Total Calories', value: total, emphasize: true),
+          _CalcRow(label: tr(LocaleKeys.exercise_total_calories), value: total, emphasize: true),
         ],
       ),
     );

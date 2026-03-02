@@ -1,9 +1,11 @@
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/controller/day_record_controller.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/exercise.dart';
 import 'package:diplomka/screens/logs/exercise_widgets.dart';
 import 'package:diplomka/services/selected_date_service.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 enum ExerciseTrackingMode { total, perMinute }
@@ -35,6 +37,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
   final TextEditingController _durationController = TextEditingController();
   ExerciseTrackingMode _mode = ExerciseTrackingMode.total;
   bool _isSaving = false;
+  bool _isFavorite = false;
 
   @override
   void initState() {
@@ -119,10 +122,10 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
                     icon: Icons.chevron_left,
                     onTap: () => Navigator.of(context).maybePop(),
                   ),
-                  Text('Add Exercise', style: AppTextStyles.title18Tight),
+                  Text(tr(LocaleKeys.exercise_add_title), style: AppTextStyles.title18Tight),
                   _CircleButton(
-                    icon: Icons.bookmark_border,
-                    onTap: () {},
+                    icon: _isFavorite ? Icons.bookmark : Icons.bookmark_border,
+                    onTap: () => setState(() => _isFavorite = !_isFavorite),
                   ),
                 ],
               ),
@@ -134,14 +137,14 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Exercise Name', style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
+                  Text(tr(LocaleKeys.exercise_exercise_name), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
                   const SizedBox(height: AppSpacing.xs),
                   _TextInput(
                     controller: _nameController,
-                    hintText: 'Exercise name',
+                    hintText: tr(LocaleKeys.exercise_name_hint),
                   ),
                   const SizedBox(height: AppSpacing.l),
-                  Text('How would you like to track calories?', style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
+                  Text(tr(LocaleKeys.exercise_track_question), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
                   const SizedBox(height: AppSpacing.xs),
                   Row(
                     children: [
@@ -150,8 +153,8 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
                           selected: _mode == ExerciseTrackingMode.total,
                           gradient: AppGradients.exerciseCalories,
                           icon: Icons.local_fire_department,
-                          label: 'Total Calories',
-                          subtitle: 'Enter total burned',
+                          label: tr(LocaleKeys.exercise_total_calories),
+                          subtitle: tr(LocaleKeys.exercise_enter_total),
                           onTap: () => setState(() => _mode = ExerciseTrackingMode.total),
                         ),
                       ),
@@ -161,8 +164,8 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
                           selected: _mode == ExerciseTrackingMode.perMinute,
                           gradient: AppGradients.exerciseCaloriesAlt,
                           icon: Icons.trending_up,
-                          label: 'Per Minute',
-                          subtitle: 'Kcal/min + duration',
+                          label: tr(LocaleKeys.exercise_per_minute),
+                          subtitle: tr(LocaleKeys.exercise_kcal_min_desc),
                           onTap: () => setState(() => _mode = ExerciseTrackingMode.perMinute),
                         ),
                       ),
@@ -170,44 +173,44 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
                   ),
                   const SizedBox(height: AppSpacing.l),
                   if (_mode == ExerciseTrackingMode.total) ...[
-                    Text('Total Calories Burned', style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
+                    Text(tr(LocaleKeys.exercise_total_burned), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
                     const SizedBox(height: AppSpacing.xs),
                     _InputCard(
                       controller: _totalController,
-                      label: 'Calories',
-                      unit: 'kcal',
+                      label: tr(LocaleKeys.common_calories),
+                      unit: tr(LocaleKeys.common_kcal),
                       gradient: AppGradients.exerciseCalories,
                       icon: Icons.local_fire_department,
                     ),
                     const SizedBox(height: AppSpacing.s),
                     Text(
-                      'Enter the total amount of calories burned',
+                      tr(LocaleKeys.exercise_enter_total),
                       style: AppTextStyles.label12.copyWith(color: AppColors.textTertiary),
                     ),
                   ] else ...[
-                    Text('Calories Per Minute', style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
+                    Text(tr(LocaleKeys.exercise_calories_per_minute), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
                     const SizedBox(height: AppSpacing.xs),
                     _InputCard(
                       controller: _rateController,
-                      label: 'kcal/min',
-                      unit: 'kcal/min',
+                      label: tr(LocaleKeys.exercise_kcal_min),
+                      unit: tr(LocaleKeys.exercise_kcal_min),
                       gradient: AppGradients.exerciseCaloriesAlt,
                       icon: Icons.trending_up,
                       onChanged: (_) => setState(() {}),
                     ),
                     const SizedBox(height: AppSpacing.m),
-                    Text('Duration', style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
+                    Text(tr(LocaleKeys.exercise_duration_label), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
                     const SizedBox(height: AppSpacing.xs),
                     _InputCard(
                       controller: _durationController,
-                      label: 'min',
-                      unit: 'min',
+                      label: tr(LocaleKeys.common_min),
+                      unit: tr(LocaleKeys.common_min),
                       gradient: AppGradients.exerciseDuration,
                       icon: Icons.schedule,
                       onChanged: (_) => setState(() {}),
                     ),
                     const SizedBox(height: AppSpacing.m),
-                    Text('Total Calories Burned', style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
+                    Text(tr(LocaleKeys.exercise_total_burned), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
                     const SizedBox(height: AppSpacing.xs),
                     ExerciseTotalSummaryCard(value: '$_calculatedTotal'),
                   ],
@@ -228,7 +231,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
                 ),
                 child: Center(
                   child: Text(
-                    _isSaving ? 'Saving...' : 'Add Exercise',
+                    _isSaving ? tr(LocaleKeys.common_saving) : tr(LocaleKeys.exercise_add_title),
                     style: AppTextStyles.button18.copyWith(color: AppColors.onPrimary),
                   ),
                 ),
@@ -241,14 +244,14 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
   }
 
   Future<void> _saveExercise() async {
-    final String exerciseName = _nameController.text.trim().isEmpty ? 'Exercise' : _nameController.text.trim();
+    final String exerciseName = _nameController.text.trim().isEmpty ? tr(LocaleKeys.common_exercise) : _nameController.text.trim();
     final int? durationMinutes = int.tryParse(_durationController.text.trim());
     final double caloriesBurned =
         _mode == ExerciseTrackingMode.total ? (double.tryParse(_totalController.text.trim()) ?? 0) : (double.tryParse(_rateController.text.trim()) ?? 0) * (durationMinutes ?? 0);
 
     if (caloriesBurned <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter valid exercise calories.')),
+        SnackBar(content: Text(tr(LocaleKeys.exercise_invalid_calories))),
       );
       return;
     }
@@ -264,6 +267,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
         timestamp: _applyDateToTime(DateTime.now(), selectedDate),
         durationMinutes: durationMinutes,
         caloriesBurned: caloriesBurned,
+        isFavorite: _isFavorite,
       );
 
       await DayRecordController.to.saveExerciseForDate(
@@ -274,7 +278,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Exercise added')),
+        SnackBar(content: Text(tr(LocaleKeys.exercise_exercise_added))),
       );
       Navigator.of(context).maybePop();
     } finally {

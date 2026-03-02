@@ -1,7 +1,9 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/user_profile.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -143,7 +145,7 @@ class _OnboardingHeightWeightScreenState
       progress: widget.step / widget.totalSteps,
       onBack: widget.onBack,
       bottom: OnboardingPrimaryButton(
-        label: 'Continue',
+        label: tr(LocaleKeys.common_continue_btn),
         onPressed: () async {
           await SessionManager.to.setHeightCm(_selectedHeightCm.toDouble());
           await SessionManager.to.setWeightKg(_selectedWeightKg.toDouble());
@@ -154,7 +156,7 @@ class _OnboardingHeightWeightScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Height & weight', style: textTheme.headlineLarge),
+          Text(tr(LocaleKeys.onboarding_height_weight_title), style: textTheme.headlineLarge),
           const SizedBox(height: AppSpacing.s),
           Text(
             'This will be used to calibrate your custom plan.',
@@ -174,7 +176,7 @@ class _OnboardingHeightWeightScreenState
               Expanded(
                 child: Column(
                   children: [
-                    Text('Height', style: textTheme.titleMedium),
+                    Text(tr(LocaleKeys.onboarding_height), style: textTheme.titleMedium),
                     const SizedBox(height: AppSpacing.s),
                     _PickerColumn(
                       key:
@@ -197,7 +199,7 @@ class _OnboardingHeightWeightScreenState
               Expanded(
                 child: Column(
                   children: [
-                    Text('Weight', style: textTheme.titleMedium),
+                    Text(tr(LocaleKeys.common_weight), style: textTheme.titleMedium),
                     const SizedBox(height: AppSpacing.s),
                     _PickerColumn(
                       key:

@@ -21,6 +21,7 @@ class ExerciseEntity {
   final DateTime timestamp;
   final int? durationMinutes;
   final double caloriesBurned;
+  final bool isFavorite;
 
   ExerciseEntity({
     this.id,
@@ -29,5 +30,6 @@ class ExerciseEntity {
     required this.timestamp,
     this.durationMinutes,
     required this.caloriesBurned,
+    this.isFavorite = false,
   });
 }

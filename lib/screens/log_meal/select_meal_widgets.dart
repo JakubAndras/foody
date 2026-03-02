@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class SelectMealSearchBar extends StatelessWidget {
@@ -9,11 +11,13 @@ class SelectMealSearchBar extends StatelessWidget {
     required this.controller,
     required this.onChanged,
     required this.onClear,
+    this.focusNode,
   });
 
   final TextEditingController controller;
   final ValueChanged<String> onChanged;
   final VoidCallback onClear;
+  final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +37,9 @@ class SelectMealSearchBar extends StatelessWidget {
             child: TextField(
               controller: controller,
               onChanged: onChanged,
+              focusNode: focusNode,
               decoration: InputDecoration(
-                hintText: 'Search Food',
+                hintText: tr(LocaleKeys.meal_search_food),
                 hintStyle: AppTextStyles.body16.copyWith(
                   color: AppColors.textSecondary,
                   fontWeight: FontWeight.w400,
@@ -535,7 +540,7 @@ class SelectMealErrorState extends StatelessWidget {
           children: [
             const Icon(Icons.error_outline, color: AppColors.error, size: AppSizes.emptyStateIconSize),
             const SizedBox(height: AppSpacing.m),
-            Text('Something went wrong', style: AppTextStyles.title18Tight, textAlign: TextAlign.center),
+            Text(tr(LocaleKeys.common_something_went_wrong), style: AppTextStyles.title18Tight, textAlign: TextAlign.center),
             const SizedBox(height: AppSpacing.xs),
             Text(
               message,
@@ -545,7 +550,7 @@ class SelectMealErrorState extends StatelessWidget {
             const SizedBox(height: AppSpacing.m),
             TextButton(
               onPressed: onRetry,
-              child: Text('Try again', style: AppTextStyles.body14.copyWith(color: AppColors.accent)),
+              child: Text(tr(LocaleKeys.common_try_again), style: AppTextStyles.body14.copyWith(color: AppColors.accent)),
             ),
           ],
         ),
@@ -614,6 +619,39 @@ class SelectMealPickerSheet extends StatelessWidget {
               }),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class SelectMealSuggestionTile extends StatelessWidget {
+  const SelectMealSuggestionTile({
+    super.key,
+    required this.name,
+    required this.frequency,
+    required this.onTap,
+  });
+
+  final String name;
+  final int frequency;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: 10),
+        child: Row(
+          children: [
+            const Icon(Icons.history, color: AppColors.textTertiary, size: AppSizes.iconSm),
+            const SizedBox(width: AppSpacing.s),
+            Expanded(
+              child: Text(name, style: AppTextStyles.body14, maxLines: 1, overflow: TextOverflow.ellipsis),
+            ),
+            Text('${frequency}x', style: AppTextStyles.body14Regular.copyWith(color: AppColors.textTertiary)),
+          ],
         ),
       ),
     );

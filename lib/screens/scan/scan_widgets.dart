@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class ScanPrimaryButton extends StatelessWidget {
@@ -263,8 +265,8 @@ class ScanZoomToggle extends StatelessWidget {
         ),
         child: Row(
           children: [
-            _zoomButton(label: '.5x', isActive: !isZoomed, onTap: () => onToggle(false)),
-            _zoomButton(label: '1x', isActive: isZoomed, onTap: () => onToggle(true)),
+            _zoomButton(label: tr(LocaleKeys.scan_zoom_05x), isActive: !isZoomed, onTap: () => onToggle(false)),
+            _zoomButton(label: tr(LocaleKeys.scan_zoom_1x), isActive: isZoomed, onTap: () => onToggle(true)),
           ],
         ),
       ),
@@ -432,7 +434,7 @@ class ScanTipOverlay extends StatelessWidget {
                 boxShadow: AppShadows.cameraControl,
               ),
               child: Center(
-                child: Text('Got it', style: AppTextStyles.body14),
+                child: Text(tr(LocaleKeys.scan_got_it), style: AppTextStyles.body14),
               ),
             ),
           ),

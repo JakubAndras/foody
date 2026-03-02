@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/model/day_record.dart';
@@ -32,7 +34,7 @@ class CaloriesCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Calories',
+                  tr(LocaleKeys.common_calories),
                   style: AppTextStyles.body16.copyWith(color: AppColors.textMuted, fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: AppSpacing.m),
@@ -53,7 +55,7 @@ class CaloriesCard extends StatelessWidget {
                             style: AppTextStyles.h2.copyWith(color: AppColors.textPrimary),
                           ),
                           Text(
-                            caloriesPlanEnabled ? 'Remaining' : 'Calories',
+                            caloriesPlanEnabled ? tr(LocaleKeys.dashboard_remaining) : tr(LocaleKeys.common_calories),
                             style: AppTextStyles.caption12.copyWith(color: AppColors.textMuted),
                           ),
                         ],
@@ -70,28 +72,28 @@ class CaloriesCard extends StatelessWidget {
             children: [
               _StatItem(
                 icon: Icons.flag_outlined,
-                label: 'Base Goal',
+                label: tr(LocaleKeys.dashboard_base_goal),
                 value: goal.toStringAsFixed(0),
                 color: AppColors.textMuted,
               ),
               const SizedBox(height: AppSpacing.s),
               _StatItem(
                 icon: Icons.restaurant_rounded,
-                label: 'Food',
+                label: tr(LocaleKeys.dashboard_food),
                 value: food.toStringAsFixed(0),
                 color: AppColors.info,
               ),
               const SizedBox(height: AppSpacing.s),
               _StatItem(
                 icon: Icons.directions_run_rounded,
-                label: 'Exercise',
+                label: tr(LocaleKeys.common_exercise),
                 value: exercise.toStringAsFixed(0),
                 color: AppColors.warning,
               ),
               const SizedBox(height: AppSpacing.s),
               _StatItem(
                 icon: Icons.history_rounded,
-                label: 'Rollover',
+                label: tr(LocaleKeys.dashboard_rollover),
                 value: '0',
                 color: AppColors.info,
               ),

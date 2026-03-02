@@ -1,7 +1,9 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/user_profile.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingGoalScreen extends StatefulWidget {
@@ -49,7 +51,7 @@ class _OnboardingGoalScreenState extends State<OnboardingGoalScreen>
       progress: widget.step / widget.totalSteps,
       onBack: widget.onBack,
       bottom: OnboardingPrimaryButton(
-        label: 'Continue',
+        label: tr(LocaleKeys.common_continue_btn),
         isEnabled: _selected != null,
         onPressed: _selected != null
             ? () async {
@@ -61,16 +63,15 @@ class _OnboardingGoalScreenState extends State<OnboardingGoalScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('What is your goal?', style: textTheme.headlineLarge),
+          Text(tr(LocaleKeys.onboarding_goal_title), style: textTheme.headlineLarge),
           const SizedBox(height: AppSpacing.s),
           Text(
-            'This helps us generate a plan for your calorie intake.',
-            style:
-                textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
+            tr(LocaleKeys.onboarding_goal_subtitle),
+            style: textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
           ),
           const SizedBox(height: AppSpacing.xl),
           OnboardingOptionCard(
-            title: 'Lose weight',
+            title: tr(LocaleKeys.onboarding_lose_weight),
             selected: _selected == ProfileGoal.lose,
             onTap: () {
               setState(() => _selected = ProfileGoal.lose);
@@ -79,7 +80,7 @@ class _OnboardingGoalScreenState extends State<OnboardingGoalScreen>
           ),
           const SizedBox(height: AppSpacing.s),
           OnboardingOptionCard(
-            title: 'Maintain',
+            title: tr(LocaleKeys.onboarding_maintain),
             selected: _selected == ProfileGoal.maintain,
             onTap: () {
               setState(() => _selected = ProfileGoal.maintain);
@@ -88,7 +89,7 @@ class _OnboardingGoalScreenState extends State<OnboardingGoalScreen>
           ),
           const SizedBox(height: AppSpacing.s),
           OnboardingOptionCard(
-            title: 'Gain weight',
+            title: tr(LocaleKeys.onboarding_gain_weight),
             selected: _selected == ProfileGoal.gain,
             onTap: () {
               setState(() => _selected = ProfileGoal.gain);

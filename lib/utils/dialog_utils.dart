@@ -7,6 +7,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:get/get.dart';
 
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 
 class DialogUtils {
   static Future<void> showDialog({
@@ -42,7 +43,7 @@ class DialogUtils {
     } else {
       dialogActions.add(PlatformDialogAction(
         child: PlatformText(
-          tr(defaultActionTitle ?? "LocaleKeys.ok"),
+          defaultActionTitle ?? tr(LocaleKeys.common_ok),
           style: Get.textTheme.titleMedium?.copyWith(color: Get.theme.colorScheme.primary),
         ),
         onPressed: () => Get.back(),

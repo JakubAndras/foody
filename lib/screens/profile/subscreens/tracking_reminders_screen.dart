@@ -1,8 +1,9 @@
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/controller/tracking_reminders_controller.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/tracking_reminder_setting.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
-import 'package:easy_localization/easy_localization.dart' as easy;
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -34,7 +35,7 @@ class TrackingRemindersScreen extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ProfileTopBar(title: easy.tr('tracking_reminders.title'), onBack: () => Get.back()),
+            ProfileTopBar(title: tr(LocaleKeys.tracking_reminders_title), onBack: () => Get.back()),
             const SizedBox(height: AppSpacing.l),
             ProfileCard(
               radius: AppRadii.lg,
@@ -44,7 +45,7 @@ class TrackingRemindersScreen extends StatelessWidget {
                 children: [
                   for (int i = 0; i < mealReminders.length; i++)
                     _ReminderRow(
-                      title: easy.tr(mealReminders[i].type.titleKey),
+                      title: tr(mealReminders[i].type.titleKey),
                       time: _formatTime(context, mealReminders[i]),
                       isOn: mealReminders[i].enabled,
                       showDivider: i != mealReminders.length - 1,
@@ -62,7 +63,7 @@ class TrackingRemindersScreen extends StatelessWidget {
               child: Column(
                 children: [
                   _ReminderRow(
-                    title: easy.tr(endOfDayReminder.type.titleKey),
+                    title: tr(endOfDayReminder.type.titleKey),
                     time: _formatTime(context, endOfDayReminder),
                     isOn: endOfDayReminder.enabled,
                     showDivider: false,
@@ -73,7 +74,7 @@ class TrackingRemindersScreen extends StatelessWidget {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      easy.tr('tracking_reminders.end_of_day_hint'),
+                      tr(LocaleKeys.tracking_reminders_end_of_day_hint),
                       style: AppTextStyles.body13,
                     ),
                   ),
@@ -90,12 +91,12 @@ class TrackingRemindersScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      easy.tr('tracking_reminders.permission_hint'),
+                      tr(LocaleKeys.tracking_reminders_permission_hint),
                       style: AppTextStyles.body13.copyWith(color: AppColors.textSecondary),
                     ),
                     const SizedBox(height: AppSpacing.m),
                     ProfileOutlineButton(
-                      label: easy.tr('tracking_reminders.open_settings'),
+                      label: tr(LocaleKeys.tracking_reminders_open_settings),
                       onPressed: controller.openSystemNotificationSettings,
                     ),
                   ],

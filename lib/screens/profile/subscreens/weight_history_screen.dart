@@ -1,9 +1,11 @@
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/controller/weight_entry_controller.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/weight_entry.dart';
 import 'package:diplomka/screens/logs/weight_log_sheet.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 import 'package:diplomka/widgets/weight_progress_card.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -20,14 +22,14 @@ class WeightHistoryScreen extends StatelessWidget {
       floatingActionButton: SizedBox(
         width: MediaQuery.of(context).size.width - (AppSpacing.screen * 2),
         child: ProfilePrimaryButton(
-          label: 'Add Weight',
+          label: tr(LocaleKeys.weight_log_add_weight),
           height: AppSizes.buttonHeightCompact,
           onPressed: () => showWeightLogSheet(context),
         ),
       ),
       child: Column(
         children: [
-          ProfileTopBar(title: 'Weight History', onBack: () => Get.back()),
+          ProfileTopBar(title: tr(LocaleKeys.profile_weight_history), onBack: () => Get.back()),
           const SizedBox(height: AppSpacing.l),
           Obx(() {
             final entries = WeightEntryController.to.entries;
@@ -137,7 +139,7 @@ class _WeightHistoryEmptyState extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
       alignment: Alignment.center,
       child: Text(
-        'No weight entries yet.',
+        tr(LocaleKeys.weight_log_no_entries),
         style: AppTextStyles.body15.copyWith(color: AppColors.textSecondary),
       ),
     );

@@ -1,9 +1,11 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/meal.dart';
 import 'package:diplomka/screens/meals/edit_meal_screen.dart';
 import 'package:diplomka/screens/meals/meal_components.dart';
 import 'package:diplomka/services/ai_feature/ai_pipeline_service.dart';
 import 'package:diplomka/utils/media_storage.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -53,13 +55,13 @@ class _FixResultScreenState extends State<FixResultScreen> {
                 children: [
                   const Icon(Icons.auto_fix_high, size: AppSizes.iconMd, color: AppColors.textPrimary),
                   const SizedBox(width: AppSpacing.s),
-                  Text('Fix result', style: AppTextStyles.h1Alt),
+                  Text(tr(LocaleKeys.fix_result_title), style: AppTextStyles.h1Alt),
                 ],
               ),
               const SizedBox(height: AppSpacing.l),
               _FeedbackInput(
                 controller: _controller,
-                hintText: 'Describe what needs to be fixed.',
+                hintText: tr(LocaleKeys.fix_result_hint),
                 maxLength: _maxLength,
                 onChanged: (_) => setState(() {}),
               ),
@@ -72,31 +74,32 @@ class _FixResultScreenState extends State<FixResultScreen> {
               ),
               const SizedBox(height: AppSpacing.m),
               _ExampleCard(
-                text: 'The smoothie is missing the strawberry and almond milk.',
+                prefix: tr(LocaleKeys.fix_result_example_prefix),
+                text: tr(LocaleKeys.fix_result_example_text),
               ),
               if (widget.showSyncCards) ...[
                 const SizedBox(height: AppSpacing.l),
                 SyncCard(
-                  title: 'Calories changed. Sync macros to match?',
-                  primaryLabel: 'Sync',
-                  secondaryLabel: "Don't sync",
+                  title: tr(LocaleKeys.meal_sync_macros_prompt),
+                  primaryLabel: tr(LocaleKeys.meal_sync),
+                  secondaryLabel: tr(LocaleKeys.meal_dont_sync),
                 ),
                 const SizedBox(height: AppSpacing.m),
                 SyncCard(
-                  title: 'Macros changed. Sync calories to match?',
-                  primaryLabel: 'Sync',
-                  secondaryLabel: "Don't sync",
+                  title: tr(LocaleKeys.meal_sync_calories_prompt),
+                  primaryLabel: tr(LocaleKeys.meal_sync),
+                  secondaryLabel: tr(LocaleKeys.meal_dont_sync),
                 ),
                 const SizedBox(height: AppSpacing.m),
                 SyncCard(
-                  title: 'Always sync automatically?',
-                  primaryLabel: 'Always sync',
-                  secondaryLabel: 'Decide later',
+                  title: tr(LocaleKeys.meal_always_sync),
+                  primaryLabel: tr(LocaleKeys.meal_always_sync),
+                  secondaryLabel: tr(LocaleKeys.meal_decide_later),
                 ),
               ],
               const Spacer(),
               GradientPillButton(
-                label: _isSubmitting ? 'Updating...' : 'Update',
+                label: _isSubmitting ? tr(LocaleKeys.fix_result_updating) : tr(LocaleKeys.fix_result_update),
                 gradient: AppGradients.askAiPrimary,
                 onTap: _isSubmitting ? null : _handleUpdate,
               ),
@@ -111,7 +114,7 @@ class _FixResultScreenState extends State<FixResultScreen> {
   Future<void> _handleUpdate() async {
     final text = _controller.text.trim();
     if (text.isEmpty) {
-      Get.snackbar('Add details', 'Describe what needs to be fixed.');
+      Get.snackbar(tr(LocaleKeys.fix_result_add_details), tr(LocaleKeys.fix_result_hint));
       return;
     }
 
@@ -128,12 +131,12 @@ class _FixResultScreenState extends State<FixResultScreen> {
     setState(() => _isSubmitting = false);
 
     if (!result.isSuccess || result.response == null) {
-      Get.snackbar('Analysis failed', result.message ?? 'Please try again.');
+      Get.snackbar(tr(LocaleKeys.error_analysis_failed), result.message ?? tr(LocaleKeys.common_try_again));
       return;
     }
 
     if (result.status == AiAnalysisStatus.lowConfidence) {
-      Get.snackbar('Low confidence', result.message ?? 'Please review the result.');
+      Get.snackbar(tr(LocaleKeys.error_low_confidence), result.message ?? tr(LocaleKeys.error_low_confidence_review));
     }
 
     final analyzedMeal = Meal.fromAnswer(result.response!.answer);
@@ -217,9 +220,10 @@ class _FeedbackInput extends StatelessWidget {
 }
 
 class _ExampleCard extends StatelessWidget {
+  final String prefix;
   final String text;
 
-  const _ExampleCard({required this.text});
+  const _ExampleCard({required this.prefix, required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -233,7 +237,7 @@ class _ExampleCard extends StatelessWidget {
         text: TextSpan(
           style: AppTextStyles.body15.copyWith(color: AppColors.textPrimary),
           children: [
-            TextSpan(text: 'Example: ', style: AppTextStyles.body15.copyWith(fontWeight: FontWeight.w700)),
+            TextSpan(text: '$prefix ', style: AppTextStyles.body15.copyWith(fontWeight: FontWeight.w700)),
             TextSpan(text: text),
           ],
         ),

@@ -1,23 +1,44 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/controller/day_record_controller.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
+import 'package:diplomka/model/exercise.dart';
 import 'package:diplomka/screens/logs/exercise_detail_options_sheet.dart';
 import 'package:diplomka/screens/logs/exercise_widgets.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-class ExerciseDetailScreen extends StatelessWidget {
+class ExerciseDetailScreen extends StatefulWidget {
   const ExerciseDetailScreen({
     super.key,
-    required this.title,
-    required this.kcal,
-    required this.minutes,
+    required this.exercise,
   });
 
-  final String title;
-  final int kcal;
-  final int minutes;
+  final Exercise exercise;
+
+  @override
+  State<ExerciseDetailScreen> createState() => _ExerciseDetailScreenState();
+}
+
+class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
+  late Exercise _exercise;
+
+  @override
+  void initState() {
+    super.initState();
+    _exercise = widget.exercise;
+  }
+
+  Future<void> _toggleFavorite() async {
+    final next = !_exercise.isFavorite;
+    setState(() => _exercise = _exercise.copyWith(isFavorite: next));
+
+    if (_exercise.id == null || _exercise.dayRecordId == null) return;
+    await DayRecordController.to.setExerciseFavorite(exercise: _exercise, isFavorite: next);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final rate = (kcal / minutes).round();
+    final rate = (_exercise.caloriesBurned / (_exercise.durationMinutes ?? 1)).round();
 
     return Scaffold(
       backgroundColor: AppColors.backgroundAlt,
@@ -34,10 +55,10 @@ class ExerciseDetailScreen extends StatelessWidget {
                     icon: Icons.chevron_left,
                     onTap: () => Navigator.of(context).maybePop(),
                   ),
-                  Text('Exercise Detail', style: AppTextStyles.title18Tight),
+                  Text(tr(LocaleKeys.exercise_detail_title), style: AppTextStyles.title18Tight),
                   Row(
                     children: [
-                      _CircleButton(icon: Icons.bookmark_border, onTap: () {}),
+                      _CircleButton(icon: _exercise.isFavorite ? Icons.bookmark : Icons.bookmark_border, onTap: _toggleFavorite),
                       const SizedBox(width: AppSpacing.s),
                       _CircleButton(
                         icon: Icons.more_horiz,
@@ -66,9 +87,9 @@ class ExerciseDetailScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Activity', style: AppTextStyles.body14.copyWith(color: AppColors.onPrimary.withValues(alpha: 0.6))),
+                        Text(tr(LocaleKeys.exercise_activity), style: AppTextStyles.body14.copyWith(color: AppColors.onPrimary.withValues(alpha: 0.6))),
                         const SizedBox(height: AppSpacing.xs),
-                        Text(title, style: AppTextStyles.h2.copyWith(color: AppColors.onPrimary)),
+                        Text(_exercise.name, style: AppTextStyles.h2.copyWith(color: AppColors.onPrimary)),
                       ],
                     ),
                   ),
@@ -79,9 +100,9 @@ class ExerciseDetailScreen extends StatelessWidget {
                         child: ExerciseStatCard(
                           gradient: AppGradients.exerciseCalories,
                           icon: Icons.local_fire_department,
-                          label: 'Total Calories',
-                          value: '$kcal',
-                          unit: 'kcal',
+                          label: tr(LocaleKeys.exercise_total_calories),
+                          value: '${_exercise.caloriesBurned.round()}',
+                          unit: tr(LocaleKeys.common_kcal),
                         ),
                       ),
                       const SizedBox(width: AppSpacing.m),
@@ -89,9 +110,9 @@ class ExerciseDetailScreen extends StatelessWidget {
                         child: ExerciseStatCard(
                           gradient: AppGradients.exerciseDuration,
                           icon: Icons.schedule,
-                          label: 'Duration',
-                          value: '$minutes',
-                          unit: 'min',
+                          label: tr(LocaleKeys.common_duration),
+                          value: '${_exercise.durationMinutes ?? 0}',
+                          unit: tr(LocaleKeys.common_min),
                         ),
                       ),
                     ],
@@ -100,25 +121,25 @@ class ExerciseDetailScreen extends StatelessWidget {
                   ExerciseInfoCard(
                     gradient: AppGradients.exerciseCaloriesAlt,
                     icon: Icons.trending_up,
-                    label: 'Calories Per Minute',
+                    label: tr(LocaleKeys.exercise_calories_per_minute),
                     value: '$rate',
-                    unit: 'kcal/min',
+                    unit: tr(LocaleKeys.exercise_kcal_min),
                   ),
                   const SizedBox(height: AppSpacing.m),
                   ExerciseCalculationCard(
-                    rate: '$rate kcal/min',
-                    duration: '$minutes min',
-                    total: '$kcal cal',
+                    rate: '$rate ${tr(LocaleKeys.exercise_kcal_min)}',
+                    duration: '${_exercise.durationMinutes ?? 0} ${tr(LocaleKeys.common_min)}',
+                    total: '${_exercise.caloriesBurned.round()} ${tr(LocaleKeys.common_kcal)}',
                   ),
                 ],
               ),
             ),
           ),
           ExerciseBottomBar(
-            primaryLabel: 'Log',
-            secondaryLabel: 'Save & Log',
-            onPrimary: () => _showSnack(context, 'Logged'),
-            onSecondary: () => _showSnack(context, 'Saved & Logged'),
+            primaryLabel: tr(LocaleKeys.exercise_log_btn),
+            secondaryLabel: tr(LocaleKeys.exercise_save_log),
+            onPrimary: () => _showSnack(context, tr(LocaleKeys.exercise_log_btn)),
+            onSecondary: () => _showSnack(context, tr(LocaleKeys.exercise_save_log)),
           ),
         ],
       ),
@@ -135,11 +156,11 @@ class ExerciseDetailScreen extends StatelessWidget {
         child: ExerciseDetailOptionsSheet(
           onReport: () {
             Navigator.of(context).pop();
-            _showSnack(context, 'Report submitted');
+            _showSnack(context, tr(LocaleKeys.common_report));
           },
           onDelete: () {
             Navigator.of(context).pop();
-            _showSnack(context, 'Exercise deleted');
+            _showSnack(context, tr(LocaleKeys.common_delete));
           },
         ),
       ),

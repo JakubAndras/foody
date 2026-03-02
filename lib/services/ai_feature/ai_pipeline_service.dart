@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/ai_response.dart';
 import 'package:diplomka/model/exercise_ai_analysis.dart';
 import 'package:diplomka/model/user_profile.dart';
@@ -8,6 +9,7 @@ import 'package:diplomka/network/openai_rest_client.dart';
 import 'package:diplomka/services/ai_feature/ai_service.dart';
 import 'package:diplomka/services/ai_feature/openai_service.dart';
 import 'package:diplomka/services/session_manager.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:get/get.dart';
 
 class AiPipelineService extends GetxService {
@@ -31,7 +33,7 @@ class AiPipelineService extends GetxService {
 
       if (response == null || response.valid == false) {
         return AiAnalysisResult.failure(
-          message: 'Analysis failed to return a valid result.',
+          message: tr(LocaleKeys.error_ai_no_result),
         );
       }
 
@@ -39,7 +41,7 @@ class AiPipelineService extends GetxService {
       if (confidence < minMealConfidence) {
         return AiAnalysisResult.lowConfidence(
           response: response,
-          message: 'Low confidence result. Please review.',
+          message: tr(LocaleKeys.error_ai_low_confidence),
         );
       }
 
@@ -55,7 +57,7 @@ class AiPipelineService extends GetxService {
     final trimmedDescription = description.trim();
     if (trimmedDescription.isEmpty) {
       return AiExerciseAnalysisResult.failure(
-        message: 'Exercise description is empty.',
+        message: tr(LocaleKeys.error_ai_exercise_empty),
       );
     }
 
@@ -68,21 +70,21 @@ class AiPipelineService extends GetxService {
       final analysis = _parseExerciseAnalysis(data);
       if (analysis == null || !analysis.valid) {
         return AiExerciseAnalysisResult.failure(
-          message: 'Exercise analysis failed to return a valid result.',
+          message: tr(LocaleKeys.error_ai_exercise_no_result),
         );
       }
 
       final answer = analysis.answer;
       if (answer.name.isEmpty || !answer.hasUsableCalories) {
         return AiExerciseAnalysisResult.failure(
-          message: 'Exercise analysis is missing required fields.',
+          message: tr(LocaleKeys.error_ai_exercise_missing),
         );
       }
 
       if (answer.confidence < minExerciseConfidence) {
         return AiExerciseAnalysisResult.lowConfidence(
           analysis: analysis,
-          message: 'Low confidence exercise result. Please review values.',
+          message: tr(LocaleKeys.error_ai_exercise_low_confidence),
         );
       }
 

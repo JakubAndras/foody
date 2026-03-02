@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:html_character_entities/html_character_entities.dart';
+
+import 'package:diplomka/generated/locale_keys.g.dart';
 
 /// DTO class that parses and holds data about server errors.
 class Error {
@@ -36,26 +39,26 @@ class Error {
   Error.generic({int? statusCode, this.serverCode, String? message, String? description}) {
     code = statusCode;
     errorType = ErrorType.generic;
-    this.message = message ?? "tr(LocaleKeys.api_error_generic)";
-    this.description = description ?? "tr(LocaleKeys.api_error_generic_message)";
+    this.message = message ?? tr(LocaleKeys.error_generic);
+    this.description = description ?? tr(LocaleKeys.error_generic_message);
   }
 
   Error.serverError() {
     errorType = ErrorType.serverError;
-    message = "tr(LocaleKeys.api_error_generic)";
-    description = "tr(LocaleKeys.api_error_generic_message)";
+    message = tr(LocaleKeys.error_generic);
+    description = tr(LocaleKeys.error_generic_message);
   }
 
   Error.timeout() {
     errorType = ErrorType.timeout;
-    message = "tr(LocaleKeys.api_error_timeout)";
-    description = "tr(LocaleKeys.api_error_timeout_message)";
+    message = tr(LocaleKeys.error_timeout);
+    description = tr(LocaleKeys.error_timeout_message);
   }
 
   Error.noInternetConnection() {
     errorType = ErrorType.noInternetConnection;
-    message = "tr(LocaleKeys.api_error_no_internet)";
-    description = "tr(LocaleKeys.api_error_no_internet_message)";
+    message = tr(LocaleKeys.error_no_internet);
+    description = tr(LocaleKeys.error_no_internet_message);
   }
 
   /// Constructor that creates an [Error] by parsing the [DioError] returned inside HTTP response.

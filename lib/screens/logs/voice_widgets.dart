@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class VoiceLogIconButton extends StatelessWidget {
@@ -51,7 +53,7 @@ class VoiceLogToggle extends StatelessWidget {
         GestureDetector(
           onTap: onSelectMeals,
           child: Text(
-            'Meals',
+            tr(LocaleKeys.common_meals),
             style: AppTextStyles.title18Tight.copyWith(
               color: isExercise ? AppColors.textMutedLight : AppColors.textPrimary,
               fontWeight: FontWeight.w600,
@@ -88,7 +90,7 @@ class VoiceLogToggle extends StatelessWidget {
         GestureDetector(
           onTap: onSelectExercise,
           child: Text(
-            'Exercise',
+            tr(LocaleKeys.common_exercise),
             style: AppTextStyles.title18Tight.copyWith(
               color: isExercise ? AppColors.textPrimary : AppColors.textMutedLight,
               fontWeight: FontWeight.w600,

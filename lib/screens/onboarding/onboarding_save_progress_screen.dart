@@ -1,5 +1,7 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingSaveProgressScreen extends StatelessWidget {
@@ -24,12 +26,12 @@ class OnboardingSaveProgressScreen extends StatelessWidget {
     return OnboardingPage(
       progress: step / totalSteps,
       onBack: onBack,
-      bottom: OnboardingPrimaryButton(label: 'Skip', onPressed: onNext),
+      bottom: OnboardingPrimaryButton(label: tr(LocaleKeys.common_skip), onPressed: onNext),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            'Save your progress',
+            tr(LocaleKeys.onboarding_save_progress_title),
             textAlign: TextAlign.center,
             style: textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w700),
           ),
@@ -37,7 +39,7 @@ class OnboardingSaveProgressScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
             child: Text(
-              'Sign in with Apple or Google to save your data to the cloud and access it from any device.',
+              tr(LocaleKeys.onboarding_save_progress_subtitle),
               textAlign: TextAlign.center,
               style: textTheme.bodyLarge?.copyWith(color: AppColors.textPrimary),
             ),
@@ -46,7 +48,7 @@ class OnboardingSaveProgressScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
             child: Text(
-              'Or skip this step to save your data locally on your phone only.',
+              tr(LocaleKeys.onboarding_save_progress_local),
               textAlign: TextAlign.center,
               style: textTheme.bodyLarge?.copyWith(color: AppColors.textPrimary),
             ),
@@ -60,13 +62,13 @@ class OnboardingSaveProgressScreen extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     OnboardingSolidButton(
-                      label: 'Sign in with Apple',
+                      label: tr(LocaleKeys.onboarding_sign_in_apple),
                       leading: const Icon(Icons.apple, color: AppColors.onPrimary, size: AppSizes.iconLg),
                       onPressed: onNext,
                     ),
                     const SizedBox(height: AppSpacing.m),
                     OnboardingOutlinedButton(
-                      label: 'Sign in with Google',
+                      label: tr(LocaleKeys.onboarding_sign_in_google),
                       leading: SizedBox(
                         width: AppSizes.iconMd,
                         height: AppSizes.iconMd,

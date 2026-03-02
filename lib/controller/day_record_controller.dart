@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:get/get.dart';
 
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/calendar_day.dart';
 import 'package:diplomka/model/calendar_day_ring_style.dart';
 import 'package:diplomka/model/day_record.dart';
@@ -96,8 +98,8 @@ class DayRecordController extends BaseController {
       await refreshDayRecords();
     } catch (e) {
       Get.snackbar(
-        'Error',
-        'Error saving meal: ${e.toString()}',
+        tr(LocaleKeys.common_error),
+        tr(LocaleKeys.error_saving_meal),
         snackPosition: SnackPosition.BOTTOM,
       );
     }
@@ -112,8 +114,8 @@ class DayRecordController extends BaseController {
       await refreshDayRecords();
     } catch (e) {
       Get.snackbar(
-        'Error',
-        'Error saving exercise: ${e.toString()}',
+        tr(LocaleKeys.common_error),
+        tr(LocaleKeys.error_saving_exercise),
         snackPosition: SnackPosition.BOTTOM,
       );
     }
@@ -125,8 +127,8 @@ class DayRecordController extends BaseController {
       await refreshDayRecords();
     } catch (e) {
       Get.snackbar(
-        'Error',
-        'Error deleting meal: ${e.toString()}',
+        tr(LocaleKeys.common_error),
+        tr(LocaleKeys.error_deleting_meal),
         snackPosition: SnackPosition.BOTTOM,
       );
     }
@@ -138,8 +140,21 @@ class DayRecordController extends BaseController {
       await refreshDayRecords();
     } catch (e) {
       Get.snackbar(
-        'Error',
-        'Error updating favorite: ${e.toString()}',
+        tr(LocaleKeys.common_error),
+        tr(LocaleKeys.error_updating_favorite),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
+  }
+
+  Future<void> setExerciseFavorite({required Exercise exercise, required bool isFavorite}) async {
+    try {
+      await _repository.updateExerciseFavorite(exercise: exercise, isFavorite: isFavorite);
+      await refreshDayRecords();
+    } catch (e) {
+      Get.snackbar(
+        tr(LocaleKeys.common_error),
+        tr(LocaleKeys.error_updating_favorite),
         snackPosition: SnackPosition.BOTTOM,
       );
     }

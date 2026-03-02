@@ -1,6 +1,8 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/ingredient.dart';
 import 'package:diplomka/screens/meals/meal_components.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class InlineErrorText extends StatelessWidget {
@@ -204,7 +206,7 @@ class EditIngredientRow extends StatelessWidget {
                   ingredient.calories.toStringAsFixed(0),
                   style: AppTextStyles.kcalValue18,
                 ),
-                Text('kcal', style: AppTextStyles.kcalLabel12),
+                Text(tr(LocaleKeys.common_kcal), style: AppTextStyles.kcalLabel12),
               ],
             ),
           ],

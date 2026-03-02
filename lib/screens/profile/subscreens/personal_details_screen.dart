@@ -1,8 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/controller/weight_entry_controller.dart';
 import 'package:diplomka/model/user_profile.dart';
 import 'package:diplomka/model/weight_entry.dart';
@@ -44,7 +46,7 @@ class PersonalDetailsScreen extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ProfileTopBar(title: 'Personal Details', onBack: () => Get.back()),
+            ProfileTopBar(title: tr(LocaleKeys.personal_details_title), onBack: () => Get.back()),
             const SizedBox(height: AppSpacing.l),
             ProfileCard(
               radius: AppRadii.lg2,
@@ -56,16 +58,16 @@ class PersonalDetailsScreen extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Goal Weight', style: AppTextStyles.body15.copyWith(fontWeight: FontWeight.w500)),
+                      Text(tr(LocaleKeys.personal_details_goal_weight), style: AppTextStyles.body15.copyWith(fontWeight: FontWeight.w500)),
                       const SizedBox(height: AppSpacing.xxs),
                       Text(goalLabel, style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w700)),
                     ],
                   ),
                   _SmallGradientButton(
-                    label: goalWeight == null ? 'Set Goal' : 'Change Goal',
+                    label: goalWeight == null ? tr(LocaleKeys.personal_details_set_goal) : tr(LocaleKeys.personal_details_change_goal),
                     onPressed: () => _showNumberSheet(
                       context,
-                      title: 'Goal Weight',
+                      title: tr(LocaleKeys.personal_details_goal_weight),
                       unit: 'kg',
                       initialValue: goalWeight,
                       min: 30,
@@ -85,11 +87,11 @@ class PersonalDetailsScreen extends StatelessWidget {
               child: Column(
                 children: [
                   _DetailRow(
-                    label: 'Current weight',
+                    label: tr(LocaleKeys.personal_details_current_weight),
                     value: weightLabel,
                     onTap: () => _showNumberSheet(
                       context,
-                      title: 'Current Weight',
+                      title: tr(LocaleKeys.personal_details_current_weight),
                       unit: 'kg',
                       initialValue: currentWeight,
                       min: 30,
@@ -104,11 +106,11 @@ class PersonalDetailsScreen extends StatelessWidget {
                     ),
                   ),
                   _DetailRow(
-                    label: 'Height',
+                    label: tr(LocaleKeys.personal_details_height),
                     value: heightLabel,
                     onTap: () => _showNumberSheet(
                       context,
-                      title: 'Height',
+                      title: tr(LocaleKeys.personal_details_height),
                       unit: 'cm',
                       initialValue: heightCm,
                       min: 120,
@@ -118,17 +120,17 @@ class PersonalDetailsScreen extends StatelessWidget {
                     ),
                   ),
                   _DetailRow(
-                    label: 'Date of birth',
+                    label: tr(LocaleKeys.personal_details_date_of_birth),
                     value: dobLabel,
                     onTap: () => _showDobSheet(context, initialDate: dob, safeArea: media),
                   ),
                   _DetailRow(
-                    label: 'Gender',
+                    label: tr(LocaleKeys.personal_details_gender),
                     value: sexLabel,
                     onTap: () => _showSexSheet(context, sex),
                   ),
                   _DetailRow(
-                    label: 'Diet',
+                    label: tr(LocaleKeys.personal_details_diet),
                     value: dietLabel,
                     subtitle: dietSubtitle,
                     showDivider: false,
@@ -197,7 +199,7 @@ class PersonalDetailsScreen extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   _SheetHeader(
-                    title: 'Date of Birth',
+                    title: tr(LocaleKeys.personal_details_dob_label),
                     onClose: () => Navigator.of(context).pop(),
                   ),
                   const SizedBox(height: AppSpacing.m),
@@ -212,7 +214,7 @@ class PersonalDetailsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: AppSpacing.m),
                   ProfilePrimaryButton(
-                    label: 'Save',
+                    label: tr(LocaleKeys.common_save),
                     onPressed: () async {
                       await SessionManager.to.setDateOfBirth(selected);
                       if (context.mounted) Navigator.of(context).pop();
@@ -580,7 +582,7 @@ class _ProfileNumberSheetState extends State<_ProfileNumberSheet> {
   Future<void> _handleSave() async {
     final value = _parseValue();
     if (value == null) {
-      setState(() => _errorText = 'Enter a value between ${widget.min} and ${widget.max}.');
+      setState(() => _errorText = tr(LocaleKeys.personal_details_validation_range, namedArgs: {'min': '${widget.min}', 'max': '${widget.max}'}));
       return;
     }
     final normalized = double.parse(value.toStringAsFixed(widget.fractionDigits));
@@ -622,7 +624,7 @@ class _ProfileNumberSheetState extends State<_ProfileNumberSheet> {
               ],
               const SizedBox(height: AppSpacing.l),
               ProfilePrimaryButton(
-                label: 'Save',
+                label: tr(LocaleKeys.common_save),
                 onPressed: _handleSave,
               ),
             ],

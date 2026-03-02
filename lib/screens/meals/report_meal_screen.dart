@@ -1,5 +1,7 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/screens/meals/meal_components.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class ReportMealScreen extends StatefulWidget {
@@ -37,13 +39,13 @@ class _ReportMealScreenState extends State<ReportMealScreen> {
                 children: [
                   const Icon(Icons.report_outlined, size: AppSizes.iconMd, color: AppColors.textPrimary),
                   const SizedBox(width: AppSpacing.s),
-                  Text('Report Meal', style: AppTextStyles.h1Alt),
+                  Text(tr(LocaleKeys.report_meal_title), style: AppTextStyles.h1Alt),
                 ],
               ),
               const SizedBox(height: AppSpacing.l),
               _FeedbackInput(
                 controller: _controller,
-                hintText: 'Tell us what is the issue with this meal log?',
+                hintText: tr(LocaleKeys.report_meal_hint),
                 maxLength: _maxLength,
                 onChanged: (_) => setState(() => _errorText = null),
               ),
@@ -67,7 +69,8 @@ class _ReportMealScreenState extends State<ReportMealScreen> {
                 ),
               const SizedBox(height: AppSpacing.m),
               _ExampleCard(
-                text: 'This is chicken breast, not turkey. The portion is about 150g, not 250g.',
+                prefix: tr(LocaleKeys.report_meal_example_prefix),
+                text: tr(LocaleKeys.report_meal_example_text),
               ),
             ],
           ),
@@ -83,7 +86,7 @@ class _ReportMealScreenState extends State<ReportMealScreen> {
             AppSpacing.l + MediaQuery.of(context).viewInsets.bottom,
           ),
           child: GradientPillButton(
-            label: _isSubmitting ? 'Reporting...' : 'Report',
+            label: _isSubmitting ? tr(LocaleKeys.report_meal_reporting) : tr(LocaleKeys.report_meal_submit),
             gradient: AppGradients.primary,
             onTap: _isSubmitting ? null : _handleReport,
           ),
@@ -95,7 +98,7 @@ class _ReportMealScreenState extends State<ReportMealScreen> {
   Future<void> _handleReport() async {
     final text = _controller.text.trim();
     if (text.isEmpty) {
-      setState(() => _errorText = 'Please describe the issue.');
+      setState(() => _errorText = tr(LocaleKeys.report_meal_empty_error));
       return;
     }
 
@@ -171,9 +174,10 @@ class _FeedbackInput extends StatelessWidget {
 }
 
 class _ExampleCard extends StatelessWidget {
+  final String prefix;
   final String text;
 
-  const _ExampleCard({required this.text});
+  const _ExampleCard({required this.prefix, required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -187,7 +191,7 @@ class _ExampleCard extends StatelessWidget {
         text: TextSpan(
           style: AppTextStyles.body16Regular.copyWith(color: AppColors.textPrimary),
           children: [
-            TextSpan(text: 'Example: ', style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w700)),
+            TextSpan(text: '$prefix ', style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w700)),
             TextSpan(text: text),
           ],
         ),

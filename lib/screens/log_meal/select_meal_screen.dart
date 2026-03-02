@@ -11,8 +11,10 @@ import 'package:diplomka/screens/log_meal/select_meal_widgets.dart';
 import 'package:diplomka/screens/logs/voice_log_screen.dart';
 import 'package:diplomka/screens/scan/scan_camera_screen.dart';
 import 'package:diplomka/screens/scan/scan_onboarding_screen.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/services/selected_date_service.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
@@ -25,13 +27,11 @@ class SelectMealScreen extends StatefulWidget {
     super.key,
     this.showLoading = false,
     this.errorMessage,
-    this.useMockData = true,
     this.initialTab = SelectMealTab.all,
   });
 
   final bool showLoading;
   final String? errorMessage;
-  final bool useMockData;
   final SelectMealTab initialTab;
 
   @override
@@ -40,8 +40,10 @@ class SelectMealScreen extends StatefulWidget {
 
 class _SelectMealScreenState extends State<SelectMealScreen> {
   final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocusNode = FocusNode();
   Timer? _debounce;
   String _query = '';
+  bool _showSuggestions = false;
   SelectMealTab _tab = SelectMealTab.all;
   SelectMealSort _sort = SelectMealSort.mostRecent;
   int _selectedMealtimeIndex = 1;
@@ -50,16 +52,28 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
   void initState() {
     super.initState();
     _tab = widget.initialTab;
+    _searchFocusNode.addListener(_onFocusChanged);
   }
 
   @override
   void dispose() {
     _debounce?.cancel();
+    _searchFocusNode.removeListener(_onFocusChanged);
+    _searchFocusNode.dispose();
     _searchController.dispose();
     super.dispose();
   }
 
+  void _onFocusChanged() {
+    setState(() {
+      _showSuggestions = _searchFocusNode.hasFocus && _searchController.text.trim().isNotEmpty;
+    });
+  }
+
   void _onSearchChanged(String value) {
+    setState(() {
+      _showSuggestions = _searchFocusNode.hasFocus && value.trim().isNotEmpty;
+    });
     _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 250), () {
       setState(() {
@@ -72,7 +86,49 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
     _searchController.clear();
     setState(() {
       _query = '';
+      _showSuggestions = false;
     });
+  }
+
+  void _onSuggestionTap(String name) {
+    _searchController.text = name;
+    _searchController.selection = TextSelection.fromPosition(TextPosition(offset: name.length));
+    setState(() {
+      _query = name;
+      _showSuggestions = false;
+    });
+    _searchFocusNode.unfocus();
+  }
+
+  List<_SuggestionItem> _computeSuggestions(List<Meal> allMeals) {
+    final query = _searchController.text.trim().toLowerCase();
+    if (query.isEmpty) return [];
+
+    final Map<String, int> nameFreqs = {};
+
+    final bool includeMeals = _tab == SelectMealTab.all || _tab == SelectMealTab.meals || _tab == SelectMealTab.favorites;
+    final bool includeIngredients = _tab == SelectMealTab.all || _tab == SelectMealTab.ingredients || _tab == SelectMealTab.favorites;
+
+    for (final meal in allMeals) {
+      if (includeMeals && meal.name.isNotEmpty) {
+        nameFreqs[meal.name] = (nameFreqs[meal.name] ?? 0) + 1;
+      }
+      if (includeIngredients) {
+        for (final ing in meal.ingredients) {
+          if (ing.name.isNotEmpty) {
+            nameFreqs[ing.name] = (nameFreqs[ing.name] ?? 0) + 1;
+          }
+        }
+      }
+    }
+
+    final suggestions = nameFreqs.entries
+        .where((e) => e.key.toLowerCase().contains(query) && e.key.toLowerCase() != query)
+        .map((e) => _SuggestionItem(name: e.key, frequency: e.value))
+        .toList()
+      ..sort((a, b) => b.frequency.compareTo(a.frequency));
+
+    return suggestions.take(5).toList();
   }
 
   void _openMealtimePicker() {
@@ -82,7 +138,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
       builder: (context) {
         return SelectMealPickerSheet(
           title: '',
-          options: const ['Breakfast', 'Lunch', 'Dinner', 'Snack'],
+          options: [tr(LocaleKeys.meal_mealtime_breakfast), tr(LocaleKeys.meal_mealtime_lunch), tr(LocaleKeys.meal_mealtime_dinner), tr(LocaleKeys.meal_mealtime_afternoon_snack)],
           selectedIndex: _selectedMealtimeIndex,
           onSelected: (index) {
             setState(() {
@@ -101,8 +157,8 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadii.lg)),
       builder: (context) {
         return SelectMealPickerSheet(
-          title: 'Sort by',
-          options: const ['Most Recent', 'A-Z'],
+          title: tr(LocaleKeys.common_sort_by),
+          options: [tr(LocaleKeys.common_most_recent), tr(LocaleKeys.common_a_z)],
           selectedIndex: _sort == SelectMealSort.mostRecent ? 0 : 1,
           onSelected: (index) {
             setState(() {
@@ -150,7 +206,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
           ingredient.name,
           () => _IngredientItem(
             ingredient: ingredient,
-            subtitle: '${ingredient.calories.toStringAsFixed(0)} kcal',
+            subtitle: '${ingredient.calories.toStringAsFixed(0)} ${tr(LocaleKeys.common_kcal)}',
           ),
         );
       }
@@ -174,13 +230,14 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
     return filtered;
   }
 
-  List<_IngredientItem> _applyIngredientFilters(List<_IngredientItem> items) {
+  List<_IngredientItem> _applyIngredientFilters(List<_IngredientItem> items, List<Meal> favoriteMeals) {
     var filtered = items;
     if (_query.isNotEmpty) {
       filtered = filtered.where((item) => item.ingredient.name.toLowerCase().contains(_query.toLowerCase())).toList();
     }
     if (_tab == SelectMealTab.favorites) {
-      filtered = filtered.where((item) => _favoriteIngredientNames.contains(item.ingredient.name)).toList();
+      final favoriteIngredientNames = favoriteMeals.expand((m) => m.ingredients).map((i) => i.name).toSet();
+      filtered = filtered.where((item) => favoriteIngredientNames.contains(item.ingredient.name)).toList();
     }
     filtered.sort((a, b) => a.ingredient.name.compareTo(b.ingredient.name));
     return filtered;
@@ -196,7 +253,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
     await DayRecordController.to.saveMealForDate(date: selectedDate, mealToSave: newMeal);
     DashboardController.to.refresh();
     Get.back();
-    Get.snackbar('Added', '${meal.name} added', snackPosition: SnackPosition.BOTTOM);
+    Get.snackbar(tr(LocaleKeys.common_add), meal.name, snackPosition: SnackPosition.BOTTOM);
   }
 
   Future<void> _addIngredientToToday(Ingredient ingredient) async {
@@ -209,7 +266,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
     await DayRecordController.to.saveMealForDate(date: selectedDate, mealToSave: meal);
     DashboardController.to.refresh();
     Get.back();
-    Get.snackbar('Added', '${ingredient.name} added', snackPosition: SnackPosition.BOTTOM);
+    Get.snackbar(tr(LocaleKeys.common_add), ingredient.name, snackPosition: SnackPosition.BOTTOM);
   }
 
   bool get _showMealsSection => _tab == SelectMealTab.all || _tab == SelectMealTab.meals || _tab == SelectMealTab.favorites;
@@ -222,10 +279,9 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
         bottom: false,
         child: Obx(() {
           final dbMeals = DayRecordController.to.dayRecords.expand((record) => record.meals).toList();
-          final useMock = widget.useMockData && dbMeals.isEmpty;
-          final baseMeals = useMock ? _mockMeals : dbMeals;
-          final meals = _applyMealFilters(baseMeals);
-          final ingredients = _applyIngredientFilters(useMock ? _mockIngredients : _resolveIngredients(dbMeals));
+          final meals = _applyMealFilters(dbMeals);
+          final favoriteMeals = dbMeals.where((m) => m.isFavorite).toList();
+          final ingredients = _applyIngredientFilters(_resolveIngredients(dbMeals), favoriteMeals);
           final visibleMeals = _showMealsSection ? meals : <Meal>[];
           final visibleIngredients = _showIngredientsSection ? ingredients : <_IngredientItem>[];
           final isEmptyState = visibleMeals.isEmpty && visibleIngredients.isEmpty;
@@ -256,7 +312,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Text('Select a Meal', style: AppTextStyles.selectMealTitle),
+                                    Text(tr(LocaleKeys.meal_select_title), style: AppTextStyles.selectMealTitle),
                                     const SizedBox(width: AppSpacing.xs),
                                     const Icon(Icons.keyboard_arrow_down, color: AppColors.primary, size: AppSizes.iconMd),
                                   ],
@@ -273,64 +329,70 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                       controller: _searchController,
                       onChanged: _onSearchChanged,
                       onClear: _clearSearch,
+                      focusNode: _searchFocusNode,
                     ),
                     const SizedBox(height: AppSpacing.m),
                     SelectMealSegmentedTabs(
-                      labels: const ['All', 'Favorites', 'Meals', 'Ingredients'],
+                      labels: [tr(LocaleKeys.common_all), tr(LocaleKeys.common_favorites), tr(LocaleKeys.common_meals), tr(LocaleKeys.common_ingredients)],
                       activeIndex: _tab.index,
                       onTap: (index) => setState(() => _tab = SelectMealTab.values[index]),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: AppSpacing.s),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: SelectMealQuickActionTile(
-                        icon: Icons.photo_camera_outlined,
-                        label: 'Meal scan',
-                        onTap: () {
-                          if (SessionManager.to.scanOnboardingComplete.value) {
-                            Get.to(() => const ScanCameraScreen());
-                          } else {
-                            Get.to(() => const ScanOnboardingScreen());
-                          }
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: AppSpacing.s),
-                    Expanded(
-                      child: SelectMealQuickActionTile(
-                        icon: Icons.qr_code_2,
-                        label: 'Barcode scan',
-                        onTap: () => Get.to(() => const ScanCameraScreen(initialMode: ScanMode.barcode)),
-                      ),
-                    ),
-                    const SizedBox(width: AppSpacing.s),
-                    Expanded(
-                      child: SelectMealQuickActionTile(
-                        icon: Icons.mic,
-                        label: 'Voice log',
-                        onTap: () => Get.to(() => const VoiceLogScreen()),
-                      ),
-                    ),
-                    const SizedBox(width: AppSpacing.s),
-                    Expanded(
-                      child: SelectMealQuickActionTile(
-                        icon: Icons.add,
-                        label: 'Manual log',
-                        onTap: _openManualLog,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: AppSpacing.s),
               Expanded(
-                child: CustomScrollView(
+                child: Stack(
+                  children: [
+                    Column(
+                      children: [
+                        const SizedBox(height: AppSpacing.s),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: SelectMealQuickActionTile(
+                                  icon: Icons.photo_camera_outlined,
+                                  label: tr(LocaleKeys.meal_meal_scan),
+                                  onTap: () {
+                                    if (SessionManager.to.scanOnboardingComplete.value) {
+                                      Get.to(() => const ScanCameraScreen());
+                                    } else {
+                                      Get.to(() => const ScanOnboardingScreen());
+                                    }
+                                  },
+                                ),
+                              ),
+                              const SizedBox(width: AppSpacing.s),
+                              Expanded(
+                                child: SelectMealQuickActionTile(
+                                  icon: Icons.qr_code_2,
+                                  label: tr(LocaleKeys.meal_barcode_scan),
+                                  onTap: () => Get.to(() => const ScanCameraScreen(initialMode: ScanMode.barcode)),
+                                ),
+                              ),
+                              const SizedBox(width: AppSpacing.s),
+                              Expanded(
+                                child: SelectMealQuickActionTile(
+                                  icon: Icons.mic,
+                                  label: tr(LocaleKeys.meal_voice_log),
+                                  onTap: () => Get.to(() => const VoiceLogScreen()),
+                                ),
+                              ),
+                              const SizedBox(width: AppSpacing.s),
+                              Expanded(
+                                child: SelectMealQuickActionTile(
+                                  icon: Icons.add,
+                                  label: tr(LocaleKeys.meal_manual_log),
+                                  onTap: _openManualLog,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.s),
+                        Expanded(
+                          child: CustomScrollView(
                   slivers: [
                     if (widget.showLoading)
                       const SliverFillRemaining(
@@ -346,11 +408,11 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                         ),
                       )
                     else if (isEmptyState)
-                      const SliverFillRemaining(
+                      SliverFillRemaining(
                         hasScrollBody: false,
                         child: SelectMealEmptyState(
-                          title: 'No items found',
-                          message: 'Try adjusting your search or filters.',
+                          title: tr(LocaleKeys.common_no_items_found),
+                          message: tr(LocaleKeys.common_try_adjusting_search),
                         ),
                       )
                     else ...[
@@ -359,7 +421,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
                           sliver: SliverToBoxAdapter(
                             child: SelectMealSectionHeader(
-                              title: 'Meals',
+                              title: tr(LocaleKeys.common_meals),
                               trailing: GestureDetector(
                                 onTap: _openSortPicker,
                                 child: Row(
@@ -368,7 +430,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                                     const Icon(Icons.tune, color: AppColors.textSecondary, size: AppSizes.iconSm),
                                     const SizedBox(width: 6),
                                     Text(
-                                      _sort == SelectMealSort.mostRecent ? 'Most Recent' : 'A-Z',
+                                      _sort == SelectMealSort.mostRecent ? tr(LocaleKeys.common_most_recent) : tr(LocaleKeys.common_a_z),
                                       style: AppTextStyles.selectMealSegmentLabel.copyWith(color: AppColors.textSecondary),
                                     ),
                                   ],
@@ -417,8 +479,8 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                       if (_showIngredientsSection) ...[
                         SliverPadding(
                           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-                          sliver: const SliverToBoxAdapter(
-                            child: SelectMealSectionHeader(title: 'Ingredients'),
+                          sliver: SliverToBoxAdapter(
+                            child: SelectMealSectionHeader(title: tr(LocaleKeys.common_ingredients)),
                           ),
                         ),
                         const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.s)),
@@ -434,7 +496,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                                     title: item.ingredient.name,
                                     subtitle: item.subtitle,
                                     onAdd: () => _addIngredientToToday(item.ingredient),
-                                    onTap: () => Get.snackbar('Ingredient', item.ingredient.name),
+                                    onTap: () => Get.snackbar(tr(LocaleKeys.common_ingredients), item.ingredient.name),
                                   ),
                                 );
                               },
@@ -444,6 +506,48 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                         ),
                         const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xxl)),
                       ],
+                    ],
+                  ],
+                ),
+                        ),
+                      ],
+                    ),
+                    if (_showSuggestions) ...[
+                      () {
+                        final suggestions = _computeSuggestions(dbMeals);
+                        if (suggestions.isEmpty) return const SizedBox.shrink();
+                        return Positioned(
+                          top: 0,
+                          left: AppSpacing.l,
+                          right: AppSpacing.l,
+                          child: Material(
+                            elevation: 4,
+                            borderRadius: BorderRadius.circular(AppRadii.md),
+                            color: AppColors.surface,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(AppRadii.md),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: suggestions.asMap().entries.map((entry) {
+                                  final index = entry.key;
+                                  final suggestion = entry.value;
+                                  return Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      if (index > 0) Divider(height: 1, indent: AppSpacing.m + AppSizes.iconSm + AppSpacing.s, color: AppColors.border),
+                                      SelectMealSuggestionTile(
+                                        name: suggestion.name,
+                                        frequency: suggestion.frequency,
+                                        onTap: () => _onSuggestionTap(suggestion.name),
+                                      ),
+                                    ],
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ),
+                        );
+                      }(),
                     ],
                   ],
                 ),
@@ -466,42 +570,10 @@ class _IngredientItem {
   });
 }
 
-final List<Meal> _mockMeals = [
-  Meal(
-    name: 'Salmon & Vegetables',
-    ingredients: [
-      Ingredient(name: 'Salmon Fillet', weight: 200, calories: 565, proteins: 48, carbs: 0, fats: 24),
-      Ingredient(name: 'Quinoa', weight: 120, calories: 200, proteins: 0, carbs: 32, fats: 0),
-      Ingredient(name: 'Broccoli', weight: 80, calories: 45, proteins: 0, carbs: 0, fats: 0),
-    ],
-    timestamp: DateTime.now().subtract(const Duration(hours: 3)),
-    isFavorite: true,
-  ),
-  Meal(
-    name: 'Salmon & Vegetables',
-    ingredients: [
-      Ingredient(name: 'Salmon Fillet', weight: 200, calories: 565, proteins: 48, carbs: 32, fats: 24),
-    ],
-    timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 2)),
-  ),
-  Meal(
-    name: 'Salmon & Vegetables',
-    ingredients: [
-      Ingredient(name: 'Salmon Fillet', weight: 200, calories: 565, proteins: 48, carbs: 32, fats: 24),
-    ],
-    timestamp: DateTime.now().subtract(const Duration(days: 2)),
-  ),
-];
+class _SuggestionItem {
+  final String name;
+  final int frequency;
 
-final List<_IngredientItem> _mockIngredients = [
-  _IngredientItem(
-    ingredient: Ingredient(name: 'Banana', weight: 118, calories: 105, proteins: 1, carbs: 27, fats: 0),
-    subtitle: '105 kcal, medium',
-  ),
-  _IngredientItem(
-    ingredient: Ingredient(name: 'Olive oil', weight: 14, calories: 126, proteins: 0, carbs: 0, fats: 14),
-    subtitle: '126 kcal',
-  ),
-];
+  const _SuggestionItem({required this.name, required this.frequency});
+}
 
-final Set<String> _favoriteIngredientNames = {'Banana'};

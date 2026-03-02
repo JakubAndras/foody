@@ -1,7 +1,9 @@
 import 'dart:math' as math;
 
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/widgets/liquid_glass/liquid_glass_system.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 
@@ -52,11 +54,11 @@ class BottomNavBar extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
       child: Row(
         children: [
-          _buildNavItem(icon: Icons.home_rounded, label: 'Home', index: 0),
+          _buildNavItem(icon: Icons.home_rounded, label: tr(LocaleKeys.nav_home), index: 0),
           const SizedBox(width: AppSpacing.s),
-          _buildNavItem(icon: Icons.bar_chart_rounded, label: 'Progress', index: 1),
+          _buildNavItem(icon: Icons.bar_chart_rounded, label: tr(LocaleKeys.nav_progress), index: 1),
           const SizedBox(width: AppSpacing.s),
-          _buildNavItem(icon: Icons.person_outline_rounded, label: 'Profile', index: 2),
+          _buildNavItem(icon: Icons.person_outline_rounded, label: tr(LocaleKeys.nav_profile), index: 2),
         ],
       ),
     );

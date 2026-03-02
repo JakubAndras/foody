@@ -1,8 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/controller/ask_ai_controller.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/screens/profile/ask_ai/ask_ai_response_screen.dart';
 import 'package:diplomka/screens/profile/ask_ai/ask_ai_widgets.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
@@ -39,7 +41,7 @@ class _AskAiScreenState extends State<AskAiScreen> {
       Get.to(() => AskAiResponseScreen(response: result, query: query));
     } else if (_controller.errorMessage.value != null) {
       Get.snackbar(
-        'Ask AI',
+        tr(LocaleKeys.ask_ai_title),
         _controller.errorMessage.value!,
         snackPosition: SnackPosition.BOTTOM,
       );
@@ -59,7 +61,7 @@ class _AskAiScreenState extends State<AskAiScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ProfileTopBar(title: 'Ask AI', onBack: () => Get.back()),
+          ProfileTopBar(title: tr(LocaleKeys.ask_ai_title), onBack: () => Get.back()),
           Expanded(
             child: SingleChildScrollView(
               child: Obx(() {
@@ -85,8 +87,8 @@ class _AskAiScreenState extends State<AskAiScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const AskAiSectionHeader(
-                                title: 'Example Questions',
+                              AskAiSectionHeader(
+                                title: tr(LocaleKeys.ask_ai_example_questions),
                                 icon: Icons.question_mark,
                                 iconGradient: AppGradients.askAiExample,
                                 iconRadius: AppRadii.xs,
@@ -94,30 +96,30 @@ class _AskAiScreenState extends State<AskAiScreen> {
                               ),
                               const SizedBox(height: AppSpacing.m),
                               AskAiExampleQuestionCard(
-                                label: 'How many times did I violate my dietary restriction this month?',
+                                label: tr(LocaleKeys.ask_ai_example_1),
                                 height: 68,
-                                onTap: () => _handleExampleTap('How many times did I violate my dietary restriction this month?'),
+                                onTap: () => _handleExampleTap(tr(LocaleKeys.ask_ai_example_1)),
                               ),
                               const SizedBox(height: AppSpacing.s),
                               AskAiExampleQuestionCard(
-                                label: 'Show me the days I exceeded my daily calorie goal.',
+                                label: tr(LocaleKeys.ask_ai_example_2),
                                 height: 68,
-                                onTap: () => _handleExampleTap('Show me the days I exceeded my daily calorie goal.'),
+                                onTap: () => _handleExampleTap(tr(LocaleKeys.ask_ai_example_2)),
                               ),
                               const SizedBox(height: AppSpacing.s),
                               AskAiExampleQuestionCard(
-                                label: 'What was my average protein intake last week?',
-                                onTap: () => _handleExampleTap('What was my average protein intake last week?'),
+                                label: tr(LocaleKeys.ask_ai_example_3),
+                                onTap: () => _handleExampleTap(tr(LocaleKeys.ask_ai_example_3)),
                               ),
                               const SizedBox(height: AppSpacing.s),
                               AskAiExampleQuestionCard(
-                                label: 'Did I meet my fiber goals in January?',
-                                onTap: () => _handleExampleTap('Did I meet my fiber goals in January?'),
+                                label: tr(LocaleKeys.ask_ai_example_4),
+                                onTap: () => _handleExampleTap(tr(LocaleKeys.ask_ai_example_4)),
                               ),
                               const SizedBox(height: AppSpacing.s),
                               AskAiExampleQuestionCard(
-                                label: 'Which days did I consume dairy products?',
-                                onTap: () => _handleExampleTap('Which days did I consume dairy products?'),
+                                label: tr(LocaleKeys.ask_ai_example_5),
+                                onTap: () => _handleExampleTap(tr(LocaleKeys.ask_ai_example_5)),
                               ),
                             ],
                           ),

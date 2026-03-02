@@ -1,8 +1,9 @@
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/controller/language_settings_controller.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/language_settings.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
-import 'package:easy_localization/easy_localization.dart' as easy;
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -20,44 +21,11 @@ class LanguageScreen extends StatelessWidget {
       child: Obx(() {
         final appLanguage = controller.appLanguage.value;
         final voicePreference = controller.voiceLogLanguagePreference.value;
-        final effectiveVoiceLanguage = controller.effectiveVoiceLogLanguage;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ProfileTopBar(title: easy.tr('language_settings.title'), onBack: () => Get.back()),
-            // const SizedBox(height: AppSpacing.m),
-            // ProfileCard(
-            //   radius: AppRadii.lg,
-            //   shadow: AppShadows.cardSubtle,
-            //   padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.m, AppSpacing.screen, AppSpacing.s),
-            //   child: Column(
-            //     crossAxisAlignment: CrossAxisAlignment.start,
-            //     children: [
-            //       Text(
-            //         easy.tr('language_settings.app_language_title'),
-            //         style: AppTextStyles.body15.copyWith(fontWeight: FontWeight.w600),
-            //       ),
-            //       const SizedBox(height: AppSpacing.xs),
-            //       Text(
-            //         easy.tr('language_settings.app_language_subtitle'),
-            //         style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary),
-            //       ),
-            //       const SizedBox(height: AppSpacing.s),
-            //       _SelectionRow(
-            //         label: easy.tr('language_settings.option_english'),
-            //         selected: appLanguage == AppLanguage.english,
-            //         onTap: () => controller.setAppLanguage(context, AppLanguage.english),
-            //       ),
-            //       _SelectionRow(
-            //         label: easy.tr('language_settings.option_czech'),
-            //         selected: appLanguage == AppLanguage.czech,
-            //         onTap: () => controller.setAppLanguage(context, AppLanguage.czech),
-            //         showDivider: false,
-            //       ),
-            //     ],
-            //   ),
-            // ),
+            ProfileTopBar(title: tr(LocaleKeys.language_settings_title), onBack: () => Get.back()),
             const SizedBox(height: AppSpacing.m),
             ProfileCard(
               radius: AppRadii.lg,
@@ -67,27 +35,59 @@ class LanguageScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    easy.tr('language_settings.voice_language_title'),
+                    tr(LocaleKeys.language_settings_app_language_title),
                     style: AppTextStyles.body15.copyWith(fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: AppSpacing.xs),
                   Text(
-                    easy.tr('language_settings.voice_language_subtitle'),
+                    tr(LocaleKeys.language_settings_app_language_subtitle),
+                    style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary),
+                  ),
+                  const SizedBox(height: AppSpacing.s),
+                  _SelectionRow(
+                    label: tr(LocaleKeys.language_settings_option_english),
+                    selected: appLanguage == AppLanguage.english,
+                    onTap: () => controller.setAppLanguage(context, AppLanguage.english),
+                  ),
+                  _SelectionRow(
+                    label: tr(LocaleKeys.language_settings_option_czech),
+                    selected: appLanguage == AppLanguage.czech,
+                    onTap: () => controller.setAppLanguage(context, AppLanguage.czech),
+                    showDivider: false,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: AppSpacing.m),
+            ProfileCard(
+              radius: AppRadii.lg,
+              shadow: AppShadows.cardSubtle,
+              padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.m, AppSpacing.screen, AppSpacing.s),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    tr(LocaleKeys.language_settings_voice_language_title),
+                    style: AppTextStyles.body15.copyWith(fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    tr(LocaleKeys.language_settings_voice_language_subtitle),
                     style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary),
                   ),
                   const SizedBox(height: AppSpacing.s),
                   // _SelectionRow(
-                  //   label: easy.tr('language_settings.option_follow_app'),
+                  //   label: tr(LocaleKeys.language_settings_option_follow_app),
                   //   selected: voicePreference == VoiceLogLanguagePreference.followApp,
                   //   onTap: () => controller.setVoiceLogLanguagePreference(VoiceLogLanguagePreference.followApp),
                   // ),
                   _SelectionRow(
-                    label: easy.tr('language_settings.option_english'),
+                    label: tr(LocaleKeys.language_settings_option_english),
                     selected: voicePreference == VoiceLogLanguagePreference.english,
                     onTap: () => controller.setVoiceLogLanguagePreference(VoiceLogLanguagePreference.english),
                   ),
                   _SelectionRow(
-                    label: easy.tr('language_settings.option_czech'),
+                    label: tr(LocaleKeys.language_settings_option_czech),
                     selected: voicePreference == VoiceLogLanguagePreference.czech,
                     onTap: () => controller.setVoiceLogLanguagePreference(VoiceLogLanguagePreference.czech),
                     showDivider: false,
@@ -101,14 +101,6 @@ class LanguageScreen extends StatelessWidget {
     );
   }
 
-  String _labelForAppLanguage(AppLanguage language) {
-    switch (language) {
-      case AppLanguage.english:
-        return easy.tr('language_settings.option_english');
-      case AppLanguage.czech:
-        return easy.tr('language_settings.option_czech');
-    }
-  }
 }
 
 class _SelectionRow extends StatelessWidget {

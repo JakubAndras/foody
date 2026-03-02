@@ -1,5 +1,6 @@
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/controller/day_record_controller.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/ingredient.dart';
 import 'package:diplomka/model/meal.dart';
 import 'package:diplomka/screens/ingredients/edit_ingredient_screen.dart';
@@ -12,6 +13,7 @@ import 'package:diplomka/services/share/meal_share_builder.dart';
 import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/utils/media_storage.dart';
 import 'package:diplomka/widgets/edit_flow/edit_flow_widgets.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -55,19 +57,19 @@ class _EditMealScreenState extends State<EditMealScreen> {
   final ScrollController _scrollController = ScrollController();
   ImageProvider? _heroImage;
   double _topPullExtent = 0;
-  String _mealtime = 'Lunch';
+  String _mealtime = 'Lunch'; // internal key, not displayed directly
   String _amountLabel = '400 x 1 g';
   bool _isSaving = false;
   bool _isDeleting = false;
 
-  static const List<String> _portionOptions = [
-    'portion (300 g)',
-    'small portion (150 g)',
-    '100 g',
-    '1 g',
-  ];
+  List<String> get _portionOptions => [
+        tr(LocaleKeys.meal_portion_300g),
+        tr(LocaleKeys.meal_portion_150g),
+        tr(LocaleKeys.meal_portion_100g),
+        tr(LocaleKeys.meal_portion_1g),
+      ];
 
-  static const List<String> _mealtimeOptions = [
+  static const List<String> _mealtimeKeys = [
     'Breakfast',
     'Morning snack',
     'Lunch',
@@ -75,6 +77,21 @@ class _EditMealScreenState extends State<EditMealScreen> {
     'Dinner',
     'Second dinner',
   ];
+
+  List<String> get _mealtimeDisplayOptions => [
+        tr(LocaleKeys.meal_mealtime_breakfast),
+        tr(LocaleKeys.meal_mealtime_morning_snack),
+        tr(LocaleKeys.meal_mealtime_lunch),
+        tr(LocaleKeys.meal_mealtime_afternoon_snack),
+        tr(LocaleKeys.meal_mealtime_dinner),
+        tr(LocaleKeys.meal_mealtime_second_dinner),
+      ];
+
+  String get _mealtimeDisplay {
+    final index = _mealtimeKeys.indexOf(_mealtime);
+    if (index < 0) return _mealtime;
+    return _mealtimeDisplayOptions[index];
+  }
 
   @override
   void initState() {
@@ -106,7 +123,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
   bool get _isEditMode => _mode == MealScreenMode.edit;
   bool get _isValid => _ingredients.isNotEmpty && _totalCalories > 0;
   bool get _isBusy => _isSaving || _isDeleting;
-  String get _mealTitle => _meal.name.trim().isEmpty ? 'Untitled meal' : _meal.name.trim();
+  String get _mealTitle => _meal.name.trim().isEmpty ? tr(LocaleKeys.meal_untitled) : _meal.name.trim();
 
   ImageProvider? _resolveHeroImage(String? path) {
     final file = MediaStorage.existingMealPhotoFile(path);
@@ -273,8 +290,8 @@ class _EditMealScreenState extends State<EditMealScreen> {
     if (_isDeleting) return;
     if (_meal.id == null) {
       Get.snackbar(
-        'Delete unavailable',
-        'This meal cannot be deleted.',
+        tr(LocaleKeys.meal_delete_title),
+        tr(LocaleKeys.meal_delete_message),
         snackPosition: SnackPosition.BOTTOM,
       );
       return;
@@ -286,10 +303,10 @@ class _EditMealScreenState extends State<EditMealScreen> {
       builder: (context) => Padding(
         padding: const EdgeInsets.all(AppSpacing.m),
         child: EditConfirmSheet(
-          title: 'Delete meal?',
-          message: 'This will remove the meal and all its ingredients.',
-          confirmLabel: 'Delete',
-          cancelLabel: 'Cancel',
+          title: tr(LocaleKeys.meal_delete_title),
+          message: tr(LocaleKeys.meal_delete_message),
+          confirmLabel: tr(LocaleKeys.common_delete),
+          cancelLabel: tr(LocaleKeys.common_cancel),
           confirmColor: AppColors.destructive,
           onCancel: () => Navigator.of(context).pop(false),
           onConfirm: () => Navigator.of(context).pop(true),
@@ -311,7 +328,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
     final mealToShare = _buildWorkingMeal();
     final request = MealShareBuilder.fromMeal(
       meal: mealToShare,
-      mealtimeLabel: _mealtime,
+      mealtimeLabel: _mealtimeDisplay,
       includePhoto: true,
     );
 
@@ -320,8 +337,8 @@ class _EditMealScreenState extends State<EditMealScreen> {
     } catch (_) {
       if (!mounted) return;
       Get.snackbar(
-        'Share unavailable',
-        'Unable to open the share sheet right now.',
+        tr(LocaleKeys.common_share),
+        tr(LocaleKeys.common_something_went_wrong),
         snackPosition: SnackPosition.BOTTOM,
       );
     }
@@ -357,7 +374,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                     child: GlassActionSheet(
                       items: [
                         GlassActionSheetItem(
-                          label: 'Share',
+                          label: tr(LocaleKeys.common_share),
                           icon: Icons.share_outlined,
                           onTap: () {
                             Navigator.of(context).pop();
@@ -365,7 +382,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                           },
                         ),
                         GlassActionSheetItem(
-                          label: 'Report',
+                          label: tr(LocaleKeys.common_report),
                           icon: Icons.report_outlined,
                           onTap: () {
                             Navigator.of(context).pop();
@@ -373,15 +390,15 @@ class _EditMealScreenState extends State<EditMealScreen> {
                           },
                         ),
                         GlassActionSheetItem(
-                          label: 'Save Image',
+                          label: tr(LocaleKeys.meal_save_image),
                           icon: Icons.download_outlined,
                           onTap: () {
                             Navigator.of(context).pop();
-                            Get.snackbar('Save Image', 'Saving is not implemented yet.');
+                            Get.snackbar(tr(LocaleKeys.meal_save_image), tr(LocaleKeys.meal_save_image_stub));
                           },
                         ),
                         GlassActionSheetItem(
-                          label: 'Delete',
+                          label: tr(LocaleKeys.common_delete),
                           icon: Icons.delete_outline,
                           color: AppColors.destructive,
                           onTap: () {
@@ -473,10 +490,10 @@ class _EditMealScreenState extends State<EditMealScreen> {
       builder: (context) => SafeArea(
         top: false,
         child: PickerSheet(
-          options: _mealtimeOptions,
-          selectedIndex: _mealtimeOptions.indexOf(_mealtime).clamp(0, _mealtimeOptions.length - 1),
+          options: _mealtimeDisplayOptions,
+          selectedIndex: _mealtimeKeys.indexOf(_mealtime).clamp(0, _mealtimeKeys.length - 1),
           onSelected: (index) {
-            final selectedMealtime = _mealtimeOptions[index];
+            final selectedMealtime = _mealtimeKeys[index];
             final selectedTime = _timeOfDayForMealtime(selectedMealtime);
             setState(() {
               _mealtime = selectedMealtime;
@@ -556,7 +573,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
 
   Future<void> _addIngredient() async {
     final newIngredient = Ingredient(
-      name: 'New Ingredient',
+      name: tr(LocaleKeys.meal_new_ingredient),
       weight: 0,
       calories: 0,
       proteins: 0,
@@ -575,9 +592,9 @@ class _EditMealScreenState extends State<EditMealScreen> {
   }
 
   String get _primaryLabel {
-    if (_isEditMode) return _isSaving ? 'Saving...' : 'Done';
-    if (widget.openedFromLogScreen) return _isSaving ? 'Saving...' : 'Save';
-    return 'Edit';
+    if (_isEditMode) return _isSaving ? tr(LocaleKeys.common_saving) : tr(LocaleKeys.common_done);
+    if (widget.openedFromLogScreen) return _isSaving ? tr(LocaleKeys.common_saving) : tr(LocaleKeys.common_save);
+    return tr(LocaleKeys.common_edit);
   }
 
   VoidCallback? get _onPrimaryTap {
@@ -654,8 +671,8 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                     left: AppSpacing.edge,
                                     right: AppSpacing.edge,
                                     top: AppSizes.mealHeroHeight - heroOverlap,
-                                    child: const AllergyAlertCard(
-                                      title: 'Allergy Alert',
+                                    child: AllergyAlertCard(
+                                      title: tr(LocaleKeys.meal_allergy_alert),
                                       subtitle: 'This meal contains: Fish',
                                     ),
                                   ),
@@ -666,7 +683,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.edge),
                               child: CaloriesSummaryCard(
-                                label: 'Calories',
+                                label: tr(LocaleKeys.common_calories),
                                 value: _totalCalories.toStringAsFixed(0),
                                 delta: widget.showCaloriesDelta ? widget.caloriesDelta : null,
                                 height: AppSizes.caloriesCardHeight,
@@ -688,7 +705,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                 right: AppSpacing.edge,
                                 top: AppSizes.mealHeroHeight - heroOverlap,
                                 child: CaloriesSummaryCard(
-                                  label: 'Calories',
+                                  label: tr(LocaleKeys.common_calories),
                                   value: _totalCalories.toStringAsFixed(0),
                                   delta: widget.showCaloriesDelta ? widget.caloriesDelta : null,
                                   height: AppSizes.caloriesCardHeight,
@@ -708,8 +725,8 @@ class _EditMealScreenState extends State<EditMealScreen> {
                           children: [
                             Expanded(
                               child: MacroStatCard(
-                                label: 'Protein',
-                                value: '${_totalProteins.toStringAsFixed(0)}g',
+                                label: tr(LocaleKeys.common_protein),
+                                value: '${_totalProteins.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
                                 icon: Icons.bolt,
                                 iconColor: AppColors.macroProtein,
                               ),
@@ -717,8 +734,8 @@ class _EditMealScreenState extends State<EditMealScreen> {
                             const SizedBox(width: AppSpacing.s),
                             Expanded(
                               child: MacroStatCard(
-                                label: 'Carbs',
-                                value: '${_totalCarbs.toStringAsFixed(0)}g',
+                                label: tr(LocaleKeys.common_carbs),
+                                value: '${_totalCarbs.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
                                 icon: Icons.grain,
                                 iconColor: AppColors.macroCarbsStrong,
                               ),
@@ -726,8 +743,8 @@ class _EditMealScreenState extends State<EditMealScreen> {
                             const SizedBox(width: AppSpacing.s),
                             Expanded(
                               child: MacroStatCard(
-                                label: 'Fats',
-                                value: '${_totalFats.toStringAsFixed(0)}g',
+                                label: tr(LocaleKeys.common_fats),
+                                value: '${_totalFats.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
                                 icon: Icons.opacity,
                                 iconColor: AppColors.macroFats,
                               ),
@@ -738,7 +755,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                       const SizedBox(height: AppSpacing.s),
                       MealRecordCard(
                         amount: _amountLabel,
-                        mealtime: _mealtime,
+                        mealtime: _mealtimeDisplay,
                         date: _formatDate(_selectedDate),
                         onAmountTap: _isBusy ? null : _openPortionPicker,
                         onMealtimeTap: _isBusy ? null : _openMealtimePicker,
@@ -751,7 +768,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Ingredients', style: AppTextStyles.sectionHeader16),
+                            Text(tr(LocaleKeys.meal_ingredients_title), style: AppTextStyles.sectionHeader16),
                             InkWell(
                               onTap: _isBusy
                                   ? null
@@ -765,7 +782,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                   const Icon(Icons.add, size: AppSizes.iconSm, color: AppColors.textTertiary),
                                   const SizedBox(width: AppSpacing.xxs),
                                   Text(
-                                    'Add',
+                                    tr(LocaleKeys.common_add),
                                     style: AppTextStyles.caption12.copyWith(color: AppColors.textTertiary, fontWeight: FontWeight.w600),
                                   ),
                                 ],
@@ -775,14 +792,14 @@ class _EditMealScreenState extends State<EditMealScreen> {
                         ),
                       ),
                       if (showIngredientsError)
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: AppSpacing.edge),
-                          child: InlineErrorText(message: 'Add at least one ingredient.'),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.edge),
+                          child: InlineErrorText(message: tr(LocaleKeys.meal_add_ingredient)),
                         )
                       else if (showCaloriesError)
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: AppSpacing.edge),
-                          child: InlineErrorText(message: 'Calories must be greater than 0.'),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.edge),
+                          child: InlineErrorText(message: tr(LocaleKeys.meal_calories_positive)),
                         ),
                       const SizedBox(height: AppSpacing.s),
                       Padding(
@@ -824,23 +841,23 @@ class _EditMealScreenState extends State<EditMealScreen> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.edge),
                           child: Column(
-                            children: const [
+                            children: [
                               SyncCard(
-                                title: 'Calories changed. Sync macros to match?',
-                                primaryLabel: 'Sync',
-                                secondaryLabel: "Don't sync",
+                                title: tr(LocaleKeys.meal_sync_macros_prompt),
+                                primaryLabel: tr(LocaleKeys.meal_sync),
+                                secondaryLabel: tr(LocaleKeys.meal_dont_sync),
                               ),
-                              SizedBox(height: AppSpacing.m),
+                              const SizedBox(height: AppSpacing.m),
                               SyncCard(
-                                title: 'Macros changed. Sync calories to match?',
-                                primaryLabel: 'Sync',
-                                secondaryLabel: "Don't sync",
+                                title: tr(LocaleKeys.meal_sync_calories_prompt),
+                                primaryLabel: tr(LocaleKeys.meal_sync),
+                                secondaryLabel: tr(LocaleKeys.meal_dont_sync),
                               ),
-                              SizedBox(height: AppSpacing.m),
+                              const SizedBox(height: AppSpacing.m),
                               SyncCard(
-                                title: 'Always sync automatically?',
-                                primaryLabel: 'Always sync',
-                                secondaryLabel: 'Decide later',
+                                title: tr(LocaleKeys.meal_always_sync),
+                                primaryLabel: tr(LocaleKeys.meal_always_sync),
+                                secondaryLabel: tr(LocaleKeys.meal_decide_later),
                               ),
                             ],
                           ),
@@ -879,7 +896,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
           child: EditBottomActionBar(
             primaryLabel: _primaryLabel,
             onPrimary: _onPrimaryTap,
-            secondaryLabel: 'Fix Issue',
+            secondaryLabel: tr(LocaleKeys.meal_fix_issue),
             secondaryIcon: Icons.auto_fix_high,
             onSecondary: _isBusy
                 ? null
@@ -964,7 +981,7 @@ class _MealNameEditorSheetState extends State<_MealNameEditorSheet> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Meal name',
+              tr(LocaleKeys.meal_meal_name),
               style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: AppSpacing.m),
@@ -974,7 +991,7 @@ class _MealNameEditorSheetState extends State<_MealNameEditorSheet> {
               textInputAction: TextInputAction.done,
               onSubmitted: (value) => Navigator.of(context).pop(value),
               decoration: InputDecoration(
-                hintText: 'Enter meal name',
+                hintText: tr(LocaleKeys.meal_enter_meal_name),
                 hintStyle: AppTextStyles.body16.copyWith(color: AppColors.textTertiary),
                 filled: true,
                 fillColor: AppColors.surfaceMuted,
@@ -993,14 +1010,14 @@ class _MealNameEditorSheetState extends State<_MealNameEditorSheet> {
               children: [
                 Expanded(
                   child: OutlinePillButton(
-                    label: 'Cancel',
+                    label: tr(LocaleKeys.common_cancel),
                     onTap: () => Navigator.of(context).pop(),
                   ),
                 ),
                 const SizedBox(width: AppSpacing.s),
                 Expanded(
                   child: GradientPillButton(
-                    label: 'Save',
+                    label: tr(LocaleKeys.common_save),
                     gradient: AppGradients.askAiPrimary,
                     onTap: () => Navigator.of(context).pop(_controller.text),
                   ),

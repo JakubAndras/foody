@@ -1,6 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/ask_ai_query_response.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 
@@ -114,7 +116,7 @@ class AskAiPromptCard extends StatelessWidget {
                       color: AppColors.textBody,
                     ),
                     decoration: InputDecoration(
-                      hintText: 'Ask about your nutrition data in natural language...',
+                      hintText: tr(LocaleKeys.ask_ai_hint),
                       hintStyle: AppTextStyles.body14.copyWith(
                         fontWeight: FontWeight.w400,
                         color: AppColors.textTertiary,
@@ -137,7 +139,7 @@ class AskAiPromptCard extends StatelessWidget {
           if (!readOnly) ...[
             const SizedBox(height: AppSpacing.m),
             AskAiPrimaryButton(
-              label: isLoading ? 'Analyzing...' : 'Ask AI',
+              label: isLoading ? tr(LocaleKeys.voice_analyzing) : tr(LocaleKeys.ask_ai_title),
               leading: isLoading
                   ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.onPrimary))
                   : const Icon(Icons.auto_awesome, size: AppSizes.iconMd, color: AppColors.onPrimary),
@@ -241,8 +243,8 @@ class AskAiResponseCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const AskAiSectionHeader(
-            title: 'AI Response',
+          AskAiSectionHeader(
+            title: tr(LocaleKeys.ask_ai_response_title),
             icon: Icons.auto_awesome,
             iconGradient: AppGradients.askAiPrimary,
             iconRadius: AppRadii.pill,
@@ -290,7 +292,7 @@ class AskAiSummaryCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AskAiSectionHeader(
-            title: 'Summary',
+            title: tr(LocaleKeys.ask_ai_summary),
             icon: icon,
             iconGradient: iconGradient,
             iconRadius: AppRadii.xs,
@@ -388,7 +390,20 @@ class _AskAiCalendarCardState extends State<AskAiCalendarCard> {
   }
 
   String _monthLabel() {
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    final months = [
+      tr(LocaleKeys.month_january),
+      tr(LocaleKeys.month_february),
+      tr(LocaleKeys.month_march),
+      tr(LocaleKeys.month_april),
+      tr(LocaleKeys.month_may),
+      tr(LocaleKeys.month_june),
+      tr(LocaleKeys.month_july),
+      tr(LocaleKeys.month_august),
+      tr(LocaleKeys.month_september),
+      tr(LocaleKeys.month_october),
+      tr(LocaleKeys.month_november),
+      tr(LocaleKeys.month_december),
+    ];
     return '${months[_month - 1]} $_year';
   }
 
@@ -412,8 +427,8 @@ class _AskAiCalendarCardState extends State<AskAiCalendarCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const AskAiSectionHeader(
-            title: 'Affected Days',
+          AskAiSectionHeader(
+            title: tr(LocaleKeys.ask_ai_affected_days),
             icon: Icons.calendar_month,
             iconGradient: AppGradients.primary,
             iconRadius: AppRadii.xs,
@@ -511,10 +526,17 @@ class AskAiCalendarGrid extends StatelessWidget {
 }
 
 class _WeekdayHeader extends StatelessWidget {
-  final List<String> labels = const ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
   @override
   Widget build(BuildContext context) {
+    final labels = [
+      tr(LocaleKeys.day_sun),
+      tr(LocaleKeys.day_mon),
+      tr(LocaleKeys.day_tue),
+      tr(LocaleKeys.day_wed),
+      tr(LocaleKeys.day_thu),
+      tr(LocaleKeys.day_fri),
+      tr(LocaleKeys.day_sat),
+    ];
     return Row(
       children: labels
           .map((label) => Expanded(
@@ -669,13 +691,13 @@ class _LegendRow extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           _LegendItem(
-            label: 'Affected',
+            label: tr(LocaleKeys.ask_ai_affected),
             gradient: affectedGradient,
             useShadow: true,
           ),
           const SizedBox(width: AppSpacing.l),
           _LegendItem(
-            label: 'Normal',
+            label: tr(LocaleKeys.ask_ai_normal),
             gradient: null,
             useShadow: false,
           ),

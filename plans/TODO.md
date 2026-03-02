@@ -31,12 +31,8 @@
 - Clone meal + all ingredients with new timestamp
 - Date picker option for target day
 
-### FR-20: Name Autocomplete from History :x:
-**Current state:** `SelectMealScreen` has search/filter (`select_meal_screen.dart:42-76`) but no autocomplete suggestions.
-**What's needed:**
-- Query distinct meal/ingredient names from DB history
-- Autocomplete dropdown as user types in meal/ingredient name fields
-- Frequency-weighted suggestions (most-used first)
+### FR-20: Name Autocomplete from History :white_check_mark:
+**Done:** Autocomplete suggestions implemented in `SelectMealScreen`. As the user types in the search bar, a floating dropdown shows up to 5 frequency-weighted suggestions derived from distinct meal and ingredient names in the user's history. Suggestions respect the active tab (Meals/Ingredients/All/Favorites). Tapping a suggestion fills the search field and filters results. Uses `FocusNode` to show/hide suggestions on focus changes.
 
 ### FR-21: Plan vs Actual for Cooking :x:
 **Current state:** `RecipeService` has 8 hardcoded Czech recipes (`recipe_service.dart:7-89`) with placeholder images. No UI references the service.
@@ -146,12 +142,8 @@
 - Unit conversion logic
 - Localized unit names
 
-### FR-18: Favorites :warning:
-**Works:** `isFavorite` field on `MealEntity` (`meal_entity.dart:23`). Toggle works in `EditMealScreen` (`edit_meal_screen.dart:264-270`). Filter tab in `SelectMealScreen`.
-**Missing:**
-- `SelectMealScreen` listing falls back to mock data when DB is empty (`select_meal_screen.dart:225-228, 469-505`)
-- No dedicated "Favorites" view outside SelectMealScreen
-- Exercise favorites — bookmark icons exist but have empty `onTap: () {}` handlers (`exercise_detail_screen.dart:40`, `exercise_log_home_screen.dart:93`, `add_exercise_screen.dart:125`)
+### FR-18: Favorites :white_check_mark:
+**Done:** Meal favorites fully functional (DB toggle, EditMealScreen bookmark, SelectMealScreen favorites tab with real DB data). Exercise favorites implemented: `isFavorite` field added to ExerciseEntity (migration v6→v7), bookmark buttons wired in ExerciseDetailScreen, AddExerciseScreen, and ExerciseLogHomeScreen. Mock data removed from SelectMealScreen and ExerciseLogHomeScreen — all listings use real DB data.
 
 ### FR-28: Data Export (CSV/PDF) :white_check_mark:
 **Implemented:** Full PDF and CSV export with date range selection (last 7/30 days, all time, custom). `ExportService` generates styled PDF reports (daily summary table, meal details with ingredients, exercise log, weight progress, period averages) and CSV files. `ExportController` manages date range state and export flow. Files shared via native share sheet (`share_plus`). Email screen removed in favor of share sheet.
@@ -195,13 +187,8 @@
 - Tips content (e.g. "speak clearly", "describe one meal at a time", supported languages)
 - Bottom sheet or dialog with tips
 
-### Localization :warning:
-**Current state:** Only 8 locale keys defined in `locale_keys.g.dart` (app_name + 7 day abbreviations). Vast majority of UI strings are hardcoded English throughout all screens.
-**What's needed:**
-- Extract all hardcoded strings to translation files (`en.json`, `cs.json`)
-- Regenerate locale keys
-- Full Czech translation
-- Verify `tr.json` (Turkish?) is intentional and complete
+### Localization :white_check_mark:
+**Done:** All user-facing strings extracted to `assets/translations/{en,cs}.json` (~380 flat keys). `locale_keys.g.dart` regenerated (564 lines). All 50+ screen/widget/controller/service files updated to use `tr(LocaleKeys.xxx)`. Full Czech translations provided. Unused `tr.json` (Turkish) removed. `as easy` aliases removed from language_screen and tracking_reminders_screen. Broken string-literal `tr()` calls in error.dart and base_controller.dart fixed.
 
 ### Dark Mode :warning:
 **Current state:** Dark theme colors defined in `app_theme_data.dart:96-149`. No toggle or system detection.
@@ -240,7 +227,7 @@
 ### Mock Data to Replace with Real Data
 | Location | Mock Content |
 |----------|-------------|
-| `select_meal_screen.dart:469-505` | 3 mock meals + 2 mock ingredients (used when DB is empty) |
+| ~~`select_meal_screen.dart:469-505`~~ | ~~3 mock meals + 2 mock ingredients~~ (removed — uses real DB data) |
 | `recipe_service.dart:7-89` | 8 hardcoded Czech recipes with placeholder image IDs |
 | `meal_detail_screen.dart:39-55` | `_stubMeal` fallback (Salmon & Vegetables) |
 | `ingredient_detail_screen.dart:18-27` | `_stubIngredient` fallback (Apple, 125g) |
@@ -249,9 +236,9 @@
 ### Empty Event Handlers
 | Location | Element |
 |----------|---------|
-| `exercise_detail_screen.dart:40` | Bookmark icon — `onTap: () {}` |
-| `exercise_log_home_screen.dart:93` | Bookmark icon — `onTap: () {}` |
-| `add_exercise_screen.dart:125` | Bookmark icon — `onTap: () {}` |
+| ~~`exercise_detail_screen.dart:40`~~ | ~~Bookmark icon~~ (wired to toggle favorite) |
+| ~~`exercise_log_home_screen.dart:93`~~ | ~~Bookmark icon~~ (wired to toggle favorites filter) |
+| ~~`add_exercise_screen.dart:125`~~ | ~~Bookmark icon~~ (wired to toggle favorite on new exercise) |
 | `ask_ai_response_screen.dart:150` | Export CSV button — `onTap: () {}` |
 | `select_meal_screen.dart:437` | Ingredient tap — shows snackbar only |
 
@@ -274,8 +261,8 @@
 1. **FR-31** — Ask AI (replace mock with real AI queries) // DONE
 2. **FR-28** — Data Export (implement actual PDF/CSV generation) // DONE
 3. **FR-05** — Account deletion & logout
-4. **FR-18** — Fix favorites listing (remove mock data fallback)
-5. **Localization** — Extract hardcoded strings to translation files
+4. **FR-18** — Fix favorites listing (remove mock data fallback) // DONE
+5. **Localization** — Extract hardcoded strings to translation files // DONE
 
 ### Medium Priority (Important for completeness)
 6. **FR-08** — Visual confidence indicators on meals
@@ -283,7 +270,7 @@
 8. **FR-35** — Working feature toggles
 9. **FR-15** — Unit types beyond grams
 10. **FR-19** — Meal duplication
-11. **FR-20** — Name autocomplete from history
+11. **FR-20** — Name autocomplete from history // DONE
 12. **Meal Report** — Wire up report submission
 13. **Dark Mode** — Theme toggle + system detection
 

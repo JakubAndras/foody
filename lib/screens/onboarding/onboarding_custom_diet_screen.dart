@@ -1,5 +1,7 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingCustomDietScreen extends StatefulWidget {
@@ -51,7 +53,7 @@ class _OnboardingCustomDietScreenState extends State<OnboardingCustomDietScreen>
       progress: widget.step / widget.totalSteps,
       onBack: widget.onBack,
       bottom: OnboardingPrimaryButton(
-        label: 'Continue',
+        label: tr(LocaleKeys.common_continue_btn),
         onPressed: () {
           widget.onPreferencesSaved?.call(_controller.text.trim());
           widget.onNext();
@@ -60,7 +62,7 @@ class _OnboardingCustomDietScreenState extends State<OnboardingCustomDietScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Custom diet\npreferences', style: textTheme.headlineLarge?.copyWith(height: 1.25)),
+          Text(tr(LocaleKeys.onboarding_custom_diet_title), style: textTheme.headlineLarge?.copyWith(height: 1.25)),
           const SizedBox(height: AppSpacing.s),
           Text(
             "Tell us about any food you don't eat, allergies, or dietary restrictions.",
@@ -79,7 +81,7 @@ class _OnboardingCustomDietScreenState extends State<OnboardingCustomDietScreen>
               maxLines: null,
               style: textTheme.titleMedium,
               decoration: InputDecoration.collapsed(
-                hintText: "E.g., I'm allergic to peanuts, don't eat dairy, avoid gluten...",
+                hintText: tr(LocaleKeys.onboarding_custom_diet_hint),
                 hintStyle: textTheme.titleMedium?.copyWith(color: AppColors.textTertiary),
               ),
             ),

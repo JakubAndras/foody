@@ -5,12 +5,14 @@ import 'dart:ui' as ui;
 import 'package:camera/camera.dart';
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/controller/dashboard_controller.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/screens/main_screen.dart';
 import 'package:diplomka/screens/scan/scan_permission_screen.dart';
 import 'package:diplomka/screens/scan/scan_preview_screen.dart';
 import 'package:diplomka/screens/scan/scan_widgets.dart';
 import 'package:diplomka/services/barcode_lookup_service.dart';
 import 'package:diplomka/services/selected_date_service.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
@@ -510,7 +512,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
             child: !_isInitializing
                 ? Center(
                     child: Text(
-                      'Camera unavailable',
+                      tr(LocaleKeys.scan_camera_unavailable),
                       style: AppTextStyles.body14Regular.copyWith(color: AppColors.textSecondary),
                     ),
                   )
@@ -677,7 +679,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ScanModeTile(
-                label: 'Scan Meal',
+                label: tr(LocaleKeys.scan_scan_meal),
                 icon: Icons.center_focus_strong,
                 isActive: _mode == ScanMode.scanMeal,
                 onTap: () => _toggleMode(ScanMode.scanMeal),
@@ -685,7 +687,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
               ),
               const SizedBox(width: AppSpacing.s),
               ScanModeTile(
-                label: 'Barcode',
+                label: tr(LocaleKeys.scan_barcode),
                 icon: Icons.qr_code_2,
                 isActive: _mode == ScanMode.barcode,
                 onTap: () => _toggleMode(ScanMode.barcode),
@@ -693,7 +695,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
               ),
               const SizedBox(width: AppSpacing.s),
               ScanModeTile(
-                label: 'Food label',
+                label: tr(LocaleKeys.scan_food_label),
                 icon: Icons.description_outlined,
                 isActive: _mode == ScanMode.foodLabel,
                 onTap: () => _toggleMode(ScanMode.foodLabel),
@@ -762,7 +764,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
               ),
               alignment: Alignment.center,
               child: Text(
-                'Align barcode in frame',
+                tr(LocaleKeys.scan_align_barcode),
                 style: AppTextStyles.body14.copyWith(color: AppColors.textEmphasisAlt),
                 textAlign: TextAlign.center,
               ),
@@ -784,10 +786,8 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
 
   Widget _buildTipOverlay() {
     final isBarcode = _mode == ScanMode.barcode;
-    final title = isBarcode ? 'Barcode Scanner' : 'Nutrition Label Scanner';
-    final body = isBarcode
-        ? 'Align the barcode within the frame and hold steady.'
-        : 'Get nutrition details from any label to track your intake accurately.';
+    final title = isBarcode ? tr(LocaleKeys.scan_barcode_scanner_title) : tr(LocaleKeys.scan_nutrition_label_title);
+    final body = isBarcode ? tr(LocaleKeys.scan_barcode_scanner_body) : tr(LocaleKeys.scan_nutrition_label_body);
     return Positioned.fill(
       child: Align(
         alignment: const Alignment(0, 0.8),

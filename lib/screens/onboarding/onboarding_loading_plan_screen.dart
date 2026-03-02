@@ -1,4 +1,6 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingLoadingPlanScreen extends StatefulWidget {
@@ -78,7 +80,7 @@ class _OnboardingLoadingPlanScreenState extends State<OnboardingLoadingPlanScree
                     const SizedBox(height: AppSpacing.m),
                     Center(
                       child: Text(
-                        "We're setting everything\nup for you",
+                        tr(LocaleKeys.onboarding_loading_title),
                         textAlign: TextAlign.center,
                         style: textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
                       ),
@@ -105,17 +107,17 @@ class _OnboardingLoadingPlanScreenState extends State<OnboardingLoadingPlanScree
                     const SizedBox(height: AppSpacing.s),
                     Center(
                       child: Text(
-                        'Estimating your metabolic age...',
+                        tr(LocaleKeys.onboarding_loading_subtitle),
                         style: textTheme.bodyLarge?.copyWith(color: AppColors.textMuted),
                       ),
                     ),
                     const SizedBox(height: AppSpacing.xl),
-                    Text('Daily recommendation for', style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+                    Text(tr(LocaleKeys.onboarding_daily_recommendation_for), style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
                     const SizedBox(height: AppSpacing.s),
-                    _Bullet(text: 'Calories'),
-                    _Bullet(text: 'Carbs'),
-                    _Bullet(text: 'Protein'),
-                    _Bullet(text: 'Fats'),
+                    _Bullet(text: tr(LocaleKeys.common_calories)),
+                    _Bullet(text: tr(LocaleKeys.common_carbs)),
+                    _Bullet(text: tr(LocaleKeys.common_protein)),
+                    _Bullet(text: tr(LocaleKeys.common_fats)),
                     const Spacer(),
                   ],
                 ),

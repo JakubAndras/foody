@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/model/weight_entry.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 
 class WeightProgressCard extends StatefulWidget {
@@ -105,7 +107,7 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Weight Progress', style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700)),
+              Text(tr(LocaleKeys.progress_weight_progress), style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700)),
               Container(
                 height: AppSizes.badgeHeight,
                 padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
@@ -120,7 +122,7 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
                     const SizedBox(width: AppSpacing.xs),
                     Text(changeLabel, style: AppTextStyles.caption12.copyWith(color: AppColors.textEmphasis, fontWeight: FontWeight.w700)),
                     const SizedBox(width: AppSpacing.xxs),
-                    Text('since start', style: AppTextStyles.caption12.copyWith(color: AppColors.textTertiary)),
+                    Text(tr(LocaleKeys.progress_since_start), style: AppTextStyles.caption12.copyWith(color: AppColors.textTertiary)),
                   ],
                 ),
               ),
@@ -130,7 +132,7 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
           if (!hasEntries)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: AppSpacing.l),
-              child: Text('No weight data yet.', style: AppTextStyles.body15.copyWith(color: AppColors.textSecondary)),
+              child: Text(tr(LocaleKeys.progress_no_weight_data), style: AppTextStyles.body15.copyWith(color: AppColors.textSecondary)),
             )
           else
             _WeightLineChart(

@@ -1,9 +1,11 @@
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/controller/weight_entry_controller.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/weight_entry.dart';
 import 'package:diplomka/screens/meals/meal_sheets.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 import 'package:diplomka/widgets/edit_flow/edit_flow_widgets.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -87,7 +89,7 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
 
     final weight = _parseWeight();
     if (weight == null) {
-      setState(() => _errorText = 'Enter a valid weight.');
+      setState(() => _errorText = tr(LocaleKeys.weight_log_invalid_weight));
       return;
     }
 
@@ -106,7 +108,7 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
     } catch (_) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Could not save weight entry. Please try again.')),
+        SnackBar(content: Text(tr(LocaleKeys.weight_log_save_failed))),
       );
     } finally {
       if (mounted) {
@@ -124,10 +126,10 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
       builder: (context) => Padding(
         padding: const EdgeInsets.all(AppSpacing.m),
         child: EditConfirmSheet(
-          title: 'Delete entry?',
-          message: 'This weight record will be removed.',
-          confirmLabel: 'Delete',
-          cancelLabel: 'Cancel',
+          title: tr(LocaleKeys.weight_log_delete_entry),
+          message: tr(LocaleKeys.weight_log_delete_message),
+          confirmLabel: tr(LocaleKeys.common_delete),
+          cancelLabel: tr(LocaleKeys.common_cancel),
           confirmColor: AppColors.destructive,
           onCancel: () => Navigator.of(context).pop(false),
           onConfirm: () => Navigator.of(context).pop(true),
@@ -180,7 +182,7 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final title = _isEditing ? 'Edit Entry' : 'Log Weight';
+    final title = _isEditing ? tr(LocaleKeys.weight_log_title_edit) : tr(LocaleKeys.weight_log_title_log);
 
     return Scaffold(
       backgroundColor: AppColors.backgroundAlt,
@@ -214,7 +216,7 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _LabelledField(
-                    label: 'WEIGHT',
+                    label: tr(LocaleKeys.weight_log_label_weight),
                     child: Row(
                       children: [
                         Expanded(
@@ -237,13 +239,13 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
                           ),
                         ),
                         const SizedBox(width: AppSpacing.xs),
-                        Text('kg', style: AppTextStyles.body15.copyWith(color: AppColors.textSecondary)),
+                        Text(tr(LocaleKeys.common_kg), style: AppTextStyles.body15.copyWith(color: AppColors.textSecondary)),
                       ],
                     ),
                   ),
                   const SizedBox(height: AppSpacing.m),
                   _LabelledField(
-                    label: 'DATE',
+                    label: tr(LocaleKeys.weight_log_label_date),
                     onTap: _openDatePicker,
                     child: Text(
                       _formatDate(_selectedDate),
@@ -264,13 +266,13 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
               children: [
                 if (_isEditing) ...[
                   Expanded(
-                    child: _DangerButton(label: 'Delete', icon: Icons.delete_outline, onPressed: _handleDelete),
+                    child: _DangerButton(label: tr(LocaleKeys.common_delete), icon: Icons.delete_outline, onPressed: _handleDelete),
                   ),
                   const SizedBox(width: AppSpacing.s),
                 ],
                 Expanded(
                   child: ProfilePrimaryButton(
-                    label: _isSaving ? 'Saving...' : 'Save',
+                    label: _isSaving ? tr(LocaleKeys.common_saving) : tr(LocaleKeys.common_save),
                     height: AppSizes.buttonHeightCompact,
                     radius: AppRadii.pill,
                     onPressed: _isSaving ? null : _handleSave,

@@ -6,6 +6,8 @@ import 'package:diplomka/model/exercise.dart';
 import 'package:diplomka/model/meal.dart';
 import 'package:diplomka/utils/media_storage.dart';
 import 'package:diplomka/widgets/progress_ring.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -33,7 +35,7 @@ class RecentlyUploadedCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "${DateFormat('MMM d').format(selectedDate)}'s meals",
+          tr(LocaleKeys.dashboard_meals_title, namedArgs: {'date': DateFormat('MMM d').format(selectedDate)}),
           style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700),
         ),
         Obx(() {
@@ -104,7 +106,7 @@ class RecentlyUploadedCard extends StatelessWidget {
     return Align(
       alignment: Alignment.centerLeft,
       child: Text(
-        'Exercises',
+        tr(LocaleKeys.dashboard_exercises_title),
         style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700),
       ),
     );
@@ -136,7 +138,7 @@ class RecentlyUploadedCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
             child: Text(
-              'Tap + to add your first meal or exercise of the day',
+              tr(LocaleKeys.dashboard_empty_state),
               style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary),
               textAlign: TextAlign.center,
             ),
@@ -205,7 +207,7 @@ class RecentlyUploadedCard extends StatelessWidget {
                               style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w700),
                             ),
                             Text(
-                              'kcal',
+                              tr(LocaleKeys.common_kcal),
                               style: AppTextStyles.caption12.copyWith(color: AppColors.textTertiary),
                             ),
                           ],
@@ -323,7 +325,7 @@ class RecentlyUploadedCard extends StatelessWidget {
                               style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w700),
                             ),
                             Text(
-                              'kcal',
+                              tr(LocaleKeys.common_kcal),
                               style: AppTextStyles.caption12.copyWith(color: AppColors.textTertiary),
                             ),
                           ],
@@ -339,7 +341,7 @@ class RecentlyUploadedCard extends StatelessWidget {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Duration: $exerciseDuration',
+                        tr(LocaleKeys.dashboard_exercise_duration, namedArgs: {'duration': exerciseDuration}),
                         style: AppTextStyles.caption12.copyWith(
                           color: AppColors.textSecondary,
                           fontWeight: FontWeight.w500,
@@ -415,8 +417,8 @@ class _AnalyzingMealCardState extends State<AnalyzingMealCard> {
   @override
   Widget build(BuildContext context) {
     final isExercise = widget.analysisType == AnalysisCardType.exercise;
-    final title = isExercise ? 'Recognising exercise' : 'Recognising meal';
-    final subtitle = isExercise ? "We'll add it to your exercise log soon." : "We’ll notify you when it’s done!";
+    final title = isExercise ? tr(LocaleKeys.dashboard_recognising_exercise) : tr(LocaleKeys.dashboard_recognising_meal);
+    final subtitle = isExercise ? tr(LocaleKeys.dashboard_recognising_exercise_subtitle) : tr(LocaleKeys.dashboard_recognising_meal_subtitle);
     final cardHeight = isExercise ? AppSizes.exerciseCardHeight : AppSizes.mealCardHeight;
     final leadingDecoration = BoxDecoration(
       borderRadius: BorderRadius.circular(AppRadii.sm2),

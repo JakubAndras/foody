@@ -1,5 +1,7 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -60,7 +62,7 @@ class OnboardingSignInSheetContent extends StatelessWidget {
             children: [
               const SizedBox(width: AppSizes.iconXl),
               Text(
-                'Sign In',
+                tr(LocaleKeys.onboarding_sign_in),
                 style: textTheme.headlineMedium,
               ),
               SizedBox(
@@ -83,12 +85,12 @@ class OnboardingSignInSheetContent extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.l),
           OnboardingSolidButton(
-            label: 'Sign in with Apple',
+            label: tr(LocaleKeys.onboarding_sign_in_apple),
             onPressed: onContinue,
           ),
           const SizedBox(height: AppSpacing.s),
           OnboardingOutlinedButton(
-            label: 'Sign in with Google',
+            label: tr(LocaleKeys.onboarding_sign_in_google),
             leading: SizedBox(
               width: AppSizes.iconLg,
               height: AppSizes.iconLg,
@@ -98,7 +100,7 @@ class OnboardingSignInSheetContent extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.s),
           OnboardingOutlinedButton(
-            label: 'Continue with email',
+            label: tr(LocaleKeys.onboarding_continue_email),
             leading: const Icon(CupertinoIcons.mail_solid, color: AppColors.textPrimary, size: AppSizes.iconMd),
             onPressed: onContinue,
           ),
@@ -107,18 +109,18 @@ class OnboardingSignInSheetContent extends StatelessWidget {
             TextSpan(
               style: textTheme.bodyMedium?.copyWith(color: AppColors.textMuted),
               children: [
-                const TextSpan(text: "By continuing you agree to app's "),
+                TextSpan(text: tr(LocaleKeys.onboarding_terms_prefix)),
                 TextSpan(
-                  text: 'Terms and Conditions',
+                  text: tr(LocaleKeys.onboarding_terms_and_conditions),
                   style: textTheme.bodyLarge?.copyWith(
                     color: AppColors.textMuted,
                     decoration: TextDecoration.underline,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                const TextSpan(text: ' and '),
+                TextSpan(text: tr(LocaleKeys.onboarding_and)),
                 TextSpan(
-                  text: 'Privacy Policy',
+                  text: tr(LocaleKeys.onboarding_privacy_policy),
                   style: textTheme.bodyLarge?.copyWith(
                     color: AppColors.textMuted,
                     decoration: TextDecoration.underline,

@@ -5,6 +5,7 @@ class Exercise {
   final DateTime timestamp;
   final int? durationMinutes;
   final double caloriesBurned;
+  final bool isFavorite;
 
   const Exercise({
     this.id,
@@ -13,6 +14,7 @@ class Exercise {
     required this.timestamp,
     this.durationMinutes,
     required this.caloriesBurned,
+    this.isFavorite = false,
   });
 
   factory Exercise.fromJson(Map<String, dynamic> json) {
@@ -23,6 +25,7 @@ class Exercise {
       timestamp: DateTime.parse(json['timestamp'] as String),
       durationMinutes: json['durationMinutes'] as int?,
       caloriesBurned: (json['caloriesBurned'] as num?)?.toDouble() ?? 0,
+      isFavorite: json['isFavorite'] as bool? ?? false,
     );
   }
 
@@ -34,6 +37,7 @@ class Exercise {
       'timestamp': timestamp.toIso8601String(),
       'durationMinutes': durationMinutes,
       'caloriesBurned': caloriesBurned,
+      'isFavorite': isFavorite,
     };
   }
 
@@ -44,6 +48,7 @@ class Exercise {
     DateTime? timestamp,
     int? durationMinutes,
     double? caloriesBurned,
+    bool? isFavorite,
   }) {
     return Exercise(
       id: id ?? this.id,
@@ -52,6 +57,7 @@ class Exercise {
       timestamp: timestamp ?? this.timestamp,
       durationMinutes: durationMinutes ?? this.durationMinutes,
       caloriesBurned: caloriesBurned ?? this.caloriesBurned,
+      isFavorite: isFavorite ?? this.isFavorite,
     );
   }
 }

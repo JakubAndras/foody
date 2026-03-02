@@ -1,11 +1,13 @@
 import 'dart:io';
 
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/model/weight_entry.dart';
 import 'package:diplomka/services/day_record_repository.dart';
 import 'package:diplomka/services/export/export_service.dart';
 import 'package:diplomka/services/share/app_share_service.dart';
 import 'package:diplomka/services/weight_entry_repository.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -46,7 +48,7 @@ class ExportController extends GetxController {
   String _dateRangeLabel() {
     final fmt = DateFormat('MMM d, yyyy');
     final (start, end) = _resolveDateRange();
-    if (selectedRange.value == ExportDateRange.allTime) return 'All Time';
+    if (selectedRange.value == ExportDateRange.allTime) return tr(LocaleKeys.export_all_time);
     return '${fmt.format(start)} – ${fmt.format(end)}';
   }
 
@@ -74,7 +76,7 @@ class ExportController extends GetxController {
       await AppShareService.share(
         request: AppShareRequest(
           files: [XFile(file.path, mimeType: 'application/pdf')],
-          subject: 'Foody Nutrition Report',
+          subject: tr(LocaleKeys.export_pdf_title),
         ),
       );
     } finally {
@@ -93,7 +95,7 @@ class ExportController extends GetxController {
       await AppShareService.share(
         request: AppShareRequest(
           files: [XFile(file.path, mimeType: 'text/csv')],
-          subject: 'Foody Nutrition Report',
+          subject: tr(LocaleKeys.export_pdf_title),
         ),
       );
     } finally {

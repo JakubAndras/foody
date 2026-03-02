@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class ExerciseDetailOptionsSheet extends StatelessWidget {
@@ -30,14 +32,14 @@ class ExerciseDetailOptionsSheet extends StatelessWidget {
             children: [
               _OptionRow(
                 icon: Icons.report_gmailerrorred_outlined,
-                label: 'Report',
+                label: tr(LocaleKeys.common_report),
                 color: AppColors.textPrimary,
                 onTap: onReport,
               ),
               const SizedBox(height: AppSpacing.s),
               _OptionRow(
                 icon: Icons.delete_outline,
-                label: 'Delete',
+                label: tr(LocaleKeys.common_delete),
                 color: AppColors.destructive,
                 onTap: onDelete,
               ),

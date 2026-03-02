@@ -88,7 +88,7 @@ class _$AppDatabase extends AppDatabase {
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 6,
+      version: 7,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -112,7 +112,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `WeightEntry` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` INTEGER NOT NULL, `weight` REAL NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Exercise` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `dayRecordId` INTEGER NOT NULL, `name` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `durationMinutes` INTEGER, `caloriesBurned` REAL NOT NULL, FOREIGN KEY (`dayRecordId`) REFERENCES `DayRecord` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `Exercise` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `dayRecordId` INTEGER NOT NULL, `name` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `durationMinutes` INTEGER, `caloriesBurned` REAL NOT NULL, `isFavorite` INTEGER NOT NULL, FOREIGN KEY (`dayRecordId`) REFERENCES `DayRecord` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
             'CREATE UNIQUE INDEX `index_DayRecord_date` ON `DayRecord` (`date`)');
 
@@ -601,7 +601,8 @@ class _$ExerciseDao extends ExerciseDao {
                   'name': item.name,
                   'timestamp': _dateTimeConverter.encode(item.timestamp),
                   'durationMinutes': item.durationMinutes,
-                  'caloriesBurned': item.caloriesBurned
+                  'caloriesBurned': item.caloriesBurned,
+                  'isFavorite': item.isFavorite ? 1 : 0
                 }),
         _exerciseEntityUpdateAdapter = UpdateAdapter(
             database,
@@ -613,7 +614,8 @@ class _$ExerciseDao extends ExerciseDao {
                   'name': item.name,
                   'timestamp': _dateTimeConverter.encode(item.timestamp),
                   'durationMinutes': item.durationMinutes,
-                  'caloriesBurned': item.caloriesBurned
+                  'caloriesBurned': item.caloriesBurned,
+                  'isFavorite': item.isFavorite ? 1 : 0
                 }),
         _exerciseEntityDeletionAdapter = DeletionAdapter(
             database,
@@ -625,7 +627,8 @@ class _$ExerciseDao extends ExerciseDao {
                   'name': item.name,
                   'timestamp': _dateTimeConverter.encode(item.timestamp),
                   'durationMinutes': item.durationMinutes,
-                  'caloriesBurned': item.caloriesBurned
+                  'caloriesBurned': item.caloriesBurned,
+                  'isFavorite': item.isFavorite ? 1 : 0
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -651,7 +654,8 @@ class _$ExerciseDao extends ExerciseDao {
             name: row['name'] as String,
             timestamp: _dateTimeConverter.decode(row['timestamp'] as int),
             durationMinutes: row['durationMinutes'] as int?,
-            caloriesBurned: row['caloriesBurned'] as double),
+            caloriesBurned: row['caloriesBurned'] as double,
+            isFavorite: (row['isFavorite'] as int) != 0),
         arguments: [dayRecordId]);
   }
 

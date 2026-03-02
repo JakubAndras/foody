@@ -75,3 +75,7 @@ final Migration migration5to6 = Migration(5, 6, (database) async {
     ')',
   );
 });
+
+final Migration migration6to7 = Migration(6, 7, (database) async {
+  await database.execute('ALTER TABLE `Exercise` ADD COLUMN `isFavorite` INTEGER NOT NULL DEFAULT 0');
+});

@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:diplomka/controller/dashboard_controller.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/nutrition_goals.dart';
 import 'package:diplomka/services/nutrition_goals_service.dart';
 import 'package:diplomka/services/selected_date_service.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -82,7 +84,7 @@ class _EditNutritionGoalsScreenState extends State<EditNutritionGoalsScreen> {
 
     if (calorieGoal == null || proteinGoal == null || carbsGoal == null || fatGoal == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter valid positive values for all goals.')),
+        SnackBar(content: Text(tr(LocaleKeys.nutrition_goals_invalid_values))),
       );
       return;
     }
@@ -105,7 +107,7 @@ class _EditNutritionGoalsScreenState extends State<EditNutritionGoalsScreen> {
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Nutrition goals updated')),
+        SnackBar(content: Text(tr(LocaleKeys.nutrition_goals_updated))),
       );
       Get.back();
     } finally {
@@ -125,39 +127,39 @@ class _EditNutritionGoalsScreenState extends State<EditNutritionGoalsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ProfileTopBar(title: 'Edit nutrition goals', onBack: () => Get.back()),
+          ProfileTopBar(title: tr(LocaleKeys.nutrition_goals_title), onBack: () => Get.back()),
           const SizedBox(height: AppSpacing.l),
           _GoalRow(
-            label: 'Calorie goal',
+            label: tr(LocaleKeys.nutrition_goals_calorie_goal),
             controller: _calorieController,
-            unit: 'kcal',
+            unit: tr(LocaleKeys.common_kcal),
             color: AppColors.primarySoft,
             icon: Icons.local_fire_department_outlined,
             enabled: !_isLoading && !_isSaving,
           ),
           const SizedBox(height: AppSpacing.m),
           _GoalRow(
-            label: 'Protein goal',
+            label: tr(LocaleKeys.nutrition_goals_protein_goal),
             controller: _proteinController,
-            unit: 'g',
+            unit: tr(LocaleKeys.common_g),
             color: AppColors.error,
             icon: Icons.fitness_center_outlined,
             enabled: !_isLoading && !_isSaving,
           ),
           const SizedBox(height: AppSpacing.m),
           _GoalRow(
-            label: 'Carb goal',
+            label: tr(LocaleKeys.nutrition_goals_carb_goal),
             controller: _carbsController,
-            unit: 'g',
+            unit: tr(LocaleKeys.common_g),
             color: AppColors.macroCarbs,
             icon: Icons.grain,
             enabled: !_isLoading && !_isSaving,
           ),
           const SizedBox(height: AppSpacing.m),
           _GoalRow(
-            label: 'Fat goal',
+            label: tr(LocaleKeys.nutrition_goals_fat_goal),
             controller: _fatController,
-            unit: 'g',
+            unit: tr(LocaleKeys.common_g),
             color: AppColors.info,
             icon: Icons.water_drop_outlined,
             enabled: !_isLoading && !_isSaving,
@@ -168,7 +170,7 @@ class _EditNutritionGoalsScreenState extends State<EditNutritionGoalsScreen> {
           ],
           const SizedBox(height: AppSpacing.l),
           ProfilePrimaryButton(
-            label: _isSaving ? 'Saving...' : 'Save goals',
+            label: _isSaving ? tr(LocaleKeys.common_saving) : tr(LocaleKeys.nutrition_goals_save_goals),
             onPressed: _isSaving || _isLoading ? null : _saveGoals,
             leading: const Icon(Icons.check, color: AppColors.onPrimary, size: AppSizes.iconMd),
             height: AppSizes.buttonHeightCompact,

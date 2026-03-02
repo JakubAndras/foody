@@ -1,5 +1,7 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingWorkoutsScreen extends StatefulWidget {
@@ -45,7 +47,7 @@ class _OnboardingWorkoutsScreenState extends State<OnboardingWorkoutsScreen> wit
       progress: widget.step / widget.totalSteps,
       onBack: widget.onBack,
       bottom: OnboardingPrimaryButton(
-        label: 'Continue',
+        label: tr(LocaleKeys.common_continue_btn),
         isEnabled: _selected != null,
         onPressed: _selected != null ? widget.onNext : null,
       ),
@@ -63,8 +65,8 @@ class _OnboardingWorkoutsScreenState extends State<OnboardingWorkoutsScreen> wit
           ),
           const SizedBox(height: AppSpacing.xl),
           OnboardingOptionCard(
-            title: '0-2',
-            subtitle: 'Workouts now and then',
+            title: tr(LocaleKeys.onboarding_workouts_0_2),
+            subtitle: tr(LocaleKeys.onboarding_workouts_0_2_desc),
             selected: _selected == '0-2',
             height: AppSizes.workoutCardHeight,
             leading: _WorkoutIcon(selected: _selected == '0-2', icon: Icons.circle_outlined),
@@ -75,8 +77,8 @@ class _OnboardingWorkoutsScreenState extends State<OnboardingWorkoutsScreen> wit
           ),
           const SizedBox(height: AppSpacing.s),
           OnboardingOptionCard(
-            title: '3-5',
-            subtitle: 'A few workouts per week',
+            title: tr(LocaleKeys.onboarding_workouts_3_5),
+            subtitle: tr(LocaleKeys.onboarding_workouts_3_5_desc),
             selected: _selected == '3-5',
             height: AppSizes.workoutCardHeight,
             leading: _WorkoutIcon(selected: _selected == '3-5', icon: Icons.more_horiz),
@@ -87,8 +89,8 @@ class _OnboardingWorkoutsScreenState extends State<OnboardingWorkoutsScreen> wit
           ),
           const SizedBox(height: AppSpacing.s),
           OnboardingOptionCard(
-            title: '6+',
-            subtitle: 'Dedicated athlete',
+            title: tr(LocaleKeys.onboarding_workouts_6_plus),
+            subtitle: tr(LocaleKeys.onboarding_workouts_6_plus_desc),
             selected: _selected == '6+',
             height: AppSizes.workoutCardHeight,
             leading: _WorkoutIcon(selected: _selected == '6+', icon: Icons.apps_outlined),

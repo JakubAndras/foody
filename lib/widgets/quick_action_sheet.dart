@@ -1,4 +1,6 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class QuickActionSheet extends StatelessWidget {
@@ -46,13 +48,13 @@ class QuickActionSheet extends StatelessWidget {
               _buildGridRow(
                 left: _QuickActionTile(
                   icon: Icons.center_focus_strong,
-                  label: 'Log Meal',
+                  label: tr(LocaleKeys.quick_action_log_meal),
                   iconBg: const Color(0x212B7FFF),
                   onTap: onLogMeal,
                 ),
                 right: _QuickActionTile(
                   icon: Icons.qr_code_2,
-                  label: 'Barcode Scan',
+                  label: tr(LocaleKeys.quick_action_barcode_scan),
                   iconBg: const Color(0x21FB2C36),
                   onTap: onBarcode,
                 ),
@@ -61,13 +63,13 @@ class QuickActionSheet extends StatelessWidget {
               _buildGridRow(
                 left: _QuickActionTile(
                   icon: Icons.mic,
-                  label: 'Voice Log',
+                  label: tr(LocaleKeys.quick_action_voice_log),
                   iconBg: const Color(0x216366F1),
                   onTap: onVoiceLog,
                 ),
                 right: _QuickActionTile(
                   icon: Icons.photo_camera_outlined,
-                  label: 'Meal Scan',
+                  label: tr(LocaleKeys.quick_action_meal_scan),
                   iconBg: const Color(0x2105DF72),
                   onTap: onMealScan,
                 ),
@@ -95,13 +97,13 @@ class QuickActionSheet extends StatelessWidget {
                   children: [
                     _QuickActionRow(
                       icon: Icons.monitor_weight_outlined,
-                      label: 'Weight',
+                      label: tr(LocaleKeys.quick_action_weight),
                       onTap: onWeight,
                     ),
                     const Divider(height: 1, color: AppColors.outline),
                     _QuickActionRow(
                       icon: Icons.fitness_center_outlined,
-                      label: 'Exercise',
+                      label: tr(LocaleKeys.quick_action_exercise),
                       onTap: onExercise,
                     ),
                   ],

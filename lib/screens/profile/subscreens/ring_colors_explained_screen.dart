@@ -1,9 +1,11 @@
 import 'dart:math' as math;
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 
 class RingColorsExplainedScreen extends StatelessWidget {
@@ -17,7 +19,7 @@ class RingColorsExplainedScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ProfileTopBar(title: 'Ring Colors Explained', onBack: () => Get.back()),
+          ProfileTopBar(title: tr(LocaleKeys.ring_colors_title), onBack: () => Get.back()),
           const SizedBox(height: AppSpacing.l),
           ProfileCard(
             color: AppColors.surfaceCard,
@@ -28,7 +30,7 @@ class RingColorsExplainedScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Calories AI app', style: AppTextStyles.h4.copyWith(fontWeight: FontWeight.w700)),
+                    Text(tr(LocaleKeys.ring_colors_header), style: AppTextStyles.h4.copyWith(fontWeight: FontWeight.w700)),
                     _FirePill(),
                   ],
                 ),
@@ -39,42 +41,42 @@ class RingColorsExplainedScreen extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.m),
           Text(
-            'Each day ring has 10 segments.',
+            tr(LocaleKeys.ring_colors_segment_info),
             style: AppTextStyles.body14Relaxed,
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(
-            '1 segment = 10% of your daily goal.',
+            tr(LocaleKeys.ring_colors_segment_calc),
             style: AppTextStyles.body14Relaxed,
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(
-            'Example: 1500 / 2000 kcal -> 75% -> 8 segments.',
+            tr(LocaleKeys.ring_colors_segment_example),
             style: AppTextStyles.body14Relaxed,
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(
-            'Red starts after 105%. Example: 125% -> 3 red segments.',
+            tr(LocaleKeys.ring_colors_red_info),
             style: AppTextStyles.body14Relaxed,
           ),
           const SizedBox(height: AppSpacing.l),
-          const _LegendItem(
-            title: 'Dark Segment',
-            description: 'Calories eaten within goal.',
+          _LegendItem(
+            title: tr(LocaleKeys.ring_colors_dark_segment),
+            description: tr(LocaleKeys.ring_colors_dark_desc),
             filledSegments: 8,
             overflowSegments: 0,
           ),
           const SizedBox(height: AppSpacing.m),
-          const _LegendItem(
-            title: 'Red Segment',
-            description: 'Calories above goal.',
+          _LegendItem(
+            title: tr(LocaleKeys.ring_colors_red_segment),
+            description: tr(LocaleKeys.ring_colors_red_desc),
             filledSegments: 10,
             overflowSegments: 3,
           ),
           const SizedBox(height: AppSpacing.m),
-          const _LegendItem(
-            title: 'Gray Segment',
-            description: 'Not eaten yet.',
+          _LegendItem(
+            title: tr(LocaleKeys.ring_colors_gray_segment),
+            description: tr(LocaleKeys.ring_colors_gray_desc),
             filledSegments: 3,
             overflowSegments: 0,
           ),

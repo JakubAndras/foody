@@ -1,5 +1,7 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingRolloverScreen extends StatelessWidget {
@@ -27,11 +29,11 @@ class OnboardingRolloverScreen extends StatelessWidget {
       bottom: Row(
         children: [
           Expanded(
-            child: OnboardingPrimaryButton(label: 'No', onPressed: onNext),
+            child: OnboardingPrimaryButton(label: tr(LocaleKeys.common_no), onPressed: onNext),
           ),
           const SizedBox(width: AppSpacing.s),
           Expanded(
-            child: OnboardingPrimaryButton(label: 'Yes', onPressed: onNext),
+            child: OnboardingPrimaryButton(label: tr(LocaleKeys.common_yes), onPressed: onNext),
           ),
         ],
       ),
@@ -39,18 +41,18 @@ class OnboardingRolloverScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Rollover calorie balance\nto the next day?',
+            tr(LocaleKeys.onboarding_rollover_title),
             style: textTheme.headlineLarge?.copyWith(height: 1.25),
           ),
           const SizedBox(height: AppSpacing.s),
-          const OnboardingPillChipSmall(
-            label: 'Rollover up to 500 cals',
+          OnboardingPillChipSmall(
+            label: tr(LocaleKeys.onboarding_rollover_chip),
             textColor: AppColors.textPrimary,
             backgroundColor: AppColors.surfaceChip,
           ),
           const SizedBox(height: AppSpacing.l),
           Text(
-            'If you eat under your goal, the unused calories will be added to tomorrow’s budget.\n\nIf you eat over, the extra calories will be subtracted from tomorrow’s budget.',
+            tr(LocaleKeys.onboarding_rollover_explanation),
             style: textTheme.bodyLarge?.copyWith(color: AppColors.textPrimary),
             textAlign: TextAlign.center,
           ),
@@ -62,7 +64,7 @@ class OnboardingRolloverScreen extends StatelessWidget {
                 Positioned(
                   left: 0,
                   child: _RolloverCard(
-                    title: 'Yesterday',
+                    title: tr(LocaleKeys.onboarding_yesterday),
                     headerColor: AppColors.errorContainer,
                     titleColor: AppColors.error,
                     totalCaloriesText: '/2000',
@@ -74,7 +76,7 @@ class OnboardingRolloverScreen extends StatelessWidget {
                   right: 0,
                   top: AppSpacing.l,
                   child: _RolloverCard(
-                    title: 'Today',
+                    title: tr(LocaleKeys.common_today),
                     headerColor: AppColors.surfaceChip,
                     titleColor: AppColors.primaryDark,
                     totalCaloriesText: '/2150',
@@ -248,7 +250,7 @@ class _CalsLeftBadge extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'Cals left',
+              tr(LocaleKeys.onboarding_cals_left),
               textAlign: TextAlign.center,
               style: textTheme.bodyMedium?.copyWith(color: AppColors.onPrimary),
             ),

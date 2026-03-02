@@ -1,8 +1,9 @@
 import 'dart:io';
-import 'dart:ui';
 
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/tracking_reminder_setting.dart';
 import 'package:diplomka/services/shared_preferences_manager.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
@@ -11,8 +12,6 @@ import 'package:timezone/data/latest_all.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
 
 const String trackingRemindersChannelId = 'tracking_reminders';
-const String trackingRemindersChannelName = 'Tracking Reminders';
-const String trackingRemindersChannelDescription = 'Daily tracking reminder notifications.';
 
 class TrackingReminderService extends GetxService {
   static TrackingReminderService get to => Get.find();
@@ -53,10 +52,10 @@ class TrackingReminderService extends GetxService {
   }
 
   Future<void> _createAndroidChannel() async {
-    const channel = AndroidNotificationChannel(
+    final channel = AndroidNotificationChannel(
       trackingRemindersChannelId,
-      trackingRemindersChannelName,
-      description: trackingRemindersChannelDescription,
+      tr(LocaleKeys.tracking_reminders_channel_name),
+      description: tr(LocaleKeys.tracking_reminders_channel_desc),
       importance: Importance.high,
     );
 
@@ -128,10 +127,10 @@ class TrackingReminderService extends GetxService {
 
     final scheduledDate = nextTriggerDate(setting.hour, setting.minute);
     final notificationDetails = NotificationDetails(
-      android: const AndroidNotificationDetails(
+      android: AndroidNotificationDetails(
         trackingRemindersChannelId,
-        trackingRemindersChannelName,
-        channelDescription: trackingRemindersChannelDescription,
+        tr(LocaleKeys.tracking_reminders_channel_name),
+        channelDescription: tr(LocaleKeys.tracking_reminders_channel_desc),
         importance: Importance.high,
         priority: Priority.high,
       ),
@@ -172,41 +171,21 @@ class TrackingReminderService extends GetxService {
   }
 
   String _notificationTitle() {
-    final languageCode = PlatformDispatcher.instance.locale.languageCode.toLowerCase();
-    if (languageCode == 'cs') {
-      return 'Pripominka sledovani';
-    }
-    return 'Tracking Reminder';
+    return tr(LocaleKeys.tracking_reminders_notification_title);
   }
 
   String _notificationBody(TrackingReminderType type) {
-    final languageCode = PlatformDispatcher.instance.locale.languageCode.toLowerCase();
-    if (languageCode == 'cs') {
-      switch (type) {
-        case TrackingReminderType.breakfast:
-          return 'Nezapomen zalogovat snidani.';
-        case TrackingReminderType.lunch:
-          return 'Nezapomen zalogovat obed.';
-        case TrackingReminderType.snack:
-          return 'Nezapomen zalogovat svacinu.';
-        case TrackingReminderType.dinner:
-          return 'Nezapomen zalogovat veceri.';
-        case TrackingReminderType.endOfDay:
-          return 'Nezapomen zapsat jidlo za cely den.';
-      }
-    }
-
     switch (type) {
       case TrackingReminderType.breakfast:
-        return 'Do not forget to log your breakfast.';
+        return tr(LocaleKeys.tracking_reminders_body_breakfast);
       case TrackingReminderType.lunch:
-        return 'Do not forget to log your lunch.';
+        return tr(LocaleKeys.tracking_reminders_body_lunch);
       case TrackingReminderType.snack:
-        return 'Do not forget to log your snack.';
+        return tr(LocaleKeys.tracking_reminders_body_snack);
       case TrackingReminderType.dinner:
-        return 'Do not forget to log your dinner.';
+        return tr(LocaleKeys.tracking_reminders_body_dinner);
       case TrackingReminderType.endOfDay:
-        return 'Do not forget to log all meals for today.';
+        return tr(LocaleKeys.tracking_reminders_body_end_of_day);
     }
   }
 }

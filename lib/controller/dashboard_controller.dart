@@ -1,9 +1,11 @@
 import 'dart:io';
 
 import 'package:diplomka/controller/streak_controller.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/barcode_lookup_result.dart';
 import 'package:diplomka/model/exercise.dart';
 import 'package:diplomka/model/meal_analysis_request.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -72,10 +74,10 @@ class DashboardController extends BaseController {
       dayRecord.value = record;
       NutritionGoalsService.to.syncFromDayRecord(date: date, dayRecord: record);
     } catch (e) {
-      dayRecordError.value = "Failed to load daily record: ${e.toString()}";
+      dayRecordError.value = e.toString();
       dayRecord.value = null;
       NutritionGoalsService.to.syncFromDayRecord(date: date, dayRecord: null);
-      Get.snackbar("Error", dayRecordError.value);
+      Get.snackbar(tr(LocaleKeys.common_error), tr(LocaleKeys.common_something_went_wrong));
     } finally {
       isLoadingDayRecord.value = false;
     }
@@ -87,9 +89,9 @@ class DashboardController extends BaseController {
     try {
       streakInfo.value = await _streakController.getStreakInfo();
     } catch (e) {
-      streakError.value = "Failed to load streak info: ${e.toString()}";
+      streakError.value = e.toString();
       streakInfo.value = null;
-      Get.snackbar("Error", streakError.value);
+      Get.snackbar(tr(LocaleKeys.common_error), tr(LocaleKeys.common_something_went_wrong));
     } finally {
       isLoadingStreak.value = false;
     }
@@ -100,7 +102,7 @@ class DashboardController extends BaseController {
       streakInfo.value = _streakController.calculateFromRecords(records);
       streakError.value = '';
     } catch (e) {
-      streakError.value = "Failed to update streak info: ${e.toString()}";
+      streakError.value = e.toString();
       streakInfo.value = null;
     } finally {
       isLoadingStreak.value = false;
@@ -129,21 +131,19 @@ class DashboardController extends BaseController {
     if (!status.isGranted) {
       String message;
       if (status.isPermanentlyDenied) {
-        message = source == ImageSource.camera
-            ? 'Camera permission is permanently denied. Please enable it in app settings.'
-            : 'Photo library permission is permanently denied. Please enable it in app settings.';
+        message = source == ImageSource.camera ? tr(LocaleKeys.error_camera_permanently_denied) : tr(LocaleKeys.error_gallery_permanently_denied);
         Get.snackbar(
-          'Permission Denied',
+          tr(LocaleKeys.error_permission_denied),
           message,
           mainButton: TextButton(
             onPressed: () => openAppSettings(),
-            child: const Text('Settings'),
+            child: Text(tr(LocaleKeys.tracking_reminders_open_settings)),
           ),
           duration: const Duration(seconds: 5),
         );
       } else {
-        message = source == ImageSource.camera ? 'Camera permission denied.' : 'Photo library permission denied.';
-        Get.snackbar('Permission Denied', message, duration: const Duration(seconds: 3));
+        message = source == ImageSource.camera ? tr(LocaleKeys.error_camera_denied) : tr(LocaleKeys.error_gallery_denied);
+        Get.snackbar(tr(LocaleKeys.error_permission_denied), message, duration: const Duration(seconds: 3));
       }
       debugPrint(message);
       return;
@@ -153,7 +153,7 @@ class DashboardController extends BaseController {
     final XFile? imageFile = await picker.pickImage(source: source);
 
     if (imageFile == null) {
-      Get.snackbar('Image Picker', 'No image selected.', duration: const Duration(seconds: 2));
+      Get.snackbar(tr(LocaleKeys.error_image_picker_title), tr(LocaleKeys.error_no_image_selected), duration: const Duration(seconds: 2));
       debugPrint('No image selected.');
       return;
     }
@@ -165,8 +165,8 @@ class DashboardController extends BaseController {
       );
     } catch (e) {
       Get.snackbar(
-        'Error',
-        'Error analyzing image: $e',
+        tr(LocaleKeys.common_error),
+        tr(LocaleKeys.error_analysis_image),
         duration: const Duration(seconds: 3),
       );
       debugPrint('Error calling AI Service: $e');
@@ -212,10 +212,10 @@ class DashboardController extends BaseController {
     }
 
     if (request.source == MealInputSource.photo && request.trimmedImagePath == null) {
-      return MealAnalysisFlowResult.failure(message: 'Photo input is required for this analysis.');
+      return MealAnalysisFlowResult.failure(message: tr(LocaleKeys.error_analysis_no_photo));
     }
     if (request.source == MealInputSource.voice && request.trimmedDescription == null) {
-      return MealAnalysisFlowResult.failure(message: 'Voice description is required for this analysis.');
+      return MealAnalysisFlowResult.failure(message: tr(LocaleKeys.error_exercise_empty_desc));
     }
 
     _beginMealAnalysis();
@@ -224,12 +224,12 @@ class DashboardController extends BaseController {
       final String? storedPhotoRef = await _resolvePhotoPath(rawImagePath);
       if (request.source == MealInputSource.photo && rawImagePath != null && storedPhotoRef == null) {
         Get.snackbar(
-          'Analysis failed',
-          'Meal photo is required for photo analysis, but the image could not be loaded.',
+          tr(LocaleKeys.error_analysis_failed),
+          tr(LocaleKeys.error_analysis_no_photo),
           duration: const Duration(seconds: 3),
         );
         return MealAnalysisFlowResult.failure(
-          message: 'Meal photo could not be loaded.',
+          message: tr(LocaleKeys.error_analysis_no_photo),
         );
       }
       if (rawImagePath != null && storedPhotoRef == null) {
@@ -249,8 +249,8 @@ class DashboardController extends BaseController {
       return flowResult;
     } catch (e) {
       Get.snackbar(
-        'Error',
-        'Error analyzing meal: $e',
+        tr(LocaleKeys.common_error),
+        tr(LocaleKeys.error_analysis_meal),
         duration: const Duration(seconds: 3),
       );
       debugPrint('Error calling AI Service: $e');
@@ -299,8 +299,8 @@ class DashboardController extends BaseController {
       );
     } catch (e) {
       Get.snackbar(
-        'Error',
-        'Error analyzing barcode: $e',
+        tr(LocaleKeys.common_error),
+        tr(LocaleKeys.error_analysis_barcode),
         duration: const Duration(seconds: 3),
       );
       debugPrint('Error calling barcode analysis flow: $e');
@@ -317,8 +317,8 @@ class DashboardController extends BaseController {
     final trimmedDescription = description.trim();
     if (trimmedDescription.isEmpty) {
       Get.snackbar(
-        'Exercise analysis failed',
-        'Exercise description cannot be empty.',
+        tr(LocaleKeys.error_exercise_analysis_failed),
+        tr(LocaleKeys.error_exercise_empty_desc),
       );
       return;
     }
@@ -331,14 +331,14 @@ class DashboardController extends BaseController {
     try {
       final result = await AiPipelineService.to.analyzeExercise(description: trimmedDescription);
       if (!result.isSuccess || result.analysis == null) {
-        Get.snackbar('Exercise analysis failed', result.message ?? 'Please try again.');
+        Get.snackbar(tr(LocaleKeys.error_exercise_analysis_failed), result.message ?? tr(LocaleKeys.common_try_again));
         return;
       }
 
       if (result.status == AiExerciseAnalysisStatus.lowConfidence) {
         Get.snackbar(
-          'Low confidence',
-          result.message ?? 'Please review values.',
+          tr(LocaleKeys.error_low_confidence),
+          result.message ?? tr(LocaleKeys.error_low_confidence_review),
         );
       }
 
@@ -348,8 +348,8 @@ class DashboardController extends BaseController {
 
       if (caloriesBurned <= 0) {
         Get.snackbar(
-          'Exercise analysis failed',
-          'Could not infer burned calories from AI response. Please try again with a more detailed description.',
+          tr(LocaleKeys.error_exercise_analysis_failed),
+          tr(LocaleKeys.error_exercise_no_calories),
         );
         return;
       }
@@ -368,8 +368,8 @@ class DashboardController extends BaseController {
       refresh();
     } catch (e) {
       Get.snackbar(
-        'Exercise analysis failed',
-        'Failed to create exercise record. Please try again.',
+        tr(LocaleKeys.error_exercise_analysis_failed),
+        tr(LocaleKeys.error_exercise_create_failed),
       );
       debugPrint('Error in exercise voice analysis flow: $e');
     } finally {
@@ -401,7 +401,7 @@ class DashboardController extends BaseController {
 
     if (result.isSuccess && result.response != null) {
       if (result.status == AiAnalysisStatus.lowConfidence) {
-        Get.snackbar('Low confidence', result.message ?? 'Please review the result.');
+        Get.snackbar(tr(LocaleKeys.error_low_confidence), result.message ?? tr(LocaleKeys.error_low_confidence_review));
       }
       Meal meal = Meal.fromAnswer(result.response!.answer).copyWith(
         timestamp: _applyDateToTime(DateTime.now(), selectedDate),
@@ -420,8 +420,8 @@ class DashboardController extends BaseController {
       return MealAnalysisFlowResult.success(status: result.status);
     } else {
       Get.snackbar(
-        'Analysis failed',
-        result.message ?? 'Could not analyze the image. Please try again.',
+        tr(LocaleKeys.error_analysis_failed),
+        result.message ?? tr(LocaleKeys.error_analysis_could_not),
         duration: const Duration(seconds: 3),
       );
       return MealAnalysisFlowResult.failure(message: result.message);

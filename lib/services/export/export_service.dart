@@ -1,8 +1,10 @@
 import 'dart:typed_data';
 
 import 'package:csv/csv.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/model/weight_entry.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -17,7 +19,16 @@ class ExportService {
     final rows = <List<dynamic>>[];
 
     // Daily nutrition header
-    rows.add(['Date', 'Calories', 'Protein (g)', 'Carbs (g)', 'Fat (g)', 'Calorie Goal', 'Exercise Calories', 'Net Calories']);
+    rows.add([
+      tr(LocaleKeys.export_csv_date),
+      tr(LocaleKeys.export_csv_calories),
+      tr(LocaleKeys.export_csv_protein),
+      tr(LocaleKeys.export_csv_carbs),
+      tr(LocaleKeys.export_csv_fat),
+      tr(LocaleKeys.export_csv_calorie_goal),
+      tr(LocaleKeys.export_csv_exercise_calories),
+      tr(LocaleKeys.export_csv_net_calories),
+    ]);
 
     for (final r in records) {
       rows.add([
@@ -34,7 +45,7 @@ class ExportService {
 
     if (weights.isNotEmpty) {
       rows.add([]); // blank separator
-      rows.add(['Date', 'Weight (kg)']);
+      rows.add([tr(LocaleKeys.export_csv_date), tr(LocaleKeys.export_csv_weight)]);
       for (final w in weights) {
         rows.add([_dateFmt.format(w.date), w.weight]);
       }
@@ -65,29 +76,29 @@ class ExportService {
         ),
         build: (context) => [
           // ── Summary ──
-          pw.Header(level: 1, text: 'Daily Summary'),
+          pw.Header(level: 1, text: tr(LocaleKeys.export_daily_summary)),
           _buildDailySummaryTable(records),
           pw.SizedBox(height: 8),
           pw.Text(
-            'Period Averages — Calories: ${avgCalories.round()} kcal  |  Protein: ${avgProtein.round()}g  |  Carbs: ${avgCarbs.round()}g  |  Fat: ${avgFat.round()}g',
+            '${tr(LocaleKeys.export_period_averages)} — ${tr(LocaleKeys.common_calories)}: ${avgCalories.round()} ${tr(LocaleKeys.common_kcal)}  |  ${tr(LocaleKeys.common_protein)}: ${avgProtein.round()}${tr(LocaleKeys.common_g)}  |  ${tr(LocaleKeys.common_carbs)}: ${avgCarbs.round()}${tr(LocaleKeys.common_g)}  |  ${tr(LocaleKeys.common_fats)}: ${avgFat.round()}${tr(LocaleKeys.common_g)}',
             style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold),
           ),
           pw.SizedBox(height: 16),
 
           // ── Meal details ──
-          pw.Header(level: 1, text: 'Meal Details'),
+          pw.Header(level: 1, text: tr(LocaleKeys.export_meal_details)),
           ...records.expand((r) => _buildDayMealDetails(r)),
 
           // ── Exercise log ──
           if (records.any((r) => r.exercises.isNotEmpty)) ...[
-            pw.Header(level: 1, text: 'Exercise Log'),
+            pw.Header(level: 1, text: tr(LocaleKeys.export_exercise_log)),
             _buildExerciseTable(records),
             pw.SizedBox(height: 16),
           ],
 
           // ── Weight progress ──
           if (weights.isNotEmpty) ...[
-            pw.Header(level: 1, text: 'Weight Progress'),
+            pw.Header(level: 1, text: tr(LocaleKeys.progress_weight_progress)),
             _buildWeightTable(weights),
           ],
         ],
@@ -101,7 +112,7 @@ class ExportService {
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
-        pw.Text('Foody — Nutrition Report', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
+        pw.Text('Foody — ${tr(LocaleKeys.export_pdf_title)}', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
         pw.Text(dateRangeLabel, style: const pw.TextStyle(fontSize: 11, color: PdfColors.grey700)),
         pw.Divider(),
       ],
@@ -114,14 +125,14 @@ class ExportService {
       cellStyle: const pw.TextStyle(fontSize: 9),
       cellAlignment: pw.Alignment.centerRight,
       headerAlignment: pw.Alignment.centerRight,
-      headers: ['Date', 'Calories', 'Protein', 'Carbs', 'Fat', 'Goal', 'Exercise', 'Net'],
+      headers: [tr(LocaleKeys.export_csv_date), tr(LocaleKeys.common_calories), tr(LocaleKeys.common_protein), tr(LocaleKeys.common_carbs), tr(LocaleKeys.common_fats), tr(LocaleKeys.export_csv_calorie_goal), tr(LocaleKeys.common_exercise), tr(LocaleKeys.export_csv_net_calories)],
       data: records
           .map((r) => [
                 _dateFmt.format(r.date),
                 '${r.totalCalories.round()}',
-                '${r.totalProteins.round()}g',
-                '${r.totalCarbs.round()}g',
-                '${r.totalFats.round()}g',
+                '${r.totalProteins.round()}${tr(LocaleKeys.common_g)}',
+                '${r.totalCarbs.round()}${tr(LocaleKeys.common_g)}',
+                '${r.totalFats.round()}${tr(LocaleKeys.common_g)}',
                 '${r.calorieGoal.round()}',
                 '${r.totalExerciseCalories.round()}',
                 '${r.netCalories.round()}',
@@ -147,15 +158,15 @@ class ExportService {
                   cellStyle: const pw.TextStyle(fontSize: 8),
                   cellAlignment: pw.Alignment.centerRight,
                   headerAlignment: pw.Alignment.centerRight,
-                  headers: ['Ingredient', 'Weight', 'Cal', 'Protein', 'Carbs', 'Fat'],
+                  headers: [tr(LocaleKeys.common_ingredients), tr(LocaleKeys.common_weight), tr(LocaleKeys.common_calories), tr(LocaleKeys.common_protein), tr(LocaleKeys.common_carbs), tr(LocaleKeys.common_fats)],
                   data: meal.ingredients
                       .map((i) => [
                             i.name,
-                            '${i.weight.round()}g',
+                            '${i.weight.round()}${tr(LocaleKeys.common_g)}',
                             '${i.calories.round()}',
-                            '${i.proteins.round()}g',
-                            '${i.carbs.round()}g',
-                            '${i.fats.round()}g',
+                            '${i.proteins.round()}${tr(LocaleKeys.common_g)}',
+                            '${i.carbs.round()}${tr(LocaleKeys.common_g)}',
+                            '${i.fats.round()}${tr(LocaleKeys.common_g)}',
                           ])
                       .toList(),
                 ),
@@ -173,15 +184,15 @@ class ExportService {
         exerciseRows.add([
           _dateTimeFmt.format(e.timestamp),
           e.name,
-          e.durationMinutes != null ? '${e.durationMinutes} min' : '-',
-          '${e.caloriesBurned.round()} kcal',
+          e.durationMinutes != null ? '${e.durationMinutes} ${tr(LocaleKeys.common_min)}' : '-',
+          '${e.caloriesBurned.round()} ${tr(LocaleKeys.common_kcal)}',
         ]);
       }
     }
     return pw.TableHelper.fromTextArray(
       headerStyle: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold),
       cellStyle: const pw.TextStyle(fontSize: 9),
-      headers: ['Date', 'Exercise', 'Duration', 'Burned'],
+      headers: [tr(LocaleKeys.export_csv_date), tr(LocaleKeys.common_exercise), tr(LocaleKeys.common_duration), tr(LocaleKeys.common_calories)],
       data: exerciseRows,
     );
   }
@@ -190,7 +201,7 @@ class ExportService {
     return pw.TableHelper.fromTextArray(
       headerStyle: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold),
       cellStyle: const pw.TextStyle(fontSize: 9),
-      headers: ['Date', 'Weight (kg)'],
+      headers: [tr(LocaleKeys.export_csv_date), tr(LocaleKeys.export_csv_weight)],
       data: weights.map((w) => [_dateFmt.format(w.date), '${w.weight}']).toList(),
     );
   }

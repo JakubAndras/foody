@@ -1,3 +1,5 @@
+import 'package:diplomka/generated/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -7,10 +9,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: Row(
-        children: const [
-          Icon(Icons.apple),
-          SizedBox(width: 8),
-          Text('Cal AI'),
+        children: [
+          const Icon(Icons.apple),
+          const SizedBox(width: 8),
+          Text(tr(LocaleKeys.dashboard_title)),
         ],
       ),
       actions: [

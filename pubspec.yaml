@@ -47,8 +47,8 @@ dependencies:
   timezone: 0.9.4
   flutter_native_timezone: 2.0.0
   liquid_glass_easy: 1.1.1
-  pdf: ^3.11.1
-  csv: ^6.0.0
+  pdf: 3.11.1
+  csv: 6.0.0
 
 dev_dependencies:
   flutter_test:

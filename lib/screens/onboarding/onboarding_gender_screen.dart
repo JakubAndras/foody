@@ -1,7 +1,9 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/user_profile.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingGenderScreen extends StatefulWidget {
@@ -48,7 +50,7 @@ class _OnboardingGenderScreenState extends State<OnboardingGenderScreen> with Au
       progress: widget.step / widget.totalSteps,
       onBack: widget.onBack,
       bottom: OnboardingPrimaryButton(
-        label: 'Continue',
+        label: tr(LocaleKeys.common_continue_btn),
         isEnabled: _selected != null,
         onPressed: _selected != null
             ? () async {
@@ -60,15 +62,15 @@ class _OnboardingGenderScreenState extends State<OnboardingGenderScreen> with Au
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Choose your Gender', style: textTheme.headlineLarge),
+          Text(tr(LocaleKeys.onboarding_gender_title), style: textTheme.headlineLarge),
           const SizedBox(height: AppSpacing.s),
           Text(
-            'This will be used to calibrate your custom plan.',
+            tr(LocaleKeys.onboarding_gender_subtitle),
             style: textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
           ),
           const SizedBox(height: AppSpacing.xl),
           OnboardingOptionCard(
-            title: 'Male',
+            title: tr(LocaleKeys.onboarding_male),
             selected: _selected == ProfileSex.male,
             onTap: () {
               setState(() => _selected = ProfileSex.male);
@@ -77,7 +79,7 @@ class _OnboardingGenderScreenState extends State<OnboardingGenderScreen> with Au
           ),
           const SizedBox(height: AppSpacing.s),
           OnboardingOptionCard(
-            title: 'Female',
+            title: tr(LocaleKeys.onboarding_female),
             selected: _selected == ProfileSex.female,
             onTap: () {
               setState(() => _selected = ProfileSex.female);
@@ -86,7 +88,7 @@ class _OnboardingGenderScreenState extends State<OnboardingGenderScreen> with Au
           ),
           const SizedBox(height: AppSpacing.s),
           OnboardingOptionCard(
-            title: 'Other',
+            title: tr(LocaleKeys.onboarding_other),
             selected: _selected == ProfileSex.other,
             onTap: () {
               setState(() => _selected = ProfileSex.other);

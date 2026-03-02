@@ -1,4 +1,6 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class PickerSheet extends StatelessWidget {
@@ -93,7 +95,15 @@ class DatePickerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final days = _buildCalendarDays(month);
-    const weekdayLabels = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+    final weekdayLabels = [
+      tr(LocaleKeys.day_mon).toUpperCase(),
+      tr(LocaleKeys.day_tue).toUpperCase(),
+      tr(LocaleKeys.day_wed).toUpperCase(),
+      tr(LocaleKeys.day_thu).toUpperCase(),
+      tr(LocaleKeys.day_fri).toUpperCase(),
+      tr(LocaleKeys.day_sat).toUpperCase(),
+      tr(LocaleKeys.day_sun).toUpperCase(),
+    ];
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.m),
@@ -171,19 +181,19 @@ class DatePickerCard extends StatelessWidget {
   }
 
   String _formatMonth(DateTime date) {
-    const months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
+    final months = [
+      tr(LocaleKeys.month_january),
+      tr(LocaleKeys.month_february),
+      tr(LocaleKeys.month_march),
+      tr(LocaleKeys.month_april),
+      tr(LocaleKeys.month_may),
+      tr(LocaleKeys.month_june),
+      tr(LocaleKeys.month_july),
+      tr(LocaleKeys.month_august),
+      tr(LocaleKeys.month_september),
+      tr(LocaleKeys.month_october),
+      tr(LocaleKeys.month_november),
+      tr(LocaleKeys.month_december),
     ];
     return '${months[date.month - 1]} ${date.year}';
   }

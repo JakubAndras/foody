@@ -1,7 +1,9 @@
 import 'dart:ui';
 
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/ingredient.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 enum MatchBadgeVariant { good, medium, low }
@@ -300,7 +302,7 @@ class MealRecordCard extends StatelessWidget {
       child: Column(
         children: [
           _RecordRow(
-            label: 'Amount',
+            label: tr(LocaleKeys.ingredient_amount),
             value: amount,
             onTap: onAmountTap,
             showChevron: true,
@@ -449,7 +451,7 @@ class IngredientRow extends StatelessWidget {
                   ingredient.calories.toStringAsFixed(0),
                   style: AppTextStyles.title.copyWith(color: AppColors.textPrimary),
                 ),
-                Text('kcal', style: AppTextStyles.caption12.copyWith(color: AppColors.textTertiary)),
+                Text(tr(LocaleKeys.common_kcal), style: AppTextStyles.caption12.copyWith(color: AppColors.textTertiary)),
               ],
             ),
           ],

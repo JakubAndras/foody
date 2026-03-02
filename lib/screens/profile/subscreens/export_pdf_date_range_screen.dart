@@ -1,9 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/controller/export_controller.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 
 class ExportPdfDateRangeScreen extends GetView<ExportController> {
@@ -19,7 +21,7 @@ class ExportPdfDateRangeScreen extends GetView<ExportController> {
           // ── Top bar ──
           Padding(
             padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.l, AppSpacing.screen, 0),
-            child: ProfileTopBar(title: 'Select date range', onBack: () => Get.back()),
+            child: ProfileTopBar(title: tr(LocaleKeys.export_select_date_range), onBack: () => Get.back()),
           ),
 
           // ── Centered content ──
@@ -63,7 +65,7 @@ class ExportPdfDateRangeScreen extends GetView<ExportController> {
             child: Column(
                     children: [
                       ProfilePrimaryButton(
-                        label: 'Export PDF',
+                        label: tr(LocaleKeys.export_pdf),
                         height: AppSizes.buttonHeightCompact,
                         radius: AppRadii.pill,
                         onPressed: controller.exportPdf,
@@ -78,7 +80,7 @@ class ExportPdfDateRangeScreen extends GetView<ExportController> {
                             side: const BorderSide(color: AppColors.textSecondary),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadii.pill)),
                           ),
-                          child: Text('Export CSV', style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                          child: Text(tr(LocaleKeys.export_csv), style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
                         ),
                       ),
                     ],
@@ -107,13 +109,13 @@ class ExportPdfDateRangeScreen extends GetView<ExportController> {
   String _rangeLabel(ExportDateRange range) {
     switch (range) {
       case ExportDateRange.last7:
-        return 'Last 7 Days';
+        return tr(LocaleKeys.export_last_7_days);
       case ExportDateRange.last30:
-        return 'Last 30 Days';
+        return tr(LocaleKeys.export_last_30_days);
       case ExportDateRange.allTime:
-        return 'All Time';
+        return tr(LocaleKeys.export_all_time);
       case ExportDateRange.custom:
-        return 'Custom Date Range';
+        return tr(LocaleKeys.export_custom_date_range);
     }
   }
 
@@ -138,7 +140,7 @@ class _CalendarRangeSheetState extends State<_CalendarRangeSheet> {
   late final List<DateTime> _months;
   late final ScrollController _scrollController;
 
-  static const _weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  List<String> get _weekdays => [tr(LocaleKeys.day_mon), tr(LocaleKeys.day_tue), tr(LocaleKeys.day_wed), tr(LocaleKeys.day_thu), tr(LocaleKeys.day_fri), tr(LocaleKeys.day_sat), tr(LocaleKeys.day_sun)];
   static final _monthFmt = DateFormat('MMMM yyyy');
   static const _cellSize = 48.0;
   static const _rangeBg = Color(0xFFEEEFF3);
@@ -225,7 +227,7 @@ class _CalendarRangeSheetState extends State<_CalendarRangeSheet> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Custom Date Range', style: AppTextStyles.h4.copyWith(fontWeight: FontWeight.w700)),
+                Text(tr(LocaleKeys.export_custom_date_range), style: AppTextStyles.h4.copyWith(fontWeight: FontWeight.w700)),
                 ProfileBackButton(icon: Icons.close, onPressed: () => Navigator.of(context).pop()),
               ],
             ),
@@ -237,7 +239,7 @@ class _CalendarRangeSheetState extends State<_CalendarRangeSheet> {
             child: Row(
               children: [
                 Text(
-                  _start != null ? _fmtDateShort(_start!) : 'Start date',
+                  _start != null ? _fmtDateShort(_start!) : tr(LocaleKeys.export_start_date),
                   style: AppTextStyles.body14.copyWith(
                     color: _start != null ? AppColors.textPrimary : AppColors.textTertiary,
                     fontWeight: FontWeight.w600,
@@ -248,7 +250,7 @@ class _CalendarRangeSheetState extends State<_CalendarRangeSheet> {
                   child: Text('–', style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary)),
                 ),
                 Text(
-                  _end != null ? _fmtDateShort(_end!) : 'End date',
+                  _end != null ? _fmtDateShort(_end!) : tr(LocaleKeys.export_end_date),
                   style: AppTextStyles.body14.copyWith(
                     color: _end != null ? AppColors.textPrimary : AppColors.textTertiary,
                     fontWeight: FontWeight.w600,
@@ -289,7 +291,7 @@ class _CalendarRangeSheetState extends State<_CalendarRangeSheet> {
           Padding(
             padding: EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.s, AppSpacing.screen, MediaQuery.of(context).padding.bottom),
             child: ProfilePrimaryButton(
-              label: 'Apply',
+              label: tr(LocaleKeys.common_apply),
               onPressed: (_start != null && _end != null) ? () => Navigator.of(context).pop((_start!, _end!)) : null,
             ),
           ),
@@ -413,7 +415,7 @@ class _CalendarRangeSheetState extends State<_CalendarRangeSheet> {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (isToday)
-                Text('Today', style: AppTextStyles.caption12.copyWith(fontWeight: FontWeight.w700, color: AppColors.textSecondary, fontSize: 9, height: 1)),
+                Text(tr(LocaleKeys.common_today), style: AppTextStyles.caption12.copyWith(fontWeight: FontWeight.w700, color: AppColors.textSecondary, fontSize: 9, height: 1)),
               Text(
                 '${date.day}',
                 style: AppTextStyles.body16.copyWith(fontWeight: isEdge || isToday ? FontWeight.w700 : FontWeight.w500, color: textColor),

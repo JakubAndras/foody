@@ -1,5 +1,7 @@
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/barcode_lookup_result.dart';
 import 'package:diplomka/services/barcode_lookup_service.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:get/get.dart';
 
 enum BarcodeScanState {
@@ -39,7 +41,7 @@ class BarcodeScanOutcome {
       state: BarcodeScanState.lookupNotFound,
       barcode: barcode,
       failureType: BarcodeLookupFailureType.notFound,
-      message: 'Product not found.',
+      message: tr(LocaleKeys.error_barcode_product_not_found),
     );
   }
 
@@ -133,17 +135,17 @@ class BarcodeScanController extends GetxController {
   String _fallbackMessage(BarcodeLookupFailureType type) {
     switch (type) {
       case BarcodeLookupFailureType.invalidBarcode:
-        return 'Unsupported barcode format.';
+        return tr(LocaleKeys.error_barcode_unsupported);
       case BarcodeLookupFailureType.notFound:
-        return 'Product was not found.';
+        return tr(LocaleKeys.error_barcode_not_found);
       case BarcodeLookupFailureType.timeout:
-        return 'Lookup timed out. Try again.';
+        return tr(LocaleKeys.error_barcode_timeout);
       case BarcodeLookupFailureType.networkUnavailable:
-        return 'No internet connection.';
+        return tr(LocaleKeys.error_barcode_no_internet);
       case BarcodeLookupFailureType.apiError:
-        return 'Product lookup is temporarily unavailable.';
+        return tr(LocaleKeys.error_barcode_service_unavailable);
       case BarcodeLookupFailureType.parseError:
-        return 'Received product data cannot be used.';
+        return tr(LocaleKeys.error_barcode_parse_failed);
     }
   }
 }

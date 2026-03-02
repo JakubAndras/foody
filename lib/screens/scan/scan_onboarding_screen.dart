@@ -1,7 +1,9 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/screens/scan/scan_camera_screen.dart';
 import 'package:diplomka/screens/scan/scan_widgets.dart';
 import 'package:diplomka/services/session_manager.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -16,45 +18,45 @@ class _ScanOnboardingScreenState extends State<ScanOnboardingScreen> {
   final PageController _pageController = PageController();
   int _activeIndex = 0;
 
-  final List<_ScanOnboardingPageData> _pages = const [
+  List<_ScanOnboardingPageData> get _pages => [
     _ScanOnboardingPageData(
-      title: 'Get the best scan:',
+      title: tr(LocaleKeys.scan_best_scan),
       bullets: [
-        _BulletData(icon: Icons.photo_camera_outlined, label: 'Hold still'),
-        _BulletData(icon: Icons.wb_sunny_outlined, label: 'Use lots of light'),
-        _BulletData(icon: Icons.visibility_outlined, label: 'Ensure all ingredients are visible'),
+        _BulletData(icon: Icons.photo_camera_outlined, label: tr(LocaleKeys.scan_hold_still)),
+        _BulletData(icon: Icons.wb_sunny_outlined, label: tr(LocaleKeys.scan_use_light)),
+        _BulletData(icon: Icons.visibility_outlined, label: tr(LocaleKeys.scan_ensure_visible)),
       ],
     ),
     _ScanOnboardingPageData(
-      title: 'AI analyzes your food:',
+      title: tr(LocaleKeys.scan_ai_analyzes),
       bullets: [
-        _BulletData(icon: Icons.camera_outlined, label: 'Ingredients are identified'),
-        _BulletData(icon: Icons.flash_on_outlined, label: 'Takes a few seconds'),
-        _BulletData(icon: Icons.schedule_outlined, label: 'You\'ll see the calories and macros'),
+        _BulletData(icon: Icons.camera_outlined, label: tr(LocaleKeys.scan_ingredients_identified)),
+        _BulletData(icon: Icons.flash_on_outlined, label: tr(LocaleKeys.scan_takes_few_seconds)),
+        _BulletData(icon: Icons.schedule_outlined, label: tr(LocaleKeys.scan_see_calories_macros)),
       ],
     ),
     _ScanOnboardingPageData(
-      title: 'Fix results, if necessary:',
+      title: tr(LocaleKeys.scan_fix_results),
       bullets: [
-        _BulletData(icon: Icons.auto_awesome_outlined, label: 'Check that the AI analysis is accurate'),
-        _BulletData(icon: Icons.add_circle_outline, label: 'Add or remove ingredients as needed'),
-        _BulletData(icon: Icons.search_outlined, label: 'Tap "Fix Results" if something\'s off'),
+        _BulletData(icon: Icons.auto_awesome_outlined, label: tr(LocaleKeys.scan_check_accurate)),
+        _BulletData(icon: Icons.add_circle_outline, label: tr(LocaleKeys.scan_add_remove_ingredients)),
+        _BulletData(icon: Icons.search_outlined, label: tr(LocaleKeys.scan_tap_fix)),
       ],
     ),
     _ScanOnboardingPageData(
-      title: 'For highest accuracy:',
+      title: tr(LocaleKeys.scan_highest_accuracy),
       bullets: [
-        _BulletData(icon: Icons.auto_awesome_outlined, label: 'Add a text description of your meal'),
-        _BulletData(icon: Icons.qr_code_outlined, label: 'Scan the barcode'),
-        _BulletData(icon: Icons.description_outlined, label: 'Or take a photo of the food label'),
+        _BulletData(icon: Icons.auto_awesome_outlined, label: tr(LocaleKeys.scan_add_text_description)),
+        _BulletData(icon: Icons.qr_code_outlined, label: tr(LocaleKeys.scan_scan_the_barcode)),
+        _BulletData(icon: Icons.description_outlined, label: tr(LocaleKeys.scan_photo_food_label)),
       ],
     ),
     _ScanOnboardingPageData(
-      title: 'For fastest process:',
+      title: tr(LocaleKeys.scan_fastest_process),
       bullets: [
-        _BulletData(icon: Icons.soup_kitchen_outlined, label: 'When cooking your own meal'), // Icons.emoji_food_beverage_outlined
-        _BulletData(icon: Icons.photo_library_outlined, label: 'Capture all ingredients together in one photo'),
-        _BulletData(icon: Icons.bolt_outlined, label: 'Save time by logging everything at once'),
+        _BulletData(icon: Icons.soup_kitchen_outlined, label: tr(LocaleKeys.scan_cooking_own_meal)),
+        _BulletData(icon: Icons.photo_library_outlined, label: tr(LocaleKeys.scan_capture_together)),
+        _BulletData(icon: Icons.bolt_outlined, label: tr(LocaleKeys.scan_save_time)),
       ],
     ),
   ];
@@ -102,7 +104,7 @@ class _ScanOnboardingScreenState extends State<ScanOnboardingScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ScanPrimaryButton(
-                  label: isLastPage ? 'Scan now' : 'Next',
+                  label: isLastPage ? tr(LocaleKeys.scan_scan_now) : tr(LocaleKeys.common_next),
                   onPressed: _next,
                   height: AppSizes.buttonHeightCompact,
                 ),

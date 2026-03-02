@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/barcode_lookup_result.dart';
 import 'package:diplomka/network/open_food_facts_client.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:get/get.dart';
 
 enum BarcodeLookupFailureType {
@@ -50,7 +52,7 @@ class BarcodeLookupService extends GetxService {
     if (normalized == null || !isSupportedBarcode(normalized)) {
       throw BarcodeLookupException(
         BarcodeLookupFailureType.invalidBarcode,
-        message: 'Unsupported barcode format.',
+        message: tr(LocaleKeys.error_barcode_unsupported),
       );
     }
 
@@ -60,7 +62,7 @@ class BarcodeLookupService extends GetxService {
       if (!lookupResponse.found || product == null) {
         throw BarcodeLookupException(
           BarcodeLookupFailureType.notFound,
-          message: 'Product was not found in Open Food Facts.',
+          message: tr(LocaleKeys.error_barcode_not_found),
         );
       }
 
@@ -68,7 +70,7 @@ class BarcodeLookupService extends GetxService {
       if (productName.isEmpty) {
         throw BarcodeLookupException(
           BarcodeLookupFailureType.parseError,
-          message: 'Product payload is missing a usable name.',
+          message: tr(LocaleKeys.error_barcode_no_name),
         );
       }
 
@@ -108,14 +110,14 @@ class BarcodeLookupService extends GetxService {
       rethrow;
     } on DioError catch (e) {
       if (e.type == DioErrorType.connectTimeout || e.type == DioErrorType.sendTimeout || e.type == DioErrorType.receiveTimeout) {
-        throw BarcodeLookupException(BarcodeLookupFailureType.timeout, message: 'Request timed out.');
+        throw BarcodeLookupException(BarcodeLookupFailureType.timeout, message: tr(LocaleKeys.error_barcode_timeout));
       }
       if (e.type == DioErrorType.other && e.error is SocketException) {
-        throw BarcodeLookupException(BarcodeLookupFailureType.networkUnavailable, message: 'No internet connection.');
+        throw BarcodeLookupException(BarcodeLookupFailureType.networkUnavailable, message: tr(LocaleKeys.error_barcode_no_internet));
       }
-      throw BarcodeLookupException(BarcodeLookupFailureType.apiError, message: 'Open Food Facts lookup failed.');
+      throw BarcodeLookupException(BarcodeLookupFailureType.apiError, message: tr(LocaleKeys.error_barcode_service_unavailable));
     } catch (_) {
-      throw BarcodeLookupException(BarcodeLookupFailureType.parseError, message: 'Failed to parse lookup response.');
+      throw BarcodeLookupException(BarcodeLookupFailureType.parseError, message: tr(LocaleKeys.error_barcode_parse_failed));
     }
   }
 

@@ -1,12 +1,14 @@
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/controller/day_record_controller.dart';
 import 'package:diplomka/controller/weight_entry_controller.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/model/streak_info.dart';
 import 'package:diplomka/model/weight_entry.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/services/streak_service.dart';
 import 'package:diplomka/widgets/weight_progress_card.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -42,16 +44,16 @@ StreakInfo _computeStreakMetrics(List<DayRecord> records) {
 
 String _nextWeighInLabel(WeightEntry? latestEntry) {
   if (latestEntry == null) {
-    return 'Log your first weigh-in';
+    return tr(LocaleKeys.progress_log_first_weigh_in);
   }
   final DateTime today = _dateOnly(DateTime.now());
   final DateTime entryDate = _dateOnly(latestEntry.date);
   final int daysSince = today.difference(entryDate).inDays;
   if (daysSince >= 7 && daysSince % 7 == 0) {
-    return 'Log today';
+    return tr(LocaleKeys.progress_log_today);
   }
   final int remaining = 7 - (daysSince % 7);
-  return 'Next weigh-in: ${remaining}d';
+  return tr(LocaleKeys.progress_next_weigh_in, namedArgs: {'days': '$remaining'});
 }
 
 class _DailyAverageStats {
@@ -92,7 +94,7 @@ class ProgressScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Progress', style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w700)),
+                Text(tr(LocaleKeys.progress_title), style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w700)),
                 const SizedBox(height: AppSpacing.l),
                 Obx(() {
                   final weightEntries = WeightEntryController.to.entries.toList(growable: false);
@@ -178,7 +180,7 @@ class _MyWeightCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String weightLabel = currentWeight == null ? '—' : '${_formatWeight(currentWeight!)} kg';
+    final String weightLabel = currentWeight == null ? '—' : '${_formatWeight(currentWeight!)} ${tr(LocaleKeys.common_kg)}';
     final double progress = goalProgress ?? 0;
 
     return Container(
@@ -195,7 +197,7 @@ class _MyWeightCard extends StatelessWidget {
         children: [
           Column(
             children: [
-              Text('My Weight', style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary)),
+              Text(tr(LocaleKeys.progress_my_weight), style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary)),
               const SizedBox(height: AppSpacing.xs),
               Text(weightLabel, style: AppTextStyles.weightValue),
             ],
@@ -227,16 +229,13 @@ class _MyWeightCard extends StatelessWidget {
               const SizedBox(height: AppSpacing.xs),
               if (goalWeight == null)
                 Text(
-                  'Goal —',
+                  tr(LocaleKeys.progress_goal_dash),
                   style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary),
                 )
               else
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Goal ', style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary)),
-                    Text('${_formatWeight(goalWeight!)} kg', style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w700)),
-                  ],
+                Text(
+                  tr(LocaleKeys.progress_goal_value, namedArgs: {'value': _formatWeight(goalWeight!)}),
+                  style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w700),
                 ),
             ],
           ),
@@ -271,7 +270,7 @@ class _DayStreakCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String title = currentStreak > 0 ? '$currentStreak Day Streak' : 'Day Streak';
+    final String title = currentStreak > 0 ? tr(LocaleKeys.progress_n_day_streak, namedArgs: {'count': '$currentStreak'}) : tr(LocaleKeys.progress_day_streak);
     final DateTime today = _dateOnly(DateTime.now());
     final int todayIndex = today.weekday - 1;
 
@@ -346,7 +345,7 @@ class _DailyAverageCard extends StatefulWidget {
 class _DailyAverageCardState extends State<_DailyAverageCard> {
   int _selectedIndex = 0;
 
-  static const List<String> _labels = ['This wk', 'Last wk', '2 wk ago', '3 wk ago'];
+  List<String> get _labels => [tr(LocaleKeys.progress_this_wk), tr(LocaleKeys.progress_last_wk), tr(LocaleKeys.progress_two_wk_ago), tr(LocaleKeys.progress_three_wk_ago)];
 
   DateTime _startOfWeek(DateTime date) => date.subtract(Duration(days: date.weekday - 1));
 
@@ -393,7 +392,7 @@ class _DailyAverageCardState extends State<_DailyAverageCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Daily Average Calories', style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700)),
+            Text(tr(LocaleKeys.progress_daily_avg_calories), style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: AppSpacing.xl),
             Center(
               child: Column(
@@ -409,12 +408,12 @@ class _DailyAverageCardState extends State<_DailyAverageCard> {
                   ),
                   const SizedBox(height: AppSpacing.m),
                   if (stats.hasMeals)
-                    Text('${stats.average.round()} kcal', style: AppTextStyles.weightValue)
+                    Text(tr(LocaleKeys.progress_avg_kcal, namedArgs: {'value': '${stats.average.round()}'}), style: AppTextStyles.weightValue)
                   else
-                    Text('No data to show', style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w700)),
+                    Text(tr(LocaleKeys.progress_no_data), style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w700)),
                   const SizedBox(height: AppSpacing.xs),
                   Text(
-                    stats.hasMeals ? 'Avg per day • ${stats.rangeLabel}' : 'This will update as you log more food.',
+                    stats.hasMeals ? '${tr(LocaleKeys.progress_avg_per_day)} • ${stats.rangeLabel}' : tr(LocaleKeys.progress_update_hint),
                     style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary),
                     textAlign: TextAlign.center,
                   ),
@@ -500,10 +499,10 @@ class _BmiCard extends StatelessWidget {
   }
 
   _BmiCategory _bmiCategory(double bmi) {
-    if (bmi < 18.5) return const _BmiCategory(label: 'Underweight', color: AppColors.info);
-    if (bmi < 25) return const _BmiCategory(label: 'Healthy', color: AppColors.success);
-    if (bmi < 30) return const _BmiCategory(label: 'Overweight', color: AppColors.warning);
-    return const _BmiCategory(label: 'Obese', color: AppColors.error);
+    if (bmi < 18.5) return _BmiCategory(label: tr(LocaleKeys.progress_bmi_underweight), color: AppColors.info);
+    if (bmi < 25) return _BmiCategory(label: tr(LocaleKeys.progress_bmi_healthy), color: AppColors.success);
+    if (bmi < 30) return _BmiCategory(label: tr(LocaleKeys.progress_bmi_overweight), color: AppColors.warning);
+    return _BmiCategory(label: tr(LocaleKeys.progress_bmi_obese), color: AppColors.error);
   }
 
   @override
@@ -513,10 +512,10 @@ class _BmiCard extends StatelessWidget {
     final bool hasWeight = currentWeight != null;
     final bool hasHeight = heightCm != null && heightCm! > 0;
     final String missingLabel = !hasHeight && !hasWeight
-        ? 'Add your height and log your weight.'
+        ? tr(LocaleKeys.progress_missing_height_weight)
         : !hasHeight
-            ? 'Add your height to see BMI.'
-            : 'Log your weight to see BMI.';
+            ? tr(LocaleKeys.progress_missing_height)
+            : tr(LocaleKeys.progress_missing_weight);
 
     return Container(
       decoration: BoxDecoration(
@@ -532,7 +531,7 @@ class _BmiCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Your BMI', style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700)),
+              Text(tr(LocaleKeys.progress_your_bmi), style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700)),
               const Icon(Icons.info_outline, size: AppSizes.iconMd, color: AppColors.textTertiary),
             ],
           ),
@@ -547,7 +546,7 @@ class _BmiCard extends StatelessWidget {
               children: [
                 Text(bmi.toStringAsFixed(1), style: AppTextStyles.bmiValue),
                 const SizedBox(width: AppSpacing.s),
-                Text('Your weight is', style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary)),
+                Text(tr(LocaleKeys.progress_your_weight_is), style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary)),
                 const SizedBox(width: AppSpacing.xs),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.xxs),
@@ -599,11 +598,11 @@ class _BmiCard extends StatelessWidget {
           const SizedBox(height: AppSpacing.m),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              _LegendItem(label: 'Underweight', color: AppColors.info),
-              _LegendItem(label: 'Healthy', color: AppColors.success),
-              _LegendItem(label: 'Overweight', color: AppColors.warning),
-              _LegendItem(label: 'Obese', color: AppColors.error),
+            children: [
+              _LegendItem(label: tr(LocaleKeys.progress_bmi_underweight), color: AppColors.info),
+              _LegendItem(label: tr(LocaleKeys.progress_bmi_healthy), color: AppColors.success),
+              _LegendItem(label: tr(LocaleKeys.progress_bmi_overweight), color: AppColors.warning),
+              _LegendItem(label: tr(LocaleKeys.progress_bmi_obese), color: AppColors.error),
             ],
           ),
         ],

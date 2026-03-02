@@ -1,6 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/network/rest_client.dart';
 import 'package:diplomka/utils/dialog_utils.dart';
 
@@ -21,8 +23,8 @@ abstract class BaseController extends FullLifeCycleController with FullLifeCycle
           Get.back();
         }
         await DialogUtils.showDialog(
-          title: "tr(LocaleKeys.api_error_no_internet)",
-          message: "tr(LocaleKeys.api_error_no_internet_message)",
+          title: tr(LocaleKeys.error_no_internet),
+          message: tr(LocaleKeys.error_no_internet_message),
         );
       }
       return false;

@@ -1,6 +1,8 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/screens/onboarding/onboarding_signin_modal_screen.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingWelcomeScreen extends StatelessWidget {
@@ -29,18 +31,18 @@ class OnboardingWelcomeScreen extends StatelessWidget {
                 children: [
                   const Spacer(),
                   Text(
-                    'Calorie tracking\nmade easy',
+                    tr(LocaleKeys.onboarding_welcome_title),
                     textAlign: TextAlign.center,
                     style: textTheme.displaySmall?.copyWith(height: 1.25),
                   ),
                   const SizedBox(height: AppSpacing.xl),
                   OnboardingPrimaryButton(
-                    label: 'Get Started',
+                    label: tr(LocaleKeys.onboarding_get_started),
                     onPressed: onNext,
                   ),
                   const SizedBox(height: AppSpacing.s),
                   OnboardingOutlinedButton(
-                    label: 'Skip onboarding (Dummy)',
+                    label: tr(LocaleKeys.onboarding_skip_onboarding),
                     onPressed: onSkip == null
                         ? null
                         : () async {
@@ -52,13 +54,13 @@ class OnboardingWelcomeScreen extends StatelessWidget {
                     alignment: WrapAlignment.center,
                     children: [
                       Text(
-                        'Already have an account? ',
+                        tr(LocaleKeys.onboarding_already_have_account),
                         style: textTheme.bodyLarge?.copyWith(color: AppColors.textPrimary),
                       ),
                       InkWell(
                         onTap: () => _showSignInModal(context),
                         child: Text(
-                          'Sign In',
+                          tr(LocaleKeys.onboarding_sign_in),
                           style: textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
                         ),
                       ),

@@ -1,5 +1,7 @@
 import 'package:diplomka/model/streak_info.dart';
 import 'package:diplomka/controller/streak_controller.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 
 // Displays streak information in a dialog.
@@ -26,7 +28,7 @@ class StreakDialog extends StatelessWidget {
                 children: [
                   const Icon(Icons.error_outline, color: Colors.red, size: 48),
                   const SizedBox(height: 16),
-                  Text('Could not load streak data: ${snapshot.error}', textAlign: TextAlign.center),
+                  Text(tr(LocaleKeys.streak_error_loading, namedArgs: {'error': snapshot.error.toString()}), textAlign: TextAlign.center),
                 ],
               ),
             );
@@ -39,7 +41,7 @@ class StreakDialog extends StatelessWidget {
                 Icon(Icons.local_fire_department, size: 80, color: Colors.orange), // Large flame icon
                 const SizedBox(height: 16),
                 Text(
-                  '${streakInfo.currentStreak} Day streak',
+                  tr(LocaleKeys.streak_title, namedArgs: {'count': streakInfo.currentStreak.toString()}),
                   style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold, color: Colors.orange),
                 ),
                 const SizedBox(height: 24),
@@ -78,7 +80,7 @@ class StreakDialog extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  'Every day matters for hitting your goal!',
+                  tr(LocaleKeys.streak_motivational),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyMedium?.copyWith(color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7)),
                 ),
@@ -91,13 +93,13 @@ class StreakDialog extends StatelessWidget {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Continue'),
+                  child: Text(tr(LocaleKeys.streak_continue)),
                 ),
               ],
             );
           } else {
-            return const Center(
-              child: Text('No streak data available.'),
+            return Center(
+              child: Text(tr(LocaleKeys.streak_no_data)),
             );
           }
         },

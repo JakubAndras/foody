@@ -1,5 +1,7 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingCalorieBurnScreen extends StatelessWidget {
@@ -26,11 +28,11 @@ class OnboardingCalorieBurnScreen extends StatelessWidget {
       bottom: Row(
         children: [
           Expanded(
-            child: OnboardingPrimaryButton(label: 'No', onPressed: onNext),
+            child: OnboardingPrimaryButton(label: tr(LocaleKeys.common_no), onPressed: onNext),
           ),
           const SizedBox(width: AppSpacing.s),
           Expanded(
-            child: OnboardingPrimaryButton(label: 'Yes', onPressed: onNext),
+            child: OnboardingPrimaryButton(label: tr(LocaleKeys.common_yes), onPressed: onNext),
           ),
         ],
       ),
@@ -38,7 +40,7 @@ class OnboardingCalorieBurnScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Add calories burned back\nto your daily goal?',
+            tr(LocaleKeys.onboarding_calorie_burn_title),
             style: textTheme.headlineLarge?.copyWith(height: 1.25),
           ),
           const SizedBox(height: AppSpacing.xxl),
@@ -58,7 +60,7 @@ class OnboardingCalorieBurnScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Today's Goal",
+                            tr(LocaleKeys.onboarding_todays_goal),
                             style: textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
                           ),
                           const SizedBox(height: AppSpacing.s),
@@ -88,8 +90,8 @@ class OnboardingCalorieBurnScreen extends StatelessWidget {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text('Running', style: textTheme.titleSmall?.copyWith(color: AppColors.textPrimary)),
-                                  Text('+ 100 cals', style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+                                  Text(tr(LocaleKeys.onboarding_running), style: textTheme.titleSmall?.copyWith(color: AppColors.textPrimary)),
+                                  Text(tr(LocaleKeys.onboarding_plus_100_cals), style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
                                 ],
                               ),
                             ],

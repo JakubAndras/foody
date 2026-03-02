@@ -1,7 +1,9 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/user_profile.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingDesiredWeightScreen extends StatefulWidget {
@@ -88,7 +90,7 @@ class _OnboardingDesiredWeightScreenState extends State<OnboardingDesiredWeightS
       progress: widget.step / widget.totalSteps,
       onBack: widget.onBack,
       bottom: OnboardingPrimaryButton(
-        label: 'Continue',
+        label: tr(LocaleKeys.common_continue_btn),
         onPressed: () async {
           await SessionManager.to.setGoalWeightKg(_valueKg);
           widget.onNext();
@@ -97,7 +99,7 @@ class _OnboardingDesiredWeightScreenState extends State<OnboardingDesiredWeightS
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('What is your desired weight?', style: textTheme.headlineLarge),
+          Text(tr(LocaleKeys.onboarding_desired_weight_title), style: textTheme.headlineLarge),
           const SizedBox(height: AppSpacing.l),
           SizedBox(
             height: sliderHostHeight,

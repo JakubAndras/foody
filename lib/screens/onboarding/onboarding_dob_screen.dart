@@ -1,6 +1,8 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -88,7 +90,7 @@ class _OnboardingDobScreenState extends State<OnboardingDobScreen> {
       progress: widget.step / widget.totalSteps,
       onBack: widget.onBack,
       bottom: OnboardingPrimaryButton(
-        label: 'Continue',
+        label: tr(LocaleKeys.common_continue_btn),
         onPressed: () async {
           final int day = _dayIndex + 1;
           final int year = _selectedYear;
@@ -100,7 +102,7 @@ class _OnboardingDobScreenState extends State<OnboardingDobScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('When were you born?', style: textTheme.headlineLarge),
+          Text(tr(LocaleKeys.onboarding_dob_title), style: textTheme.headlineLarge),
           const SizedBox(height: AppSpacing.s),
           Text(
             'This will be used to calibrate your custom plan.',
