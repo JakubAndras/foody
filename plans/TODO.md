@@ -38,13 +38,8 @@
 - Recipe → meal conversion flow
 - Shopping list generation from planned meals
 
-### FR-23: Dietary Violations in Calendar :x:
-**Current state:** Calendar rings show calorie progress only (`calendar_day_ring_service.dart`). No violation tracking.
-**What's needed:**
-- Cross-reference logged ingredients against user's dietary restrictions (`SessionManager.dietType` + `customDietPreferences`)
-- Visual markers on calendar days with violations
-- Violation detail screen per day
-- Aggregate violation report
+### FR-23: Dietary Violations in Calendar :white_check_mark:
+**Done:** Monthly calendar card on Progress screen showing warning icons on days with dietary violations. `DietaryViolationService` checks ingredient names against keyword lists (EN+CS) for vegetarian (meat/fish), vegan (meat/fish/dairy/eggs/honey), and custom (user-defined comma-separated keywords) diets. Card hidden when diet type is classic/null. Tapping a violation day opens a bottom sheet with grouped violations per meal. Fully localized (EN/CS).
 
 ### FR-25: Expenditure Integration Settings :x:
 **Current state:** No health/fitness app integration code exists.
@@ -165,18 +160,11 @@
 - Report data model (meal ID, user text, timestamp)
 - Admin review mechanism (or at minimum, local persistence)
 
-### Save Meal Image to Gallery :x:
-**Current state:** `edit_meal_screen.dart:378-381` shows snackbar "Saving is not implemented yet."
-**What's needed:**
-- `image_gallery_saver` or equivalent package
-- Permission handling for photo library access
-- Save confirmation with gallery path
+### Save Meal Image to Gallery :white_check_mark:
+**Done:** `image_gallery_saver` package added. `MediaStorage.saveToGallery()` resolves stored photo ref → reads bytes → saves to device gallery. Manual save wired in EditMealScreen action sheet. Auto-save toggle added in Preferences screen (`SessionManager.savePhotosToGallery`) — when enabled, photos are automatically saved to gallery after AI analysis (both camera and barcode flows). iOS `NSPhotoLibraryAddUsageDescription` was already configured. Localization keys added for EN/CS.
 
-### Voice Log Tips / Help :x:
-**Current state:** Help button in `voice_log_screen.dart:521-525` shows snackbar "Voice log tips coming soon."
-**What's needed:**
-- Tips content (e.g. "speak clearly", "describe one meal at a time", supported languages)
-- Bottom sheet or dialog with tips
+### Voice Log Tips / Help :white_check_mark:
+**Done:** Help button in `voice_log_screen.dart` opens a modal bottom sheet with 7 practical tips: speak clearly, one meal at a time, include portions, be specific, pause/resume, edit text, and language settings. Fully localized (EN/CS). Icons per tip for scannability.
 
 ### Localization :white_check_mark:
 **Done:** All user-facing strings extracted to `assets/translations/{en,cs}.json` (~380 flat keys). `locale_keys.g.dart` regenerated (564 lines). All 50+ screen/widget/controller/service files updated to use `tr(LocaleKeys.xxx)`. Full Czech translations provided. Unused `tr.json` (Turkish) removed. `as easy` aliases removed from language_screen and tracking_reminders_screen. Broken string-literal `tr()` calls in error.dart and base_controller.dart fixed.
@@ -268,12 +256,12 @@
 ### Lower Priority (Nice to have)
 14. **FR-32** — Monthly motivational summary
 15. **FR-34** — AI accuracy evaluation
-16. **FR-23** — Dietary violations in calendar
+16. **FR-23** — Dietary violations in calendar // DONE
 17. **FR-25** — Health app integrations
 18. **FR-16** — Customizable portion presets
 19. **FR-21** — Meal planning / plan vs actual
 20. **Accessibility** — Semantic labels, screen reader support
 21. **Multiple meals per photo**
 22. **Gemini provider** — Verify and test
-23. **Save meal image** — Gallery save
-24. **Voice log tips** — Help content
+23. **Save meal image** — Gallery save // DONE
+24. **Voice log tips** — Help content // DONE

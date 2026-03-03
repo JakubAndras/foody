@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:diplomka/controller/streak_controller.dart';
+import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/barcode_lookup_result.dart';
 import 'package:diplomka/model/exercise.dart';
@@ -236,6 +237,10 @@ class DashboardController extends BaseController {
         debugPrint('Meal photo could not be persisted. sourcePath=$rawImagePath');
       }
 
+      if (storedPhotoRef != null && SessionManager.to.savePhotosToGallery.value) {
+        MediaStorage.saveToGallery(storedPhotoRef);
+      }
+
       final String? resolvedPhotoPath = await MediaStorage.resolveStoredMealPhotoPath(storedPhotoRef);
       final List<File>? imageFiles = resolvedPhotoPath == null ? null : <File>[File(resolvedPhotoPath)];
 
@@ -269,6 +274,9 @@ class DashboardController extends BaseController {
     try {
       final BarcodeLookupResult? lookupResult = await _tryLookupBarcode(barcode);
       final String? barcodePhotoRef = await _resolveBarcodePhotoPath(lookupResult);
+      if (barcodePhotoRef != null && SessionManager.to.savePhotosToGallery.value) {
+        MediaStorage.saveToGallery(barcodePhotoRef);
+      }
       final String? barcodePhotoPath = await MediaStorage.resolveStoredMealPhotoPath(barcodePhotoRef);
       final List<File>? barcodeImageFiles = barcodePhotoPath == null ? null : <File>[File(barcodePhotoPath)];
 

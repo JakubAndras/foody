@@ -1,8 +1,10 @@
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/controller/dashboard_controller.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/screens/main_screen.dart';
 import 'package:diplomka/screens/scan/scan_widgets.dart';
 import 'package:diplomka/services/selected_date_service.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -70,7 +72,7 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
                   ),
                   const SizedBox(height: AppSpacing.l),
                   ScanInputField(
-                    hint: 'Add notes or description (optional)',
+                    hint: tr(LocaleKeys.scan_preview_notes_hint),
                     controller: _notesController,
                     height: AppSizes.scanTextAreaHeight,
                     maxLines: 3,
@@ -78,7 +80,7 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
                   ),
                   const SizedBox(height: AppSpacing.xl),
                   ScanPrimaryButton(
-                    label: 'Analyze Meal',
+                    label: tr(LocaleKeys.scan_preview_analyze),
                     icon: Icons.auto_awesome,
                     gradient: AppGradients.scanAnalyze,
                     onPressed: _isAnalyzing ? null : _analyze,
@@ -124,17 +126,58 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
             children: [
               GestureDetector(
                 onTap: () => Get.back(),
-                child: Text('Retake', style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w500)),
+                child: Text(tr(LocaleKeys.scan_preview_retake), style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w500)),
               ),
               const SizedBox(width: AppSpacing.s),
               GestureDetector(
-                onTap: () => Get.snackbar('Help', 'Tips for better scans are available on the onboarding screens.'),
-                child: Text('Help', style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w500)),
+                onTap: () => _showPreviewTips(context),
+                child: Text(tr(LocaleKeys.scan_preview_help), style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w500)),
               ),
             ],
           ),
         ),
       ],
+    );
+  }
+
+  void _showPreviewTips(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (_) => Container(
+        decoration: const BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.lg)),
+        ),
+        padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.m, AppSpacing.l, AppSpacing.xl),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 36,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: AppColors.outline,
+                  borderRadius: BorderRadius.circular(AppRadii.pill),
+                ),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.l),
+            Text(
+              tr(LocaleKeys.scan_preview_tips_title),
+              style: AppTextStyles.title18Tight.copyWith(fontWeight: FontWeight.w700),
+            ),
+            const SizedBox(height: AppSpacing.m),
+            _PreviewTipRow(icon: Icons.edit_note, text: tr(LocaleKeys.scan_preview_tip_add_description)),
+            _PreviewTipRow(icon: Icons.camera_alt_outlined, text: tr(LocaleKeys.scan_preview_tip_retake_blurry)),
+            _PreviewTipRow(icon: Icons.visibility_outlined, text: tr(LocaleKeys.scan_preview_tip_all_visible)),
+            _PreviewTipRow(icon: Icons.tune_outlined, text: tr(LocaleKeys.scan_preview_tip_review_results)),
+          ],
+        ),
+      ),
     );
   }
 
@@ -146,5 +189,32 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
       return '$name. $notes';
     }
     return name.isNotEmpty ? name : notes;
+  }
+}
+
+class _PreviewTipRow extends StatelessWidget {
+  const _PreviewTipRow({required this.icon, required this.text});
+
+  final IconData icon;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.s),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, size: AppSizes.iconMd, color: AppColors.primary),
+          const SizedBox(width: AppSpacing.s),
+          Expanded(
+            child: Text(
+              text,
+              style: AppTextStyles.body14Relaxed,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

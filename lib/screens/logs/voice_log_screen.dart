@@ -486,6 +486,50 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
     return '$baseText $recognizedText';
   }
 
+  void _showVoiceTips(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (_) => Container(
+        decoration: const BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.lg)),
+        ),
+        padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.m, AppSpacing.l, AppSpacing.xl),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 36,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: AppColors.outline,
+                  borderRadius: BorderRadius.circular(AppRadii.pill),
+                ),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.l),
+            Text(
+              tr(LocaleKeys.voice_tips_title),
+              style: AppTextStyles.title18Tight.copyWith(fontWeight: FontWeight.w700),
+            ),
+            const SizedBox(height: AppSpacing.m),
+            _VoiceTipRow(icon: Icons.record_voice_over_outlined, text: tr(LocaleKeys.voice_tips_speak_clearly)),
+            _VoiceTipRow(icon: Icons.restaurant_outlined, text: tr(LocaleKeys.voice_tips_one_meal)),
+            _VoiceTipRow(icon: Icons.scale_outlined, text: tr(LocaleKeys.voice_tips_include_portions)),
+            _VoiceTipRow(icon: Icons.tune_outlined, text: tr(LocaleKeys.voice_tips_be_specific)),
+            _VoiceTipRow(icon: Icons.pause_circle_outline, text: tr(LocaleKeys.voice_tips_pause_resume)),
+            _VoiceTipRow(icon: Icons.edit_outlined, text: tr(LocaleKeys.voice_tips_edit_text)),
+            _VoiceTipRow(icon: Icons.language_outlined, text: tr(LocaleKeys.voice_tips_languages)),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isExercise = _mode == VoiceLogMode.exercise;
@@ -521,9 +565,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
                               ),
                               VoiceLogIconButton(
                                 icon: Icons.help_outline,
-                                onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(tr(LocaleKeys.voice_tips_coming_soon))),
-                                ),
+                                onTap: () => _showVoiceTips(context),
                               ),
                             ],
                           ),
@@ -652,6 +694,33 @@ class _PermissionDialogButton extends StatelessWidget {
             decoration: TextDecoration.none,
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _VoiceTipRow extends StatelessWidget {
+  const _VoiceTipRow({required this.icon, required this.text});
+
+  final IconData icon;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.s),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(icon, size: AppSizes.iconMd, color: AppColors.violetStrong),
+          const SizedBox(width: AppSpacing.s),
+          Expanded(
+            child: Text(
+              text,
+              style: AppTextStyles.body14Relaxed,
+            ),
+          ),
+        ],
       ),
     );
   }

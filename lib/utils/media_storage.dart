@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -212,6 +213,22 @@ class MediaStorage {
         !value.contains('://') &&
         !value.startsWith('file:') &&
         !value.startsWith('content:');
+  }
+
+  static Future<bool> saveToGallery(String? storedReference) async {
+    if (storedReference == null || storedReference.trim().isEmpty) return false;
+    try {
+      final String? resolvedPath = await resolveStoredMealPhotoPath(storedReference);
+      if (resolvedPath == null) return false;
+      final file = File(resolvedPath);
+      if (!await file.exists()) return false;
+      final Uint8List bytes = await file.readAsBytes();
+      if (bytes.isEmpty) return false;
+      final result = await ImageGallerySaver.saveImage(bytes, quality: 100, name: 'foody_${DateTime.now().millisecondsSinceEpoch}');
+      return result != null && result['isSuccess'] == true;
+    } catch (_) {
+      return false;
+    }
   }
 
   static Future<Uint8List?> _tryReadBytesFromSourcePath(String sourcePath) async {

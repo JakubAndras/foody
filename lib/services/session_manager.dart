@@ -32,6 +32,7 @@ class SessionManager extends GetxService {
   final RxBool prefersMetric = true.obs;
   final Rxn<DateTime> dateOfBirth = Rxn<DateTime>();
   final RxnDouble weightChangeRateKgPerWeek = RxnDouble();
+  final RxBool savePhotosToGallery = false.obs;
 
   Future<void> onAppInit() async {
     themeModeIndex.value = ThemeMode.values[await SharedPreferencesService.to.getInt(key: themeModeKey) ?? 0];
@@ -51,6 +52,7 @@ class SessionManager extends GetxService {
     final dobMillis = await SharedPreferencesService.to.getInt(key: profileDobKey);
     dateOfBirth.value = dobMillis == null ? null : DateTime.fromMillisecondsSinceEpoch(dobMillis);
     weightChangeRateKgPerWeek.value = await SharedPreferencesService.to.getDouble(key: profileWeightChangeRateKgPerWeekKey);
+    savePhotosToGallery.value = await SharedPreferencesService.to.getBool(key: savePhotosToGalleryKey) ?? false;
   }
 
   Future<void> setOnboardingComplete(bool value) async {
@@ -134,5 +136,10 @@ class SessionManager extends GetxService {
       key: profileWeightChangeRateKgPerWeekKey,
       value: value,
     );
+  }
+
+  Future<void> setSavePhotosToGallery(bool value) async {
+    savePhotosToGallery.value = value;
+    await SharedPreferencesService.to.setBool(key: savePhotosToGalleryKey, value: value);
   }
 }

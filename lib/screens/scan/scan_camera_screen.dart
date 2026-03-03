@@ -785,9 +785,36 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
   }
 
   Widget _buildTipOverlay() {
-    final isBarcode = _mode == ScanMode.barcode;
-    final title = isBarcode ? tr(LocaleKeys.scan_barcode_scanner_title) : tr(LocaleKeys.scan_nutrition_label_title);
-    final body = isBarcode ? tr(LocaleKeys.scan_barcode_scanner_body) : tr(LocaleKeys.scan_nutrition_label_body);
+    final String title;
+    final String body;
+    final Widget? child;
+
+    switch (_mode) {
+      case ScanMode.scanMeal:
+        title = tr(LocaleKeys.scan_meal_photo_tips_title);
+        body = '';
+        child = Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ScanBulletRow(icon: Icons.center_focus_strong, label: tr(LocaleKeys.scan_meal_tip_center_food)),
+            const SizedBox(height: AppSpacing.s),
+            ScanBulletRow(icon: Icons.light_mode, label: tr(LocaleKeys.scan_meal_tip_good_lighting)),
+            const SizedBox(height: AppSpacing.s),
+            ScanBulletRow(icon: Icons.visibility, label: tr(LocaleKeys.scan_meal_tip_include_all)),
+            const SizedBox(height: AppSpacing.s),
+            ScanBulletRow(icon: Icons.edit_note, label: tr(LocaleKeys.scan_meal_tip_add_description)),
+          ],
+        );
+      case ScanMode.barcode:
+        title = tr(LocaleKeys.scan_barcode_scanner_title);
+        body = tr(LocaleKeys.scan_barcode_scanner_body);
+        child = null;
+      case ScanMode.foodLabel:
+        title = tr(LocaleKeys.scan_nutrition_label_title);
+        body = tr(LocaleKeys.scan_nutrition_label_body);
+        child = _showNutritionTip ? const ScanNutritionLabelCard() : null;
+    }
+
     return Positioned.fill(
       child: Align(
         alignment: const Alignment(0, 0.8),
@@ -795,7 +822,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
           title: title,
           body: body,
           onDismiss: () => setState(() => _showTip = false),
-          child: _showNutritionTip ? const ScanNutritionLabelCard() : null,
+          child: child,
         ),
       ),
     );

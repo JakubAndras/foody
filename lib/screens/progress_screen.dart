@@ -7,11 +7,12 @@ import 'package:diplomka/model/streak_info.dart';
 import 'package:diplomka/model/weight_entry.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/services/streak_service.dart';
+import 'package:diplomka/model/user_profile.dart';
+import 'package:diplomka/widgets/dietary_violations_calendar_card.dart' show MonthlyCalendarCard;
 import 'package:diplomka/widgets/weight_progress_card.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 
 DateTime _dateOnly(DateTime date) => DateTime(date.year, date.month, date.day);
 
@@ -143,6 +144,14 @@ class ProgressScreen extends StatelessWidget {
                     return const WeightProgressCard(entries: []);
                   }
                   return WeightProgressCard(entries: entries.toList(growable: false));
+                }),
+                Obx(() {
+                  final dietType = SessionManager.to.dietType.value;
+                  final showViolations = dietType != null && dietType != ProfileDietType.classic;
+                  return Padding(
+                    padding: const EdgeInsets.only(top: AppSpacing.l),
+                    child: MonthlyCalendarCard(showViolationsToggle: showViolations),
+                  );
                 }),
                 const SizedBox(height: AppSpacing.l),
                 const _DailyAverageCard(),

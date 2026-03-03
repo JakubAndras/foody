@@ -1,10 +1,8 @@
-import 'dart:math' as math;
-
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/controller/day_record_controller.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
-import 'package:diplomka/model/calendar_day_ring_style.dart';
 import 'package:diplomka/services/calendar_day_ring_service.dart';
+import 'package:diplomka/widgets/calendar_day_ring_painter.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -132,7 +130,7 @@ class _DateSelectorState extends State<DateSelector> {
                 width: AppSizes.dateCircleSize,
                 height: AppSizes.dateCircleSize,
                 child: CustomPaint(
-                  painter: _CalendarDayRingPainter(
+                  painter: CalendarDayRingPainter(
                     ringStyle: ringStyle,
                     strokeWidth: ringStrokeWidth,
                     useSegmentedRing: widget.useSegmentedRing,
@@ -167,67 +165,5 @@ class _DateSelectorState extends State<DateSelector> {
   void dispose() {
     _pageController.dispose();
     super.dispose();
-  }
-}
-
-class _CalendarDayRingPainter extends CustomPainter {
-  const _CalendarDayRingPainter({
-    required this.ringStyle,
-    required this.strokeWidth,
-    required this.useSegmentedRing,
-  });
-
-  final CalendarDayRingStyle ringStyle;
-  final double strokeWidth;
-  final bool useSegmentedRing;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth;
-    final radius = (size.shortestSide - strokeWidth) / 2;
-    final center = Offset(size.width / 2, size.height / 2);
-    final rect = Rect.fromCircle(center: center, radius: radius);
-    const startAngleOffset = -math.pi / 2;
-
-    if (!useSegmentedRing) {
-      paint
-        ..strokeCap = StrokeCap.round
-        ..color = AppColors.borderStrong;
-      canvas.drawCircle(center, radius, paint);
-
-      final progress = (ringStyle.roundedPercent / 100).clamp(0.0, 1.0);
-      if (progress <= 0) {
-        return;
-      }
-
-      paint.color = ringStyle.roundedPercent > 100 ? AppColors.error : AppColors.primarySoft;
-      canvas.drawArc(rect, startAngleOffset, 2 * math.pi * progress, false, paint);
-      return;
-    }
-
-    paint.strokeCap = StrokeCap.round;
-    final segmentSweep = (2 * math.pi) / ringStyle.totalSegments;
-    final gapSweep = segmentSweep * 0.28;
-    final drawSweep = segmentSweep - gapSweep;
-
-    for (int i = 0; i < ringStyle.totalSegments; i++) {
-      if (i < ringStyle.overflowSegments) {
-        paint.color = AppColors.error;
-      } else if (i < ringStyle.filledSegments) {
-        paint.color = AppColors.primarySoft;
-      } else {
-        paint.color = AppColors.borderStrong;
-      }
-
-      final start = startAngleOffset + i * segmentSweep + (gapSweep / 2);
-      canvas.drawArc(rect, start, drawSweep, false, paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _CalendarDayRingPainter oldDelegate) {
-    return oldDelegate.ringStyle != ringStyle || oldDelegate.strokeWidth != strokeWidth || oldDelegate.useSegmentedRing != useSegmentedRing;
   }
 }

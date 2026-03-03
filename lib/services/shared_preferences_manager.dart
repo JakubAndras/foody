@@ -15,6 +15,7 @@ const String profilePrefersMetricKey = "profilePrefersMetricKey";
 const String profileWeightChangeRateKgPerWeekKey = "profileWeightChangeRateKgPerWeekKey";
 const String profileDietTypeKey = "profileDietTypeKey";
 const String profileCustomDietPreferencesKey = "profileCustomDietPreferencesKey";
+const String savePhotosToGalleryKey = "savePhotosToGalleryKey";
 
 class SharedPreferencesService extends GetxService {
   static SharedPreferencesService get to => Get.find();

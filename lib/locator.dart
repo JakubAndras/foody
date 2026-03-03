@@ -11,6 +11,7 @@ import 'package:diplomka/services/day_record_repository.dart';
 import 'package:diplomka/network/open_food_facts_client.dart';
 import 'package:diplomka/services/barcode_lookup_service.dart';
 import 'package:diplomka/services/calendar_day_ring_service.dart';
+import 'package:diplomka/services/dietary_violation_service.dart';
 import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/services/ai_feature/ai_service_manager.dart';
 import 'package:diplomka/services/ai_feature/gemini_service.dart';
@@ -69,6 +70,7 @@ Future<void> setupServices() async {
   /// Inicializace singleton GetxController -> permanent: true -> zamezí smazání z paměti
   Get.put(DayRecordRepository(database: db), permanent: true);
   Get.put(CalendarDayRingService(), permanent: true);
+  Get.put(DietaryViolationService(), permanent: true);
   Get.put(
     DayRecordController(
       repository: DayRecordRepository.to,

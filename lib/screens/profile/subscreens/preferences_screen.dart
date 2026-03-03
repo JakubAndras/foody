@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
-import 'package:diplomka/screens/profile/subscreens/language_screen.dart';
+import 'package:diplomka/services/session_manager.dart';
 
 class PreferencesScreen extends StatelessWidget {
   const PreferencesScreen({super.key});
@@ -67,6 +67,21 @@ class PreferencesScreen extends StatelessWidget {
                   showDivider: false,
                 ),
               ],
+            ),
+          ),
+          const SizedBox(height: AppSpacing.m),
+          ProfileCard(
+            radius: AppRadii.lg,
+            shadow: AppShadows.cardSubtle,
+            padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.xs, AppSpacing.screen, AppSpacing.xs),
+            child: Obx(
+              () => _ToggleRow(
+                title: tr(LocaleKeys.preferences_save_photos_gallery),
+                subtitle: tr(LocaleKeys.preferences_save_photos_gallery_desc),
+                isOn: SessionManager.to.savePhotosToGallery.value,
+                onTap: () => SessionManager.to.setSavePhotosToGallery(!SessionManager.to.savePhotosToGallery.value),
+                showDivider: false,
+              ),
             ),
           ),
         ],
@@ -141,12 +156,14 @@ class _ToggleRow extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.isOn,
+    this.onTap,
     this.showDivider = true,
   });
 
   final String title;
   final String subtitle;
   final bool isOn;
+  final VoidCallback? onTap;
   final bool showDivider;
 
   @override
@@ -168,7 +185,7 @@ class _ToggleRow extends StatelessWidget {
                   ],
                 ),
               ),
-              ProfileToggle(isOn: isOn),
+              ProfileToggle(isOn: isOn, onTap: onTap),
             ],
           ),
         ),

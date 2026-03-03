@@ -295,6 +295,16 @@ class _EditMealScreenState extends State<EditMealScreen> {
     Get.snackbar(tr(LocaleKeys.meal_duplicated), _meal.name, snackPosition: SnackPosition.BOTTOM);
   }
 
+  Future<void> _handleSaveImageToGallery() async {
+    final saved = await MediaStorage.saveToGallery(_meal.photoPath);
+    if (!mounted) return;
+    if (saved) {
+      Get.snackbar(tr(LocaleKeys.meal_save_image), tr(LocaleKeys.meal_save_image_success), snackPosition: SnackPosition.BOTTOM);
+    } else {
+      Get.snackbar(tr(LocaleKeys.meal_save_image), tr(LocaleKeys.meal_save_image_error), snackPosition: SnackPosition.BOTTOM);
+    }
+  }
+
   Future<void> _handlePrimaryAction() async {
     if (_isEditMode) {
       await _handleSaveInEditMode();
@@ -433,7 +443,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                           icon: Icons.download_outlined,
                           onTap: () {
                             Navigator.of(context).pop();
-                            Get.snackbar(tr(LocaleKeys.meal_save_image), tr(LocaleKeys.meal_save_image_stub));
+                            _handleSaveImageToGallery();
                           },
                         ),
                         GlassActionSheetItem(
