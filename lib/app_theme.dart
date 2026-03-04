@@ -121,6 +121,13 @@ class AppColors {
   static const matchGreenBg = Color(0xFFDCFCE7);
   static const matchRedBg = errorSoft;
 
+  // Dark calendar
+  static const calendarDarkBg = Color(0xFF1C1C1E);
+  static const calendarDarkSurface = Color(0xFF2C2C2E);
+  static const calendarDarkText = Color(0xFFFFFFFF);
+  static const calendarDarkWeekend = Color(0xFF48484A);
+  static const calendarDarkMuted = Color(0xFF8E8E93);
+
   // Legacy aliases
   static const primarySoft = textPrimary;
   static const indicatorInactive = Color(0xFFD1D1C8);
@@ -139,6 +146,7 @@ class AppSpacing {
   static const double mega = 72;
   static const double screen = m;
   static const double edge = m;
+  static const double bottom = m;
 }
 
 class AppRadii {

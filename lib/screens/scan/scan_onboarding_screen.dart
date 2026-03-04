@@ -146,7 +146,7 @@ class _ScanOnboardingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const bottomOverlayReserve = AppSpacing.xl + AppSizes.scanIndicatorDot + AppSpacing.m + AppSizes.buttonHeightCompact + AppSpacing.m;
+    const bottomOverlayReserve = AppSpacing.xl + AppSizes.scanIndicatorDot + AppSpacing.m + AppSizes.buttonHeightCompact + AppSpacing.bottom;
     return Column(
       children: [
         _buildImageHeader(context),

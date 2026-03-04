@@ -61,7 +61,7 @@ class ExportPdfDateRangeScreen extends GetView<ExportController> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(AppSpacing.screen),
+            padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.screen, AppSpacing.screen, AppSpacing.bottom),
             child: Column(
                     children: [
                       ProfilePrimaryButton(
@@ -289,7 +289,7 @@ class _CalendarRangeSheetState extends State<_CalendarRangeSheet> {
 
           // ── Apply button ──
           Padding(
-            padding: EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.s, AppSpacing.screen, MediaQuery.of(context).padding.bottom),
+            padding: EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.s, AppSpacing.screen, AppSpacing.bottom + MediaQuery.of(context).padding.bottom),
             child: ProfilePrimaryButton(
               label: tr(LocaleKeys.common_apply),
               onPressed: (_start != null && _end != null) ? () => Navigator.of(context).pop((_start!, _end!)) : null,

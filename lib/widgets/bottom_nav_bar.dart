@@ -95,10 +95,8 @@ class BottomNavBar extends StatelessWidget {
         final double sideMargin = AppSpacing.m;
         final double navWidth = _computeNavWidth(constraints.maxWidth, sideMargin);
         final double safeBottom = MediaQuery.paddingOf(context).bottom;
-        final double bottomMargin = safeBottom + AppSpacing.s;
-        final double navTop = math.max(0.0, constraints.maxHeight - bottomMargin - AppSizes.bottomNavHeight);
-        final double actionTop = math.max(0.0, constraints.maxHeight - bottomMargin - AppSizes.fabSize);
-        final double actionLeft = math.max(sideMargin, constraints.maxWidth - sideMargin - AppSizes.fabSize);
+        final double navTop = math.max(0.0, constraints.maxHeight - safeBottom - AppSizes.bottomNavHeight);
+        final double actionLeft = math.max(AppSpacing.m, constraints.maxWidth - sideMargin - AppSizes.fabSize);
 
         return AppLiquidGlassLayer(
           backgroundWidget: body,
@@ -112,7 +110,7 @@ class BottomNavBar extends StatelessWidget {
             AppLiquidGlassPresets.mainTabActionLens.build(
               width: AppSizes.fabSize,
               height: AppSizes.fabSize,
-              position: LiquidGlassOffsetPosition(left: actionLeft, top: actionTop),
+              position: LiquidGlassOffsetPosition(left: actionLeft, top: navTop),
               child: _buildAddButton(),
             ),
           ],

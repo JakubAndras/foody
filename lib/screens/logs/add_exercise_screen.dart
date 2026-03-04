@@ -218,21 +218,24 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.s, AppSpacing.l, AppSpacing.l),
-            child: GestureDetector(
-              onTap: _isSaving ? null : _saveExercise,
-              child: Container(
-                height: AppSizes.buttonHeightCompact,
-                decoration: BoxDecoration(
-                  gradient: AppGradients.primary,
-                  borderRadius: BorderRadius.circular(AppRadii.pill),
-                  boxShadow: AppShadows.button,
-                ),
-                child: Center(
-                  child: Text(
-                    _isSaving ? tr(LocaleKeys.common_saving) : tr(LocaleKeys.exercise_add_title),
-                    style: AppTextStyles.button18.copyWith(color: AppColors.onPrimary),
+          SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+              child: GestureDetector(
+                onTap: _isSaving ? null : _saveExercise,
+                child: Container(
+                  height: AppSizes.buttonHeightCompact,
+                  decoration: BoxDecoration(
+                    gradient: AppGradients.primary,
+                    borderRadius: BorderRadius.circular(AppRadii.pill),
+                    boxShadow: AppShadows.button,
+                  ),
+                  child: Center(
+                    child: Text(
+                      _isSaving ? tr(LocaleKeys.common_saving) : tr(LocaleKeys.exercise_add_title),
+                      style: AppTextStyles.button18.copyWith(color: AppColors.onPrimary),
+                    ),
                   ),
                 ),
               ),

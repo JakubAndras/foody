@@ -324,7 +324,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
             AppSpacing.edge,
             AppSpacing.s,
             AppSpacing.edge,
-            AppSpacing.l + MediaQuery.of(context).viewInsets.bottom,
+            AppSpacing.bottom + MediaQuery.of(context).viewInsets.bottom,
           ),
           child: GradientPillButton(
             label: tr(LocaleKeys.common_done),

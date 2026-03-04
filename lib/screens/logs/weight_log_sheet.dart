@@ -260,25 +260,28 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.s, AppSpacing.l, AppSpacing.l),
-            child: Row(
-              children: [
-                if (_isEditing) ...[
+          SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+              child: Row(
+                children: [
+                  if (_isEditing) ...[
+                    Expanded(
+                      child: _DangerButton(label: tr(LocaleKeys.common_delete), icon: Icons.delete_outline, onPressed: _handleDelete),
+                    ),
+                    const SizedBox(width: AppSpacing.s),
+                  ],
                   Expanded(
-                    child: _DangerButton(label: tr(LocaleKeys.common_delete), icon: Icons.delete_outline, onPressed: _handleDelete),
+                    child: ProfilePrimaryButton(
+                      label: _isSaving ? tr(LocaleKeys.common_saving) : tr(LocaleKeys.common_save),
+                      height: AppSizes.buttonHeightCompact,
+                      radius: AppRadii.pill,
+                      onPressed: _isSaving ? null : _handleSave,
+                    ),
                   ),
-                  const SizedBox(width: AppSpacing.s),
                 ],
-                Expanded(
-                  child: ProfilePrimaryButton(
-                    label: _isSaving ? tr(LocaleKeys.common_saving) : tr(LocaleKeys.common_save),
-                    height: AppSizes.buttonHeightCompact,
-                    radius: AppRadii.pill,
-                    onPressed: _isSaving ? null : _handleSave,
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ],

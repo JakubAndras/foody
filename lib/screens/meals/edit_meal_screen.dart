@@ -961,7 +961,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                         isNewMeal: widget.isNewMeal,
                       ),
                     ),
-            padding: const EdgeInsets.fromLTRB(AppSpacing.edge, AppSpacing.s, AppSpacing.edge, AppSpacing.m),
+            padding: const EdgeInsets.fromLTRB(AppSpacing.edge, AppSpacing.s, AppSpacing.edge, AppSpacing.bottom),
           ),
         ),
       ),

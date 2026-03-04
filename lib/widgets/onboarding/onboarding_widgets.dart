@@ -35,7 +35,7 @@ class OnboardingPage extends StatelessWidget {
     final media = MediaQuery.of(context);
     final double topInset = media.padding.top;
     final double bottomInset = media.padding.bottom;
-    final double bottomBarHeight = bottom == null ? 0 : AppSizes.buttonHeight + AppSpacing.l + bottomInset;
+    final double bottomBarHeight = bottom == null ? 0 : AppSizes.buttonHeight + AppSpacing.bottom + bottomInset;
     final Widget? floatingActionButton = bottom == null
         ? null
         : SafeArea(
