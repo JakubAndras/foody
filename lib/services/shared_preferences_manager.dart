@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:diplomka/model/motivational_summary_setting.dart';
 import 'package:diplomka/model/tracking_reminder_setting.dart';
 
 const String themeModeKey = "themeModeKey";
@@ -102,5 +103,33 @@ class SharedPreferencesService extends GetxService {
     await setBool(key: trackingReminderEnabledKey(setting.type), value: setting.enabled);
     await setInt(key: trackingReminderHourKey(setting.type), value: setting.hour);
     await setInt(key: trackingReminderMinuteKey(setting.type), value: setting.minute);
+  }
+
+  // --- Motivational Summary Settings ---
+
+  String motivationalSummaryEnabledKey(MotivationalSummaryType type) => 'motivationalSummary_${type.code}_enabled';
+
+  String motivationalSummaryHourKey(MotivationalSummaryType type) => 'motivationalSummary_${type.code}_hour';
+
+  String motivationalSummaryMinuteKey(MotivationalSummaryType type) => 'motivationalSummary_${type.code}_minute';
+
+  Future<MotivationalSummarySetting> getMotivationalSummarySetting(MotivationalSummaryType type) async {
+    final defaultSetting = MotivationalSummarySetting.defaults(type);
+    final enabled = await getBool(key: motivationalSummaryEnabledKey(type)) ?? defaultSetting.enabled;
+    final hour = await getInt(key: motivationalSummaryHourKey(type)) ?? defaultSetting.hour;
+    final minute = await getInt(key: motivationalSummaryMinuteKey(type)) ?? defaultSetting.minute;
+
+    return MotivationalSummarySetting(
+      type: type,
+      enabled: enabled,
+      hour: hour.clamp(0, 23),
+      minute: minute.clamp(0, 59),
+    );
+  }
+
+  Future<void> setMotivationalSummarySetting(MotivationalSummarySetting setting) async {
+    await setBool(key: motivationalSummaryEnabledKey(setting.type), value: setting.enabled);
+    await setInt(key: motivationalSummaryHourKey(setting.type), value: setting.hour);
+    await setInt(key: motivationalSummaryMinuteKey(setting.type), value: setting.minute);
   }
 }

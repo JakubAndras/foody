@@ -475,7 +475,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
                 child: Stack(
                   children: [
                     _buildCameraTopBar(),
-                    _buildScanFrame(),
+                    if (!_showTip) _buildScanFrame(),
                     _buildZoomToggle(),
                   ],
                 ),
@@ -816,13 +816,22 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
     }
 
     return Positioned.fill(
-      child: Align(
-        alignment: const Alignment(0, 0.8),
-        child: ScanTipOverlay(
-          title: title,
-          body: body,
-          onDismiss: () => setState(() => _showTip = false),
-          child: child,
+      child: GestureDetector(
+        onTap: () => setState(() => _showTip = false),
+        child: ColoredBox(
+          color: AppColors.overlayDark40,
+          child: Align(
+            alignment: const Alignment(0, -0.2),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl),
+              child: ScanTipOverlay(
+                title: title,
+                body: body,
+                onDismiss: () => setState(() => _showTip = false),
+                child: child,
+              ),
+            ),
+          ),
         ),
       ),
     );

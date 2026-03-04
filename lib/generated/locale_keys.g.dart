@@ -210,6 +210,7 @@ abstract class  LocaleKeys {
   static const profile_edit_nutrition_goals = 'profile_edit_nutrition_goals';
   static const profile_weight_history = 'profile_weight_history';
   static const profile_tracking_reminders = 'profile_tracking_reminders';
+  static const profile_motivational_summary = 'profile_motivational_summary';
   static const profile_ring_colors = 'profile_ring_colors';
   static const profile_widgets = 'profile_widgets';
   static const profile_how_to_add = 'profile_how_to_add';
@@ -565,6 +566,19 @@ abstract class  LocaleKeys {
   static const tracking_reminders_end_of_day_hint = 'tracking_reminders_end_of_day_hint';
   static const tracking_reminders_permission_hint = 'tracking_reminders_permission_hint';
   static const tracking_reminders_open_settings = 'tracking_reminders_open_settings';
+  static const motivational_summary_title = 'motivational_summary_title';
+  static const motivational_summary_channel_name = 'motivational_summary_channel_name';
+  static const motivational_summary_channel_desc = 'motivational_summary_channel_desc';
+  static const motivational_summary_notification_title = 'motivational_summary_notification_title';
+  static const motivational_summary_description = 'motivational_summary_description';
+  static const motivational_summary_type_daily = 'motivational_summary_type_daily';
+  static const motivational_summary_type_weekly = 'motivational_summary_type_weekly';
+  static const motivational_summary_type_monthly = 'motivational_summary_type_monthly';
+  static const motivational_summary_body_daily = 'motivational_summary_body_daily';
+  static const motivational_summary_body_weekly = 'motivational_summary_body_weekly';
+  static const motivational_summary_body_monthly = 'motivational_summary_body_monthly';
+  static const motivational_summary_permission_hint = 'motivational_summary_permission_hint';
+  static const motivational_summary_open_settings = 'motivational_summary_open_settings';
   static const language_settings_title = 'language_settings_title';
   static const language_settings_app_language_title = 'language_settings_app_language_title';
   static const language_settings_app_language_subtitle = 'language_settings_app_language_subtitle';

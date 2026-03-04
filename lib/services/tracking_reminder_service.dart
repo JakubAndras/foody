@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/tracking_reminder_setting.dart';
+import 'package:diplomka/screens/main_screen.dart';
 import 'package:diplomka/services/shared_preferences_manager.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
@@ -16,7 +17,7 @@ const String trackingRemindersChannelId = 'tracking_reminders';
 class TrackingReminderService extends GetxService {
   static TrackingReminderService get to => Get.find();
 
-  final FlutterLocalNotificationsPlugin _notificationsPlugin = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin notificationsPlugin = FlutterLocalNotificationsPlugin();
   bool _initialized = false;
 
   Future<void> initialize() async {
@@ -35,7 +36,10 @@ class TrackingReminderService extends GetxService {
       ),
     );
 
-    await _notificationsPlugin.initialize(initializationSettings);
+    await notificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: _onNotificationTap,
+    );
     await _createAndroidChannel();
     _initialized = true;
   }
@@ -59,13 +63,13 @@ class TrackingReminderService extends GetxService {
       importance: Importance.high,
     );
 
-    final AndroidFlutterLocalNotificationsPlugin? androidImplementation = _notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+    final AndroidFlutterLocalNotificationsPlugin? androidImplementation = notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
     await androidImplementation?.createNotificationChannel(channel);
   }
 
   Future<bool> hasNotificationPermission() async {
     if (Platform.isAndroid) {
-      final AndroidFlutterLocalNotificationsPlugin? androidImplementation = _notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+      final AndroidFlutterLocalNotificationsPlugin? androidImplementation = notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
       return await androidImplementation?.areNotificationsEnabled() ?? true;
     }
 
@@ -84,13 +88,13 @@ class TrackingReminderService extends GetxService {
     }
 
     if (Platform.isAndroid) {
-      final AndroidFlutterLocalNotificationsPlugin? androidImplementation = _notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+      final AndroidFlutterLocalNotificationsPlugin? androidImplementation = notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
       final bool? granted = await androidImplementation?.requestNotificationsPermission();
       return granted ?? await hasNotificationPermission();
     }
 
     if (Platform.isIOS) {
-      final IOSFlutterLocalNotificationsPlugin? iosImplementation = _notificationsPlugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>();
+      final IOSFlutterLocalNotificationsPlugin? iosImplementation = notificationsPlugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>();
       final bool? granted = await iosImplementation?.requestPermissions(
         alert: true,
         badge: true,
@@ -141,7 +145,7 @@ class TrackingReminderService extends GetxService {
       ),
     );
 
-    await _notificationsPlugin.zonedSchedule(
+    await notificationsPlugin.zonedSchedule(
       setting.type.notificationId,
       _notificationTitle(),
       _notificationBody(setting.type),
@@ -156,7 +160,7 @@ class TrackingReminderService extends GetxService {
 
   Future<void> cancelReminder(TrackingReminderType type) async {
     await initialize();
-    await _notificationsPlugin.cancel(type.notificationId);
+    await notificationsPlugin.cancel(type.notificationId);
   }
 
   tz.TZDateTime nextTriggerDate(int hour, int minute) {
@@ -186,6 +190,13 @@ class TrackingReminderService extends GetxService {
         return tr(LocaleKeys.tracking_reminders_body_dinner);
       case TrackingReminderType.endOfDay:
         return tr(LocaleKeys.tracking_reminders_body_end_of_day);
+    }
+  }
+
+  static void _onNotificationTap(NotificationResponse response) {
+    final payload = response.payload ?? '';
+    if (payload.startsWith('motivational_')) {
+      MainScreenController.to.showProgressTab();
     }
   }
 }

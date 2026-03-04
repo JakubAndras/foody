@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 
+import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/screens/dashboard_screen.dart';
 import 'package:diplomka/screens/progress_screen.dart';
 import 'package:diplomka/screens/profile/profile_screen.dart';
@@ -49,10 +50,15 @@ class MainScreenController extends BaseController {
     _selectedIndex.value = 0;
   }
 
+  void showProgressTab() {
+    _selectedIndex.value = 1;
+  }
+
   void _showQuickActions(BuildContext context) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
+      barrierColor: AppColors.overlayDark40,
       isScrollControlled: false,
       builder: (_) => QuickActionSheet(
         onLogMeal: () {

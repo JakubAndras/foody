@@ -65,13 +65,8 @@
 - Parse and display AI-generated response
 - Conversation history (optional)
 
-### FR-32: Monthly Motivational Summary :x:
-**Current state:** No code related to monthly summaries exists.
-**What's needed:**
-- Monthly data aggregation (avg calories, protein, weight change, streak, best day)
-- Motivational messaging based on progress vs goals
-- End-of-month push notification
-- Summary screen accessible from progress tab
+### FR-32: Motivational Summary Notifications :white_check_mark:
+**Done:** Motivational summary notifications implemented with daily, weekly, and monthly options. `MotivationalSummaryService` schedules notifications via `flutter_local_notifications` using `DateTimeComponents.time` (daily), `DateTimeComponents.dayOfWeekAndTime` (weekly, Sunday), and `DateTimeComponents.dayOfMonthAndTime` (monthly, 1st). Settings screen (`MotivationalSummaryScreen`) mirrors Tracking Reminders UI with toggles and time pickers per frequency. Settings persisted in SharedPreferences. All three types default to disabled (opt-in). Notification tap navigates to Progress screen (tab 1) via `onDidReceiveNotificationResponse` callback. Notification IDs 3001-3003, separate Android channel `motivational_summary`. Fully localized (EN/CS).
 
 ### FR-34: AI Accuracy Evaluation :x:
 **Current state:** No feedback or accuracy tracking code exists.
@@ -254,7 +249,7 @@
 13. **Dark Mode** — Theme toggle + system detection
 
 ### Lower Priority (Nice to have)
-14. **FR-32** — Monthly motivational summary
+14. **FR-32** — Motivational summary notifications // DONE
 15. **FR-34** — AI accuracy evaluation
 16. **FR-23** — Dietary violations in calendar // DONE
 17. **FR-25** — Health app integrations

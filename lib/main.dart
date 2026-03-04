@@ -1,3 +1,4 @@
+import 'package:diplomka/services/motivational_summary_service.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/services/home_widget/widget_sync_service.dart';
 import 'package:diplomka/services/language_settings_service.dart';
@@ -20,6 +21,8 @@ Future<void> main() async {
   await LanguageSettingsService.to.load();
   await TrackingReminderService.to.initialize();
   await TrackingReminderService.to.rescheduleAllFromStorage();
+  await MotivationalSummaryService.to.initialize();
+  await MotivationalSummaryService.to.rescheduleAllFromStorage();
   await WidgetSyncService.to.initialize();
 
   runApp(

@@ -3,7 +3,9 @@ import 'package:diplomka/controller/export_controller.dart';
 import 'package:diplomka/controller/barcode_scan_controller.dart';
 import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/controller/language_settings_controller.dart';
+import 'package:diplomka/controller/motivational_summary_controller.dart';
 import 'package:diplomka/controller/tracking_reminders_controller.dart';
+import 'package:diplomka/services/motivational_summary_service.dart';
 import 'package:diplomka/screens/main_screen.dart';
 import 'package:diplomka/controller/day_record_controller.dart';
 import 'package:diplomka/controller/recipe_service.dart';
@@ -58,6 +60,7 @@ Future<void> setupServices() async {
   Get.lazyPut<SessionManager>(() => SessionManager());
   Get.put(LanguageSettingsService(), permanent: true);
   Get.put(TrackingReminderService(), permanent: true);
+  Get.put(MotivationalSummaryService(), permanent: true);
   Get.put(StreakService(), permanent: true);
   Get.put(WidgetActionRouter(), permanent: true);
   Get.put(WidgetSyncService(), permanent: true);
@@ -89,6 +92,14 @@ Future<void> setupServices() async {
   Get.lazyPut<TrackingRemindersController>(
     () => TrackingRemindersController(
       sharedPreferencesService: SharedPreferencesService.to,
+      trackingReminderService: TrackingReminderService.to,
+    ),
+    fenix: true,
+  );
+  Get.lazyPut<MotivationalSummaryController>(
+    () => MotivationalSummaryController(
+      sharedPreferencesService: SharedPreferencesService.to,
+      motivationalSummaryService: MotivationalSummaryService.to,
       trackingReminderService: TrackingReminderService.to,
     ),
     fenix: true,
