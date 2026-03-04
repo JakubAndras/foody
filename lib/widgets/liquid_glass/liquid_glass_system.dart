@@ -146,6 +146,24 @@ class AppLiquidGlassPresets {
     saturation: 1.01,
     color: Color(0x52FFFFFF),
   );
+
+  static const AppLiquidGlassLensConfig scanTipLens = AppLiquidGlassLensConfig(
+    magnification: 1.01,
+    distortion: 0.08,
+    distortionWidth: 20,
+    shape: RoundedRectangleShape(
+      cornerRadius: AppRadii.lg2,
+      borderWidth: 1.2,
+      borderSoftness: 1.2,
+      lightIntensity: 1.15,
+      oneSideLightIntensity: 0.6,
+      lightDirection: 225,
+    ),
+    blur: LiquidGlassBlur(sigmaX: 6, sigmaY: 6),
+    chromaticAberration: 0.001,
+    saturation: 1.02,
+    color: Color(0x88FFFFFF),
+  );
 }
 
 class AppLiquidGlassLayer extends StatelessWidget {

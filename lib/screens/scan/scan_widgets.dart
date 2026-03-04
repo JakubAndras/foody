@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
@@ -396,49 +397,62 @@ class ScanTipOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IgnorePointer(
-            ignoring: true,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (child != null) ...[
-                  child!,
-                  const SizedBox(height: AppSpacing.l),
-                ],
-                Text(title, style: AppTextStyles.scanHeading20, textAlign: TextAlign.center),
-                const SizedBox(height: AppSpacing.s),
-                SizedBox(
-                  width: 280,
-                  child: Text(
-                    body,
-                    style: AppTextStyles.body14Regular,
-                    textAlign: TextAlign.center,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(AppRadii.lg2),
+      child: BackdropFilter(
+        filter: ui.ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+        child: Container(
+          padding: const EdgeInsets.all(AppSpacing.l),
+          decoration: BoxDecoration(
+            color: const Color(0x55FFFFFF),
+            borderRadius: BorderRadius.circular(AppRadii.lg2),
+            border: Border.all(color: const Color(0x44FFFFFF), width: 1.2),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IgnorePointer(
+                ignoring: true,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (child != null) ...[
+                      child!,
+                      const SizedBox(height: AppSpacing.l),
+                    ],
+                    Text(title, style: AppTextStyles.scanHeading20, textAlign: TextAlign.center),
+                    if (body.isNotEmpty) ...[
+                      const SizedBox(height: AppSpacing.s),
+                      SizedBox(
+                        width: 280,
+                        child: Text(
+                          body,
+                          style: AppTextStyles.body14Regular,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              const SizedBox(height: AppSpacing.l),
+              GestureDetector(
+                onTap: onDismiss,
+                child: Container(
+                  width: 100,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: AppColors.surface.withValues(alpha: 0.85),
+                    borderRadius: BorderRadius.circular(AppRadii.pill),
+                  ),
+                  child: Center(
+                    child: Text(tr(LocaleKeys.scan_got_it), style: AppTextStyles.body14),
                   ),
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(height: AppSpacing.l),
-          GestureDetector(
-            onTap: onDismiss,
-            child: Container(
-              width: 100,
-              height: 48,
-              decoration: BoxDecoration(
-                color: AppColors.surface,
-                borderRadius: BorderRadius.circular(AppRadii.pill),
-                boxShadow: AppShadows.cameraControl,
               ),
-              child: Center(
-                child: Text(tr(LocaleKeys.scan_got_it), style: AppTextStyles.body14),
-              ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
