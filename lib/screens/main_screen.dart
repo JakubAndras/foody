@@ -5,7 +5,9 @@ import 'package:diplomka/screens/dashboard_screen.dart';
 import 'package:diplomka/screens/progress_screen.dart';
 import 'package:diplomka/screens/profile/profile_screen.dart';
 import 'package:diplomka/widgets/bottom_nav_bar.dart';
+import 'package:diplomka/widgets/liquid_glass/liquid_glass_system.dart';
 import 'package:flutter/material.dart';
+import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:diplomka/screens/scan/scan_onboarding_screen.dart';
 import 'package:diplomka/controller/base_controller.dart';
 import 'package:diplomka/screens/scan/scan_camera_screen.dart';
@@ -22,14 +24,36 @@ class MainScreen extends GetView<MainScreenController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBody: true,
       body: Obx(() {
         final activeBody = MainScreenController.to.widgetOptions.elementAt(controller._selectedIndex.value);
-        return BottomNavBar(
-          body: activeBody,
-          currentIndex: controller._selectedIndex.value,
-          onTap: controller._onItemTapped,
-          onAdd: () => controller._showQuickActions(context),
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            const double bottomOffset = 16;
+            final double sideMargin = AppSpacing.l;
+            final double navWidth = constraints.maxWidth - sideMargin * 2 - AppSizes.fabSize - AppSpacing.s;
+            final double actionLeft = constraints.maxWidth - sideMargin - AppSizes.fabSize;
+
+            return AppLiquidGlassLayer(
+              backgroundWidget: activeBody,
+              children: [
+                AppLiquidGlassPresets.mainTabBarLens.build(
+                  width: navWidth,
+                  height: AppSizes.bottomNavHeight,
+                  position: LiquidGlassOffsetPosition(left: sideMargin, bottom: AppSpacing.xl),
+                  child: BottomNavBarContent(
+                    currentIndex: controller._selectedIndex.value,
+                    onTap: controller._onItemTapped,
+                  ),
+                ),
+                AppLiquidGlassPresets.mainTabActionLens.build(
+                  width: AppSizes.fabSize,
+                  height: AppSizes.fabSize,
+                  position: LiquidGlassOffsetPosition(left: actionLeft, bottom: AppSpacing.xl),
+                  child: BottomNavActionButton(onTap: () => controller._showQuickActions(context)),
+                ),
+              ],
+            );
+          },
         );
       }),
     );
