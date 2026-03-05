@@ -147,6 +147,7 @@ class AppSpacing {
   static const double screen = m;
   static const double edge = m;
   static const double bottom = m;
+  static const double safeAreaTop = 64;
 }
 
 class AppRadii {
