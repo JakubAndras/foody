@@ -5,13 +5,12 @@ import 'package:diplomka/screens/profile/profile_widgets.dart';
 import 'package:diplomka/services/day_record_repository.dart';
 import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/widgets/calories_card.dart';
+import 'package:diplomka/widgets/dashboard_calendar_sheet.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:diplomka/app_theme.dart';
-import 'package:intl/intl.dart';
-
 import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/widgets/date_selector.dart';
 import 'package:diplomka/widgets/macros_row.dart';
@@ -128,14 +127,9 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          tr(LocaleKeys.dashboard_title),
-          style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w700),
-        ),
         Obx(() {
           if (dashboardController.isLoadingStreak.value) {
-            return _streakPill(
-              minWidth: AppSizes.streakPillMinWidth,
+            return _glassHeaderPill(
               child: const SizedBox(
                 width: AppSizes.iconSm,
                 height: AppSizes.iconSm,
@@ -144,53 +138,66 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
             );
           }
           if (dashboardController.streakError.isNotEmpty) {
-            return _streakPill(
-              minWidth: AppSizes.streakPillMinWidth,
-              child: const Icon(Icons.error_outline, color: AppColors.error, size: AppSizes.iconSm),
+            return _glassHeaderPill(
               onTap: () => showDialog(context: context, builder: (_) => const StreakDialog()),
+              child: const Icon(Icons.error_outline, color: AppColors.error, size: AppSizes.iconSm),
             );
           }
           final streak = dashboardController.streakInfo.value?.currentStreak ?? 0;
-          return _streakPill(
-            minWidth: _streakPillMinWidthFor(streak),
+          return _glassHeaderPill(
+            onTap: () => showDialog(context: context, builder: (_) => const StreakDialog()),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.local_fire_department, color: AppColors.orange, size: AppSizes.iconSm),
+                const Icon(Icons.emoji_events_outlined, color: AppColors.textSecondary, size: 18),
                 const SizedBox(width: AppSpacing.xs),
                 Text(
                   '$streak',
-                  style: AppTextStyles.caption12.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w700),
+                  style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w700),
                 ),
               ],
             ),
-            onTap: () => showDialog(context: context, builder: (_) => const StreakDialog()),
+          );
+        }),
+        Obx(() {
+          final date = dashboardController.selectedDate.value;
+          final dayStr = date.day.toString();
+          final monthStr = date.month.toString().padLeft(2, '0');
+          return _glassHeaderPill(
+            onTap: () async {
+              final selected = await DashboardCalendarSheet.show(context, selectedDate: date);
+              if (selected != null) {
+                dashboardController.updateDate(selected);
+              }
+            },
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.calendar_month, color: AppColors.textSecondary, size: 18),
+                const SizedBox(width: AppSpacing.xs),
+                Text(
+                  '$dayStr. $monthStr',
+                  style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w700),
+                ),
+              ],
+            ),
           );
         }),
       ],
     );
   }
 
-  double _streakPillMinWidthFor(int streak) {
-    final digits = streak.abs().toString().length;
-    if (digits >= 3) return AppSizes.streakPillMinWidthTripleDigit;
-    if (digits >= 2) return AppSizes.streakPillMinWidthDoubleDigit;
-    return AppSizes.streakPillMinWidth;
-  }
-
-  Widget _streakPill({
+  Widget _glassHeaderPill({
     required Widget child,
-    required double minWidth,
     VoidCallback? onTap,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
         height: AppSizes.streakPillHeight,
-        constraints: BoxConstraints(minWidth: minWidth),
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: AppColors.surfaceMuted,
           borderRadius: BorderRadius.circular(AppRadii.pill),
           border: Border.all(color: AppColors.border),
           boxShadow: AppShadows.cardSmall,

@@ -96,19 +96,26 @@ class _DateSelectorState extends State<DateSelector> {
     );
   }
 
+  bool _isToday(DateTime date) {
+    final now = DateTime.now();
+    return date.year == now.year && date.month == now.month && date.day == now.day;
+  }
+
   Widget _buildDate(DateTime date, bool isSelected) {
     final normalizedDate = _normalizeDate(date);
     final labelAndNumberColor = isSelected ? AppColors.textPrimary : AppColors.borderStrong;
     final ringStrokeWidth = AppSizes.dateCircleBorder * 0.8;
+    final isToday = _isToday(date);
     final dayNames = [
-      tr(LocaleKeys.day_monday_short),
-      tr(LocaleKeys.day_tuesday_short),
-      tr(LocaleKeys.day_wednesday_short),
-      tr(LocaleKeys.day_thursday_short),
-      tr(LocaleKeys.day_friday_short),
-      tr(LocaleKeys.day_saturday_short),
-      tr(LocaleKeys.day_sunday_short),
+      tr(LocaleKeys.day_mon),
+      tr(LocaleKeys.day_tue),
+      tr(LocaleKeys.day_wed),
+      tr(LocaleKeys.day_thu),
+      tr(LocaleKeys.day_fri),
+      tr(LocaleKeys.day_sat),
+      tr(LocaleKeys.day_sun),
     ];
+    final dayLabel = isToday ? tr(LocaleKeys.common_today) : dayNames[date.weekday - 1];
 
     return Obx(() {
       final ringStyle = _dayRecordController.weekRingStyles[normalizedDate] ?? CalendarDayRingService.emptyStyle;
@@ -116,9 +123,10 @@ class _DateSelectorState extends State<DateSelector> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            dayNames[date.weekday - 1].toUpperCase(),
+            dayLabel,
             style: AppTextStyles.label11.copyWith(
-              color: labelAndNumberColor,
+              color: isToday ? AppColors.textPrimary : labelAndNumberColor,
+              fontWeight: isToday ? FontWeight.w700 : FontWeight.w600,
             ),
           ),
           const SizedBox(height: AppSpacing.s),

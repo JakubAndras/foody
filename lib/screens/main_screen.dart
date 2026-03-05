@@ -28,10 +28,8 @@ class MainScreen extends GetView<MainScreenController> {
         final activeBody = MainScreenController.to.widgetOptions.elementAt(controller._selectedIndex.value);
         return LayoutBuilder(
           builder: (context, constraints) {
-            const double bottomOffset = 16;
-            final double sideMargin = AppSpacing.l;
-            final double navWidth = constraints.maxWidth - sideMargin * 2 - AppSizes.fabSize - AppSpacing.s;
-            final double actionLeft = constraints.maxWidth - sideMargin - AppSizes.fabSize;
+            final double navWidth = constraints.maxWidth - AppSpacing.xxxl - AppSizes.fabSize - AppSpacing.s;
+            final double actionLeft = constraints.maxWidth - AppSpacing.l - AppSizes.fabSize;
 
             return AppLiquidGlassLayer(
               backgroundWidget: activeBody,
@@ -39,7 +37,7 @@ class MainScreen extends GetView<MainScreenController> {
                 AppLiquidGlassPresets.mainTabBarLens.build(
                   width: navWidth,
                   height: AppSizes.bottomNavHeight,
-                  position: LiquidGlassOffsetPosition(left: sideMargin, bottom: AppSpacing.xl),
+                  position: LiquidGlassOffsetPosition(left: AppSpacing.l, bottom: AppSpacing.xl),
                   child: BottomNavBarContent(
                     currentIndex: controller._selectedIndex.value,
                     onTap: controller._onItemTapped,
