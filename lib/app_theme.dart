@@ -12,8 +12,8 @@ class AppColors {
   static const onPrimary = white;
 
   // Background / surfaces
-  static const background = white;
-  static const backgroundSoft = Color(0xFFF8F8F8);
+  static const background = backgroundSoft;
+  static const backgroundSoft = Color(0xFFE8E8E8);
   static const backgroundAlt = Color(0xFFFAFAFA);
   static const surface = white;
   static const surfaceMuted = Color(0xFFF3F4F6);
@@ -75,6 +75,9 @@ class AppColors {
   static const glassMuted = Color(0xE6EEEEEE);
   static const glassSheet = Color(0x80FFFFFF);
   static const keyboardSurface = Color(0xFFD1D5DB);
+
+  static const glassBorder = Color(0xFFFFFFFF);
+  static const glassBackground = Color(0xB0FFFFFF);
 
   // Misc / brand
   static const statusBarDark = Color(0xFF1E2939);
@@ -194,7 +197,7 @@ class AppSizes {
   static const double iconButtonSm = 32;
   static const double stepIndicatorHeight = 4;
   static const double badgeHeight = 30;
-  static const double streakPillHeight = 34;
+  static const double streakPillHeight = 40;
   static const double streakPillMinWidth = 56;
   static const double streakPillMinWidthDoubleDigit = 64;
   static const double streakPillMinWidthTripleDigit = 72;
@@ -203,6 +206,7 @@ class AppSizes {
   static const double iconMd = 20;
   static const double iconLg = 24;
   static const double iconXl = 40;
+  static const double iconTabBar = 32;
   static const double cardIconLg = 48;
   static const double legendDot = 10;
   static const double macroDot = 8;
@@ -339,6 +343,7 @@ class AppSizes {
   static const double exerciseOptionCardHeight = 140;
   static const double exerciseStatCardHeight = 164;
   static const double exerciseInputHeight = scanInputHeight;
+  static const double glassBorderWidth = 1.5;
 }
 
 class AppOpacities {
@@ -477,11 +482,11 @@ class AppGradients {
   );
 
   static const LinearGradient background = LinearGradient(
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
+    begin: Alignment.topRight,
+    end: Alignment.bottomLeft,
     colors: [
       AppColors.background,
-      AppColors.surfaceSubtle,
+      AppColors.background,
     ],
     stops: [0, 1],
   );

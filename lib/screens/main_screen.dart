@@ -50,20 +50,20 @@ class MainScreen extends GetView<MainScreenController> {
                     onTap: controller._onItemTapped,
                   ),
                 ),
-                AppLiquidGlassPresets.mainTabActionLens.build(
+                AppLiquidGlassPresets.mainTabBarLens.build(
                   width: AppSizes.fabSize,
                   height: AppSizes.fabSize,
                   position: LiquidGlassOffsetPosition(left: actionLeft, bottom: AppSpacing.xl),
                   child: BottomNavActionButton(onTap: () => controller._showQuickActions(context)),
                 ),
                 if (isDashboard) ...[
-                  AppLiquidGlassPresets.mainTabBarLens.build(
+                  AppLiquidGlassPresets.basicButtonLens.build(
                     width: AppSizes.streakPillMinWidthTripleDigit,
                     height: AppSizes.streakPillHeight,
                     position: const LiquidGlassOffsetPosition(left: AppSpacing.l, top: AppSpacing.safeAreaTop),
                     child: const _DashboardStreakPill(),
                   ),
-                  AppLiquidGlassPresets.mainTabBarLens.build(
+                  AppLiquidGlassPresets.basicButtonLens.build(
                     width: calendarPillWidth,
                     height: AppSizes.streakPillHeight,
                     position: LiquidGlassOffsetPosition(left: calendarPillLeft, top: AppSpacing.safeAreaTop),
@@ -147,38 +147,45 @@ class _DashboardStreakPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      final dc = DashboardController.to;
-      if (dc.isLoadingStreak.value) {
-        return const Center(
-          child: SizedBox(
-            width: AppSizes.iconSm,
-            height: AppSizes.iconSm,
-            child: CircularProgressIndicator(strokeWidth: AppSizes.borderThick, color: AppColors.orange),
-          ),
-        );
-      }
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color:AppColors.glassBackground,
+        borderRadius: BorderRadius.circular(AppRadii.pill),
+        border: Border.all(color: AppColors.glassBorder, width: AppSizes.glassBorderWidth),
+      ),
+      child: Obx(() {
+        final dc = DashboardController.to;
+        if (dc.isLoadingStreak.value) {
+          return const Center(
+            child: SizedBox(
+              width: AppSizes.iconSm,
+              height: AppSizes.iconSm,
+              child: CircularProgressIndicator(strokeWidth: AppSizes.borderThick, color: AppColors.orange),
+            ),
+          );
+        }
 
-      Widget content;
-      if (dc.streakError.isNotEmpty) {
-        content = const Icon(Icons.error_outline, color: AppColors.error, size: AppSizes.iconSm);
-      } else {
-        final streak = dc.streakInfo.value?.currentStreak ?? 0;
-        content = Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.emoji_events_outlined, color: AppColors.textSecondary, size: 18),
-            const SizedBox(width: AppSpacing.xs),
-            Text('$streak', style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w700)),
-          ],
-        );
-      }
+        Widget content;
+        if (dc.streakError.isNotEmpty) {
+          content = const Icon(Icons.error_outline, color: AppColors.error, size: AppSizes.iconSm);
+        } else {
+          final streak = dc.streakInfo.value?.currentStreak ?? 0;
+          content = Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.emoji_events_outlined, color: AppColors.textSecondary, size: 18),
+              const SizedBox(width: AppSpacing.xs),
+              Text('$streak', style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w700)),
+            ],
+          );
+        }
 
-      return GestureDetector(
-        onTap: () => showDialog(context: context, builder: (_) => const StreakDialog()),
-        child: Center(child: content),
-      );
-    });
+        return GestureDetector(
+          onTap: () => showDialog(context: context, builder: (_) => const StreakDialog()),
+          child: Center(child: content),
+        );
+      }),
+    );
   }
 }
 
@@ -187,29 +194,36 @@ class _DashboardCalendarPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      final dc = DashboardController.to;
-      final date = dc.selectedDate.value;
-      final dayStr = date.day.toString();
-      final monthStr = date.month.toString().padLeft(2, '0');
-      return GestureDetector(
-        onTap: () async {
-          final selected = await DashboardCalendarSheet.show(context, selectedDate: date);
-          if (selected != null) {
-            dc.updateDate(selected);
-          }
-        },
-        child: Center(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.calendar_month, color: AppColors.textSecondary, size: 18),
-              const SizedBox(width: AppSpacing.xs),
-              Text('$dayStr. $monthStr', style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w700)),
-            ],
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color:AppColors.glassBackground,
+        borderRadius: BorderRadius.circular(AppRadii.pill),
+        border: Border.all(color: AppColors.glassBorder, width: AppSizes.glassBorderWidth),
+      ),
+      child: Obx(() {
+        final dc = DashboardController.to;
+        final date = dc.selectedDate.value;
+        final dayStr = date.day.toString();
+        final monthStr = date.month.toString().padLeft(2, '0');
+        return GestureDetector(
+          onTap: () async {
+            final selected = await DashboardCalendarSheet.show(context, selectedDate: date);
+            if (selected != null) {
+              dc.updateDate(selected);
+            }
+          },
+          child: Center(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.calendar_month, color: AppColors.textSecondary, size: 18),
+                const SizedBox(width: AppSpacing.xs),
+                Text('$dayStr. $monthStr', style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w700)),
+              ],
+            ),
           ),
-        ),
-      );
-    });
+        );
+      }),
+    );
   }
 }

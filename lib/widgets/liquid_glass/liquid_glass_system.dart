@@ -86,65 +86,48 @@ class AppLiquidGlassPresets {
     refreshRate: LiquidGlassRefreshRate.high,
   );
 
-  static const AppLiquidGlassViewConfig snapshot = AppLiquidGlassViewConfig(
-    pixelRatio: 0.6,
-    realTimeCapture: false,
-    useSync: false,
-    refreshRate: LiquidGlassRefreshRate.high,
-  );
-
   static const AppLiquidGlassLensConfig mainTabBarLens = AppLiquidGlassLensConfig(
-    magnification: 1.015,
+    magnification: 1.0,
+    refractionMode: LiquidGlassRefractionMode.shapeRefraction,
     distortion: 0.09,
-    distortionWidth: 24,
+    distortionWidth: 30,
     shape: RoundedRectangleShape(
       cornerRadius: AppRadii.pill,
-      borderWidth: 1.4,
-      borderSoftness: 1.2,
-      lightIntensity: 1.2,
-      oneSideLightIntensity: 0.7,
-      lightDirection: 225,
-    ),
-    blur: LiquidGlassBlur(sigmaX: 4, sigmaY: 4),
-    chromaticAberration: 0.0015,
-    saturation: 1.03,
-    color: Color(0x66FFFFFF),
-  );
-
-  static const AppLiquidGlassLensConfig mainTabActionLens = AppLiquidGlassLensConfig(
-    magnification: 1,
-    distortion: 0.11,
-    distortionWidth: 20,
-    shape: RoundedRectangleShape(
-      cornerRadius: AppRadii.pill,
-      borderWidth: 1.2,
+      borderWidth: 0.8,
       borderSoftness: 1.4,
-      lightIntensity: 1.25,
-      oneSideLightIntensity: 1.1,
-      lightDirection: 200,
+      lightIntensity: 2,
+      oneSideLightIntensity: 1.0,
+      lightDirection: 315,
+      lightMode: LiquidGlassLightMode.edge,
+      lightColor: Color(0x00000000),
+      shadowColor: Color(0x00000000), // 0x00000000 // 0x80FFFFFF
     ),
-    blur: LiquidGlassBlur(sigmaX: 5, sigmaY: 5),
-    chromaticAberration: 0.001,
+    blur: LiquidGlassBlur(sigmaX: 1.2, sigmaY: 1.2),
+    chromaticAberration: 0,
     saturation: 1.05,
     color: Color(0x70FFFFFF),
   );
 
-  static const AppLiquidGlassLensConfig cardLens = AppLiquidGlassLensConfig(
-    magnification: 1.01,
-    distortion: 0.07,
-    distortionWidth: 18,
+  static const AppLiquidGlassLensConfig basicButtonLens = AppLiquidGlassLensConfig(
+    magnification: 1.0,
+    refractionMode: LiquidGlassRefractionMode.shapeRefraction,
+    distortion: 0.09,
+    distortionWidth: 12,
     shape: RoundedRectangleShape(
-      cornerRadius: AppRadii.lg2,
-      borderWidth: 1,
-      borderSoftness: 1,
-      lightIntensity: 1.05,
-      oneSideLightIntensity: 0.4,
-      lightDirection: 250,
+      cornerRadius: AppRadii.pill,
+      borderWidth: 0.8,
+      borderSoftness: 1.4,
+      lightIntensity: 2,
+      oneSideLightIntensity: 1.0,
+      lightDirection: 315,
+      lightMode: LiquidGlassLightMode.edge,
+      lightColor: Color(0x00000000),
+      shadowColor: Color(0x00000000), // 0x00000000 // 0x80FFFFFF
     ),
-    blur: LiquidGlassBlur(sigmaX: 2.5, sigmaY: 2.5),
-    chromaticAberration: 0.001,
-    saturation: 1.01,
-    color: Color(0x52FFFFFF),
+    blur: LiquidGlassBlur(sigmaX: 1.2, sigmaY: 1.2),
+    chromaticAberration: 0,
+    saturation: 1.05,
+    color: Color(0x70FFFFFF),
   );
 
   static const AppLiquidGlassViewConfig calendarSheet = AppLiquidGlassViewConfig(
@@ -170,24 +153,6 @@ class AppLiquidGlassPresets {
     chromaticAberration: 0.002,
     saturation: 1.03,
     color: Color(0x40FFFFFF),
-  );
-
-  static const AppLiquidGlassLensConfig scanTipLens = AppLiquidGlassLensConfig(
-    magnification: 1.01,
-    distortion: 0.08,
-    distortionWidth: 20,
-    shape: RoundedRectangleShape(
-      cornerRadius: AppRadii.lg2,
-      borderWidth: 1.2,
-      borderSoftness: 1.2,
-      lightIntensity: 1.15,
-      oneSideLightIntensity: 0.6,
-      lightDirection: 225,
-    ),
-    blur: LiquidGlassBlur(sigmaX: 6, sigmaY: 6),
-    chromaticAberration: 0.001,
-    saturation: 1.02,
-    color: Color(0x88FFFFFF),
   );
 }
 
@@ -215,51 +180,6 @@ class AppLiquidGlassLayer extends StatelessWidget {
       realTimeCapture: viewConfig.realTimeCapture,
       useSync: viewConfig.useSync,
       refreshRate: viewConfig.refreshRate,
-    );
-  }
-}
-
-class AppLiquidGlassCard extends StatelessWidget {
-  final Widget child;
-  final double height;
-  final EdgeInsetsGeometry padding;
-  final AppLiquidGlassViewConfig viewConfig;
-  final AppLiquidGlassLensConfig lensConfig;
-  final Color backgroundColor;
-
-  const AppLiquidGlassCard({
-    super.key,
-    required this.child,
-    required this.height,
-    this.padding = const EdgeInsets.all(AppSpacing.m),
-    this.viewConfig = AppLiquidGlassPresets.snapshot,
-    this.lensConfig = AppLiquidGlassPresets.cardLens,
-    this.backgroundColor = AppColors.backgroundAlt,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: height,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          return AppLiquidGlassLayer(
-            viewConfig: viewConfig,
-            backgroundWidget: ColoredBox(color: backgroundColor),
-            children: [
-              lensConfig.build(
-                width: constraints.maxWidth,
-                height: constraints.maxHeight,
-                position: const LiquidGlassOffsetPosition(left: 0, top: 0),
-                child: Padding(
-                  padding: padding,
-                  child: child,
-                ),
-              ),
-            ],
-          );
-        },
-      ),
     );
   }
 }

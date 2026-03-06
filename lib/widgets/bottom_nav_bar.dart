@@ -12,16 +12,23 @@ class BottomNavBarContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-      child: Row(
-        children: [
-          _buildNavItem(icon: Icons.home_rounded, label: tr(LocaleKeys.nav_home), index: 0),
-          const SizedBox(width: AppSpacing.s),
-          _buildNavItem(icon: Icons.bar_chart_rounded, label: tr(LocaleKeys.nav_progress), index: 1),
-          const SizedBox(width: AppSpacing.s),
-          _buildNavItem(icon: Icons.person_outline_rounded, label: tr(LocaleKeys.nav_profile), index: 2),
-        ],
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.glassBackground,
+        borderRadius: BorderRadius.circular(AppRadii.pill),
+        border: Border.all(color: AppColors.glassBorder, width: AppSizes.glassBorderWidth),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+        child: Row(
+          children: [
+            _buildNavItem(icon: Icons.home_rounded, label: tr(LocaleKeys.nav_home), index: 0),
+            const SizedBox(width: AppSpacing.s),
+            _buildNavItem(icon: Icons.bar_chart_rounded, label: tr(LocaleKeys.nav_progress), index: 1),
+            const SizedBox(width: AppSpacing.s),
+            _buildNavItem(icon: Icons.person_outline_rounded, label: tr(LocaleKeys.nav_profile), index: 2),
+          ],
+        ),
       ),
     );
   }
@@ -39,18 +46,14 @@ class BottomNavBarContent extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppRadii.lg2),
           child: Container(
             height: AppSizes.navItemHeight,
-            decoration: BoxDecoration(
-              color: isSelected ? AppColors.surfaceMuted.withValues(alpha: 0.7) : Colors.transparent,
-              borderRadius: BorderRadius.circular(AppRadii.lg2),
-            ),
+            decoration: BoxDecoration(color: isSelected ? AppColors.black.withValues(alpha: 0.15) : Colors.transparent, borderRadius: BorderRadius.circular(AppRadii.lg2)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(icon, size: AppSizes.iconMd, color: iconColor),
-                const SizedBox(height: AppSpacing.xxs),
+                Icon(icon, size: AppSizes.iconTabBar, color: iconColor),
                 Text(
                   label,
-                  style: AppTextStyles.label10.copyWith(color: textColor, fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500),
+                  style: AppTextStyles.label11.copyWith(color: textColor, fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500),
                 ),
               ],
             ),
@@ -69,8 +72,12 @@ class BottomNavActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AppColors.glassBackground,
+        borderRadius: BorderRadius.circular(AppRadii.pill),
+        border: Border.all(color: AppColors.glassBorder, width: AppSizes.glassBorderWidth),
+      ),
       child: InkWell(
         onTap: onTap,
         customBorder: const CircleBorder(),
