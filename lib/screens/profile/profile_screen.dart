@@ -21,6 +21,7 @@ import 'package:diplomka/screens/scan/scan_camera_screen.dart';
 import 'package:diplomka/screens/scan/scan_onboarding_screen.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 import 'package:diplomka/services/session_manager.dart';
+import 'package:diplomka/widgets/faded_edge_scroll_view.dart';
 import 'package:diplomka/widgets/progress_ring.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -28,130 +29,138 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ProfileGradientScaffold(
-      scroll: true,
-      safeBottom: false,
-      padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.s, AppSpacing.l, AppSpacing.mega + 42),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(tr(LocaleKeys.profile_title), style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w700)),
-          const SizedBox(height: AppSpacing.s),
-          const _ProfileHeaderCard(),
-          const SizedBox(height: AppSpacing.l),
-          ProfileSectionHeader(title: tr(LocaleKeys.profile_account)),
-          const SizedBox(height: AppSpacing.s),
-          _ProfileGroupCard(
-            children: [
-              _ProfileActionRow(
-                title: tr(LocaleKeys.profile_personal_details),
-                icon: Icons.credit_card_outlined,
-                onTap: () => Get.to(() => const PersonalDetailsScreen()),
-              ),
-              _ProfileActionRow(
-                title: tr(LocaleKeys.profile_preferences),
-                icon: Icons.settings_outlined,
-                onTap: () => Get.to(() => const PreferencesScreen()),
-              ),
-              _ProfileActionRow(
-                title: tr(LocaleKeys.profile_language),
-                icon: Icons.translate_outlined,
-                showDivider: false,
-                onTap: () => Get.to(() => const LanguageScreen()),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.l),
-          ProfileSectionHeader(title: tr(LocaleKeys.profile_goals_tracking)),
-          const SizedBox(height: AppSpacing.s),
-          _ProfileGroupCard(
-            children: [
-              _ProfileActionRow(
-                title: tr(LocaleKeys.profile_edit_nutrition_goals),
-                icon: Icons.gps_fixed,
-                onTap: () => Get.to(() => const EditNutritionGoalsScreen()),
-              ),
-              _ProfileActionRow(
-                title: tr(LocaleKeys.profile_weight_history),
-                icon: Icons.history,
-                onTap: () => Get.to(() => const WeightHistoryScreen()),
-              ),
-              _ProfileActionRow(
-                title: tr(LocaleKeys.profile_tracking_reminders),
-                icon: Icons.notifications_none_outlined,
-                onTap: () => Get.to(() => const TrackingRemindersScreen()),
-              ),
-              _ProfileActionRow(
-                title: tr(LocaleKeys.profile_motivational_summary),
-                icon: Icons.emoji_events_outlined,
-                onTap: () => Get.to(() => const MotivationalSummaryScreen()),
-              ),
-              _ProfileActionRow(
-                title: tr(LocaleKeys.profile_ring_colors),
-                icon: Icons.brightness_1_outlined,
-                showDivider: false,
-                onTap: () => Get.to(() => const RingColorsExplainedScreen()),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.l),
-          ProfileSectionHeader(
-            title: tr(LocaleKeys.profile_widgets),
-            trailing: Text(
-              tr(LocaleKeys.profile_how_to_add),
-              style: TextStyle(
-                color: AppColors.textSecondary,
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
-              ),
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      body: Container(
+        decoration: const BoxDecoration(gradient: AppGradients.background),
+        child: SafeArea(
+          top: false,
+          bottom: false,
+          child: FadedEdgeScrollView(
+            padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.mega + AppSpacing.l, AppSpacing.l, AppSpacing.mega + 42),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(tr(LocaleKeys.profile_title), style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w700)),
+                const SizedBox(height: AppSpacing.s),
+                const _ProfileHeaderCard(),
+                const SizedBox(height: AppSpacing.l),
+                ProfileSectionHeader(title: tr(LocaleKeys.profile_account)),
+                const SizedBox(height: AppSpacing.s),
+                _ProfileGroupCard(
+                  children: [
+                    _ProfileActionRow(
+                      title: tr(LocaleKeys.profile_personal_details),
+                      icon: Icons.credit_card_outlined,
+                      onTap: () => Get.to(() => const PersonalDetailsScreen()),
+                    ),
+                    _ProfileActionRow(
+                      title: tr(LocaleKeys.profile_preferences),
+                      icon: Icons.settings_outlined,
+                      onTap: () => Get.to(() => const PreferencesScreen()),
+                    ),
+                    _ProfileActionRow(
+                      title: tr(LocaleKeys.profile_language),
+                      icon: Icons.translate_outlined,
+                      showDivider: false,
+                      onTap: () => Get.to(() => const LanguageScreen()),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.l),
+                ProfileSectionHeader(title: tr(LocaleKeys.profile_goals_tracking)),
+                const SizedBox(height: AppSpacing.s),
+                _ProfileGroupCard(
+                  children: [
+                    _ProfileActionRow(
+                      title: tr(LocaleKeys.profile_edit_nutrition_goals),
+                      icon: Icons.gps_fixed,
+                      onTap: () => Get.to(() => const EditNutritionGoalsScreen()),
+                    ),
+                    _ProfileActionRow(
+                      title: tr(LocaleKeys.profile_weight_history),
+                      icon: Icons.history,
+                      onTap: () => Get.to(() => const WeightHistoryScreen()),
+                    ),
+                    _ProfileActionRow(
+                      title: tr(LocaleKeys.profile_tracking_reminders),
+                      icon: Icons.notifications_none_outlined,
+                      onTap: () => Get.to(() => const TrackingRemindersScreen()),
+                    ),
+                    _ProfileActionRow(
+                      title: tr(LocaleKeys.profile_motivational_summary),
+                      icon: Icons.emoji_events_outlined,
+                      onTap: () => Get.to(() => const MotivationalSummaryScreen()),
+                    ),
+                    _ProfileActionRow(
+                      title: tr(LocaleKeys.profile_ring_colors),
+                      icon: Icons.brightness_1_outlined,
+                      showDivider: false,
+                      onTap: () => Get.to(() => const RingColorsExplainedScreen()),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.l),
+                ProfileSectionHeader(
+                  title: tr(LocaleKeys.profile_widgets),
+                  trailing: Text(
+                    tr(LocaleKeys.profile_how_to_add),
+                    style: TextStyle(
+                      color: AppColors.textSecondary,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.s),
+                const _WidgetSection(),
+                const SizedBox(height: AppSpacing.l),
+                ProfileSectionHeader(title: tr(LocaleKeys.profile_progress_data)),
+                const SizedBox(height: AppSpacing.s),
+                _ProfileGroupCard(
+                  children: [
+                    _ProfileActionRow(
+                      title: tr(LocaleKeys.profile_export_summary),
+                      icon: Icons.ios_share_outlined,
+                      onTap: () => Get.to(() => const ExportPdfIntroScreen()),
+                    ),
+                    _ProfileActionRow(
+                      title: tr(LocaleKeys.profile_ask_ai),
+                      icon: Icons.auto_awesome_outlined,
+                      showDivider: false,
+                      onTap: () => Get.to(() => const AskAiScreen()),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.l),
+                ProfileSectionHeader(title: tr(LocaleKeys.profile_account_actions)),
+                const SizedBox(height: AppSpacing.s),
+                _ProfileGroupCard(
+                  children: [
+                    _ProfileActionRow(
+                      title: tr(LocaleKeys.profile_logout),
+                      icon: Icons.logout,
+                      onTap: () => Get.snackbar(tr(LocaleKeys.profile_logout), tr(LocaleKeys.profile_logout_stub)),
+                    ),
+                    _ProfileActionRow(
+                      title: tr(LocaleKeys.profile_delete_account),
+                      icon: Icons.person_remove_outlined,
+                      showDivider: false,
+                      onTap: () => Get.snackbar(tr(LocaleKeys.profile_delete_account), tr(LocaleKeys.profile_delete_account_stub)),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.s),
+                Center(
+                  child: Text(
+                    tr(LocaleKeys.profile_version),
+                    style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary),
+                  ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: AppSpacing.s),
-          const _WidgetSection(),
-          const SizedBox(height: AppSpacing.l),
-          ProfileSectionHeader(title: tr(LocaleKeys.profile_progress_data)),
-          const SizedBox(height: AppSpacing.s),
-          _ProfileGroupCard(
-            children: [
-              _ProfileActionRow(
-                title: tr(LocaleKeys.profile_export_summary),
-                icon: Icons.ios_share_outlined,
-                onTap: () => Get.to(() => const ExportPdfIntroScreen()),
-              ),
-              _ProfileActionRow(
-                title: tr(LocaleKeys.profile_ask_ai),
-                icon: Icons.auto_awesome_outlined,
-                showDivider: false,
-                onTap: () => Get.to(() => const AskAiScreen()),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.l),
-          ProfileSectionHeader(title: tr(LocaleKeys.profile_account_actions)),
-          const SizedBox(height: AppSpacing.s),
-          _ProfileGroupCard(
-            children: [
-              _ProfileActionRow(
-                title: tr(LocaleKeys.profile_logout),
-                icon: Icons.logout,
-                onTap: () => Get.snackbar(tr(LocaleKeys.profile_logout), tr(LocaleKeys.profile_logout_stub)),
-              ),
-              _ProfileActionRow(
-                title: tr(LocaleKeys.profile_delete_account),
-                icon: Icons.person_remove_outlined,
-                showDivider: false,
-                onTap: () => Get.snackbar(tr(LocaleKeys.profile_delete_account), tr(LocaleKeys.profile_delete_account_stub)),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.s),
-          Center(
-            child: Text(
-              tr(LocaleKeys.profile_version),
-              style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

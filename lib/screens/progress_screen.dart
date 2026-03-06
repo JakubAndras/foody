@@ -11,6 +11,7 @@ import 'package:diplomka/model/user_profile.dart';
 import 'package:diplomka/widgets/dietary_violations_calendar_card.dart' show MonthlyCalendarCard;
 import 'package:diplomka/widgets/weight_progress_card.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:diplomka/widgets/faded_edge_scroll_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -89,14 +90,15 @@ class ProgressScreen extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(gradient: AppGradients.background),
         child: SafeArea(
+          top: false,
           bottom: false,
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.s, AppSpacing.l, AppSpacing.mega + 42),
+          child: FadedEdgeScrollView(
+            padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.mega + AppSpacing.l, AppSpacing.l, AppSpacing.mega + 42),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(tr(LocaleKeys.progress_title), style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w700)),
-                const SizedBox(height: AppSpacing.l),
+                const SizedBox(height: AppSpacing.s),
                 Obx(() {
                   final weightEntries = WeightEntryController.to.entries.toList(growable: false);
                   final dayRecords = DayRecordController.to.dayRecords.toList(growable: false);

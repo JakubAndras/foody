@@ -7,6 +7,7 @@ class ProfileGradientScaffold extends StatelessWidget {
     required this.child,
     this.padding,
     this.scroll = false,
+    this.safeTop = true,
     this.safeBottom = true,
     this.floatingActionButton,
     this.floatingActionButtonLocation,
@@ -15,6 +16,7 @@ class ProfileGradientScaffold extends StatelessWidget {
   final Widget child;
   final EdgeInsets? padding;
   final bool scroll;
+  final bool safeTop;
   final bool safeBottom;
   final Widget? floatingActionButton;
   final FloatingActionButtonLocation? floatingActionButtonLocation;
@@ -33,6 +35,7 @@ class ProfileGradientScaffold extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(gradient: AppGradients.background),
         child: SafeArea(
+          top: safeTop,
           bottom: safeBottom,
           child: scroll
               ? LayoutBuilder(
