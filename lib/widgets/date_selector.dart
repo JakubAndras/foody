@@ -103,7 +103,7 @@ class _DateSelectorState extends State<DateSelector> {
 
   Widget _buildDate(DateTime date, bool isSelected) {
     final normalizedDate = _normalizeDate(date);
-    final labelAndNumberColor = isSelected ? AppColors.textPrimary : AppColors.borderStrong;
+    final numberColor = isSelected ? AppColors.textPrimary : AppColors.borderStrong;
     final ringStrokeWidth = AppSizes.dateCircleBorder * 0.8;
     final isToday = _isToday(date);
     final dayNames = [
@@ -125,7 +125,7 @@ class _DateSelectorState extends State<DateSelector> {
           Text(
             dayLabel,
             style: AppTextStyles.label11.copyWith(
-              color: isToday ? AppColors.textPrimary : labelAndNumberColor,
+              color: isToday ? AppColors.textPrimary : AppColors.borderStrong,
               fontWeight: isToday ? FontWeight.w700 : FontWeight.w600,
             ),
           ),
@@ -155,7 +155,7 @@ class _DateSelectorState extends State<DateSelector> {
                         date.day.toString(),
                         style: AppTextStyles.body16.copyWith(
                           fontWeight: FontWeight.w700,
-                          color: labelAndNumberColor,
+                          color: numberColor,
                         ),
                       ),
                     ),

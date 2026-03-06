@@ -5,8 +5,6 @@ import 'package:diplomka/screens/profile/profile_widgets.dart';
 import 'package:diplomka/services/day_record_repository.dart';
 import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/widgets/calories_card.dart';
-import 'package:diplomka/widgets/dashboard_calendar_sheet.dart';
-import 'package:diplomka/widgets/liquid_glass/glass_container.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +14,6 @@ import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/widgets/date_selector.dart';
 import 'package:diplomka/widgets/macros_row.dart';
 import 'package:diplomka/widgets/recently_uploaded_card.dart';
-import 'package:diplomka/widgets/streak_dialog.dart';
 import 'package:diplomka/controller/base_controller.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/services/nutrition_goals_service.dart';
@@ -51,65 +48,57 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                      child: Stack(
-                        children: [
-                          Builder(
-                            builder: (context) {
-                              final isAnalyzingMeal = dashboardController.newMealAnalyzeLoading.value;
-                              final hasLoadedRecord = dashboardController.dayRecord.value != null;
+                      child: Builder(
+                        builder: (context) {
+                          final isAnalyzingMeal = dashboardController.newMealAnalyzeLoading.value;
+                          final hasLoadedRecord = dashboardController.dayRecord.value != null;
 
-                              if (dashboardController.isLoadingDayRecord.value && !hasLoadedRecord && !isAnalyzingMeal) {
-                                return const Center(child: CircularProgressIndicator());
-                              }
-                              if (dashboardController.dayRecordError.isNotEmpty) {
-                                return Center(child: Text(tr(LocaleKeys.dashboard_error_loading, namedArgs: {'error': dashboardController.dayRecordError.value})));
-                              }
+                          if (dashboardController.isLoadingDayRecord.value && !hasLoadedRecord && !isAnalyzingMeal) {
+                            return const Center(child: CircularProgressIndicator());
+                          }
+                          if (dashboardController.dayRecordError.isNotEmpty) {
+                            return Center(child: Text(tr(LocaleKeys.dashboard_error_loading, namedArgs: {'error': dashboardController.dayRecordError.value})));
+                          }
 
-                              return SingleChildScrollView(
-                                controller: controller.scrollController,
-                                padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.xs, AppSpacing.l, AppSpacing.mega + 42),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(height: AppSpacing.huge * 2 - 4),
-                                    DateSelector(
-                                      selectedDate: dashboardController.selectedDate.value,
-                                      useSegmentedRing: _useSegmentedDateRing,
-                                      onDateSelected: (date) {
-                                        dashboardController.updateDate(date);
-                                      },
-                                    ),
-                                    const SizedBox(height: AppSpacing.m),
-                                    _caloriesTrackerWidget(recordToShow),
-                                    const SizedBox(height: AppSpacing.m),
-                                    RecentlyUploadedCard(
-                                      meals: recordToShow.meals,
-                                      exercises: recordToShow.exercises,
-                                      selectedDate: dashboardController.selectedDate.value,
-                                      onMealTap: (meal) async {
-                                        await Get.to(() => MealDetailScreen(meal: meal));
-                                        dashboardController.refresh();
-                                      },
-                                      onMealLongPress: (meal) async {
-                                        final today = DateTime.now();
-                                        final todayNormalized = DateTime(today.year, today.month, today.day);
-                                        final duplicate = meal.copyWith(id: null, dayRecordId: null, timestamp: today);
-                                        await DayRecordController.to.saveMealForDate(date: todayNormalized, mealToSave: duplicate);
-                                        SelectedDateService.to.setSelectedDate(todayNormalized);
-                                        dashboardController.refresh();
-                                        Get.snackbar(tr(LocaleKeys.meal_duplicated), meal.name, snackPosition: SnackPosition.BOTTOM);
-                                      },
-                                    ),
-                                  ],
+                          return SingleChildScrollView(
+                            controller: controller.scrollController,
+                            padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.xs, AppSpacing.l, AppSpacing.mega + 42),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: AppSpacing.huge * 2 - 4),
+                                DateSelector(
+                                  selectedDate: dashboardController.selectedDate.value,
+                                  useSegmentedRing: _useSegmentedDateRing,
+                                  onDateSelected: (date) {
+                                    dashboardController.updateDate(date);
+                                  },
                                 ),
-                              );
-                            },
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: AppSpacing.l, vertical: AppSpacing.safeAreaTop),
-                            child: _buildHeader(context, dashboardController),
-                          ),
-                        ],
+                                const SizedBox(height: AppSpacing.m),
+                                _caloriesTrackerWidget(recordToShow),
+                                const SizedBox(height: AppSpacing.m),
+                                RecentlyUploadedCard(
+                                  meals: recordToShow.meals,
+                                  exercises: recordToShow.exercises,
+                                  selectedDate: dashboardController.selectedDate.value,
+                                  onMealTap: (meal) async {
+                                    await Get.to(() => MealDetailScreen(meal: meal));
+                                    dashboardController.refresh();
+                                  },
+                                  onMealLongPress: (meal) async {
+                                    final today = DateTime.now();
+                                    final todayNormalized = DateTime(today.year, today.month, today.day);
+                                    final duplicate = meal.copyWith(id: null, dayRecordId: null, timestamp: today);
+                                    await DayRecordController.to.saveMealForDate(date: todayNormalized, mealToSave: duplicate);
+                                    SelectedDateService.to.setSelectedDate(todayNormalized);
+                                    dashboardController.refresh();
+                                    Get.snackbar(tr(LocaleKeys.meal_duplicated), meal.name, snackPosition: SnackPosition.BOTTOM);
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ],
@@ -119,80 +108,6 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
           ),
         );
       },
-    );
-  }
-
-  Widget _buildHeader(BuildContext context, DashboardController dashboardController) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Obx(() {
-          if (dashboardController.isLoadingStreak.value) {
-            return _glassHeaderPill(
-              child: const SizedBox(
-                width: AppSizes.iconSm,
-                height: AppSizes.iconSm,
-                child: CircularProgressIndicator(strokeWidth: AppSizes.borderThick, color: AppColors.orange),
-              ),
-            );
-          }
-          if (dashboardController.streakError.isNotEmpty) {
-            return _glassHeaderPill(
-              onTap: () => showDialog(context: context, builder: (_) => const StreakDialog()),
-              child: const Icon(Icons.error_outline, color: AppColors.error, size: AppSizes.iconSm),
-            );
-          }
-          final streak = dashboardController.streakInfo.value?.currentStreak ?? 0;
-          return _glassHeaderPill(
-            onTap: () => showDialog(context: context, builder: (_) => const StreakDialog()),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.emoji_events_outlined, color: AppColors.textSecondary, size: 18),
-                const SizedBox(width: AppSpacing.xs),
-                Text(
-                  '$streak',
-                  style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w700),
-                ),
-              ],
-            ),
-          );
-        }),
-        Obx(() {
-          final date = dashboardController.selectedDate.value;
-          final dayStr = date.day.toString();
-          final monthStr = date.month.toString().padLeft(2, '0');
-          return _glassHeaderPill(
-            onTap: () async {
-              final selected = await DashboardCalendarSheet.show(context, selectedDate: date);
-              if (selected != null) {
-                dashboardController.updateDate(selected);
-              }
-            },
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.calendar_month, color: AppColors.textSecondary, size: 18),
-                const SizedBox(width: AppSpacing.xs),
-                Text(
-                  '$dayStr. $monthStr',
-                  style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w700),
-                ),
-              ],
-            ),
-          );
-        }),
-      ],
-    );
-  }
-
-  Widget _glassHeaderPill({required Widget child, VoidCallback? onTap}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: GlassContainer.pill(
-        height: AppSizes.streakPillHeight,
-        child: Center(child: child),
-      ),
     );
   }
 
