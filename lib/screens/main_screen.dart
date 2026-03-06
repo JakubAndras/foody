@@ -31,7 +31,7 @@ class MainScreen extends GetView<MainScreenController> {
         final activeBody = MainScreenController.to.widgetOptions.elementAt(controller._selectedIndex.value);
         return LayoutBuilder(
           builder: (context, constraints) {
-            final double navWidth = constraints.maxWidth - AppSpacing.xxxl - AppSizes.fabSize - AppSpacing.s;
+            final double navWidth = constraints.maxWidth - AppSpacing.l - AppSizes.fabSize - AppSpacing.s - AppSpacing.l;
             final double actionLeft = constraints.maxWidth - AppSpacing.l - AppSizes.fabSize;
 
             final bool isDashboard = controller._selectedIndex.value == 0;

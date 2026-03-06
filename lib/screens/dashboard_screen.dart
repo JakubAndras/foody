@@ -108,7 +108,7 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
                             right: 0,
                             child: IgnorePointer(
                               child: Container(
-                                height: 80,
+                                height: 104,
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
                                     begin: Alignment.topCenter,
@@ -117,8 +117,8 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
                                       AppColors.background,
                                       AppColors.background,
                                       AppColors.background,
-                                      AppColors.background.withValues(alpha: 0.8),
-                                      AppColors.background.withValues(alpha: 0)
+                                      AppColors.background.withValues(alpha: 0.9),
+                                      AppColors.background.withValues(alpha: 0.0)
                                     ],
                                   ),
                                 ),
@@ -131,7 +131,7 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
                             right: 0,
                             child: IgnorePointer(
                               child: Container(
-                                height: 60,
+                                height: 120,
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
                                     begin: Alignment.bottomCenter,
@@ -139,8 +139,8 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
                                     colors: [
                                       AppColors.background.withValues(alpha: 0.9),
                                       AppColors.background.withValues(alpha: 0.9),
-                                      AppColors.background.withValues(alpha: 0.9),
-                                      AppColors.background.withValues(alpha: 0.45),
+                                      AppColors.background.withValues(alpha: 0.7),
+                                      AppColors.background.withValues(alpha: 0.2),
                                       AppColors.background.withValues(alpha: 0)
                                     ],
                                   ),

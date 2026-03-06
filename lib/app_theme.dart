@@ -211,7 +211,7 @@ class AppSizes {
   static const double legendDot = 10;
   static const double macroDot = 8;
   static const double macroDotSm = 6;
-  static const double navItemHeight = 48;
+  static const double navItemHeight = 56;
   static const double fabSize = 64;
   static const double fabIconSize = 24;
   static const double progressBarHeight = 8;

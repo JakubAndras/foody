@@ -19,7 +19,7 @@ class BottomNavBarContent extends StatelessWidget {
         border: Border.all(color: AppColors.glassBorder, width: AppSizes.glassBorderWidth),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxs),
         child: Row(
           children: [
             _buildNavItem(icon: Icons.home_rounded, label: tr(LocaleKeys.nav_home), index: 0),
@@ -43,10 +43,13 @@ class BottomNavBarContent extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: () => onTap(index),
-          borderRadius: BorderRadius.circular(AppRadii.lg2),
+          borderRadius: BorderRadius.circular(AppRadii.lg3),
           child: Container(
             height: AppSizes.navItemHeight,
-            decoration: BoxDecoration(color: isSelected ? AppColors.black.withValues(alpha: 0.15) : Colors.transparent, borderRadius: BorderRadius.circular(AppRadii.lg2)),
+            decoration: BoxDecoration(
+                color: isSelected ? AppColors.black.withValues(alpha: 0.15) : Colors.transparent,
+                borderRadius: BorderRadius.circular(AppRadii.lg3)
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
