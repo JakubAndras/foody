@@ -12,10 +12,10 @@ class AppColors {
   static const onPrimary = white;
 
   // Background / surfaces
-  static const background = backgroundSoft;
+  static const background = surfaceFrostEnd;
   static const backgroundSoft = Color(0xFFE8E8E8);
   static const backgroundAlt = Color(0xFFFAFAFA);
-  static const surface = white;
+  static const surface = Color(0xFFF5F5F5); // white
   static const surfaceMuted = Color(0xFFF3F4F6);
   static const separator = surfaceMuted;
   static const surfaceSearch = Color(0xFFF3F3F5);
@@ -77,7 +77,7 @@ class AppColors {
   static const keyboardSurface = Color(0xFFD1D5DB);
 
   static const glassBorder = Color(0xFFFFFFFF);
-  static const glassBackground = Color(0xB0FFFFFF);
+  static const glassBackground = Color(0xD0FFFFFF);
 
   // Misc / brand
   static const statusBarDark = Color(0xFF1E2939);

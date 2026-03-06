@@ -35,8 +35,8 @@ class BottomNavBarContent extends StatelessWidget {
 
   Widget _buildNavItem({required IconData icon, required String label, required int index}) {
     final bool isSelected = currentIndex == index;
-    final Color iconColor = isSelected ? AppColors.textPrimary : AppColors.textTertiary;
-    final Color textColor = isSelected ? AppColors.textPrimary : AppColors.textTertiary;
+    final Color iconColor = AppColors.textPrimary; // isSelected ? AppColors.textPrimary : AppColors.textTertiary;
+    final Color textColor = AppColors.textPrimary; // isSelected ? AppColors.textPrimary : AppColors.textTertiary;
 
     return Expanded(
       child: Material(
@@ -47,7 +47,7 @@ class BottomNavBarContent extends StatelessWidget {
           child: Container(
             height: AppSizes.navItemHeight,
             decoration: BoxDecoration(
-                color: isSelected ? AppColors.black.withValues(alpha: 0.15) : Colors.transparent,
+                color: isSelected ? AppColors.black.withValues(alpha: 0.05) : Colors.transparent,
                 borderRadius: BorderRadius.circular(AppRadii.lg3)
             ),
             child: Column(

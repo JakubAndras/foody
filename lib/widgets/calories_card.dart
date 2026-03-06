@@ -25,7 +25,7 @@ class CaloriesCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg),
-        boxShadow: AppShadows.cardSmall,
+        //boxShadow: AppShadows.cardSmall,
       ),
       child: Row(
         children: [

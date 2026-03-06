@@ -93,12 +93,14 @@ class ProgressScreen extends StatelessWidget {
           top: false,
           bottom: false,
           child: FadedEdgeScrollView(
+            topFadeHeight: 0,
             padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.mega + AppSpacing.l, AppSpacing.l, AppSpacing.mega + 42),
+            //collapsedHeader: Text(tr(LocaleKeys.progress_title), style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w700)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(tr(LocaleKeys.progress_title), style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w700)),
-                const SizedBox(height: AppSpacing.s),
+                // CollapsibleTitle(child: Text(tr(LocaleKeys.progress_title), style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w700))),
+                // const SizedBox(height: AppSpacing.s),
                 Obx(() {
                   final weightEntries = WeightEntryController.to.entries.toList(growable: false);
                   final dayRecords = DayRecordController.to.dayRecords.toList(growable: false);

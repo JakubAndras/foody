@@ -90,7 +90,7 @@ class AppLiquidGlassPresets {
     magnification: 1.0,
     refractionMode: LiquidGlassRefractionMode.shapeRefraction,
     distortion: 0.09,
-    distortionWidth: 30,
+    distortionWidth: 16,
     shape: RoundedRectangleShape(
       cornerRadius: AppRadii.pill,
       borderWidth: 0.8,
@@ -102,7 +102,7 @@ class AppLiquidGlassPresets {
       lightColor: Color(0x00000000),
       shadowColor: Color(0x00000000), // 0x00000000 // 0x80FFFFFF
     ),
-    blur: LiquidGlassBlur(sigmaX: 1.2, sigmaY: 1.2),
+    blur: LiquidGlassBlur(sigmaX: 1.5, sigmaY: 1.5),
     chromaticAberration: 0,
     saturation: 1.05,
     color: Color(0x70FFFFFF),
@@ -124,7 +124,7 @@ class AppLiquidGlassPresets {
       lightColor: Color(0x00000000),
       shadowColor: Color(0x00000000), // 0x00000000 // 0x80FFFFFF
     ),
-    blur: LiquidGlassBlur(sigmaX: 1.2, sigmaY: 1.2),
+    blur: LiquidGlassBlur(sigmaX: 1.5, sigmaY: 1.5),
     chromaticAberration: 0,
     saturation: 1.05,
     color: Color(0x70FFFFFF),
