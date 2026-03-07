@@ -1,27 +1,16 @@
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
-import 'package:diplomka/widgets/liquid_glass/liquid_glass_system.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 
 class DashboardCalendarSheet extends StatefulWidget {
-  const DashboardCalendarSheet({super.key, required this.selectedDate});
+  const DashboardCalendarSheet({super.key, required this.selectedDate, required this.onDateSelected});
 
   final DateTime selectedDate;
+  final ValueChanged<DateTime> onDateSelected;
 
-  static Future<DateTime?> show(BuildContext context, {required DateTime selectedDate}) {
-    return showModalBottomSheet<DateTime>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      barrierColor: AppColors.overlayDark60,
-      shape: const RoundedRectangleBorder(),
-      builder: (_) => DashboardCalendarSheet(selectedDate: selectedDate),
-    );
-  }
+  static const double sheetHeight = 400.0;
 
   @override
   State<DashboardCalendarSheet> createState() => _DashboardCalendarSheetState();
@@ -39,8 +28,6 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
   static const int _maxYear = 2035;
   static const double _pickerItemExtent = 44.0;
   static const double _calendarRowHeight = 46.0;
-  static const double _pickerSheetHeight = 400.0;
-  static const double _sheetMargin = AppSpacing.xs;
 
   static const List<String> _weekdayKeys = [
     LocaleKeys.day_mon,
@@ -91,30 +78,14 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
     return DateFormat('MMMM yyyy').format(_displayedMonth);
   }
 
-  /// Background with subtle colored spots so the glass shader has content to refract.
-  Widget _buildGlassBackground() {
-    return Container(
-      color: AppColors.calendarDarkBg,
-      child: Stack(
-        children: [
-          Expanded(
-            child: Material(color: Colors.transparent, child: SizedBox(height: 600, width: 600)),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final daysInMonth = DateUtils.getDaysInMonth(_displayedMonth.year, _displayedMonth.month);
     final firstWeekday = DateTime(_displayedMonth.year, _displayedMonth.month, 1).weekday;
     final totalSlots = (firstWeekday - 1) + daysInMonth;
     final rowCount = (totalSlots / 7).ceil();
-    final sheetHeight = _pickerSheetHeight;
-    final sheetWidth = MediaQuery.of(context).size.width - (_sheetMargin * 2);
 
-    final calendarContent = Column(
+    return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         const SizedBox(height: AppSpacing.xs),
@@ -130,36 +101,6 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
         const SizedBox(height: AppSpacing.s),
         if (_showMonthYearPicker) Expanded(child: _buildMonthYearPicker()) else _buildCalendarGrid(daysInMonth, firstWeekday, rowCount),
       ],
-    );
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(_sheetMargin, 0, _sheetMargin, _sheetMargin),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250),
-        curve: Curves.easeOutCubic,
-        height: sheetHeight,
-        clipBehavior: Clip.antiAlias,
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(56),
-            bottomRight: Radius.circular(56),
-            topLeft: Radius.circular(AppRadii.lg),
-            topRight: Radius.circular(AppRadii.lg),
-          ),
-        ),
-        child: AppLiquidGlassLayer(
-          viewConfig: AppLiquidGlassPresets.calendarSheet,
-          backgroundWidget: _buildGlassBackground(),
-          children: [
-            AppLiquidGlassPresets.calendarSheetLens.build(
-              width: sheetWidth,
-              height: sheetHeight,
-              position: const LiquidGlassOffsetPosition(left: 0, top: 0),
-              child: calendarContent,
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -261,7 +202,7 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
     Color textColor = AppColors.calendarDarkText;
 
     return GestureDetector(
-      onTap: () => Navigator.of(context).pop(date),
+      onTap: () => widget.onDateSelected(date),
       behavior: HitTestBehavior.opaque,
       child: Center(
         child: Container(

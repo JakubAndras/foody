@@ -69,6 +69,20 @@ class MainScreen extends GetView<MainScreenController> {
                     position: LiquidGlassOffsetPosition(left: calendarPillLeft, top: AppSpacing.safeAreaTop),
                     child: const _DashboardCalendarPill(),
                   ),
+                  AppLiquidGlassPresets.calendarSheetLens.build(
+                    width: constraints.maxWidth - AppSpacing.xs * 2,
+                    height: DashboardCalendarSheet.sheetHeight,
+                    position: const LiquidGlassOffsetPosition(left: AppSpacing.xs, top: AppSpacing.safeAreaTop + AppSizes.streakPillHeight + AppSpacing.s),
+                    visibility: false,
+                    controller: controller._calendarLensController,
+                    child: DashboardCalendarSheet(
+                      selectedDate: DashboardController.to.selectedDate.value,
+                      onDateSelected: (date) {
+                        DashboardController.to.updateDate(date);
+                        controller._hideCalendar();
+                      },
+                    ),
+                  ),
                 ],
               ],
             );
@@ -82,11 +96,14 @@ class MainScreen extends GetView<MainScreenController> {
 class MainScreenController extends BaseController {
   static MainScreenController get to => Get.find();
   final RxInt _selectedIndex = 0.obs;
+  final LiquidGlassController _calendarLensController = LiquidGlassController();
+  bool _isCalendarVisible = false;
 
   final List<Widget> widgetOptions = <Widget>[const DashboardScreen(), const ProgressScreen(), const ProfileScreen()];
 
   void _onItemTapped(int index) {
     _selectedIndex.value = index;
+    _hideCalendar();
   }
 
   void showDashboardTab() {
@@ -97,7 +114,24 @@ class MainScreenController extends BaseController {
     _selectedIndex.value = 1;
   }
 
+  void _toggleCalendar() {
+    if (_isCalendarVisible) {
+      _hideCalendar();
+    } else {
+      _calendarLensController.showLiquidGlass(animationTimeMillisecond: 42);
+      _isCalendarVisible = true;
+    }
+  }
+
+  void _hideCalendar() {
+    if (_isCalendarVisible) {
+      _calendarLensController.hideLiquidGlass(animationTimeMillisecond: 42);
+      _isCalendarVisible = false;
+    }
+  }
+
   void _showQuickActions(BuildContext context) {
+    _hideCalendar();
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -206,12 +240,7 @@ class _DashboardCalendarPill extends StatelessWidget {
         final dayStr = date.day.toString();
         final monthStr = date.month.toString().padLeft(2, '0');
         return GestureDetector(
-          onTap: () async {
-            final selected = await DashboardCalendarSheet.show(context, selectedDate: date);
-            if (selected != null) {
-              dc.updateDate(selected);
-            }
-          },
+          onTap: () => MainScreenController.to._toggleCalendar(),
           child: Center(
             child: Row(
               mainAxisSize: MainAxisSize.min,

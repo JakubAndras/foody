@@ -12,10 +12,10 @@ class AppColors {
   static const onPrimary = white;
 
   // Background / surfaces
-  static const background = surfaceFrostEnd;
+  static const background = surfacePill;
   static const backgroundSoft = Color(0xFFE8E8E8);
   static const backgroundAlt = Color(0xFFFAFAFA);
-  static const surface = Color(0xFFF5F5F5); // white
+  static const surface = backgroundAlt; // white
   static const surfaceMuted = Color(0xFFF3F4F6);
   static const separator = surfaceMuted;
   static const surfaceSearch = Color(0xFFF3F3F5);
