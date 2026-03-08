@@ -50,6 +50,7 @@ dependencies:
   pdf: 3.11.1
   csv: 6.0.0
   image_gallery_saver: 2.0.3
+  variable_blur: 0.1.0
 
 dev_dependencies:
   flutter_test:

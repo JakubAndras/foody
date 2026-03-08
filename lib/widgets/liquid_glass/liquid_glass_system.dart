@@ -12,7 +12,7 @@ class AppLiquidGlassViewConfig {
     this.pixelRatio = 0.8,
     this.realTimeCapture = true,
     this.useSync = true,
-    this.refreshRate = LiquidGlassRefreshRate.high,
+    this.refreshRate = LiquidGlassRefreshRate.deviceRefreshRate,
   });
 }
 
@@ -83,7 +83,7 @@ class AppLiquidGlassPresets {
     pixelRatio: 0.72,
     realTimeCapture: true,
     useSync: true,
-    refreshRate: LiquidGlassRefreshRate.high,
+    refreshRate: LiquidGlassRefreshRate.deviceRefreshRate,
   );
 
   static const AppLiquidGlassLensConfig mainTabBarLens = AppLiquidGlassLensConfig(
@@ -121,20 +121,20 @@ class AppLiquidGlassPresets {
       oneSideLightIntensity: 1.0,
       lightDirection: 315,
       lightMode: LiquidGlassLightMode.edge,
-      lightColor: Color(0x00000000),
-      shadowColor: Color(0x00000000), // 0x00000000 // 0x80FFFFFF
+      lightColor: Color(0x80FFFFFF),
+      shadowColor: Color(0x80FFFFFF), // 0x00000000 // 0x80FFFFFF
     ),
     blur: LiquidGlassBlur(sigmaX: 1.5, sigmaY: 1.5),
     chromaticAberration: 0,
     saturation: 1.05,
-    color: Color(0x70FFFFFF),
+    color: Color(0x00FFFFFF),
   );
 
   static const AppLiquidGlassViewConfig calendarSheet = AppLiquidGlassViewConfig(
     pixelRatio: 0.72,
     realTimeCapture: true,
     useSync: true,
-    refreshRate: LiquidGlassRefreshRate.high,
+    refreshRate: LiquidGlassRefreshRate.deviceRefreshRate,
   );
 
   static const AppLiquidGlassLensConfig calendarSheetLens = AppLiquidGlassLensConfig(

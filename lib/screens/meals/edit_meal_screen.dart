@@ -14,6 +14,7 @@ import 'package:diplomka/services/share/meal_share_builder.dart';
 import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/utils/media_storage.dart';
 import 'package:diplomka/widgets/edit_flow/edit_flow_widgets.dart';
+import 'package:diplomka/widgets/liquid_glass/liquid_glass_back_button.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -1105,7 +1106,7 @@ class _EditMealTopBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _GlassIconButton(icon: Icons.chevron_left, onTap: onBack),
+          LiquidGlassBackButton.back(onTap: onBack),
           Row(
             children: [
               _GlassIconButton(icon: isFavorite ? Icons.bookmark : Icons.bookmark_border, onTap: onBookmark),

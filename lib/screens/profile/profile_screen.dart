@@ -17,11 +17,12 @@ import 'package:diplomka/screens/profile/subscreens/motivational_summary_screen.
 import 'package:diplomka/screens/profile/subscreens/tracking_reminders_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/export_pdf_intro_screen.dart';
 import 'package:diplomka/screens/profile/ask_ai/ask_ai_screen.dart';
+import 'package:diplomka/screens/profile/subscreens/glass_test_screen.dart';
 import 'package:diplomka/screens/scan/scan_camera_screen.dart';
 import 'package:diplomka/screens/scan/scan_onboarding_screen.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 import 'package:diplomka/services/session_manager.dart';
-import 'package:diplomka/widgets/faded_edge_scroll_view.dart';
+import 'package:diplomka/widgets/variable_blur_scroll_view.dart';
 import 'package:diplomka/widgets/progress_ring.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -36,8 +37,9 @@ class ProfileScreen extends StatelessWidget {
         child: SafeArea(
           top: false,
           bottom: false,
-          child: FadedEdgeScrollView(
-            topFadeHeight: 0,
+          child: VariableBlurScrollView(
+            topBlurSigma: 52,
+            topFadeHeight: 40,
             padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.mega + AppSpacing.l, AppSpacing.l, AppSpacing.mega + 42),
             //collapsedHeader: Text(tr(LocaleKeys.profile_title), style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w700)),
             child: Column(
@@ -129,8 +131,13 @@ class ProfileScreen extends StatelessWidget {
                     _ProfileActionRow(
                       title: tr(LocaleKeys.profile_ask_ai),
                       icon: Icons.auto_awesome_outlined,
-                      showDivider: false,
                       onTap: () => Get.to(() => const AskAiScreen()),
+                    ),
+                    _ProfileActionRow(
+                      title: 'Glass Test',
+                      icon: Icons.blur_on,
+                      showDivider: false,
+                      onTap: () => Get.to(() => const GlassTestScreen()),
                     ),
                   ],
                 ),

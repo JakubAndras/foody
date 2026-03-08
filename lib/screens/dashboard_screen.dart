@@ -18,6 +18,7 @@ import 'package:diplomka/controller/base_controller.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/services/nutrition_goals_service.dart';
 import 'package:diplomka/widgets/faded_edge_scroll_view.dart';
+import 'package:diplomka/widgets/variable_blur_scroll_view.dart';
 
 class DashboardScreen extends GetView<_DashboardScreenController> {
   const DashboardScreen({super.key});
@@ -61,7 +62,9 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
                             return Center(child: Text(tr(LocaleKeys.dashboard_error_loading, namedArgs: {'error': dashboardController.dayRecordError.value})));
                           }
 
-                          return FadedEdgeScrollView(
+                          return VariableBlurScrollView(
+                            topBlurSigma: 52,
+                            topBlurHeight: 0.1,
                             controller: controller.scrollController,
                             padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.xs, AppSpacing.l, AppSpacing.mega + 42),
                             child: Column(

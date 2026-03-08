@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:diplomka/app_theme.dart';
+import 'package:variable_blur/variable_blur.dart';
 
-class FadedEdgeScrollView extends StatefulWidget {
-  const FadedEdgeScrollView({
+/// A performant alternative to [FadedEdgeScrollView] that uses the
+/// `variable_blur` package (GPU fragment shader) instead of stacking
+/// multiple [BackdropFilter] layers.
+///
+/// Provides the same API surface: top blur region, bottom tint gradient,
+/// collapsible header driven by scroll position.
+class VariableBlurScrollView extends StatefulWidget {
+  const VariableBlurScrollView({
     super.key,
     required this.child,
     this.padding,
@@ -12,7 +19,9 @@ class FadedEdgeScrollView extends StatefulWidget {
     this.collapsedHeader,
     this.collapseOffset,
     this.topBlurSigma = 0.0,
-    this.topBlurSteps = 20,
+    this.blurQuality = BlurQuality.medium,
+    this.edgeIntensity = 0.06,
+    this.topBlurHeight = 0.09,
   });
 
   final Widget child;
@@ -20,29 +29,30 @@ class FadedEdgeScrollView extends StatefulWidget {
   final ScrollController? controller;
   final double topFadeHeight;
   final double bottomFadeHeight;
+  final double topBlurHeight;
 
   /// Maximum Gaussian blur sigma at the very top. Set to 0 to disable blur.
   final double topBlurSigma;
 
-  /// Number of stacked blur layers used to create the linear gradient blur.
-  /// More steps = smoother transition, but heavier on GPU. 6 is a good default.
-  final int topBlurSteps;
+  /// Quality level for the GPU blur shader. Lower = faster.
+  final BlurQuality blurQuality;
 
-  /// Widget shown centered at the top of the screen (below the status bar)
-  /// once [CollapsibleTitle] scrolls behind the top fade, or when the scroll
-  /// offset exceeds [collapseOffset] (if no [CollapsibleTitle] is used).
+  /// Controls the smoothness of the blur edge transition (0.0–1.0).
+  final double edgeIntensity;
+
+  /// Widget shown centered at the top once [CollapsibleTitleV] scrolls behind
+  /// the top fade, or when the scroll offset exceeds [collapseOffset].
   final Widget? collapsedHeader;
 
   /// Manual fallback: scroll offset at which [collapsedHeader] appears.
-  /// Ignored when a [CollapsibleTitle] is present in the scroll content
-  /// (automatic measurement takes priority).
+  /// Ignored when a [CollapsibleTitleV] is present in the scroll content.
   final double? collapseOffset;
 
   @override
-  State<FadedEdgeScrollView> createState() => _FadedEdgeScrollViewState();
+  State<VariableBlurScrollView> createState() => _VariableBlurScrollViewState();
 }
 
-class _FadedEdgeScrollViewState extends State<FadedEdgeScrollView> {
+class _VariableBlurScrollViewState extends State<VariableBlurScrollView> {
   final GlobalKey _titleKey = GlobalKey();
   final ValueNotifier<bool> _collapsed = ValueNotifier<bool>(false);
   ScrollController? _ownController;
@@ -58,7 +68,7 @@ class _FadedEdgeScrollViewState extends State<FadedEdgeScrollView> {
   }
 
   @override
-  void didUpdateWidget(FadedEdgeScrollView oldWidget) {
+  void didUpdateWidget(VariableBlurScrollView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.controller != widget.controller) {
       oldWidget.controller?.removeListener(_onScroll);
@@ -103,38 +113,29 @@ class _FadedEdgeScrollViewState extends State<FadedEdgeScrollView> {
   @override
   Widget build(BuildContext context) {
     final topPadding = MediaQuery.of(context).padding.top;
+    final useBlur = widget.topBlurSigma > 0;
+
+    Widget scrollContent = Container(
+      color: AppColors.background,
+      child: SingleChildScrollView(
+        controller: _effectiveController,
+        padding: widget.padding,
+        child: widget.child,
+      ),
+    );
 
     return Stack(
       children: [
-        SingleChildScrollView(
-          controller: _effectiveController,
-          padding: widget.padding,
-          child: widget.child,
-        ),
-        // Top tint gradient
-        Positioned(
-          top: 0,
-          left: 0,
-          right: 0,
-          child: IgnorePointer(
-            child: Container(
-              height: widget.topFadeHeight,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    AppColors.background,
-                    AppColors.background,
-                    AppColors.background,
-                    AppColors.background.withValues(alpha: 0.9),
-                    AppColors.background.withValues(alpha: 0.0),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
+        // Main scroll content — optionally wrapped in VariableBlur
+        if (useBlur)
+          VariableBlur(
+            sigma: 8,
+            blurSides: BlurSides.vertical(top: widget.topBlurHeight), // ResponsiveBlurSides.vertical(top: 200.0),
+            edgeIntensity: 0.05,
+            child: scrollContent,
+          )
+        else
+          scrollContent,
         // Collapsed header
         if (widget.collapsedHeader != null)
           Positioned(
@@ -190,17 +191,16 @@ class _FadedEdgeScrollViewState extends State<FadedEdgeScrollView> {
   }
 }
 
-/// Wrap the large title inside a [FadedEdgeScrollView]'s scroll content.
-/// Driven by the same bool as the collapsed header — when the collapsed header
-/// is visible this widget fades out, and vice versa.
-class CollapsibleTitle extends StatelessWidget {
-  const CollapsibleTitle({super.key, required this.child});
+/// Wrap the large title inside a [VariableBlurScrollView]'s scroll content.
+/// Counterpart of [CollapsibleTitle] for the variable-blur variant.
+class CollapsibleTitleV extends StatelessWidget {
+  const CollapsibleTitleV({super.key, required this.child});
 
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    final state = context.findAncestorStateOfType<_FadedEdgeScrollViewState>();
+    final state = context.findAncestorStateOfType<_VariableBlurScrollViewState>();
     if (state == null) return child;
 
     return KeyedSubtree(
