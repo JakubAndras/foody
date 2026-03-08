@@ -175,10 +175,10 @@ class _VariableBlurScrollViewState extends State<VariableBlurScrollView> {
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
                   colors: [
-                    AppColors.background.withValues(alpha: 0.9),
-                    AppColors.background.withValues(alpha: 0.9),
                     AppColors.background.withValues(alpha: 0.8),
-                    AppColors.background.withValues(alpha: 0.4),
+                    AppColors.background.withValues(alpha: 0.8),
+                    AppColors.background.withValues(alpha: 0.6),
+                    AppColors.background.withValues(alpha: 0.3),
                     AppColors.background.withValues(alpha: 0),
                   ],
                 ),

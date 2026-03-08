@@ -12,6 +12,14 @@ class ConfirmUsernameScreen extends StatelessWidget {
     return ProfileGradientScaffold(
       scroll: true,
       padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.l, AppSpacing.l, AppSpacing.xl),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: SizedBox(
+        width: MediaQuery.of(context).size.width - (AppSpacing.l * 2),
+        child: const ProfilePrimaryButton(
+          label: 'Continue',
+          height: AppSizes.buttonHeightCompact,
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -37,11 +45,7 @@ class ConfirmUsernameScreen extends StatelessWidget {
               style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w500),
             ),
           ),
-          const Spacer(),
-          const ProfilePrimaryButton(
-            label: 'Continue',
-            height: AppSizes.buttonHeightCompact,
-          ),
+          const SizedBox(height: AppSpacing.mega + AppSizes.buttonHeightCompact),
         ],
       ),
     );

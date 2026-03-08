@@ -63,6 +63,18 @@ class _DateSelectorState extends State<DateSelector> {
   void _handleDateTap(DateTime date) => widget.onDateSelected(date);
 
   @override
+  void didUpdateWidget(covariant DateSelector oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final oldMonday = _getMondayForWeekContaining(oldWidget.selectedDate);
+    final newMonday = _getMondayForWeekContaining(widget.selectedDate);
+    if (oldMonday != newMonday) {
+      final targetPage = _calculatePageIndex(widget.selectedDate);
+      _pageController.jumpToPage(targetPage);
+      _dayRecordController.loadWeek(newMonday);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: AppSizes.calendarStripHeight,

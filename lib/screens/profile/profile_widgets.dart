@@ -40,6 +40,7 @@ class ProfileGradientScaffold extends StatelessWidget {
           child: scroll
               ? LayoutBuilder(
                   builder: (context, constraints) => SingleChildScrollView(
+                    keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                     child: ConstrainedBox(
                       constraints: BoxConstraints(minHeight: constraints.maxHeight),
                       child: content,

@@ -130,30 +130,6 @@ class AppLiquidGlassPresets {
     color: Color(0x00FFFFFF),
   );
 
-  static const AppLiquidGlassViewConfig calendarSheet = AppLiquidGlassViewConfig(
-    pixelRatio: 0.72,
-    realTimeCapture: true,
-    useSync: true,
-    refreshRate: LiquidGlassRefreshRate.deviceRefreshRate,
-  );
-
-  static const AppLiquidGlassLensConfig calendarSheetLens = AppLiquidGlassLensConfig(
-    magnification: 1.01,
-    distortion: 0.08,
-    distortionWidth: 22,
-    shape: RoundedRectangleShape(
-      cornerRadius: AppRadii.lg,
-      borderWidth: 1.2,
-      borderSoftness: 1.2,
-      lightIntensity: 1.25,
-      oneSideLightIntensity: 0.7,
-      lightDirection: 210,
-    ),
-    blur: LiquidGlassBlur(sigmaX: 4, sigmaY: 4),
-    chromaticAberration: 0.002,
-    saturation: 1.03,
-    color: Color(0x40FFFFFF),
-  );
 }
 
 class AppLiquidGlassLayer extends StatelessWidget {

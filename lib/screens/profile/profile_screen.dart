@@ -18,6 +18,7 @@ import 'package:diplomka/screens/profile/subscreens/tracking_reminders_screen.da
 import 'package:diplomka/screens/profile/subscreens/export_pdf_intro_screen.dart';
 import 'package:diplomka/screens/profile/ask_ai/ask_ai_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/glass_test_screen.dart';
+import 'package:diplomka/screens/onboarding/onboarding_flow_screen.dart';
 import 'package:diplomka/screens/scan/scan_camera_screen.dart';
 import 'package:diplomka/screens/scan/scan_onboarding_screen.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
@@ -136,8 +137,13 @@ class ProfileScreen extends StatelessWidget {
                     _ProfileActionRow(
                       title: 'Glass Test',
                       icon: Icons.blur_on,
-                      showDivider: false,
                       onTap: () => Get.to(() => const GlassTestScreen()),
+                    ),
+                    _ProfileActionRow(
+                      title: 'Test Onboarding',
+                      icon: Icons.play_circle_outline,
+                      showDivider: false,
+                      onTap: () => Get.to(() => const OnboardingFlowScreen()),
                     ),
                   ],
                 ),

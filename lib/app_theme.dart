@@ -5,6 +5,20 @@ class AppColors {
   static const white = Color(0xFFFFFFFF);
   static const black = Color(0xFF0A0A0A);
 
+  // White scale (pure white → subtle grey)
+  static const white1 = Color(0xFFFFFFFF);
+  static const white2 = Color(0xFFFCFCFD);
+  static const white3 = Color(0xFFF9F9FA);
+  static const white4 = Color(0xFFF5F5F7);
+  static const white5 = Color(0xFFF0F0F3);
+
+  // Grey scale (light grey → medium grey)
+  static const grey1 = Color(0xFFE8E8EA);
+  static const grey2 = Color(0xFFDCDCE0);
+  static const grey3 = Color(0xFFCFCFD5);
+  static const grey4 = Color(0xFFC2C2C9);
+  static const grey5 = Color(0xFFB5B5BD);
+
   // Brand
   static const primary = black;
   static const primaryMuted = Color(0xFF4D4D4D);
@@ -127,7 +141,7 @@ class AppColors {
   // Dark calendar
   static const calendarDarkBg = Color(0xFF1C1C1E);
   static const calendarDarkSurface = Color(0xFF2C2C2E);
-  static const calendarDarkText = Color(0xFFFFFFFF);
+  static const calendarDarkText = black;
   static const calendarDarkWeekend = Color(0xFF48484A);
   static const calendarDarkMuted = Color(0xFF8E8E93);
 

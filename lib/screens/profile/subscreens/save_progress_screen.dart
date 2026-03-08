@@ -12,6 +12,14 @@ class SaveProgressScreen extends StatelessWidget {
     return ProfileGradientScaffold(
       scroll: true,
       padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.l, AppSpacing.screen, AppSpacing.xl),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: SizedBox(
+        width: MediaQuery.of(context).size.width - (AppSpacing.screen * 2),
+        child: const ProfilePrimaryButton(
+          label: 'Skip',
+          height: AppSizes.buttonHeight,
+        ),
+      ),
       child: Column(
         children: [
           Align(
@@ -46,11 +54,7 @@ class SaveProgressScreen extends StatelessWidget {
             ),
             height: AppSizes.buttonHeight,
           ),
-          const Spacer(),
-          const ProfilePrimaryButton(
-            label: 'Skip',
-            height: AppSizes.buttonHeight,
-          ),
+          const SizedBox(height: AppSpacing.mega + AppSizes.buttonHeight),
         ],
       ),
     );

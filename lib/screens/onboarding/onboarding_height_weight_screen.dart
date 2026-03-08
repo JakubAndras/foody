@@ -314,8 +314,7 @@ class _PickerColumnState extends State<_PickerColumn> {
   @override
   void didUpdateWidget(covariant _PickerColumn oldWidget) {
     super.didUpdateWidget(oldWidget);
-    final int nextSelected =
-        widget.selectedIndex.clamp(0, widget.values.length - 1);
+    final int nextSelected = widget.selectedIndex.clamp(0, widget.values.length - 1);
     if (nextSelected == _selectedIndex) return;
     _selectedIndex = nextSelected;
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -331,48 +330,70 @@ class _PickerColumnState extends State<_PickerColumn> {
     super.dispose();
   }
 
+  double _opacityForDistance(int distance) {
+    switch (distance) {
+      case 0:
+        return 1.0;
+      case 1:
+        return 0.55;
+      case 2:
+        return 0.35;
+      case 3:
+        return 0.2;
+      default:
+        return 0.1;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final TextStyle selectedStyle =
-        Theme.of(context).textTheme.titleMedium!.copyWith(
-              fontWeight: FontWeight.w700,
-              color: AppColors.primary,
-            );
-
-    final TextStyle unselectedStyle =
-        Theme.of(context).textTheme.bodyLarge!.copyWith(
-              color: AppColors.textSecondary,
-            );
-
     return SizedBox(
       height: AppSizes.pickerHeight,
-      child: CupertinoPicker(
-        scrollController: _controller,
-        backgroundColor: Colors.transparent,
-        itemExtent: AppSizes.pickerItemHeight,
-        squeeze: 1.1,
-        useMagnifier: true,
-        magnification: 1.0,
-        selectionOverlay: Container(
-          margin: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-            border: Border.all(color: AppColors.outline),
-            borderRadius: BorderRadius.circular(AppRadii.sm),
-          ),
-        ),
-        onSelectedItemChanged: (index) {
-          setState(() => _selectedIndex = index);
-          widget.onSelected(index);
-        },
-        children: List.generate(widget.values.length, (index) {
-          return Center(
-            child: Text(
-              widget.values[index],
-              style: index == _selectedIndex ? selectedStyle : unselectedStyle,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // Selection highlight behind the picker
+          Container(
+            height: AppSizes.pickerItemHeight,
+            margin: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
+            decoration: BoxDecoration(
+              color: AppColors.grey1,
+              borderRadius: BorderRadius.circular(10),
             ),
-          );
-        }),
+          ),
+          // Picker on top so text is not covered
+          CupertinoPicker(
+            scrollController: _controller,
+            backgroundColor: Colors.transparent,
+            itemExtent: AppSizes.pickerItemHeight,
+            squeeze: 1.5,
+            useMagnifier: true,
+            magnification: 1,
+            diameterRatio: 1.1,
+            selectionOverlay: const SizedBox.shrink(),
+            onSelectedItemChanged: (index) {
+              setState(() => _selectedIndex = index);
+              widget.onSelected(index);
+            },
+            children: List.generate(widget.values.length, (index) {
+              final int distance = (index - _selectedIndex).abs();
+              final bool isSelected = index == _selectedIndex;
+              final double opacity = _opacityForDistance(distance);
+
+              return Center(
+                child: Text(
+                  widget.values[index],
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
+                    color: isSelected ? CupertinoColors.black : CupertinoColors.black.withValues(alpha: opacity),
+                    letterSpacing: -0.3,
+                  ),
+                ),
+              );
+            }),
+          ),
+        ],
       ),
     );
   }

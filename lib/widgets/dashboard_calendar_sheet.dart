@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/screens/main_screen.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,7 +13,22 @@ class DashboardCalendarSheet extends StatefulWidget {
   final DateTime selectedDate;
   final ValueChanged<DateTime> onDateSelected;
 
-  static const double sheetHeight = 400.0;
+  static void show(BuildContext context, {required DateTime selectedDate, required ValueChanged<DateTime> onDateSelected}) {
+    MainScreenController.to.isCalendarSheetVisible.value = true;
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      barrierColor: AppColors.overlayDark,
+      isScrollControlled: true,
+      builder: (sheetContext) => DashboardCalendarSheet(
+        selectedDate: selectedDate,
+        onDateSelected: onDateSelected,
+      ),
+    ).whenComplete(() {
+      MainScreenController.to.isCalendarSheetVisible.value = false;
+    });
+  }
 
   @override
   State<DashboardCalendarSheet> createState() => _DashboardCalendarSheetState();
@@ -19,6 +37,7 @@ class DashboardCalendarSheet extends StatefulWidget {
 class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
   late DateTime _displayedMonth;
   late DateTime _today;
+  late DateTime _selectedDate;
   bool _showMonthYearPicker = false;
 
   int _pickerMonth = 0;
@@ -44,7 +63,8 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
     super.initState();
     final now = DateTime.now();
     _today = DateTime(now.year, now.month, now.day);
-    _displayedMonth = DateTime(widget.selectedDate.year, widget.selectedDate.month, 1);
+    _selectedDate = widget.selectedDate;
+    _displayedMonth = DateTime(_selectedDate.year, _selectedDate.month, 1);
     _pickerMonth = _displayedMonth.month - 1;
     _pickerYear = _displayedMonth.year;
   }
@@ -84,23 +104,39 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
     final firstWeekday = DateTime(_displayedMonth.year, _displayedMonth.month, 1).weekday;
     final totalSlots = (firstWeekday - 1) + daysInMonth;
     final rowCount = (totalSlots / 7).ceil();
+    final contentHeight = MediaQuery.of(context).size.height * 0.35;
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const SizedBox(height: AppSpacing.xs),
-        Center(
-          child: Container(
-            width: 36,
-            height: 4,
-            decoration: BoxDecoration(color: AppColors.calendarDarkMuted, borderRadius: BorderRadius.circular(2)),
+    return Padding(
+      padding: const EdgeInsets.all(AppSpacing.xs),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadii.xl), bottom: Radius.circular(AppRadii.xxl + 10)),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+          child: CustomPaint(
+            painter: const _GlassSheetPainter(),
+            child: SafeArea(
+              top: false,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: AppSpacing.xs),
+                  Center(
+                    child: Container(
+                      width: 36,
+                      height: 4,
+                      decoration: BoxDecoration(color: AppColors.calendarDarkMuted, borderRadius: BorderRadius.circular(2)),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xl),
+                  _buildHeader(),
+                  const SizedBox(height: AppSpacing.xs),
+                  SizedBox(height: contentHeight, child: _showMonthYearPicker ? _buildMonthYearPicker() : _buildCalendarGrid(daysInMonth, firstWeekday, rowCount)),
+                ],
+              ),
+            ),
           ),
         ),
-        const SizedBox(height: AppSpacing.s),
-        _buildHeader(),
-        const SizedBox(height: AppSpacing.s),
-        if (_showMonthYearPicker) Expanded(child: _buildMonthYearPicker()) else _buildCalendarGrid(daysInMonth, firstWeekday, rowCount),
-      ],
+      ),
     );
   }
 
@@ -134,7 +170,7 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
               behavior: HitTestBehavior.opaque,
               child: const Padding(
                 padding: EdgeInsets.all(AppSpacing.xs),
-                child: Icon(Icons.chevron_left, color: AppColors.calendarDarkText, size: AppSizes.iconLg),
+                child: Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.calendarDarkText, size: AppSizes.iconMd),
               ),
             ),
             const SizedBox(width: AppSpacing.xxs),
@@ -142,8 +178,8 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
               onTap: _goToNextMonth,
               behavior: HitTestBehavior.opaque,
               child: const Padding(
-                padding: EdgeInsets.all(AppSpacing.xs),
-                child: Icon(Icons.chevron_right, color: AppColors.calendarDarkText, size: AppSizes.iconLg),
+                padding: EdgeInsets.only(left: AppSpacing.xs),
+                child: Icon(Icons.arrow_forward_ios_rounded, color: AppColors.calendarDarkText, size: AppSizes.iconMd),
               ),
             ),
           ],
@@ -159,20 +195,19 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
-            height: 22,
             child: Row(
               children: _weekdayKeys
                   .map(
                     (key) => Expanded(
                       child: Center(
-                        child: Text(tr(key).toUpperCase(), style: AppTextStyles.label11.copyWith(color: AppColors.calendarDarkMuted)),
+                        child: Text(tr(key).toUpperCase(), style: AppTextStyles.label12.copyWith(color: AppColors.calendarDarkMuted)),
                       ),
                     ),
                   )
                   .toList(),
             ),
           ),
-          const SizedBox(height: AppSpacing.xs),
+          const SizedBox(height: AppSpacing.xxs),
           ...List.generate(rowCount, (row) {
             return SizedBox(
               height: _calendarRowHeight,
@@ -197,12 +232,15 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
 
   Widget _buildDayCell(DateTime date) {
     final isToday = date.year == _today.year && date.month == _today.month && date.day == _today.day;
-    final isSelected = date.year == widget.selectedDate.year && date.month == widget.selectedDate.month && date.day == widget.selectedDate.day;
+    final isSelected = date.year == _selectedDate.year && date.month == _selectedDate.month && date.day == _selectedDate.day;
 
-    Color textColor = AppColors.calendarDarkText;
+    Color textColor = isSelected ? AppColors.white1 : AppColors.calendarDarkText;
 
     return GestureDetector(
-      onTap: () => widget.onDateSelected(date),
+      onTap: () {
+        setState(() => _selectedDate = date);
+        widget.onDateSelected(date);
+      },
       behavior: HitTestBehavior.opaque,
       child: Center(
         child: Container(
@@ -220,7 +258,7 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
           alignment: Alignment.center,
           child: Text(
             '${date.day}',
-            style: AppTextStyles.body16.copyWith(fontWeight: isToday ? FontWeight.w700 : FontWeight.w500, color: textColor),
+            style: AppTextStyles.body17.copyWith(fontWeight: isToday ? FontWeight.w700 : FontWeight.w500, color: textColor),
           ),
         ),
       ),
@@ -290,4 +328,46 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
       ],
     );
   }
+}
+
+class _GlassSheetPainter extends CustomPainter {
+  const _GlassSheetPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rrect = RRect.fromLTRBAndCorners(
+      0,
+      0,
+      size.width,
+      size.height,
+      topLeft: Radius.circular(AppRadii.xl),
+      topRight: Radius.circular(AppRadii.xl),
+      bottomRight: Radius.circular(AppRadii.xxl + 10),
+      bottomLeft: Radius.circular(AppRadii.xxl + 10),
+    );
+
+    // Glass fill
+    canvas.drawRRect(rrect, Paint()..color = const Color(0xB0FFFFFF));
+
+    //Specular highlight at the top
+    final highlightRect = Rect.fromLTWH(size.width * 0.1, 0, size.width * 0.8, size.height * 0.12);
+    canvas.drawRRect(
+      RRect.fromRectAndCorners(highlightRect, topLeft: Radius.circular(AppRadii.xl), topRight: Radius.circular(AppRadii.xl)),
+      Paint()
+        ..shader = const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x30FFFFFF), Color(0x00FFFFFF)]).createShader(highlightRect)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2.0),
+    );
+
+    // Border
+    canvas.drawRRect(
+      rrect.deflate(0.4),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 0.8
+        ..color = AppColors.white1,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

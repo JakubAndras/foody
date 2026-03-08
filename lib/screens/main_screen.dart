@@ -41,7 +41,7 @@ class MainScreen extends GetView<MainScreenController> {
             return AppLiquidGlassLayer(
               backgroundWidget: activeBody,
               children: [
-                AppLiquidGlassPresets.mainTabBarLens.build(
+                AppLiquidGlassPresets.basicButtonLens.build(
                   width: navWidth,
                   height: AppSizes.bottomNavHeight,
                   position: LiquidGlassOffsetPosition(left: AppSpacing.l, bottom: AppSpacing.xl),
@@ -50,7 +50,7 @@ class MainScreen extends GetView<MainScreenController> {
                     onTap: controller._onItemTapped,
                   ),
                 ),
-                AppLiquidGlassPresets.mainTabBarLens.build(
+                AppLiquidGlassPresets.basicButtonLens.build(
                   width: AppSizes.fabSize,
                   height: AppSizes.fabSize,
                   position: LiquidGlassOffsetPosition(left: actionLeft, bottom: AppSpacing.xl),
@@ -69,20 +69,6 @@ class MainScreen extends GetView<MainScreenController> {
                     position: LiquidGlassOffsetPosition(left: calendarPillLeft, top: AppSpacing.safeAreaTop),
                     child: const _DashboardCalendarPill(),
                   ),
-                  AppLiquidGlassPresets.calendarSheetLens.build(
-                    width: constraints.maxWidth - AppSpacing.xs * 2,
-                    height: DashboardCalendarSheet.sheetHeight,
-                    position: const LiquidGlassOffsetPosition(left: AppSpacing.xs, top: AppSpacing.safeAreaTop + AppSizes.streakPillHeight + AppSpacing.s),
-                    visibility: false,
-                    controller: controller._calendarLensController,
-                    child: DashboardCalendarSheet(
-                      selectedDate: DashboardController.to.selectedDate.value,
-                      onDateSelected: (date) {
-                        DashboardController.to.updateDate(date);
-                        controller._hideCalendar();
-                      },
-                    ),
-                  ),
                 ],
               ],
             );
@@ -96,14 +82,12 @@ class MainScreen extends GetView<MainScreenController> {
 class MainScreenController extends BaseController {
   static MainScreenController get to => Get.find();
   final RxInt _selectedIndex = 0.obs;
-  final LiquidGlassController _calendarLensController = LiquidGlassController();
-  bool _isCalendarVisible = false;
+  final RxBool isCalendarSheetVisible = false.obs;
 
   final List<Widget> widgetOptions = <Widget>[const DashboardScreen(), const ProgressScreen(), const ProfileScreen()];
 
   void _onItemTapped(int index) {
     _selectedIndex.value = index;
-    _hideCalendar();
   }
 
   void showDashboardTab() {
@@ -114,24 +98,7 @@ class MainScreenController extends BaseController {
     _selectedIndex.value = 1;
   }
 
-  void _toggleCalendar() {
-    if (_isCalendarVisible) {
-      _hideCalendar();
-    } else {
-      _calendarLensController.showLiquidGlass(animationTimeMillisecond: 42);
-      _isCalendarVisible = true;
-    }
-  }
-
-  void _hideCalendar() {
-    if (_isCalendarVisible) {
-      _calendarLensController.hideLiquidGlass(animationTimeMillisecond: 42);
-      _isCalendarVisible = false;
-    }
-  }
-
   void _showQuickActions(BuildContext context) {
-    _hideCalendar();
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -181,15 +148,17 @@ class _DashboardStreakPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color:AppColors.glassBackground,
-        borderRadius: BorderRadius.circular(AppRadii.pill),
-        border: Border.all(color: AppColors.glassBorder, width: AppSizes.glassBorderWidth),
-      ),
-      child: Obx(() {
-        final dc = DashboardController.to;
-        if (dc.isLoadingStreak.value) {
+    return Obx(() {
+      final calendarVisible = MainScreenController.to.isCalendarSheetVisible.value;
+      return DecoratedBox(
+        decoration: BoxDecoration(
+          color: AppColors.glassBackground,
+          borderRadius: BorderRadius.circular(AppRadii.pill),
+          border: Border.all(color: AppColors.glassBorder, width: AppSizes.glassBorderWidth),
+        ),
+        child: Obx(() {
+          final dc = DashboardController.to;
+          if (dc.isLoadingStreak.value) {
           return const Center(
             child: SizedBox(
               width: AppSizes.iconSm,
@@ -219,7 +188,8 @@ class _DashboardStreakPill extends StatelessWidget {
           child: Center(child: content),
         );
       }),
-    );
+      );
+    });
   }
 }
 
@@ -228,19 +198,25 @@ class _DashboardCalendarPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color:AppColors.glassBackground,
-        borderRadius: BorderRadius.circular(AppRadii.pill),
-        border: Border.all(color: AppColors.glassBorder, width: AppSizes.glassBorderWidth),
-      ),
-      child: Obx(() {
-        final dc = DashboardController.to;
-        final date = dc.selectedDate.value;
+    return Obx(() {
+      final calendarVisible = MainScreenController.to.isCalendarSheetVisible.value;
+      return DecoratedBox(
+        decoration: BoxDecoration(
+          color: AppColors.glassBackground,
+          borderRadius: BorderRadius.circular(AppRadii.pill),
+          border: Border.all(color: AppColors.glassBorder, width: AppSizes.glassBorderWidth),
+        ),
+        child: Obx(() {
+          final dc = DashboardController.to;
+          final date = dc.selectedDate.value;
         final dayStr = date.day.toString();
         final monthStr = date.month.toString().padLeft(2, '0');
         return GestureDetector(
-          onTap: () => MainScreenController.to._toggleCalendar(),
+          onTap: () => DashboardCalendarSheet.show(
+            context,
+            selectedDate: dc.selectedDate.value,
+            onDateSelected: (date) => DashboardController.to.updateDate(date),
+          ),
           child: Center(
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -253,6 +229,7 @@ class _DashboardCalendarPill extends StatelessWidget {
           ),
         );
       }),
-    );
+      );
+    });
   }
 }
