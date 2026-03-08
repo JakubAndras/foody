@@ -100,7 +100,10 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
     final firstWeekday = DateTime(_displayedMonth.year, _displayedMonth.month, 1).weekday;
     final totalSlots = (firstWeekday - 1) + daysInMonth;
     final rowCount = (totalSlots / 7).ceil();
-    final contentHeight = MediaQuery.of(context).size.height * 0.35;
+    final contentHeightSheet = MediaQuery.of(context).size.height * 0.36;
+    final contentHeightSheetWithoutBottom = MediaQuery.of(context).size.height * 0.34;
+    final contentHeightSheetBackToToday = MediaQuery.of(context).size.height * 0.02;
+    final selectedDayIsToday = _selectedDate != _today || _displayedMonth.year != _today.year || _displayedMonth.month != _today.month;
 
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.xs),
@@ -112,6 +115,7 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
             painter: const _GlassSheetPainter(),
             child: SafeArea(
               top: false,
+              bottom: false,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -126,7 +130,33 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
                   const SizedBox(height: AppSpacing.xl),
                   _buildHeader(),
                   const SizedBox(height: AppSpacing.xs),
-                  SizedBox(height: contentHeight, child: _showMonthYearPicker ? _buildMonthYearPicker() : _buildCalendarGrid(daysInMonth, firstWeekday, rowCount)),
+                  SizedBox(
+                    height: selectedDayIsToday ? contentHeightSheetWithoutBottom : contentHeightSheet,
+                    child: _showMonthYearPicker ? _buildMonthYearPicker() : _buildCalendarGrid(daysInMonth, firstWeekday, rowCount),
+                  ),
+                  if (selectedDayIsToday)
+                    SizedBox(
+                      height: contentHeightSheetBackToToday,
+                      child: Center(
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedDate = _today;
+                              _displayedMonth = DateTime(_today.year, _today.month, 1);
+                              _pickerMonth = _today.month - 1;
+                              _pickerYear = _today.year;
+                              _showMonthYearPicker = false;
+                            });
+                            widget.onDateSelected(_today);
+                          },
+                          child: Text(
+                            tr(LocaleKeys.common_back_to_today),
+                            style: AppTextStyles.body14.copyWith(color: AppColors.calendarDarkText, fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      ),
+                    ),
+                  const SizedBox(height: AppSpacing.xxl),
                 ],
               ),
             ),
@@ -284,6 +314,7 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
               setState(() {
                 _pickerMonth = date.month;
                 _pickerYear = date.year;
+                _displayedMonth = DateTime(date.year, date.month, 1);
                 _selectedDate = DateTime(date.year, date.month, 1);
               });
               widget.onDateSelected(_selectedDate);

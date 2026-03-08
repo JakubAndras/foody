@@ -46,6 +46,7 @@ abstract class  LocaleKeys {
   static const common_meals = 'common_meals';
   static const common_ingredients = 'common_ingredients';
   static const common_today = 'common_today';
+  static const common_back_to_today = 'common_back_to_today';
   static const day_monday_short = 'day_monday_short';
   static const day_tuesday_short = 'day_tuesday_short';
   static const day_wednesday_short = 'day_wednesday_short';
