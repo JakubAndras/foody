@@ -25,16 +25,20 @@ class LiquidGlassBackButton extends StatefulWidget {
 }
 
 class _LiquidGlassBackButtonState extends State<LiquidGlassBackButton> with TickerProviderStateMixin {
+  static const _navigationDelay = Duration(milliseconds: 125);
+  static const _releaseLead = Duration(milliseconds: 16);
+
   late final AnimationController _pressController;
   late final AnimationController _glintController;
   late final AnimationController _ambientController;
+  bool _isNavigating = false;
 
   @override
   void initState() {
     super.initState();
-    _pressController = AnimationController(vsync: this, duration: const Duration(milliseconds: 160), reverseDuration: const Duration(milliseconds: 260));
-    _glintController = AnimationController(vsync: this, duration: const Duration(milliseconds: 700));
-    _ambientController = AnimationController(vsync: this, duration: const Duration(milliseconds: 3600))..repeat(reverse: true);
+    _pressController = AnimationController(vsync: this, duration: const Duration(milliseconds: 80), reverseDuration: const Duration(milliseconds: 120));
+    _glintController = AnimationController(vsync: this, duration: const Duration(milliseconds: 320));
+    _ambientController = AnimationController(vsync: this, duration: const Duration(milliseconds: 3000))..repeat(reverse: true);
   }
 
   @override
@@ -46,24 +50,37 @@ class _LiquidGlassBackButtonState extends State<LiquidGlassBackButton> with Tick
   }
 
   void _onTapDown(TapDownDetails _) {
+    if (_isNavigating) return;
     _pressController.forward();
     _glintController.forward(from: 0);
   }
 
   Future<void> _onTapUp(TapUpDetails _) async {
-    _pressController.reverse();
+    if (_isNavigating) return;
+    _isNavigating = true;
     if (defaultTargetPlatform == TargetPlatform.iOS) {
       await HapticFeedback.lightImpact();
     }
+    await Future.delayed(_navigationDelay - _releaseLead);
+    if (!mounted) return;
+    _pressController.reverse();
+    await Future.delayed(_releaseLead);
+    if (!mounted) return;
     widget.onTap?.call();
+    if (mounted) {
+      _isNavigating = false;
+    }
   }
 
-  void _onTapCancel() => _pressController.reverse();
+  void _onTapCancel() {
+    if (_isNavigating) return;
+    _pressController.reverse();
+  }
 
   @override
   Widget build(BuildContext context) {
     final iconColor = widget.iconColor ?? AppColors.textPrimary;
-    final iconSize = widget.size * 0.45;
+    final iconSize = widget.size * 0.5;
     final semanticLabel = widget.icon == LiquidGlassBackButtonIcon.back ? 'Back' : 'Close';
     final animation = Listenable.merge([_pressController, _glintController, _ambientController]);
 
@@ -73,63 +90,59 @@ class _LiquidGlassBackButtonState extends State<LiquidGlassBackButton> with Tick
         final press = Curves.easeOutCubic.transform(_pressController.value);
         final ambient = Curves.easeInOutSine.transform(_ambientController.value);
         final glint = Curves.easeOutCubic.transform(_glintController.value);
-        final scale = lerpDouble(1.0, 0.94, press)!;
-        final translateY = lerpDouble(0.0, 1.6, press)!;
-        final blurSigma = lerpDouble(16.0, 12.0, press)!;
-        final shadowOpacity = lerpDouble(0.14, 0.08, press)!;
-        final glowOpacity = lerpDouble(0.14, 0.22, ambient)!;
-        final iconTint = Color.lerp(iconColor, Colors.white, 0.12 * press) ?? iconColor;
+        final scale = lerpDouble(1.06, 1.34, press)!;
+        final blurSigma = lerpDouble(3.5, 5.0, press)!;
+        final shadowOpacity = lerpDouble(0.14, 0.2, press)!;
+        final glowOpacity = lerpDouble(0.14, 0.26 + (press * 0.06), ambient)!;
+        final iconTint = Color.lerp(iconColor, Colors.white, 0.18 * press) ?? iconColor;
 
         return Transform.scale(
           scale: scale,
-          child: Transform.translate(
-            offset: Offset(0, translateY),
-            child: Semantics(
-              button: true,
-              label: semanticLabel,
-              child: MouseRegion(
-                cursor: SystemMouseCursors.click,
-                child: GestureDetector(
-                  onTapDown: _onTapDown,
-                  onTapUp: _onTapUp,
-                  onTapCancel: _onTapCancel,
-                  behavior: HitTestBehavior.opaque,
-                  child: SizedBox(
-                    width: widget.size,
-                    height: widget.size,
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.textPrimary.withValues(alpha: shadowOpacity),
-                            blurRadius: lerpDouble(18, 12, press)!,
-                            spreadRadius: -5,
-                            offset: Offset(0, lerpDouble(10, 6, press)!),
-                          ),
-                          BoxShadow(
-                            color: Colors.white.withValues(alpha: glowOpacity * (1 - press * 0.55)),
-                            blurRadius: lerpDouble(12, 8, press)!,
-                            spreadRadius: -6,
-                            offset: const Offset(-1.5, -2),
-                          ),
-                        ],
-                      ),
-                      child: ClipOval(
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: blurSigma, sigmaY: blurSigma),
-                          child: CustomPaint(
-                            painter: _GlassButtonPainter(pressProgress: press, ambientProgress: ambient, glintProgress: glint),
-                            child: Center(
-                              child: Transform.translate(
-                                offset: Offset(widget.icon == LiquidGlassBackButtonIcon.back ? -0.55 * press : 0, 0.35 * press),
-                                child: Transform.scale(
-                                  scale: lerpDouble(1.0, 0.97, press)!,
-                                  child: Icon(
-                                    widget.icon == LiquidGlassBackButtonIcon.back ? Icons.arrow_back_ios_new_rounded : Icons.close_rounded,
-                                    size: iconSize,
-                                    color: iconTint,
-                                  ),
+          child: Semantics(
+            button: true,
+            label: semanticLabel,
+            child: MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: GestureDetector(
+                onTapDown: _onTapDown,
+                onTapUp: _onTapUp,
+                onTapCancel: _onTapCancel,
+                behavior: HitTestBehavior.opaque,
+                child: SizedBox(
+                  width: widget.size,
+                  height: widget.size,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.textPrimary.withValues(alpha: shadowOpacity),
+                          blurRadius: lerpDouble(18, 17, press)!,
+                          spreadRadius: -5 + (press * 1.2),
+                          offset: Offset(0, lerpDouble(10, 8.5, press)!),
+                        ),
+                        BoxShadow(
+                          color: Colors.white.withValues(alpha: glowOpacity * (1 - press * 0.35)),
+                          blurRadius: lerpDouble(12, 18, press)!,
+                          spreadRadius: -6 + (press * 0.8),
+                          offset: const Offset(-1.5, -2),
+                        ),
+                      ],
+                    ),
+                    child: ClipOval(
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: blurSigma, sigmaY: blurSigma),
+                        child: CustomPaint(
+                          painter: _GlassButtonPainter(pressProgress: press, ambientProgress: ambient, glintProgress: glint),
+                          child: Center(
+                            child: Transform.translate(
+                              offset: Offset(widget.icon == LiquidGlassBackButtonIcon.back ? -0.25 * press : 0, 0),
+                              child: Transform.scale(
+                                scale: lerpDouble(1.0, 1.07, press)!,
+                                child: Icon(
+                                  widget.icon == LiquidGlassBackButtonIcon.back ? Icons.arrow_back_ios_new_rounded : Icons.close_rounded,
+                                  size: iconSize,
+                                  color: iconTint,
                                 ),
                               ),
                             ),
