@@ -1,4 +1,6 @@
 import 'package:diplomka/controller/ask_ai_controller.dart';
+import 'package:diplomka/controller/health_integration_controller.dart';
+import 'package:diplomka/services/health_integration_service.dart';
 import 'package:diplomka/controller/export_controller.dart';
 import 'package:diplomka/controller/barcode_scan_controller.dart';
 import 'package:diplomka/controller/dashboard_controller.dart';
@@ -39,7 +41,7 @@ import 'database/migrations.dart';
 Future<void> setupServices() async {
   await MediaStorage.initialize();
   final AppDatabase db = await Get.putAsync(
-      () => $FloorAppDatabase.databaseBuilder(AppDatabase.databaseName).addMigrations([migration1to2, migration2to3, migration3to4, migration4to5, migration5to6, migration6to7, migration7to8]).build());
+      () => $FloorAppDatabase.databaseBuilder(AppDatabase.databaseName).addMigrations([migration1to2, migration2to3, migration3to4, migration4to5, migration5to6, migration6to7, migration7to8, migration8to9]).build());
 
   /// Inicializace singleton GetxService - jednodušší nalezení controlleru v paměti;
   Get.lazyPut<SharedPreferencesService>(() => SharedPreferencesService());
@@ -106,6 +108,8 @@ Future<void> setupServices() async {
   );
   Get.put(WeightEntryRepository(database: db), permanent: true);
   Get.put(WeightEntryController(repository: WeightEntryRepository.to), permanent: true);
+  Get.put(HealthIntegrationService(), permanent: true);
+  Get.lazyPut<HealthIntegrationController>(() => HealthIntegrationController(), fenix: true);
   Get.lazyPut<AskAiController>(() => AskAiController(), fenix: true);
   Get.lazyPut<ExportController>(() => ExportController(), fenix: true);
 }

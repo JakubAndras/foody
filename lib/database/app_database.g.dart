@@ -88,7 +88,7 @@ class _$AppDatabase extends AppDatabase {
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 8,
+      version: 9,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -112,7 +112,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `WeightEntry` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` INTEGER NOT NULL, `weight` REAL NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Exercise` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `dayRecordId` INTEGER NOT NULL, `name` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `durationMinutes` INTEGER, `caloriesBurned` REAL NOT NULL, `isFavorite` INTEGER NOT NULL, FOREIGN KEY (`dayRecordId`) REFERENCES `DayRecord` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `Exercise` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `dayRecordId` INTEGER NOT NULL, `name` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `durationMinutes` INTEGER, `caloriesBurned` REAL NOT NULL, `isFavorite` INTEGER NOT NULL, `source` TEXT, FOREIGN KEY (`dayRecordId`) REFERENCES `DayRecord` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
             'CREATE UNIQUE INDEX `index_DayRecord_date` ON `DayRecord` (`date`)');
 
@@ -611,7 +611,8 @@ class _$ExerciseDao extends ExerciseDao {
                   'timestamp': _dateTimeConverter.encode(item.timestamp),
                   'durationMinutes': item.durationMinutes,
                   'caloriesBurned': item.caloriesBurned,
-                  'isFavorite': item.isFavorite ? 1 : 0
+                  'isFavorite': item.isFavorite ? 1 : 0,
+                  'source': item.source
                 }),
         _exerciseEntityUpdateAdapter = UpdateAdapter(
             database,
@@ -624,7 +625,8 @@ class _$ExerciseDao extends ExerciseDao {
                   'timestamp': _dateTimeConverter.encode(item.timestamp),
                   'durationMinutes': item.durationMinutes,
                   'caloriesBurned': item.caloriesBurned,
-                  'isFavorite': item.isFavorite ? 1 : 0
+                  'isFavorite': item.isFavorite ? 1 : 0,
+                  'source': item.source
                 }),
         _exerciseEntityDeletionAdapter = DeletionAdapter(
             database,
@@ -637,7 +639,8 @@ class _$ExerciseDao extends ExerciseDao {
                   'timestamp': _dateTimeConverter.encode(item.timestamp),
                   'durationMinutes': item.durationMinutes,
                   'caloriesBurned': item.caloriesBurned,
-                  'isFavorite': item.isFavorite ? 1 : 0
+                  'isFavorite': item.isFavorite ? 1 : 0,
+                  'source': item.source
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -664,8 +667,28 @@ class _$ExerciseDao extends ExerciseDao {
             timestamp: _dateTimeConverter.decode(row['timestamp'] as int),
             durationMinutes: row['durationMinutes'] as int?,
             caloriesBurned: row['caloriesBurned'] as double,
-            isFavorite: (row['isFavorite'] as int) != 0),
+            isFavorite: (row['isFavorite'] as int) != 0,
+            source: row['source'] as String?),
         arguments: [dayRecordId]);
+  }
+
+  @override
+  Future<ExerciseEntity?> findExerciseByDayRecordAndSource(
+    int dayRecordId,
+    String source,
+  ) async {
+    return _queryAdapter.query(
+        'SELECT * FROM Exercise WHERE dayRecordId = ?1 AND source = ?2 LIMIT 1',
+        mapper: (Map<String, Object?> row) => ExerciseEntity(
+            id: row['id'] as int?,
+            dayRecordId: row['dayRecordId'] as int,
+            name: row['name'] as String,
+            timestamp: _dateTimeConverter.decode(row['timestamp'] as int),
+            durationMinutes: row['durationMinutes'] as int?,
+            caloriesBurned: row['caloriesBurned'] as double,
+            isFavorite: (row['isFavorite'] as int) != 0,
+            source: row['source'] as String?),
+        arguments: [dayRecordId, source]);
   }
 
   @override

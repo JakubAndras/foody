@@ -140,6 +140,7 @@ class DayRecordRepository extends GetxService {
       durationMinutes: exercise.durationMinutes,
       caloriesBurned: exercise.caloriesBurned,
       isFavorite: exercise.isFavorite,
+      source: exercise.source,
     );
 
     if (exercise.id == null) {
@@ -176,8 +177,18 @@ class DayRecordRepository extends GetxService {
       durationMinutes: exercise.durationMinutes,
       caloriesBurned: exercise.caloriesBurned,
       isFavorite: isFavorite,
+      source: exercise.source,
     );
     await _exerciseDao.updateExercise(entity);
+  }
+
+  Future<Exercise?> findHealthSyncExercise({required DateTime date, required String source}) async {
+    final normalizedDate = _normalizeDate(date);
+    final existing = await _dayRecordDao.findDayRecordByDate(normalizedDate.millisecondsSinceEpoch);
+    if (existing == null) return null;
+    final entity = await _exerciseDao.findExerciseByDayRecordAndSource(existing.id!, source);
+    if (entity == null) return null;
+    return _buildExerciseFromEntity(entity);
   }
 
   Future<void> repairMealPhotoPaths() async {
@@ -292,6 +303,7 @@ class DayRecordRepository extends GetxService {
       durationMinutes: exerciseEntity.durationMinutes,
       caloriesBurned: exerciseEntity.caloriesBurned,
       isFavorite: exerciseEntity.isFavorite,
+      source: exerciseEntity.source,
     );
   }
 

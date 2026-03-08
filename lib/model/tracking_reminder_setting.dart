@@ -40,30 +40,30 @@ extension TrackingReminderTypeX on TrackingReminderType {
   String get titleKey {
     switch (this) {
       case TrackingReminderType.breakfast:
-        return 'tracking_reminders.type.breakfast';
+        return 'tracking_reminders_type_breakfast';
       case TrackingReminderType.lunch:
-        return 'tracking_reminders.type.lunch';
+        return 'tracking_reminders_type_lunch';
       case TrackingReminderType.snack:
-        return 'tracking_reminders.type.snack';
+        return 'tracking_reminders_type_snack';
       case TrackingReminderType.dinner:
-        return 'tracking_reminders.type.dinner';
+        return 'tracking_reminders_type_dinner';
       case TrackingReminderType.endOfDay:
-        return 'tracking_reminders.type.end_of_day';
+        return 'tracking_reminders_type_end_of_day';
     }
   }
 
   String get notificationBodyKey {
     switch (this) {
       case TrackingReminderType.breakfast:
-        return 'tracking_reminders.notification_body.breakfast';
+        return 'tracking_reminders_body_breakfast';
       case TrackingReminderType.lunch:
-        return 'tracking_reminders.notification_body.lunch';
+        return 'tracking_reminders_body_lunch';
       case TrackingReminderType.snack:
-        return 'tracking_reminders.notification_body.snack';
+        return 'tracking_reminders_body_snack';
       case TrackingReminderType.dinner:
-        return 'tracking_reminders.notification_body.dinner';
+        return 'tracking_reminders_body_dinner';
       case TrackingReminderType.endOfDay:
-        return 'tracking_reminders.notification_body.end_of_day';
+        return 'tracking_reminders_body_end_of_day';
     }
   }
 

@@ -277,7 +277,7 @@ class RecentlyUploadedCard extends StatelessWidget {
     final String exerciseDuration = exercise.durationMinutes == null ? '-' : '${exercise.durationMinutes} min';
 
     return GestureDetector(
-      onTap: () => onExerciseTap?.call(exercise),
+      onTap: exercise.isFromHealthSync ? null : () => onExerciseTap?.call(exercise),
       child: Container(
         height: AppSizes.exerciseCardHeight,
         margin: const EdgeInsets.symmetric(vertical: AppSpacing.xxs + 1),

@@ -321,14 +321,14 @@ class MealRecordCard extends StatelessWidget {
           ),
           const Divider(color: AppColors.separator, height: AppSpacing.m, thickness: AppSizes.dividerThin),
           _RecordRow(
-            label: 'Mealtime',
+            label: tr(LocaleKeys.meal_mealtime),
             value: mealtime,
             onTap: onMealtimeTap,
             showChevron: true,
           ),
           const Divider(color: AppColors.separator, height: AppSpacing.m, thickness: AppSizes.dividerThin),
           _RecordRow(
-            label: 'Date',
+            label: tr(LocaleKeys.meal_date),
             value: date,
             onTap: onDateTap,
             valueAsChip: true,

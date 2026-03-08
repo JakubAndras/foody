@@ -721,7 +721,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                     top: AppSizes.mealHeroHeight - heroOverlap,
                                     child: AllergyAlertCard(
                                       title: tr(LocaleKeys.meal_allergy_alert),
-                                      subtitle: 'This meal contains: Fish',
+                                      subtitle: tr(LocaleKeys.meal_allergy_contains, namedArgs: {'allergen': 'Fish'}),
                                     ),
                                   ),
                                 ],

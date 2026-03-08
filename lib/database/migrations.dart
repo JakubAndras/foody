@@ -92,3 +92,9 @@ final Migration migration7to8 = Migration(7, 8, (database) async {
     await database.execute('ALTER TABLE `Ingredient` ADD COLUMN `confidence` REAL');
   } catch (_) {}
 });
+
+final Migration migration8to9 = Migration(8, 9, (database) async {
+  try {
+    await database.execute('ALTER TABLE `Exercise` ADD COLUMN `source` TEXT');
+  } catch (_) {}
+});

@@ -1,6 +1,8 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class PersonalDetailsCustomDietScreen extends StatefulWidget {
@@ -47,7 +49,7 @@ class _PersonalDetailsCustomDietScreenState extends State<PersonalDetailsCustomD
         top: false,
         minimum: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
         child: OnboardingPrimaryButton(
-          label: 'Continue',
+          label: tr(LocaleKeys.common_continue_btn),
           onPressed: () {
             widget.onPreferencesSaved?.call(_controller.text.trim());
             widget.onNext();
@@ -57,10 +59,10 @@ class _PersonalDetailsCustomDietScreenState extends State<PersonalDetailsCustomD
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ProfileTopBar(title: 'Custom Diet', onBack: widget.onBack),
+          ProfileTopBar(title: tr(LocaleKeys.personal_details_custom_diet_title), onBack: widget.onBack),
           const SizedBox(height: AppSpacing.xl),
           Text(
-            "Tell us about any food you don't eat, allergies, or dietary restrictions.",
+            tr(LocaleKeys.personal_details_custom_diet_subtitle),
             style: textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
           ),
           const SizedBox(height: AppSpacing.l),
@@ -76,7 +78,7 @@ class _PersonalDetailsCustomDietScreenState extends State<PersonalDetailsCustomD
               maxLines: null,
               style: textTheme.titleMedium,
               decoration: InputDecoration.collapsed(
-                hintText: "E.g., I'm allergic to peanuts, don't eat dairy, avoid gluten...",
+                hintText: tr(LocaleKeys.onboarding_custom_diet_hint),
                 hintStyle: textTheme.titleMedium?.copyWith(color: AppColors.textTertiary),
               ),
             ),

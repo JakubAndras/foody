@@ -30,7 +30,7 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
   }
 
   List<Exercise> _allExercises() {
-    return DayRecordController.to.dayRecords.expand((record) => record.exercises).toList();
+    return DayRecordController.to.dayRecords.expand((record) => record.exercises).where((e) => !e.isFromHealthSync).toList();
   }
 
   List<Exercise> _applyFilters(List<Exercise> exercises) {

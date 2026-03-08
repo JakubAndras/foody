@@ -51,6 +51,8 @@ dependencies:
   csv: 6.0.0
   image_gallery_saver: 2.0.3
   variable_blur: 0.1.0
+  health: ^13.3.1
+  url_launcher: ^6.2.5
 
 dev_dependencies:
   flutter_test:

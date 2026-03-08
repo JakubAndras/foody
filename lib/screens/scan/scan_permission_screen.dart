@@ -1,5 +1,7 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/screens/scan/scan_widgets.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -24,17 +26,17 @@ class ScanPermissionScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: AppSpacing.xl),
-              Text('Camera access', style: AppTextStyles.h3),
+              Text(tr(LocaleKeys.scan_camera_access), style: AppTextStyles.h3),
               const SizedBox(height: AppSpacing.m),
               Text(
                 isPermanentlyDenied
-                    ? 'Camera access is disabled. Enable it in Settings to scan meals.'
-                    : 'Allow camera access to scan your meal and analyze it instantly.',
+                    ? tr(LocaleKeys.scan_camera_disabled_message)
+                    : tr(LocaleKeys.scan_camera_allow_message),
                 style: AppTextStyles.body14Relaxed,
               ),
               const Spacer(),
               ScanPrimaryButton(
-                label: isPermanentlyDenied ? 'Open Settings' : 'Allow Camera',
+                label: isPermanentlyDenied ? tr(LocaleKeys.scan_open_settings) : tr(LocaleKeys.scan_allow_camera),
                 onPressed: () async {
                   if (isPermanentlyDenied) {
                     await openAppSettings();

@@ -6,6 +6,7 @@ class Exercise {
   final int? durationMinutes;
   final double caloriesBurned;
   final bool isFavorite;
+  final String? source;
 
   const Exercise({
     this.id,
@@ -15,7 +16,10 @@ class Exercise {
     this.durationMinutes,
     required this.caloriesBurned,
     this.isFavorite = false,
+    this.source,
   });
+
+  bool get isFromHealthSync => source == 'apple_health' || source == 'health_connect';
 
   factory Exercise.fromJson(Map<String, dynamic> json) {
     return Exercise(
@@ -26,6 +30,7 @@ class Exercise {
       durationMinutes: json['durationMinutes'] as int?,
       caloriesBurned: (json['caloriesBurned'] as num?)?.toDouble() ?? 0,
       isFavorite: json['isFavorite'] as bool? ?? false,
+      source: json['source'] as String?,
     );
   }
 
@@ -38,6 +43,7 @@ class Exercise {
       'durationMinutes': durationMinutes,
       'caloriesBurned': caloriesBurned,
       'isFavorite': isFavorite,
+      'source': source,
     };
   }
 
@@ -49,6 +55,7 @@ class Exercise {
     int? durationMinutes,
     double? caloriesBurned,
     bool? isFavorite,
+    String? source,
   }) {
     return Exercise(
       id: id ?? this.id,
@@ -58,6 +65,7 @@ class Exercise {
       durationMinutes: durationMinutes ?? this.durationMinutes,
       caloriesBurned: caloriesBurned ?? this.caloriesBurned,
       isFavorite: isFavorite ?? this.isFavorite,
+      source: source ?? this.source,
     );
   }
 }

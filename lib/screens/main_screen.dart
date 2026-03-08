@@ -29,13 +29,15 @@ class MainScreen extends GetView<MainScreenController> {
     return Scaffold(
       body: Obx(() {
         final activeBody = MainScreenController.to.widgetOptions.elementAt(controller._selectedIndex.value);
+        final selectedDate = DashboardController.to.selectedDate.value;
         return LayoutBuilder(
           builder: (context, constraints) {
             final double navWidth = constraints.maxWidth - AppSpacing.l - AppSizes.fabSize - AppSpacing.s - AppSpacing.l;
             final double actionLeft = constraints.maxWidth - AppSpacing.l - AppSizes.fabSize;
 
             final bool isDashboard = controller._selectedIndex.value == 0;
-            const double calendarPillWidth = 100;
+            final bool showYear = selectedDate.year != DateTime.now().year;
+            final double calendarPillWidth = showYear ? 140 : 100;
             final double calendarPillLeft = constraints.maxWidth - AppSpacing.l - calendarPillWidth;
 
             return AppLiquidGlassLayer(
@@ -211,6 +213,8 @@ class _DashboardCalendarPill extends StatelessWidget {
           final date = dc.selectedDate.value;
         final dayStr = date.day.toString();
         final monthStr = date.month.toString().padLeft(2, '0');
+        final showYear = date.year != DateTime.now().year;
+        final label = showYear ? '$dayStr. $monthStr. ${date.year}' : '$dayStr. $monthStr';
         return GestureDetector(
           onTap: () => DashboardCalendarSheet.show(
             context,
@@ -223,7 +227,7 @@ class _DashboardCalendarPill extends StatelessWidget {
               children: [
                 const Icon(Icons.calendar_month, color: AppColors.textSecondary, size: 18),
                 const SizedBox(width: AppSpacing.xs),
-                Text('$dayStr. $monthStr', style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w700)),
+                Text(label, style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w700)),
               ],
             ),
           ),

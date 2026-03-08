@@ -19,6 +19,10 @@ import 'package:diplomka/screens/onboarding/onboarding_workouts_screen.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+
+import '../main_screen.dart';
 
 class OnboardingFlowScreen extends StatefulWidget {
   const OnboardingFlowScreen({super.key});
@@ -51,11 +55,17 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
     );
   }
 
-  Future<void> _skipOnboarding() async {
-    if (SessionManager.to.dietType.value == null) {
-      await SessionManager.to.setDietType(ProfileDietType.classic);
+  void _skipOnboarding()  {
+    debugPrint('[SKIP] _skipOnboarding called');
+    try {
+      if (SessionManager.to.dietType.value == null) {
+        unawaited(SessionManager.to.setDietType(ProfileDietType.classic));
+      }
+      unawaited(SessionManager.to.setOnboardingComplete(true));
+      Get.to(() => const MainScreen());
+    } catch (e, st) {
+      debugPrint('[SKIP] ERROR: $e\n$st');
     }
-    await SessionManager.to.setOnboardingComplete(true);
   }
 
   void _previous() {

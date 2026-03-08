@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:diplomka/controller/streak_controller.dart';
+import 'package:diplomka/services/health_integration_service.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/barcode_lookup_result.dart';
@@ -57,6 +58,7 @@ class DashboardController extends BaseController {
     super.onInit();
     _fetchDayRecord(selectedDate.value);
     _fetchStreakInfo();
+    _syncHealthDataIfEnabled();
     _dayRecordsWorker = ever<List<DayRecord>>(
       _dayRecordController.dayRecords,
       _updateStreakFromRecords,
@@ -65,6 +67,18 @@ class DashboardController extends BaseController {
     selectedDate.listen((date) {
       _fetchDayRecord(date);
     });
+  }
+
+  Future<void> _syncHealthDataIfEnabled() async {
+    try {
+      final healthService = HealthIntegrationService.to;
+      if (healthService.isEnabled.value) {
+        await healthService.syncToday();
+        _fetchDayRecord(selectedDate.value);
+      }
+    } catch (_) {
+      // Health sync is best-effort; do not disrupt dashboard on failure
+    }
   }
 
   Future<void> _fetchDayRecord(DateTime date) async {

@@ -6,6 +6,9 @@ abstract class ExerciseDao {
   @Query('''SELECT * FROM Exercise WHERE dayRecordId = :dayRecordId ORDER BY timestamp DESC''')
   Future<List<ExerciseEntity>> findExercisesForDayRecord(int dayRecordId);
 
+  @Query('''SELECT * FROM Exercise WHERE dayRecordId = :dayRecordId AND source = :source LIMIT 1''')
+  Future<ExerciseEntity?> findExerciseByDayRecordAndSource(int dayRecordId, String source);
+
   @Insert(onConflict: OnConflictStrategy.replace)
   Future<int> insertExercise(ExerciseEntity exercise);
 

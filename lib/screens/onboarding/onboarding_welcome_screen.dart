@@ -9,7 +9,7 @@ class OnboardingWelcomeScreen extends StatelessWidget {
   const OnboardingWelcomeScreen({super.key, this.onNext, this.onSkip});
 
   final VoidCallback? onNext;
-  final Future<void> Function()? onSkip;
+  final VoidCallback? onSkip;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,7 @@ class OnboardingWelcomeScreen extends StatelessWidget {
                     onPressed: onSkip == null
                         ? null
                         : () async {
-                            await onSkip!.call();
+                            onSkip!.call();
                           },
                   ),
                   const SizedBox(height: AppSpacing.l),

@@ -17,7 +17,7 @@ import 'dao/meal_dao.dart';
 
 part 'app_database.g.dart';
 
-const _databaseVersion = 8;
+const _databaseVersion = 9;
 
 @TypeConverters([DateTimeConverter])
 @Database(version: _databaseVersion, entities: [DayRecordEntity, MealEntity, IngredientEntity, WeightEntryEntity, ExerciseEntity])

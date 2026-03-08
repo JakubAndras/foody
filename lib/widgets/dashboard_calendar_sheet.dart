@@ -21,10 +21,7 @@ class DashboardCalendarSheet extends StatefulWidget {
       elevation: 0,
       barrierColor: AppColors.overlayDark,
       isScrollControlled: true,
-      builder: (sheetContext) => DashboardCalendarSheet(
-        selectedDate: selectedDate,
-        onDateSelected: onDateSelected,
-      ),
+      builder: (sheetContext) => DashboardCalendarSheet(selectedDate: selectedDate, onDateSelected: onDateSelected),
     ).whenComplete(() {
       MainScreenController.to.isCalendarSheetVisible.value = false;
     });
@@ -45,7 +42,6 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
 
   static const int _minYear = 2020;
   static const int _maxYear = 2035;
-  static const double _pickerItemExtent = 44.0;
   static const double _calendarRowHeight = 46.0;
 
   static const List<String> _weekdayKeys = [
@@ -266,66 +262,35 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
   }
 
   Widget _buildMonthYearPicker() {
-    final monthNames = List.generate(12, (i) => DateFormat('MMMM').format(DateTime(2026, i + 1)));
-    final yearCount = _maxYear - _minYear + 1;
-
-    return Stack(
-      children: [
-        Center(
-          child: Container(
-            height: _pickerItemExtent,
-            margin: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-            decoration: BoxDecoration(color: AppColors.calendarDarkSurface, borderRadius: BorderRadius.circular(AppRadii.sm)),
+    return Align(
+      alignment: const Alignment(0, -0.4),
+      child: SizedBox(
+        height: 200,
+        child: CupertinoTheme(
+          data: CupertinoThemeData(
+            textTheme: CupertinoTextThemeData(
+              // Base font is scaled up ~1.12x by CupertinoPicker magnification for the selected row.
+              // Use a smaller base so the magnified size matches the non-selected rows visually.
+              dateTimePickerTextStyle: AppTextStyles.h4.copyWith(color: AppColors.calendarDarkText, fontWeight: FontWeight.w400, fontSize: 20),
+            ),
+          ),
+          child: CupertinoDatePicker(
+            mode: CupertinoDatePickerMode.monthYear,
+            initialDateTime: DateTime(_pickerYear, _pickerMonth),
+            minimumDate: DateTime(_minYear),
+            maximumDate: DateTime(_maxYear, 12),
+            backgroundColor: Colors.transparent,
+            onDateTimeChanged: (DateTime date) {
+              setState(() {
+                _pickerMonth = date.month;
+                _pickerYear = date.year;
+                _selectedDate = DateTime(date.year, date.month, 1);
+              });
+              widget.onDateSelected(_selectedDate);
+            },
           ),
         ),
-        Row(
-          children: [
-            Expanded(
-              child: CupertinoPicker(
-                scrollController: FixedExtentScrollController(initialItem: _pickerMonth),
-                itemExtent: _pickerItemExtent,
-                diameterRatio: 1.3,
-                squeeze: 0.85,
-                selectionOverlay: const SizedBox.shrink(),
-                magnification: 1.0,
-                onSelectedItemChanged: (index) {
-                  setState(() => _pickerMonth = index);
-                },
-                children: List.generate(12, (i) {
-                  return Center(
-                    child: Text(
-                      monthNames[i],
-                      style: AppTextStyles.h4.copyWith(color: AppColors.calendarDarkText, fontWeight: FontWeight.w600),
-                    ),
-                  );
-                }),
-              ),
-            ),
-            Expanded(
-              child: CupertinoPicker(
-                scrollController: FixedExtentScrollController(initialItem: _pickerYear - _minYear),
-                itemExtent: _pickerItemExtent,
-                diameterRatio: 1.3,
-                squeeze: 0.85,
-                selectionOverlay: const SizedBox.shrink(),
-                magnification: 1.0,
-                onSelectedItemChanged: (index) {
-                  setState(() => _pickerYear = _minYear + index);
-                },
-                children: List.generate(yearCount, (i) {
-                  final year = _minYear + i;
-                  return Center(
-                    child: Text(
-                      '$year',
-                      style: AppTextStyles.h4.copyWith(color: AppColors.calendarDarkText, fontWeight: FontWeight.w600),
-                    ),
-                  );
-                }),
-              ),
-            ),
-          ],
-        ),
-      ],
+      ),
     );
   }
 }

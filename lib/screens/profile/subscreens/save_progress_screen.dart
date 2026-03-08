@@ -1,3 +1,5 @@
+import 'package:diplomka/generated/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,8 +17,8 @@ class SaveProgressScreen extends StatelessWidget {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: SizedBox(
         width: MediaQuery.of(context).size.width - (AppSpacing.screen * 2),
-        child: const ProfilePrimaryButton(
-          label: 'Skip',
+        child: ProfilePrimaryButton(
+          label: tr(LocaleKeys.common_skip),
           height: AppSizes.buttonHeight,
         ),
       ),
@@ -28,25 +30,25 @@ class SaveProgressScreen extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.xl),
           Text(
-            'Save your progress',
+            tr(LocaleKeys.onboarding_save_progress_title),
             textAlign: TextAlign.center,
             style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: AppSpacing.m),
           Text(
-            'Sign in with Apple or Google to save your data to the cloud and access it from any device.\n\nOr skip this step to save your data locally on your phone only.',
+            '${tr(LocaleKeys.onboarding_save_progress_subtitle)}\n\n${tr(LocaleKeys.onboarding_save_progress_local)}',
             textAlign: TextAlign.center,
             style: AppTextStyles.body15.copyWith(color: AppColors.textPrimary),
           ),
           const SizedBox(height: AppSpacing.xl),
           ProfilePrimaryButton(
-            label: 'Sign in with Apple',
+            label: tr(LocaleKeys.onboarding_sign_in_apple),
             leading: const Icon(Icons.apple, color: AppColors.onPrimary, size: AppSizes.iconMd),
             height: AppSizes.buttonHeight,
           ),
           const SizedBox(height: AppSpacing.m),
           ProfileOutlineButton(
-            label: 'Sign in with Google',
+            label: tr(LocaleKeys.onboarding_sign_in_google),
             leading: SizedBox(
               width: AppSizes.iconLg,
               height: AppSizes.iconLg,

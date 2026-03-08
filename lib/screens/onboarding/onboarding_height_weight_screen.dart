@@ -3,8 +3,8 @@ import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/user_profile.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
+import 'package:diplomka/widgets/picker_column.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingHeightWeightScreen extends StatefulWidget {
@@ -178,17 +178,16 @@ class _OnboardingHeightWeightScreenState
                   children: [
                     Text(tr(LocaleKeys.onboarding_height), style: textTheme.titleMedium),
                     const SizedBox(height: AppSpacing.s),
-                    _PickerColumn(
-                      key:
-                          ValueKey('height-${_metric ? 'metric' : 'imperial'}'),
+                    PickerColumn(
+                      key: ValueKey('height-${_metric ? 'metric' : 'imperial'}'),
                       values: _heightDisplayValues,
                       selectedIndex: _heightSelectedIndex,
+                      height: AppSizes.pickerHeight,
                       onSelected: (index) {
                         if (_metric) {
                           _selectedHeightCm = _heightCmValues[index];
                         } else {
-                          _selectedHeightCm =
-                              _inchesToCm(_heightInchValues[index]);
+                          _selectedHeightCm = _inchesToCm(_heightInchValues[index]);
                         }
                       },
                     ),
@@ -201,20 +200,18 @@ class _OnboardingHeightWeightScreenState
                   children: [
                     Text(tr(LocaleKeys.common_weight), style: textTheme.titleMedium),
                     const SizedBox(height: AppSpacing.s),
-                    _PickerColumn(
-                      key:
-                          ValueKey('weight-${_metric ? 'metric' : 'imperial'}'),
+                    PickerColumn(
+                      key: ValueKey('weight-${_metric ? 'metric' : 'imperial'}'),
                       values: _weightDisplayValues,
                       selectedIndex: _weightSelectedIndex,
+                      height: AppSizes.pickerHeight,
                       onSelected: (index) {
                         if (_metric) {
                           _selectedWeightKg = _weightKgValues[index];
                         } else {
-                          _selectedWeightKg =
-                              _poundsToKg(_weightLbValues[index]);
+                          _selectedWeightKg = _poundsToKg(_weightLbValues[index]);
                         }
-                        _selectedWeightKg = _selectedWeightKg.clamp(
-                            _weightKgValues.first, _weightKgValues.last);
+                        _selectedWeightKg = _selectedWeightKg.clamp(_weightKgValues.first, _weightKgValues.last);
                       },
                     ),
                   ],
@@ -284,117 +281,3 @@ class _UnitToggle extends StatelessWidget {
   }
 }
 
-class _PickerColumn extends StatefulWidget {
-  const _PickerColumn({
-    super.key,
-    required this.values,
-    required this.selectedIndex,
-    required this.onSelected,
-  });
-
-  final List<String> values;
-  final int selectedIndex;
-  final ValueChanged<int> onSelected;
-
-  @override
-  State<_PickerColumn> createState() => _PickerColumnState();
-}
-
-class _PickerColumnState extends State<_PickerColumn> {
-  int _selectedIndex = 0;
-  late FixedExtentScrollController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedIndex = widget.selectedIndex.clamp(0, widget.values.length - 1);
-    _controller = FixedExtentScrollController(initialItem: _selectedIndex);
-  }
-
-  @override
-  void didUpdateWidget(covariant _PickerColumn oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    final int nextSelected = widget.selectedIndex.clamp(0, widget.values.length - 1);
-    if (nextSelected == _selectedIndex) return;
-    _selectedIndex = nextSelected;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted && _controller.hasClients) {
-        _controller.jumpToItem(nextSelected);
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  double _opacityForDistance(int distance) {
-    switch (distance) {
-      case 0:
-        return 1.0;
-      case 1:
-        return 0.55;
-      case 2:
-        return 0.35;
-      case 3:
-        return 0.2;
-      default:
-        return 0.1;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: AppSizes.pickerHeight,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          // Selection highlight behind the picker
-          Container(
-            height: AppSizes.pickerItemHeight,
-            margin: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
-            decoration: BoxDecoration(
-              color: AppColors.grey1,
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-          // Picker on top so text is not covered
-          CupertinoPicker(
-            scrollController: _controller,
-            backgroundColor: Colors.transparent,
-            itemExtent: AppSizes.pickerItemHeight,
-            squeeze: 1.5,
-            useMagnifier: true,
-            magnification: 1,
-            diameterRatio: 1.1,
-            selectionOverlay: const SizedBox.shrink(),
-            onSelectedItemChanged: (index) {
-              setState(() => _selectedIndex = index);
-              widget.onSelected(index);
-            },
-            children: List.generate(widget.values.length, (index) {
-              final int distance = (index - _selectedIndex).abs();
-              final bool isSelected = index == _selectedIndex;
-              final double opacity = _opacityForDistance(distance);
-
-              return Center(
-                child: Text(
-                  widget.values[index],
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
-                    color: isSelected ? CupertinoColors.black : CupertinoColors.black.withValues(alpha: opacity),
-                    letterSpacing: -0.3,
-                  ),
-                ),
-              );
-            }),
-          ),
-        ],
-      ),
-    );
-  }
-}

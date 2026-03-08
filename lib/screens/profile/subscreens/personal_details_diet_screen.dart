@@ -1,6 +1,8 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class PersonalDetailsDietScreen extends StatefulWidget {
@@ -38,15 +40,15 @@ class _PersonalDetailsDietScreenState extends State<PersonalDetailsDietScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          ProfileTopBar(title: 'Diet', onBack: widget.onBack),
+          ProfileTopBar(title: tr(LocaleKeys.personal_details_diet), onBack: widget.onBack),
           const SizedBox(height: AppSpacing.l),
           Text(
-            'Do you follow a specific diet?',
+            tr(LocaleKeys.personal_details_diet_title),
             style: textTheme.headlineSmall,
           ),
           const SizedBox(height: AppSpacing.l),
           OnboardingOptionCard(
-            title: 'Classic',
+            title: tr(LocaleKeys.onboarding_classic),
             selected: _selected == 'classic',
             height: AppSizes.optionCardHeightLarge,
             leading: const _DietIcon(icon: Icons.restaurant),
@@ -58,7 +60,7 @@ class _PersonalDetailsDietScreenState extends State<PersonalDetailsDietScreen> {
           ),
           const SizedBox(height: AppSpacing.s),
           OnboardingOptionCard(
-            title: 'Vegetarian',
+            title: tr(LocaleKeys.onboarding_vegetarian),
             selected: _selected == 'vegetarian',
             height: AppSizes.optionCardHeightLarge,
             leading: const _DietIcon(icon: Icons.eco_outlined),
@@ -70,7 +72,7 @@ class _PersonalDetailsDietScreenState extends State<PersonalDetailsDietScreen> {
           ),
           const SizedBox(height: AppSpacing.s),
           OnboardingOptionCard(
-            title: 'Vegan',
+            title: tr(LocaleKeys.onboarding_vegan),
             selected: _selected == 'vegan',
             height: AppSizes.optionCardHeightLarge,
             leading: const _DietIcon(icon: Icons.energy_savings_leaf_outlined),
@@ -82,11 +84,11 @@ class _PersonalDetailsDietScreenState extends State<PersonalDetailsDietScreen> {
           ),
           const SizedBox(height: AppSpacing.m),
           Center(
-            child: Text('Or', style: textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary)),
+            child: Text(tr(LocaleKeys.common_or), style: textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary)),
           ),
           const SizedBox(height: AppSpacing.m),
           OnboardingOptionCard(
-            title: 'Custom',
+            title: tr(LocaleKeys.onboarding_custom),
             selected: _selected == 'custom',
             height: AppSizes.optionCardHeightLarge,
             leading: const _DietIcon(icon: Icons.add),

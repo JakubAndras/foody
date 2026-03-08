@@ -68,5 +68,7 @@
     <string>This app needs photo library access to select meal images.</string>
     <key>NSPhotoLibraryAddUsageDescription</key>
     <string>This app needs photo library access to save photos of your meals.</string>
+    <key>NSHealthShareUsageDescription</key>
+    <string>Foody reads your active energy data to track burned calories alongside your meals.</string>
 </dict>
 </plist>

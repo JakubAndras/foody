@@ -1,3 +1,5 @@
+import 'package:diplomka/generated/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,19 +17,19 @@ class ConfirmUsernameScreen extends StatelessWidget {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: SizedBox(
         width: MediaQuery.of(context).size.width - (AppSpacing.l * 2),
-        child: const ProfilePrimaryButton(
-          label: 'Continue',
+        child: ProfilePrimaryButton(
+          label: tr(LocaleKeys.common_continue_btn),
           height: AppSizes.buttonHeightCompact,
         ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ProfileTopBar(title: 'Confirm your username', onBack: () => Get.back()),
+          ProfileTopBar(title: tr(LocaleKeys.onboarding_confirm_username_title), onBack: () => Get.back()),
           const SizedBox(height: AppSpacing.m),
           const SizedBox(height: AppSpacing.xs),
           Text(
-            'This is the name others will see in groups.',
+            tr(LocaleKeys.onboarding_confirm_username_subtitle),
             style: AppTextStyles.body16.copyWith(color: AppColors.textTertiary, fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: AppSpacing.l),
@@ -41,7 +43,7 @@ class ConfirmUsernameScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
             alignment: Alignment.centerLeft,
             child: Text(
-              'Your username',
+              tr(LocaleKeys.onboarding_your_username),
               style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w500),
             ),
           ),

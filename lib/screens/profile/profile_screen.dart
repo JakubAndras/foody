@@ -12,17 +12,20 @@ import 'package:diplomka/screens/profile/subscreens/preferences_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/language_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/edit_nutrition_goals_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/weight_history_screen.dart';
+import 'package:diplomka/screens/profile/subscreens/health_integration_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/ring_colors_explained_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/motivational_summary_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/tracking_reminders_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/export_pdf_intro_screen.dart';
 import 'package:diplomka/screens/profile/ask_ai/ask_ai_screen.dart';
+import 'package:diplomka/screens/profile/subscreens/faq_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/glass_test_screen.dart';
 import 'package:diplomka/screens/onboarding/onboarding_flow_screen.dart';
 import 'package:diplomka/screens/scan/scan_camera_screen.dart';
 import 'package:diplomka/screens/scan/scan_onboarding_screen.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 import 'package:diplomka/services/session_manager.dart';
+import 'dart:io';
 import 'package:diplomka/widgets/variable_blur_scroll_view.dart';
 import 'package:diplomka/widgets/progress_ring.dart';
 
@@ -98,6 +101,11 @@ class ProfileScreen extends StatelessWidget {
                       onTap: () => Get.to(() => const MotivationalSummaryScreen()),
                     ),
                     _ProfileActionRow(
+                      title: Platform.isIOS ? tr(LocaleKeys.health_apple_health) : tr(LocaleKeys.health_health_connect),
+                      icon: Icons.favorite_outline,
+                      onTap: () => Get.to(() => const HealthIntegrationScreen()),
+                    ),
+                    _ProfileActionRow(
                       title: tr(LocaleKeys.profile_ring_colors),
                       icon: Icons.brightness_1_outlined,
                       showDivider: false,
@@ -133,6 +141,11 @@ class ProfileScreen extends StatelessWidget {
                       title: tr(LocaleKeys.profile_ask_ai),
                       icon: Icons.auto_awesome_outlined,
                       onTap: () => Get.to(() => const AskAiScreen()),
+                    ),
+                    _ProfileActionRow(
+                      title: tr(LocaleKeys.profile_faq),
+                      icon: Icons.help_outline_rounded,
+                      onTap: () => Get.to(() => const FaqScreen()),
                     ),
                     _ProfileActionRow(
                       title: 'Glass Test',
