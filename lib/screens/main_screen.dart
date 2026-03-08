@@ -43,7 +43,7 @@ class MainScreen extends GetView<MainScreenController> {
             return AppLiquidGlassLayer(
               backgroundWidget: activeBody,
               children: [
-                AppLiquidGlassPresets.basicButtonLens.build(
+                AppLiquidGlassPresets.mainTabBarLens.build(
                   width: navWidth,
                   height: AppSizes.bottomNavHeight,
                   position: LiquidGlassOffsetPosition(left: AppSpacing.l, bottom: AppSpacing.xl),
@@ -52,7 +52,7 @@ class MainScreen extends GetView<MainScreenController> {
                     onTap: controller._onItemTapped,
                   ),
                 ),
-                AppLiquidGlassPresets.basicButtonLens.build(
+                AppLiquidGlassPresets.mainTabBarLens.build(
                   width: AppSizes.fabSize,
                   height: AppSizes.fabSize,
                   position: LiquidGlassOffsetPosition(left: actionLeft, bottom: AppSpacing.xl),
@@ -154,9 +154,9 @@ class _DashboardStreakPill extends StatelessWidget {
       final calendarVisible = MainScreenController.to.isCalendarSheetVisible.value;
       return DecoratedBox(
         decoration: BoxDecoration(
-          color: AppColors.glassBackground,
-          borderRadius: BorderRadius.circular(AppRadii.pill),
-          border: Border.all(color: AppColors.glassBorder, width: AppSizes.glassBorderWidth),
+          // color: AppColors.glassBackground,
+          // borderRadius: BorderRadius.circular(AppRadii.pill),
+          // border: Border.all(color: AppColors.glassBorder, width: AppSizes.glassBorderWidth),
         ),
         child: Obx(() {
           final dc = DashboardController.to;
@@ -204,9 +204,9 @@ class _DashboardCalendarPill extends StatelessWidget {
       final calendarVisible = MainScreenController.to.isCalendarSheetVisible.value;
       return DecoratedBox(
         decoration: BoxDecoration(
-          color: AppColors.glassBackground,
-          borderRadius: BorderRadius.circular(AppRadii.pill),
-          border: Border.all(color: AppColors.glassBorder, width: AppSizes.glassBorderWidth),
+          // color: AppColors.glassBackground,
+          // borderRadius: BorderRadius.circular(AppRadii.pill),
+          // border: Border.all(color: AppColors.glassBorder, width: AppSizes.glassBorderWidth),
         ),
         child: Obx(() {
           final dc = DashboardController.to;

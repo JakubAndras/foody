@@ -14,9 +14,9 @@ class BottomNavBarContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: AppColors.glassBackground,
-        borderRadius: BorderRadius.circular(AppRadii.pill),
-        border: Border.all(color: AppColors.glassBorder, width: AppSizes.glassBorderWidth),
+        // color: AppColors.glassBackground,
+        // borderRadius: BorderRadius.circular(AppRadii.pill),
+        // border: Border.all(color: AppColors.glassBorder, width: AppSizes.glassBorderWidth),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxs),
@@ -77,9 +77,9 @@ class BottomNavActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: AppColors.glassBackground,
-        borderRadius: BorderRadius.circular(AppRadii.pill),
-        border: Border.all(color: AppColors.glassBorder, width: AppSizes.glassBorderWidth),
+        // color: AppColors.glassBackground,
+        // borderRadius: BorderRadius.circular(AppRadii.pill),
+        // border: Border.all(color: AppColors.glassBorder, width: AppSizes.glassBorderWidth),
       ),
       child: InkWell(
         onTap: onTap,
