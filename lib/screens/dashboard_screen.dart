@@ -19,6 +19,7 @@ import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/services/nutrition_goals_service.dart';
 import 'package:diplomka/widgets/faded_edge_scroll_view.dart';
 import 'package:diplomka/widgets/variable_blur_scroll_view.dart';
+import 'package:diplomka/widgets/mesh_gradient_background.dart';
 
 class DashboardScreen extends GetView<_DashboardScreenController> {
   const DashboardScreen({super.key});
@@ -32,13 +33,11 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
       builder: (_DashboardScreenController controller) {
         final dashboardController = DashboardController.to;
         return Scaffold(
-          backgroundColor: AppColors.background,
-          body: Container(
-            decoration: const BoxDecoration(gradient: AppGradients.background),
-            child: SafeArea(
-              top: false,
-              bottom: false,
-              child: Obx(() {
+          backgroundColor: AppColors.meshBase,
+          body: SafeArea(
+            top: false,
+            bottom: false,
+            child: Obx(() {
                 final selectedDate = dashboardController.selectedDate.value;
                 final existingDayRecord = dashboardController.dayRecord.value;
                 final dayRecord = existingDayRecord ?? DayRecord.initial(selectedDate);
@@ -65,6 +64,9 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
                           return VariableBlurScrollView(
                             topBlurSigma: 52,
                             topBlurHeight: 0.1,
+                            backgroundColor: Colors.transparent,
+                            fadeColor: AppColors.meshBase,
+                            backgroundWidget: const MeshGradientBackground(),
                             controller: controller.scrollController,
                             padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.xs, AppSpacing.l, AppSpacing.mega + 42),
                             child: Column(
@@ -109,7 +111,6 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
                 );
               }),
             ),
-          ),
         );
       },
     );
@@ -223,10 +224,10 @@ class _DashboardPreviewScreenState extends State<DashboardPreviewScreen> {
     final dateLabel = DateFormat.yMMMd().format(widget.date);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
-      body: Container(
-        decoration: const BoxDecoration(gradient: AppGradients.background),
-        child: SafeArea(
+      backgroundColor: AppColors.meshBase,
+      body: Stack(children: [
+        const MeshGradientBackground(),
+        SafeArea(
           bottom: true,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -258,7 +259,7 @@ class _DashboardPreviewScreenState extends State<DashboardPreviewScreen> {
             ],
           ),
         ),
-      ),
+      ]),
     );
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/widgets/mesh_gradient_background.dart';
 
 class ProfileGradientScaffold extends StatelessWidget {
   const ProfileGradientScaffold({
@@ -11,6 +12,7 @@ class ProfileGradientScaffold extends StatelessWidget {
     this.safeBottom = true,
     this.floatingActionButton,
     this.floatingActionButtonLocation,
+    this.useMeshBackground = false,
   });
 
   final Widget child;
@@ -21,6 +23,10 @@ class ProfileGradientScaffold extends StatelessWidget {
   final Widget? floatingActionButton;
   final FloatingActionButtonLocation? floatingActionButtonLocation;
 
+  /// When true, uses the multi-tone mesh gradient background.
+  /// When false, falls back to the flat gradient.
+  final bool useMeshBackground;
+
   @override
   Widget build(BuildContext context) {
     final Widget content = Padding(
@@ -28,28 +34,32 @@ class ProfileGradientScaffold extends StatelessWidget {
       child: child,
     );
 
+    final Widget body = SafeArea(
+      top: safeTop,
+      bottom: safeBottom,
+      child: scroll
+          ? LayoutBuilder(
+              builder: (context, constraints) => SingleChildScrollView(
+                keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: content,
+                ),
+              ),
+            )
+          : content,
+    );
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: useMeshBackground ? AppColors.meshBase : AppColors.background,
       floatingActionButton: floatingActionButton,
       floatingActionButtonLocation: floatingActionButtonLocation,
-      body: Container(
-        decoration: const BoxDecoration(gradient: AppGradients.background),
-        child: SafeArea(
-          top: safeTop,
-          bottom: safeBottom,
-          child: scroll
-              ? LayoutBuilder(
-                  builder: (context, constraints) => SingleChildScrollView(
-                    keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                      child: content,
-                    ),
-                  ),
-                )
-              : content,
-        ),
-      ),
+      body: useMeshBackground
+          ? Stack(children: [const MeshGradientBackground(), body])
+          : Container(
+              decoration: const BoxDecoration(gradient: AppGradients.background),
+              child: body,
+            ),
     );
   }
 }

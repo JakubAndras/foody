@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Foody** is a Flutter mobile app for AI-powered calorie tracking, built as a diploma thesis by Jakub Andras. Users can photograph food, describe it by voice/text, or scan a barcode, and the app uses OpenAI GPT-4o to estimate nutritional values. Package name: `diplomka`.
+**Foody** is a Flutter mobile app for AI-powered calorie tracking, built as a diploma thesis by Jakub Andras. Users can photograph food, describe it by voice/text, or scan a barcode, and the app uses OpenAI to estimate nutritional values. Package name: `diplomka`.
 
 ## Project Structure
 
@@ -18,98 +18,20 @@ lib/
 ├── locator.dart                       # DI — registers all services/controllers via Get.put/lazyPut
 │
 ├── controller/                        # GetxControllers (UI state + business logic)
-│   ├── dashboard_controller.dart      #   Main dashboard state, meal/exercise analysis triggers
-│   ├── day_record_controller.dart     #   CRUD for day records, meals, ingredients, exercises
-│   ├── barcode_scan_controller.dart   #   Barcode scan flow state machine
-│   ├── weight_entry_controller.dart   #   Weight log CRUD
-│   ├── streak_controller.dart         #   Streak calculation
-│   ├── tracking_reminders_controller.dart
-│   ├── language_settings_controller.dart
-│   ├── recipe_service.dart            #   Recipe suggestions
-│   └── base_controller.dart           #   Shared loading/error state
 │
 ├── services/                          # GetxServices (long-lived, app-scoped)
-│   ├── day_record_repository.dart     #   Aggregate assembly (DayRecord+Meals+Ingredients+Exercises)
-│   ├── weight_entry_repository.dart   #   Weight entry persistence
-│   ├── session_manager.dart           #   User profile → SharedPreferences
-│   ├── shared_preferences_manager.dart#   Low-level SharedPreferences wrapper
-│   ├── nutrition_goals_service.dart   #   Goal persistence + propagation to future dates
-│   ├── selected_date_service.dart     #   Currently selected date (reactive)
-│   ├── streak_service.dart            #   Streak logic
-│   ├── calendar_day_ring_service.dart #   Ring color computation per calendar day
-│   ├── barcode_lookup_service.dart    #   Barcode → Open Food Facts lookup
-│   ├── tracking_reminder_service.dart #   flutter_local_notifications scheduling
-│   ├── language_settings_service.dart #   Voice recognition language preference
-│   ├── ai_feature/                    #   AI pipeline
-│   │   ├── ai_pipeline_service.dart   #     Orchestrator (photo/text/voice → AI → result)
-│   │   ├── ai_service_manager.dart    #     Provider selection (OpenAI/Gemini)
-│   │   ├── ai_service.dart            #     Abstract AI service interface
-│   │   ├── openai_service.dart        #     OpenAI implementation
-│   │   └── gemini_service.dart        #     Gemini implementation
-│   ├── voice/
-│   │   └── voice_transcription_service.dart  # speech_to_text wrapper
-│   ├── share/                         #   Meal sharing (image builder + share sheet)
-│   └── home_widget/                   #   iOS/Android home screen widget sync
 │
 ├── database/                          # Floor ORM layer
-│   ├── app_database.dart              #   @Database definition, version 8
-│   ├── migrations.dart                #   migration1to2 … migration7to8
-│   ├── entities/                      #   @Entity classes (DayRecord, Meal, Ingredient, WeightEntry, Exercise)
-│   └── dao/                           #   @dao classes (one per entity)
 │
 ├── network/                           # REST clients
-│   ├── base_rest_client.dart          #   Shared HTTP logic
-│   ├── openai_rest_client.dart        #   OpenAI GPT-4o requests
-│   ├── gemini_rest_client.dart        #   Gemini requests
-│   ├── open_food_facts_client.dart    #   Open Food Facts barcode API
-│   └── rest_client.dart               #   Legacy/common interface
 │
 ├── model/                             # Data models + json_serializable
-│   ├── day_record.dart                #   Domain aggregate (DayRecord + meals + exercises)
-│   ├── meal.dart, ingredient.dart     #   Meal/ingredient domain models
-│   ├── exercise.dart                  #   Exercise domain model
-│   ├── ai_response.dart (+.g.dart)    #   AI JSON response model
-│   ├── nutrition_goals.dart           #   Goals model with DayRecord mapping
-│   ├── user_profile.dart              #   Profile enums (gender, diet type, goal)
-│   ├── barcode_lookup_result.dart     #   OFF API result
-│   ├── tracking_reminder_setting.dart #   Reminder config
-│   └── …                             #   (streak_info, weight_entry, recipe, etc.)
 │
 ├── screens/                           # UI screens (one file or folder per feature)
-│   ├── main_screen.dart               #   3-tab shell (Dashboard/Progress/Profile) + FAB
-│   ├── dashboard_screen.dart          #   Daily overview with calories ring + meals + exercises
-│   ├── progress_screen.dart           #   Weight chart, streaks, weekly averages, BMI
-│   ├── onboarding/                    #   16 onboarding screens (welcome → plan ready)
-│   ├── scan/                          #   Camera scan, barcode, preview, permissions
-│   ├── meals/                         #   Meal detail, edit meal, fix result, report, ingredients
-│   ├── ingredients/                   #   Edit ingredient screen
-│   ├── logs/                          #   Voice log, exercise log/detail/add, weight log sheet
-│   ├── log_meal/                      #   Select meal screen (history/favorites/search)
-│   └── profile/                       #   Profile screen + subscreens + Ask AI
-│       ├── profile_screen.dart
-│       ├── ask_ai/                    #   Ask AI screens (currently mock)
-│       └── subscreens/                #   Personal details, nutrition goals, reminders,
-│                                      #     preferences, export, weight history, language, etc.
 │
 ├── widgets/                           # Reusable UI components
-│   ├── calories_card.dart, macros_card.dart, macros_row.dart
-│   ├── progress_ring.dart             #   Circular progress painter
-│   ├── date_selector.dart             #   Horizontal date picker
-│   ├── recently_uploaded_card.dart    #   Dashboard meals+exercises card
-│   ├── weight_progress_card.dart      #   Weight chart widget
-│   ├── bottom_nav_bar.dart            #   Custom bottom navigation
-│   ├── quick_action_sheet.dart        #   FAB action sheet
-│   ├── streak_dialog.dart             #   Streak celebration dialog
-│   ├── onboarding/                    #   Shared onboarding widgets
-│   ├── edit_flow/                     #   Shared edit flow widgets
-│   └── liquid_glass/                  #   Liquid glass visual effect
 │
 ├── utils/                             # Helpers
-│   ├── prompt.dart                    #   AI prompt templates
-│   ├── media_storage.dart             #   Photo file management
-│   ├── dialog_utils.dart              #   Common dialog helpers
-│   └── error.dart                     #   Error handling utilities
-│
 └── generated/                         # Auto-generated (do not edit)
     ├── locale_keys.g.dart             #   easy_localization keys
     └── codegen_loader.g.dart          #   Translation loader
@@ -190,34 +112,12 @@ Direct GetX navigation: `Get.to(() => const SomeScreen())` — no named route ta
 - **New services/controllers**: Register in `lib/locator.dart`
 - **File naming**: snake_case files, PascalCase classes
 
-## Figma MCP Integration
-
-Figma file: `https://www.figma.com/design/rrhjcqMf3or0uisF2fkI3U/Diplomka?m=dev`
-
-**Required workflow (do not skip):**
-1. `get_design_context` — fetch structured representation for the exact node(s).
-2. If truncated, `get_metadata` for the high-level node map, then re-fetch specific nodes.
-3. `get_screenshot` — visual reference of the node variant.
-4. Only after both context + screenshot, download assets and start implementation.
-
-**Translation rules:**
-- MCP output is often React + Tailwind — treat as design/behavior spec only, translate to Flutter.
-- Reuse project color tokens, typography, spacing from `lib/app_theme.dart` — never duplicate.
-- Reuse existing Flutter components (buttons, inputs, icon wrappers) instead of creating new ones.
-- If conflicts arise, prefer design-system tokens and adjust minimally to match visuals.
-- Validate against the Figma screenshot for 1:1 look before marking complete.
-
-**Naming conventions:**
-- Screens: `<Feature><Name>Screen` (e.g., `OnboardingGoalScreen`, `AskAiResponseScreen`)
-- Components: `<Feature><Name>Card`, `<Feature><Name>Button`, `<Feature><Name>Picker`
-
 ## Layout & Accessibility Rules
 
 **Layout:**
 - Base horizontal gutters: 16–24px (use `AppSpacing.edge` or equivalent token)
 - Vertical section spacing: 16–24px; intra-list gaps: 8–12px
 - Cards: full-width, max 430px on large devices
-- All screens: `SafeArea` + scroll (`SingleChildScrollView` or `CustomScrollView`) for overflow
 - Bottom CTA bars: pinned with keyboard-safe padding
 
 **Accessibility:**

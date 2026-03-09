@@ -81,6 +81,13 @@ class AppColors {
   static const redSoft = Color(0xFFFEE2E2);
   static const dangerSoft = redSubtle;
 
+  // Mesh gradient background blobs
+  static const meshPeach = Color(0xFFFDE8E0); // warm peach top-right
+  static const meshLavender = Color(0xFFEDE4F5); // soft lavender top-left
+  static const meshSky = Color(0xFFE0ECF8); // cool sky-blue bottom-left
+  static const meshMint = Color(0xFFE2F3ED); // gentle mint bottom-right
+  static const meshBase = Color(0xFFF7F7FA); // near-white warm base
+
   // Overlays / glass
   static const overlayDark = Color(0x33000000);
   static const overlayDark40 = Color(0x66000000);

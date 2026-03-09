@@ -22,6 +22,9 @@ class VariableBlurScrollView extends StatefulWidget {
     this.blurQuality = BlurQuality.medium,
     this.edgeIntensity = 0.06,
     this.topBlurHeight = 0.09,
+    this.backgroundColor,
+    this.fadeColor,
+    this.backgroundWidget,
   });
 
   final Widget child;
@@ -30,6 +33,22 @@ class VariableBlurScrollView extends StatefulWidget {
   final double topFadeHeight;
   final double bottomFadeHeight;
   final double topBlurHeight;
+
+  /// Background color for the scroll content area.
+  /// Defaults to [AppColors.background]. Set to [Colors.transparent]
+  /// when using a [backgroundWidget].
+  final Color? backgroundColor;
+
+  /// Color used for the bottom fade-out gradient. Defaults to
+  /// [backgroundColor]. When using a transparent content background
+  /// over a mesh gradient, set this to [AppColors.meshBase] to avoid
+  /// black shadow artifacts.
+  final Color? fadeColor;
+
+  /// Optional background widget (e.g. [MeshGradientBackground]) placed
+  /// behind the scroll content but inside the blur shader, so the blur
+  /// operates on the correct colours.
+  final Widget? backgroundWidget;
 
   /// Maximum Gaussian blur sigma at the very top. Set to 0 to disable blur.
   final double topBlurSigma;
@@ -115,14 +134,27 @@ class _VariableBlurScrollViewState extends State<VariableBlurScrollView> {
     final topPadding = MediaQuery.of(context).padding.top;
     final useBlur = widget.topBlurSigma > 0;
 
-    Widget scrollContent = Container(
-      color: AppColors.background,
-      child: SingleChildScrollView(
-        controller: _effectiveController,
-        padding: widget.padding,
-        child: widget.child,
-      ),
+    final bgColor = widget.backgroundColor ?? AppColors.background;
+    final fade = widget.fadeColor ?? bgColor;
+
+    final isTransparent = bgColor == Colors.transparent || bgColor.a == 0;
+
+    Widget scrollView = SingleChildScrollView(
+      controller: _effectiveController,
+      padding: widget.padding,
+      child: widget.child,
     );
+
+    // When content is transparent, place backgroundWidget (e.g. mesh gradient)
+    // behind the scroll view so the blur shader has correct pixels to work with.
+    Widget scrollContent;
+    if (isTransparent && widget.backgroundWidget != null) {
+      scrollContent = Stack(children: [widget.backgroundWidget!, scrollView]);
+    } else if (isTransparent) {
+      scrollContent = scrollView;
+    } else {
+      scrollContent = Container(color: bgColor, child: scrollView);
+    }
 
     return Stack(
       children: [
@@ -175,11 +207,11 @@ class _VariableBlurScrollViewState extends State<VariableBlurScrollView> {
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
                   colors: [
-                    AppColors.background.withValues(alpha: 0.8),
-                    AppColors.background.withValues(alpha: 0.8),
-                    AppColors.background.withValues(alpha: 0.6),
-                    AppColors.background.withValues(alpha: 0.3),
-                    AppColors.background.withValues(alpha: 0),
+                    fade.withValues(alpha: 0.8),
+                    fade.withValues(alpha: 0.8),
+                    fade.withValues(alpha: 0.6),
+                    fade.withValues(alpha: 0.3),
+                    fade.withValues(alpha: 0),
                   ],
                 ),
               ),

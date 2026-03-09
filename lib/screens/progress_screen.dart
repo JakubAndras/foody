@@ -11,6 +11,7 @@ import 'package:diplomka/model/user_profile.dart';
 import 'package:diplomka/widgets/dietary_violations_calendar_card.dart' show MonthlyCalendarCard;
 import 'package:diplomka/widgets/weight_progress_card.dart';
 import 'package:diplomka/widgets/variable_blur_scroll_view.dart';
+import 'package:diplomka/widgets/mesh_gradient_background.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -86,15 +87,16 @@ class ProgressScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
-      body: Container(
-        decoration: const BoxDecoration(gradient: AppGradients.background),
-        child: SafeArea(
-          top: false,
-          bottom: false,
-          child: VariableBlurScrollView(
-            topBlurSigma: 52,
-            topFadeHeight: 40,
+      backgroundColor: AppColors.meshBase,
+      body: SafeArea(
+        top: false,
+        bottom: false,
+        child: VariableBlurScrollView(
+          topBlurSigma: 52,
+          topFadeHeight: 40,
+          backgroundColor: Colors.transparent,
+          fadeColor: AppColors.meshBase,
+          backgroundWidget: const MeshGradientBackground(),
             padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.mega + AppSpacing.l, AppSpacing.l, AppSpacing.mega + 42),
             //collapsedHeader: Text(tr(LocaleKeys.progress_title), style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w700)),
             child: Column(
@@ -174,7 +176,6 @@ class ProgressScreen extends StatelessWidget {
             ),
           ),
         ),
-      ),
     );
   }
 }
