@@ -95,7 +95,7 @@ class _PickerColumnState extends State<PickerColumn> {
             height: itemExtent,
             margin: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
             decoration: BoxDecoration(
-              color: widget.selectionHighlightColor ?? AppColors.grey1,
+              color: widget.selectionHighlightColor ?? AppColors.greyLight3,
               borderRadius: BorderRadius.circular(widget.selectionHighlightBorderRadius),
             ),
           ),

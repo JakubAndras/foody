@@ -20,6 +20,7 @@ import 'package:diplomka/screens/profile/subscreens/export_pdf_intro_screen.dart
 import 'package:diplomka/screens/profile/ask_ai/ask_ai_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/faq_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/glass_test_screen.dart';
+import 'package:diplomka/screens/profile/subscreens/liquid_glass_widgets_test_screen.dart';
 import 'package:diplomka/screens/onboarding/onboarding_flow_screen.dart';
 import 'package:diplomka/screens/scan/scan_camera_screen.dart';
 import 'package:diplomka/screens/scan/scan_onboarding_screen.dart';
@@ -153,6 +154,11 @@ class ProfileScreen extends StatelessWidget {
                       title: 'Glass Test',
                       icon: Icons.blur_on,
                       onTap: () => Get.to(() => const GlassTestScreen()),
+                    ),
+                    _ProfileActionRow(
+                      title: 'Liquid Glass Widgets Test',
+                      icon: Icons.auto_awesome,
+                      onTap: () => Get.to(() => const LiquidGlassWidgetsTestScreen()),
                     ),
                     _ProfileActionRow(
                       title: 'Test Onboarding',

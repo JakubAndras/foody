@@ -5,19 +5,19 @@ class AppColors {
   static const white = Color(0xFFFFFFFF);
   static const black = Color(0xFF0A0A0A);
 
-  // White scale (pure white → subtle grey)
+  // White scale (pure white → light grey -> grey)
   static const white1 = Color(0xFFFFFFFF);
   static const white2 = Color(0xFFFCFCFD);
   static const white3 = Color(0xFFF9F9FA);
   static const white4 = Color(0xFFF5F5F7);
-  static const white5 = Color(0xFFF0F0F3);
-
-  // Grey scale (light grey → medium grey)
-  static const grey1 = Color(0xFFE8E8EA);
-  static const grey2 = Color(0xFFDCDCE0);
-  static const grey3 = Color(0xFFCFCFD5);
-  static const grey4 = Color(0xFFC2C2C9);
-  static const grey5 = Color(0xFFB5B5BD);
+  static const greyLight1 = Color(0xFFF0F0F3);
+  static const greyLight2 = Color(0xFFECECEF);
+  static const greyLight3 = Color(0xFFE8E8EA);
+  static const greyLight4 = Color(0xFFDCDCE0);
+  static const grey1 = Color(0xFFCFCFD5);
+  static const grey2 = Color(0xFFC2C2C9);
+  static const grey3 = Color(0xFFB5B5BD);
+  static const grey4 = Color(0xFFA8A8B1);
 
   // Brand
   static const primary = black;
@@ -81,12 +81,12 @@ class AppColors {
   static const redSoft = Color(0xFFFEE2E2);
   static const dangerSoft = redSubtle;
 
-  // Mesh gradient background blobs
-  static const meshPeach = Color(0xFFFDE8E0); // warm peach top-right
-  static const meshLavender = Color(0xFFEDE4F5); // soft lavender top-left
-  static const meshSky = Color(0xFFE0ECF8); // cool sky-blue bottom-left
-  static const meshMint = Color(0xFFE2F3ED); // gentle mint bottom-right
-  static const meshBase = Color(0xFFF7F7FA); // near-white warm base
+  // Mesh gradient background blobs — "Wellness Glow"
+  static const meshPeach = meshBase; //Color(0xFFFFF5F0); // warm peach top-right
+  static const meshLavender = meshBase; //Color(0xFFF5FAFF); // cool sky top-left
+  static const meshSky = meshBase;  //Color(0xFFF0FFF4); // mint bottom-left
+  static const meshMint = meshBase; // Color(0xFFFFF8F5); // cream bottom-right
+  static const meshBase = white4; //Color(0xFFFFFCFA); // warm near-white base
 
   // Overlays / glass
   static const overlayDark = Color(0x33000000);
