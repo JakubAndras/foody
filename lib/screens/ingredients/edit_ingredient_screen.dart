@@ -284,7 +284,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
                           Expanded(
                             child: _EditableMacroCard(
                               label: tr(LocaleKeys.common_protein),
-                              icon: Icons.bolt,
+                              icon: AppIcons.protein,
                               iconColor: AppColors.macroProtein,
                               controller: _proteinController,
                             ),
@@ -293,7 +293,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
                           Expanded(
                             child: _EditableMacroCard(
                               label: tr(LocaleKeys.common_carbs),
-                              icon: Icons.grain,
+                              icon: AppIcons.carbs,
                               iconColor: AppColors.macroCarbsStrong,
                               controller: _carbsController,
                             ),
@@ -302,7 +302,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
                           Expanded(
                             child: _EditableMacroCard(
                               label: tr(LocaleKeys.common_fats),
-                              icon: Icons.opacity,
+                              icon: AppIcons.fats,
                               iconColor: AppColors.macroFats,
                               controller: _fatController,
                             ),

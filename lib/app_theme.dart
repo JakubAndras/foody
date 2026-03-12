@@ -48,7 +48,7 @@ class AppColors {
   static const borderStrong = Color(0xFFD1D5DC);
 
   // Text
-  static const textPrimary = Color(0xFF0F172B);
+  static const textPrimary = Color(0xFF0A0A0A);
   static const textHeading = Color(0xFF101828);
   static const textSecondary = Color(0xFF6A7282);
   static const textSecondaryAlt = Color(0xFF6B7280);
@@ -86,7 +86,7 @@ class AppColors {
   static const meshLavender = meshBase; //Color(0xFFF5FAFF); // cool sky top-left
   static const meshSky = meshBase;  //Color(0xFFF0FFF4); // mint bottom-left
   static const meshMint = meshBase; // Color(0xFFFFF8F5); // cream bottom-right
-  static const meshBase = white4; //Color(0xFFFFFCFA); // warm near-white base
+  static const meshBase = greyLight1; //Color(0xFFFFFCFA); // warm near-white base
 
   // Overlays / glass
   static const overlayDark = Color(0x33000000);
@@ -155,6 +155,12 @@ class AppColors {
   // Legacy aliases
   static const primarySoft = textPrimary;
   static const indicatorInactive = Color(0xFFD1D1C8);
+}
+
+class AppIcons {
+  static const IconData protein = Icons.fitness_center_rounded;
+  static const IconData carbs = Icons.spa_rounded;
+  static const IconData fats = Icons.opacity_rounded;
 }
 
 class AppSpacing {

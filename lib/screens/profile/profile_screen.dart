@@ -343,21 +343,21 @@ class _WidgetSection extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _MacroLeftRow(
-                          icon: Icons.vpn_key_rounded,
+                          icon: AppIcons.protein,
                           color: AppColors.macroProtein,
                           value: proteinText,
                           label: tr(LocaleKeys.dashboard_protein_eaten),
                         ),
                         const SizedBox(height: AppSpacing.s),
                         _MacroLeftRow(
-                          icon: Icons.grain,
+                          icon: AppIcons.carbs,
                           color: AppColors.macroCarbs,
                           value: carbsText,
                           label: tr(LocaleKeys.dashboard_carbs_eaten),
                         ),
                         const SizedBox(height: AppSpacing.s),
                         _MacroLeftRow(
-                          icon: Icons.water_drop,
+                          icon: AppIcons.fats,
                           color: AppColors.macroFats,
                           value: fatText,
                           label: tr(LocaleKeys.dashboard_fat_eaten),

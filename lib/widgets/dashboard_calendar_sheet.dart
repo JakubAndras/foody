@@ -91,7 +91,8 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
   }
 
   String _monthYearLabel() {
-    return DateFormat('MMMM yyyy').format(_displayedMonth);
+    final raw = DateFormat('MMMM yyyy').format(_displayedMonth);
+    return '${raw[0].toUpperCase()}${raw.substring(1)}';
   }
 
   @override

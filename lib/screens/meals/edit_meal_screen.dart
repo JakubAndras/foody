@@ -782,7 +782,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                               child: MacroStatCard(
                                 label: tr(LocaleKeys.common_protein),
                                 value: '${_totalProteins.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
-                                icon: Icons.bolt,
+                                icon: AppIcons.protein,
                                 iconColor: AppColors.macroProtein,
                               ),
                             ),
@@ -791,7 +791,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                               child: MacroStatCard(
                                 label: tr(LocaleKeys.common_carbs),
                                 value: '${_totalCarbs.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
-                                icon: Icons.grain,
+                                icon: AppIcons.carbs,
                                 iconColor: AppColors.macroCarbsStrong,
                               ),
                             ),
@@ -800,7 +800,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                               child: MacroStatCard(
                                 label: tr(LocaleKeys.common_fats),
                                 value: '${_totalFats.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
-                                icon: Icons.opacity,
+                                icon: AppIcons.fats,
                                 iconColor: AppColors.macroFats,
                               ),
                             ),

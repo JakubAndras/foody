@@ -22,7 +22,7 @@ Low-level shader-based glass refraction. Captures background content and renders
 
 | Location | Usage |
 |----------|-------|
-| `lib/screens/main_screen.dart` | Main 3-tab shell — `AppLiquidGlassLayer` renders the bottom tab bar as glass lenses over the dashboard/progress/profile background. Uses `mainTabView` and `mainTabBarLens` presets. `LiquidGlassTapAnimator` drives tab-switch pop animation. |
+| `lib/screens/main_screen.dart` | `LiquidGlassTapEffect` wraps dashboard pills (streak + calendar) for pop animation on tap. |
 | `lib/screens/meals/edit_meal_screen.dart` | `LiquidGlassBackButton` for navigation back. |
 | `lib/screens/profile/subscreens/glass_test_screen.dart` | Debug test screen — raw `LiquidGlassView` with multiple draggable lens configurations and swappable network-image backgrounds. |
 
@@ -30,7 +30,7 @@ Low-level shader-based glass refraction. Captures background content and renders
 
 ## Section 2: `liquid_glass_widgets` (High-level widget library)
 
-**Package:** `liquid_glass_widgets: ^0.4.0-dev.4`
+**Package:** `liquid_glass_widgets: 0.4.0-dev.4`
 
 Apple iOS 26 Liquid Glass design system with 32 pre-built widgets across 6 categories (Containers, Interactive, Input, Feedback, Overlays, Surfaces). Shader-based glassmorphism, physics-driven jelly animations, and dynamic lighting. Two quality modes (`standard` / `premium`) and grouped/standalone rendering.
 
@@ -42,12 +42,54 @@ Apple iOS 26 Liquid Glass design system with 32 pre-built widgets across 6 categ
 
 | Location | Usage |
 |----------|-------|
-| `lib/screens/profile/subscreens/liquid_glass_widgets_test_screen.dart` | Showcase/test screen demonstrating all widget categories: `GlassCard`, `GlassPanel`, `GlassContainer`, `GlassButton`, `GlassIconButton`, `GlassChip`, `GlassSwitch`, `GlassSlider`, `GlassSegmentedControl`, `GlassBadge`, `GlassProgressIndicator`, `GlassDialog`, `GlassSheet`, `GlassActionSheet`, `GlassAppBar`, `GlassTabBar`, `GlassToolbar`, `GlassTextField`, `GlassTextArea`, `GlassPasswordField`, `GlassSearchBar`, `GlassPicker`. Uses `LiquidGlassScope.stack` + `GlassBottomBar` for navigation. |
+| `lib/screens/main_screen.dart` | **Main bottom tab bar.** `LiquidGlassScope` + `LiquidGlassBackground` wraps the active screen body so `GlassBottomBar` refracts live scrollable content. `GlassBottomBarExtraButton` replaces the old FAB glass lens. Dashboard pills use `GlassContainer` for their glass appearance. |
+| `lib/screens/profile/subscreens/liquid_glass_widgets_test_screen.dart` | Showcase/test screen demonstrating all widget categories. Uses `LiquidGlassScope.stack` + `GlassBottomBar` for navigation. |
 
-### Planned usage
+### Refraction pattern
 
-- **Main bottom tab bar** — replace or enhance current `liquid_glass_easy`-based tab bar with `GlassBottomBar` from this package.
-- Additional glass surfaces and overlays throughout the app as the package matures past dev pre-release.
+The main screen uses `LiquidGlassScope` (manual mode) with `LiquidGlassBackground` wrapping the scaffold body. This allows `GlassBottomBar` to refract the actual live screen content (not a static gradient). The glass shader captures via `RepaintBoundary.toImage()` at ~10fps during interaction, full fps at rest.
+
+```dart
+LiquidGlassScope(
+  child: Scaffold(
+    body: LiquidGlassBackground(
+      child: activeBody,  // scrollable, interactive
+    ),
+    bottomNavigationBar: GlassBottomBar(...),
+  ),
+)
+```
+
+### Customizing glass appearance (`LiquidGlassSettings`)
+
+All glass widgets accept a `glassSettings` (or `settings`) parameter to control the glass look:
+
+```dart
+LiquidGlassSettings(
+  thickness: 25,              // Material thickness (higher = more opaque glass)
+  blur: 2,                    // Blur radius (lower = sharper, more transparent)
+  glassColor: Colors.white.withValues(alpha: 0.6),  // Tint color + opacity
+  lightIntensity: 1.5,        // Directional light strength
+  refractiveIndex: 1.5,       // Light bending (1.0–2.0)
+  lightAngle: 45.0,           // Light direction in degrees
+  ambientStrength: 0.3,       // Ambient light contribution
+  saturation: 1.2,            // Color saturation multiplier
+  chromaticAberration: 0.002, // RGB separation for depth effect
+)
+```
+
+**Current app tuning (main bottom bar):**
+- `thickness: 25` — light glass material
+- `blur: 2` — very subtle blur, content visible through
+- `glassColor: white @ 60%` — strong white tint while staying transparent
+- `lightIntensity: 1.5` — slightly elevated light for white appearance
+
+**Tips for tuning:**
+- More white/opaque → increase `glassColor` alpha and/or `thickness`
+- More transparent → decrease `blur` and `glassColor` alpha
+- Sharper content behind glass → lower `blur` (0–4 range)
+- Softer frosted look → higher `blur` (8–18 range)
+- `GlassQuality.premium` for static bars, `GlassQuality.standard` for scrollable content
 
 ### Key API notes
 
