@@ -22,7 +22,7 @@ class ExerciseSearchBar extends StatelessWidget {
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg),
         border: Border.all(color: AppColors.outline, width: 1),
-        boxShadow: AppShadows.cardSmall,
+        // boxShadow: AppShadows.cardSmall,
       ),
       child: Row(
         children: [
@@ -120,7 +120,7 @@ class ExerciseListCard extends StatelessWidget {
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(AppRadii.lg),
           border: Border.all(color: AppColors.outline, width: 1),
-          boxShadow: AppShadows.cardSmall,
+          // boxShadow: AppShadows.cardSmall,
         ),
         child: Row(
           children: [
@@ -159,7 +159,7 @@ class ExerciseListCard extends StatelessWidget {
                 decoration: const BoxDecoration(
                   color: AppColors.primary,
                   shape: BoxShape.circle,
-                  boxShadow: AppShadows.control,
+                  // boxShadow: AppShadows.control,
                 ),
                 child: const Icon(Icons.add, color: AppColors.onPrimary, size: AppSizes.iconMd),
               ),
@@ -196,7 +196,7 @@ class ExerciseStatCard extends StatelessWidget {
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg),
         border: Border.all(color: AppColors.outline, width: 1),
-        boxShadow: AppShadows.cardSmall,
+        // boxShadow: AppShadows.cardSmall,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -250,7 +250,7 @@ class ExerciseInfoCard extends StatelessWidget {
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg),
         border: Border.all(color: AppColors.outline, width: 1),
-        boxShadow: AppShadows.cardSmall,
+        // boxShadow: AppShadows.cardSmall,
       ),
       child: Row(
         children: [
@@ -351,7 +351,7 @@ class ExerciseBottomBar extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: AppGradients.primary,
                   borderRadius: BorderRadius.circular(AppRadii.pill),
-                  boxShadow: AppShadows.control,
+                  // boxShadow: AppShadows.control,
                 ),
                 child: Center(
                   child: Text(
@@ -372,7 +372,7 @@ class ExerciseBottomBar extends StatelessWidget {
                   color: AppColors.backgroundAlt,
                   borderRadius: BorderRadius.circular(AppRadii.pill),
                   border: Border.all(color: AppColors.primary, width: 1),
-                  boxShadow: AppShadows.control,
+                  // boxShadow: AppShadows.control,
                 ),
                 child: Center(
                   child: ShaderMask(
@@ -474,7 +474,7 @@ class ExerciseInputCard extends StatelessWidget {
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg),
         border: Border.all(color: AppColors.outline, width: 1),
-        boxShadow: AppShadows.cardSmall,
+        // boxShadow: AppShadows.cardSmall,
       ),
       child: Row(
         children: [
@@ -516,7 +516,7 @@ class ExerciseTotalSummaryCard extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: AppGradients.primary,
         borderRadius: BorderRadius.circular(AppRadii.lg),
-        boxShadow: AppShadows.control,
+        // boxShadow: AppShadows.control,
       ),
       child: Center(
         child: Text(

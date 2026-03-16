@@ -63,7 +63,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                       Container(
                         height: 118,
                         padding: const EdgeInsets.all(AppSpacing.l),
-                        decoration: BoxDecoration(gradient: AppGradients.primary, borderRadius: BorderRadius.circular(AppRadii.lg), boxShadow: AppShadows.button),
+                        decoration: BoxDecoration(gradient: AppGradients.primary, borderRadius: BorderRadius.circular(AppRadii.lg) /* , boxShadow: AppShadows.button */),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [

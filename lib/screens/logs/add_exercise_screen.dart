@@ -205,7 +205,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
                     onTap: _isSaving ? null : _saveExercise,
                     child: Container(
                       height: AppSizes.buttonHeightCompact,
-                      decoration: BoxDecoration(gradient: AppGradients.primary, borderRadius: BorderRadius.circular(AppRadii.pill), boxShadow: AppShadows.button),
+                      decoration: BoxDecoration(gradient: AppGradients.primary, borderRadius: BorderRadius.circular(AppRadii.pill) /* , boxShadow: AppShadows.button */),
                       child: Center(
                         child: Text(
                           _isSaving ? tr(LocaleKeys.common_saving) : tr(LocaleKeys.exercise_add_title),
@@ -284,7 +284,7 @@ class _TextInput extends StatelessWidget {
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg),
         border: Border.all(color: AppColors.outline, width: 1),
-        boxShadow: AppShadows.cardSmall,
+        // boxShadow: AppShadows.cardSmall,
       ),
       child: TextField(
         controller: controller,
@@ -318,7 +318,7 @@ class _InputCard extends StatelessWidget {
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg),
         border: Border.all(color: AppColors.outline, width: 1),
-        boxShadow: AppShadows.cardSmall,
+        // boxShadow: AppShadows.cardSmall,
       ),
       child: Row(
         children: [
