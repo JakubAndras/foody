@@ -8,7 +8,7 @@ import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
+import 'package:diplomka/screens/profile/profile_widgets.dart';
 
 enum ExerciseTrackingMode { total, perMinute }
 
@@ -102,123 +102,102 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return LiquidGlassScope(
-      child: Scaffold(
-        backgroundColor: AppColors.background,
-        extendBodyBehindAppBar: true,
-        appBar: CustomGlassAppBar(
-          title: tr(LocaleKeys.exercise_add_title),
-          onBack: () => Navigator.of(context).maybePop(),
-          actions: [
-            CustomGlassIconButton(icon: _isFavorite ? Icons.bookmark : Icons.bookmark_border, iconSize: AppSizes.iconMd, onPressed: () => setState(() => _isFavorite = !_isFavorite)),
-          ],
+    return ProfileGradientScaffold(
+      scroll: true,
+      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, 0, AppSpacing.screen, AppSpacing.xl),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: SizedBox(
+        width: MediaQuery.of(context).size.width - (AppSpacing.screen * 2),
+        child: ProfilePrimaryButton(
+          label: _isSaving ? tr(LocaleKeys.common_saving) : tr(LocaleKeys.exercise_add_title),
+          height: AppSizes.buttonHeightCompact,
+          onPressed: _isSaving ? null : _saveExercise,
         ),
-        body: LiquidGlassBackground(
-          child: Column(
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CustomGlassAppBar(
+            title: tr(LocaleKeys.exercise_add_title),
+            onBack: () => Navigator.of(context).maybePop(),
+            actions: [
+              CustomGlassIconButton(icon: _isFavorite ? Icons.bookmark : Icons.bookmark_border, iconSize: AppSizes.iconMd, onPressed: () => setState(() => _isFavorite = !_isFavorite)),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.l),
+          Text(tr(LocaleKeys.exercise_exercise_name), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
+          const SizedBox(height: AppSpacing.xs),
+          _TextInput(controller: _nameController, hintText: tr(LocaleKeys.exercise_name_hint)),
+          const SizedBox(height: AppSpacing.l),
+          Text(tr(LocaleKeys.exercise_track_question), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
+          const SizedBox(height: AppSpacing.xs),
+          Row(
             children: [
               Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.s, AppSpacing.l, AppSpacing.xl),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(tr(LocaleKeys.exercise_exercise_name), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
-                      const SizedBox(height: AppSpacing.xs),
-                      _TextInput(controller: _nameController, hintText: tr(LocaleKeys.exercise_name_hint)),
-                      const SizedBox(height: AppSpacing.l),
-                      Text(tr(LocaleKeys.exercise_track_question), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
-                      const SizedBox(height: AppSpacing.xs),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ExerciseTrackingOptionCard(
-                              selected: _mode == ExerciseTrackingMode.total,
-                              gradient: AppGradients.exerciseCalories,
-                              icon: Icons.local_fire_department,
-                              label: tr(LocaleKeys.exercise_total_calories),
-                              subtitle: tr(LocaleKeys.exercise_enter_total),
-                              onTap: () => setState(() => _mode = ExerciseTrackingMode.total),
-                            ),
-                          ),
-                          const SizedBox(width: AppSpacing.m),
-                          Expanded(
-                            child: ExerciseTrackingOptionCard(
-                              selected: _mode == ExerciseTrackingMode.perMinute,
-                              gradient: AppGradients.exerciseCaloriesAlt,
-                              icon: Icons.trending_up,
-                              label: tr(LocaleKeys.exercise_per_minute),
-                              subtitle: tr(LocaleKeys.exercise_kcal_min_desc),
-                              onTap: () => setState(() => _mode = ExerciseTrackingMode.perMinute),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: AppSpacing.l),
-                      if (_mode == ExerciseTrackingMode.total) ...[
-                        Text(tr(LocaleKeys.exercise_total_burned), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
-                        const SizedBox(height: AppSpacing.xs),
-                        _InputCard(
-                          controller: _totalController,
-                          label: tr(LocaleKeys.common_calories),
-                          unit: tr(LocaleKeys.common_kcal),
-                          gradient: AppGradients.exerciseCalories,
-                          icon: Icons.local_fire_department,
-                        ),
-                        const SizedBox(height: AppSpacing.s),
-                        Text(tr(LocaleKeys.exercise_enter_total), style: AppTextStyles.label12.copyWith(color: AppColors.textTertiary)),
-                      ] else ...[
-                        Text(tr(LocaleKeys.exercise_calories_per_minute), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
-                        const SizedBox(height: AppSpacing.xs),
-                        _InputCard(
-                          controller: _rateController,
-                          label: tr(LocaleKeys.exercise_kcal_min),
-                          unit: tr(LocaleKeys.exercise_kcal_min),
-                          gradient: AppGradients.exerciseCaloriesAlt,
-                          icon: Icons.trending_up,
-                          onChanged: (_) => setState(() {}),
-                        ),
-                        const SizedBox(height: AppSpacing.m),
-                        Text(tr(LocaleKeys.exercise_duration_label), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
-                        const SizedBox(height: AppSpacing.xs),
-                        _InputCard(
-                          controller: _durationController,
-                          label: tr(LocaleKeys.common_min),
-                          unit: tr(LocaleKeys.common_min),
-                          gradient: AppGradients.exerciseDuration,
-                          icon: Icons.schedule,
-                          onChanged: (_) => setState(() {}),
-                        ),
-                        const SizedBox(height: AppSpacing.m),
-                        Text(tr(LocaleKeys.exercise_total_burned), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
-                        const SizedBox(height: AppSpacing.xs),
-                        ExerciseTotalSummaryCard(value: '$_calculatedTotal'),
-                      ],
-                    ],
-                  ),
+                child: ExerciseTrackingOptionCard(
+                  selected: _mode == ExerciseTrackingMode.total,
+                  gradient: AppGradients.exerciseCalories,
+                  icon: Icons.local_fire_department,
+                  label: tr(LocaleKeys.exercise_total_calories),
+                  subtitle: tr(LocaleKeys.exercise_enter_total),
+                  onTap: () => setState(() => _mode = ExerciseTrackingMode.total),
                 ),
               ),
-              SafeArea(
-                top: false,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-                  child: GestureDetector(
-                    onTap: _isSaving ? null : _saveExercise,
-                    child: Container(
-                      height: AppSizes.buttonHeightCompact,
-                      decoration: BoxDecoration(gradient: AppGradients.primary, borderRadius: BorderRadius.circular(AppRadii.pill) /* , boxShadow: AppShadows.button */),
-                      child: Center(
-                        child: Text(
-                          _isSaving ? tr(LocaleKeys.common_saving) : tr(LocaleKeys.exercise_add_title),
-                          style: AppTextStyles.button18.copyWith(color: AppColors.onPrimary),
-                        ),
-                      ),
-                    ),
-                  ),
+              const SizedBox(width: AppSpacing.m),
+              Expanded(
+                child: ExerciseTrackingOptionCard(
+                  selected: _mode == ExerciseTrackingMode.perMinute,
+                  gradient: AppGradients.exerciseCaloriesAlt,
+                  icon: Icons.trending_up,
+                  label: tr(LocaleKeys.exercise_per_minute),
+                  subtitle: tr(LocaleKeys.exercise_kcal_min_desc),
+                  onTap: () => setState(() => _mode = ExerciseTrackingMode.perMinute),
                 ),
               ),
             ],
           ),
-        ),
+          const SizedBox(height: AppSpacing.l),
+          if (_mode == ExerciseTrackingMode.total) ...[
+            Text(tr(LocaleKeys.exercise_total_burned), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
+            const SizedBox(height: AppSpacing.xs),
+            _InputCard(
+              controller: _totalController,
+              label: tr(LocaleKeys.common_calories),
+              unit: tr(LocaleKeys.common_kcal),
+              gradient: AppGradients.exerciseCalories,
+              icon: Icons.local_fire_department,
+            ),
+            const SizedBox(height: AppSpacing.s),
+            Text(tr(LocaleKeys.exercise_enter_total), style: AppTextStyles.label12.copyWith(color: AppColors.textTertiary)),
+          ] else ...[
+            Text(tr(LocaleKeys.exercise_calories_per_minute), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
+            const SizedBox(height: AppSpacing.xs),
+            _InputCard(
+              controller: _rateController,
+              label: tr(LocaleKeys.exercise_kcal_min),
+              unit: tr(LocaleKeys.exercise_kcal_min),
+              gradient: AppGradients.exerciseCaloriesAlt,
+              icon: Icons.trending_up,
+              onChanged: (_) => setState(() {}),
+            ),
+            const SizedBox(height: AppSpacing.m),
+            Text(tr(LocaleKeys.exercise_duration_label), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
+            const SizedBox(height: AppSpacing.xs),
+            _InputCard(
+              controller: _durationController,
+              label: tr(LocaleKeys.common_min),
+              unit: tr(LocaleKeys.common_min),
+              gradient: AppGradients.exerciseDuration,
+              icon: Icons.schedule,
+              onChanged: (_) => setState(() {}),
+            ),
+            const SizedBox(height: AppSpacing.m),
+            Text(tr(LocaleKeys.exercise_total_burned), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
+            const SizedBox(height: AppSpacing.xs),
+            ExerciseTotalSummaryCard(value: '$_calculatedTotal'),
+          ],
+          const SizedBox(height: AppSpacing.huge),
+        ],
       ),
     );
   }

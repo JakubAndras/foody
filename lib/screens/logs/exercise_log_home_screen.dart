@@ -12,7 +12,6 @@ import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 class ExerciseLogHomeScreen extends StatefulWidget {
   const ExerciseLogHomeScreen({super.key});
@@ -60,98 +59,75 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return LiquidGlassScope(
-      child: Scaffold(
-        backgroundColor: AppColors.background,
-        extendBodyBehindAppBar: true,
-        appBar: CustomGlassAppBar(
-          title: tr(LocaleKeys.exercise_log_title),
-          onBack: () => Navigator.of(context).maybePop(),
-          actions: [
-            CustomGlassIconButton(
-              icon: _showFavorites ? Icons.bookmark : Icons.bookmark_border,
-              iconSize: AppSizes.iconMd,
-              onPressed: () => setState(() => _showFavorites = !_showFavorites),
-            ),
-          ],
+    return ProfileGradientScaffold(
+      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, 0, AppSpacing.screen, 0),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: SizedBox(
+        width: MediaQuery.of(context).size.width - (AppSpacing.screen * 2),
+        child: ProfilePrimaryButton(
+          label: tr(LocaleKeys.exercise_add_title),
+          height: AppSizes.buttonHeightCompact,
+          onPressed: () => Get.to(() => const AddExerciseScreen()),
         ),
-        body: LiquidGlassBackground(
-          child: SafeArea(
-            bottom: false,
-            child: Stack(
-              children: [
-                Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-                      child: ExerciseSearchBar(controller: _searchController, onChanged: (_) => setState(() {})),
-                    ),
-                    const SizedBox(height: AppSpacing.s),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-                      child: Row(
-                        children: [
-                          ExerciseFilterChip(label: tr(LocaleKeys.common_all), selected: !_showFavorites, onTap: () => setState(() => _showFavorites = false)),
-                          const SizedBox(width: AppSpacing.s),
-                          ExerciseFilterChip(
-                            label: tr(LocaleKeys.common_favorites),
-                            selected: _showFavorites,
-                            icon: Icons.close,
-                            onTap: () => setState(() => _showFavorites = true),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.s),
-                    Expanded(
-                      child: Obx(() {
-                        final filtered = _applyFilters(_allExercises());
-                        if (filtered.isEmpty) {
-                          return Center(
-                            child: Text(
-                              _showFavorites ? tr(LocaleKeys.exercise_no_favorites) : tr(LocaleKeys.exercise_no_logged),
-                              style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary),
-                            ),
-                          );
-                        }
-                        return ListView.separated(
-                          padding: EdgeInsets.fromLTRB(
-                            AppSpacing.l,
-                            AppSpacing.s,
-                            AppSpacing.l,
-                            AppSizes.buttonHeightCompact + AppSpacing.bottom + MediaQuery.paddingOf(context).bottom + AppSpacing.l,
-                          ),
-                          itemCount: filtered.length,
-                          separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.s),
-                          itemBuilder: (context, index) {
-                            final exercise = filtered[index];
-                            return ExerciseListCard(
-                              title: exercise.name,
-                              kcal: exercise.caloriesBurned.round(),
-                              minutes: exercise.durationMinutes ?? 0,
-                              onAdd: () => _duplicateExerciseForSelectedDay(exercise),
-                              onTap: () => Get.to(() => ExerciseDetailScreen(exercise: exercise)),
-                            );
-                          },
-                        );
-                      }),
-                    ),
-                  ],
-                ),
-                Positioned(
-                  left: AppSpacing.l,
-                  right: AppSpacing.l,
-                  bottom: MediaQuery.paddingOf(context).bottom,
-                  child: ProfilePrimaryButton(
-                    label: tr(LocaleKeys.exercise_add_title),
-                    height: AppSizes.buttonHeightCompact,
-                    onPressed: () => Get.to(() => const AddExerciseScreen()),
-                  ),
-                ),
-              ],
-            ),
+      ),
+      child: Column(
+        children: [
+          CustomGlassAppBar(
+            title: tr(LocaleKeys.exercise_log_title),
+            onBack: () => Navigator.of(context).maybePop(),
+            actions: [
+              CustomGlassIconButton(
+                icon: _showFavorites ? Icons.bookmark : Icons.bookmark_border,
+                iconSize: AppSizes.iconMd,
+                onPressed: () => setState(() => _showFavorites = !_showFavorites),
+              ),
+            ],
           ),
-        ),
+          const SizedBox(height: AppSpacing.l),
+          ExerciseSearchBar(controller: _searchController, onChanged: (_) => setState(() {})),
+          const SizedBox(height: AppSpacing.s),
+          Row(
+            children: [
+              ExerciseFilterChip(label: tr(LocaleKeys.common_all), selected: !_showFavorites, onTap: () => setState(() => _showFavorites = false)),
+              const SizedBox(width: AppSpacing.s),
+              ExerciseFilterChip(
+                label: tr(LocaleKeys.common_favorites),
+                selected: _showFavorites,
+                icon: Icons.close,
+                onTap: () => setState(() => _showFavorites = true),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.s),
+          Expanded(
+            child: Obx(() {
+              final filtered = _applyFilters(_allExercises());
+              if (filtered.isEmpty) {
+                return Center(
+                  child: Text(
+                    _showFavorites ? tr(LocaleKeys.exercise_no_favorites) : tr(LocaleKeys.exercise_no_logged),
+                    style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary),
+                  ),
+                );
+              }
+              return ListView.separated(
+                padding: EdgeInsets.fromLTRB(0, AppSpacing.s, 0, AppSizes.buttonHeightCompact + AppSpacing.xl + MediaQuery.paddingOf(context).bottom),
+                itemCount: filtered.length,
+                separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.s),
+                itemBuilder: (context, index) {
+                  final exercise = filtered[index];
+                  return ExerciseListCard(
+                    title: exercise.name,
+                    kcal: exercise.caloriesBurned.round(),
+                    minutes: exercise.durationMinutes ?? 0,
+                    onAdd: () => _duplicateExerciseForSelectedDay(exercise),
+                    onTap: () => Get.to(() => ExerciseDetailScreen(exercise: exercise)),
+                  );
+                },
+              );
+            }),
+          ),
+        ],
       ),
     );
   }

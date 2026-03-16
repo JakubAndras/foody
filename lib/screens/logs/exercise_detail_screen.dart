@@ -7,7 +7,7 @@ import 'package:diplomka/screens/logs/exercise_widgets.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
+import 'package:diplomka/screens/profile/profile_widgets.dart';
 
 class ExerciseDetailScreen extends StatefulWidget {
   const ExerciseDetailScreen({super.key, required this.exercise});
@@ -39,91 +39,97 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
   Widget build(BuildContext context) {
     final rate = (_exercise.caloriesBurned / (_exercise.durationMinutes ?? 1)).round();
 
-    return LiquidGlassScope(
-      child: Scaffold(
-        backgroundColor: AppColors.background,
-        extendBodyBehindAppBar: true,
-        appBar: CustomGlassAppBar(
-          title: tr(LocaleKeys.exercise_detail_title),
-          onBack: () => Navigator.of(context).maybePop(),
-          actions: [
-            CustomGlassIconButton(icon: _exercise.isFavorite ? Icons.bookmark : Icons.bookmark_border, iconSize: AppSizes.iconMd, onPressed: _toggleFavorite),
-            CustomGlassIconButton(icon: Icons.more_horiz, iconSize: AppSizes.iconMd, onPressed: () => _showOptions(context)),
+    return ProfileGradientScaffold(
+      scroll: true,
+      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, 0, AppSpacing.screen, AppSpacing.xl),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: SizedBox(
+        width: MediaQuery.of(context).size.width - (AppSpacing.screen * 2),
+        child: Row(
+          children: [
+            Expanded(
+              child: ProfilePrimaryButton(
+                label: tr(LocaleKeys.exercise_log_btn),
+                height: AppSizes.buttonHeightCompact,
+                onPressed: () => _showSnack(context, tr(LocaleKeys.exercise_log_btn)),
+              ),
+            ),
+            const SizedBox(width: AppSpacing.m),
+            Expanded(
+              child: ProfileOutlineButton(
+                label: tr(LocaleKeys.exercise_save_log),
+                height: AppSizes.buttonHeightCompact,
+                onPressed: () => _showSnack(context, tr(LocaleKeys.exercise_save_log)),
+              ),
+            ),
           ],
         ),
-        body: LiquidGlassBackground(
-          child: Column(
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CustomGlassAppBar(
+            title: tr(LocaleKeys.exercise_detail_title),
+            onBack: () => Navigator.of(context).maybePop(),
+            actions: [
+              CustomGlassIconButton(icon: _exercise.isFavorite ? Icons.bookmark : Icons.bookmark_border, iconSize: AppSizes.iconMd, onPressed: _toggleFavorite),
+              CustomGlassIconButton(icon: Icons.more_horiz, iconSize: AppSizes.iconMd, onPressed: () => _showOptions(context)),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.l),
+          Container(
+            height: 118,
+            padding: const EdgeInsets.all(AppSpacing.l),
+            decoration: BoxDecoration(gradient: AppGradients.primary, borderRadius: BorderRadius.circular(AppRadii.lg)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(tr(LocaleKeys.exercise_activity), style: AppTextStyles.body14.copyWith(color: AppColors.onPrimary.withValues(alpha: 0.6))),
+                const SizedBox(height: AppSpacing.xs),
+                Text(_exercise.name, style: AppTextStyles.h2.copyWith(color: AppColors.onPrimary)),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppSpacing.m),
+          Row(
             children: [
               Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.s, AppSpacing.l, AppSpacing.l),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        height: 118,
-                        padding: const EdgeInsets.all(AppSpacing.l),
-                        decoration: BoxDecoration(gradient: AppGradients.primary, borderRadius: BorderRadius.circular(AppRadii.lg) /* , boxShadow: AppShadows.button */),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(tr(LocaleKeys.exercise_activity), style: AppTextStyles.body14.copyWith(color: AppColors.onPrimary.withValues(alpha: 0.6))),
-                            const SizedBox(height: AppSpacing.xs),
-                            Text(_exercise.name, style: AppTextStyles.h2.copyWith(color: AppColors.onPrimary)),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.m),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ExerciseStatCard(
-                              gradient: AppGradients.exerciseCalories,
-                              icon: Icons.local_fire_department,
-                              label: tr(LocaleKeys.exercise_total_calories),
-                              value: '${_exercise.caloriesBurned.round()}',
-                              unit: tr(LocaleKeys.common_kcal),
-                            ),
-                          ),
-                          const SizedBox(width: AppSpacing.m),
-                          Expanded(
-                            child: ExerciseStatCard(
-                              gradient: AppGradients.exerciseDuration,
-                              icon: Icons.schedule,
-                              label: tr(LocaleKeys.common_duration),
-                              value: '${_exercise.durationMinutes ?? 0}',
-                              unit: tr(LocaleKeys.common_min),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: AppSpacing.m),
-                      ExerciseInfoCard(
-                        gradient: AppGradients.exerciseCaloriesAlt,
-                        icon: Icons.trending_up,
-                        label: tr(LocaleKeys.exercise_calories_per_minute),
-                        value: '$rate',
-                        unit: tr(LocaleKeys.exercise_kcal_min),
-                      ),
-                      const SizedBox(height: AppSpacing.m),
-                      ExerciseCalculationCard(
-                        rate: '$rate ${tr(LocaleKeys.exercise_kcal_min)}',
-                        duration: '${_exercise.durationMinutes ?? 0} ${tr(LocaleKeys.common_min)}',
-                        total: '${_exercise.caloriesBurned.round()} ${tr(LocaleKeys.common_kcal)}',
-                      ),
-                    ],
-                  ),
+                child: ExerciseStatCard(
+                  gradient: AppGradients.exerciseCalories,
+                  icon: Icons.local_fire_department,
+                  label: tr(LocaleKeys.exercise_total_calories),
+                  value: '${_exercise.caloriesBurned.round()}',
+                  unit: tr(LocaleKeys.common_kcal),
                 ),
               ),
-              ExerciseBottomBar(
-                primaryLabel: tr(LocaleKeys.exercise_log_btn),
-                secondaryLabel: tr(LocaleKeys.exercise_save_log),
-                onPrimary: () => _showSnack(context, tr(LocaleKeys.exercise_log_btn)),
-                onSecondary: () => _showSnack(context, tr(LocaleKeys.exercise_save_log)),
+              const SizedBox(width: AppSpacing.m),
+              Expanded(
+                child: ExerciseStatCard(
+                  gradient: AppGradients.exerciseDuration,
+                  icon: Icons.schedule,
+                  label: tr(LocaleKeys.common_duration),
+                  value: '${_exercise.durationMinutes ?? 0}',
+                  unit: tr(LocaleKeys.common_min),
+                ),
               ),
             ],
           ),
-        ),
+          const SizedBox(height: AppSpacing.m),
+          ExerciseInfoCard(
+            gradient: AppGradients.exerciseCaloriesAlt,
+            icon: Icons.trending_up,
+            label: tr(LocaleKeys.exercise_calories_per_minute),
+            value: '$rate',
+            unit: tr(LocaleKeys.exercise_kcal_min),
+          ),
+          const SizedBox(height: AppSpacing.m),
+          ExerciseCalculationCard(
+            rate: '$rate ${tr(LocaleKeys.exercise_kcal_min)}',
+            duration: '${_exercise.durationMinutes ?? 0} ${tr(LocaleKeys.common_min)}',
+            total: '${_exercise.caloriesBurned.round()} ${tr(LocaleKeys.common_kcal)}',
+          ),
+          const SizedBox(height: AppSpacing.huge),
+        ],
       ),
     );
   }
