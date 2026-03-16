@@ -8,9 +8,11 @@ import 'package:diplomka/screens/logs/exercise_detail_screen.dart';
 import 'package:diplomka/screens/logs/exercise_widgets.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 import 'package:diplomka/services/selected_date_service.dart';
+import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 class ExerciseLogHomeScreen extends StatefulWidget {
   const ExerciseLogHomeScreen({super.key});
@@ -58,113 +60,98 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.backgroundAlt,
-      body: SafeArea(
-        bottom: false,
-        child: Stack(
-          children: [
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.m, AppSpacing.l, AppSpacing.s),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _CircleButton(icon: Icons.chevron_left, onTap: () => Navigator.of(context).maybePop()),
-                      Text(tr(LocaleKeys.exercise_log_title), style: AppTextStyles.title18Tight),
-                      _CircleButton(
-                        icon: _showFavorites ? Icons.bookmark : Icons.bookmark_border,
-                        onTap: () => setState(() => _showFavorites = !_showFavorites),
-                        filled: _showFavorites,
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-                  child: ExerciseSearchBar(controller: _searchController, onChanged: (_) => setState(() {})),
-                ),
-                const SizedBox(height: AppSpacing.s),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-                  child: Row(
-                    children: [
-                      ExerciseFilterChip(label: tr(LocaleKeys.common_all), selected: !_showFavorites, onTap: () => setState(() => _showFavorites = false)),
-                      const SizedBox(width: AppSpacing.s),
-                      ExerciseFilterChip(label: tr(LocaleKeys.common_favorites), selected: _showFavorites, icon: Icons.close, onTap: () => setState(() => _showFavorites = true)),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.s),
-                Expanded(
-                  child: Obx(() {
-                    final filtered = _applyFilters(_allExercises());
-                    if (filtered.isEmpty) {
-                      return Center(
-                        child: Text(
-                          _showFavorites ? tr(LocaleKeys.exercise_no_favorites) : tr(LocaleKeys.exercise_no_logged),
-                          style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary),
-                        ),
-                      );
-                    }
-                    return ListView.separated(
-                      padding: EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.s, AppSpacing.l, AppSizes.buttonHeightCompact + AppSpacing.bottom + MediaQuery.paddingOf(context).bottom + AppSpacing.l),
-                      itemCount: filtered.length,
-                      separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.s),
-                      itemBuilder: (context, index) {
-                        final exercise = filtered[index];
-                        return ExerciseListCard(
-                          title: exercise.name,
-                          kcal: exercise.caloriesBurned.round(),
-                          minutes: exercise.durationMinutes ?? 0,
-                          onAdd: () => _duplicateExerciseForSelectedDay(exercise),
-                          onTap: () => Get.to(() => ExerciseDetailScreen(exercise: exercise)),
-                        );
-                      },
-                    );
-                  }),
-                ),
-              ],
-            ),
-            Positioned(
-              left: AppSpacing.l,
-              right: AppSpacing.l,
-              bottom: MediaQuery.paddingOf(context).bottom,
-              child: ProfilePrimaryButton(
-                label: tr(LocaleKeys.exercise_add_title),
-                height: AppSizes.buttonHeightCompact,
-                onPressed: () => Get.to(() => const AddExerciseScreen()),
-              ),
+    return LiquidGlassScope(
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        extendBodyBehindAppBar: true,
+        appBar: CustomGlassAppBar(
+          title: tr(LocaleKeys.exercise_log_title),
+          onBack: () => Navigator.of(context).maybePop(),
+          actions: [
+            CustomGlassIconButton(
+              icon: _showFavorites ? Icons.bookmark : Icons.bookmark_border,
+              iconSize: AppSizes.iconMd,
+              onPressed: () => setState(() => _showFavorites = !_showFavorites),
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _CircleButton extends StatelessWidget {
-  const _CircleButton({required this.icon, required this.onTap, this.filled = true});
-
-  final IconData icon;
-  final VoidCallback onTap;
-  final bool filled;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: AppSizes.backButtonSize,
-        height: AppSizes.backButtonSize,
-        decoration: BoxDecoration(
-          color: filled ? AppColors.surface : AppColors.backgroundAlt,
-          borderRadius: BorderRadius.circular(AppRadii.pill),
-          border: Border.all(color: AppColors.outline, width: 1),
-          boxShadow: filled ? AppShadows.control : null,
+        body: LiquidGlassBackground(
+          child: SafeArea(
+            bottom: false,
+            child: Stack(
+              children: [
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+                      child: ExerciseSearchBar(controller: _searchController, onChanged: (_) => setState(() {})),
+                    ),
+                    const SizedBox(height: AppSpacing.s),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+                      child: Row(
+                        children: [
+                          ExerciseFilterChip(label: tr(LocaleKeys.common_all), selected: !_showFavorites, onTap: () => setState(() => _showFavorites = false)),
+                          const SizedBox(width: AppSpacing.s),
+                          ExerciseFilterChip(
+                            label: tr(LocaleKeys.common_favorites),
+                            selected: _showFavorites,
+                            icon: Icons.close,
+                            onTap: () => setState(() => _showFavorites = true),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.s),
+                    Expanded(
+                      child: Obx(() {
+                        final filtered = _applyFilters(_allExercises());
+                        if (filtered.isEmpty) {
+                          return Center(
+                            child: Text(
+                              _showFavorites ? tr(LocaleKeys.exercise_no_favorites) : tr(LocaleKeys.exercise_no_logged),
+                              style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary),
+                            ),
+                          );
+                        }
+                        return ListView.separated(
+                          padding: EdgeInsets.fromLTRB(
+                            AppSpacing.l,
+                            AppSpacing.s,
+                            AppSpacing.l,
+                            AppSizes.buttonHeightCompact + AppSpacing.bottom + MediaQuery.paddingOf(context).bottom + AppSpacing.l,
+                          ),
+                          itemCount: filtered.length,
+                          separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.s),
+                          itemBuilder: (context, index) {
+                            final exercise = filtered[index];
+                            return ExerciseListCard(
+                              title: exercise.name,
+                              kcal: exercise.caloriesBurned.round(),
+                              minutes: exercise.durationMinutes ?? 0,
+                              onAdd: () => _duplicateExerciseForSelectedDay(exercise),
+                              onTap: () => Get.to(() => ExerciseDetailScreen(exercise: exercise)),
+                            );
+                          },
+                        );
+                      }),
+                    ),
+                  ],
+                ),
+                Positioned(
+                  left: AppSpacing.l,
+                  right: AppSpacing.l,
+                  bottom: MediaQuery.paddingOf(context).bottom,
+                  child: ProfilePrimaryButton(
+                    label: tr(LocaleKeys.exercise_add_title),
+                    height: AppSizes.buttonHeightCompact,
+                    onPressed: () => Get.to(() => const AddExerciseScreen()),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
-        child: Icon(icon, color: AppColors.textPrimary, size: AppSizes.iconMd),
       ),
     );
   }

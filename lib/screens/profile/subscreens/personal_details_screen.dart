@@ -21,7 +21,7 @@ class PersonalDetailsScreen extends StatelessWidget {
     final media = MediaQuery.of(context);
     return ProfileGradientScaffold(
       scroll: true,
-      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.l, AppSpacing.screen, AppSpacing.xl),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, 0, AppSpacing.screen, AppSpacing.xl),
       child: Obx(() {
         final entries = WeightEntryController.to.entries;
         final double? profileWeight = SessionManager.to.weightKg.value;

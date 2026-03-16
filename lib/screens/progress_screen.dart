@@ -1,4 +1,5 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:diplomka/controller/day_record_controller.dart';
 import 'package:diplomka/controller/weight_entry_controller.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
@@ -23,11 +24,7 @@ List<WeightEntry> _sortWeightEntries(List<WeightEntry> entries, {bool descending
   return data;
 }
 
-double? _computeGoalProgress({
-  required double current,
-  required double start,
-  required double goal,
-}) {
+double? _computeGoalProgress({required double current, required double start, required double goal}) {
   if (goal == start) {
     return current == goal ? 1.0 : 0.0;
   }
@@ -63,21 +60,14 @@ class _DailyAverageStats {
   final bool hasMeals;
   final String rangeLabel;
 
-  const _DailyAverageStats({
-    required this.average,
-    required this.hasMeals,
-    required this.rangeLabel,
-  });
+  const _DailyAverageStats({required this.average, required this.hasMeals, required this.rangeLabel});
 }
 
 class _BmiCategory {
   final String label;
   final Color color;
 
-  const _BmiCategory({
-    required this.label,
-    required this.color,
-  });
+  const _BmiCategory({required this.label, required this.color});
 }
 
 class ProgressScreen extends StatelessWidget {
@@ -96,92 +86,72 @@ class ProgressScreen extends StatelessWidget {
           backgroundColor: Colors.transparent,
           fadeColor: AppColors.meshBase,
           backgroundWidget: const MeshGradientBackground(),
-            padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.mega + AppSpacing.l, AppSpacing.l, AppSpacing.mega + 42),
-            //collapsedHeader: Text(tr(LocaleKeys.progress_title), style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w700)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // CollapsibleTitle(child: Text(tr(LocaleKeys.progress_title), style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w700))),
-                // const SizedBox(height: AppSpacing.s),
-                Obx(() {
-                  final weightEntries = WeightEntryController.to.entries.toList(growable: false);
-                  final dayRecords = DayRecordController.to.dayRecords.toList(growable: false);
-                  final double? profileWeight = SessionManager.to.weightKg.value;
-                  final double? goalWeight = SessionManager.to.goalWeightKg.value;
+          padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.mega + AppSpacing.l, AppSpacing.l, AppSpacing.mega + 42),
+          //collapsedHeader: Text(tr(LocaleKeys.progress_title), style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w700)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // CollapsibleTitle(child: Text(tr(LocaleKeys.progress_title), style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w700))),
+              // const SizedBox(height: AppSpacing.s),
+              Obx(() {
+                final weightEntries = WeightEntryController.to.entries.toList(growable: false);
+                final dayRecords = DayRecordController.to.dayRecords.toList(growable: false);
+                final double? profileWeight = SessionManager.to.weightKg.value;
+                final double? goalWeight = SessionManager.to.goalWeightKg.value;
 
-                  final sortedWeights = _sortWeightEntries(weightEntries);
-                  final latestWeight = sortedWeights.isNotEmpty ? sortedWeights.first : null;
-                  final earliestWeight = sortedWeights.isNotEmpty ? sortedWeights.last : null;
-                  final double? currentWeight = latestWeight?.weight ?? profileWeight;
-                  final double? startWeight = earliestWeight?.weight ?? profileWeight;
-                  final goalProgress = currentWeight != null && startWeight != null && goalWeight != null
-                      ? _computeGoalProgress(
-                          current: currentWeight,
-                          start: startWeight,
-                          goal: goalWeight,
-                        )
-                      : null;
-                  final streakMetrics = _computeStreakMetrics(dayRecords);
+                final sortedWeights = _sortWeightEntries(weightEntries);
+                final latestWeight = sortedWeights.isNotEmpty ? sortedWeights.first : null;
+                final earliestWeight = sortedWeights.isNotEmpty ? sortedWeights.last : null;
+                final double? currentWeight = latestWeight?.weight ?? profileWeight;
+                final double? startWeight = earliestWeight?.weight ?? profileWeight;
+                final goalProgress = currentWeight != null && startWeight != null && goalWeight != null
+                    ? _computeGoalProgress(current: currentWeight, start: startWeight, goal: goalWeight)
+                    : null;
+                final streakMetrics = _computeStreakMetrics(dayRecords);
 
-                  return Row(
-                    children: [
-                      Expanded(
-                        child: _MyWeightCard(
-                          currentWeight: currentWeight,
-                          goalWeight: goalWeight,
-                          goalProgress: goalProgress,
-                          nextWeighInLabel: _nextWeighInLabel(latestWeight),
-                        ),
-                      ),
-                      const SizedBox(width: AppSpacing.m),
-                      Expanded(
-                        child: _DayStreakCard(
-                          currentStreak: streakMetrics.currentStreak,
-                          activeDays: streakMetrics.activeDaysThisWeek,
-                        ),
-                      ),
-                    ],
-                  );
-                }),
-                const SizedBox(height: AppSpacing.l),
-                Obx(() {
-                  final entries = WeightEntryController.to.entries;
-                  if (entries.isEmpty) {
-                    return const WeightProgressCard(entries: []);
-                  }
-                  return WeightProgressCard(entries: entries.toList(growable: false));
-                }),
-                const Padding(
-                  padding: EdgeInsets.only(top: AppSpacing.l),
-                  child: MonthlyCalendarCard(),
-                ),
-                const SizedBox(height: AppSpacing.l),
-                const _DailyAverageCard(),
-                const SizedBox(height: AppSpacing.l),
-                Obx(() {
-                  final weightEntries = WeightEntryController.to.entries.toList(growable: false);
-                  final sorted = _sortWeightEntries(weightEntries);
-                  final latest = sorted.isNotEmpty ? sorted.first : null;
-                  return _BmiCard(
-                    currentWeight: latest?.weight,
-                    heightCm: SessionManager.to.heightCm.value,
-                  );
-                }),
-              ],
-            ),
+                return Row(
+                  children: [
+                    Expanded(
+                      child: _MyWeightCard(currentWeight: currentWeight, goalWeight: goalWeight, goalProgress: goalProgress, nextWeighInLabel: _nextWeighInLabel(latestWeight)),
+                    ),
+                    const SizedBox(width: AppSpacing.m),
+                    Expanded(
+                      child: _DayStreakCard(currentStreak: streakMetrics.currentStreak, activeDays: streakMetrics.activeDaysThisWeek),
+                    ),
+                  ],
+                );
+              }),
+              const SizedBox(height: AppSpacing.l),
+              Obx(() {
+                final entries = WeightEntryController.to.entries;
+                if (entries.isEmpty) {
+                  return const WeightProgressCard(entries: []);
+                }
+                return WeightProgressCard(entries: entries.toList(growable: false));
+              }),
+              const Padding(
+                padding: EdgeInsets.only(top: AppSpacing.l),
+                child: MonthlyCalendarCard(),
+              ),
+              const SizedBox(height: AppSpacing.l),
+              const _DailyAverageCard(),
+              const SizedBox(height: AppSpacing.l),
+              Obx(() {
+                final weightEntries = WeightEntryController.to.entries.toList(growable: false);
+                final sorted = _sortWeightEntries(weightEntries);
+                final latest = sorted.isNotEmpty ? sorted.first : null;
+                return _BmiCard(currentWeight: latest?.weight, heightCm: SessionManager.to.heightCm.value);
+              }),
+            ],
           ),
         ),
+      ),
     );
   }
 }
 
 class _MyWeightCard extends StatelessWidget {
-  const _MyWeightCard({
-    this.currentWeight,
-    this.goalWeight,
-    this.goalProgress,
-    required this.nextWeighInLabel,
-  });
+  const _MyWeightCard({this.currentWeight, this.goalWeight, this.goalProgress, required this.nextWeighInLabel});
 
   final double? currentWeight;
   final double? goalWeight;
@@ -220,28 +190,18 @@ class _MyWeightCard extends StatelessWidget {
                   Container(
                     width: AppSizes.goalBarWidth,
                     height: AppSizes.stepIndicatorHeight,
-                    decoration: BoxDecoration(
-                      color: AppColors.surfaceMuted,
-                      borderRadius: BorderRadius.circular(AppRadii.pill),
-                    ),
+                    decoration: BoxDecoration(color: AppColors.surfaceMuted, borderRadius: BorderRadius.circular(AppRadii.pill)),
                   ),
                   if (goalProgress != null)
                     ClipRRect(
                       borderRadius: BorderRadius.circular(AppRadii.pill),
-                      child: Container(
-                        width: AppSizes.goalBarWidth * progress,
-                        height: AppSizes.stepIndicatorHeight,
-                        color: AppColors.primary,
-                      ),
+                      child: Container(width: AppSizes.goalBarWidth * progress, height: AppSizes.stepIndicatorHeight, color: AppColors.primary),
                     ),
                 ],
               ),
               const SizedBox(height: AppSpacing.xs),
               if (goalWeight == null)
-                Text(
-                  tr(LocaleKeys.progress_goal_dash),
-                  style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary),
-                )
+                Text(tr(LocaleKeys.progress_goal_dash), style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary))
               else
                 Text(
                   tr(LocaleKeys.progress_goal_value, namedArgs: {'value': _formatWeight(goalWeight!)}),
@@ -252,10 +212,7 @@ class _MyWeightCard extends StatelessWidget {
           Container(
             height: AppSizes.segmentedHeight,
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-            decoration: BoxDecoration(
-              color: AppColors.surfaceSubtle,
-              borderRadius: BorderRadius.circular(AppRadii.sm2),
-            ),
+            decoration: BoxDecoration(color: AppColors.surfaceSubtle, borderRadius: BorderRadius.circular(AppRadii.sm2)),
             child: Center(
               child: Text(
                 nextWeighInLabel,
@@ -270,10 +227,7 @@ class _MyWeightCard extends StatelessWidget {
 }
 
 class _DayStreakCard extends StatelessWidget {
-  const _DayStreakCard({
-    required this.currentStreak,
-    required this.activeDays,
-  });
+  const _DayStreakCard({required this.currentStreak, required this.activeDays});
 
   final int currentStreak;
   final List<bool> activeDays;
@@ -298,7 +252,10 @@ class _DayStreakCard extends StatelessWidget {
           const SizedBox(height: AppSpacing.xs),
           Icon(Icons.local_fire_department, color: AppColors.orange, size: AppSizes.streakIconSize),
           const SizedBox(height: AppSpacing.xs),
-          Text(title, style: AppTextStyles.title.copyWith(color: AppColors.orange, fontWeight: FontWeight.w700)),
+          Text(
+            title,
+            style: AppTextStyles.title.copyWith(color: AppColors.orange, fontWeight: FontWeight.w700),
+          ),
           const SizedBox(height: AppSpacing.s),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -337,10 +294,7 @@ class _DayLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxs),
-      child: Text(
-        label,
-        style: AppTextStyles.label9.copyWith(color: highlight ? AppColors.orange : AppColors.textPrimary),
-      ),
+      child: Text(label, style: AppTextStyles.label9.copyWith(color: highlight ? AppColors.orange : AppColors.textPrimary)),
     );
   }
 }
@@ -364,9 +318,7 @@ class _DailyAverageCardState extends State<_DailyAverageCard> {
     final DateTime weekStart = _startOfWeek(today).subtract(Duration(days: 7 * index));
     final DateTime weekEnd = weekStart.add(const Duration(days: 6));
 
-    final Map<DateTime, DayRecord> byDate = {
-      for (final record in records) _dateOnly(record.date): record,
-    };
+    final Map<DateTime, DayRecord> byDate = {for (final record in records) _dateOnly(record.date): record};
 
     double totalCalories = 0;
     bool hasMeals = false;
@@ -410,10 +362,7 @@ class _DailyAverageCardState extends State<_DailyAverageCard> {
                   Container(
                     width: AppSizes.cardIconLg,
                     height: AppSizes.cardIconLg,
-                    decoration: BoxDecoration(
-                      color: AppColors.surfaceSubtle,
-                      borderRadius: BorderRadius.circular(AppRadii.md),
-                    ),
+                    decoration: BoxDecoration(color: AppColors.surfaceSubtle, borderRadius: BorderRadius.circular(AppRadii.md)),
                     child: const Icon(Icons.bar_chart_rounded, color: AppColors.textTertiary),
                   ),
                   const SizedBox(height: AppSpacing.m),
@@ -431,11 +380,7 @@ class _DailyAverageCardState extends State<_DailyAverageCard> {
               ),
             ),
             const SizedBox(height: AppSpacing.xl),
-            _SegmentedControl(
-              labels: _labels,
-              selectedIndex: _selectedIndex,
-              onTap: (index) => setState(() => _selectedIndex = index),
-            ),
+            _SegmentedControl(labels: _labels, selectedIndex: _selectedIndex, onTap: (index) => setState(() => _selectedIndex = index)),
           ],
         ),
       );
@@ -448,56 +393,16 @@ class _SegmentedControl extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int>? onTap;
 
-  const _SegmentedControl({
-    required this.labels,
-    required this.selectedIndex,
-    this.onTap,
-  });
+  const _SegmentedControl({required this.labels, required this.selectedIndex, this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: AppSizes.segmentedHeight,
-      padding: const EdgeInsets.all(AppSpacing.xxs),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceMuted,
-        borderRadius: BorderRadius.circular(AppRadii.lg2),
-      ),
-      child: Row(
-        children: List.generate(labels.length, (index) {
-          final bool selected = index == selectedIndex;
-          return Expanded(
-            child: GestureDetector(
-              onTap: onTap == null ? null : () => onTap!(index),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: selected ? AppColors.surface : Colors.transparent,
-                  borderRadius: BorderRadius.circular(AppRadii.md),
-                  boxShadow: selected ? AppShadows.cardSmall : null,
-                ),
-                child: Center(
-                  child: Text(
-                    labels[index],
-                    style: AppTextStyles.caption12.copyWith(
-                      fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
-                      color: selected ? AppColors.textPrimary : AppColors.textTertiary,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          );
-        }),
-      ),
-    );
+    return GlassSegmentedControl(segments: labels, selectedIndex: selectedIndex, onSegmentSelected: onTap ?? (_) {}, useOwnLayer: true);
   }
 }
 
 class _BmiCard extends StatelessWidget {
-  const _BmiCard({
-    this.currentWeight,
-    this.heightCm,
-  });
+  const _BmiCard({this.currentWeight, this.heightCm});
 
   final double? currentWeight;
   final double? heightCm;
@@ -524,8 +429,8 @@ class _BmiCard extends StatelessWidget {
     final String missingLabel = !hasHeight && !hasWeight
         ? tr(LocaleKeys.progress_missing_height_weight)
         : !hasHeight
-            ? tr(LocaleKeys.progress_missing_height)
-            : tr(LocaleKeys.progress_missing_weight);
+        ? tr(LocaleKeys.progress_missing_height)
+        : tr(LocaleKeys.progress_missing_weight);
 
     return Container(
       decoration: BoxDecoration(
@@ -547,10 +452,7 @@ class _BmiCard extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.m),
           if (bmi == null)
-            Text(
-              missingLabel,
-              style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary),
-            )
+            Text(missingLabel, style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary))
           else
             Row(
               children: [
@@ -560,10 +462,7 @@ class _BmiCard extends StatelessWidget {
                 const SizedBox(width: AppSpacing.xs),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.xxs),
-                  decoration: BoxDecoration(
-                    color: category!.color,
-                    borderRadius: BorderRadius.circular(AppRadii.xs),
-                  ),
+                  decoration: BoxDecoration(color: category!.color, borderRadius: BorderRadius.circular(AppRadii.xs)),
                   child: Text(
                     category.label,
                     style: AppTextStyles.caption12.copyWith(color: AppColors.onPrimary, fontWeight: FontWeight.w700),
@@ -584,10 +483,7 @@ class _BmiCard extends StatelessWidget {
                 children: [
                   Container(
                     height: AppSizes.bmiBarHeight,
-                    decoration: BoxDecoration(
-                      gradient: AppGradients.bmi,
-                      borderRadius: BorderRadius.circular(AppRadii.pill),
-                    ),
+                    decoration: BoxDecoration(gradient: AppGradients.bmi, borderRadius: BorderRadius.circular(AppRadii.pill)),
                   ),
                   if (bmi != null)
                     Positioned(
@@ -595,10 +491,7 @@ class _BmiCard extends StatelessWidget {
                       child: Container(
                         width: AppSizes.bmiMarkerWidth,
                         height: AppSizes.bmiMarkerHeight,
-                        decoration: BoxDecoration(
-                          color: AppColors.primarySoft,
-                          borderRadius: BorderRadius.circular(AppRadii.pill),
-                        ),
+                        decoration: BoxDecoration(color: AppColors.primarySoft, borderRadius: BorderRadius.circular(AppRadii.pill)),
                       ),
                     ),
                 ],
@@ -632,7 +525,11 @@ class _LegendItem extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Container(width: AppSizes.legendDot, height: AppSizes.legendDot, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+        Container(
+          width: AppSizes.legendDot,
+          height: AppSizes.legendDot,
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        ),
         const SizedBox(width: AppSpacing.xs),
         Text(label, style: AppTextStyles.label10.copyWith(color: AppColors.textTertiary)),
       ],

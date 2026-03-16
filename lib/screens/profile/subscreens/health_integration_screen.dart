@@ -17,6 +17,14 @@ class HealthIntegrationScreen extends StatelessWidget {
 
     return ProfileGradientScaffold(
       scroll: true,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: SizedBox(
+        width: MediaQuery.of(context).size.width - (AppSpacing.screen * 2),
+        child: ProfilePrimaryButton(
+          label: Platform.isIOS ? tr(LocaleKeys.health_open_health_app) : tr(LocaleKeys.health_open_health_connect),
+          onPressed: () => controller.openHealthApp(),
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -58,11 +66,6 @@ class HealthIntegrationScreen extends StatelessWidget {
             child: Column(
               children: Platform.isIOS ? _buildIosSteps() : _buildAndroidSteps(),
             ),
-          ),
-          const SizedBox(height: AppSpacing.xl),
-          ProfilePrimaryButton(
-            label: Platform.isIOS ? tr(LocaleKeys.health_open_health_app) : tr(LocaleKeys.health_open_health_connect),
-            onPressed: () => controller.openHealthApp(),
           ),
           const SizedBox(height: AppSpacing.l),
         ],

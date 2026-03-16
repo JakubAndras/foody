@@ -18,6 +18,7 @@ class HealthIntegrationService extends GetxService {
 
   final _health = Health();
   bool _configured = false;
+  late final Future<void> _settingsLoaded;
 
   String get platformName => Platform.isIOS ? 'Apple Health' : 'Health Connect';
 
@@ -28,8 +29,11 @@ class HealthIntegrationService extends GetxService {
   @override
   void onInit() {
     super.onInit();
-    _loadSettings();
+    _settingsLoaded = _loadSettings();
   }
+
+  /// Await this before reading [isEnabled] to ensure SharedPreferences values are loaded.
+  Future<void> waitForSettingsLoaded() => _settingsLoaded;
 
   Future<void> _ensureConfigured() async {
     if (!_configured) {
@@ -84,7 +88,7 @@ class HealthIntegrationService extends GetxService {
       if (!granted) return false;
       isEnabled.value = true;
       await _persistSettings();
-      await syncToday();
+      await syncRecentDays();
       return true;
     } else {
       isEnabled.value = false;
@@ -99,13 +103,34 @@ class HealthIntegrationService extends GetxService {
     await syncBurnedCalories(now);
   }
 
+  /// Syncs burned calories for the last [maxDays] days up to today.
+  /// Called on app startup to backfill days the user didn't open the app.
+  Future<void> syncRecentDays({int maxDays = 3}) async {
+    if (!isEnabled.value) return;
+
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final startDate = today.subtract(Duration(days: maxDays));
+
+    var current = startDate;
+    while (!current.isAfter(today)) {
+      await syncBurnedCalories(current);
+      current = current.add(const Duration(days: 1));
+    }
+  }
+
   Future<void> syncBurnedCalories(DateTime date) async {
     try {
-      final calories = await getActiveEnergyBurned(date);
-      if (calories == null || calories <= 0) return;
+      print('HealthSync: syncing date=${date.toIso8601String()}');
+      final calories = await getActiveEnergyBurned(date) ?? 0;
+      print('HealthSync: date=${date.toIso8601String()} calories=$calories');
 
       final repo = DayRecordRepository.to;
       final existing = await repo.findHealthSyncExercise(date: date, source: _sourceTag);
+      print('HealthSync: existing=${existing?.id}, existingCal=${existing?.caloriesBurned}');
+
+      // Skip if record already exists and calories haven't changed.
+      if (existing != null && existing.caloriesBurned == calories) return;
 
       final exercise = Exercise(
         id: existing?.id,
@@ -140,9 +165,12 @@ class HealthIntegrationService extends GetxService {
         endTime: end,
       );
 
+      print('HealthSync: date=${date.toIso8601String()} dataPoints=${dataPoints.length}');
+
       if (dataPoints.isEmpty) return null;
 
       final cleaned = _health.removeDuplicates(dataPoints);
+      print('HealthSync: date=${date.toIso8601String()} cleaned=${cleaned.length}');
 
       double total = 0;
       for (final point in cleaned) {

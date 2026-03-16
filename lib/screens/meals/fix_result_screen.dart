@@ -5,9 +5,12 @@ import 'package:diplomka/screens/meals/edit_meal_screen.dart';
 import 'package:diplomka/screens/meals/meal_components.dart';
 import 'package:diplomka/services/ai_feature/ai_pipeline_service.dart';
 import 'package:diplomka/utils/media_storage.dart';
+import 'package:diplomka/widgets/custom_glass_app_bar.dart';
+import 'package:diplomka/widgets/foody_glass_buttons.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 class FixResultScreen extends StatefulWidget {
   final bool showSyncCards;
@@ -15,13 +18,7 @@ class FixResultScreen extends StatefulWidget {
   final DateTime? selectedDate;
   final bool isNewMeal;
 
-  const FixResultScreen({
-    super.key,
-    this.showSyncCards = false,
-    this.baseMeal,
-    this.selectedDate,
-    this.isNewMeal = false,
-  });
+  const FixResultScreen({super.key, this.showSyncCards = false, this.baseMeal, this.selectedDate, this.isNewMeal = false});
 
   @override
   State<FixResultScreen> createState() => _FixResultScreenState();
@@ -40,71 +37,53 @@ class _FixResultScreenState extends State<FixResultScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: AppSpacing.s),
-              _BackButtonCircle(onTap: () => Navigator.of(context).maybePop()),
-              const SizedBox(height: AppSpacing.l),
-              Row(
+    return LiquidGlassScope(
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        extendBodyBehindAppBar: true,
+        body: LiquidGlassBackground(
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.auto_fix_high, size: AppSizes.iconMd, color: AppColors.textPrimary),
-                  const SizedBox(width: AppSpacing.s),
-                  Text(tr(LocaleKeys.fix_result_title), style: AppTextStyles.h1Alt),
+                  const SizedBox(height: AppSpacing.s),
+                  CustomGlassIconButton(icon: Icons.chevron_left, onPressed: () => Navigator.of(context).maybePop()),
+                  const SizedBox(height: AppSpacing.l),
+                  Row(
+                    children: [
+                      const Icon(Icons.auto_fix_high, size: AppSizes.iconMd, color: AppColors.textPrimary),
+                      const SizedBox(width: AppSpacing.s),
+                      Text(tr(LocaleKeys.fix_result_title), style: AppTextStyles.h1Alt),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.l),
+                  _FeedbackInput(controller: _controller, hintText: tr(LocaleKeys.fix_result_hint), maxLength: _maxLength, onChanged: (_) => setState(() {})),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Text('${_controller.text.length}/$_maxLength', style: AppTextStyles.body15.copyWith(color: AppColors.textTertiary)),
+                  ),
+                  const SizedBox(height: AppSpacing.m),
+                  _ExampleCard(prefix: tr(LocaleKeys.fix_result_example_prefix), text: tr(LocaleKeys.fix_result_example_text)),
+                  if (widget.showSyncCards) ...[
+                    const SizedBox(height: AppSpacing.l),
+                    SyncCard(title: tr(LocaleKeys.meal_sync_macros_prompt), primaryLabel: tr(LocaleKeys.meal_sync), secondaryLabel: tr(LocaleKeys.meal_dont_sync)),
+                    const SizedBox(height: AppSpacing.m),
+                    SyncCard(title: tr(LocaleKeys.meal_sync_calories_prompt), primaryLabel: tr(LocaleKeys.meal_sync), secondaryLabel: tr(LocaleKeys.meal_dont_sync)),
+                    const SizedBox(height: AppSpacing.m),
+                    SyncCard(title: tr(LocaleKeys.meal_always_sync), primaryLabel: tr(LocaleKeys.meal_always_sync), secondaryLabel: tr(LocaleKeys.meal_decide_later)),
+                  ],
+                  const Spacer(),
+                  FoodyPrimaryButton(
+                    label: _isSubmitting ? tr(LocaleKeys.fix_result_updating) : tr(LocaleKeys.fix_result_update),
+                    gradient: AppGradients.askAiPrimary,
+                    onTap: _isSubmitting ? null : _handleUpdate,
+                  ),
+                  const SizedBox(height: AppSpacing.xl),
                 ],
               ),
-              const SizedBox(height: AppSpacing.l),
-              _FeedbackInput(
-                controller: _controller,
-                hintText: tr(LocaleKeys.fix_result_hint),
-                maxLength: _maxLength,
-                onChanged: (_) => setState(() {}),
-              ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  '${_controller.text.length}/$_maxLength',
-                  style: AppTextStyles.body15.copyWith(color: AppColors.textTertiary),
-                ),
-              ),
-              const SizedBox(height: AppSpacing.m),
-              _ExampleCard(
-                prefix: tr(LocaleKeys.fix_result_example_prefix),
-                text: tr(LocaleKeys.fix_result_example_text),
-              ),
-              if (widget.showSyncCards) ...[
-                const SizedBox(height: AppSpacing.l),
-                SyncCard(
-                  title: tr(LocaleKeys.meal_sync_macros_prompt),
-                  primaryLabel: tr(LocaleKeys.meal_sync),
-                  secondaryLabel: tr(LocaleKeys.meal_dont_sync),
-                ),
-                const SizedBox(height: AppSpacing.m),
-                SyncCard(
-                  title: tr(LocaleKeys.meal_sync_calories_prompt),
-                  primaryLabel: tr(LocaleKeys.meal_sync),
-                  secondaryLabel: tr(LocaleKeys.meal_dont_sync),
-                ),
-                const SizedBox(height: AppSpacing.m),
-                SyncCard(
-                  title: tr(LocaleKeys.meal_always_sync),
-                  primaryLabel: tr(LocaleKeys.meal_always_sync),
-                  secondaryLabel: tr(LocaleKeys.meal_decide_later),
-                ),
-              ],
-              const Spacer(),
-              GradientPillButton(
-                label: _isSubmitting ? tr(LocaleKeys.fix_result_updating) : tr(LocaleKeys.fix_result_update),
-                gradient: AppGradients.askAiPrimary,
-                onTap: _isSubmitting ? null : _handleUpdate,
-              ),
-              const SizedBox(height: AppSpacing.xl),
-            ],
+            ),
           ),
         ),
       ),
@@ -122,10 +101,7 @@ class _FixResultScreenState extends State<FixResultScreen> {
     final photoPath = widget.baseMeal?.photoPath;
     final photoFile = MediaStorage.existingMealPhotoFile(photoPath);
     final imageFiles = photoFile == null ? null : [photoFile];
-    final result = await AiPipelineService.to.analyzeMeal(
-      imageFiles: imageFiles,
-      description: text,
-    );
+    final result = await AiPipelineService.to.analyzeMeal(imageFiles: imageFiles, description: text);
 
     if (!mounted) return;
     setState(() => _isSubmitting = false);
@@ -149,35 +125,7 @@ class _FixResultScreenState extends State<FixResultScreen> {
       name: analyzedMeal.name.isEmpty && baseMeal != null ? baseMeal.name : analyzedMeal.name,
     );
 
-    Get.off(() => EditMealScreen(
-          meal: updatedMeal,
-          isNewMeal: widget.isNewMeal,
-          selectedDate: widget.selectedDate,
-        ));
-  }
-}
-
-class _BackButtonCircle extends StatelessWidget {
-  final VoidCallback onTap;
-
-  const _BackButtonCircle({required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(AppRadii.pill),
-      child: Ink(
-        width: AppSizes.backButtonSize,
-        height: AppSizes.backButtonSize,
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(AppRadii.pill),
-          border: Border.all(color: AppColors.outline),
-        ),
-        child: const Icon(Icons.chevron_left, size: AppSizes.iconMd, color: AppColors.textPrimary),
-      ),
-    );
+    Get.off(() => EditMealScreen(meal: updatedMeal, isNewMeal: widget.isNewMeal, selectedDate: widget.selectedDate));
   }
 }
 
@@ -187,12 +135,7 @@ class _FeedbackInput extends StatelessWidget {
   final int maxLength;
   final ValueChanged<String>? onChanged;
 
-  const _FeedbackInput({
-    required this.controller,
-    required this.hintText,
-    required this.maxLength,
-    this.onChanged,
-  });
+  const _FeedbackInput({required this.controller, required this.hintText, required this.maxLength, this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -229,15 +172,15 @@ class _ExampleCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.l),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceSubtle,
-        borderRadius: BorderRadius.circular(AppRadii.md),
-      ),
+      decoration: BoxDecoration(color: AppColors.surfaceSubtle, borderRadius: BorderRadius.circular(AppRadii.md)),
       child: RichText(
         text: TextSpan(
           style: AppTextStyles.body15.copyWith(color: AppColors.textPrimary),
           children: [
-            TextSpan(text: '$prefix ', style: AppTextStyles.body15.copyWith(fontWeight: FontWeight.w700)),
+            TextSpan(
+              text: '$prefix ',
+              style: AppTextStyles.body15.copyWith(fontWeight: FontWeight.w700),
+            ),
             TextSpan(text: text),
           ],
         ),

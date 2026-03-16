@@ -63,7 +63,7 @@ class MainScreen extends GetView<MainScreenController> {
             glassSettings: LiquidGlassSettings(
               thickness: 25,
               blur: 2,
-              glassColor: Colors.white.withValues(alpha: 0.6),
+              glassColor: Colors.white.withValues(alpha: 0.65),
               lightIntensity: 1.5,
             ),
             tabs: [

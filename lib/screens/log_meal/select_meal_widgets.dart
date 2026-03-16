@@ -1,18 +1,13 @@
 import 'dart:ui';
 
 import 'package:diplomka/app_theme.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class SelectMealSearchBar extends StatelessWidget {
-  const SelectMealSearchBar({
-    super.key,
-    required this.controller,
-    required this.onChanged,
-    required this.onClear,
-    this.focusNode,
-  });
+  const SelectMealSearchBar({super.key, required this.controller, required this.onChanged, required this.onClear, this.focusNode});
 
   final TextEditingController controller;
   final ValueChanged<String> onChanged;
@@ -25,10 +20,7 @@ class SelectMealSearchBar extends StatelessWidget {
     return Container(
       height: AppSizes.searchBarHeight,
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceSearch,
-        borderRadius: BorderRadius.circular(AppRadii.pill),
-      ),
+      decoration: BoxDecoration(color: AppColors.surfaceSearch, borderRadius: BorderRadius.circular(AppRadii.pill)),
       child: Row(
         children: [
           const Icon(Icons.search, color: AppColors.textSecondary, size: AppSizes.iconMd),
@@ -40,17 +32,11 @@ class SelectMealSearchBar extends StatelessWidget {
               focusNode: focusNode,
               decoration: InputDecoration(
                 hintText: tr(LocaleKeys.meal_search_food),
-                hintStyle: AppTextStyles.body16.copyWith(
-                  color: AppColors.textSecondary,
-                  fontWeight: FontWeight.w400,
-                ),
+                hintStyle: AppTextStyles.body16.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w400),
                 border: InputBorder.none,
                 isDense: true,
               ),
-              style: AppTextStyles.body16.copyWith(
-                fontWeight: FontWeight.w400,
-                color: AppColors.textPrimary,
-              ),
+              style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w400, color: AppColors.textPrimary),
             ),
           ),
           if (hasValue)
@@ -65,12 +51,7 @@ class SelectMealSearchBar extends StatelessWidget {
 }
 
 class SelectMealSegmentedTabs extends StatelessWidget {
-  const SelectMealSegmentedTabs({
-    super.key,
-    required this.labels,
-    required this.activeIndex,
-    required this.onTap,
-  });
+  const SelectMealSegmentedTabs({super.key, required this.labels, required this.activeIndex, required this.onTap});
 
   final List<String> labels;
   final int activeIndex;
@@ -78,56 +59,16 @@ class SelectMealSegmentedTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: AppSizes.selectMealSegmentHeight,
-      decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: AppColors.outline, width: 1)),
-      ),
-      child: Row(
-        children: List.generate(labels.length, (index) {
-          final isActive = index == activeIndex;
-          return Padding(
-            padding: EdgeInsets.only(right: index == labels.length - 1 ? 0 : AppSpacing.l),
-            child: GestureDetector(
-              onTap: () => onTap(index),
-              child: IntrinsicWidth(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      labels[index],
-                      style: AppTextStyles.selectMealSegmentLabel.copyWith(
-                        color: isActive ? AppColors.primary : AppColors.textTertiary,
-                      ),
-                    ),
-                    if (isActive)
-                      Container(
-                        height: AppSizes.selectMealSegmentIndicator,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: AppColors.primary,
-                          borderRadius: BorderRadius.circular(AppRadii.pill),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        }),
-      ),
+    return GlassTabBar(
+      tabs: labels.map((l) => GlassTab(label: l)).toList(),
+      selectedIndex: activeIndex,
+      onTabSelected: onTap,
     );
   }
 }
 
 class SelectMealQuickActionTile extends StatelessWidget {
-  const SelectMealQuickActionTile({
-    super.key,
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
+  const SelectMealQuickActionTile({super.key, required this.icon, required this.label, required this.onTap});
 
   final IconData icon;
   final String label;
@@ -139,11 +80,7 @@ class SelectMealQuickActionTile extends StatelessWidget {
       onTap: onTap,
       child: Container(
         height: AppSizes.selectMealActionTileHeight,
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(AppRadii.md),
-          boxShadow: AppShadows.cardSmall,
-        ),
+        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.md), boxShadow: AppShadows.cardSmall),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -158,11 +95,7 @@ class SelectMealQuickActionTile extends StatelessWidget {
 }
 
 class SelectMealSectionHeader extends StatelessWidget {
-  const SelectMealSectionHeader({
-    super.key,
-    required this.title,
-    this.trailing,
-  });
+  const SelectMealSectionHeader({super.key, required this.title, this.trailing});
 
   final String title;
   final Widget? trailing;
@@ -180,11 +113,7 @@ class SelectMealSectionHeader extends StatelessWidget {
 }
 
 class SelectMealMacroDot extends StatelessWidget {
-  const SelectMealMacroDot({
-    super.key,
-    required this.color,
-    required this.label,
-  });
+  const SelectMealMacroDot({super.key, required this.color, required this.label});
 
   final Color color;
   final String label;
@@ -252,12 +181,7 @@ class SelectMealCard extends StatelessWidget {
               decoration: BoxDecoration(
                 color: AppColors.surfaceMuted,
                 borderRadius: BorderRadius.circular(AppRadii.md),
-                image: imageProvider != null
-                    ? DecorationImage(
-                        image: imageProvider!,
-                        fit: BoxFit.cover,
-                      )
-                    : null,
+                image: imageProvider != null ? DecorationImage(image: imageProvider!, fit: BoxFit.cover) : null,
               ),
             ),
             const SizedBox(width: AppSpacing.m),
@@ -286,10 +210,7 @@ class SelectMealCard extends StatelessWidget {
               child: Container(
                 width: 32,
                 height: 32,
-                decoration: const BoxDecoration(
-                  color: AppColors.primary,
-                  shape: BoxShape.circle,
-                ),
+                decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
                 child: const Icon(Icons.add, color: AppColors.onPrimary, size: AppSizes.iconMd),
               ),
             ),
@@ -340,12 +261,7 @@ class SelectMealInlineMacroCard extends StatelessWidget {
               decoration: BoxDecoration(
                 color: AppColors.surfaceMuted,
                 borderRadius: BorderRadius.circular(AppRadii.md),
-                image: imageProvider != null
-                    ? DecorationImage(
-                        image: imageProvider!,
-                        fit: BoxFit.cover,
-                      )
-                    : null,
+                image: imageProvider != null ? DecorationImage(image: imageProvider!, fit: BoxFit.cover) : null,
               ),
             ),
             const SizedBox(width: AppSpacing.m),
@@ -396,10 +312,7 @@ class SelectMealInlineMacroCard extends StatelessWidget {
               child: Container(
                 width: 32,
                 height: 32,
-                decoration: const BoxDecoration(
-                  color: AppColors.primary,
-                  shape: BoxShape.circle,
-                ),
+                decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
                 child: const Icon(Icons.add, color: AppColors.onPrimary, size: AppSizes.iconMd),
               ),
             ),
@@ -411,13 +324,7 @@ class SelectMealInlineMacroCard extends StatelessWidget {
 }
 
 class SelectMealIngredientRow extends StatelessWidget {
-  const SelectMealIngredientRow({
-    super.key,
-    required this.title,
-    required this.subtitle,
-    required this.onAdd,
-    this.onTap,
-  });
+  const SelectMealIngredientRow({super.key, required this.title, required this.subtitle, required this.onAdd, this.onTap});
 
   final String title;
   final String subtitle;
@@ -431,11 +338,7 @@ class SelectMealIngredientRow extends StatelessWidget {
       child: Container(
         height: AppSizes.selectMealIngredientRowHeight,
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(AppRadii.md),
-          boxShadow: AppShadows.cardSmall,
-        ),
+        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.md), boxShadow: AppShadows.cardSmall),
         child: Row(
           children: [
             Expanded(
@@ -454,10 +357,7 @@ class SelectMealIngredientRow extends StatelessWidget {
               child: Container(
                 width: 32,
                 height: 32,
-                decoration: const BoxDecoration(
-                  color: AppColors.primary,
-                  shape: BoxShape.circle,
-                ),
+                decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
                 child: const Icon(Icons.add, color: AppColors.onPrimary, size: AppSizes.iconMd),
               ),
             ),
@@ -469,11 +369,7 @@ class SelectMealIngredientRow extends StatelessWidget {
 }
 
 class SelectMealEmptyState extends StatelessWidget {
-  const SelectMealEmptyState({
-    super.key,
-    required this.title,
-    required this.message,
-  });
+  const SelectMealEmptyState({super.key, required this.title, required this.message});
 
   final String title;
   final String message;
@@ -508,24 +404,13 @@ class SelectMealLoadingState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: SizedBox(
-        height: 40,
-        width: 40,
-        child: CircularProgressIndicator(
-          strokeWidth: 3,
-          color: AppColors.primary,
-        ),
-      ),
+      child: SizedBox(height: 40, width: 40, child: CircularProgressIndicator(strokeWidth: 3, color: AppColors.primary)),
     );
   }
 }
 
 class SelectMealErrorState extends StatelessWidget {
-  const SelectMealErrorState({
-    super.key,
-    required this.message,
-    required this.onRetry,
-  });
+  const SelectMealErrorState({super.key, required this.message, required this.onRetry});
 
   final String message;
   final VoidCallback onRetry;
@@ -560,13 +445,7 @@ class SelectMealErrorState extends StatelessWidget {
 }
 
 class SelectMealPickerSheet extends StatelessWidget {
-  const SelectMealPickerSheet({
-    super.key,
-    required this.title,
-    required this.options,
-    required this.selectedIndex,
-    required this.onSelected,
-  });
+  const SelectMealPickerSheet({super.key, required this.title, required this.options, required this.selectedIndex, required this.onSelected});
 
   final String title;
   final List<String> options;
@@ -581,10 +460,7 @@ class SelectMealPickerSheet extends StatelessWidget {
         filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s, vertical: AppSpacing.m),
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(AppRadii.lg),
-          ),
+          decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.lg)),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -606,9 +482,7 @@ class SelectMealPickerSheet extends StatelessWidget {
                         SizedBox(
                           width: AppSizes.iconLg,
                           height: AppSizes.iconLg,
-                          child: isSelected
-                              ? const Icon(Icons.check, color: AppColors.primary, size: AppSizes.iconMd)
-                              : const SizedBox.shrink(),
+                          child: isSelected ? const Icon(Icons.check, color: AppColors.primary, size: AppSizes.iconMd) : const SizedBox.shrink(),
                         ),
                         const SizedBox(width: AppSpacing.xs),
                         Text(options[index], style: AppTextStyles.selectMealPickerItem),
@@ -626,12 +500,7 @@ class SelectMealPickerSheet extends StatelessWidget {
 }
 
 class SelectMealSuggestionTile extends StatelessWidget {
-  const SelectMealSuggestionTile({
-    super.key,
-    required this.name,
-    required this.frequency,
-    required this.onTap,
-  });
+  const SelectMealSuggestionTile({super.key, required this.name, required this.frequency, required this.onTap});
 
   final String name;
   final int frequency;

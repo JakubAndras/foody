@@ -72,8 +72,9 @@ class DashboardController extends BaseController {
   Future<void> _syncHealthDataIfEnabled() async {
     try {
       final healthService = HealthIntegrationService.to;
+      await healthService.waitForSettingsLoaded();
       if (healthService.isEnabled.value) {
-        await healthService.syncToday();
+        await healthService.syncRecentDays();
         _fetchDayRecord(selectedDate.value);
       }
     } catch (_) {

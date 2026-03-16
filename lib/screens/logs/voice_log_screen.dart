@@ -10,9 +10,11 @@ import 'package:diplomka/screens/logs/voice_widgets.dart';
 import 'package:diplomka/services/language_settings_service.dart';
 import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/services/voice/voice_transcription_service.dart';
+import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
@@ -21,10 +23,7 @@ import 'package:speech_to_text/speech_to_text.dart';
 enum VoiceLogMode { meals, exercise }
 
 class VoiceLogScreen extends StatefulWidget {
-  const VoiceLogScreen({
-    super.key,
-    this.initialMode = VoiceLogMode.meals,
-  });
+  const VoiceLogScreen({super.key, this.initialMode = VoiceLogMode.meals});
 
   final VoiceLogMode initialMode;
 
@@ -53,16 +52,8 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
   void initState() {
     super.initState();
     _mode = widget.initialMode;
-    _pulseController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 900),
-    )..repeat(reverse: true);
-    _pulseAnimation = Tween<double>(begin: 1, end: 1.11).animate(
-      CurvedAnimation(
-        parent: _pulseController,
-        curve: Curves.easeInOut,
-      ),
-    );
+    _pulseController = AnimationController(vsync: this, duration: const Duration(milliseconds: 900))..repeat(reverse: true);
+    _pulseAnimation = Tween<double>(begin: 1, end: 1.11).animate(CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut));
     _refreshPermissionStatus();
   }
 
@@ -142,60 +133,34 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.82),
                     borderRadius: BorderRadius.circular(28),
-                    border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.65),
-                      width: 1,
-                    ),
+                    border: Border.all(color: Colors.white.withValues(alpha: 0.65), width: 1),
                   ),
-                  padding: const EdgeInsets.fromLTRB(
-                    AppSpacing.l,
-                    AppSpacing.l,
-                    AppSpacing.l,
-                    AppSpacing.m,
-                  ),
+                  padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.l, AppSpacing.l, AppSpacing.m),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
                         width: 54,
                         height: 54,
-                        decoration: BoxDecoration(
-                          color: AppColors.surface,
-                          borderRadius: BorderRadius.circular(AppRadii.pill),
-                        ),
-                        child: const Icon(
-                          Icons.mic_rounded,
-                          color: AppColors.violetStrong,
-                          size: AppSizes.iconLg,
-                        ),
+                        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.pill)),
+                        child: const Icon(Icons.mic_rounded, color: AppColors.violetStrong, size: AppSizes.iconLg),
                       ),
                       const SizedBox(height: AppSpacing.m),
                       Text(
                         tr(LocaleKeys.voice_mic_access),
-                        style: AppTextStyles.title18Tight.copyWith(
-                          fontWeight: FontWeight.w700,
-                          decoration: TextDecoration.none,
-                        ),
+                        style: AppTextStyles.title18Tight.copyWith(fontWeight: FontWeight.w700, decoration: TextDecoration.none),
                       ),
                       const SizedBox(height: AppSpacing.s),
                       Text(
-                        _permissionPermanentlyDenied
-                            ? tr(LocaleKeys.voice_mic_denied_message)
-                            : tr(LocaleKeys.voice_mic_request_message),
+                        _permissionPermanentlyDenied ? tr(LocaleKeys.voice_mic_denied_message) : tr(LocaleKeys.voice_mic_request_message),
                         textAlign: TextAlign.center,
-                        style: AppTextStyles.body14Relaxed.copyWith(
-                          color: AppColors.textSecondary,
-                          decoration: TextDecoration.none,
-                        ),
+                        style: AppTextStyles.body14Relaxed.copyWith(color: AppColors.textSecondary, decoration: TextDecoration.none),
                       ),
                       const SizedBox(height: AppSpacing.l),
                       Row(
                         children: [
                           Expanded(
-                            child: _PermissionDialogButton(
-                              label: tr(LocaleKeys.voice_not_now),
-                              onTap: () => Navigator.of(context).pop(),
-                            ),
+                            child: _PermissionDialogButton(label: tr(LocaleKeys.voice_not_now), onTap: () => Navigator.of(context).pop()),
                           ),
                           const SizedBox(width: AppSpacing.s),
                           Expanded(
@@ -224,16 +189,10 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
         );
       },
       transitionBuilder: (context, animation, secondaryAnimation, child) {
-        final curve = CurvedAnimation(
-          parent: animation,
-          curve: Curves.easeOutCubic,
-        );
+        final curve = CurvedAnimation(parent: animation, curve: Curves.easeOutCubic);
         return FadeTransition(
           opacity: curve,
-          child: ScaleTransition(
-            scale: Tween<double>(begin: 0.96, end: 1).animate(curve),
-            child: child,
-          ),
+          child: ScaleTransition(scale: Tween<double>(begin: 0.96, end: 1).animate(curve), child: child),
         );
       },
     );
@@ -242,10 +201,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
   Future<bool> _ensureSpeechReady() async {
     if (_speechReady) return true;
     try {
-      final available = await _voiceService.initialize(
-        onError: _handleSpeechError,
-        onStatus: _handleSpeechStatus,
-      );
+      final available = await _voiceService.initialize(onError: _handleSpeechError, onStatus: _handleSpeechStatus);
       if (!mounted) return false;
 
       if (!available) {
@@ -272,9 +228,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
   Future<void> _startListening() async {
     if (_isAnalyzing) return;
     final appLocale = context.locale;
-    final preferredVoiceLanguageCode = LanguageSettingsService.to.resolveVoiceLogLanguageCode(
-      appLanguageCode: appLocale.languageCode,
-    );
+    final preferredVoiceLanguageCode = LanguageSettingsService.to.resolveVoiceLogLanguageCode(appLanguageCode: appLocale.languageCode);
 
     if (!_hasPermission) {
       await _showVoicePermissionDialog();
@@ -287,11 +241,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
     try {
       _dictationBaseText = _controller.text.trim();
       _currentSessionTranscript = '';
-      await _voiceService.startListening(
-        onResult: _handleSpeechResult,
-        appLocale: appLocale,
-        preferredLanguageCode: preferredVoiceLanguageCode,
-      );
+      await _voiceService.startListening(onResult: _handleSpeechResult, appLocale: appLocale, preferredLanguageCode: preferredVoiceLanguageCode);
       if (!mounted) return;
       setState(() {
         _isListening = true;
@@ -384,25 +334,13 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
 
   void _startMealAnalysisAndNavigate(String description) {
     final selectedDate = SelectedDateService.to.selectedDate.value;
-    unawaited(
-      DashboardController.to.analyzeMealFromVoice(
-        selectedDate: selectedDate,
-        description: description,
-        scrollToTodayMealsOnStart: true,
-      ),
-    );
+    unawaited(DashboardController.to.analyzeMealFromVoice(selectedDate: selectedDate, description: description, scrollToTodayMealsOnStart: true));
     _navigateToDashboardRoot();
   }
 
   void _startExerciseAnalysisAndNavigate(String description) {
     final selectedDate = SelectedDateService.to.selectedDate.value;
-    unawaited(
-      DashboardController.to.analyzeExerciseFromVoice(
-        selectedDate: selectedDate,
-        description: description,
-        scrollToTodayMealsOnStart: true,
-      ),
-    );
+    unawaited(DashboardController.to.analyzeExerciseFromVoice(selectedDate: selectedDate, description: description, scrollToTodayMealsOnStart: true));
     _navigateToDashboardRoot();
   }
 
@@ -460,10 +398,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
     if (recognized.isEmpty) return;
 
     _currentSessionTranscript = recognized;
-    final nextText = _mergeTranscript(
-      _dictationBaseText,
-      _currentSessionTranscript,
-    );
+    final nextText = _mergeTranscript(_dictationBaseText, _currentSessionTranscript);
     if (_controller.text != nextText) {
       _controller.value = TextEditingValue(
         text: nextText,
@@ -505,17 +440,11 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
               child: Container(
                 width: 36,
                 height: 4,
-                decoration: BoxDecoration(
-                  color: AppColors.outline,
-                  borderRadius: BorderRadius.circular(AppRadii.pill),
-                ),
+                decoration: BoxDecoration(color: AppColors.outline, borderRadius: BorderRadius.circular(AppRadii.pill)),
               ),
             ),
             const SizedBox(height: AppSpacing.l),
-            Text(
-              tr(LocaleKeys.voice_tips_title),
-              style: AppTextStyles.title18Tight.copyWith(fontWeight: FontWeight.w700),
-            ),
+            Text(tr(LocaleKeys.voice_tips_title), style: AppTextStyles.title18Tight.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: AppSpacing.m),
             _VoiceTipRow(icon: Icons.record_voice_over_outlined, text: tr(LocaleKeys.voice_tips_speak_clearly)),
             _VoiceTipRow(icon: Icons.restaurant_outlined, text: tr(LocaleKeys.voice_tips_one_meal)),
@@ -536,122 +465,99 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
     final hasText = _controller.text.trim().isNotEmpty;
     final keyboardInset = MediaQuery.viewInsetsOf(context).bottom;
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return AnimatedPadding(
-              duration: const Duration(milliseconds: 100),
-              curve: Curves.easeOutCubic,
-              padding: EdgeInsets.only(bottom: keyboardInset),
-              child: SingleChildScrollView(
-                keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                  child: IntrinsicHeight(
-                    child: Column(
-                      children: [
-                        const SizedBox(height: AppSpacing.l),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              VoiceLogIconButton(
-                                icon: Icons.close,
-                                onTap: () => Navigator.of(context).maybePop(),
-                              ),
-                              VoiceLogIconButton(
-                                icon: Icons.help_outline,
-                                onTap: () => _showVoiceTips(context),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: AppSpacing.xl),
-                        VoiceLogToggle(
-                          isExercise: isExercise,
-                          onSelectMeals: () => _toggleMode(VoiceLogMode.meals),
-                          onSelectExercise: () => _toggleMode(VoiceLogMode.exercise),
-                        ),
-                        const SizedBox(height: AppSpacing.l),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-                          child: Container(
-                            padding: const EdgeInsets.all(AppSpacing.m),
-                            decoration: BoxDecoration(
-                              color: AppColors.surface,
-                              borderRadius: BorderRadius.circular(AppRadii.lg),
-                              boxShadow: AppShadows.cardSubtle,
-                            ),
-                            child: Column(
-                              children: [
-                                VoiceLogTextArea(
-                                  controller: _controller,
-                                  hintText: isExercise
-                                      ? tr(LocaleKeys.voice_hint_exercise)
-                                      : tr(LocaleKeys.voice_hint_meals),
-                                  onChanged: (_) => setState(() {}),
-                                  enabled: !_isListening && !_isAnalyzing,
+    return LiquidGlassScope(
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        backgroundColor: AppColors.background,
+        resizeToAvoidBottomInset: false,
+        appBar: CustomGlassAppBar(
+          leadingIcon: Icons.close,
+          onBack: () => Navigator.of(context).maybePop(),
+          actions: [CustomGlassIconButton(icon: Icons.help_outline, iconSize: AppSizes.iconMd, onPressed: () => _showVoiceTips(context))],
+        ),
+        body: LiquidGlassBackground(
+          child: SafeArea(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return AnimatedPadding(
+                  duration: const Duration(milliseconds: 100),
+                  curve: Curves.easeOutCubic,
+                  padding: EdgeInsets.only(bottom: keyboardInset),
+                  child: SingleChildScrollView(
+                    keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                      child: IntrinsicHeight(
+                        child: Column(
+                          children: [
+                            const SizedBox(height: AppSpacing.xl),
+                            VoiceLogToggle(isExercise: isExercise, onSelectMeals: () => _toggleMode(VoiceLogMode.meals), onSelectExercise: () => _toggleMode(VoiceLogMode.exercise)),
+                            const SizedBox(height: AppSpacing.l),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+                              child: Container(
+                                padding: const EdgeInsets.all(AppSpacing.m),
+                                decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.lg), boxShadow: AppShadows.cardSubtle),
+                                child: Column(
+                                  children: [
+                                    VoiceLogTextArea(
+                                      controller: _controller,
+                                      hintText: isExercise ? tr(LocaleKeys.voice_hint_exercise) : tr(LocaleKeys.voice_hint_meals),
+                                      onChanged: (_) => setState(() {}),
+                                      enabled: !_isListening && !_isAnalyzing,
+                                    ),
+                                    const SizedBox(height: AppSpacing.m),
+                                    VoiceLogAnalyzeButton(
+                                      label: _isAnalyzing
+                                          ? (isExercise ? tr(LocaleKeys.voice_analyzing_exercise) : tr(LocaleKeys.voice_analyzing_meals))
+                                          : (isExercise ? tr(LocaleKeys.voice_analyze_exercise) : tr(LocaleKeys.voice_analyze_meals)),
+                                      onTap: _handleAnalyze,
+                                      enabled: hasText && !_isAnalyzing,
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(height: AppSpacing.m),
-                                VoiceLogAnalyzeButton(
-                                  label: _isAnalyzing ? (isExercise ? tr(LocaleKeys.voice_analyzing_exercise) : tr(LocaleKeys.voice_analyzing_meals)) : (isExercise ? tr(LocaleKeys.voice_analyze_exercise) : tr(LocaleKeys.voice_analyze_meals)),
-                                  onTap: _handleAnalyze,
-                                  enabled: hasText && !_isAnalyzing,
-                                ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ),
-                        const SizedBox(height: AppSpacing.l),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
-                          child: Text(
-                            isExercise
-                                ? tr(LocaleKeys.voice_instruction_exercise)
-                                : tr(LocaleKeys.voice_instruction_meals),
-                            textAlign: TextAlign.center,
-                            style: AppTextStyles.body14Relaxed,
-                          ),
-                        ),
-                        const Spacer(),
-                        AnimatedBuilder(
-                          animation: _pulseAnimation,
-                          builder: (context, child) {
-                            final scale = _isListening ? _pulseAnimation.value : 1.0;
-                            return Transform.scale(
-                              scale: scale,
-                              child: child,
-                            );
-                          },
-                          child: VoiceMicButton(
-                            gradient: !isExercise && !_isListening ? AppGradients.primary : null,
-                            color: isExercise || _isListening ? AppColors.violetStrong : null,
-                            onTap: _isListening ? _stopListening : _startListening,
-                            onLongPress: _togglePause,
-                          ),
-                        ),
-                        const SizedBox(height: AppSpacing.s),
-                        if (_isListening || _isPaused || _isAnalyzing || _speechErrorMessage != null)
-                          Text(
-                            _speechErrorMessage ?? (_isAnalyzing ? tr(LocaleKeys.voice_analyzing) : (_isPaused ? tr(LocaleKeys.voice_paused) : tr(LocaleKeys.voice_listening))),
-                            style: AppTextStyles.body14.copyWith(
-                              color: _speechErrorMessage == null ? AppColors.violetStrong : AppColors.error,
-                              fontWeight: FontWeight.w600,
+                            const SizedBox(height: AppSpacing.l),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
+                              child: Text(
+                                isExercise ? tr(LocaleKeys.voice_instruction_exercise) : tr(LocaleKeys.voice_instruction_meals),
+                                textAlign: TextAlign.center,
+                                style: AppTextStyles.body14Relaxed,
+                              ),
                             ),
-                            textAlign: TextAlign.center,
-                          ),
-                        const SizedBox(height: AppSpacing.xl),
-                      ],
+                            const Spacer(),
+                            AnimatedBuilder(
+                              animation: _pulseAnimation,
+                              builder: (context, child) {
+                                final scale = _isListening ? _pulseAnimation.value : 1.0;
+                                return Transform.scale(scale: scale, child: child);
+                              },
+                              child: VoiceMicButton(
+                                gradient: !isExercise && !_isListening ? AppGradients.primary : null,
+                                color: isExercise || _isListening ? AppColors.violetStrong : null,
+                                onTap: _isListening ? _stopListening : _startListening,
+                                onLongPress: _togglePause,
+                              ),
+                            ),
+                            const SizedBox(height: AppSpacing.s),
+                            if (_isListening || _isPaused || _isAnalyzing || _speechErrorMessage != null)
+                              Text(
+                                _speechErrorMessage ?? (_isAnalyzing ? tr(LocaleKeys.voice_analyzing) : (_isPaused ? tr(LocaleKeys.voice_paused) : tr(LocaleKeys.voice_listening))),
+                                style: AppTextStyles.body14.copyWith(color: _speechErrorMessage == null ? AppColors.violetStrong : AppColors.error, fontWeight: FontWeight.w600),
+                                textAlign: TextAlign.center,
+                              ),
+                            const SizedBox(height: AppSpacing.xl),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-            );
-          },
+                );
+              },
+            ),
+          ),
         ),
       ),
     );
@@ -659,11 +565,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
 }
 
 class _PermissionDialogButton extends StatelessWidget {
-  const _PermissionDialogButton({
-    required this.label,
-    required this.onTap,
-    this.emphasized = false,
-  });
+  const _PermissionDialogButton({required this.label, required this.onTap, this.emphasized = false});
 
   final String label;
   final VoidCallback onTap;
@@ -678,21 +580,12 @@ class _PermissionDialogButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: emphasized ? AppColors.violetStrong : Colors.white.withValues(alpha: 0.72),
           borderRadius: BorderRadius.circular(AppRadii.pill),
-          border: emphasized
-              ? null
-              : Border.all(
-                  color: AppColors.outline,
-                  width: 1,
-                ),
+          border: emphasized ? null : Border.all(color: AppColors.outline, width: 1),
         ),
         alignment: Alignment.center,
         child: Text(
           label,
-          style: AppTextStyles.body14.copyWith(
-            color: emphasized ? AppColors.onPrimary : AppColors.textPrimary,
-            fontWeight: FontWeight.w600,
-            decoration: TextDecoration.none,
-          ),
+          style: AppTextStyles.body14.copyWith(color: emphasized ? AppColors.onPrimary : AppColors.textPrimary, fontWeight: FontWeight.w600, decoration: TextDecoration.none),
         ),
       ),
     );
@@ -714,12 +607,7 @@ class _VoiceTipRow extends StatelessWidget {
         children: [
           Icon(icon, size: AppSizes.iconMd, color: AppColors.violetStrong),
           const SizedBox(width: AppSpacing.s),
-          Expanded(
-            child: Text(
-              text,
-              style: AppTextStyles.body14Relaxed,
-            ),
-          ),
+          Expanded(child: Text(text, style: AppTextStyles.body14Relaxed)),
         ],
       ),
     );

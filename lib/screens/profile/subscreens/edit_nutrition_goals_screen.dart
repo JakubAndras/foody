@@ -123,7 +123,18 @@ class _EditNutritionGoalsScreenState extends State<EditNutritionGoalsScreen> {
   Widget build(BuildContext context) {
     return ProfileGradientScaffold(
       scroll: true,
-      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.l, AppSpacing.screen, AppSpacing.xl),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, 0, AppSpacing.screen, AppSpacing.xl),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: SizedBox(
+        width: MediaQuery.of(context).size.width - (AppSpacing.screen * 2),
+        child: ProfilePrimaryButton(
+          label: _isSaving ? tr(LocaleKeys.common_saving) : tr(LocaleKeys.nutrition_goals_save_goals),
+          onPressed: _isSaving || _isLoading ? null : _saveGoals,
+          leading: const Icon(Icons.check, color: AppColors.onPrimary, size: AppSizes.iconMd),
+          height: AppSizes.buttonHeightCompact,
+          shadow: AppShadows.control,
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -168,14 +179,6 @@ class _EditNutritionGoalsScreenState extends State<EditNutritionGoalsScreen> {
             const SizedBox(height: AppSpacing.m),
             const LinearProgressIndicator(),
           ],
-          const SizedBox(height: AppSpacing.l),
-          ProfilePrimaryButton(
-            label: _isSaving ? tr(LocaleKeys.common_saving) : tr(LocaleKeys.nutrition_goals_save_goals),
-            onPressed: _isSaving || _isLoading ? null : _saveGoals,
-            leading: const Icon(Icons.check, color: AppColors.onPrimary, size: AppSizes.iconMd),
-            height: AppSizes.buttonHeightCompact,
-            shadow: AppShadows.control,
-          ),
         ],
       ),
     );

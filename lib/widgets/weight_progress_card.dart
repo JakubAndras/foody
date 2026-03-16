@@ -1,16 +1,14 @@
 import 'dart:math';
 
 import 'package:diplomka/app_theme.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:diplomka/model/weight_entry.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 
 class WeightProgressCard extends StatefulWidget {
-  const WeightProgressCard({
-    super.key,
-    required this.entries,
-  });
+  const WeightProgressCard({super.key, required this.entries});
 
   final List<WeightEntry> entries;
 
@@ -83,14 +81,12 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
     final latest = hasEntries ? entries.first : null;
     final earliest = hasEntries ? entries.last : null;
     final change = hasEntries && entries.length > 1 ? latest!.weight - earliest!.weight : 0.0;
-    final changeLabel = hasEntries && entries.length > 1
-        ? '${change >= 0 ? '+' : ''}${_formatWeight(change)} kg'
-        : '—';
+    final changeLabel = hasEntries && entries.length > 1 ? '${change >= 0 ? '+' : ''}${_formatWeight(change)} kg' : '—';
     final changeIcon = change > 0
         ? Icons.trending_up
         : change < 0
-            ? Icons.trending_down
-            : Icons.trending_flat;
+        ? Icons.trending_down
+        : Icons.trending_flat;
 
     final ticks = hasEntries ? _buildTicks(entries) : <double>[];
 
@@ -120,7 +116,10 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
                   children: [
                     Icon(changeIcon, size: AppSizes.iconXs, color: AppColors.textEmphasis),
                     const SizedBox(width: AppSpacing.xs),
-                    Text(changeLabel, style: AppTextStyles.caption12.copyWith(color: AppColors.textEmphasis, fontWeight: FontWeight.w700)),
+                    Text(
+                      changeLabel,
+                      style: AppTextStyles.caption12.copyWith(color: AppColors.textEmphasis, fontWeight: FontWeight.w700),
+                    ),
                     const SizedBox(width: AppSpacing.xxs),
                     Text(tr(LocaleKeys.progress_since_start), style: AppTextStyles.caption12.copyWith(color: AppColors.textTertiary)),
                   ],
@@ -135,17 +134,9 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
               child: Text(tr(LocaleKeys.progress_no_weight_data), style: AppTextStyles.body15.copyWith(color: AppColors.textSecondary)),
             )
           else
-            _WeightLineChart(
-              entries: entries,
-              ticks: ticks,
-              formatWeight: _formatWeight,
-            ),
+            _WeightLineChart(entries: entries, ticks: ticks, formatWeight: _formatWeight),
           const SizedBox(height: AppSpacing.l),
-          _SegmentedControl(
-            labels: _rangeLabels,
-            selectedIndex: _selectedIndex,
-            onTap: (index) => setState(() => _selectedIndex = index),
-          ),
+          _SegmentedControl(labels: _rangeLabels, selectedIndex: _selectedIndex, onTap: (index) => setState(() => _selectedIndex = index)),
         ],
       ),
     );
@@ -153,11 +144,7 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
 }
 
 class _WeightLineChart extends StatelessWidget {
-  const _WeightLineChart({
-    required this.entries,
-    required this.ticks,
-    required this.formatWeight,
-  });
+  const _WeightLineChart({required this.entries, required this.ticks, required this.formatWeight});
 
   final List<WeightEntry> entries;
   final List<double> ticks;
@@ -195,10 +182,12 @@ class _WeightLineChart extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: ticks
-                .map((value) => Text(
-                      formatWeight(value),
-                      style: AppTextStyles.caption12.copyWith(color: AppColors.textTertiary, fontWeight: FontWeight.w600),
-                    ))
+                .map(
+                  (value) => Text(
+                    formatWeight(value),
+                    style: AppTextStyles.caption12.copyWith(color: AppColors.textTertiary, fontWeight: FontWeight.w600),
+                  ),
+                )
                 .toList(),
           ),
         ),
@@ -207,12 +196,7 @@ class _WeightLineChart extends StatelessWidget {
           child: SizedBox(
             height: chartHeight,
             child: CustomPaint(
-              painter: _WeightLinePainter(
-                entries: data,
-                minWeight: minWeight,
-                maxWeight: maxWeight,
-                gridLines: ticks.length,
-              ),
+              painter: _WeightLinePainter(entries: data, minWeight: minWeight, maxWeight: maxWeight, gridLines: ticks.length),
             ),
           ),
         ),
@@ -222,12 +206,7 @@ class _WeightLineChart extends StatelessWidget {
 }
 
 class _WeightLinePainter extends CustomPainter {
-  _WeightLinePainter({
-    required this.entries,
-    required this.minWeight,
-    required this.maxWeight,
-    required this.gridLines,
-  });
+  _WeightLinePainter({required this.entries, required this.minWeight, required this.maxWeight, required this.gridLines});
 
   final List<WeightEntry> entries;
   final double minWeight;
@@ -291,10 +270,7 @@ class _WeightLinePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _WeightLinePainter oldDelegate) {
-    return oldDelegate.entries != entries ||
-        oldDelegate.minWeight != minWeight ||
-        oldDelegate.maxWeight != maxWeight ||
-        oldDelegate.gridLines != gridLines;
+    return oldDelegate.entries != entries || oldDelegate.minWeight != minWeight || oldDelegate.maxWeight != maxWeight || oldDelegate.gridLines != gridLines;
   }
 }
 
@@ -303,47 +279,10 @@ class _SegmentedControl extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onTap;
 
-  const _SegmentedControl({
-    required this.labels,
-    required this.selectedIndex,
-    required this.onTap,
-  });
+  const _SegmentedControl({required this.labels, required this.selectedIndex, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: AppSizes.segmentedHeight,
-      padding: const EdgeInsets.all(AppSpacing.xxs),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceMuted,
-        borderRadius: BorderRadius.circular(AppRadii.lg2),
-      ),
-      child: Row(
-        children: List.generate(labels.length, (index) {
-          final bool selected = index == selectedIndex;
-          return Expanded(
-            child: GestureDetector(
-              onTap: () => onTap(index),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: selected ? AppColors.surface : Colors.transparent,
-                  borderRadius: BorderRadius.circular(AppRadii.md),
-                  boxShadow: selected ? AppShadows.cardSmall : null,
-                ),
-                child: Center(
-                  child: Text(
-                    labels[index],
-                    style: AppTextStyles.caption12.copyWith(
-                      fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
-                      color: selected ? AppColors.textPrimary : AppColors.textTertiary,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          );
-        }),
-      ),
-    );
+    return GlassSegmentedControl(segments: labels, selectedIndex: selectedIndex, onSegmentSelected: onTap, useOwnLayer: true);
   }
 }

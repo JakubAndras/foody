@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/widgets/custom_glass_app_bar.dart';
+import 'package:diplomka/widgets/foody_glass_buttons.dart';
 import 'package:diplomka/widgets/mesh_gradient_background.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 class ProfileGradientScaffold extends StatelessWidget {
   const ProfileGradientScaffold({
@@ -29,10 +32,7 @@ class ProfileGradientScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Widget content = Padding(
-      padding: padding ?? const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.l, AppSpacing.screen, AppSpacing.xl),
-      child: child,
-    );
+    final Widget content = Padding(padding: padding ?? const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.l, AppSpacing.screen, AppSpacing.xl), child: child);
 
     final Widget body = SafeArea(
       top: safeTop,
@@ -50,16 +50,21 @@ class ProfileGradientScaffold extends StatelessWidget {
           : content,
     );
 
-    return Scaffold(
-      backgroundColor: useMeshBackground ? AppColors.meshBase : AppColors.background,
-      floatingActionButton: floatingActionButton,
-      floatingActionButtonLocation: floatingActionButtonLocation,
-      body: useMeshBackground
-          ? Stack(children: [const MeshGradientBackground(), body])
-          : Container(
-              decoration: const BoxDecoration(gradient: AppGradients.background),
-              child: body,
-            ),
+    return LiquidGlassScope(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        extendBodyBehindAppBar: true,
+        floatingActionButton: floatingActionButton,
+        floatingActionButtonLocation: floatingActionButtonLocation,
+        body: LiquidGlassBackground(
+          child: useMeshBackground
+              ? Stack(children: [const MeshGradientBackground(), body])
+              : Container(
+                  decoration: const BoxDecoration(gradient: AppGradients.background),
+                  child: body,
+                ),
+        ),
+      ),
     );
   }
 }
@@ -72,22 +77,7 @@ class ProfileBackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: AppSizes.backButtonSize,
-      height: AppSizes.backButtonSize,
-      child: Material(
-        color: AppColors.surface,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadii.pill),
-          side: const BorderSide(color: AppColors.outline),
-        ),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(AppRadii.pill),
-          onTap: onPressed,
-          child: Icon(icon, size: AppSizes.iconMd, color: AppColors.textPrimary),
-        ),
-      ),
-    );
+    return CustomGlassIconButton(icon: icon, onPressed: onPressed, size: AppSizes.backButtonSize);
   }
 }
 
@@ -99,22 +89,7 @@ class ProfileTopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: AppSizes.navItemHeight,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: ProfileBackButton(onPressed: onBack),
-          ),
-          Text(
-            title,
-            style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w600),
-          ),
-        ],
-      ),
-    );
+    return CustomGlassAppBar(title: title, onBack: onBack);
   }
 }
 
@@ -139,12 +114,7 @@ class ProfileCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(radius),
-        boxShadow: shadow,
-        border: border,
-      ),
+      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(radius), boxShadow: shadow, border: border),
       padding: padding,
       child: child,
     );
@@ -152,15 +122,7 @@ class ProfileCard extends StatelessWidget {
 }
 
 class ProfilePrimaryButton extends StatelessWidget {
-  const ProfilePrimaryButton({
-    super.key,
-    required this.label,
-    this.onPressed,
-    this.leading,
-    this.height = AppSizes.buttonHeightCompact,
-    this.radius = AppRadii.pill,
-    this.shadow,
-  });
+  const ProfilePrimaryButton({super.key, required this.label, this.onPressed, this.leading, this.height = AppSizes.buttonHeightCompact, this.radius = AppRadii.pill, this.shadow});
 
   final String label;
   final VoidCallback? onPressed;
@@ -171,54 +133,12 @@ class ProfilePrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: height,
-      width: double.infinity,
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onPressed,
-          borderRadius: BorderRadius.circular(radius),
-          child: Ink(
-            decoration: BoxDecoration(
-              gradient: AppGradients.primary,
-              borderRadius: BorderRadius.circular(radius),
-              boxShadow: shadow,
-            ),
-            child: Center(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (leading != null) ...[
-                    leading!,
-                    const SizedBox(width: AppSpacing.xs),
-                  ],
-                  Text(
-                    label,
-                    style: AppTextStyles.title17.copyWith(
-                      color: AppColors.onPrimary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
+    return FoodyPrimaryButton(label: label, onTap: onPressed, leading: leading, height: height, shadow: shadow);
   }
 }
 
 class ProfileOutlineButton extends StatelessWidget {
-  const ProfileOutlineButton({
-    super.key,
-    required this.label,
-    this.onPressed,
-    this.leading,
-    this.height = AppSizes.buttonHeightCompact,
-    this.radius = AppRadii.pill,
-  });
+  const ProfileOutlineButton({super.key, required this.label, this.onPressed, this.leading, this.height = AppSizes.buttonHeightCompact, this.radius = AppRadii.pill});
 
   final String label;
   final VoidCallback? onPressed;
@@ -228,39 +148,7 @@ class ProfileOutlineButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: height,
-      width: double.infinity,
-      child: Material(
-        color: AppColors.surface,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(radius),
-          side: const BorderSide(color: AppColors.outline),
-        ),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(radius),
-          onTap: onPressed,
-          child: Center(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (leading != null) ...[
-                  leading!,
-                  const SizedBox(width: AppSpacing.xs),
-                ],
-                Text(
-                  label,
-                  style: AppTextStyles.title17.copyWith(
-                    color: AppColors.textPrimary,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+    return FoodySecondaryButton(label: label, onTap: onPressed, leading: leading, height: height);
   }
 }
 
@@ -277,10 +165,7 @@ class ProfileSectionHeader extends StatelessWidget {
       children: [
         Text(
           title,
-          style: AppTextStyles.body14.copyWith(
-            color: AppColors.textSecondary,
-            fontWeight: FontWeight.w600,
-          ),
+          style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w600),
         ),
         if (trailing != null) trailing!,
       ],
@@ -289,15 +174,7 @@ class ProfileSectionHeader extends StatelessWidget {
 }
 
 class ProfileSettingsRow extends StatelessWidget {
-  const ProfileSettingsRow({
-    super.key,
-    required this.title,
-    this.subtitle,
-    this.leading,
-    this.trailing,
-    this.showDivider = true,
-    this.onTap,
-  });
+  const ProfileSettingsRow({super.key, required this.title, this.subtitle, this.leading, this.trailing, this.showDivider = true, this.onTap});
 
   final String title;
   final String? subtitle;
@@ -313,25 +190,13 @@ class ProfileSettingsRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: subtitle == null ? CrossAxisAlignment.center : CrossAxisAlignment.start,
         children: [
-          if (leading != null) ...[
-            leading!,
-            const SizedBox(width: AppSpacing.s),
-          ],
+          if (leading != null) ...[leading!, const SizedBox(width: AppSpacing.s)],
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: AppTextStyles.body15.copyWith(fontWeight: FontWeight.w600),
-                ),
-                if (subtitle != null) ...[
-                  const SizedBox(height: AppSpacing.xxs),
-                  Text(
-                    subtitle!,
-                    style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary),
-                  ),
-                ],
+                Text(title, style: AppTextStyles.body15.copyWith(fontWeight: FontWeight.w600)),
+                if (subtitle != null) ...[const SizedBox(height: AppSpacing.xxs), Text(subtitle!, style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary))],
               ],
             ),
           ),
@@ -371,21 +236,14 @@ class ProfileToggle extends StatelessWidget {
         width: AppSizes.toggleWidthSm,
         height: AppSizes.toggleHeightSm,
         padding: const EdgeInsets.all(2),
-        decoration: BoxDecoration(
-          color: isOn ? AppColors.primarySoft : AppColors.borderStrong,
-          borderRadius: BorderRadius.circular(AppRadii.pill),
-        ),
+        decoration: BoxDecoration(color: isOn ? AppColors.primarySoft : AppColors.borderStrong, borderRadius: BorderRadius.circular(AppRadii.pill)),
         child: AnimatedAlign(
           duration: AppTheme.transitionDuration,
           alignment: isOn ? Alignment.centerRight : Alignment.centerLeft,
           child: Container(
             width: AppSizes.toggleKnobSm,
             height: AppSizes.toggleKnobSm,
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(AppRadii.pill),
-              boxShadow: AppShadows.control,
-            ),
+            decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.pill), boxShadow: AppShadows.control),
           ),
         ),
       ),
@@ -404,16 +262,10 @@ class ProfileTimeChip extends StatelessWidget {
     return Container(
       height: AppSizes.streakPillHeight,
       width: width,
-      decoration: BoxDecoration(
-        color: AppColors.surfaceMuted,
-        borderRadius: BorderRadius.circular(AppRadii.xs),
-      ),
+      decoration: BoxDecoration(color: AppColors.surfaceMuted, borderRadius: BorderRadius.circular(AppRadii.xs)),
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
       alignment: Alignment.center,
-      child: Text(
-        label,
-        style: AppTextStyles.body15.copyWith(fontWeight: FontWeight.w500),
-      ),
+      child: Text(label, style: AppTextStyles.body15.copyWith(fontWeight: FontWeight.w500)),
     );
   }
 }

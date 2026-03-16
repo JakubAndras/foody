@@ -4,15 +4,14 @@ import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/screens/main_screen.dart';
 import 'package:diplomka/screens/scan/scan_widgets.dart';
 import 'package:diplomka/services/selected_date_service.dart';
+import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 class ScanPreviewScreen extends StatefulWidget {
-  const ScanPreviewScreen({
-    super.key,
-    required this.imagePath,
-  });
+  const ScanPreviewScreen({super.key, required this.imagePath});
 
   final String? imagePath;
 
@@ -54,9 +53,39 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.backgroundAlt,
-      body: SafeArea(
+    return LiquidGlassScope(
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        backgroundColor: AppColors.background,
+        appBar: CustomGlassAppBar(
+          leadingIcon: Icons.close,
+          onBack: () => Get.back(),
+          titleWidget: Container(
+            height: AppSizes.scanTopButtonSize,
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(AppRadii.pill),
+              border: Border.all(color: AppColors.outline, width: 1.08),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  onTap: () => Get.back(),
+                  child: Text(tr(LocaleKeys.scan_preview_retake), style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w500)),
+                ),
+                const SizedBox(width: AppSpacing.s),
+                GestureDetector(
+                  onTap: () => _showPreviewTips(context),
+                  child: Text(tr(LocaleKeys.scan_preview_help), style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w500)),
+                ),
+              ],
+            ),
+          ),
+        ),
+        body: LiquidGlassBackground(
+          child: SafeArea(
         child: Stack(
           children: [
             SingleChildScrollView(
@@ -64,20 +93,10 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  _buildTopBar(),
                   const SizedBox(height: AppSpacing.l),
-                  ScanPreviewImage(
-                    imagePath: widget.imagePath,
-                    hasShadow: false,
-                  ),
+                  ScanPreviewImage(imagePath: widget.imagePath, hasShadow: false),
                   const SizedBox(height: AppSpacing.l),
-                  ScanInputField(
-                    hint: tr(LocaleKeys.scan_preview_notes_hint),
-                    controller: _notesController,
-                    height: AppSizes.scanTextAreaHeight,
-                    maxLines: 3,
-                    hasShadow: false,
-                  ),
+                  ScanInputField(hint: tr(LocaleKeys.scan_preview_notes_hint), controller: _notesController, height: AppSizes.scanTextAreaHeight, maxLines: 3, hasShadow: false),
                   const SizedBox(height: AppSpacing.xl),
                   ScanPrimaryButton(
                     label: tr(LocaleKeys.scan_preview_analyze),
@@ -99,44 +118,9 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
               ),
           ],
         ),
+          ),
+        ),
       ),
-    );
-  }
-
-  Widget _buildTopBar() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        ScanCircleButton(
-          icon: Icons.close,
-          onPressed: () => Get.back(),
-          backgroundColor: AppColors.surface,
-          shadow: const <BoxShadow>[],
-          border: Border.all(color: AppColors.outline, width: 1.08),
-        ),
-        Container(
-          height: AppSizes.scanTopButtonSize,
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(AppRadii.pill),
-            border: Border.all(color: AppColors.outline, width: 1.08),
-          ),
-          child: Row(
-            children: [
-              GestureDetector(
-                onTap: () => Get.back(),
-                child: Text(tr(LocaleKeys.scan_preview_retake), style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w500)),
-              ),
-              const SizedBox(width: AppSpacing.s),
-              GestureDetector(
-                onTap: () => _showPreviewTips(context),
-                child: Text(tr(LocaleKeys.scan_preview_help), style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w500)),
-              ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 
@@ -159,17 +143,11 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
               child: Container(
                 width: 36,
                 height: 4,
-                decoration: BoxDecoration(
-                  color: AppColors.outline,
-                  borderRadius: BorderRadius.circular(AppRadii.pill),
-                ),
+                decoration: BoxDecoration(color: AppColors.outline, borderRadius: BorderRadius.circular(AppRadii.pill)),
               ),
             ),
             const SizedBox(height: AppSpacing.l),
-            Text(
-              tr(LocaleKeys.scan_preview_tips_title),
-              style: AppTextStyles.title18Tight.copyWith(fontWeight: FontWeight.w700),
-            ),
+            Text(tr(LocaleKeys.scan_preview_tips_title), style: AppTextStyles.title18Tight.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: AppSpacing.m),
             _PreviewTipRow(icon: Icons.edit_note, text: tr(LocaleKeys.scan_preview_tip_add_description)),
             _PreviewTipRow(icon: Icons.camera_alt_outlined, text: tr(LocaleKeys.scan_preview_tip_retake_blurry)),
@@ -207,12 +185,7 @@ class _PreviewTipRow extends StatelessWidget {
         children: [
           Icon(icon, size: AppSizes.iconMd, color: AppColors.primary),
           const SizedBox(width: AppSpacing.s),
-          Expanded(
-            child: Text(
-              text,
-              style: AppTextStyles.body14Relaxed,
-            ),
-          ),
+          Expanded(child: Text(text, style: AppTextStyles.body14Relaxed)),
         ],
       ),
     );

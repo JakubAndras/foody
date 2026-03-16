@@ -5,20 +5,15 @@ import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/exercise.dart';
 import 'package:diplomka/screens/logs/exercise_widgets.dart';
 import 'package:diplomka/services/selected_date_service.dart';
+import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 enum ExerciseTrackingMode { total, perMinute }
 
 class AddExerciseScreen extends StatefulWidget {
-  const AddExerciseScreen({
-    super.key,
-    this.initialName,
-    this.initialDurationMinutes,
-    this.initialCaloriesTotal,
-    this.initialCaloriesPerMinute,
-    this.initialTrackingMode,
-  });
+  const AddExerciseScreen({super.key, this.initialName, this.initialDurationMinutes, this.initialCaloriesTotal, this.initialCaloriesPerMinute, this.initialTrackingMode});
 
   final String? initialName;
   final int? initialDurationMinutes;
@@ -107,141 +102,123 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.backgroundAlt,
-      body: Column(
-        children: [
-          SafeArea(
-            bottom: false,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.m, AppSpacing.l, AppSpacing.s),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _CircleButton(
-                    icon: Icons.chevron_left,
-                    onTap: () => Navigator.of(context).maybePop(),
-                  ),
-                  Text(tr(LocaleKeys.exercise_add_title), style: AppTextStyles.title18Tight),
-                  _CircleButton(
-                    icon: _isFavorite ? Icons.bookmark : Icons.bookmark_border,
-                    onTap: () => setState(() => _isFavorite = !_isFavorite),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.s, AppSpacing.l, AppSpacing.xl),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(tr(LocaleKeys.exercise_exercise_name), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
-                  const SizedBox(height: AppSpacing.xs),
-                  _TextInput(
-                    controller: _nameController,
-                    hintText: tr(LocaleKeys.exercise_name_hint),
-                  ),
-                  const SizedBox(height: AppSpacing.l),
-                  Text(tr(LocaleKeys.exercise_track_question), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
-                  const SizedBox(height: AppSpacing.xs),
-                  Row(
+    return LiquidGlassScope(
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        extendBodyBehindAppBar: true,
+        appBar: CustomGlassAppBar(
+          title: tr(LocaleKeys.exercise_add_title),
+          onBack: () => Navigator.of(context).maybePop(),
+          actions: [
+            CustomGlassIconButton(icon: _isFavorite ? Icons.bookmark : Icons.bookmark_border, iconSize: AppSizes.iconMd, onPressed: () => setState(() => _isFavorite = !_isFavorite)),
+          ],
+        ),
+        body: LiquidGlassBackground(
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.s, AppSpacing.l, AppSpacing.xl),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: ExerciseTrackingOptionCard(
-                          selected: _mode == ExerciseTrackingMode.total,
+                      Text(tr(LocaleKeys.exercise_exercise_name), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
+                      const SizedBox(height: AppSpacing.xs),
+                      _TextInput(controller: _nameController, hintText: tr(LocaleKeys.exercise_name_hint)),
+                      const SizedBox(height: AppSpacing.l),
+                      Text(tr(LocaleKeys.exercise_track_question), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
+                      const SizedBox(height: AppSpacing.xs),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ExerciseTrackingOptionCard(
+                              selected: _mode == ExerciseTrackingMode.total,
+                              gradient: AppGradients.exerciseCalories,
+                              icon: Icons.local_fire_department,
+                              label: tr(LocaleKeys.exercise_total_calories),
+                              subtitle: tr(LocaleKeys.exercise_enter_total),
+                              onTap: () => setState(() => _mode = ExerciseTrackingMode.total),
+                            ),
+                          ),
+                          const SizedBox(width: AppSpacing.m),
+                          Expanded(
+                            child: ExerciseTrackingOptionCard(
+                              selected: _mode == ExerciseTrackingMode.perMinute,
+                              gradient: AppGradients.exerciseCaloriesAlt,
+                              icon: Icons.trending_up,
+                              label: tr(LocaleKeys.exercise_per_minute),
+                              subtitle: tr(LocaleKeys.exercise_kcal_min_desc),
+                              onTap: () => setState(() => _mode = ExerciseTrackingMode.perMinute),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: AppSpacing.l),
+                      if (_mode == ExerciseTrackingMode.total) ...[
+                        Text(tr(LocaleKeys.exercise_total_burned), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
+                        const SizedBox(height: AppSpacing.xs),
+                        _InputCard(
+                          controller: _totalController,
+                          label: tr(LocaleKeys.common_calories),
+                          unit: tr(LocaleKeys.common_kcal),
                           gradient: AppGradients.exerciseCalories,
                           icon: Icons.local_fire_department,
-                          label: tr(LocaleKeys.exercise_total_calories),
-                          subtitle: tr(LocaleKeys.exercise_enter_total),
-                          onTap: () => setState(() => _mode = ExerciseTrackingMode.total),
                         ),
-                      ),
-                      const SizedBox(width: AppSpacing.m),
-                      Expanded(
-                        child: ExerciseTrackingOptionCard(
-                          selected: _mode == ExerciseTrackingMode.perMinute,
+                        const SizedBox(height: AppSpacing.s),
+                        Text(tr(LocaleKeys.exercise_enter_total), style: AppTextStyles.label12.copyWith(color: AppColors.textTertiary)),
+                      ] else ...[
+                        Text(tr(LocaleKeys.exercise_calories_per_minute), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
+                        const SizedBox(height: AppSpacing.xs),
+                        _InputCard(
+                          controller: _rateController,
+                          label: tr(LocaleKeys.exercise_kcal_min),
+                          unit: tr(LocaleKeys.exercise_kcal_min),
                           gradient: AppGradients.exerciseCaloriesAlt,
                           icon: Icons.trending_up,
-                          label: tr(LocaleKeys.exercise_per_minute),
-                          subtitle: tr(LocaleKeys.exercise_kcal_min_desc),
-                          onTap: () => setState(() => _mode = ExerciseTrackingMode.perMinute),
+                          onChanged: (_) => setState(() {}),
                         ),
-                      ),
+                        const SizedBox(height: AppSpacing.m),
+                        Text(tr(LocaleKeys.exercise_duration_label), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
+                        const SizedBox(height: AppSpacing.xs),
+                        _InputCard(
+                          controller: _durationController,
+                          label: tr(LocaleKeys.common_min),
+                          unit: tr(LocaleKeys.common_min),
+                          gradient: AppGradients.exerciseDuration,
+                          icon: Icons.schedule,
+                          onChanged: (_) => setState(() {}),
+                        ),
+                        const SizedBox(height: AppSpacing.m),
+                        Text(tr(LocaleKeys.exercise_total_burned), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
+                        const SizedBox(height: AppSpacing.xs),
+                        ExerciseTotalSummaryCard(value: '$_calculatedTotal'),
+                      ],
                     ],
                   ),
-                  const SizedBox(height: AppSpacing.l),
-                  if (_mode == ExerciseTrackingMode.total) ...[
-                    Text(tr(LocaleKeys.exercise_total_burned), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
-                    const SizedBox(height: AppSpacing.xs),
-                    _InputCard(
-                      controller: _totalController,
-                      label: tr(LocaleKeys.common_calories),
-                      unit: tr(LocaleKeys.common_kcal),
-                      gradient: AppGradients.exerciseCalories,
-                      icon: Icons.local_fire_department,
-                    ),
-                    const SizedBox(height: AppSpacing.s),
-                    Text(
-                      tr(LocaleKeys.exercise_enter_total),
-                      style: AppTextStyles.label12.copyWith(color: AppColors.textTertiary),
-                    ),
-                  ] else ...[
-                    Text(tr(LocaleKeys.exercise_calories_per_minute), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
-                    const SizedBox(height: AppSpacing.xs),
-                    _InputCard(
-                      controller: _rateController,
-                      label: tr(LocaleKeys.exercise_kcal_min),
-                      unit: tr(LocaleKeys.exercise_kcal_min),
-                      gradient: AppGradients.exerciseCaloriesAlt,
-                      icon: Icons.trending_up,
-                      onChanged: (_) => setState(() {}),
-                    ),
-                    const SizedBox(height: AppSpacing.m),
-                    Text(tr(LocaleKeys.exercise_duration_label), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
-                    const SizedBox(height: AppSpacing.xs),
-                    _InputCard(
-                      controller: _durationController,
-                      label: tr(LocaleKeys.common_min),
-                      unit: tr(LocaleKeys.common_min),
-                      gradient: AppGradients.exerciseDuration,
-                      icon: Icons.schedule,
-                      onChanged: (_) => setState(() {}),
-                    ),
-                    const SizedBox(height: AppSpacing.m),
-                    Text(tr(LocaleKeys.exercise_total_burned), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
-                    const SizedBox(height: AppSpacing.xs),
-                    ExerciseTotalSummaryCard(value: '$_calculatedTotal'),
-                  ],
-                ],
+                ),
               ),
-            ),
-          ),
-          SafeArea(
-            top: false,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-              child: GestureDetector(
-                onTap: _isSaving ? null : _saveExercise,
-                child: Container(
-                  height: AppSizes.buttonHeightCompact,
-                  decoration: BoxDecoration(
-                    gradient: AppGradients.primary,
-                    borderRadius: BorderRadius.circular(AppRadii.pill),
-                    boxShadow: AppShadows.button,
-                  ),
-                  child: Center(
-                    child: Text(
-                      _isSaving ? tr(LocaleKeys.common_saving) : tr(LocaleKeys.exercise_add_title),
-                      style: AppTextStyles.button18.copyWith(color: AppColors.onPrimary),
+              SafeArea(
+                top: false,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+                  child: GestureDetector(
+                    onTap: _isSaving ? null : _saveExercise,
+                    child: Container(
+                      height: AppSizes.buttonHeightCompact,
+                      decoration: BoxDecoration(gradient: AppGradients.primary, borderRadius: BorderRadius.circular(AppRadii.pill), boxShadow: AppShadows.button),
+                      child: Center(
+                        child: Text(
+                          _isSaving ? tr(LocaleKeys.common_saving) : tr(LocaleKeys.exercise_add_title),
+                          style: AppTextStyles.button18.copyWith(color: AppColors.onPrimary),
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -249,13 +226,12 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
   Future<void> _saveExercise() async {
     final String exerciseName = _nameController.text.trim().isEmpty ? tr(LocaleKeys.common_exercise) : _nameController.text.trim();
     final int? durationMinutes = int.tryParse(_durationController.text.trim());
-    final double caloriesBurned =
-        _mode == ExerciseTrackingMode.total ? (double.tryParse(_totalController.text.trim()) ?? 0) : (double.tryParse(_rateController.text.trim()) ?? 0) * (durationMinutes ?? 0);
+    final double caloriesBurned = _mode == ExerciseTrackingMode.total
+        ? (double.tryParse(_totalController.text.trim()) ?? 0)
+        : (double.tryParse(_rateController.text.trim()) ?? 0) * (durationMinutes ?? 0);
 
     if (caloriesBurned <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(tr(LocaleKeys.exercise_invalid_calories))),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(tr(LocaleKeys.exercise_invalid_calories))));
       return;
     }
 
@@ -273,16 +249,11 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
         isFavorite: _isFavorite,
       );
 
-      await DayRecordController.to.saveExerciseForDate(
-        date: selectedDate,
-        exerciseToSave: exercise,
-      );
+      await DayRecordController.to.saveExerciseForDate(date: selectedDate, exerciseToSave: exercise);
       DashboardController.to.refresh();
 
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(tr(LocaleKeys.exercise_exercise_added))),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(tr(LocaleKeys.exercise_exercise_added))));
       Navigator.of(context).maybePop();
     } finally {
       if (mounted) {
@@ -294,24 +265,12 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
   }
 
   DateTime _applyDateToTime(DateTime source, DateTime targetDate) {
-    return DateTime(
-      targetDate.year,
-      targetDate.month,
-      targetDate.day,
-      source.hour,
-      source.minute,
-      source.second,
-      source.millisecond,
-      source.microsecond,
-    );
+    return DateTime(targetDate.year, targetDate.month, targetDate.day, source.hour, source.minute, source.second, source.millisecond, source.microsecond);
   }
 }
 
 class _TextInput extends StatelessWidget {
-  const _TextInput({
-    required this.controller,
-    required this.hintText,
-  });
+  const _TextInput({required this.controller, required this.hintText});
 
   final TextEditingController controller;
   final String hintText;
@@ -341,14 +300,7 @@ class _TextInput extends StatelessWidget {
 }
 
 class _InputCard extends StatelessWidget {
-  const _InputCard({
-    required this.controller,
-    required this.label,
-    required this.unit,
-    required this.gradient,
-    required this.icon,
-    this.onChanged,
-  });
+  const _InputCard({required this.controller, required this.label, required this.unit, required this.gradient, required this.icon, this.onChanged});
 
   final TextEditingController controller;
   final String label;
@@ -373,10 +325,7 @@ class _InputCard extends StatelessWidget {
           Container(
             width: 40,
             height: 40,
-            decoration: BoxDecoration(
-              gradient: gradient,
-              borderRadius: BorderRadius.circular(AppRadii.md),
-            ),
+            decoration: BoxDecoration(gradient: gradient, borderRadius: BorderRadius.circular(AppRadii.md)),
             child: Icon(icon, color: AppColors.onPrimary, size: AppSizes.iconSm),
           ),
           const SizedBox(width: AppSpacing.m),
@@ -395,34 +344,6 @@ class _InputCard extends StatelessWidget {
           ),
           Text(unit, style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary)),
         ],
-      ),
-    );
-  }
-}
-
-class _CircleButton extends StatelessWidget {
-  const _CircleButton({
-    required this.icon,
-    required this.onTap,
-  });
-
-  final IconData icon;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: AppSizes.backButtonSize,
-        height: AppSizes.backButtonSize,
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(AppRadii.pill),
-          border: Border.all(color: AppColors.outline, width: 1),
-          boxShadow: AppShadows.control,
-        ),
-        child: Icon(icon, color: AppColors.textPrimary, size: AppSizes.iconMd),
       ),
     );
   }

@@ -23,7 +23,7 @@ class TrackingRemindersScreen extends StatelessWidget {
 
     return ProfileGradientScaffold(
       scroll: true,
-      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.l, AppSpacing.screen, AppSpacing.xl),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, 0, AppSpacing.screen, AppSpacing.xl),
       child: Obx(() {
         final remindersByType = {
           for (final reminder in controller.reminders) reminder.type: reminder,

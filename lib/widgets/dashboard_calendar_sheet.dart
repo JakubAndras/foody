@@ -185,7 +185,7 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
                     style: AppTextStyles.title17.copyWith(color: AppColors.calendarDarkText, fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(width: AppSpacing.xxs),
-                  Icon(_showMonthYearPicker ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_right, color: AppColors.calendarDarkText, size: AppSizes.iconLg),
+                  Icon(_showMonthYearPicker ? Icons.keyboard_arrow_down_rounded : Icons.keyboard_arrow_right_rounded, color: AppColors.calendarDarkText, size: AppSizes.iconLg),
                 ],
               ),
             ),

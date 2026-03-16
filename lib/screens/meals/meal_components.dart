@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/ingredient.dart';
+import 'package:diplomka/widgets/foody_glass_buttons.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -17,14 +18,7 @@ class MealHeroHeader extends StatelessWidget {
   final Alignment imageAlignment;
   final double? confidence;
 
-  const MealHeroHeader({
-    super.key,
-    required this.title,
-    required this.timeLabel,
-    this.image,
-    this.imageAlignment = Alignment.center,
-    this.confidence,
-  });
+  const MealHeroHeader({super.key, required this.title, required this.timeLabel, this.image, this.imageAlignment = Alignment.center, this.confidence});
 
   @override
   Widget build(BuildContext context) {
@@ -36,14 +30,7 @@ class MealHeroHeader extends StatelessWidget {
         children: [
           DecoratedBox(
             decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-                colors: [
-                  AppColors.overlayDark60,
-                  Color(0x00000000),
-                ],
-              ),
+              gradient: LinearGradient(begin: Alignment.bottomCenter, end: Alignment.topCenter, colors: [AppColors.overlayDark60, Color(0x00000000)]),
             ),
           ),
           Positioned(
@@ -59,13 +46,10 @@ class MealHeroHeader extends StatelessWidget {
                     const SizedBox(width: AppSpacing.xs),
                     Column(
                       children: [
-                        Text(
-                          timeLabel,
-                          style: AppTextStyles.caption12.copyWith(color: AppColors.onPrimary.withValues(alpha: 0.8)),
-                        ),
+                        Text(timeLabel, style: AppTextStyles.caption12.copyWith(color: AppColors.onPrimary.withValues(alpha: 0.8))),
                         const SizedBox(height: 0.5),
                       ],
-                    )
+                    ),
                   ],
                 ),
                 const SizedBox(height: AppSpacing.xxs),
@@ -89,11 +73,7 @@ class MatchBadge extends StatelessWidget {
   final String text;
   final MatchBadgeVariant variant;
 
-  const MatchBadge({
-    super.key,
-    required this.text,
-    this.variant = MatchBadgeVariant.good,
-  });
+  const MatchBadge({super.key, required this.text, this.variant = MatchBadgeVariant.good});
 
   Color get _background {
     switch (variant) {
@@ -122,15 +102,9 @@ class MatchBadge extends StatelessWidget {
     return Container(
       height: AppSizes.matchBadgeHeight,
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
-      decoration: BoxDecoration(
-        color: _background,
-        borderRadius: BorderRadius.circular(AppRadii.pill),
-      ),
+      decoration: BoxDecoration(color: _background, borderRadius: BorderRadius.circular(AppRadii.pill)),
       alignment: Alignment.center,
-      child: Text(
-        text,
-        style: AppTextStyles.badge14.copyWith(color: _textColor),
-      ),
+      child: Text(text, style: AppTextStyles.badge14.copyWith(color: _textColor)),
     );
   }
 }
@@ -163,16 +137,7 @@ class CaloriesSummaryCard extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final double? height;
 
-  const CaloriesSummaryCard({
-    super.key,
-    required this.label,
-    required this.value,
-    this.delta,
-    this.badge,
-    this.margin,
-    this.padding,
-    this.height,
-  });
+  const CaloriesSummaryCard({super.key, required this.label, required this.value, this.delta, this.badge, this.margin, this.padding, this.height});
 
   @override
   Widget build(BuildContext context) {
@@ -180,19 +145,10 @@ class CaloriesSummaryCard extends StatelessWidget {
       margin: margin,
       height: height,
       padding: padding ?? const EdgeInsets.all(AppSpacing.l),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.lg),
-        boxShadow: AppShadows.cardSmall,
-      ),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.lg), boxShadow: AppShadows.cardSmall),
       child: Stack(
         children: [
-          if (badge != null)
-            Positioned(
-              right: 0,
-              top: 0,
-              child: badge!,
-            ),
+          if (badge != null) Positioned(right: 0, top: 0, child: badge!),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -207,15 +163,9 @@ class CaloriesSummaryCard extends StatelessWidget {
                     Container(
                       height: AppSizes.matchBadgeHeight,
                       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary,
-                        borderRadius: BorderRadius.circular(AppRadii.pill),
-                      ),
+                      decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(AppRadii.pill)),
                       alignment: Alignment.center,
-                      child: Text(
-                        delta!,
-                        style: AppTextStyles.badge14.copyWith(color: AppColors.onPrimary),
-                      ),
+                      child: Text(delta!, style: AppTextStyles.badge14.copyWith(color: AppColors.onPrimary)),
                     ),
                   ],
                 ],
@@ -235,14 +185,7 @@ class MacroStatCard extends StatelessWidget {
   final Color iconColor;
   final double? height;
 
-  const MacroStatCard({
-    super.key,
-    required this.label,
-    required this.value,
-    required this.icon,
-    required this.iconColor,
-    this.height,
-  });
+  const MacroStatCard({super.key, required this.label, required this.value, required this.icon, required this.iconColor, this.height});
 
   @override
   Widget build(BuildContext context) {
@@ -250,11 +193,7 @@ class MacroStatCard extends StatelessWidget {
       width: double.infinity,
       height: height ?? AppSizes.macroCardSize,
       padding: const EdgeInsets.all(AppSpacing.l),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.lg),
-        boxShadow: AppShadows.cardSmall,
-      ),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.lg), boxShadow: AppShadows.cardSmall),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -289,16 +228,7 @@ class MealRecordCard extends StatelessWidget {
   final VoidCallback? onDateTap;
   final EdgeInsetsGeometry? margin;
 
-  const MealRecordCard({
-    super.key,
-    required this.amount,
-    required this.mealtime,
-    required this.date,
-    this.onAmountTap,
-    this.onMealtimeTap,
-    this.onDateTap,
-    this.margin,
-  });
+  const MealRecordCard({super.key, required this.amount, required this.mealtime, required this.date, this.onAmountTap, this.onMealtimeTap, this.onDateTap, this.margin});
 
   @override
   Widget build(BuildContext context) {
@@ -313,26 +243,11 @@ class MealRecordCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _RecordRow(
-            label: tr(LocaleKeys.ingredient_amount),
-            value: amount,
-            onTap: onAmountTap,
-            showChevron: true,
-          ),
+          _RecordRow(label: tr(LocaleKeys.ingredient_amount), value: amount, onTap: onAmountTap, showChevron: true),
           const Divider(color: AppColors.separator, height: AppSpacing.m, thickness: AppSizes.dividerThin),
-          _RecordRow(
-            label: tr(LocaleKeys.meal_mealtime),
-            value: mealtime,
-            onTap: onMealtimeTap,
-            showChevron: true,
-          ),
+          _RecordRow(label: tr(LocaleKeys.meal_mealtime), value: mealtime, onTap: onMealtimeTap, showChevron: true),
           const Divider(color: AppColors.separator, height: AppSpacing.m, thickness: AppSizes.dividerThin),
-          _RecordRow(
-            label: tr(LocaleKeys.meal_date),
-            value: date,
-            onTap: onDateTap,
-            valueAsChip: true,
-          ),
+          _RecordRow(label: tr(LocaleKeys.meal_date), value: date, onTap: onDateTap, valueAsChip: true),
         ],
       ),
     );
@@ -346,13 +261,7 @@ class _RecordRow extends StatelessWidget {
   final bool valueAsChip;
   final VoidCallback? onTap;
 
-  const _RecordRow({
-    required this.label,
-    required this.value,
-    this.showChevron = false,
-    this.valueAsChip = false,
-    this.onTap,
-  });
+  const _RecordRow({required this.label, required this.value, this.showChevron = false, this.valueAsChip = false, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -360,10 +269,7 @@ class _RecordRow extends StatelessWidget {
         ? Container(
             height: AppSizes.dateChipHeight,
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
-            decoration: BoxDecoration(
-              color: AppColors.surfaceMuted,
-              borderRadius: BorderRadius.circular(AppRadii.sm1),
-            ),
+            decoration: BoxDecoration(color: AppColors.surfaceMuted, borderRadius: BorderRadius.circular(AppRadii.sm1)),
             alignment: Alignment.center,
             child: Text(value, style: AppTextStyles.formValue16),
           )
@@ -371,10 +277,7 @@ class _RecordRow extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(value, style: AppTextStyles.formValue16),
-              if (showChevron) ...[
-                const SizedBox(width: AppSpacing.xs),
-                const Icon(Icons.keyboard_arrow_down, size: AppSizes.iconSm, color: AppColors.textSecondary),
-              ],
+              if (showChevron) ...[const SizedBox(width: AppSpacing.xs), const Icon(Icons.keyboard_arrow_down, size: AppSizes.iconSm, color: AppColors.textSecondary)],
             ],
           );
 
@@ -401,13 +304,7 @@ class IngredientRow extends StatelessWidget {
   final String? alertText;
   final VoidCallback? onTap;
 
-  const IngredientRow({
-    super.key,
-    required this.ingredient,
-    this.highlighted = false,
-    this.alertText,
-    this.onTap,
-  });
+  const IngredientRow({super.key, required this.ingredient, this.highlighted = false, this.alertText, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -432,10 +329,7 @@ class IngredientRow extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      if (highlighted) ...[
-                        const Icon(Icons.warning_amber_rounded, size: AppSizes.iconSm, color: AppColors.warningStrong),
-                        const SizedBox(width: AppSpacing.xs),
-                      ],
+                      if (highlighted) ...[const Icon(Icons.warning_amber_rounded, size: AppSizes.iconSm, color: AppColors.warningStrong), const SizedBox(width: AppSpacing.xs)],
                       Text(
                         ingredient.name,
                         style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary),
@@ -459,10 +353,7 @@ class IngredientRow extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(
-                  ingredient.calories.toStringAsFixed(0),
-                  style: AppTextStyles.title.copyWith(color: AppColors.textPrimary),
-                ),
+                Text(ingredient.calories.toStringAsFixed(0), style: AppTextStyles.title.copyWith(color: AppColors.textPrimary)),
                 Text(tr(LocaleKeys.common_kcal), style: AppTextStyles.caption12.copyWith(color: AppColors.textTertiary)),
               ],
             ),
@@ -511,10 +402,7 @@ class _MacroDotLabel extends StatelessWidget {
           ),
         ),
         const SizedBox(width: AppSpacing.xxs),
-        Text(
-          value,
-          style: AppTextStyles.macroDotLabel11,
-        ),
+        Text(value, style: AppTextStyles.macroDotLabel11),
       ],
     );
   }
@@ -525,12 +413,7 @@ class AllergyAlertCard extends StatelessWidget {
   final String subtitle;
   final EdgeInsetsGeometry? margin;
 
-  const AllergyAlertCard({
-    super.key,
-    required this.title,
-    required this.subtitle,
-    this.margin,
-  });
+  const AllergyAlertCard({super.key, required this.title, required this.subtitle, this.margin});
 
   @override
   Widget build(BuildContext context) {
@@ -551,7 +434,10 @@ class AllergyAlertCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                Text(
+                  title,
+                  style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+                ),
                 const SizedBox(height: 2),
                 Text(subtitle, style: AppTextStyles.body13.copyWith(color: AppColors.textMuted)),
               ],
@@ -568,12 +454,7 @@ class MeasurementChips extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int>? onChanged;
 
-  const MeasurementChips({
-    super.key,
-    required this.options,
-    required this.selectedIndex,
-    this.onChanged,
-  });
+  const MeasurementChips({super.key, required this.options, required this.selectedIndex, this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -589,17 +470,11 @@ class MeasurementChips extends StatelessWidget {
               child: Container(
                 height: AppSizes.chipHeight,
                 padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-                decoration: BoxDecoration(
-                  color: isSelected ? AppColors.primary : AppColors.surfaceMuted,
-                  borderRadius: BorderRadius.circular(AppRadii.pill),
-                ),
+                decoration: BoxDecoration(color: isSelected ? AppColors.primary : AppColors.surfaceMuted, borderRadius: BorderRadius.circular(AppRadii.pill)),
                 alignment: Alignment.center,
                 child: Text(
                   options[index],
-                  style: AppTextStyles.formValue16.copyWith(
-                    color: isSelected ? AppColors.onPrimary : AppColors.textPrimary,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: AppTextStyles.formValue16.copyWith(color: isSelected ? AppColors.onPrimary : AppColors.textPrimary, fontWeight: FontWeight.w500),
                 ),
               ),
             ),
@@ -642,84 +517,6 @@ class AmountInputField extends StatelessWidget {
   }
 }
 
-class GradientPillButton extends StatelessWidget {
-  final String label;
-  final LinearGradient gradient;
-  final VoidCallback? onTap;
-  final double height;
-
-  const GradientPillButton({
-    super.key,
-    required this.label,
-    required this.gradient,
-    this.onTap,
-    this.height = AppSizes.buttonHeight,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final enabled = onTap != null;
-    return Opacity(
-      opacity: enabled ? 1 : 0.5,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(AppRadii.pill),
-        child: Ink(
-          height: height,
-          decoration: BoxDecoration(
-            gradient: gradient,
-            borderRadius: BorderRadius.circular(AppRadii.pill),
-          ),
-          child: Center(
-            child: Text(label, style: AppTextStyles.body16.copyWith(color: AppColors.onPrimary, fontWeight: FontWeight.w600)),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class OutlinePillButton extends StatelessWidget {
-  final String label;
-  final IconData? icon;
-  final VoidCallback? onTap;
-
-  const OutlinePillButton({
-    super.key,
-    required this.label,
-    this.icon,
-    this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(AppRadii.pill),
-      child: Ink(
-        height: AppSizes.buttonHeight,
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(AppRadii.pill),
-          border: Border.all(color: AppColors.outline),
-        ),
-        child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (icon != null) ...[
-                Icon(icon, size: AppSizes.iconSm, color: AppColors.textEmphasisAlt),
-                const SizedBox(width: AppSpacing.xs),
-              ],
-              Text(label, style: AppTextStyles.body16.copyWith(color: AppColors.textEmphasisAlt, fontWeight: FontWeight.w600)),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class GlassActionSheet extends StatelessWidget {
   final List<GlassActionSheetItem> items;
 
@@ -733,37 +530,31 @@ class GlassActionSheet extends StatelessWidget {
         filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s, vertical: AppSpacing.m),
-          decoration: BoxDecoration(
-            color: AppColors.glassSheet,
-            borderRadius: BorderRadius.circular(AppRadii.lg),
-          ),
+          decoration: BoxDecoration(color: AppColors.glassSheet, borderRadius: BorderRadius.circular(AppRadii.lg)),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: items
-                .map((item) => Padding(
-                      padding: EdgeInsets.only(bottom: item == items.last ? 0 : AppSpacing.s),
-                      child: InkWell(
-                        onTap: item.onTap,
-                        borderRadius: BorderRadius.circular(AppRadii.sm),
-                        child: SizedBox(
-                          height: AppSizes.actionRowHeight,
-                          child: Row(
-                            children: [
-                              Icon(item.icon, color: item.color ?? AppColors.textPrimary, size: AppSizes.iconMd),
-                              const SizedBox(width: AppSpacing.s),
-                              Expanded(
-                                child: Text(
-                                  item.label,
-                                  style: AppTextStyles.selectMealPickerItem.copyWith(
-                                    color: item.color ?? AppColors.textPrimary,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                .map(
+                  (item) => Padding(
+                    padding: EdgeInsets.only(bottom: item == items.last ? 0 : AppSpacing.s),
+                    child: InkWell(
+                      onTap: item.onTap,
+                      borderRadius: BorderRadius.circular(AppRadii.sm),
+                      child: SizedBox(
+                        height: AppSizes.actionRowHeight,
+                        child: Row(
+                          children: [
+                            Icon(item.icon, color: item.color ?? AppColors.textPrimary, size: AppSizes.iconMd),
+                            const SizedBox(width: AppSpacing.s),
+                            Expanded(
+                              child: Text(item.label, style: AppTextStyles.selectMealPickerItem.copyWith(color: item.color ?? AppColors.textPrimary)),
+                            ),
+                          ],
                         ),
                       ),
-                    ))
+                    ),
+                  ),
+                )
                 .toList(),
           ),
         ),
@@ -778,12 +569,7 @@ class GlassActionSheetItem {
   final Color? color;
   final VoidCallback? onTap;
 
-  const GlassActionSheetItem({
-    required this.label,
-    required this.icon,
-    this.color,
-    this.onTap,
-  });
+  const GlassActionSheetItem({required this.label, required this.icon, this.color, this.onTap});
 }
 
 class SyncCard extends StatelessWidget {
@@ -793,24 +579,13 @@ class SyncCard extends StatelessWidget {
   final VoidCallback? onPrimary;
   final VoidCallback? onSecondary;
 
-  const SyncCard({
-    super.key,
-    required this.title,
-    required this.primaryLabel,
-    required this.secondaryLabel,
-    this.onPrimary,
-    this.onSecondary,
-  });
+  const SyncCard({super.key, required this.title, required this.primaryLabel, required this.secondaryLabel, this.onPrimary, this.onSecondary});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.m),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.lg3),
-        boxShadow: AppShadows.button,
-      ),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.lg3), boxShadow: AppShadows.button),
       child: Column(
         children: [
           Row(
@@ -818,10 +593,7 @@ class SyncCard extends StatelessWidget {
               const Icon(Icons.sync, size: AppSizes.iconMd, color: AppColors.textPrimary),
               const SizedBox(width: AppSpacing.s),
               Expanded(
-                child: Text(
-                  title,
-                  style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w500),
-                ),
+                child: Text(title, style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w500)),
               ),
             ],
           ),
@@ -831,22 +603,14 @@ class SyncCard extends StatelessWidget {
             children: [
               SizedBox(
                 height: AppSizes.buttonHeightXxs,
-                child: GradientPillButton(
-                  label: primaryLabel,
-                  gradient: AppGradients.primary,
-                  height: AppSizes.buttonHeightXxs,
-                  onTap: onPrimary,
-                ),
+                child: FoodyPrimaryButton(label: primaryLabel, gradient: AppGradients.primary, height: AppSizes.buttonHeightXxs, onTap: onPrimary),
               ),
               const SizedBox(width: AppSpacing.s),
               InkWell(
                 onTap: onSecondary,
                 child: Text(
                   secondaryLabel,
-                  style: AppTextStyles.body16.copyWith(
-                    fontWeight: FontWeight.w600,
-                    decoration: TextDecoration.underline,
-                  ),
+                  style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600, decoration: TextDecoration.underline),
                 ),
               ),
             ],

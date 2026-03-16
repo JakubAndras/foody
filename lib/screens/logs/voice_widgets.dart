@@ -2,15 +2,12 @@ import 'dart:ui';
 
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
+import 'package:diplomka/widgets/foody_glass_buttons.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class VoiceLogIconButton extends StatelessWidget {
-  const VoiceLogIconButton({
-    super.key,
-    required this.icon,
-    required this.onTap,
-  });
+  const VoiceLogIconButton({super.key, required this.icon, required this.onTap});
 
   final IconData icon;
   final VoidCallback onTap;
@@ -22,11 +19,7 @@ class VoiceLogIconButton extends StatelessWidget {
       child: Container(
         width: AppSizes.backButtonSize,
         height: AppSizes.backButtonSize,
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          shape: BoxShape.circle,
-          boxShadow: AppShadows.control,
-        ),
+        decoration: BoxDecoration(color: AppColors.surface, shape: BoxShape.circle, boxShadow: AppShadows.control),
         child: Icon(icon, color: AppColors.textPrimary, size: AppSizes.iconMd),
       ),
     );
@@ -34,12 +27,7 @@ class VoiceLogIconButton extends StatelessWidget {
 }
 
 class VoiceLogToggle extends StatelessWidget {
-  const VoiceLogToggle({
-    super.key,
-    required this.isExercise,
-    required this.onSelectMeals,
-    required this.onSelectExercise,
-  });
+  const VoiceLogToggle({super.key, required this.isExercise, required this.onSelectMeals, required this.onSelectExercise});
 
   final bool isExercise;
   final VoidCallback onSelectMeals;
@@ -54,10 +42,7 @@ class VoiceLogToggle extends StatelessWidget {
           onTap: onSelectMeals,
           child: Text(
             tr(LocaleKeys.common_meals),
-            style: AppTextStyles.title18Tight.copyWith(
-              color: isExercise ? AppColors.textMutedLight : AppColors.textPrimary,
-              fontWeight: FontWeight.w600,
-            ),
+            style: AppTextStyles.title18Tight.copyWith(color: isExercise ? AppColors.textMutedLight : AppColors.textPrimary, fontWeight: FontWeight.w600),
           ),
         ),
         const SizedBox(width: AppSpacing.m),
@@ -77,11 +62,7 @@ class VoiceLogToggle extends StatelessWidget {
               child: Container(
                 width: AppSizes.voiceToggleKnob,
                 height: AppSizes.voiceToggleKnob,
-                decoration: BoxDecoration(
-                  color: AppColors.surface,
-                  shape: BoxShape.circle,
-                  boxShadow: AppShadows.cardSmall,
-                ),
+                decoration: BoxDecoration(color: AppColors.surface, shape: BoxShape.circle, boxShadow: AppShadows.cardSmall),
               ),
             ),
           ),
@@ -91,10 +72,7 @@ class VoiceLogToggle extends StatelessWidget {
           onTap: onSelectExercise,
           child: Text(
             tr(LocaleKeys.common_exercise),
-            style: AppTextStyles.title18Tight.copyWith(
-              color: isExercise ? AppColors.textPrimary : AppColors.textMutedLight,
-              fontWeight: FontWeight.w600,
-            ),
+            style: AppTextStyles.title18Tight.copyWith(color: isExercise ? AppColors.textPrimary : AppColors.textMutedLight, fontWeight: FontWeight.w600),
           ),
         ),
       ],
@@ -103,10 +81,7 @@ class VoiceLogToggle extends StatelessWidget {
 }
 
 class VoiceLogFrostedSurface extends StatelessWidget {
-  const VoiceLogFrostedSurface({
-    super.key,
-    required this.child,
-  });
+  const VoiceLogFrostedSurface({super.key, required this.child});
 
   final Widget child;
 
@@ -129,13 +104,7 @@ class VoiceLogFrostedSurface extends StatelessWidget {
 }
 
 class VoiceLogTextArea extends StatelessWidget {
-  const VoiceLogTextArea({
-    super.key,
-    required this.controller,
-    required this.hintText,
-    this.onChanged,
-    this.enabled = true,
-  });
+  const VoiceLogTextArea({super.key, required this.controller, required this.hintText, this.onChanged, this.enabled = true});
 
   final TextEditingController controller;
   final String hintText;
@@ -147,10 +116,7 @@ class VoiceLogTextArea extends StatelessWidget {
     return Container(
       height: AppSizes.voiceTextAreaHeight,
       padding: const EdgeInsets.all(AppSpacing.m),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceMuted,
-        borderRadius: BorderRadius.circular(AppRadii.md),
-      ),
+      decoration: BoxDecoration(color: AppColors.surfaceMuted, borderRadius: BorderRadius.circular(AppRadii.md)),
       child: TextField(
         controller: controller,
         enabled: enabled,
@@ -168,12 +134,7 @@ class VoiceLogTextArea extends StatelessWidget {
 }
 
 class VoiceLogAnalyzeButton extends StatelessWidget {
-  const VoiceLogAnalyzeButton({
-    super.key,
-    required this.label,
-    required this.onTap,
-    this.enabled = true,
-  });
+  const VoiceLogAnalyzeButton({super.key, required this.label, required this.onTap, this.enabled = true});
 
   final String label;
   final VoidCallback onTap;
@@ -181,41 +142,12 @@ class VoiceLogAnalyzeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: enabled ? onTap : null,
-      child: Opacity(
-        opacity: enabled ? 1 : AppOpacities.half,
-        child: Container(
-          height: AppSizes.voiceAnalyzeHeight,
-          decoration: BoxDecoration(
-            gradient: AppGradients.voiceAnalyze,
-            borderRadius: BorderRadius.circular(AppRadii.md),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.auto_awesome, color: AppColors.onPrimary, size: AppSizes.iconMd),
-              const SizedBox(width: AppSpacing.s),
-              Text(
-                label,
-                style: AppTextStyles.button18.copyWith(color: AppColors.onPrimary),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+    return FoodyPrimaryButton(label: label, onTap: enabled ? onTap : null, icon: Icons.auto_awesome, gradient: AppGradients.voiceAnalyze, height: AppSizes.voiceAnalyzeHeight);
   }
 }
 
 class VoiceMicButton extends StatelessWidget {
-  const VoiceMicButton({
-    super.key,
-    this.gradient,
-    this.color,
-    required this.onTap,
-    this.onLongPress,
-  });
+  const VoiceMicButton({super.key, this.gradient, this.color, required this.onTap, this.onLongPress});
 
   final Gradient? gradient;
   final Color? color;
@@ -230,17 +162,8 @@ class VoiceMicButton extends StatelessWidget {
       child: Container(
         width: AppSizes.voiceMicSize,
         height: AppSizes.voiceMicSize,
-        decoration: BoxDecoration(
-          gradient: gradient,
-          color: color,
-          shape: BoxShape.circle,
-          boxShadow: AppShadows.button,
-        ),
-        child: Icon(
-          Icons.mic_rounded,
-          size: AppSizes.voiceMicIcon,
-          color: AppColors.onPrimary,
-        ),
+        decoration: BoxDecoration(gradient: gradient, color: color, shape: BoxShape.circle, boxShadow: AppShadows.button),
+        child: Icon(Icons.mic_rounded, size: AppSizes.voiceMicIcon, color: AppColors.onPrimary),
       ),
     );
   }

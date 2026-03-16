@@ -84,6 +84,7 @@ Future<void> setupServices() async {
     permanent: true,
   );
   Get.put(NutritionGoalsService(), permanent: true);
+  Get.put(HealthIntegrationService(), permanent: true);
   Get.put(DashboardController(), permanent: true);
   Get.lazyPut<LanguageSettingsController>(
     () => LanguageSettingsController(
@@ -108,7 +109,6 @@ Future<void> setupServices() async {
   );
   Get.put(WeightEntryRepository(database: db), permanent: true);
   Get.put(WeightEntryController(repository: WeightEntryRepository.to), permanent: true);
-  Get.put(HealthIntegrationService(), permanent: true);
   Get.lazyPut<HealthIntegrationController>(() => HealthIntegrationController(), fenix: true);
   Get.lazyPut<AskAiController>(() => AskAiController(), fenix: true);
   Get.lazyPut<ExportController>(() => ExportController(), fenix: true);

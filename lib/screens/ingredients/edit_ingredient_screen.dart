@@ -3,9 +3,12 @@ import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/ingredient.dart';
 import 'package:diplomka/screens/meals/meal_components.dart';
 import 'package:diplomka/widgets/edit_flow/edit_flow_widgets.dart';
+import 'package:diplomka/widgets/custom_glass_app_bar.dart';
+import 'package:diplomka/widgets/foody_glass_buttons.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 class EditIngredientResult {
   final Ingredient? ingredient;
@@ -26,11 +29,7 @@ class EditIngredientScreen extends StatefulWidget {
   final Ingredient ingredient;
   final bool allowDelete;
 
-  const EditIngredientScreen({
-    super.key,
-    required this.ingredient,
-    this.allowDelete = true,
-  });
+  const EditIngredientScreen({super.key, required this.ingredient, this.allowDelete = true});
 
   @override
   State<EditIngredientScreen> createState() => _EditIngredientScreenState();
@@ -72,14 +71,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
   }
 
   void _registerInputListeners() {
-    final controllers = [
-      _nameController,
-      _amountController,
-      _caloriesController,
-      _proteinController,
-      _carbsController,
-      _fatController,
-    ];
+    final controllers = [_nameController, _amountController, _caloriesController, _proteinController, _carbsController, _fatController];
     for (final controller in controllers) {
       controller.addListener(_handleInputChanged);
     }
@@ -123,14 +115,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
       return null;
     }
 
-    return _baseIngredient.copyWith(
-      name: name,
-      weight: weight,
-      calories: calories,
-      proteins: protein,
-      carbs: carbs,
-      fats: fat,
-    );
+    return _baseIngredient.copyWith(name: name, weight: weight, calories: calories, proteins: protein, carbs: carbs, fats: fat);
   }
 
   bool get _isValid => _buildIngredientFromInputs() != null;
@@ -190,174 +175,127 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.backgroundAlt,
-      body: SafeArea(
-        child: Column(
-          children: [
-            SizedBox(
-              height: AppSizes.editTopBarHeight,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.edge),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _CircleIconButton(
-                      icon: Icons.chevron_left,
-                      onTap: () => Navigator.of(context).maybePop(),
-                    ),
-                    Text(tr(LocaleKeys.ingredient_title), style: AppTextStyles.navTitle18),
-                    if (widget.allowDelete)
-                      _CircleIconButton(
-                        icon: Icons.delete_outline,
-                        onTap: _confirmDelete,
-                      )
-                    else
-                      const SizedBox(width: AppSizes.backButtonSize),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.only(bottom: AppSpacing.xl),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: AppSpacing.xs),
-                          TextField(
-                            controller: _nameController,
-                            textCapitalization: TextCapitalization.words,
-                            style: AppTextStyles.headline36,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              isDense: true,
-                              contentPadding: EdgeInsets.zero,
-                              hintText: tr(LocaleKeys.ingredient_name),
-                              hintStyle: AppTextStyles.headline36.copyWith(color: AppColors.textTertiary),
-                            ),
-                          ),
-                          const SizedBox(height: AppSpacing.l),
-                          Text(tr(LocaleKeys.ingredient_measurement), style: AppTextStyles.formLabel16),
-                          const SizedBox(height: AppSpacing.s),
-                          MeasurementChips(
-                            options: [tr(LocaleKeys.ingredient_fraction), tr(LocaleKeys.common_g), tr(LocaleKeys.ingredient_small), tr(LocaleKeys.ingredient_medium), tr(LocaleKeys.ingredient_large)],
-                            selectedIndex: _selectedMeasurement,
-                            onChanged: (index) => setState(() => _selectedMeasurement = index),
-                          ),
-                          const SizedBox(height: AppSpacing.l),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return LiquidGlassScope(
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        backgroundColor: AppColors.background,
+        appBar: CustomGlassAppBar(
+          title: tr(LocaleKeys.ingredient_title),
+          onBack: () => Navigator.of(context).maybePop(),
+          actions: [if (widget.allowDelete) CustomGlassIconButton(icon: Icons.delete_outline, iconSize: AppSizes.iconMd, onPressed: _confirmDelete)],
+        ),
+        body: LiquidGlassBackground(
+          child: SafeArea(
+            child: Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.only(bottom: AppSpacing.xl),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(tr(LocaleKeys.ingredient_amount), style: AppTextStyles.formLabel16),
-                              _AmountInputField(
-                                controller: _amountController,
-                                onChanged: (_) {},
+                              const SizedBox(height: AppSpacing.xs),
+                              TextField(
+                                controller: _nameController,
+                                textCapitalization: TextCapitalization.words,
+                                style: AppTextStyles.headline36,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  isDense: true,
+                                  contentPadding: EdgeInsets.zero,
+                                  hintText: tr(LocaleKeys.ingredient_name),
+                                  hintStyle: AppTextStyles.headline36.copyWith(color: AppColors.textTertiary),
+                                ),
+                              ),
+                              const SizedBox(height: AppSpacing.l),
+                              Text(tr(LocaleKeys.ingredient_measurement), style: AppTextStyles.formLabel16),
+                              const SizedBox(height: AppSpacing.s),
+                              MeasurementChips(
+                                options: [
+                                  tr(LocaleKeys.ingredient_fraction),
+                                  tr(LocaleKeys.common_g),
+                                  tr(LocaleKeys.ingredient_small),
+                                  tr(LocaleKeys.ingredient_medium),
+                                  tr(LocaleKeys.ingredient_large),
+                                ],
+                                selectedIndex: _selectedMeasurement,
+                                onChanged: (index) => setState(() => _selectedMeasurement = index),
+                              ),
+                              const SizedBox(height: AppSpacing.l),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(tr(LocaleKeys.ingredient_amount), style: AppTextStyles.formLabel16),
+                                  _AmountInputField(controller: _amountController, onChanged: (_) {}),
+                                ],
+                              ),
+                              if (_showValidationError && _validationMessage != null)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: AppSpacing.s),
+                                  child: InlineErrorText(message: _validationMessage!),
+                                ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.l),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.edge),
+                          child: _EditableCaloriesCard(controller: _caloriesController),
+                        ),
+                        const SizedBox(height: AppSpacing.m),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.edge),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: _EditableMacroCard(
+                                  label: tr(LocaleKeys.common_protein),
+                                  icon: AppIcons.protein,
+                                  iconColor: AppColors.macroProtein,
+                                  controller: _proteinController,
+                                ),
+                              ),
+                              const SizedBox(width: AppSpacing.s),
+                              Expanded(
+                                child: _EditableMacroCard(
+                                  label: tr(LocaleKeys.common_carbs),
+                                  icon: AppIcons.carbs,
+                                  iconColor: AppColors.macroCarbsStrong,
+                                  controller: _carbsController,
+                                ),
+                              ),
+                              const SizedBox(width: AppSpacing.s),
+                              Expanded(
+                                child: _EditableMacroCard(label: tr(LocaleKeys.common_fats), icon: AppIcons.fats, iconColor: AppColors.macroFats, controller: _fatController),
                               ),
                             ],
                           ),
-                          if (_showValidationError && _validationMessage != null)
-                            Padding(
-                              padding: const EdgeInsets.only(top: AppSpacing.s),
-                              child: InlineErrorText(message: _validationMessage!),
-                            ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: AppSpacing.l),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.edge),
-                      child: _EditableCaloriesCard(
-                        controller: _caloriesController,
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.m),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.edge),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: _EditableMacroCard(
-                              label: tr(LocaleKeys.common_protein),
-                              icon: AppIcons.protein,
-                              iconColor: AppColors.macroProtein,
-                              controller: _proteinController,
-                            ),
-                          ),
-                          const SizedBox(width: AppSpacing.s),
-                          Expanded(
-                            child: _EditableMacroCard(
-                              label: tr(LocaleKeys.common_carbs),
-                              icon: AppIcons.carbs,
-                              iconColor: AppColors.macroCarbsStrong,
-                              controller: _carbsController,
-                            ),
-                          ),
-                          const SizedBox(width: AppSpacing.s),
-                          Expanded(
-                            child: _EditableMacroCard(
-                              label: tr(LocaleKeys.common_fats),
-                              icon: AppIcons.fats,
-                              iconColor: AppColors.macroFats,
-                              controller: _fatController,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: SafeArea(
-        top: false,
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(
-            AppSpacing.edge,
-            AppSpacing.s,
-            AppSpacing.edge,
-            AppSpacing.bottom + MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: GradientPillButton(
-            label: tr(LocaleKeys.common_done),
-            gradient: AppGradients.primary,
-            height: AppSizes.buttonHeightCompact,
-            onTap: _isValid ? _handleDone : null,
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _CircleIconButton extends StatelessWidget {
-  final IconData icon;
-  final VoidCallback onTap;
-
-  const _CircleIconButton({required this.icon, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(AppRadii.pill),
-      child: Ink(
-        width: AppSizes.backButtonSize,
-        height: AppSizes.backButtonSize,
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(AppRadii.pill),
-          border: Border.all(color: AppColors.outline, width: AppSizes.dividerThin),
+        bottomNavigationBar: SafeArea(
+          top: false,
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(AppSpacing.edge, AppSpacing.s, AppSpacing.edge, AppSpacing.bottom + MediaQuery.of(context).viewInsets.bottom),
+            child: FoodyPrimaryButton(
+              label: tr(LocaleKeys.common_done),
+              gradient: AppGradients.primary,
+              height: AppSizes.buttonHeightCompact,
+              onTap: _isValid ? _handleDone : null,
+            ),
+          ),
         ),
-        child: Icon(icon, size: AppSizes.iconMd, color: AppColors.textPrimary),
       ),
     );
   }
@@ -367,10 +305,7 @@ class _AmountInputField extends StatelessWidget {
   final TextEditingController controller;
   final ValueChanged<String>? onChanged;
 
-  const _AmountInputField({
-    required this.controller,
-    this.onChanged,
-  });
+  const _AmountInputField({required this.controller, this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -411,11 +346,7 @@ class _EditableCaloriesCard extends StatelessWidget {
     return Container(
       height: AppSizes.caloriesCardHeight,
       padding: const EdgeInsets.all(AppSpacing.l),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.lg),
-        boxShadow: AppShadows.cardSmall,
-      ),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.lg), boxShadow: AppShadows.cardSmall),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -430,19 +361,12 @@ class _EditableCaloriesCard extends StatelessWidget {
                     controller: controller,
                     keyboardType: const TextInputType.numberWithOptions(decimal: true),
                     style: AppTextStyles.stat48.copyWith(color: AppColors.primary),
-                    decoration: const InputDecoration(
-                      isDense: true,
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.zero,
-                    ),
+                    decoration: const InputDecoration(isDense: true, border: InputBorder.none, contentPadding: EdgeInsets.zero),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: AppSpacing.xs),
-                  child: Text(
-                    tr(LocaleKeys.common_kcal),
-                    style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary),
-                  ),
+                  child: Text(tr(LocaleKeys.common_kcal), style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary)),
                 ),
               ],
             ),
@@ -459,12 +383,7 @@ class _EditableMacroCard extends StatelessWidget {
   final IconData icon;
   final Color iconColor;
 
-  const _EditableMacroCard({
-    required this.label,
-    required this.controller,
-    required this.icon,
-    required this.iconColor,
-  });
+  const _EditableMacroCard({required this.label, required this.controller, required this.icon, required this.iconColor});
 
   @override
   Widget build(BuildContext context) {
@@ -472,11 +391,7 @@ class _EditableMacroCard extends StatelessWidget {
       width: double.infinity,
       height: AppSizes.macroCardSize,
       padding: const EdgeInsets.all(AppSpacing.l),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.lg),
-        boxShadow: AppShadows.cardSmall,
-      ),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.lg), boxShadow: AppShadows.cardSmall),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -502,17 +417,10 @@ class _EditableMacroCard extends StatelessWidget {
                   controller: controller,
                   keyboardType: const TextInputType.numberWithOptions(decimal: true),
                   style: AppTextStyles.title24.copyWith(color: AppColors.primary),
-                  decoration: const InputDecoration(
-                    isDense: true,
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.zero,
-                  ),
+                  decoration: const InputDecoration(isDense: true, border: InputBorder.none, contentPadding: EdgeInsets.zero),
                 ),
               ),
-              Text(
-                tr(LocaleKeys.common_g),
-                style: AppTextStyles.caption12.copyWith(color: AppColors.textSecondary),
-              ),
+              Text(tr(LocaleKeys.common_g), style: AppTextStyles.caption12.copyWith(color: AppColors.textSecondary)),
             ],
           ),
         ],

@@ -1,7 +1,7 @@
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/ingredient.dart';
-import 'package:diplomka/screens/meals/meal_components.dart';
+import 'package:diplomka/widgets/foody_glass_buttons.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -14,10 +14,7 @@ class InlineErrorText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: AppSpacing.xs),
-      child: Text(
-        message,
-        style: AppTextStyles.body14Regular.copyWith(color: AppColors.errorText),
-      ),
+      child: Text(message, style: AppTextStyles.body14Regular.copyWith(color: AppColors.errorText)),
     );
   }
 }
@@ -30,15 +27,7 @@ class EditBottomActionBar extends StatelessWidget {
   final VoidCallback? onSecondary;
   final EdgeInsetsGeometry? padding;
 
-  const EditBottomActionBar({
-    super.key,
-    required this.primaryLabel,
-    this.onPrimary,
-    this.secondaryLabel,
-    this.secondaryIcon,
-    this.onSecondary,
-    this.padding,
-  });
+  const EditBottomActionBar({super.key, required this.primaryLabel, this.onPrimary, this.secondaryLabel, this.secondaryIcon, this.onSecondary, this.padding});
 
   @override
   Widget build(BuildContext context) {
@@ -48,20 +37,12 @@ class EditBottomActionBar extends StatelessWidget {
         children: [
           if (secondaryLabel != null) ...[
             Expanded(
-              child: OutlinePillButton(
-                label: secondaryLabel!,
-                icon: secondaryIcon,
-                onTap: onSecondary,
-              ),
+              child: FoodySecondaryButton(label: secondaryLabel!, icon: secondaryIcon, onTap: onSecondary),
             ),
             const SizedBox(width: AppSpacing.s),
           ],
           Expanded(
-            child: GradientPillButton(
-              label: primaryLabel,
-              gradient: AppGradients.primary,
-              onTap: onPrimary,
-            ),
+            child: FoodyPrimaryButton(label: primaryLabel, gradient: AppGradients.primary, onTap: onPrimary),
           ),
         ],
       ),
@@ -93,11 +74,7 @@ class EditConfirmSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.l),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.lg),
-        boxShadow: AppShadows.sheet,
-      ),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.lg), boxShadow: AppShadows.sheet),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,23 +86,13 @@ class EditConfirmSheet extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: OutlinePillButton(
-                  label: cancelLabel,
-                  onTap: onCancel,
-                ),
+                child: FoodySecondaryButton(label: cancelLabel, onTap: onCancel),
               ),
               const SizedBox(width: AppSpacing.s),
               Expanded(
-                child: GradientPillButton(
+                child: FoodyPrimaryButton(
                   label: confirmLabel,
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      confirmColor,
-                      confirmColor.withValues(alpha: 0.85),
-                    ],
-                  ),
+                  gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [confirmColor, confirmColor.withValues(alpha: 0.85)]),
                   onTap: onConfirm,
                 ),
               ),
@@ -143,13 +110,7 @@ class EditIngredientRow extends StatelessWidget {
   final String? alertText;
   final VoidCallback? onTap;
 
-  const EditIngredientRow({
-    super.key,
-    required this.ingredient,
-    this.highlighted = false,
-    this.alertText,
-    this.onTap,
-  });
+  const EditIngredientRow({super.key, required this.ingredient, this.highlighted = false, this.alertText, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -175,23 +136,14 @@ class EditIngredientRow extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      if (highlighted) ...[
-                        const Icon(Icons.warning_amber_rounded, size: AppSizes.iconSm, color: AppColors.warningStrong),
-                        const SizedBox(width: AppSpacing.xs),
-                      ],
+                      if (highlighted) ...[const Icon(Icons.warning_amber_rounded, size: AppSizes.iconSm, color: AppColors.warningStrong), const SizedBox(width: AppSpacing.xs)],
                       Text(
                         ingredient.name,
                         style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary),
                       ),
                     ],
                   ),
-                  if (alertText != null) ...[
-                    const SizedBox(height: AppSpacing.xxs),
-                    Text(
-                      alertText!,
-                      style: AppTextStyles.macroDotLabel11.copyWith(color: AppColors.orange),
-                    ),
-                  ],
+                  if (alertText != null) ...[const SizedBox(height: AppSpacing.xxs), Text(alertText!, style: AppTextStyles.macroDotLabel11.copyWith(color: AppColors.orange))],
                   const Spacer(),
                   _MacroDotsRow(ingredient: ingredient),
                 ],
@@ -202,10 +154,7 @@ class EditIngredientRow extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(
-                  ingredient.calories.toStringAsFixed(0),
-                  style: AppTextStyles.kcalValue18,
-                ),
+                Text(ingredient.calories.toStringAsFixed(0), style: AppTextStyles.kcalValue18),
                 Text(tr(LocaleKeys.common_kcal), style: AppTextStyles.kcalLabel12),
               ],
             ),
