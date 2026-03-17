@@ -1,12 +1,7 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:diplomka/app_theme.dart';
-
-/// App-wide glass settings for standalone icon buttons.
-const customGlassSettings = LiquidGlassSettings(thickness: 42, blur: 5, glassColor: Color(0xB0FFFFFF), lightIntensity: 6, lightAngle: 0.3 * pi);
 
 /// Glass icon button with dark icon — wraps [GlassButton.custom] so we can
 /// control icon colour (the stock [GlassIconButton] hardcodes white).
@@ -32,7 +27,7 @@ class CustomGlassIconButton extends StatelessWidget {
         height: size,
         shape: const LiquidOval(),
         useOwnLayer: true,
-        settings: customGlassSettings,
+        settings: AppGlass.standard,
         quality: GlassQuality.premium,
         interactionScale: 0.95,
         child: Padding(
@@ -44,16 +39,44 @@ class CustomGlassIconButton extends StatelessWidget {
   }
 }
 
+/// Group of icon buttons in a single glass pill — iOS 26 style.
+class CustomGlassIconButtonGroup extends StatelessWidget {
+  const CustomGlassIconButtonGroup({super.key, required this.items, this.height = 44, this.iconSize});
+
+  final List<({IconData icon, VoidCallback onPressed})> items;
+  final double height;
+  final double? iconSize;
+
+  @override
+  Widget build(BuildContext context) {
+    final effectiveIconSize = iconSize ?? (height * 0.5);
+    return GlassButtonGroup(
+      useOwnLayer: true,
+      glassSettings: AppGlass.standard,
+      quality: GlassQuality.premium,
+      borderRadius: height / 2,
+      children: items
+          .map((item) => GestureDetector(
+                onTap: item.onPressed,
+                behavior: HitTestBehavior.opaque,
+                child: SizedBox(width: height, height: height, child: Center(child: Icon(item.icon, size: effectiveIconSize, color: AppColors.black))),
+              ))
+          .toList(),
+    );
+  }
+}
+
 /// Transparent app bar with independent glass elements — iOS 26 style.
 /// Back/action buttons are standalone glass pills; title is plain text.
 /// No shared glass layer.
 class CustomGlassAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomGlassAppBar({super.key, this.title, this.titleWidget, this.leading, this.leadingIcon, this.actions, this.onBack, this.showLeading = true});
+  const CustomGlassAppBar({super.key, this.title, this.titleWidget, this.leading, this.leadingIcon, this.leadingIconSize, this.actions, this.onBack, this.showLeading = true});
 
   final String? title;
   final Widget? titleWidget;
   final Widget? leading;
   final IconData? leadingIcon;
+  final double? leadingIconSize;
   final List<Widget>? actions;
   final VoidCallback? onBack;
   final bool showLeading;
@@ -65,29 +88,32 @@ class CustomGlassAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final leadingWidget = !showLeading
         ? const SizedBox(width: AppSizes.backButtonSize)
-        : leading ?? CustomGlassIconButton(icon: leadingIcon ?? Icons.arrow_back_ios_new_rounded, iconSize: AppSizes.iconMd, onPressed: onBack ?? () => Get.back());
+        : leading ?? CustomGlassIconButton(icon: leadingIcon ?? Icons.arrow_back_ios_new_rounded, iconSize: leadingIconSize ?? AppSizes.iconMd, onPressed: onBack ?? () => Get.back());
 
     final titleContent = titleWidget ?? (title != null ? Text(title!, style: AppTextStyles.title18Tight) : null);
 
     return SafeArea(
       bottom: false,
-      child: SizedBox(
-        height: preferredSize.height,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            if (titleContent != null) Center(child: titleContent),
-            Row(
-              children: [
-                leadingWidget,
-                const Spacer(),
-                if (actions != null && actions!.isNotEmpty)
-                  Row(mainAxisSize: MainAxisSize.min, spacing: AppSpacing.s, children: actions!)
-                else
-                  SizedBox(width: AppSizes.backButtonSize),
-              ],
-            ),
-          ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
+        child: SizedBox(
+          height: preferredSize.height,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              if (titleContent != null) Center(child: titleContent),
+              Row(
+                children: [
+                  leadingWidget,
+                  const Spacer(),
+                  if (actions != null && actions!.isNotEmpty)
+                    Row(mainAxisSize: MainAxisSize.min, spacing: AppSpacing.s, children: actions!)
+                  else
+                    SizedBox(width: AppSizes.backButtonSize),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

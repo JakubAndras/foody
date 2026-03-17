@@ -10,6 +10,7 @@ import 'package:diplomka/screens/meals/report_meal_screen.dart';
 import 'package:diplomka/screens/meals/meal_components.dart';
 import 'package:diplomka/screens/meals/meal_sheets.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
+import 'package:diplomka/widgets/glass_popup.dart';
 import 'package:diplomka/widgets/foody_glass_buttons.dart';
 import 'package:diplomka/services/share/app_share_service.dart';
 import 'package:diplomka/services/share/meal_share_builder.dart';
@@ -342,87 +343,51 @@ class _EditMealScreenState extends State<EditMealScreen> {
   }
 
   void _openActionSheet() {
-    final double topInset = MediaQuery.of(context).padding.top;
-
-    showGeneralDialog<void>(
+    showGlassPopup(
       context: context,
-      barrierDismissible: true,
-      barrierLabel: 'Meal actions',
-      barrierColor: AppColors.overlayDark40.withValues(alpha: 0.2),
-      transitionDuration: AppTheme.transitionDuration,
-      pageBuilder: (context, _, _) {
-        return SafeArea(
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: GestureDetector(behavior: HitTestBehavior.opaque, onTap: () => Navigator.of(context).pop(), child: const SizedBox.expand()),
-              ),
-              Positioned(
-                top: topInset,
-                right: AppSpacing.edge,
-                child: Material(
-                  color: Colors.transparent,
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints.tightFor(width: AppSizes.actionSheetWidth),
-                    child: GlassActionSheet(
-                      items: [
-                        GlassActionSheetItem(
-                          label: tr(LocaleKeys.common_share),
-                          icon: Icons.share_outlined,
-                          onTap: () {
-                            Navigator.of(context).pop();
-                            _handleShareMeal();
-                          },
-                        ),
-                        GlassActionSheetItem(
-                          label: tr(LocaleKeys.common_report),
-                          icon: Icons.report_outlined,
-                          onTap: () {
-                            Navigator.of(context).pop();
-                            Get.to(() => const ReportMealScreen());
-                          },
-                        ),
-                        GlassActionSheetItem(
-                          label: tr(LocaleKeys.meal_duplicate_to_today),
-                          icon: Icons.content_copy_outlined,
-                          onTap: () {
-                            Navigator.of(context).pop();
-                            _handleDuplicateMeal();
-                          },
-                        ),
-                        GlassActionSheetItem(
-                          label: tr(LocaleKeys.meal_save_image),
-                          icon: Icons.download_outlined,
-                          onTap: () {
-                            Navigator.of(context).pop();
-                            _handleSaveImageToGallery();
-                          },
-                        ),
-                        GlassActionSheetItem(
-                          label: tr(LocaleKeys.common_delete),
-                          icon: Icons.delete_outline,
-                          color: AppColors.destructive,
-                          onTap: () {
-                            Navigator.of(context).pop();
-                            _handleDeleteMeal();
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        final curved = CurvedAnimation(parent: animation, curve: Curves.easeOutCubic);
-        return FadeTransition(
-          opacity: curved,
-          child: ScaleTransition(scale: Tween<double>(begin: 0.96, end: 1).animate(curved), alignment: Alignment.topRight, child: child),
-        );
-      },
+      items: [
+        GlassPopupItem(
+          label: tr(LocaleKeys.common_share),
+          icon: Icons.share_outlined,
+          onTap: () {
+            Navigator.of(context).pop();
+            _handleShareMeal();
+          },
+        ),
+        GlassPopupItem(
+          label: tr(LocaleKeys.common_report),
+          icon: Icons.report_outlined,
+          onTap: () {
+            Navigator.of(context).pop();
+            Get.to(() => const ReportMealScreen());
+          },
+        ),
+        GlassPopupItem(
+          label: tr(LocaleKeys.meal_duplicate_to_today),
+          icon: Icons.content_copy_outlined,
+          onTap: () {
+            Navigator.of(context).pop();
+            _handleDuplicateMeal();
+          },
+        ),
+        GlassPopupItem(
+          label: tr(LocaleKeys.meal_save_image),
+          icon: Icons.download_outlined,
+          onTap: () {
+            Navigator.of(context).pop();
+            _handleSaveImageToGallery();
+          },
+        ),
+        GlassPopupItem(
+          label: tr(LocaleKeys.common_delete),
+          icon: Icons.delete_outline,
+          color: AppColors.destructive,
+          onTap: () {
+            Navigator.of(context).pop();
+            _handleDeleteMeal();
+          },
+        ),
+      ],
     );
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 class AppColors {
   // Base
@@ -736,6 +737,10 @@ class AppShadows {
       color: Color(0x1A000000),
     ),
   ];
+}
+
+class AppGlass {
+  static final standard = LiquidGlassSettings(thickness: 25, blur: 2, glassColor: Colors.white.withValues(alpha: 0.65), lightIntensity: 1.5);
 }
 
 class AppTextStyles {

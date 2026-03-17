@@ -43,6 +43,8 @@ abstract class  LocaleKeys {
   static const common_sort_by = 'common_sort_by';
   static const common_most_recent = 'common_most_recent';
   static const common_a_z = 'common_a_z';
+  static const common_z_a = 'common_z_a';
+  static const common_most_protein = 'common_most_protein';
   static const common_meals = 'common_meals';
   static const common_ingredients = 'common_ingredients';
   static const common_today = 'common_today';

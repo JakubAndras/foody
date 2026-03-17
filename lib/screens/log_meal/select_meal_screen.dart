@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/controller/dashboard_controller.dart';
@@ -8,21 +9,23 @@ import 'package:diplomka/model/meal.dart';
 import 'package:diplomka/screens/meals/edit_meal_screen.dart';
 import 'package:diplomka/screens/meals/meal_detail_screen.dart';
 import 'package:diplomka/screens/log_meal/select_meal_widgets.dart';
-import 'package:diplomka/screens/logs/voice_log_screen.dart';
-import 'package:diplomka/screens/scan/scan_camera_screen.dart';
-import 'package:diplomka/screens/scan/scan_onboarding_screen.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
-import 'package:diplomka/services/session_manager.dart';
+import 'package:diplomka/services/language_settings_service.dart';
 import 'package:diplomka/services/selected_date_service.dart';
+import 'package:diplomka/services/voice/voice_transcription_service.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
+import 'package:diplomka/widgets/glass_popup.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:speech_to_text/speech_recognition_error.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
 
 enum SelectMealTab { all, favorites, meals, ingredients }
 
-enum SelectMealSort { mostRecent, alphabetic }
+enum SelectMealSort { mostRecent, aToZ, zToA, mostProtein }
 
 class SelectMealScreen extends StatefulWidget {
   const SelectMealScreen({super.key, this.showLoading = false, this.errorMessage, this.initialTab = SelectMealTab.all});
@@ -41,9 +44,15 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
   Timer? _debounce;
   String _query = '';
   bool _showSuggestions = false;
+  bool _showSearch = false;
   SelectMealTab _tab = SelectMealTab.all;
   SelectMealSort _sort = SelectMealSort.mostRecent;
   int _selectedMealtimeIndex = 1;
+
+  // Voice search
+  final VoiceTranscriptionService _voiceService = VoiceTranscriptionService();
+  bool _isListening = false;
+  bool _speechReady = false;
 
   @override
   void initState() {
@@ -55,6 +64,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
   @override
   void dispose() {
     _debounce?.cancel();
+    _voiceService.cancelListening().catchError((_) {});
     _searchFocusNode.removeListener(_onFocusChanged);
     _searchFocusNode.dispose();
     _searchController.dispose();
@@ -79,6 +89,20 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
     });
   }
 
+  void _toggleSearch() {
+    if (_isListening) {
+      _voiceService.stopListening().catchError((_) {});
+    }
+    setState(() {
+      _showSearch = !_showSearch;
+      _isListening = false;
+      if (!_showSearch) {
+        _searchController.clear();
+        _query = '';
+      }
+    });
+  }
+
   void _clearSearch() {
     _searchController.clear();
     setState(() {
@@ -87,83 +111,92 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
     });
   }
 
-  void _onSuggestionTap(String name) {
-    _searchController.text = name;
-    _searchController.selection = TextSelection.fromPosition(TextPosition(offset: name.length));
-    setState(() {
-      _query = name;
-      _showSuggestions = false;
-    });
-    _searchFocusNode.unfocus();
-  }
-
-  List<_SuggestionItem> _computeSuggestions(List<Meal> allMeals) {
-    final query = _searchController.text.trim().toLowerCase();
-    if (query.isEmpty) return [];
-
-    final Map<String, int> nameFreqs = {};
-
-    final bool includeMeals = _tab == SelectMealTab.all || _tab == SelectMealTab.meals || _tab == SelectMealTab.favorites;
-    final bool includeIngredients = _tab == SelectMealTab.all || _tab == SelectMealTab.ingredients || _tab == SelectMealTab.favorites;
-
-    for (final meal in allMeals) {
-      if (includeMeals && meal.name.isNotEmpty) {
-        nameFreqs[meal.name] = (nameFreqs[meal.name] ?? 0) + 1;
-      }
-      if (includeIngredients) {
-        for (final ing in meal.ingredients) {
-          if (ing.name.isNotEmpty) {
-            nameFreqs[ing.name] = (nameFreqs[ing.name] ?? 0) + 1;
-          }
-        }
-      }
+  Future<void> _toggleVoiceSearch() async {
+    if (_isListening) {
+      await _voiceService.stopListening();
+      if (!mounted) return;
+      setState(() => _isListening = false);
+      return;
     }
 
-    final suggestions =
-        nameFreqs.entries.where((e) => e.key.toLowerCase().contains(query) && e.key.toLowerCase() != query).map((e) => _SuggestionItem(name: e.key, frequency: e.value)).toList()
-          ..sort((a, b) => b.frequency.compareTo(a.frequency));
+    // Check permissions
+    final micStatus = await Permission.microphone.status;
+    PermissionStatus speechStatus = PermissionStatus.granted;
+    if (Platform.isIOS) speechStatus = await Permission.speech.status;
 
-    return suggestions.take(5).toList();
-  }
+    if (!micStatus.isGranted || !speechStatus.isGranted) {
+      final micResult = await Permission.microphone.request();
+      PermissionStatus speechResult = PermissionStatus.granted;
+      if (Platform.isIOS) speechResult = await Permission.speech.request();
+      if (!micResult.isGranted || !speechResult.isGranted) return;
+    }
 
-  void _openMealtimePicker() {
-    showModalBottomSheet<void>(
-      context: context,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadii.lg)),
-      builder: (context) {
-        return SelectMealPickerSheet(
-          title: '',
-          options: [tr(LocaleKeys.meal_mealtime_breakfast), tr(LocaleKeys.meal_mealtime_lunch), tr(LocaleKeys.meal_mealtime_dinner), tr(LocaleKeys.meal_mealtime_afternoon_snack)],
-          selectedIndex: _selectedMealtimeIndex,
-          onSelected: (index) {
-            setState(() {
-              _selectedMealtimeIndex = index;
-            });
-            Navigator.of(context).pop();
-          },
-        );
+    // Initialize speech engine
+    if (!_speechReady) {
+      final available = await _voiceService.initialize(
+        onError: (SpeechRecognitionError error) {
+          if (!mounted) return;
+          setState(() => _isListening = false);
+        },
+        onStatus: (String status) {
+          if (!mounted) return;
+          if (status == 'done' || status == 'notListening') {
+            setState(() => _isListening = false);
+          }
+        },
+      );
+      if (!available) return;
+      _speechReady = true;
+    }
+
+    // Start listening
+    if (!mounted) return;
+    final appLocale = context.locale;
+    final preferredLanguageCode = LanguageSettingsService.to.resolveVoiceLogLanguageCode(appLanguageCode: appLocale.languageCode);
+
+    _searchFocusNode.unfocus();
+    await _voiceService.startListening(
+      onResult: (SpeechRecognitionResult result) {
+        if (!mounted) return;
+        final text = result.recognizedWords.trim();
+        _searchController.text = text;
+        _searchController.selection = TextSelection.fromPosition(TextPosition(offset: text.length));
+        _onSearchChanged(text);
       },
+      appLocale: appLocale,
+      preferredLanguageCode: preferredLanguageCode,
     );
+    if (!mounted) return;
+    setState(() => _isListening = true);
   }
 
   void _openSortPicker() {
-    showModalBottomSheet<void>(
+    showGlassPopup(
       context: context,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadii.lg)),
-      builder: (context) {
-        return SelectMealPickerSheet(
-          title: tr(LocaleKeys.common_sort_by),
-          options: [tr(LocaleKeys.common_most_recent), tr(LocaleKeys.common_a_z)],
-          selectedIndex: _sort == SelectMealSort.mostRecent ? 0 : 1,
-          onSelected: (index) {
-            setState(() {
-              _sort = index == 0 ? SelectMealSort.mostRecent : SelectMealSort.alphabetic;
-            });
+      items: SelectMealSort.values.map((sort) {
+        return GlassPopupItem(
+          label: _sortLabel(sort),
+          selected: _sort == sort,
+          onTap: () {
+            setState(() => _sort = sort);
             Navigator.of(context).pop();
           },
         );
-      },
+      }).toList(),
     );
+  }
+
+  String _sortLabel(SelectMealSort sort) {
+    switch (sort) {
+      case SelectMealSort.mostRecent:
+        return tr(LocaleKeys.common_most_recent);
+      case SelectMealSort.aToZ:
+        return tr(LocaleKeys.common_a_z);
+      case SelectMealSort.zToA:
+        return tr(LocaleKeys.common_z_a);
+      case SelectMealSort.mostProtein:
+        return tr(LocaleKeys.common_most_protein);
+    }
   }
 
   void _openManualLog() {
@@ -194,10 +227,15 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
     if (_tab == SelectMealTab.favorites) {
       filtered = filtered.where((meal) => meal.isFavorite).toList();
     }
-    if (_sort == SelectMealSort.mostRecent) {
-      filtered.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-    } else {
-      filtered.sort((a, b) => a.name.compareTo(b.name));
+    switch (_sort) {
+      case SelectMealSort.mostRecent:
+        filtered.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+      case SelectMealSort.aToZ:
+        filtered.sort((a, b) => a.name.compareTo(b.name));
+      case SelectMealSort.zToA:
+        filtered.sort((a, b) => b.name.compareTo(a.name));
+      case SelectMealSort.mostProtein:
+        filtered.sort((a, b) => b.totalProteins.compareTo(a.totalProteins));
     }
     return filtered;
   }
@@ -211,7 +249,16 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
       final favoriteIngredientNames = favoriteMeals.expand((m) => m.ingredients).map((i) => i.name).toSet();
       filtered = filtered.where((item) => favoriteIngredientNames.contains(item.ingredient.name)).toList();
     }
-    filtered.sort((a, b) => a.ingredient.name.compareTo(b.ingredient.name));
+    switch (_sort) {
+      case SelectMealSort.mostRecent:
+        break;
+      case SelectMealSort.aToZ:
+        filtered.sort((a, b) => a.ingredient.name.compareTo(b.ingredient.name));
+      case SelectMealSort.zToA:
+        filtered.sort((a, b) => b.ingredient.name.compareTo(a.ingredient.name));
+      case SelectMealSort.mostProtein:
+        filtered.sort((a, b) => b.ingredient.proteins.compareTo(a.ingredient.proteins));
+    }
     return filtered;
   }
 
@@ -234,6 +281,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
   }
 
   bool get _showMealsSection => _tab == SelectMealTab.all || _tab == SelectMealTab.meals || _tab == SelectMealTab.favorites;
+
   bool get _showIngredientsSection => _tab == SelectMealTab.all || _tab == SelectMealTab.ingredients || _tab == SelectMealTab.favorites;
 
   @override
@@ -242,229 +290,228 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
       child: Scaffold(
         extendBodyBehindAppBar: true,
         backgroundColor: AppColors.background,
-        appBar: CustomGlassAppBar(
-          leadingIcon: Icons.close,
-          onBack: () => Get.back(),
-          titleWidget: GestureDetector(
-            onTap: _openMealtimePicker,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(tr(LocaleKeys.meal_select_title), style: AppTextStyles.selectMealTitle),
-                const SizedBox(width: AppSpacing.xs),
-                const Icon(Icons.keyboard_arrow_down, color: AppColors.primary, size: AppSizes.iconMd),
-              ],
-            ),
-          ),
-        ),
-        body: LiquidGlassBackground(
-          child: SafeArea(
-            bottom: false,
-            child: Obx(() {
-              final dbMeals = DayRecordController.to.dayRecords.expand((record) => record.meals).toList();
-              final meals = _applyMealFilters(dbMeals);
-              final favoriteMeals = dbMeals.where((m) => m.isFavorite).toList();
-              final ingredients = _applyIngredientFilters(_resolveIngredients(dbMeals), favoriteMeals);
-              final visibleMeals = _showMealsSection ? meals : <Meal>[];
-              final visibleIngredients = _showIngredientsSection ? ingredients : <_IngredientItem>[];
-              final isEmptyState = visibleMeals.isEmpty && visibleIngredients.isEmpty;
-
-              return Column(
-                children: [
-                  Container(
-                    color: AppColors.surface,
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-                    child: Column(
-                      children: [
-                        SelectMealSearchBar(controller: _searchController, onChanged: _onSearchChanged, onClear: _clearSearch, focusNode: _searchFocusNode),
-                        const SizedBox(height: AppSpacing.m),
-                        SelectMealSegmentedTabs(
-                          labels: [tr(LocaleKeys.common_all), tr(LocaleKeys.common_favorites), tr(LocaleKeys.common_meals), tr(LocaleKeys.common_ingredients)],
-                          activeIndex: _tab.index,
-                          onTap: (index) => setState(() => _tab = SelectMealTab.values[index]),
-                        ),
-                      ],
+        appBar: _showSearch
+            ? PreferredSize(
+                preferredSize: const Size.fromHeight(AppSizes.topBarHeight),
+                child: SafeArea(
+                  bottom: false,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
+                    child: SizedBox(
+                      height: AppSizes.topBarHeight,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: GlassContainer(
+                              useOwnLayer: true,
+                              quality: GlassQuality.premium,
+                              settings: AppGlass.standard,
+                              shape: LiquidRoundedSuperellipse(borderRadius: AppRadii.pill),
+                              child: SizedBox(
+                                height: 44,
+                                child: Row(
+                                  children: [
+                                    const SizedBox(width: AppSpacing.m),
+                                    Icon(Icons.search_rounded, color: AppColors.textSecondary, size: AppSizes.iconMd),
+                                    const SizedBox(width: AppSpacing.s),
+                                    Expanded(
+                                      child: TextField(
+                                        controller: _searchController,
+                                        focusNode: _searchFocusNode,
+                                        onChanged: _onSearchChanged,
+                                        autofocus: true,
+                                        style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary),
+                                        decoration: InputDecoration(
+                                          hintText: tr(LocaleKeys.meal_search_food),
+                                          hintStyle: AppTextStyles.body16.copyWith(color: AppColors.textSecondary),
+                                          border: InputBorder.none,
+                                          isDense: true,
+                                          contentPadding: EdgeInsets.zero,
+                                        ),
+                                      ),
+                                    ),
+                                    if (_searchController.text.isNotEmpty)
+                                      GestureDetector(
+                                        onTap: _clearSearch,
+                                        child: Icon(Icons.cancel_rounded, color: AppColors.textSecondary, size: AppSizes.iconMd),
+                                      )
+                                    else
+                                      GestureDetector(
+                                        onTap: _toggleVoiceSearch,
+                                        child: Icon(Icons.mic_rounded, color: _isListening ? AppColors.error : AppColors.textSecondary, size: AppSizes.iconMd),
+                                      ),
+                                    const SizedBox(width: AppSpacing.m),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: AppSpacing.s),
+                          CustomGlassIconButton(
+                            icon: Icons.close_rounded,
+                            onPressed: _toggleSearch,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
+                ),
+              )
+            : CustomGlassAppBar(
+                //leadingIcon: Icons.close,
+                leadingIconSize: AppSizes.iconLg,
+                onBack: () => Get.back(),
+                titleWidget: Text(tr(LocaleKeys.meal_select_title), style: AppTextStyles.selectMealTitle),
+                actions: [
+                  CustomGlassIconButtonGroup(
+                    iconSize: AppSizes.iconLg,
+                    items: [
+                      (icon: Icons.search_rounded, onPressed: _toggleSearch),
+                      (icon: Icons.add_rounded, onPressed: _openManualLog),
+                    ],
+                  ),
+                ],
+              ),
+        body: LiquidGlassBackground(
+          child: Obx(() {
+            final dbMeals = DayRecordController.to.dayRecords.expand((record) => record.meals).toList();
+            final meals = _applyMealFilters(dbMeals);
+            final favoriteMeals = dbMeals.where((m) => m.isFavorite).toList();
+            final ingredients = _applyIngredientFilters(_resolveIngredients(dbMeals), favoriteMeals);
+            final visibleMeals = _showMealsSection ? meals : <Meal>[];
+            final visibleIngredients = _showIngredientsSection ? ingredients : <_IngredientItem>[];
+            final isEmptyState = visibleMeals.isEmpty && visibleIngredients.isEmpty;
+
+            return SafeArea(
+              bottom: false,
+              child: Column(
+                children: [
+                  const SizedBox(height: AppSpacing.s),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+                      child: SelectMealSegmentedTabs(
+                        labels: [tr(LocaleKeys.common_all), tr(LocaleKeys.common_favorites), tr(LocaleKeys.common_meals), tr(LocaleKeys.common_ingredients)],
+                        activeIndex: _tab.index,
+                        onTap: (index) => setState(() => _tab = SelectMealTab.values[index]),
+                      ),
+                    ),
+                  const SizedBox(height: AppSpacing.s),
                   Expanded(
-                    child: Stack(
-                      children: [
-                        Column(
-                          children: [
-                            const SizedBox(height: AppSpacing.s),
-                            Padding(
+                    child: CustomScrollView(
+                      slivers: [
+                        if (widget.showLoading)
+                          const SliverFillRemaining(hasScrollBody: false, child: SelectMealLoadingState())
+                        else if (widget.errorMessage != null)
+                          SliverFillRemaining(
+                            hasScrollBody: false,
+                            child: SelectMealErrorState(message: widget.errorMessage!, onRetry: () => setState(() {})),
+                          )
+                        else if (isEmptyState)
+                          SliverFillRemaining(
+                            hasScrollBody: false,
+                            child: SelectMealEmptyState(title: tr(LocaleKeys.common_no_items_found), message: tr(LocaleKeys.common_try_adjusting_search)),
+                          )
+                        else ...[
+                          if (_showMealsSection) ...[
+                            SliverPadding(
                               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: SelectMealQuickActionTile(
-                                      icon: Icons.photo_camera_outlined,
-                                      label: tr(LocaleKeys.meal_meal_scan),
-                                      onTap: () {
-                                        if (SessionManager.to.scanOnboardingComplete.value) {
-                                          Get.to(() => const ScanCameraScreen());
-                                        } else {
-                                          Get.to(() => const ScanOnboardingScreen());
-                                        }
-                                      },
+                              sliver: SliverToBoxAdapter(
+                                child: SelectMealSectionHeader(
+                                  title: tr(LocaleKeys.common_meals),
+                                  trailing: GestureDetector(
+                                    onTap: _openSortPicker,
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const Icon(Icons.tune, color: AppColors.textSecondary, size: AppSizes.iconSm),
+                                        const SizedBox(width: 6),
+                                        Text(
+                                          _sortLabel(_sort),
+                                          style: AppTextStyles.selectMealSegmentLabel.copyWith(color: AppColors.textSecondary),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                  const SizedBox(width: AppSpacing.s),
-                                  Expanded(
-                                    child: SelectMealQuickActionTile(
-                                      icon: Icons.qr_code_2,
-                                      label: tr(LocaleKeys.meal_barcode_scan),
-                                      onTap: () => Get.to(() => const ScanCameraScreen(initialMode: ScanMode.barcode)),
-                                    ),
-                                  ),
-                                  const SizedBox(width: AppSpacing.s),
-                                  Expanded(
-                                    child: SelectMealQuickActionTile(icon: Icons.mic, label: tr(LocaleKeys.meal_voice_log), onTap: () => Get.to(() => const VoiceLogScreen())),
-                                  ),
-                                  const SizedBox(width: AppSpacing.s),
-                                  Expanded(
-                                    child: SelectMealQuickActionTile(icon: Icons.add, label: tr(LocaleKeys.meal_manual_log), onTap: _openManualLog),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: AppSpacing.s),
-                            Expanded(
-                              child: CustomScrollView(
-                                slivers: [
-                                  if (widget.showLoading)
-                                    const SliverFillRemaining(hasScrollBody: false, child: SelectMealLoadingState())
-                                  else if (widget.errorMessage != null)
-                                    SliverFillRemaining(
-                                      hasScrollBody: false,
-                                      child: SelectMealErrorState(message: widget.errorMessage!, onRetry: () => setState(() {})),
-                                    )
-                                  else if (isEmptyState)
-                                    SliverFillRemaining(
-                                      hasScrollBody: false,
-                                      child: SelectMealEmptyState(title: tr(LocaleKeys.common_no_items_found), message: tr(LocaleKeys.common_try_adjusting_search)),
-                                    )
-                                  else ...[
-                                    if (_showMealsSection) ...[
-                                      SliverPadding(
-                                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-                                        sliver: SliverToBoxAdapter(
-                                          child: SelectMealSectionHeader(
-                                            title: tr(LocaleKeys.common_meals),
-                                            trailing: GestureDetector(
-                                              onTap: _openSortPicker,
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  const Icon(Icons.tune, color: AppColors.textSecondary, size: AppSizes.iconSm),
-                                                  const SizedBox(width: 6),
-                                                  Text(
-                                                    _sort == SelectMealSort.mostRecent ? tr(LocaleKeys.common_most_recent) : tr(LocaleKeys.common_a_z),
-                                                    style: AppTextStyles.selectMealSegmentLabel.copyWith(color: AppColors.textSecondary),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.s)),
-                                      SliverPadding(
-                                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-                                        sliver: SliverList(
-                                          delegate: SliverChildBuilderDelegate((context, index) {
-                                            final meal = meals[index];
-                                            final selectedDate = SelectedDateService.to.selectedDate.value;
-                                            final newMeal = meal.copyWith(id: null, dayRecordId: null, timestamp: _applyDateToTime(meal.timestamp, selectedDate));
-                                            return Padding(
-                                              padding: const EdgeInsets.only(bottom: AppSpacing.xs),
-                                              child: SelectMealCard(
-                                                title: meal.name,
-                                                kcal: meal.totalCalories.toStringAsFixed(0),
-                                                protein: '${meal.totalProteins.toStringAsFixed(0)}g',
-                                                carbs: '${meal.totalCarbs.toStringAsFixed(0)}g',
-                                                fats: '${meal.totalFats.toStringAsFixed(0)}g',
-                                                imageProvider: null,
-                                                onTap: () => Get.to(() => MealDetailScreen(meal: newMeal, openedFromLogScreen: true, selectedDate: selectedDate)),
-                                                onAdd: () => _addMealToToday(meal),
-                                              ),
-                                            );
-                                          }, childCount: meals.length),
-                                        ),
-                                      ),
-                                      const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.l)),
-                                    ],
-                                    if (_showIngredientsSection) ...[
-                                      SliverPadding(
-                                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-                                        sliver: SliverToBoxAdapter(child: SelectMealSectionHeader(title: tr(LocaleKeys.common_ingredients))),
-                                      ),
-                                      const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.s)),
-                                      SliverPadding(
-                                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-                                        sliver: SliverList(
-                                          delegate: SliverChildBuilderDelegate((context, index) {
-                                            final item = ingredients[index];
-                                            return Padding(
-                                              padding: const EdgeInsets.only(bottom: AppSpacing.xs),
-                                              child: SelectMealIngredientRow(
-                                                title: item.ingredient.name,
-                                                subtitle: item.subtitle,
-                                                onAdd: () => _addIngredientToToday(item.ingredient),
-                                                onTap: () => Get.snackbar(tr(LocaleKeys.common_ingredients), item.ingredient.name),
-                                              ),
-                                            );
-                                          }, childCount: ingredients.length),
-                                        ),
-                                      ),
-                                      const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xxl)),
-                                    ],
-                                  ],
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        if (_showSuggestions) ...[
-                          () {
-                            final suggestions = _computeSuggestions(dbMeals);
-                            if (suggestions.isEmpty) return const SizedBox.shrink();
-                            return Positioned(
-                              top: 0,
-                              left: AppSpacing.l,
-                              right: AppSpacing.l,
-                              child: Material(
-                                elevation: 4,
-                                borderRadius: BorderRadius.circular(AppRadii.md),
-                                color: AppColors.surface,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(AppRadii.md),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: suggestions.asMap().entries.map((entry) {
-                                      final index = entry.key;
-                                      final suggestion = entry.value;
-                                      return Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          if (index > 0) Divider(height: 1, indent: AppSpacing.m + AppSizes.iconSm + AppSpacing.s, color: AppColors.border),
-                                          SelectMealSuggestionTile(name: suggestion.name, frequency: suggestion.frequency, onTap: () => _onSuggestionTap(suggestion.name)),
-                                        ],
-                                      );
-                                    }).toList(),
                                   ),
                                 ),
                               ),
-                            );
-                          }(),
+                            ),
+                            const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.s)),
+                            SliverPadding(
+                              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+                              sliver: SliverList(
+                                delegate: SliverChildBuilderDelegate((context, index) {
+                                  final meal = meals[index];
+                                  final selectedDate = SelectedDateService.to.selectedDate.value;
+                                  final newMeal = meal.copyWith(id: null, dayRecordId: null, timestamp: _applyDateToTime(meal.timestamp, selectedDate));
+                                  return Padding(
+                                    padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+                                    child: SelectMealCard(
+                                      title: meal.name,
+                                      kcal: meal.totalCalories.toStringAsFixed(0),
+                                      protein: '${meal.totalProteins.toStringAsFixed(0)}g',
+                                      carbs: '${meal.totalCarbs.toStringAsFixed(0)}g',
+                                      fats: '${meal.totalFats.toStringAsFixed(0)}g',
+                                      imageProvider: null,
+                                      onTap: () => Get.to(() => MealDetailScreen(meal: newMeal, openedFromLogScreen: true, selectedDate: selectedDate)),
+                                      onAdd: () => _addMealToToday(meal),
+                                    ),
+                                  );
+                                }, childCount: meals.length),
+                              ),
+                            ),
+                            const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.l)),
+                          ],
+                          if (_showIngredientsSection) ...[
+                            SliverPadding(
+                              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+                              sliver: SliverToBoxAdapter(
+                                child: SelectMealSectionHeader(
+                                  title: tr(LocaleKeys.common_ingredients),
+                                  trailing: GestureDetector(
+                                    onTap: _openSortPicker,
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const Icon(Icons.tune, color: AppColors.textSecondary, size: AppSizes.iconSm),
+                                        const SizedBox(width: 6),
+                                        Text(
+                                          _sortLabel(_sort),
+                                          style: AppTextStyles.selectMealSegmentLabel.copyWith(color: AppColors.textSecondary),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.s)),
+                            SliverPadding(
+                              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+                              sliver: SliverList(
+                                delegate: SliverChildBuilderDelegate((context, index) {
+                                  final item = ingredients[index];
+                                  return Padding(
+                                    padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+                                    child: SelectMealIngredientRow(
+                                      title: item.ingredient.name,
+                                      subtitle: item.subtitle,
+                                      onAdd: () => _addIngredientToToday(item.ingredient),
+                                      onTap: () => Get.snackbar(tr(LocaleKeys.common_ingredients), item.ingredient.name),
+                                    ),
+                                  );
+                                }, childCount: ingredients.length),
+                              ),
+                            ),
+                            const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xxl)),
+                          ],
                         ],
                       ],
                     ),
                   ),
                 ],
-              );
-            }),
-          ),
+              ),
+            );
+          }),
         ),
       ),
     );

@@ -60,16 +60,8 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return ProfileGradientScaffold(
+      safeBottom: false,
       padding: const EdgeInsets.fromLTRB(AppSpacing.screen, 0, AppSpacing.screen, 0),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: SizedBox(
-        width: MediaQuery.of(context).size.width - (AppSpacing.screen * 2),
-        child: ProfilePrimaryButton(
-          label: tr(LocaleKeys.exercise_add_title),
-          height: AppSizes.buttonHeightCompact,
-          onPressed: () => Get.to(() => const AddExerciseScreen()),
-        ),
-      ),
       child: Column(
         children: [
           CustomGlassAppBar(
@@ -77,9 +69,9 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
             onBack: () => Navigator.of(context).maybePop(),
             actions: [
               CustomGlassIconButton(
-                icon: _showFavorites ? Icons.bookmark : Icons.bookmark_border,
+                icon: Icons.add,
                 iconSize: AppSizes.iconMd,
-                onPressed: () => setState(() => _showFavorites = !_showFavorites),
+                onPressed: () => Get.to(() => const AddExerciseScreen()),
               ),
             ],
           ),
@@ -111,7 +103,7 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
                 );
               }
               return ListView.separated(
-                padding: EdgeInsets.fromLTRB(0, AppSpacing.s, 0, AppSizes.buttonHeightCompact + AppSpacing.xl + MediaQuery.paddingOf(context).bottom),
+                padding: EdgeInsets.fromLTRB(0, AppSpacing.s, 0, AppSpacing.l + MediaQuery.paddingOf(context).bottom),
                 itemCount: filtered.length,
                 separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.s),
                 itemBuilder: (context, index) {
