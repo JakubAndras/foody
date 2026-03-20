@@ -46,6 +46,15 @@
   "common_ingredients": "Ingredience",
   "common_today": "Dnes",
   "common_back_to_today": "Zpět na dnešek",
+  "common_food_logged": "Jídlo zaznamenáno",
+  "common_exercise_logged": "Cvičení zaznamenáno",
+  "common_view": "Zobrazit",
+  "common_undo": "Zpět",
+  "common_confidence": "Spolehlivost",
+  "common_unsaved_changes": "Máte neuložené změny",
+  "common_unsaved_changes_message": "Chcete uložit změny před odchodem?",
+  "common_discard": "Zahodit",
+  "common_name": "Název",
 
   "day_monday_short": "P",
   "day_tuesday_short": "Ú",
@@ -328,6 +337,7 @@
   "meal_share_summary": "Souhrn jídla: {title}",
   "meal_duplicate_to_today": "Duplikovat na dnešek",
   "meal_duplicated": "Jídlo duplikováno",
+  "meal_duplicated_to": "Jídlo duplikováno na {date}",
 
   "ingredient_title": "Upravit ingredienci",
   "ingredient_name": "Název ingredience",

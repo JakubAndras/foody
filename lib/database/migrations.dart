@@ -98,3 +98,46 @@ final Migration migration8to9 = Migration(8, 9, (database) async {
     await database.execute('ALTER TABLE `Exercise` ADD COLUMN `source` TEXT');
   } catch (_) {}
 });
+
+final Migration migration9to10 = Migration(9, 10, (database) async {
+  await database.execute('''
+    CREATE TABLE IF NOT EXISTS `MealTemplate` (
+      `id` INTEGER PRIMARY KEY AUTOINCREMENT,
+      `name` TEXT NOT NULL,
+      `normalizedName` TEXT NOT NULL,
+      `photoPath` TEXT,
+      `isFavorite` INTEGER NOT NULL DEFAULT 0,
+      `lastUsedAt` INTEGER NOT NULL,
+      `usageCount` INTEGER NOT NULL DEFAULT 1
+    )
+  ''');
+  await database.execute('CREATE UNIQUE INDEX IF NOT EXISTS `index_MealTemplate_normalizedName` ON `MealTemplate` (`normalizedName`)');
+
+  await database.execute('''
+    CREATE TABLE IF NOT EXISTS `MealTemplateIngredient` (
+      `id` INTEGER PRIMARY KEY AUTOINCREMENT,
+      `templateId` INTEGER NOT NULL,
+      `name` TEXT NOT NULL,
+      `weight` REAL NOT NULL,
+      `calories` REAL NOT NULL,
+      `proteins` REAL NOT NULL,
+      `carbs` REAL NOT NULL,
+      `fats` REAL NOT NULL,
+      FOREIGN KEY (`templateId`) REFERENCES `MealTemplate` (`id`) ON DELETE CASCADE
+    )
+  ''');
+
+  await database.execute('''
+    CREATE TABLE IF NOT EXISTS `ExerciseTemplate` (
+      `id` INTEGER PRIMARY KEY AUTOINCREMENT,
+      `name` TEXT NOT NULL,
+      `normalizedName` TEXT NOT NULL,
+      `durationMinutes` INTEGER,
+      `caloriesBurned` REAL NOT NULL,
+      `isFavorite` INTEGER NOT NULL DEFAULT 0,
+      `lastUsedAt` INTEGER NOT NULL,
+      `usageCount` INTEGER NOT NULL DEFAULT 1
+    )
+  ''');
+  await database.execute('CREATE UNIQUE INDEX IF NOT EXISTS `index_ExerciseTemplate_normalizedName` ON `ExerciseTemplate` (`normalizedName`)');
+});

@@ -5,22 +5,28 @@ import "package:sqflite/sqflite.dart" as sqflite;
 import 'package:diplomka/model/type_converters.dart';
 import 'package:diplomka/database/dao/day_record_dao.dart';
 import 'package:diplomka/database/dao/exercise_dao.dart';
+import 'package:diplomka/database/dao/exercise_template_dao.dart';
 import 'package:diplomka/database/dao/ingredient_dao.dart';
+import 'package:diplomka/database/dao/meal_template_dao.dart';
+import 'package:diplomka/database/dao/meal_template_ingredient_dao.dart';
 import 'package:diplomka/database/dao/weight_entry_dao.dart';
 import 'package:diplomka/database/entities/day_record_entity.dart';
 import 'package:diplomka/database/entities/exercise_entity.dart';
+import 'package:diplomka/database/entities/exercise_template_entity.dart';
 import 'package:diplomka/database/entities/ingredient_entity.dart';
 import 'package:diplomka/database/entities/meal_entity.dart';
+import 'package:diplomka/database/entities/meal_template_entity.dart';
+import 'package:diplomka/database/entities/meal_template_ingredient_entity.dart';
 import 'package:diplomka/database/entities/weight_entry_entity.dart';
 
 import 'dao/meal_dao.dart';
 
 part 'app_database.g.dart';
 
-const _databaseVersion = 9;
+const _databaseVersion = 10;
 
 @TypeConverters([DateTimeConverter])
-@Database(version: _databaseVersion, entities: [DayRecordEntity, MealEntity, IngredientEntity, WeightEntryEntity, ExerciseEntity])
+@Database(version: _databaseVersion, entities: [DayRecordEntity, MealEntity, IngredientEntity, WeightEntryEntity, ExerciseEntity, MealTemplateEntity, MealTemplateIngredientEntity, ExerciseTemplateEntity])
 abstract class AppDatabase extends FloorDatabase {
   static const databaseName = "app_database.db";
 
@@ -29,4 +35,7 @@ abstract class AppDatabase extends FloorDatabase {
   IngredientDao get ingredientDao;
   WeightEntryDao get weightEntryDao;
   ExerciseDao get exerciseDao;
+  MealTemplateDao get mealTemplateDao;
+  MealTemplateIngredientDao get mealTemplateIngredientDao;
+  ExerciseTemplateDao get exerciseTemplateDao;
 }

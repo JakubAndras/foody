@@ -29,6 +29,7 @@ class Prompt {
       },
       "rules": [
         "Return only JSON.",
+        "The meal name must be at most 30 characters. Use the marketing or brand name of the product when recognizable.",
         "When only text is available, infer a realistic dish from the text.",
         "When both image and text are available, prioritize image evidence and use text to disambiguate."
       ]

@@ -2,17 +2,21 @@ import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/controller/day_record_controller.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/exercise.dart';
+import 'package:diplomka/model/exercise_template.dart';
+import 'package:diplomka/services/exercise_template_repository.dart';
 import 'package:diplomka/screens/logs/exercise_detail_options_sheet.dart';
 import 'package:diplomka/screens/logs/exercise_widgets.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 
 class ExerciseDetailScreen extends StatefulWidget {
-  const ExerciseDetailScreen({super.key, required this.exercise});
+  const ExerciseDetailScreen({super.key, required this.exercise, this.openedFromLogScreen = false});
 
   final Exercise exercise;
+  final bool openedFromLogScreen;
 
   @override
   State<ExerciseDetailScreen> createState() => _ExerciseDetailScreenState();
@@ -30,6 +34,13 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
   Future<void> _toggleFavorite() async {
     final next = !_exercise.isFavorite;
     setState(() => _exercise = _exercise.copyWith(isFavorite: next));
+
+    if (widget.openedFromLogScreen) {
+      final normalized = ExerciseTemplate.normalize(_exercise.name);
+      final template = ExerciseTemplateRepository.to.allTemplates.firstWhereOrNull((t) => t.normalizedName == normalized);
+      if (template != null) await ExerciseTemplateRepository.to.setFavorite(template, next);
+      return;
+    }
 
     if (_exercise.id == null || _exercise.dayRecordId == null) return;
     await DayRecordController.to.setExerciseFavorite(exercise: _exercise, isFavorite: next);

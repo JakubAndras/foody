@@ -362,9 +362,9 @@ class SelectMealIngredientRow extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: AppTextStyles.selectMealIngredientTitle),
+                  Text(title, style: AppTextStyles.selectMealIngredientTitle, maxLines: 1, overflow: TextOverflow.ellipsis),
                   const SizedBox(height: 2),
-                  Text(subtitle, style: AppTextStyles.selectMealIngredientSubtitle),
+                  Text(subtitle, style: AppTextStyles.selectMealIngredientSubtitle, maxLines: 1, overflow: TextOverflow.ellipsis),
                 ],
               ),
             ),

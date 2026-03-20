@@ -16,9 +16,12 @@ import 'package:diplomka/services/share/app_share_service.dart';
 import 'package:diplomka/services/share/meal_share_builder.dart';
 import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/utils/media_storage.dart';
+import 'package:diplomka/model/meal_template.dart';
+import 'package:diplomka/services/meal_template_repository.dart';
 import 'package:diplomka/widgets/edit_flow/edit_flow_widgets.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -59,6 +62,9 @@ class _EditMealScreenState extends State<EditMealScreen> {
   late MealScreenMode _mode;
   late DateTime _selectedDate;
   late List<Ingredient> _ingredients;
+  late String _initialName;
+  late List<Ingredient> _initialIngredients;
+  late DateTime _initialDate;
   final ScrollController _scrollController = ScrollController();
   ImageProvider? _heroImage;
   double _topPullExtent = 0;
@@ -97,6 +103,9 @@ class _EditMealScreenState extends State<EditMealScreen> {
     _mealtime = _mealtimeFromTimestamp(_meal.timestamp);
     _amountLabel = _initialAmountLabel();
     _ingredients = List<Ingredient>.from(_meal.ingredients);
+    _initialName = _meal.name;
+    _initialIngredients = List<Ingredient>.from(_meal.ingredients);
+    _initialDate = _selectedDate;
     _heroImage = _resolveHeroImage(_meal.photoPath);
     _scrollController.addListener(_handleScroll);
   }
@@ -116,7 +125,45 @@ class _EditMealScreenState extends State<EditMealScreen> {
   bool get _isEditMode => _mode == MealScreenMode.edit;
   bool get _isValid => _ingredients.isNotEmpty && _totalCalories > 0;
   bool get _isBusy => _isSaving || _isDeleting;
+  bool get _isFromToday {
+    final now = DateTime.now();
+    return _selectedDate.year == now.year && _selectedDate.month == now.month && _selectedDate.day == now.day;
+  }
   String get _mealTitle => _meal.name.trim().isEmpty ? tr(LocaleKeys.meal_untitled) : _meal.name.trim();
+
+  bool get _hasUnsavedChanges {
+    if (_meal.name != _initialName) return true;
+    if (_selectedDate != _initialDate) return true;
+    if (_ingredients.length != _initialIngredients.length) return true;
+    for (int i = 0; i < _ingredients.length; i++) {
+      final a = _ingredients[i];
+      final b = _initialIngredients[i];
+      if (a.name != b.name || a.weight != b.weight || a.calories != b.calories || a.proteins != b.proteins || a.carbs != b.carbs || a.fats != b.fats) return true;
+    }
+    return false;
+  }
+
+  void _handleBack() {
+    if (!_hasUnsavedChanges) {
+      Navigator.of(context).pop();
+      return;
+    }
+    GlassDialog.show(
+      context: context,
+      title: tr(LocaleKeys.common_unsaved_changes),
+      message: tr(LocaleKeys.common_unsaved_changes_message),
+      actions: [
+        GlassDialogAction(label: tr(LocaleKeys.common_discard), onPressed: () {
+          Navigator.of(context).pop(); // close dialog
+          Navigator.of(context).pop(); // close screen
+        }),
+        GlassDialogAction(label: tr(LocaleKeys.common_save), isPrimary: true, onPressed: () {
+          Navigator.of(context).pop(); // close dialog
+          _handlePrimaryAction();
+        }),
+      ],
+    );
+  }
 
   ImageProvider? _resolveHeroImage(String? path) {
     final file = MediaStorage.existingMealPhotoFile(path);
@@ -261,7 +308,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
     SelectedDateService.to.setSelectedDate(todayNormalized);
     DashboardController.to.refresh();
     if (!mounted) return;
-    Get.snackbar(tr(LocaleKeys.meal_duplicated), _meal.name, snackPosition: SnackPosition.BOTTOM);
+    GlassToast.show(context, message: tr(LocaleKeys.meal_duplicated_to, namedArgs: {'date': DateFormat.MMMMd(context.locale.languageCode).format(todayNormalized)}), type: GlassToastType.success, position: GlassToastPosition.bottom);
   }
 
   Future<void> _handleSaveImageToGallery() async {
@@ -276,7 +323,11 @@ class _EditMealScreenState extends State<EditMealScreen> {
 
   Future<void> _handlePrimaryAction() async {
     if (_isEditMode) {
-      await _handleSaveInEditMode();
+      if (widget.openedFromLogScreen) {
+        await _handleSaveInViewMode();
+      } else {
+        await _handleSaveInEditMode();
+      }
       return;
     }
 
@@ -291,6 +342,13 @@ class _EditMealScreenState extends State<EditMealScreen> {
   Future<void> _toggleFavorite() async {
     final next = !_meal.isFavorite;
     setState(() => _meal = _meal.copyWith(isFavorite: next));
+
+    if (widget.openedFromLogScreen) {
+      final normalized = MealTemplate.normalize(_meal.name);
+      final template = MealTemplateRepository.to.allTemplates.firstWhereOrNull((t) => t.normalizedName == normalized);
+      if (template != null) await MealTemplateRepository.to.setFavorite(template, next);
+      return;
+    }
 
     if (_meal.id == null || _meal.dayRecordId == null) return;
     await DayRecordController.to.setMealFavorite(meal: _meal, isFavorite: next);
@@ -362,14 +420,15 @@ class _EditMealScreenState extends State<EditMealScreen> {
             Get.to(() => const ReportMealScreen());
           },
         ),
-        GlassPopupItem(
-          label: tr(LocaleKeys.meal_duplicate_to_today),
-          icon: Icons.content_copy_outlined,
-          onTap: () {
-            Navigator.of(context).pop();
-            _handleDuplicateMeal();
-          },
-        ),
+        if (!_isFromToday)
+          GlassPopupItem(
+            label: tr(LocaleKeys.meal_duplicate_to_today),
+            icon: Icons.content_copy_outlined,
+            onTap: () {
+              Navigator.of(context).pop();
+              _handleDuplicateMeal();
+            },
+          ),
         GlassPopupItem(
           label: tr(LocaleKeys.meal_save_image),
           icon: Icons.download_outlined,
@@ -414,6 +473,82 @@ class _EditMealScreenState extends State<EditMealScreen> {
     );
   }
 
+  Future<void> _openNutrientEditor({required String label, required double currentValue, required void Function(double) onSave}) async {
+    if (_isBusy) return;
+    _ensureEditMode();
+    final result = await showModalBottomSheet<double>(
+      context: context,
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.lg3))),
+      clipBehavior: Clip.antiAlias,
+      showDragHandle: false,
+      isScrollControlled: true,
+      builder: (context) => _NutrientEditorSheet(label: label, initialValue: currentValue),
+    );
+    if (result == null) return;
+    onSave(result);
+    _persistCurrentState();
+  }
+
+  Future<void> _persistCurrentState() async {
+    final updated = _buildWorkingMeal();
+    if (widget.openedFromLogScreen) {
+      final targetDate = widget.selectedDate ?? SelectedDateService.to.selectedDate.value;
+      final mealToSave = updated.copyWith(id: null, dayRecordId: null);
+      await DayRecordController.to.saveMealForDate(date: targetDate, mealToSave: mealToSave);
+    } else {
+      await DayRecordController.to.saveMealForDate(date: _selectedDate, mealToSave: updated);
+    }
+    DashboardController.to.refresh();
+    _syncInitialState();
+  }
+
+  void _syncInitialState() {
+    _initialName = _meal.name;
+    _initialIngredients = List<Ingredient>.from(_ingredients);
+    _initialDate = _selectedDate;
+  }
+
+  void _updateNutrientProportionally(double newTotal, double Function(Ingredient) getter, Ingredient Function(Ingredient, double) updater) {
+    final oldTotal = _ingredients.fold<double>(0, (sum, i) => sum + getter(i));
+    setState(() {
+      if (_ingredients.length == 1 || oldTotal == 0) {
+        if (_ingredients.isNotEmpty) {
+          _ingredients[0] = updater(_ingredients[0], newTotal);
+        }
+      } else {
+        for (int i = 0; i < _ingredients.length; i++) {
+          final ratio = getter(_ingredients[i]) / oldTotal;
+          _ingredients[i] = updater(_ingredients[i], newTotal * ratio);
+        }
+      }
+    });
+  }
+
+  void _openCaloriesEditor() => _openNutrientEditor(
+    label: tr(LocaleKeys.common_calories),
+    currentValue: _totalCalories,
+    onSave: (v) => _updateNutrientProportionally(v, (i) => i.calories, (i, val) => i.copyWith(calories: val)),
+  );
+
+  void _openProteinEditor() => _openNutrientEditor(
+    label: tr(LocaleKeys.common_protein),
+    currentValue: _totalProteins,
+    onSave: (v) => _updateNutrientProportionally(v, (i) => i.proteins, (i, val) => i.copyWith(proteins: val)),
+  );
+
+  void _openCarbsEditor() => _openNutrientEditor(
+    label: tr(LocaleKeys.common_carbs),
+    currentValue: _totalCarbs,
+    onSave: (v) => _updateNutrientProportionally(v, (i) => i.carbs, (i, val) => i.copyWith(carbs: val)),
+  );
+
+  void _openFatsEditor() => _openNutrientEditor(
+    label: tr(LocaleKeys.common_fats),
+    currentValue: _totalFats,
+    onSave: (v) => _updateNutrientProportionally(v, (i) => i.fats, (i, val) => i.copyWith(fats: val)),
+  );
+
   Future<void> _openMealNameEditor() async {
     if (_isBusy) return;
     _ensureEditMode();
@@ -432,6 +567,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
     setState(() {
       _meal = _meal.copyWith(name: nextName);
     });
+    _persistCurrentState();
   }
 
   void _openMealtimePicker() {
@@ -525,9 +661,8 @@ class _EditMealScreenState extends State<EditMealScreen> {
   }
 
   String get _primaryLabel {
-    if (_isEditMode) return _isSaving ? tr(LocaleKeys.common_saving) : tr(LocaleKeys.common_done);
-    if (widget.openedFromLogScreen) return _isSaving ? tr(LocaleKeys.common_saving) : tr(LocaleKeys.common_save);
-    return tr(LocaleKeys.common_edit);
+    if (_isSaving) return tr(LocaleKeys.common_saving);
+    return tr(LocaleKeys.common_done);
   }
 
   VoidCallback? get _onPrimaryTap {
@@ -547,11 +682,17 @@ class _EditMealScreenState extends State<EditMealScreen> {
       bottomSheetTheme: const BottomSheetThemeData(backgroundColor: Colors.transparent, surfaceTintColor: Colors.transparent, shadowColor: Colors.transparent, elevation: 0),
     );
 
-    return Theme(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        _handleBack();
+      },
+      child: Theme(
       data: screenTheme,
       child: LiquidGlassScope(
         child: Scaffold(
-          backgroundColor: AppColors.background,
+          backgroundColor: AppColors.surface,
           extendBodyBehindAppBar: true,
           body: LiquidGlassBackground(
             child: Stack(
@@ -586,10 +727,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                   height: AppSizes.mealHeroHeight + AppSizes.alertCardHeight - heroOverlap,
                                   child: Stack(
                                     children: [
-                                      GestureDetector(
-                                        onTap: _isBusy ? null : _openMealNameEditor,
-                                        child: MealHeroHeader(title: _mealTitle, timeLabel: _formatTime(_meal.timestamp)),
-                                      ),
+                                      MealHeroHeader(title: _mealTitle, timeLabel: _formatTime(_meal.timestamp), onTitleTap: _isBusy ? null : _openMealNameEditor),
                                       Positioned(
                                         left: AppSpacing.edge,
                                         right: AppSpacing.edge,
@@ -610,7 +748,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                     value: _totalCalories.toStringAsFixed(0),
                                     delta: widget.showCaloriesDelta ? widget.caloriesDelta : null,
                                     height: AppSizes.caloriesCardHeight,
-                                    badge: MatchBadge(text: _matchText(widget.matchBadgeVariant), variant: widget.matchBadgeVariant),
+                                    badge: _meal.confidence != null ? MatchBadge(text: _confidenceText, variant: _confidenceVariant) : null,
                                   ),
                                 ),
                               ],
@@ -620,20 +758,20 @@ class _EditMealScreenState extends State<EditMealScreen> {
                               height: AppSizes.mealHeroHeight + AppSizes.caloriesCardHeight - heroOverlap,
                               child: Stack(
                                 children: [
-                                  GestureDetector(
-                                    onTap: _isBusy ? null : _openMealNameEditor,
-                                    child: MealHeroHeader(title: _mealTitle, timeLabel: _formatTime(_meal.timestamp)),
-                                  ),
+                                  MealHeroHeader(title: _mealTitle, timeLabel: _formatTime(_meal.timestamp), onTitleTap: _isBusy ? null : _openMealNameEditor),
                                   Positioned(
                                     left: AppSpacing.edge,
                                     right: AppSpacing.edge,
                                     top: AppSizes.mealHeroHeight - heroOverlap,
-                                    child: CaloriesSummaryCard(
-                                      label: tr(LocaleKeys.common_calories),
-                                      value: _totalCalories.toStringAsFixed(0),
-                                      delta: widget.showCaloriesDelta ? widget.caloriesDelta : null,
-                                      height: AppSizes.caloriesCardHeight,
-                                      badge: MatchBadge(text: _matchText(widget.matchBadgeVariant), variant: widget.matchBadgeVariant),
+                                    child: GestureDetector(
+                                      onTap: _isBusy ? null : _openCaloriesEditor,
+                                      child: CaloriesSummaryCard(
+                                        label: tr(LocaleKeys.common_calories),
+                                        value: _totalCalories.toStringAsFixed(0),
+                                        delta: widget.showCaloriesDelta ? widget.caloriesDelta : null,
+                                        height: AppSizes.caloriesCardHeight,
+                                        badge: _meal.confidence != null ? MatchBadge(text: _confidenceText, variant: _confidenceVariant) : null,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -645,29 +783,38 @@ class _EditMealScreenState extends State<EditMealScreen> {
                             child: Row(
                               children: [
                                 Expanded(
-                                  child: MacroStatCard(
-                                    label: tr(LocaleKeys.common_protein),
-                                    value: '${_totalProteins.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
-                                    icon: AppIcons.protein,
-                                    iconColor: AppColors.macroProtein,
+                                  child: GestureDetector(
+                                    onTap: _isBusy ? null : _openProteinEditor,
+                                    child: MacroStatCard(
+                                      label: tr(LocaleKeys.common_protein),
+                                      value: '${_totalProteins.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
+                                      icon: AppIcons.protein,
+                                      iconColor: AppColors.macroProtein,
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(width: AppSpacing.s),
                                 Expanded(
-                                  child: MacroStatCard(
-                                    label: tr(LocaleKeys.common_carbs),
-                                    value: '${_totalCarbs.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
-                                    icon: AppIcons.carbs,
-                                    iconColor: AppColors.macroCarbsStrong,
+                                  child: GestureDetector(
+                                    onTap: _isBusy ? null : _openCarbsEditor,
+                                    child: MacroStatCard(
+                                      label: tr(LocaleKeys.common_carbs),
+                                      value: '${_totalCarbs.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
+                                      icon: AppIcons.carbs,
+                                      iconColor: AppColors.macroCarbsStrong,
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(width: AppSpacing.s),
                                 Expanded(
-                                  child: MacroStatCard(
-                                    label: tr(LocaleKeys.common_fats),
-                                    value: '${_totalFats.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
-                                    icon: AppIcons.fats,
-                                    iconColor: AppColors.macroFats,
+                                  child: GestureDetector(
+                                    onTap: _isBusy ? null : _openFatsEditor,
+                                    child: MacroStatCard(
+                                      label: tr(LocaleKeys.common_fats),
+                                      value: '${_totalFats.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
+                                      icon: AppIcons.fats,
+                                      iconColor: AppColors.macroFats,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -683,6 +830,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                             onDateTap: _isBusy ? null : _openDatePicker,
                             margin: const EdgeInsets.symmetric(horizontal: AppSpacing.edge),
                           ),
+                          if (_ingredients.length > 1) ...[
                           const SizedBox(height: AppSpacing.xl),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.edge),
@@ -757,6 +905,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                               }),
                             ),
                           ),
+                          ],
                           if (widget.showSyncCards) ...[
                             const SizedBox(height: AppSpacing.l),
                             Padding(
@@ -778,7 +927,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                     ],
                   ),
                 ),
-                _EditMealTopBar(onBack: () => Navigator.of(context).maybePop(), isFavorite: _meal.isFavorite, onBookmark: _toggleFavorite, onMenu: _openActionSheet),
+                _EditMealTopBar(onBack: _handleBack, isFavorite: _meal.isFavorite, onBookmark: _toggleFavorite, onMenu: _openActionSheet),
                 if (_isBusy)
                   Positioned.fill(
                     child: ColoredBox(
@@ -802,6 +951,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
           ),
         ),
       ),
+    ),
     );
   }
 
@@ -820,15 +970,17 @@ class _EditMealScreenState extends State<EditMealScreen> {
     return '$hour:$minute $suffix';
   }
 
-  String _matchText(MatchBadgeVariant variant) {
-    switch (variant) {
-      case MatchBadgeVariant.medium:
-        return '72% Confidence';
-      case MatchBadgeVariant.low:
-        return '48% Confidence';
-      case MatchBadgeVariant.good:
-        return '94% Confidence';
-    }
+  MatchBadgeVariant get _confidenceVariant {
+    final c = _meal.confidence;
+    if (c == null || c >= 0.75) return MatchBadgeVariant.good;
+    if (c >= 0.45) return MatchBadgeVariant.medium;
+    return MatchBadgeVariant.low;
+  }
+
+  String get _confidenceText {
+    final c = _meal.confidence;
+    if (c == null) return '';
+    return '${(c * 100).round()}% ${tr(LocaleKeys.common_confidence)}';
   }
 }
 
@@ -866,7 +1018,7 @@ class _MealNameEditorSheetState extends State<_MealNameEditorSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(tr(LocaleKeys.meal_meal_name), style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700)),
+            Text(tr(LocaleKeys.common_name), style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: AppSpacing.m),
             TextField(
               controller: _controller,
@@ -890,7 +1042,84 @@ class _MealNameEditorSheetState extends State<_MealNameEditorSheet> {
                 ),
                 const SizedBox(width: AppSpacing.s),
                 Expanded(
-                  child: FoodyPrimaryButton(label: tr(LocaleKeys.common_save), gradient: AppGradients.askAiPrimary, onTap: () => Navigator.of(context).pop(_controller.text)),
+                  child: FoodyPrimaryButton(label: tr(LocaleKeys.common_save), gradient: LinearGradient(colors: [AppColors.primary, AppColors.primary]), onTap: () => Navigator.of(context).pop(_controller.text)),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _NutrientEditorSheet extends StatefulWidget {
+  final String label;
+  final double initialValue;
+
+  const _NutrientEditorSheet({required this.label, required this.initialValue});
+
+  @override
+  State<_NutrientEditorSheet> createState() => _NutrientEditorSheetState();
+}
+
+class _NutrientEditorSheetState extends State<_NutrientEditorSheet> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    final display = widget.initialValue == widget.initialValue.roundToDouble() ? widget.initialValue.toStringAsFixed(0) : widget.initialValue.toStringAsFixed(1);
+    _controller = TextEditingController(text: display);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    final parsed = double.tryParse(_controller.text.replaceAll(',', '.'));
+    if (parsed != null && parsed >= 0) Navigator.of(context).pop(parsed);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: EdgeInsets.only(left: AppSpacing.l, right: AppSpacing.l, top: AppSpacing.l, bottom: AppSpacing.l + MediaQuery.viewInsetsOf(context).bottom),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(widget.label, style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700)),
+            const SizedBox(height: AppSpacing.m),
+            TextField(
+              controller: _controller,
+              autofocus: true,
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              textInputAction: TextInputAction.done,
+              onSubmitted: (_) => _submit(),
+              decoration: InputDecoration(
+                hintText: widget.label,
+                hintStyle: AppTextStyles.body16.copyWith(color: AppColors.textTertiary),
+                filled: true,
+                fillColor: AppColors.surfaceMuted,
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadii.md), borderSide: BorderSide.none),
+                contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.m),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.m),
+            Row(
+              children: [
+                Expanded(
+                  child: FoodySecondaryButton(label: tr(LocaleKeys.common_cancel), onTap: () => Navigator.of(context).pop()),
+                ),
+                const SizedBox(width: AppSpacing.s),
+                Expanded(
+                  child: FoodyPrimaryButton(label: tr(LocaleKeys.common_save), gradient: LinearGradient(colors: [AppColors.primary, AppColors.primary]), onTap: _submit),
                 ),
               ],
             ),
@@ -912,10 +1141,17 @@ class _EditMealTopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomGlassAppBar(
+      //leadingIcon: Icons.close,
+      leadingIconSize: AppSizes.iconLg,
       onBack: onBack,
       actions: [
-        CustomGlassIconButton(icon: isFavorite ? Icons.bookmark : Icons.bookmark_border, iconSize: AppSizes.iconMd, onPressed: onBookmark),
-        CustomGlassIconButton(icon: Icons.more_horiz, iconSize: AppSizes.iconMd, onPressed: onMenu),
+        CustomGlassIconButtonGroup(
+          iconSize: AppSizes.iconLg,
+          items: [
+            (icon: isFavorite ? Icons.bookmark : Icons.bookmark_border, onPressed: onBookmark),
+            (icon: Icons.more_horiz, onPressed: onMenu),
+          ],
+        ),
       ],
     );
   }

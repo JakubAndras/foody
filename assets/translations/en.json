@@ -46,6 +46,15 @@
   "common_ingredients": "Ingredients",
   "common_today": "Today",
   "common_back_to_today": "Back to today",
+  "common_food_logged": "Food logged",
+  "common_exercise_logged": "Exercise logged",
+  "common_view": "View",
+  "common_undo": "Undo",
+  "common_confidence": "Confidence",
+  "common_unsaved_changes": "You have unsaved changes",
+  "common_unsaved_changes_message": "Do you want to save your changes before leaving?",
+  "common_discard": "Discard",
+  "common_name": "Name",
 
   "day_monday_short": "M",
   "day_tuesday_short": "T",
@@ -328,6 +337,7 @@
   "meal_share_summary": "Meal summary: {title}",
   "meal_duplicate_to_today": "Duplicate to today",
   "meal_duplicated": "Meal duplicated",
+  "meal_duplicated_to": "Meal duplicated to {date}",
 
   "ingredient_title": "Edit Ingredient",
   "ingredient_name": "Ingredient name",

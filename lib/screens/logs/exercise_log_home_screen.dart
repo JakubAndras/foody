@@ -2,13 +2,15 @@ import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/controller/day_record_controller.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
-import 'package:diplomka/model/exercise.dart';
+import 'package:diplomka/model/exercise_template.dart';
+import 'package:diplomka/services/exercise_template_repository.dart';
 import 'package:diplomka/screens/logs/add_exercise_screen.dart';
 import 'package:diplomka/screens/logs/exercise_detail_screen.dart';
 import 'package:diplomka/screens/logs/exercise_widgets.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
+import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -30,31 +32,41 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
     super.dispose();
   }
 
-  List<Exercise> _allExercises() {
-    return DayRecordController.to.dayRecords.expand((record) => record.exercises).where((e) => !e.isFromHealthSync).toList();
+  List<ExerciseTemplate> _allExercises() {
+    return ExerciseTemplateRepository.to.allTemplates.toList();
   }
 
-  List<Exercise> _applyFilters(List<Exercise> exercises) {
+  List<ExerciseTemplate> _applyFilters(List<ExerciseTemplate> exercises) {
     final query = _searchController.text.toLowerCase();
     return exercises.where((e) {
       final matchesQuery = query.isEmpty || e.name.toLowerCase().contains(query);
       final matchesFavorite = !_showFavorites || e.isFavorite;
       return matchesQuery && matchesFavorite;
-    }).toList()..sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    }).toList()..sort((a, b) => b.lastUsedAt.compareTo(a.lastUsedAt));
   }
 
-  Future<void> _duplicateExerciseForSelectedDay(Exercise exercise) async {
+  Future<void> _addExerciseFromTemplate(ExerciseTemplate template) async {
     final selectedDate = SelectedDateService.to.selectedDate.value;
     final now = DateTime.now();
     final timestamp = DateTime(selectedDate.year, selectedDate.month, selectedDate.day, now.hour, now.minute, now.second, now.millisecond, now.microsecond);
 
-    final newExercise = Exercise(name: exercise.name, timestamp: timestamp, durationMinutes: exercise.durationMinutes, caloriesBurned: exercise.caloriesBurned);
+    final newExercise = template.toExercise(timestamp: timestamp);
 
-    await DayRecordController.to.saveExerciseForDate(date: selectedDate, exerciseToSave: newExercise);
+    final savedExercise = await DayRecordController.to.saveExerciseForDate(date: selectedDate, exerciseToSave: newExercise);
     DashboardController.to.refresh();
 
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(tr(LocaleKeys.exercise_exercise_added))));
+    showLoggedSnackbar(
+      context: context,
+      message: tr(LocaleKeys.common_exercise_logged),
+      onView: () => Get.back(),
+      onUndo: () async {
+        if (savedExercise != null) {
+          await DayRecordController.to.deleteExercise(savedExercise);
+          DashboardController.to.refresh();
+        }
+      },
+    );
   }
 
   @override
@@ -107,13 +119,14 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
                 itemCount: filtered.length,
                 separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.s),
                 itemBuilder: (context, index) {
-                  final exercise = filtered[index];
+                  final template = filtered[index];
+                  final previewExercise = template.toExercise(timestamp: DateTime.now());
                   return ExerciseListCard(
-                    title: exercise.name,
-                    kcal: exercise.caloriesBurned.round(),
-                    minutes: exercise.durationMinutes ?? 0,
-                    onAdd: () => _duplicateExerciseForSelectedDay(exercise),
-                    onTap: () => Get.to(() => ExerciseDetailScreen(exercise: exercise)),
+                    title: template.name,
+                    kcal: template.caloriesBurned.round(),
+                    minutes: template.durationMinutes ?? 0,
+                    onAdd: () => _addExerciseFromTemplate(template),
+                    onTap: () => Get.to(() => ExerciseDetailScreen(exercise: previewExercise, openedFromLogScreen: true)),
                   );
                 },
               );

@@ -49,6 +49,15 @@ abstract class  LocaleKeys {
   static const common_ingredients = 'common_ingredients';
   static const common_today = 'common_today';
   static const common_back_to_today = 'common_back_to_today';
+  static const common_food_logged = 'common_food_logged';
+  static const common_exercise_logged = 'common_exercise_logged';
+  static const common_view = 'common_view';
+  static const common_undo = 'common_undo';
+  static const common_confidence = 'common_confidence';
+  static const common_unsaved_changes = 'common_unsaved_changes';
+  static const common_unsaved_changes_message = 'common_unsaved_changes_message';
+  static const common_discard = 'common_discard';
+  static const common_name = 'common_name';
   static const day_monday_short = 'day_monday_short';
   static const day_tuesday_short = 'day_tuesday_short';
   static const day_wednesday_short = 'day_wednesday_short';
@@ -318,6 +327,7 @@ abstract class  LocaleKeys {
   static const meal_share_summary = 'meal_share_summary';
   static const meal_duplicate_to_today = 'meal_duplicate_to_today';
   static const meal_duplicated = 'meal_duplicated';
+  static const meal_duplicated_to = 'meal_duplicated_to';
   static const ingredient_title = 'ingredient_title';
   static const ingredient_name = 'ingredient_name';
   static const ingredient_measurement = 'ingredient_measurement';

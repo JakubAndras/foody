@@ -129,7 +129,7 @@ class ExerciseListCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(title, style: AppTextStyles.title18Tight),
+                  Text(title, style: AppTextStyles.title18Tight, maxLines: 1, overflow: TextOverflow.ellipsis),
                   const SizedBox(height: AppSpacing.xs),
                   Row(
                     children: [

@@ -128,6 +128,11 @@ class DayRecordRepository extends GetxService {
     await _mealDao.deleteMealById(meal.id!);
   }
 
+  Future<void> deleteExercise(Exercise exercise) async {
+    if (exercise.id == null) return;
+    await _exerciseDao.deleteExerciseById(exercise.id!);
+  }
+
   Future<DayRecord> saveExerciseForDate({required DateTime date, required Exercise exercise}) async {
     final normalizedDate = _normalizeDate(date);
     final dayRecordId = await _ensureDayRecordId(normalizedDate);

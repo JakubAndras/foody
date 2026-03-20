@@ -10,7 +10,9 @@ import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/model/exercise.dart';
 import 'package:diplomka/services/calendar_day_ring_service.dart';
 import 'package:diplomka/services/day_record_repository.dart';
+import 'package:diplomka/services/exercise_template_repository.dart';
 import 'package:diplomka/services/home_widget/widget_sync_service.dart';
+import 'package:diplomka/services/meal_template_repository.dart';
 
 import '../model/meal.dart';
 import 'base_controller.dart';
@@ -89,35 +91,51 @@ class DayRecordController extends BaseController {
         .toList();
   }
 
-  Future<void> saveMealForDate({required DateTime date, required Meal mealToSave}) async {
+  Future<Meal?> saveMealForDate({required DateTime date, required Meal mealToSave}) async {
     try {
-      await _repository.saveMealForDate(date: date, meal: mealToSave);
+      final savedDayRecord = await _repository.saveMealForDate(date: date, meal: mealToSave);
       final normalizedDate = DateTime(date.year, date.month, date.day);
-      final dayRecord = await getDayRecord(normalizedDate);
-      weekRingStyles[normalizedDate] = _resolveRingStyle(dayRecord);
+      weekRingStyles[normalizedDate] = _resolveRingStyle(savedDayRecord);
       await refreshDayRecords();
+      if (mealToSave.name.trim().isNotEmpty) {
+        unawaited(MealTemplateRepository.to.upsertFromMeal(mealToSave));
+      }
+      // Return the saved meal (with DB-assigned id) for undo support
+      if (mealToSave.id != null) {
+        return savedDayRecord.meals.where((m) => m.id == mealToSave.id).firstOrNull;
+      }
+      return savedDayRecord.meals.where((m) => m.name == mealToSave.name).fold<Meal?>(null, (best, m) => best == null || (m.id ?? 0) > (best.id ?? 0) ? m : best);
     } catch (e) {
       Get.snackbar(
         tr(LocaleKeys.common_error),
         tr(LocaleKeys.error_saving_meal),
         snackPosition: SnackPosition.BOTTOM,
       );
+      return null;
     }
   }
 
-  Future<void> saveExerciseForDate({required DateTime date, required Exercise exerciseToSave}) async {
+  Future<Exercise?> saveExerciseForDate({required DateTime date, required Exercise exerciseToSave}) async {
     try {
-      await _repository.saveExerciseForDate(date: date, exercise: exerciseToSave);
+      final savedDayRecord = await _repository.saveExerciseForDate(date: date, exercise: exerciseToSave);
       final normalizedDate = DateTime(date.year, date.month, date.day);
-      final dayRecord = await getDayRecord(normalizedDate);
-      weekRingStyles[normalizedDate] = _resolveRingStyle(dayRecord);
+      weekRingStyles[normalizedDate] = _resolveRingStyle(savedDayRecord);
       await refreshDayRecords();
+      if (exerciseToSave.name.trim().isNotEmpty && !exerciseToSave.isFromHealthSync) {
+        unawaited(ExerciseTemplateRepository.to.upsertFromExercise(exerciseToSave));
+      }
+      // Return the saved exercise (with DB-assigned id) for undo support
+      if (exerciseToSave.id != null) {
+        return savedDayRecord.exercises.where((e) => e.id == exerciseToSave.id).firstOrNull;
+      }
+      return savedDayRecord.exercises.where((e) => e.name == exerciseToSave.name).fold<Exercise?>(null, (best, e) => best == null || (e.id ?? 0) > (best.id ?? 0) ? e : best);
     } catch (e) {
       Get.snackbar(
         tr(LocaleKeys.common_error),
         tr(LocaleKeys.error_saving_exercise),
         snackPosition: SnackPosition.BOTTOM,
       );
+      return null;
     }
   }
 
@@ -129,6 +147,19 @@ class DayRecordController extends BaseController {
       Get.snackbar(
         tr(LocaleKeys.common_error),
         tr(LocaleKeys.error_deleting_meal),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
+  }
+
+  Future<void> deleteExercise(Exercise exercise) async {
+    try {
+      await _repository.deleteExercise(exercise);
+      await refreshDayRecords();
+    } catch (e) {
+      Get.snackbar(
+        tr(LocaleKeys.common_error),
+        tr(LocaleKeys.error_saving_exercise),
         snackPosition: SnackPosition.BOTTOM,
       );
     }

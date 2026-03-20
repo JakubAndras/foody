@@ -29,6 +29,8 @@ import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/services/streak_service.dart';
 import 'package:diplomka/services/shared_preferences_manager.dart';
 import 'package:diplomka/services/tracking_reminder_service.dart';
+import 'package:diplomka/services/exercise_template_repository.dart';
+import 'package:diplomka/services/meal_template_repository.dart';
 import 'package:diplomka/services/weight_entry_repository.dart';
 import 'package:diplomka/utils/media_storage.dart';
 import 'package:get/get.dart';
@@ -41,7 +43,7 @@ import 'database/migrations.dart';
 Future<void> setupServices() async {
   await MediaStorage.initialize();
   final AppDatabase db = await Get.putAsync(
-      () => $FloorAppDatabase.databaseBuilder(AppDatabase.databaseName).addMigrations([migration1to2, migration2to3, migration3to4, migration4to5, migration5to6, migration6to7, migration7to8, migration8to9]).build());
+      () => $FloorAppDatabase.databaseBuilder(AppDatabase.databaseName).addMigrations([migration1to2, migration2to3, migration3to4, migration4to5, migration5to6, migration6to7, migration7to8, migration8to9, migration9to10]).build());
 
   /// Inicializace singleton GetxService - jednodušší nalezení controlleru v paměti;
   Get.lazyPut<SharedPreferencesService>(() => SharedPreferencesService());
@@ -74,6 +76,8 @@ Future<void> setupServices() async {
 
   /// Inicializace singleton GetxController -> permanent: true -> zamezí smazání z paměti
   Get.put(DayRecordRepository(database: db), permanent: true);
+  Get.put(MealTemplateRepository(database: db), permanent: true);
+  Get.put(ExerciseTemplateRepository(database: db), permanent: true);
   Get.put(CalendarDayRingService(), permanent: true);
   Get.put(DietaryViolationService(), permanent: true);
   Get.put(

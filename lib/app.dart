@@ -49,6 +49,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
         //themeMode: SessionManager.to.themeModeIndex.value,
         theme: appThemeData.themeData,
         //darkTheme: appThemeData.darkThemeData,
+        builder: (context, child) => DefaultTextStyle(style: DefaultTextStyle.of(context).style.copyWith(decoration: TextDecoration.none), child: child!),
         home: Obx(() {
           if (SessionManager.to.onboardingComplete.value) {
             return const MainScreen();

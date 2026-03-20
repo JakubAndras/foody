@@ -17,8 +17,9 @@ class MealHeroHeader extends StatelessWidget {
   final ImageProvider? image;
   final Alignment imageAlignment;
   final double? confidence;
+  final VoidCallback? onTitleTap;
 
-  const MealHeroHeader({super.key, required this.title, required this.timeLabel, this.image, this.imageAlignment = Alignment.center, this.confidence});
+  const MealHeroHeader({super.key, required this.title, required this.timeLabel, this.image, this.imageAlignment = Alignment.center, this.confidence, this.onTitleTap});
 
   @override
   Widget build(BuildContext context) {
@@ -53,11 +54,14 @@ class MealHeroHeader extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: AppSpacing.xxs),
-                Text(
-                  title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.title24.copyWith(color: AppColors.onPrimary),
+                GestureDetector(
+                  onTap: onTitleTap,
+                  child: Text(
+                    title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.title24.copyWith(color: AppColors.onPrimary),
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.xxs),
               ],
@@ -330,9 +334,13 @@ class IngredientRow extends StatelessWidget {
                   Row(
                     children: [
                       if (highlighted) ...[const Icon(Icons.warning_amber_rounded, size: AppSizes.iconSm, color: AppColors.warningStrong), const SizedBox(width: AppSpacing.xs)],
-                      Text(
-                        ingredient.name,
-                        style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+                      Flexible(
+                        child: Text(
+                          ingredient.name,
+                          style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ],
                   ),

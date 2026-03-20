@@ -82,13 +82,19 @@ class _$AppDatabase extends AppDatabase {
 
   ExerciseDao? _exerciseDaoInstance;
 
+  MealTemplateDao? _mealTemplateDaoInstance;
+
+  MealTemplateIngredientDao? _mealTemplateIngredientDaoInstance;
+
+  ExerciseTemplateDao? _exerciseTemplateDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 9,
+      version: 10,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -114,7 +120,17 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Exercise` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `dayRecordId` INTEGER NOT NULL, `name` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `durationMinutes` INTEGER, `caloriesBurned` REAL NOT NULL, `isFavorite` INTEGER NOT NULL, `source` TEXT, FOREIGN KEY (`dayRecordId`) REFERENCES `DayRecord` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
+            'CREATE TABLE IF NOT EXISTS `MealTemplate` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `normalizedName` TEXT NOT NULL, `photoPath` TEXT, `isFavorite` INTEGER NOT NULL, `lastUsedAt` INTEGER NOT NULL, `usageCount` INTEGER NOT NULL)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `MealTemplateIngredient` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `templateId` INTEGER NOT NULL, `name` TEXT NOT NULL, `weight` REAL NOT NULL, `calories` REAL NOT NULL, `proteins` REAL NOT NULL, `carbs` REAL NOT NULL, `fats` REAL NOT NULL, FOREIGN KEY (`templateId`) REFERENCES `MealTemplate` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `ExerciseTemplate` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `normalizedName` TEXT NOT NULL, `durationMinutes` INTEGER, `caloriesBurned` REAL NOT NULL, `isFavorite` INTEGER NOT NULL, `lastUsedAt` INTEGER NOT NULL, `usageCount` INTEGER NOT NULL)');
+        await database.execute(
             'CREATE UNIQUE INDEX `index_DayRecord_date` ON `DayRecord` (`date`)');
+        await database.execute(
+            'CREATE UNIQUE INDEX `index_MealTemplate_normalizedName` ON `MealTemplate` (`normalizedName`)');
+        await database.execute(
+            'CREATE UNIQUE INDEX `index_ExerciseTemplate_normalizedName` ON `ExerciseTemplate` (`normalizedName`)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -146,6 +162,24 @@ class _$AppDatabase extends AppDatabase {
   @override
   ExerciseDao get exerciseDao {
     return _exerciseDaoInstance ??= _$ExerciseDao(database, changeListener);
+  }
+
+  @override
+  MealTemplateDao get mealTemplateDao {
+    return _mealTemplateDaoInstance ??=
+        _$MealTemplateDao(database, changeListener);
+  }
+
+  @override
+  MealTemplateIngredientDao get mealTemplateIngredientDao {
+    return _mealTemplateIngredientDaoInstance ??=
+        _$MealTemplateIngredientDao(database, changeListener);
+  }
+
+  @override
+  ExerciseTemplateDao get exerciseTemplateDao {
+    return _exerciseTemplateDaoInstance ??=
+        _$ExerciseTemplateDao(database, changeListener);
   }
 }
 
@@ -712,6 +746,283 @@ class _$ExerciseDao extends ExerciseDao {
   @override
   Future<void> deleteExercise(ExerciseEntity exercise) async {
     await _exerciseEntityDeletionAdapter.delete(exercise);
+  }
+}
+
+class _$MealTemplateDao extends MealTemplateDao {
+  _$MealTemplateDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _mealTemplateEntityInsertionAdapter = InsertionAdapter(
+            database,
+            'MealTemplate',
+            (MealTemplateEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'normalizedName': item.normalizedName,
+                  'photoPath': item.photoPath,
+                  'isFavorite': item.isFavorite ? 1 : 0,
+                  'lastUsedAt': _dateTimeConverter.encode(item.lastUsedAt),
+                  'usageCount': item.usageCount
+                }),
+        _mealTemplateEntityUpdateAdapter = UpdateAdapter(
+            database,
+            'MealTemplate',
+            ['id'],
+            (MealTemplateEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'normalizedName': item.normalizedName,
+                  'photoPath': item.photoPath,
+                  'isFavorite': item.isFavorite ? 1 : 0,
+                  'lastUsedAt': _dateTimeConverter.encode(item.lastUsedAt),
+                  'usageCount': item.usageCount
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<MealTemplateEntity>
+      _mealTemplateEntityInsertionAdapter;
+
+  final UpdateAdapter<MealTemplateEntity> _mealTemplateEntityUpdateAdapter;
+
+  @override
+  Future<List<MealTemplateEntity>> getAllTemplates() async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM MealTemplate ORDER BY lastUsedAt DESC',
+        mapper: (Map<String, Object?> row) => MealTemplateEntity(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            normalizedName: row['normalizedName'] as String,
+            photoPath: row['photoPath'] as String?,
+            isFavorite: (row['isFavorite'] as int) != 0,
+            lastUsedAt: _dateTimeConverter.decode(row['lastUsedAt'] as int),
+            usageCount: row['usageCount'] as int));
+  }
+
+  @override
+  Future<MealTemplateEntity?> findByNormalizedName(
+      String normalizedName) async {
+    return _queryAdapter.query(
+        'SELECT * FROM MealTemplate WHERE normalizedName = ?1 LIMIT 1',
+        mapper: (Map<String, Object?> row) => MealTemplateEntity(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            normalizedName: row['normalizedName'] as String,
+            photoPath: row['photoPath'] as String?,
+            isFavorite: (row['isFavorite'] as int) != 0,
+            lastUsedAt: _dateTimeConverter.decode(row['lastUsedAt'] as int),
+            usageCount: row['usageCount'] as int),
+        arguments: [normalizedName]);
+  }
+
+  @override
+  Future<List<MealTemplateEntity>> getFavoriteTemplates() async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM MealTemplate WHERE isFavorite = 1 ORDER BY lastUsedAt DESC',
+        mapper: (Map<String, Object?> row) => MealTemplateEntity(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            normalizedName: row['normalizedName'] as String,
+            photoPath: row['photoPath'] as String?,
+            isFavorite: (row['isFavorite'] as int) != 0,
+            lastUsedAt: _dateTimeConverter.decode(row['lastUsedAt'] as int),
+            usageCount: row['usageCount'] as int));
+  }
+
+  @override
+  Future<void> deleteTemplateById(int id) async {
+    await _queryAdapter.queryNoReturn('DELETE FROM MealTemplate WHERE id = ?1',
+        arguments: [id]);
+  }
+
+  @override
+  Future<int> insertTemplate(MealTemplateEntity template) {
+    return _mealTemplateEntityInsertionAdapter.insertAndReturnId(
+        template, OnConflictStrategy.ignore);
+  }
+
+  @override
+  Future<void> updateTemplate(MealTemplateEntity template) async {
+    await _mealTemplateEntityUpdateAdapter.update(
+        template, OnConflictStrategy.abort);
+  }
+}
+
+class _$MealTemplateIngredientDao extends MealTemplateIngredientDao {
+  _$MealTemplateIngredientDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _mealTemplateIngredientEntityInsertionAdapter = InsertionAdapter(
+            database,
+            'MealTemplateIngredient',
+            (MealTemplateIngredientEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'templateId': item.templateId,
+                  'name': item.name,
+                  'weight': item.weight,
+                  'calories': item.calories,
+                  'proteins': item.proteins,
+                  'carbs': item.carbs,
+                  'fats': item.fats
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<MealTemplateIngredientEntity>
+      _mealTemplateIngredientEntityInsertionAdapter;
+
+  @override
+  Future<List<MealTemplateIngredientEntity>> findForTemplate(
+      int templateId) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM MealTemplateIngredient WHERE templateId = ?1',
+        mapper: (Map<String, Object?> row) => MealTemplateIngredientEntity(
+            id: row['id'] as int?,
+            templateId: row['templateId'] as int,
+            name: row['name'] as String,
+            weight: row['weight'] as double,
+            calories: row['calories'] as double,
+            proteins: row['proteins'] as double,
+            carbs: row['carbs'] as double,
+            fats: row['fats'] as double),
+        arguments: [templateId]);
+  }
+
+  @override
+  Future<void> deleteForTemplate(int templateId) async {
+    await _queryAdapter.queryNoReturn(
+        'DELETE FROM MealTemplateIngredient WHERE templateId = ?1',
+        arguments: [templateId]);
+  }
+
+  @override
+  Future<List<int>> insertIngredients(
+      List<MealTemplateIngredientEntity> ingredients) {
+    return _mealTemplateIngredientEntityInsertionAdapter.insertListAndReturnIds(
+        ingredients, OnConflictStrategy.replace);
+  }
+}
+
+class _$ExerciseTemplateDao extends ExerciseTemplateDao {
+  _$ExerciseTemplateDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _exerciseTemplateEntityInsertionAdapter = InsertionAdapter(
+            database,
+            'ExerciseTemplate',
+            (ExerciseTemplateEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'normalizedName': item.normalizedName,
+                  'durationMinutes': item.durationMinutes,
+                  'caloriesBurned': item.caloriesBurned,
+                  'isFavorite': item.isFavorite ? 1 : 0,
+                  'lastUsedAt': _dateTimeConverter.encode(item.lastUsedAt),
+                  'usageCount': item.usageCount
+                }),
+        _exerciseTemplateEntityUpdateAdapter = UpdateAdapter(
+            database,
+            'ExerciseTemplate',
+            ['id'],
+            (ExerciseTemplateEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'normalizedName': item.normalizedName,
+                  'durationMinutes': item.durationMinutes,
+                  'caloriesBurned': item.caloriesBurned,
+                  'isFavorite': item.isFavorite ? 1 : 0,
+                  'lastUsedAt': _dateTimeConverter.encode(item.lastUsedAt),
+                  'usageCount': item.usageCount
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<ExerciseTemplateEntity>
+      _exerciseTemplateEntityInsertionAdapter;
+
+  final UpdateAdapter<ExerciseTemplateEntity>
+      _exerciseTemplateEntityUpdateAdapter;
+
+  @override
+  Future<List<ExerciseTemplateEntity>> getAllTemplates() async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM ExerciseTemplate ORDER BY lastUsedAt DESC',
+        mapper: (Map<String, Object?> row) => ExerciseTemplateEntity(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            normalizedName: row['normalizedName'] as String,
+            durationMinutes: row['durationMinutes'] as int?,
+            caloriesBurned: row['caloriesBurned'] as double,
+            isFavorite: (row['isFavorite'] as int) != 0,
+            lastUsedAt: _dateTimeConverter.decode(row['lastUsedAt'] as int),
+            usageCount: row['usageCount'] as int));
+  }
+
+  @override
+  Future<ExerciseTemplateEntity?> findByNormalizedName(
+      String normalizedName) async {
+    return _queryAdapter.query(
+        'SELECT * FROM ExerciseTemplate WHERE normalizedName = ?1 LIMIT 1',
+        mapper: (Map<String, Object?> row) => ExerciseTemplateEntity(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            normalizedName: row['normalizedName'] as String,
+            durationMinutes: row['durationMinutes'] as int?,
+            caloriesBurned: row['caloriesBurned'] as double,
+            isFavorite: (row['isFavorite'] as int) != 0,
+            lastUsedAt: _dateTimeConverter.decode(row['lastUsedAt'] as int),
+            usageCount: row['usageCount'] as int),
+        arguments: [normalizedName]);
+  }
+
+  @override
+  Future<List<ExerciseTemplateEntity>> getFavoriteTemplates() async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM ExerciseTemplate WHERE isFavorite = 1 ORDER BY lastUsedAt DESC',
+        mapper: (Map<String, Object?> row) => ExerciseTemplateEntity(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            normalizedName: row['normalizedName'] as String,
+            durationMinutes: row['durationMinutes'] as int?,
+            caloriesBurned: row['caloriesBurned'] as double,
+            isFavorite: (row['isFavorite'] as int) != 0,
+            lastUsedAt: _dateTimeConverter.decode(row['lastUsedAt'] as int),
+            usageCount: row['usageCount'] as int));
+  }
+
+  @override
+  Future<void> deleteTemplateById(int id) async {
+    await _queryAdapter.queryNoReturn(
+        'DELETE FROM ExerciseTemplate WHERE id = ?1',
+        arguments: [id]);
+  }
+
+  @override
+  Future<int> insertTemplate(ExerciseTemplateEntity template) {
+    return _exerciseTemplateEntityInsertionAdapter.insertAndReturnId(
+        template, OnConflictStrategy.ignore);
+  }
+
+  @override
+  Future<void> updateTemplate(ExerciseTemplateEntity template) async {
+    await _exerciseTemplateEntityUpdateAdapter.update(
+        template, OnConflictStrategy.abort);
   }
 }
 

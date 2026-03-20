@@ -7,20 +7,39 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class LanguageScreen extends StatelessWidget {
+class LanguageScreen extends StatefulWidget {
   const LanguageScreen({super.key});
 
   @override
+  State<LanguageScreen> createState() => _LanguageScreenState();
+}
+
+class _LanguageScreenState extends State<LanguageScreen> {
+  late final LanguageSettingsController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = LanguageSettingsController.to;
+  }
+
+  Future<void> _changeAppLanguage(AppLanguage language) async {
+    if (_controller.appLanguage.value == language) return;
+    await context.setLocale(language.locale);
+    _controller.setAppLanguage(language);
+    if (mounted) setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final controller = LanguageSettingsController.to;
-    controller.initializeFromContext(context);
+    _controller.initializeFromContext(context);
 
     return ProfileGradientScaffold(
       scroll: true,
       padding: const EdgeInsets.fromLTRB(AppSpacing.screen, 0, AppSpacing.screen, AppSpacing.xl),
       child: Obx(() {
-        final appLanguage = controller.appLanguage.value;
-        final voicePreference = controller.voiceLogLanguagePreference.value;
+        final appLanguage = _controller.appLanguage.value;
+        final voicePreference = _controller.voiceLogLanguagePreference.value;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,12 +66,12 @@ class LanguageScreen extends StatelessWidget {
                   _SelectionRow(
                     label: tr(LocaleKeys.language_settings_option_english),
                     selected: appLanguage == AppLanguage.english,
-                    onTap: () => controller.setAppLanguage(context, AppLanguage.english),
+                    onTap: () => _changeAppLanguage(AppLanguage.english),
                   ),
                   _SelectionRow(
                     label: tr(LocaleKeys.language_settings_option_czech),
                     selected: appLanguage == AppLanguage.czech,
-                    onTap: () => controller.setAppLanguage(context, AppLanguage.czech),
+                    onTap: () => _changeAppLanguage(AppLanguage.czech),
                     showDivider: false,
                   ),
                 ],
@@ -79,17 +98,17 @@ class LanguageScreen extends StatelessWidget {
                   // _SelectionRow(
                   //   label: tr(LocaleKeys.language_settings_option_follow_app),
                   //   selected: voicePreference == VoiceLogLanguagePreference.followApp,
-                  //   onTap: () => controller.setVoiceLogLanguagePreference(VoiceLogLanguagePreference.followApp),
+                  //   onTap: () => _controller.setVoiceLogLanguagePreference(VoiceLogLanguagePreference.followApp),
                   // ),
                   _SelectionRow(
                     label: tr(LocaleKeys.language_settings_option_english),
                     selected: voicePreference == VoiceLogLanguagePreference.english,
-                    onTap: () => controller.setVoiceLogLanguagePreference(VoiceLogLanguagePreference.english),
+                    onTap: () => _controller.setVoiceLogLanguagePreference(VoiceLogLanguagePreference.english),
                   ),
                   _SelectionRow(
                     label: tr(LocaleKeys.language_settings_option_czech),
                     selected: voicePreference == VoiceLogLanguagePreference.czech,
-                    onTap: () => controller.setVoiceLogLanguagePreference(VoiceLogLanguagePreference.czech),
+                    onTap: () => _controller.setVoiceLogLanguagePreference(VoiceLogLanguagePreference.czech),
                     showDivider: false,
                   ),
                 ],
@@ -100,7 +119,6 @@ class LanguageScreen extends StatelessWidget {
       }),
     );
   }
-
 }
 
 class _SelectionRow extends StatelessWidget {

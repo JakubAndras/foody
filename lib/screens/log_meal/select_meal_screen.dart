@@ -6,15 +6,19 @@ import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/controller/day_record_controller.dart';
 import 'package:diplomka/model/ingredient.dart';
 import 'package:diplomka/model/meal.dart';
+import 'package:diplomka/model/meal_template.dart';
+import 'package:diplomka/services/meal_template_repository.dart';
 import 'package:diplomka/screens/meals/edit_meal_screen.dart';
 import 'package:diplomka/screens/meals/meal_detail_screen.dart';
 import 'package:diplomka/screens/log_meal/select_meal_widgets.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
+import 'package:diplomka/utils/media_storage.dart';
 import 'package:diplomka/services/language_settings_service.dart';
 import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/services/voice/voice_transcription_service.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:diplomka/widgets/glass_popup.dart';
+import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:get/get.dart';
@@ -209,27 +213,34 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
     return DateTime(targetDate.year, targetDate.month, targetDate.day, source.hour, source.minute, source.second, source.millisecond, source.microsecond);
   }
 
-  List<_IngredientItem> _resolveIngredients(List<Meal> meals) {
+  ImageProvider? _resolveImage(String? path) {
+    final file = MediaStorage.existingMealPhotoFile(path);
+    if (file == null) return null;
+    return FileImage(file);
+  }
+
+  List<_IngredientItem> _resolveIngredients(List<MealTemplate> templates) {
     final Map<String, _IngredientItem> unique = {};
-    for (final meal in meals) {
-      for (final ingredient in meal.ingredients) {
+    for (final template in templates) {
+      if (template.ingredients.length <= 1) continue;
+      for (final ingredient in template.ingredients) {
         unique.putIfAbsent(ingredient.name, () => _IngredientItem(ingredient: ingredient, subtitle: '${ingredient.calories.toStringAsFixed(0)} ${tr(LocaleKeys.common_kcal)}'));
       }
     }
     return unique.values.toList();
   }
 
-  List<Meal> _applyMealFilters(List<Meal> meals) {
-    var filtered = meals;
+  List<MealTemplate> _applyMealFilters(List<MealTemplate> templates) {
+    var filtered = templates;
     if (_query.isNotEmpty) {
-      filtered = filtered.where((meal) => meal.name.toLowerCase().contains(_query.toLowerCase())).toList();
+      filtered = filtered.where((t) => t.name.toLowerCase().contains(_query.toLowerCase())).toList();
     }
     if (_tab == SelectMealTab.favorites) {
-      filtered = filtered.where((meal) => meal.isFavorite).toList();
+      filtered = filtered.where((t) => t.isFavorite).toList();
     }
     switch (_sort) {
       case SelectMealSort.mostRecent:
-        filtered.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+        filtered.sort((a, b) => b.lastUsedAt.compareTo(a.lastUsedAt));
       case SelectMealSort.aToZ:
         filtered.sort((a, b) => a.name.compareTo(b.name));
       case SelectMealSort.zToA:
@@ -240,13 +251,13 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
     return filtered;
   }
 
-  List<_IngredientItem> _applyIngredientFilters(List<_IngredientItem> items, List<Meal> favoriteMeals) {
+  List<_IngredientItem> _applyIngredientFilters(List<_IngredientItem> items, List<MealTemplate> favoriteTemplates) {
     var filtered = items;
     if (_query.isNotEmpty) {
       filtered = filtered.where((item) => item.ingredient.name.toLowerCase().contains(_query.toLowerCase())).toList();
     }
     if (_tab == SelectMealTab.favorites) {
-      final favoriteIngredientNames = favoriteMeals.expand((m) => m.ingredients).map((i) => i.name).toSet();
+      final favoriteIngredientNames = favoriteTemplates.expand((t) => t.ingredients).map((i) => i.name).toSet();
       filtered = filtered.where((item) => favoriteIngredientNames.contains(item.ingredient.name)).toList();
     }
     switch (_sort) {
@@ -262,22 +273,42 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
     return filtered;
   }
 
-  Future<void> _addMealToToday(Meal meal) async {
+  Future<void> _addMealToToday(MealTemplate template) async {
     final selectedDate = SelectedDateService.to.selectedDate.value;
-    final newMeal = meal.copyWith(id: null, dayRecordId: null, timestamp: _applyDateToTime(DateTime.now(), selectedDate));
-    await DayRecordController.to.saveMealForDate(date: selectedDate, mealToSave: newMeal);
+    final newMeal = template.toMeal(timestamp: _applyDateToTime(DateTime.now(), selectedDate));
+    final savedMeal = await DayRecordController.to.saveMealForDate(date: selectedDate, mealToSave: newMeal);
     DashboardController.to.refresh();
-    Get.back();
-    Get.snackbar(tr(LocaleKeys.common_add), meal.name, snackPosition: SnackPosition.BOTTOM);
+    if (!mounted) return;
+    showLoggedSnackbar(
+      context: context,
+      message: tr(LocaleKeys.common_food_logged),
+      onView: () => Get.back(),
+      onUndo: () async {
+        if (savedMeal != null) {
+          await DayRecordController.to.deleteMeal(savedMeal);
+          DashboardController.to.refresh();
+        }
+      },
+    );
   }
 
   Future<void> _addIngredientToToday(Ingredient ingredient) async {
     final selectedDate = SelectedDateService.to.selectedDate.value;
     final meal = Meal(name: ingredient.name, ingredients: [ingredient], timestamp: _applyDateToTime(DateTime.now(), selectedDate));
-    await DayRecordController.to.saveMealForDate(date: selectedDate, mealToSave: meal);
+    final savedMeal = await DayRecordController.to.saveMealForDate(date: selectedDate, mealToSave: meal);
     DashboardController.to.refresh();
-    Get.back();
-    Get.snackbar(tr(LocaleKeys.common_add), ingredient.name, snackPosition: SnackPosition.BOTTOM);
+    if (!mounted) return;
+    showLoggedSnackbar(
+      context: context,
+      message: tr(LocaleKeys.common_food_logged),
+      onView: () => Get.back(),
+      onUndo: () async {
+        if (savedMeal != null) {
+          await DayRecordController.to.deleteMeal(savedMeal);
+          DashboardController.to.refresh();
+        }
+      },
+    );
   }
 
   bool get _showMealsSection => _tab == SelectMealTab.all || _tab == SelectMealTab.meals || _tab == SelectMealTab.favorites;
@@ -374,11 +405,11 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
               ),
         body: LiquidGlassBackground(
           child: Obx(() {
-            final dbMeals = DayRecordController.to.dayRecords.expand((record) => record.meals).toList();
-            final meals = _applyMealFilters(dbMeals);
-            final favoriteMeals = dbMeals.where((m) => m.isFavorite).toList();
-            final ingredients = _applyIngredientFilters(_resolveIngredients(dbMeals), favoriteMeals);
-            final visibleMeals = _showMealsSection ? meals : <Meal>[];
+            final allTemplates = MealTemplateRepository.to.allTemplates.toList();
+            final meals = _applyMealFilters(allTemplates);
+            final favoriteTemplates = allTemplates.where((t) => t.isFavorite).toList();
+            final ingredients = _applyIngredientFilters(_resolveIngredients(allTemplates), favoriteTemplates);
+            final visibleMeals = _showMealsSection ? meals : <MealTemplate>[];
             final visibleIngredients = _showIngredientsSection ? ingredients : <_IngredientItem>[];
             final isEmptyState = visibleMeals.isEmpty && visibleIngredients.isEmpty;
 
@@ -440,20 +471,20 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
                               sliver: SliverList(
                                 delegate: SliverChildBuilderDelegate((context, index) {
-                                  final meal = meals[index];
+                                  final template = meals[index];
                                   final selectedDate = SelectedDateService.to.selectedDate.value;
-                                  final newMeal = meal.copyWith(id: null, dayRecordId: null, timestamp: _applyDateToTime(meal.timestamp, selectedDate));
+                                  final previewMeal = template.toMeal(timestamp: _applyDateToTime(DateTime.now(), selectedDate));
                                   return Padding(
                                     padding: const EdgeInsets.only(bottom: AppSpacing.xs),
                                     child: SelectMealCard(
-                                      title: meal.name,
-                                      kcal: meal.totalCalories.toStringAsFixed(0),
-                                      protein: '${meal.totalProteins.toStringAsFixed(0)}g',
-                                      carbs: '${meal.totalCarbs.toStringAsFixed(0)}g',
-                                      fats: '${meal.totalFats.toStringAsFixed(0)}g',
-                                      imageProvider: null,
-                                      onTap: () => Get.to(() => MealDetailScreen(meal: newMeal, openedFromLogScreen: true, selectedDate: selectedDate)),
-                                      onAdd: () => _addMealToToday(meal),
+                                      title: template.name,
+                                      kcal: template.totalCalories.toStringAsFixed(0),
+                                      protein: '${template.totalProteins.toStringAsFixed(0)}g',
+                                      carbs: '${template.totalCarbs.toStringAsFixed(0)}g',
+                                      fats: '${template.totalFats.toStringAsFixed(0)}g',
+                                      imageProvider: _resolveImage(template.photoPath),
+                                      onTap: () => Get.to(() => MealDetailScreen(meal: previewMeal, openedFromLogScreen: true, selectedDate: selectedDate)),
+                                      onAdd: () => _addMealToToday(template),
                                     ),
                                   );
                                 }, childCount: meals.length),
