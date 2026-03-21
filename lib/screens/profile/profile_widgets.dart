@@ -186,7 +186,7 @@ class ProfileSettingsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Widget row = Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen, vertical: AppSpacing.s),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen, vertical: AppSpacing.m),
       child: Row(
         crossAxisAlignment: subtitle == null ? CrossAxisAlignment.center : CrossAxisAlignment.start,
         children: [
@@ -200,7 +200,7 @@ class ProfileSettingsRow extends StatelessWidget {
               ],
             ),
           ),
-          trailing ?? const Icon(Icons.chevron_right, size: AppSizes.iconSm, color: AppColors.textTertiary),
+          trailing ?? const Icon(Icons.arrow_forward_ios_rounded, size: AppSizes.iconMd, color: AppColors.textTertiary),
         ],
       ),
     );
@@ -214,7 +214,7 @@ class ProfileSettingsRow extends StatelessWidget {
         if (showDivider)
           Padding(
             padding: const EdgeInsets.only(left: AppSizes.settingsDividerIndent),
-            child: Divider(height: AppSizes.dividerThin, color: AppColors.surfaceSubtle),
+            child: Divider(height: AppSizes.dividerThin, color: AppColors.surfaceMuted),
           ),
       ],
     );

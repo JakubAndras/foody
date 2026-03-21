@@ -7,6 +7,7 @@ import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/screens/main_screen.dart';
 import 'package:diplomka/screens/logs/voice_widgets.dart';
+import 'package:diplomka/model/language_settings.dart';
 import 'package:diplomka/services/language_settings_service.dart';
 import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/services/voice/voice_transcription_service.dart';
@@ -421,6 +422,82 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
     return '$baseText $recognizedText';
   }
 
+  void _showVoiceLanguageSheet(BuildContext context) {
+    final service = LanguageSettingsService.to;
+
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.lg3))),
+      clipBehavior: Clip.antiAlias,
+      builder: (sheetContext) {
+        return SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.s, AppSpacing.l, AppSpacing.l),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 36,
+                  height: 4,
+                  decoration: BoxDecoration(color: AppColors.textTertiary.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(2)),
+                ),
+                const SizedBox(height: AppSpacing.m),
+                Row(
+                  children: [
+                    Expanded(child: Text(tr(LocaleKeys.language_settings_voice_language_title), style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700))),
+                    GestureDetector(
+                      onTap: () => Navigator.of(sheetContext).pop(),
+                      child: Container(
+                        width: AppSizes.iconButtonSm,
+                        height: AppSizes.iconButtonSm,
+                        decoration: const BoxDecoration(color: AppColors.surfaceMuted, shape: BoxShape.circle),
+                        child: const Icon(Icons.close, size: AppSizes.iconSm, color: AppColors.textPrimary),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(tr(LocaleKeys.language_settings_voice_language_subtitle), style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary)),
+                ),
+                const SizedBox(height: AppSpacing.m),
+                Obx(() {
+                  final current = service.voiceLogLanguagePreference.value;
+                  return Column(
+                    children: [
+                      _VoiceLanguageRow(
+                        flag: '🇺🇸',
+                        label: tr(LocaleKeys.language_settings_option_english),
+                        selected: current == VoiceLogLanguagePreference.english,
+                        onTap: () async {
+                          await service.setVoiceLogLanguagePreference(VoiceLogLanguagePreference.english);
+                          if (sheetContext.mounted) Navigator.of(sheetContext).pop();
+                        },
+                      ),
+                      Divider(height: AppSizes.dividerThin, color: AppColors.surfaceMuted),
+                      _VoiceLanguageRow(
+                        flag: '🇨🇿',
+                        label: tr(LocaleKeys.language_settings_option_czech),
+                        selected: current == VoiceLogLanguagePreference.czech,
+                        onTap: () async {
+                          await service.setVoiceLogLanguagePreference(VoiceLogLanguagePreference.czech);
+                          if (sheetContext.mounted) Navigator.of(sheetContext).pop();
+                        },
+                      ),
+                    ],
+                  );
+                }),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   void _showVoiceTips(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -473,7 +550,12 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
         appBar: CustomGlassAppBar(
           leadingIcon: Icons.close,
           onBack: () => Navigator.of(context).maybePop(),
-          actions: [CustomGlassIconButton(icon: Icons.help_outline, iconSize: AppSizes.iconMd, onPressed: () => _showVoiceTips(context))],
+          actions: [
+            CustomGlassIconButtonGroup(items: [
+              (icon: Icons.translate_outlined, onPressed: () => _showVoiceLanguageSheet(context)),
+              (icon: Icons.help_outline, onPressed: () => _showVoiceTips(context)),
+            ]),
+          ],
         ),
         body: LiquidGlassBackground(
           child: SafeArea(
@@ -586,6 +668,39 @@ class _PermissionDialogButton extends StatelessWidget {
         child: Text(
           label,
           style: AppTextStyles.body14.copyWith(color: emphasized ? AppColors.onPrimary : AppColors.textPrimary, fontWeight: FontWeight.w600, decoration: TextDecoration.none),
+        ),
+      ),
+    );
+  }
+}
+
+class _VoiceLanguageRow extends StatelessWidget {
+  const _VoiceLanguageRow({required this.flag, required this.label, required this.selected, required this.onTap});
+
+  final String flag;
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.m),
+        child: Row(
+          children: [
+            Text(flag, style: const TextStyle(fontSize: 24)),
+            const SizedBox(width: AppSpacing.m),
+            Expanded(child: Text(label, style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w500))),
+            if (selected)
+              Container(
+                width: AppSizes.iconMd + 4,
+                height: AppSizes.iconMd + 4,
+                decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
+                child: const Icon(Icons.check, size: AppSizes.iconSm, color: AppColors.onPrimary),
+              ),
+          ],
         ),
       ),
     );

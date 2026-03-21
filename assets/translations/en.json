@@ -50,6 +50,8 @@
   "common_exercise_logged": "Exercise logged",
   "common_view": "View",
   "common_undo": "Undo",
+  "common_coming_soon": "Coming soon",
+  "common_feature_not_available": "This feature is not yet available.",
   "common_confidence": "Confidence",
   "common_unsaved_changes": "You have unsaved changes",
   "common_unsaved_changes_message": "Do you want to save your changes before leaving?",

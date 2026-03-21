@@ -8,7 +8,6 @@ import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/controller/weight_entry_controller.dart';
 import 'package:diplomka/model/user_profile.dart';
 import 'package:diplomka/model/weight_entry.dart';
-import 'package:diplomka/screens/profile/subscreens/personal_details_custom_diet_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/personal_details_diet_screen.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 import 'package:diplomka/services/session_manager.dart';
@@ -271,23 +270,28 @@ class PersonalDetailsScreen extends StatelessWidget {
             return;
           }
 
-          await Get.to<void>(
-            () => PersonalDetailsCustomDietScreen(
-              onBack: () => Get.back<void>(),
-              onNext: () async {
-                await SessionManager.to.setDietType(ProfileDietType.custom);
-                await SessionManager.to.setCustomDietPreferences(customPreferencesDraft);
-                Get.back<void>();
-                Get.back<void>();
-              },
-              initialPreferences: customPreferencesDraft,
-              onPreferencesSaved: (value) => customPreferencesDraft = value,
-            ),
-          );
+          final saved = await _showCustomDietSheet(context, initialPreferences: customPreferencesDraft);
+          if (saved == null) return;
+          await SessionManager.to.setDietType(ProfileDietType.custom);
+          await SessionManager.to.setCustomDietPreferences(saved);
+          Get.back<void>();
         },
         initialDiet: selectedDietCode,
+        customPreferences: customPreferencesDraft,
         onDietChanged: (diet) => selectedDietCode = diet,
       ),
+    );
+  }
+
+  Future<String?> _showCustomDietSheet(BuildContext context, {required String initialPreferences}) {
+    return showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.lg3))),
+      clipBehavior: Clip.antiAlias,
+      showDragHandle: false,
+      builder: (_) => _CustomDietSheet(initialPreferences: initialPreferences),
     );
   }
 
@@ -389,7 +393,7 @@ class _DetailRow extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(label, style: AppTextStyles.body15.copyWith(fontWeight: FontWeight.w400)),
+                      Text(label, style: AppTextStyles.body15.copyWith(fontWeight: FontWeight.w500)),
                       if (subtitle != null) ...[
                         const SizedBox(height: AppSpacing.xxs),
                         _TwoLineThreeDotsText(
@@ -400,14 +404,7 @@ class _DetailRow extends StatelessWidget {
                     ],
                   ),
                 ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(value, style: AppTextStyles.body15.copyWith(fontWeight: FontWeight.w600)),
-                    const SizedBox(width: AppSpacing.s),
-                    const Icon(Icons.edit_outlined, size: AppSizes.iconSm, color: AppColors.textTertiary),
-                  ],
-                ),
+                Text(value, style: AppTextStyles.body15.copyWith(fontWeight: FontWeight.w600)),
               ],
             ),
           ),
@@ -465,6 +462,88 @@ class _TwoLineThreeDotsText extends StatelessWidget {
         final result = trimmed.isEmpty ? '...' : '$trimmed...';
         return Text(result, maxLines: 2, style: style);
       },
+    );
+  }
+}
+
+class _CustomDietSheet extends StatefulWidget {
+  const _CustomDietSheet({required this.initialPreferences});
+
+  final String initialPreferences;
+
+  @override
+  State<_CustomDietSheet> createState() => _CustomDietSheetState();
+}
+
+class _CustomDietSheetState extends State<_CustomDietSheet> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.initialPreferences);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: EdgeInsets.only(left: AppSpacing.l, right: AppSpacing.l, top: AppSpacing.l, bottom: AppSpacing.l + MediaQuery.viewInsetsOf(context).bottom),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(tr(LocaleKeys.personal_details_custom_diet_title), style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700)),
+            const SizedBox(height: AppSpacing.xs),
+            Text(tr(LocaleKeys.personal_details_custom_diet_subtitle), style: AppTextStyles.body14Regular.copyWith(color: AppColors.textSecondary)),
+            const SizedBox(height: AppSpacing.m),
+            TextField(
+              controller: _controller,
+              autofocus: true,
+              textCapitalization: TextCapitalization.sentences,
+              maxLines: 4,
+              style: AppTextStyles.body16,
+              decoration: InputDecoration(
+                hintText: tr(LocaleKeys.onboarding_custom_diet_hint),
+                hintStyle: AppTextStyles.body16.copyWith(color: AppColors.textTertiary),
+                filled: true,
+                fillColor: AppColors.surfaceMuted,
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadii.md), borderSide: BorderSide.none),
+                contentPadding: const EdgeInsets.all(AppSpacing.m),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.m),
+            Row(
+              children: [
+                Expanded(
+                  child: FoodySecondaryButton(label: tr(LocaleKeys.common_cancel), onTap: () => Navigator.of(context).pop()),
+                ),
+                const SizedBox(width: AppSpacing.s),
+                Expanded(
+                  child: ValueListenableBuilder<TextEditingValue>(
+                    valueListenable: _controller,
+                    builder: (context, value, _) {
+                      final hasText = value.text.trim().isNotEmpty;
+                      return FoodyPrimaryButton(
+                        label: tr(LocaleKeys.common_save),
+                        gradient: LinearGradient(colors: [AppColors.primary, AppColors.primary]),
+                        onTap: hasText ? () => Navigator.of(context).pop(_controller.text.trim()) : null,
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

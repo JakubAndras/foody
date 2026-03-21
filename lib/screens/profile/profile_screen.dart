@@ -9,7 +9,8 @@ import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/screens/profile/subscreens/confirm_username_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/personal_details_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/preferences_screen.dart';
-import 'package:diplomka/screens/profile/subscreens/language_screen.dart';
+import 'package:diplomka/controller/language_settings_controller.dart';
+import 'package:diplomka/model/language_settings.dart';
 import 'package:diplomka/screens/profile/subscreens/edit_nutrition_goals_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/weight_history_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/health_integration_screen.dart';
@@ -47,15 +48,15 @@ class ProfileScreen extends StatelessWidget {
           backgroundColor: Colors.transparent,
           fadeColor: AppColors.meshBase,
           backgroundWidget: const MeshGradientBackground(),
-            padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.mega + AppSpacing.l, AppSpacing.l, AppSpacing.mega + 42),
+            padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.mega + AppSpacing.s, AppSpacing.l, AppSpacing.mega + 42),
             //collapsedHeader: Text(tr(LocaleKeys.profile_title), style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w700)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 //CollapsibleTitle(child: Text(tr(LocaleKeys.profile_title), style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w700))),
                 //const SizedBox(height: AppSpacing.s),
-                const _ProfileHeaderCard(),
-                const SizedBox(height: AppSpacing.l),
+                // const _ProfileHeaderCard(),
+                // const SizedBox(height: AppSpacing.l),
                 ProfileSectionHeader(title: tr(LocaleKeys.profile_account)),
                 const SizedBox(height: AppSpacing.s),
                 _ProfileGroupCard(
@@ -74,7 +75,7 @@ class ProfileScreen extends StatelessWidget {
                       title: tr(LocaleKeys.profile_language),
                       icon: Icons.translate_outlined,
                       showDivider: false,
-                      onTap: () => Get.to(() => const LanguageScreen()),
+                      onTap: () => _showLanguageSheet(context),
                     ),
                   ],
                 ),
@@ -119,17 +120,23 @@ class ProfileScreen extends StatelessWidget {
                 const SizedBox(height: AppSpacing.l),
                 ProfileSectionHeader(
                   title: tr(LocaleKeys.profile_widgets),
-                  trailing: Text(
-                    tr(LocaleKeys.profile_how_to_add),
-                    style: TextStyle(
-                      color: AppColors.textSecondary,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
+                  trailing: GestureDetector(
+                    onTap: () => Get.snackbar(tr(LocaleKeys.common_coming_soon), tr(LocaleKeys.common_feature_not_available)),
+                    child: Text(
+                      tr(LocaleKeys.profile_how_to_add),
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      ),
                     ),
                   ),
                 ),
                 const SizedBox(height: AppSpacing.s),
-                const _WidgetSection(),
+                GestureDetector(
+                  onTap: () => Get.snackbar(tr(LocaleKeys.common_coming_soon), tr(LocaleKeys.common_feature_not_available)),
+                  child: const AbsorbPointer(child: _WidgetSection()),
+                ),
                 const SizedBox(height: AppSpacing.l),
                 ProfileSectionHeader(title: tr(LocaleKeys.profile_progress_data)),
                 const SizedBox(height: AppSpacing.s),
@@ -199,6 +206,113 @@ class ProfileScreen extends StatelessWidget {
         ),
     );
   }
+
+  void _showLanguageSheet(BuildContext context) {
+    final controller = LanguageSettingsController.to;
+    controller.initializeFromContext(context);
+
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.lg3))),
+      clipBehavior: Clip.antiAlias,
+      builder: (sheetContext) {
+        return SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.s, AppSpacing.l, AppSpacing.l),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 36,
+                  height: 4,
+                  decoration: BoxDecoration(color: AppColors.textTertiary.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(2)),
+                ),
+                const SizedBox(height: AppSpacing.m),
+                Row(
+                  children: [
+                    Expanded(child: Text(tr(LocaleKeys.language_settings_title), style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700))),
+                    GestureDetector(
+                      onTap: () => Navigator.of(sheetContext).pop(),
+                      child: Container(
+                        width: AppSizes.iconButtonSm,
+                        height: AppSizes.iconButtonSm,
+                        decoration: const BoxDecoration(color: AppColors.surfaceMuted, shape: BoxShape.circle),
+                        child: const Icon(Icons.close, size: AppSizes.iconSm, color: AppColors.textPrimary),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.m),
+                Obx(() {
+                  final current = controller.appLanguage.value;
+                  return Column(
+                    children: [
+                      _LanguageRow(
+                        flag: '🇺🇸',
+                        label: tr(LocaleKeys.language_settings_option_english),
+                        selected: current == AppLanguage.english,
+                        onTap: () async {
+                          await sheetContext.setLocale(AppLanguage.english.locale);
+                          controller.setAppLanguage(AppLanguage.english);
+                          if (sheetContext.mounted) Navigator.of(sheetContext).pop();
+                        },
+                      ),
+                      Divider(height: AppSizes.dividerThin, color: AppColors.surfaceMuted),
+                      _LanguageRow(
+                        flag: '🇨🇿',
+                        label: tr(LocaleKeys.language_settings_option_czech),
+                        selected: current == AppLanguage.czech,
+                        onTap: () async {
+                          await sheetContext.setLocale(AppLanguage.czech.locale);
+                          controller.setAppLanguage(AppLanguage.czech);
+                          if (sheetContext.mounted) Navigator.of(sheetContext).pop();
+                        },
+                      ),
+                    ],
+                  );
+                }),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _LanguageRow extends StatelessWidget {
+  const _LanguageRow({required this.flag, required this.label, required this.selected, required this.onTap});
+
+  final String flag;
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.m),
+        child: Row(
+          children: [
+            Text(flag, style: const TextStyle(fontSize: 24)),
+            const SizedBox(width: AppSpacing.m),
+            Expanded(child: Text(label, style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w500))),
+            if (selected)
+              Container(
+                width: AppSizes.iconMd + 4,
+                height: AppSizes.iconMd + 4,
+                decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
+                child: const Icon(Icons.check, size: AppSizes.iconSm, color: AppColors.onPrimary),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class _ProfileHeaderCard extends StatelessWidget {
@@ -207,7 +321,7 @@ class _ProfileHeaderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Get.to(() => const ConfirmUsernameScreen()),
+      onTap: () => Get.snackbar(tr(LocaleKeys.common_coming_soon), tr(LocaleKeys.common_feature_not_available)),
       child: Container(
         height: AppSizes.profileHeaderHeight,
         decoration: BoxDecoration(
@@ -222,7 +336,7 @@ class _ProfileHeaderCard extends StatelessWidget {
               width: AppSizes.avatarSize,
               height: AppSizes.avatarSize,
               decoration: const BoxDecoration(
-                color: AppColors.avatarPurple,
+                gradient: AppGradients.primary,
                 shape: BoxShape.circle,
               ),
               child: Center(

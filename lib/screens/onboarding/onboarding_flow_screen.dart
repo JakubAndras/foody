@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:diplomka/model/user_profile.dart';
 import 'package:diplomka/screens/onboarding/onboarding_calorie_burn_screen.dart';
-import 'package:diplomka/screens/onboarding/onboarding_custom_diet_screen.dart';
-import 'package:diplomka/screens/onboarding/onboarding_diet_screen.dart';
+import 'package:diplomka/screens/profile/subscreens/personal_details_custom_diet_screen.dart';
+import 'package:diplomka/screens/profile/subscreens/personal_details_diet_screen.dart';
 import 'package:diplomka/screens/onboarding/onboarding_dob_screen.dart';
 import 'package:diplomka/screens/onboarding/onboarding_gender_screen.dart';
 import 'package:diplomka/screens/onboarding/onboarding_goal_screen.dart';
@@ -129,20 +129,18 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
       OnboardingGoalScreen(onNext: _next, onBack: _previous, step: 5, totalSteps: totalSteps, onCanProceedChanged: (canProceed) => _setCanProceed(5, canProceed)),
       OnboardingDesiredWeightScreen(onNext: _next, onBack: _previous, step: 6, totalSteps: totalSteps),
       OnboardingWeightLossSpeedScreen(onNext: _next, onBack: _previous, step: 7, totalSteps: totalSteps),
-      OnboardingDietScreen(
+      PersonalDetailsDietScreen(
         onNext: _next,
         onBack: _previous,
-        step: 8,
-        totalSteps: totalSteps,
+        keepAlive: true,
         onCanProceedChanged: (canProceed) => _setCanProceed(8, canProceed),
         onDietChanged: _handleDietChanged,
       ),
       if (_showCustomDiet)
-        OnboardingCustomDietScreen(
+        PersonalDetailsCustomDietScreen(
           onNext: _next,
           onBack: _previous,
-          step: customStep,
-          totalSteps: totalSteps,
+          keepAlive: true,
           initialPreferences: SessionManager.to.customDietPreferences.value,
           onPreferencesSaved: (value) => unawaited(SessionManager.to.setCustomDietPreferences(value)),
         ),

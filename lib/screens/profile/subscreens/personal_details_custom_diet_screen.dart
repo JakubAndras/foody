@@ -12,19 +12,24 @@ class PersonalDetailsCustomDietScreen extends StatefulWidget {
     required this.onBack,
     this.initialPreferences,
     this.onPreferencesSaved,
+    this.keepAlive = false,
   });
 
   final VoidCallback onNext;
   final VoidCallback onBack;
   final String? initialPreferences;
   final ValueChanged<String>? onPreferencesSaved;
+  final bool keepAlive;
 
   @override
   State<PersonalDetailsCustomDietScreen> createState() => _PersonalDetailsCustomDietScreenState();
 }
 
-class _PersonalDetailsCustomDietScreenState extends State<PersonalDetailsCustomDietScreen> {
+class _PersonalDetailsCustomDietScreenState extends State<PersonalDetailsCustomDietScreen> with AutomaticKeepAliveClientMixin {
   final TextEditingController _controller = TextEditingController();
+
+  @override
+  bool get wantKeepAlive => widget.keepAlive;
 
   @override
   void initState() {
@@ -40,19 +45,28 @@ class _PersonalDetailsCustomDietScreenState extends State<PersonalDetailsCustomD
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     return ProfileGradientScaffold(
       scroll: true,
+      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, 0, AppSpacing.screen, AppSpacing.xl),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: SafeArea(
         top: false,
         minimum: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-        child: OnboardingPrimaryButton(
-          label: tr(LocaleKeys.common_continue_btn),
-          onPressed: () {
-            widget.onPreferencesSaved?.call(_controller.text.trim());
-            widget.onNext();
+        child: ValueListenableBuilder<TextEditingValue>(
+          valueListenable: _controller,
+          builder: (context, value, _) {
+            final hasText = value.text.trim().isNotEmpty;
+            return OnboardingPrimaryButton(
+              label: tr(LocaleKeys.common_save),
+              isEnabled: hasText,
+              onPressed: () {
+                widget.onPreferencesSaved?.call(_controller.text.trim());
+                widget.onNext();
+              },
+            );
           },
         ),
       ),
@@ -60,7 +74,7 @@ class _PersonalDetailsCustomDietScreenState extends State<PersonalDetailsCustomD
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ProfileTopBar(title: tr(LocaleKeys.personal_details_custom_diet_title), onBack: widget.onBack),
-          const SizedBox(height: AppSpacing.xl),
+          const SizedBox(height: AppSpacing.l),
           Text(
             tr(LocaleKeys.personal_details_custom_diet_subtitle),
             style: textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),

@@ -53,6 +53,8 @@ abstract class  LocaleKeys {
   static const common_exercise_logged = 'common_exercise_logged';
   static const common_view = 'common_view';
   static const common_undo = 'common_undo';
+  static const common_coming_soon = 'common_coming_soon';
+  static const common_feature_not_available = 'common_feature_not_available';
   static const common_confidence = 'common_confidence';
   static const common_unsaved_changes = 'common_unsaved_changes';
   static const common_unsaved_changes_message = 'common_unsaved_changes_message';

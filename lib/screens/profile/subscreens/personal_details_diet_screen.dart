@@ -12,51 +12,68 @@ class PersonalDetailsDietScreen extends StatefulWidget {
     required this.onBack,
     this.onDietChanged,
     this.initialDiet,
+    this.onCanProceedChanged,
+    this.keepAlive = false,
+    this.customPreferences,
   });
 
   final VoidCallback onNext;
   final VoidCallback onBack;
   final ValueChanged<String>? onDietChanged;
   final String? initialDiet;
+  final ValueChanged<bool>? onCanProceedChanged;
+  final bool keepAlive;
+  final String? customPreferences;
 
   @override
   State<PersonalDetailsDietScreen> createState() => _PersonalDetailsDietScreenState();
 }
 
-class _PersonalDetailsDietScreenState extends State<PersonalDetailsDietScreen> {
+class _PersonalDetailsDietScreenState extends State<PersonalDetailsDietScreen> with AutomaticKeepAliveClientMixin {
   String? _selected;
+
+  @override
+  bool get wantKeepAlive => widget.keepAlive;
 
   @override
   void initState() {
     super.initState();
     _selected = widget.initialDiet;
+    if (widget.onCanProceedChanged != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        widget.onCanProceedChanged?.call(_selected != null);
+      });
+    }
+  }
+
+  void _selectDiet(String diet) {
+    setState(() => _selected = diet);
+    widget.onDietChanged?.call(diet);
+    if (widget.onCanProceedChanged != null) {
+      widget.onCanProceedChanged!(true);
+    } else {
+      widget.onNext();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     return ProfileGradientScaffold(
+      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, 0, AppSpacing.screen, AppSpacing.xl),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ProfileTopBar(title: tr(LocaleKeys.personal_details_diet), onBack: widget.onBack),
-          const SizedBox(height: AppSpacing.l),
-          Text(
-            tr(LocaleKeys.personal_details_diet_title),
-            style: textTheme.headlineSmall,
-          ),
           const SizedBox(height: AppSpacing.l),
           OnboardingOptionCard(
             title: tr(LocaleKeys.onboarding_classic),
             selected: _selected == 'classic',
             height: AppSizes.optionCardHeightLarge,
             leading: const _DietIcon(icon: Icons.restaurant),
-            onTap: () {
-              setState(() => _selected = 'classic');
-              widget.onDietChanged?.call('classic');
-              widget.onNext();
-            },
+            onTap: () => _selectDiet('classic'),
           ),
           const SizedBox(height: AppSpacing.s),
           OnboardingOptionCard(
@@ -64,11 +81,7 @@ class _PersonalDetailsDietScreenState extends State<PersonalDetailsDietScreen> {
             selected: _selected == 'vegetarian',
             height: AppSizes.optionCardHeightLarge,
             leading: const _DietIcon(icon: Icons.eco_outlined),
-            onTap: () {
-              setState(() => _selected = 'vegetarian');
-              widget.onDietChanged?.call('vegetarian');
-              widget.onNext();
-            },
+            onTap: () => _selectDiet('vegetarian'),
           ),
           const SizedBox(height: AppSpacing.s),
           OnboardingOptionCard(
@@ -76,11 +89,7 @@ class _PersonalDetailsDietScreenState extends State<PersonalDetailsDietScreen> {
             selected: _selected == 'vegan',
             height: AppSizes.optionCardHeightLarge,
             leading: const _DietIcon(icon: Icons.energy_savings_leaf_outlined),
-            onTap: () {
-              setState(() => _selected = 'vegan');
-              widget.onDietChanged?.call('vegan');
-              widget.onNext();
-            },
+            onTap: () => _selectDiet('vegan'),
           ),
           const SizedBox(height: AppSpacing.m),
           Center(
@@ -92,12 +101,20 @@ class _PersonalDetailsDietScreenState extends State<PersonalDetailsDietScreen> {
             selected: _selected == 'custom',
             height: AppSizes.optionCardHeightLarge,
             leading: const _DietIcon(icon: Icons.add),
-            onTap: () {
-              setState(() => _selected = 'custom');
-              widget.onDietChanged?.call('custom');
-              widget.onNext();
-            },
+            onTap: () => _selectDiet('custom'),
           ),
+          if (_selected == 'custom' && (widget.customPreferences?.trim().isNotEmpty ?? false)) ...[
+            const SizedBox(height: AppSpacing.m),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
+              child: Text(
+                widget.customPreferences!.trim(),
+                style: AppTextStyles.body15.copyWith(fontWeight: FontWeight.w400),
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
         ],
       ),
     );
