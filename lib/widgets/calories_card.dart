@@ -3,22 +3,27 @@ import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/model/day_record.dart';
+import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/widgets/progress_ring.dart';
 
 class CaloriesCard extends StatelessWidget {
-  const CaloriesCard({super.key, required this.dayRecord, this.caloriesPlanEnabled = true});
+  const CaloriesCard({super.key, required this.dayRecord, this.caloriesPlanEnabled = true, this.rolloverAmount = 0});
 
   final DayRecord dayRecord;
   final bool caloriesPlanEnabled;
+  final double rolloverAmount;
 
   @override
   Widget build(BuildContext context) {
-    final double goal = dayRecord.calorieGoal <= 0 ? 1 : dayRecord.calorieGoal;
+    final bool burnedEnabled = SessionManager.to.burnedCaloriesEnabled.value;
+    final bool rolloverEnabled = SessionManager.to.rolloverCaloriesEnabled.value;
+    final double baseGoal = dayRecord.calorieGoal <= 0 ? 1 : dayRecord.calorieGoal;
+    final double effectiveGoal = baseGoal + (rolloverEnabled ? rolloverAmount : 0);
     final double food = dayRecord.totalCalories;
     final double exercise = dayRecord.totalExerciseCalories;
-    final double net = dayRecord.netCalories;
-    final double remaining = dayRecord.caloriesLeft;
-    final double progress = (net / goal).clamp(0.0, 1.0);
+    final double remaining = burnedEnabled ? effectiveGoal - dayRecord.netCalories : effectiveGoal - dayRecord.totalCalories;
+    final double consumed = burnedEnabled ? dayRecord.netCalories : dayRecord.totalCalories;
+    final double progress = (consumed / effectiveGoal).clamp(0.0, 1.0);
 
     return Container(
       padding: const EdgeInsets.all(AppSpacing.l),
@@ -51,7 +56,7 @@ class CaloriesCard extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            (caloriesPlanEnabled ? remaining : net).toStringAsFixed(0),
+                            (caloriesPlanEnabled ? remaining : consumed).toStringAsFixed(0),
                             style: AppTextStyles.h2.copyWith(color: AppColors.textPrimary),
                           ),
                           Text(
@@ -73,7 +78,7 @@ class CaloriesCard extends StatelessWidget {
               _StatItem(
                 icon: Icons.flag_outlined,
                 label: tr(LocaleKeys.dashboard_base_goal),
-                value: goal.toStringAsFixed(0),
+                value: effectiveGoal.toStringAsFixed(0),
                 color: AppColors.textMuted,
               ),
               const SizedBox(height: AppSpacing.s),
@@ -83,20 +88,24 @@ class CaloriesCard extends StatelessWidget {
                 value: food.toStringAsFixed(0),
                 color: AppColors.info,
               ),
-              const SizedBox(height: AppSpacing.s),
-              _StatItem(
-                icon: Icons.directions_run_rounded,
-                label: tr(LocaleKeys.common_exercise),
-                value: exercise.toStringAsFixed(0),
-                color: AppColors.warning,
-              ),
-              const SizedBox(height: AppSpacing.s),
-              _StatItem(
-                icon: Icons.history_rounded,
-                label: tr(LocaleKeys.dashboard_rollover),
-                value: '0',
-                color: AppColors.info,
-              ),
+              if (burnedEnabled) ...[
+                const SizedBox(height: AppSpacing.s),
+                _StatItem(
+                  icon: Icons.directions_run_rounded,
+                  label: tr(LocaleKeys.common_exercise),
+                  value: exercise.toStringAsFixed(0),
+                  color: AppColors.warning,
+                ),
+              ],
+              if (rolloverEnabled) ...[
+                const SizedBox(height: AppSpacing.s),
+                _StatItem(
+                  icon: Icons.history_rounded,
+                  label: tr(LocaleKeys.dashboard_rollover),
+                  value: rolloverAmount.toStringAsFixed(0),
+                  color: AppColors.info,
+                ),
+              ],
             ],
           ),
         ],

@@ -292,6 +292,11 @@ abstract class  LocaleKeys {
   static const meal_enter_meal_name = 'meal_enter_meal_name';
   static const meal_ingredients_title = 'meal_ingredients_title';
   static const meal_fix_issue = 'meal_fix_issue';
+  static const meal_change_photo = 'meal_change_photo';
+  static const meal_add_photo = 'meal_add_photo';
+  static const meal_take_photo = 'meal_take_photo';
+  static const meal_upload_photo = 'meal_upload_photo';
+  static const meal_remove_photo = 'meal_remove_photo';
   static const meal_save_image = 'meal_save_image';
   static const meal_save_image_success = 'meal_save_image_success';
   static const meal_save_image_error = 'meal_save_image_error';

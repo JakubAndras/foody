@@ -7,9 +7,17 @@ import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 import 'package:diplomka/services/session_manager.dart';
+import 'package:diplomka/widgets/liquid_glass/glass_segmented_tabs.dart';
 
-class PreferencesScreen extends StatelessWidget {
+class PreferencesScreen extends StatefulWidget {
   const PreferencesScreen({super.key});
+
+  @override
+  State<PreferencesScreen> createState() => _PreferencesScreenState();
+}
+
+class _PreferencesScreenState extends State<PreferencesScreen> {
+  int _appearanceIndex = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -21,52 +29,58 @@ class PreferencesScreen extends StatelessWidget {
         children: [
           ProfileTopBar(title: tr(LocaleKeys.preferences_title), onBack: () => Get.back()),
           const SizedBox(height: AppSpacing.m),
+          Text(tr(LocaleKeys.preferences_appearance), style: AppTextStyles.body15),
+          const SizedBox(height: AppSpacing.xs),
+          Text(tr(LocaleKeys.preferences_appearance_hint), style: AppTextStyles.body13),
+          const SizedBox(height: AppSpacing.m),
+          GlassSegmentedTabs(
+            labels: [tr(LocaleKeys.preferences_system), tr(LocaleKeys.preferences_light), tr(LocaleKeys.preferences_dark)],
+            activeIndex: _appearanceIndex,
+            onTap: (index) => setState(() => _appearanceIndex = index),
+          ),
+          const SizedBox(height: AppSpacing.m),
           ProfileCard(
             radius: AppRadii.lg,
             shadow: AppShadows.cardSubtle,
-            padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.m, AppSpacing.screen, AppSpacing.screen),
+            padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.xs, AppSpacing.screen, AppSpacing.xs),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(tr(LocaleKeys.preferences_appearance), style: AppTextStyles.body15),
-                const SizedBox(height: AppSpacing.xs),
-                Text(tr(LocaleKeys.preferences_appearance_hint), style: AppTextStyles.body13),
-                const SizedBox(height: AppSpacing.m),
-                _AppearanceSegmented(
-                  labels: [tr(LocaleKeys.preferences_system), tr(LocaleKeys.preferences_light), tr(LocaleKeys.preferences_dark)],
-                  selectedIndex: 1,
-                  onChanged: (_) {},
+                // TODO: Live Activity — requires paid Apple Developer account + ActivityKit implementation (see plan: live-activity-ios-lock-screen-dynamic-island.md)
+                // _ToggleRow(title: tr(LocaleKeys.preferences_live_activity), subtitle: tr(LocaleKeys.preferences_live_activity_desc), isOn: false),
+                Obx(
+                  () => _ToggleRow(
+                    title: tr(LocaleKeys.preferences_burned_calories),
+                    subtitle: tr(LocaleKeys.preferences_burned_calories_desc),
+                    isOn: SessionManager.to.burnedCaloriesEnabled.value,
+                    onChanged: (val) => SessionManager.to.setBurnedCaloriesEnabled(val),
+                  ),
+                ),
+                Obx(
+                  () => _ToggleRow(
+                    title: tr(LocaleKeys.preferences_rollover_calories),
+                    subtitle: tr(LocaleKeys.preferences_rollover_calories_desc),
+                    isOn: SessionManager.to.rolloverCaloriesEnabled.value,
+                    onChanged: (val) => SessionManager.to.setRolloverCaloriesEnabled(val),
+                  ),
+                ),
+                Obx(
+                  () => _ToggleRow(
+                    title: tr(LocaleKeys.preferences_auto_adjust),
+                    subtitle: tr(LocaleKeys.preferences_auto_adjust_desc),
+                    isOn: SessionManager.to.autoAdjustMacrosEnabled.value,
+                    onChanged: (val) => SessionManager.to.setAutoAdjustMacrosEnabled(val),
+                  ),
+                ),
+                Obx(
+                  () => _ToggleRow(
+                    title: tr(LocaleKeys.preferences_save_photos_gallery),
+                    subtitle: tr(LocaleKeys.preferences_save_photos_gallery_desc),
+                    isOn: SessionManager.to.savePhotosToGallery.value,
+                    onChanged: (val) => SessionManager.to.setSavePhotosToGallery(val),
+                    showDivider: false,
+                  ),
                 ),
               ],
-            ),
-          ),
-          const SizedBox(height: AppSpacing.m),
-          ProfileCard(
-            radius: AppRadii.lg,
-            shadow: AppShadows.cardSubtle,
-            padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.xs, AppSpacing.screen, AppSpacing.xs),
-            child: Column(
-              children: [
-                _ToggleRow(title: tr(LocaleKeys.preferences_live_activity), subtitle: tr(LocaleKeys.preferences_live_activity_desc), isOn: false),
-                _ToggleRow(title: tr(LocaleKeys.preferences_burned_calories), subtitle: tr(LocaleKeys.preferences_burned_calories_desc), isOn: true),
-                _ToggleRow(title: tr(LocaleKeys.preferences_rollover_calories), subtitle: tr(LocaleKeys.preferences_rollover_calories_desc), isOn: false),
-                _ToggleRow(title: tr(LocaleKeys.preferences_auto_adjust), subtitle: tr(LocaleKeys.preferences_auto_adjust_desc), isOn: true, showDivider: false),
-              ],
-            ),
-          ),
-          const SizedBox(height: AppSpacing.m),
-          ProfileCard(
-            radius: AppRadii.lg,
-            shadow: AppShadows.cardSubtle,
-            padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.xs, AppSpacing.screen, AppSpacing.xs),
-            child: Obx(
-              () => _ToggleRow(
-                title: tr(LocaleKeys.preferences_save_photos_gallery),
-                subtitle: tr(LocaleKeys.preferences_save_photos_gallery_desc),
-                isOn: SessionManager.to.savePhotosToGallery.value,
-                onTap: () => SessionManager.to.setSavePhotosToGallery(!SessionManager.to.savePhotosToGallery.value),
-                showDivider: false,
-              ),
             ),
           ),
         ],
@@ -75,26 +89,13 @@ class PreferencesScreen extends StatelessWidget {
   }
 }
 
-class _AppearanceSegmented extends StatelessWidget {
-  const _AppearanceSegmented({required this.labels, required this.selectedIndex, required this.onChanged});
-
-  final List<String> labels;
-  final int selectedIndex;
-  final ValueChanged<int> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return GlassSegmentedControl(segments: labels, selectedIndex: selectedIndex, onSegmentSelected: onChanged, useOwnLayer: true);
-  }
-}
-
 class _ToggleRow extends StatelessWidget {
-  const _ToggleRow({required this.title, required this.subtitle, required this.isOn, this.onTap, this.showDivider = true});
+  const _ToggleRow({required this.title, required this.subtitle, required this.isOn, this.onChanged, this.showDivider = true});
 
   final String title;
   final String subtitle;
   final bool isOn;
-  final VoidCallback? onTap;
+  final ValueChanged<bool>? onChanged;
   final bool showDivider;
 
   @override
@@ -104,7 +105,7 @@ class _ToggleRow extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
                 child: Column(
@@ -116,7 +117,8 @@ class _ToggleRow extends StatelessWidget {
                   ],
                 ),
               ),
-              ProfileToggle(isOn: isOn, onTap: onTap),
+              const SizedBox(width: AppSpacing.s),
+              GlassSwitch(value: isOn, onChanged: onChanged ?? (_) {}, useOwnLayer: true),
             ],
           ),
         ),

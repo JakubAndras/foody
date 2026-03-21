@@ -117,11 +117,12 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
   }
 
   Widget _caloriesTrackerWidget(DayRecord recordToShow) {
+    final rollover = DashboardController.to.rolloverAmount.value;
     Widget caloriesTrackerWidget;
     if (SessionManager.to.caloriesPlanEnabled.value) {
       caloriesTrackerWidget = Column(
         children: [
-          CaloriesCard(dayRecord: recordToShow),
+          CaloriesCard(dayRecord: recordToShow, rolloverAmount: rollover),
           const SizedBox(height: AppSpacing.s),
           MacrosRow(dayRecord: recordToShow),
         ],
@@ -129,7 +130,7 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
     } else {
       caloriesTrackerWidget = Column(
         children: [
-          CaloriesCard(dayRecord: recordToShow, caloriesPlanEnabled: false),
+          CaloriesCard(dayRecord: recordToShow, caloriesPlanEnabled: false, rolloverAmount: rollover),
           const SizedBox(height: AppSpacing.s),
           MacrosRow(dayRecord: recordToShow, caloriesPlanEnabled: false),
         ],
@@ -265,9 +266,10 @@ class _DashboardPreviewScreenState extends State<DashboardPreviewScreen> {
 
   Widget _buildCaloriesTracker(DayRecord recordToShow) {
     final planEnabled = SessionManager.to.caloriesPlanEnabled.value;
+    final rollover = DashboardController.to.rolloverAmount.value;
     return Column(
       children: [
-        CaloriesCard(dayRecord: recordToShow, caloriesPlanEnabled: planEnabled),
+        CaloriesCard(dayRecord: recordToShow, caloriesPlanEnabled: planEnabled, rolloverAmount: rollover),
         const SizedBox(height: AppSpacing.s),
         MacrosRow(dayRecord: recordToShow, caloriesPlanEnabled: planEnabled),
       ],

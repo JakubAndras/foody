@@ -2,6 +2,7 @@ import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/ingredient.dart';
 import 'package:diplomka/screens/meals/meal_components.dart';
+import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/widgets/edit_flow/edit_flow_widgets.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:diplomka/widgets/foody_glass_buttons.dart';
@@ -45,6 +46,8 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
   late Ingredient _baseIngredient;
   int _selectedMeasurement = 1;
   bool _showValidationError = false;
+  bool _isAutoAdjusting = false;
+  double _lastCalories = 0;
 
   @override
   void initState() {
@@ -56,6 +59,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
     _proteinController = TextEditingController(text: _formatNumber(_baseIngredient.proteins));
     _carbsController = TextEditingController(text: _formatNumber(_baseIngredient.carbs));
     _fatController = TextEditingController(text: _formatNumber(_baseIngredient.fats));
+    _lastCalories = _baseIngredient.calories;
     _registerInputListeners();
   }
 
@@ -71,14 +75,62 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
   }
 
   void _registerInputListeners() {
-    final controllers = [_nameController, _amountController, _caloriesController, _proteinController, _carbsController, _fatController];
-    for (final controller in controllers) {
-      controller.addListener(_handleInputChanged);
-    }
+    _nameController.addListener(_handleInputChanged);
+    _amountController.addListener(_handleInputChanged);
+    _caloriesController.addListener(_onCaloriesFieldChanged);
+    _proteinController.addListener(_onMacroFieldChanged);
+    _carbsController.addListener(_onMacroFieldChanged);
+    _fatController.addListener(_onMacroFieldChanged);
   }
 
   void _handleInputChanged() {
     if (!mounted) return;
+    setState(() {});
+  }
+
+  void _onCaloriesFieldChanged() {
+    if (!mounted || _isAutoAdjusting) return;
+    if (!SessionManager.to.autoAdjustMacrosEnabled.value) {
+      setState(() {});
+      return;
+    }
+    final newCalories = _parseNumber(_caloriesController.text);
+    if (newCalories == null || _lastCalories == 0) {
+      _lastCalories = newCalories ?? _lastCalories;
+      setState(() {});
+      return;
+    }
+    final ratio = newCalories / _lastCalories;
+    if (ratio == 1.0) {
+      setState(() {});
+      return;
+    }
+    final protein = _parseNumber(_proteinController.text) ?? 0;
+    final carbs = _parseNumber(_carbsController.text) ?? 0;
+    final fat = _parseNumber(_fatController.text) ?? 0;
+    _isAutoAdjusting = true;
+    _proteinController.text = _formatNumber((protein * ratio).roundToDouble());
+    _carbsController.text = _formatNumber((carbs * ratio).roundToDouble());
+    _fatController.text = _formatNumber((fat * ratio).roundToDouble());
+    _lastCalories = newCalories;
+    _isAutoAdjusting = false;
+    setState(() {});
+  }
+
+  void _onMacroFieldChanged() {
+    if (!mounted || _isAutoAdjusting) return;
+    if (!SessionManager.to.autoAdjustMacrosEnabled.value) {
+      setState(() {});
+      return;
+    }
+    final protein = _parseNumber(_proteinController.text) ?? 0;
+    final carbs = _parseNumber(_carbsController.text) ?? 0;
+    final fat = _parseNumber(_fatController.text) ?? 0;
+    final newCalories = (protein * 4) + (carbs * 4) + (fat * 9);
+    _isAutoAdjusting = true;
+    _caloriesController.text = _formatNumber(newCalories.roundToDouble());
+    _lastCalories = newCalories;
+    _isAutoAdjusting = false;
     setState(() {});
   }
 

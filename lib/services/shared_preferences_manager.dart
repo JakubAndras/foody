@@ -17,6 +17,9 @@ const String profileWeightChangeRateKgPerWeekKey = "profileWeightChangeRateKgPer
 const String profileDietTypeKey = "profileDietTypeKey";
 const String profileCustomDietPreferencesKey = "profileCustomDietPreferencesKey";
 const String savePhotosToGalleryKey = "savePhotosToGalleryKey";
+const String burnedCaloriesEnabledKey = "burnedCaloriesEnabledKey";
+const String rolloverCaloriesEnabledKey = "rolloverCaloriesEnabledKey";
+const String autoAdjustMacrosEnabledKey = "autoAdjustMacrosEnabledKey";
 const String healthIntegrationEnabledKey = "healthIntegration_enabled";
 const String healthIntegrationLastSyncKey = "healthIntegration_lastSync";
 

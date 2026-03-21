@@ -18,6 +18,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:diplomka/model/meal.dart';
 import 'package:diplomka/services/barcode_lookup_service.dart';
 import 'package:diplomka/services/ai_feature/ai_pipeline_service.dart';
+import 'package:diplomka/services/day_record_repository.dart';
 import 'package:diplomka/services/nutrition_goals_service.dart';
 import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/utils/media_storage.dart';
@@ -41,6 +42,8 @@ class DashboardController extends BaseController {
   final Rx<StreakInfo?> streakInfo = Rx<StreakInfo?>(null);
   final RxBool isLoadingStreak = false.obs;
   final RxString streakError = ''.obs;
+
+  final RxDouble rolloverAmount = 0.0.obs;
 
   final RxBool newMealAnalyzeLoading = false.obs;
   final RxBool newExerciseAnalyzeLoading = false.obs;
@@ -89,14 +92,28 @@ class DashboardController extends BaseController {
       final record = await _dayRecordController.getDayRecord(date);
       dayRecord.value = record;
       NutritionGoalsService.to.syncFromDayRecord(date: date, dayRecord: record);
+      rolloverAmount.value = await _calculateRollover(date);
     } catch (e) {
       dayRecordError.value = e.toString();
       dayRecord.value = null;
+      rolloverAmount.value = 0;
       NutritionGoalsService.to.syncFromDayRecord(date: date, dayRecord: null);
       Get.snackbar(tr(LocaleKeys.common_error), tr(LocaleKeys.common_something_went_wrong));
     } finally {
       isLoadingDayRecord.value = false;
     }
+  }
+
+  Future<double> _calculateRollover(DateTime date) async {
+    if (!SessionManager.to.rolloverCaloriesEnabled.value) return 0;
+    final yesterday = date.subtract(const Duration(days: 1));
+    final yesterdayRecord = await DayRecordRepository.to.getDayRecord(yesterday);
+    if (yesterdayRecord == null) return 0;
+
+    final bool burnedEnabled = SessionManager.to.burnedCaloriesEnabled.value;
+    final double yesterdayConsumed = burnedEnabled ? yesterdayRecord.netCalories : yesterdayRecord.totalCalories;
+    final double leftover = yesterdayRecord.calorieGoal - yesterdayConsumed;
+    return leftover.clamp(0, 500);
   }
 
   Future<void> _fetchStreakInfo() async {

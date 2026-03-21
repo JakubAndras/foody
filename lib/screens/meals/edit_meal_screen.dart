@@ -19,6 +19,7 @@ import 'package:diplomka/utils/media_storage.dart';
 import 'package:diplomka/model/meal_template.dart';
 import 'package:diplomka/services/meal_template_repository.dart';
 import 'package:diplomka/widgets/edit_flow/edit_flow_widgets.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:intl/intl.dart';
@@ -321,6 +322,40 @@ class _EditMealScreenState extends State<EditMealScreen> {
     }
   }
 
+  Future<void> _handleTakePhoto() async {
+    final picker = ImagePicker();
+    final image = await picker.pickImage(source: ImageSource.camera);
+    if (image == null || !mounted) return;
+    final storedPath = await MediaStorage.persistMealPhoto(image.path);
+    if (storedPath == null || !mounted) return;
+    setState(() {
+      _meal = _meal.copyWith(photoPath: storedPath);
+      _heroImage = _resolveHeroImage(storedPath);
+    });
+    _persistCurrentState();
+  }
+
+  Future<void> _handleUploadPhoto() async {
+    final picker = ImagePicker();
+    final image = await picker.pickImage(source: ImageSource.gallery);
+    if (image == null || !mounted) return;
+    final storedPath = await MediaStorage.persistMealPhoto(image.path);
+    if (storedPath == null || !mounted) return;
+    setState(() {
+      _meal = _meal.copyWith(photoPath: storedPath);
+      _heroImage = _resolveHeroImage(storedPath);
+    });
+    _persistCurrentState();
+  }
+
+  void _handleRemovePhoto() {
+    setState(() {
+      _meal = _meal.copyWith(clearPhotoPath: true);
+      _heroImage = null;
+    });
+    _persistCurrentState();
+  }
+
   Future<void> _handlePrimaryAction() async {
     if (_isEditMode) {
       if (widget.openedFromLogScreen) {
@@ -361,25 +396,6 @@ class _EditMealScreenState extends State<EditMealScreen> {
       return;
     }
 
-    final confirm = await showModalBottomSheet<bool>(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) => Padding(
-        padding: const EdgeInsets.all(AppSpacing.m),
-        child: EditConfirmSheet(
-          title: tr(LocaleKeys.meal_delete_title),
-          message: tr(LocaleKeys.meal_delete_message),
-          confirmLabel: tr(LocaleKeys.common_delete),
-          cancelLabel: tr(LocaleKeys.common_cancel),
-          confirmColor: AppColors.destructive,
-          onCancel: () => Navigator.of(context).pop(false),
-          onConfirm: () => Navigator.of(context).pop(true),
-        ),
-      ),
-    );
-
-    if (confirm != true) return;
-
     setState(() => _isDeleting = true);
     await DayRecordController.to.deleteMeal(_meal);
 
@@ -400,10 +416,57 @@ class _EditMealScreenState extends State<EditMealScreen> {
     }
   }
 
+  void _openPhotoSheet() {
+    final bool hasPhoto = _meal.photoPath != null && _meal.photoPath!.isNotEmpty;
+    showGlassPopup(
+      context: context,
+      items: [
+        GlassPopupItem(
+          label: hasPhoto ? tr(LocaleKeys.meal_change_photo) : tr(LocaleKeys.meal_add_photo),
+          icon: Icons.photo_outlined,
+          trailingIcon: Icons.keyboard_arrow_down_rounded,
+        ),
+        GlassPopupItem(
+          label: tr(LocaleKeys.meal_take_photo),
+          showDividerAbove: true,
+          onTap: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            _handleTakePhoto();
+          },
+        ),
+        GlassPopupItem(
+          label: tr(LocaleKeys.meal_upload_photo),
+          onTap: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            _handleUploadPhoto();
+          },
+        ),
+        if (hasPhoto)
+          GlassPopupItem(
+            label: tr(LocaleKeys.meal_remove_photo),
+            color: AppColors.destructive,
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+              _handleRemovePhoto();
+            },
+          ),
+      ],
+    );
+  }
+
   void _openActionSheet() {
     showGlassPopup(
       context: context,
       items: [
+        GlassPopupItem(
+          label: _meal.photoPath != null && _meal.photoPath!.isNotEmpty ? tr(LocaleKeys.meal_change_photo) : tr(LocaleKeys.meal_add_photo),
+          icon: Icons.photo_outlined,
+          trailingIcon: Icons.chevron_right_rounded,
+          onTap: () => _openPhotoSheet(),
+        ),
         GlassPopupItem(
           label: tr(LocaleKeys.common_share),
           icon: Icons.share_outlined,
@@ -441,6 +504,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
           label: tr(LocaleKeys.common_delete),
           icon: Icons.delete_outline,
           color: AppColors.destructive,
+          showDividerAbove: true,
           onTap: () {
             Navigator.of(context).pop();
             _handleDeleteMeal();

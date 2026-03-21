@@ -12,13 +12,14 @@ import 'package:diplomka/screens/profile/subscreens/personal_details_custom_diet
 import 'package:diplomka/screens/profile/subscreens/personal_details_diet_screen.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 import 'package:diplomka/services/session_manager.dart';
+import 'package:diplomka/widgets/foody_glass_buttons.dart';
+import 'package:diplomka/widgets/glass_popup.dart';
 
 class PersonalDetailsScreen extends StatelessWidget {
   const PersonalDetailsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final media = MediaQuery.of(context);
     return ProfileGradientScaffold(
       scroll: true,
       padding: const EdgeInsets.fromLTRB(AppSpacing.screen, 0, AppSpacing.screen, AppSpacing.xl),
@@ -89,7 +90,7 @@ class PersonalDetailsScreen extends StatelessWidget {
                   _DetailRow(
                     label: tr(LocaleKeys.personal_details_current_weight),
                     value: weightLabel,
-                    onTap: () => _showNumberSheet(
+                    onTap: (_) => _showNumberSheet(
                       context,
                       title: tr(LocaleKeys.personal_details_current_weight),
                       unit: 'kg',
@@ -108,7 +109,7 @@ class PersonalDetailsScreen extends StatelessWidget {
                   _DetailRow(
                     label: tr(LocaleKeys.personal_details_height),
                     value: heightLabel,
-                    onTap: () => _showNumberSheet(
+                    onTap: (_) => _showNumberSheet(
                       context,
                       title: tr(LocaleKeys.personal_details_height),
                       unit: 'cm',
@@ -122,19 +123,19 @@ class PersonalDetailsScreen extends StatelessWidget {
                   _DetailRow(
                     label: tr(LocaleKeys.personal_details_date_of_birth),
                     value: dobLabel,
-                    onTap: () => _showDobSheet(context, initialDate: dob, safeArea: media),
+                    onTap: (_) => _showDobSheet(context, initialDate: dob),
                   ),
                   _DetailRow(
                     label: tr(LocaleKeys.personal_details_gender),
                     value: sexLabel,
-                    onTap: () => _showSexSheet(context, sex),
+                    onTap: (rowContext) => _showSexSheet(context, sex, targetContext: rowContext),
                   ),
                   _DetailRow(
                     label: tr(LocaleKeys.personal_details_diet),
                     value: dietLabel,
                     subtitle: dietSubtitle,
                     showDivider: false,
-                    onTap: () => _openDietFlow(
+                    onTap: (_) => _openDietFlow(
                       context,
                       currentDietType: dietType,
                       currentCustomPreferences: customDietPreferences,
@@ -172,56 +173,58 @@ class PersonalDetailsScreen extends StatelessWidget {
   Future<void> _showDobSheet(
     BuildContext context, {
     required DateTime? initialDate,
-    required MediaQueryData safeArea,
   }) async {
     final now = DateTime.now();
     final initial = initialDate ?? DateTime(now.year - 25, now.month, now.day);
     DateTime selected = initial;
-    final bottomInset = safeArea.viewInsets.bottom;
 
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (_) {
-        return Padding(
-          padding: EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.screen, AppSpacing.screen, AppSpacing.screen + bottomInset),
-          child: Material(
-            color: Colors.transparent,
-            child: Container(
-              decoration: BoxDecoration(
-                color: AppColors.surface,
-                borderRadius: BorderRadius.circular(AppRadii.xl),
-                boxShadow: AppShadows.modal,
-              ),
-              padding: const EdgeInsets.all(AppSpacing.l),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _SheetHeader(
-                    title: tr(LocaleKeys.personal_details_dob_label),
-                    onClose: () => Navigator.of(context).pop(),
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.lg3))),
+      clipBehavior: Clip.antiAlias,
+      showDragHandle: false,
+      builder: (sheetContext) {
+        return SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.l),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(tr(LocaleKeys.personal_details_dob_label), style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700)),
+                const SizedBox(height: AppSpacing.m),
+                SizedBox(
+                  height: AppSizes.pickerHeight,
+                  child: CupertinoDatePicker(
+                    mode: CupertinoDatePickerMode.date,
+                    initialDateTime: initial,
+                    maximumDate: now,
+                    onDateTimeChanged: (value) => selected = value,
                   ),
-                  const SizedBox(height: AppSpacing.m),
-                  SizedBox(
-                    height: AppSizes.pickerHeight,
-                    child: CupertinoDatePicker(
-                      mode: CupertinoDatePickerMode.date,
-                      initialDateTime: initial,
-                      maximumDate: now,
-                      onDateTimeChanged: (value) => selected = value,
+                ),
+                const SizedBox(height: AppSpacing.m),
+                Row(
+                  children: [
+                    Expanded(
+                      child: FoodySecondaryButton(label: tr(LocaleKeys.common_cancel), onTap: () => Navigator.of(sheetContext).pop()),
                     ),
-                  ),
-                  const SizedBox(height: AppSpacing.m),
-                  ProfilePrimaryButton(
-                    label: tr(LocaleKeys.common_save),
-                    onPressed: () async {
-                      await SessionManager.to.setDateOfBirth(selected);
-                      if (context.mounted) Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
+                    const SizedBox(width: AppSpacing.s),
+                    Expanded(
+                      child: FoodyPrimaryButton(
+                        label: tr(LocaleKeys.common_save),
+                        gradient: LinearGradient(colors: [AppColors.primary, AppColors.primary]),
+                        onTap: () async {
+                          await SessionManager.to.setDateOfBirth(selected);
+                          if (sheetContext.mounted) Navigator.of(sheetContext).pop();
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         );
@@ -229,55 +232,20 @@ class PersonalDetailsScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _showSexSheet(BuildContext context, ProfileSex? current) async {
-    await showModalBottomSheet<void>(
+  Future<void> _showSexSheet(BuildContext context, ProfileSex? current, {BuildContext? targetContext}) async {
+    await showGlassPopup(
       context: context,
-      backgroundColor: Colors.transparent,
-      builder: (_) => Padding(
-        padding: const EdgeInsets.all(AppSpacing.m),
-        child: Material(
-          color: Colors.transparent,
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(AppRadii.lg),
-              boxShadow: AppShadows.sheet,
-            ),
-            padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.m, AppSpacing.l, AppSpacing.m),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: ProfileSex.values.map((sex) {
-                final isSelected = sex == current;
-                return InkWell(
-                  onTap: () async {
-                    await SessionManager.to.setSex(sex);
-                    if (context.mounted) Navigator.of(context).pop();
-                  },
-                  borderRadius: BorderRadius.circular(AppRadii.sm),
-                  child: SizedBox(
-                    height: AppSizes.actionRowHeight,
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: AppSizes.iconLg,
-                          child: isSelected ? const Icon(Icons.check, color: AppColors.textPrimary, size: AppSizes.iconMd) : const SizedBox(width: AppSizes.iconMd),
-                        ),
-                        const SizedBox(width: AppSpacing.xs),
-                        Expanded(
-                          child: Text(
-                            sex.label,
-                            style: AppTextStyles.selectMealPickerItem.copyWith(color: AppColors.textHeading),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
-        ),
-      ),
+      targetContext: targetContext,
+      items: ProfileSex.values.map((sex) {
+        return GlassPopupItem(
+          label: sex.label,
+          selected: sex == current,
+          onTap: () async {
+            Navigator.of(context).pop();
+            await SessionManager.to.setSex(sex);
+          },
+        );
+      }).toList(),
     );
   }
 
@@ -336,7 +304,10 @@ class PersonalDetailsScreen extends StatelessWidget {
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.lg3))),
+      clipBehavior: Clip.antiAlias,
+      showDragHandle: false,
       builder: (_) => _ProfileNumberSheet(
         title: title,
         unit: unit,
@@ -400,7 +371,7 @@ class _DetailRow extends StatelessWidget {
   final String value;
   final String? subtitle;
   final bool showDivider;
-  final VoidCallback? onTap;
+  final void Function(BuildContext)? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -409,7 +380,7 @@ class _DetailRow extends StatelessWidget {
     return Column(
       children: [
         InkWell(
-          onTap: onTap,
+          onTap: onTap != null ? () => onTap!(context) : null,
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: hasSubtitle ? AppSpacing.m : AppSpacing.s),
             child: Row(
@@ -498,36 +469,6 @@ class _TwoLineThreeDotsText extends StatelessWidget {
   }
 }
 
-class _SheetHeader extends StatelessWidget {
-  const _SheetHeader({required this.title, required this.onClose});
-
-  final String title;
-  final VoidCallback onClose;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(title, style: AppTextStyles.h4.copyWith(fontWeight: FontWeight.w700)),
-        SizedBox(
-          width: AppSizes.iconButtonSm,
-          height: AppSizes.iconButtonSm,
-          child: Material(
-            color: AppColors.surfaceMuted,
-            shape: const CircleBorder(),
-            child: InkWell(
-              onTap: onClose,
-              customBorder: const CircleBorder(),
-              child: const Icon(Icons.close, size: AppSizes.iconMd, color: AppColors.textSecondary),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 class _ProfileNumberSheet extends StatefulWidget {
   const _ProfileNumberSheet({
     required this.title,
@@ -593,83 +534,58 @@ class _ProfileNumberSheetState extends State<_ProfileNumberSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
-    return Padding(
-      padding: EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.screen, AppSpacing.screen, AppSpacing.screen + bottomInset),
-      child: Material(
-        color: Colors.transparent,
-        child: Container(
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(AppRadii.xl),
-            boxShadow: AppShadows.modal,
-          ),
-          padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.l, AppSpacing.l, AppSpacing.l),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _SheetHeader(title: widget.title, onClose: () => Navigator.of(context).pop()),
-              const SizedBox(height: AppSpacing.l),
-              _NumberField(
-                controller: _controller,
-                unit: widget.unit,
-                onChanged: () => setState(() => _errorText = null),
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: EdgeInsets.only(left: AppSpacing.l, right: AppSpacing.l, top: AppSpacing.l, bottom: AppSpacing.l + MediaQuery.viewInsetsOf(context).bottom),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(widget.title, style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700)),
+            const SizedBox(height: AppSpacing.m),
+            TextField(
+              controller: _controller,
+              autofocus: true,
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              textInputAction: TextInputAction.done,
+              onSubmitted: (_) => _handleSave(),
+              decoration: InputDecoration(
+                hintText: widget.unit,
+                hintStyle: AppTextStyles.body16.copyWith(color: AppColors.textTertiary),
+                filled: true,
+                fillColor: AppColors.surfaceMuted,
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadii.md), borderSide: BorderSide.none),
+                contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.m),
+                suffixText: widget.unit,
+                suffixStyle: AppTextStyles.body15.copyWith(color: AppColors.textSecondary),
               ),
-              if (_errorText != null) ...[
-                const SizedBox(height: AppSpacing.xs),
-                Text(
-                  _errorText!,
-                  style: AppTextStyles.body14Regular.copyWith(color: AppColors.errorText),
-                ),
-              ],
-              const SizedBox(height: AppSpacing.l),
-              ProfilePrimaryButton(
-                label: tr(LocaleKeys.common_save),
-                onPressed: _handleSave,
+              style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w600),
+              onChanged: (_) => setState(() => _errorText = null),
+            ),
+            if (_errorText != null) ...[
+              const SizedBox(height: AppSpacing.xs),
+              Text(
+                _errorText!,
+                style: AppTextStyles.body14Regular.copyWith(color: AppColors.errorText),
               ),
             ],
-          ),
+            const SizedBox(height: AppSpacing.m),
+            Row(
+              children: [
+                Expanded(
+                  child: FoodySecondaryButton(label: tr(LocaleKeys.common_cancel), onTap: () => Navigator.of(context).pop()),
+                ),
+                const SizedBox(width: AppSpacing.s),
+                Expanded(
+                  child: FoodyPrimaryButton(label: tr(LocaleKeys.common_save), gradient: LinearGradient(colors: [AppColors.primary, AppColors.primary]), onTap: _handleSave),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-class _NumberField extends StatelessWidget {
-  const _NumberField({required this.controller, required this.unit, required this.onChanged});
-
-  final TextEditingController controller;
-  final String unit;
-  final VoidCallback onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.s),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceSubtle,
-        borderRadius: BorderRadius.circular(AppRadii.md),
-        border: Border.all(color: AppColors.outline),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              controller: controller,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-                isCollapsed: true,
-                hintText: '0',
-              ),
-              style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w600),
-              onChanged: (_) => onChanged(),
-            ),
-          ),
-          const SizedBox(width: AppSpacing.xs),
-          Text(unit, style: AppTextStyles.body15.copyWith(color: AppColors.textSecondary)),
-        ],
-      ),
-    );
-  }
-}

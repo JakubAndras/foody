@@ -89,6 +89,7 @@ class Meal {
     List<Ingredient>? ingredients,
     DateTime? timestamp,
     String? photoPath,
+    bool clearPhotoPath = false,
     bool? isFavorite,
     double? confidence,
   }) {
@@ -98,7 +99,7 @@ class Meal {
       name: name ?? this.name,
       ingredients: ingredients ?? this.ingredients,
       timestamp: timestamp ?? this.timestamp,
-      photoPath: photoPath ?? this.photoPath,
+      photoPath: clearPhotoPath ? null : (photoPath ?? this.photoPath),
       isFavorite: isFavorite ?? this.isFavorite,
       confidence: confidence ?? this.confidence,
     );

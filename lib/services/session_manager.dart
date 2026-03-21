@@ -33,6 +33,9 @@ class SessionManager extends GetxService {
   final Rxn<DateTime> dateOfBirth = Rxn<DateTime>();
   final RxnDouble weightChangeRateKgPerWeek = RxnDouble();
   final RxBool savePhotosToGallery = false.obs;
+  final RxBool burnedCaloriesEnabled = true.obs;
+  final RxBool rolloverCaloriesEnabled = false.obs;
+  final RxBool autoAdjustMacrosEnabled = true.obs;
 
   Future<void> onAppInit() async {
     themeModeIndex.value = ThemeMode.values[await SharedPreferencesService.to.getInt(key: themeModeKey) ?? 0];
@@ -53,6 +56,9 @@ class SessionManager extends GetxService {
     dateOfBirth.value = dobMillis == null ? null : DateTime.fromMillisecondsSinceEpoch(dobMillis);
     weightChangeRateKgPerWeek.value = await SharedPreferencesService.to.getDouble(key: profileWeightChangeRateKgPerWeekKey);
     savePhotosToGallery.value = await SharedPreferencesService.to.getBool(key: savePhotosToGalleryKey) ?? false;
+    burnedCaloriesEnabled.value = await SharedPreferencesService.to.getBool(key: burnedCaloriesEnabledKey) ?? true;
+    rolloverCaloriesEnabled.value = await SharedPreferencesService.to.getBool(key: rolloverCaloriesEnabledKey) ?? false;
+    autoAdjustMacrosEnabled.value = await SharedPreferencesService.to.getBool(key: autoAdjustMacrosEnabledKey) ?? true;
   }
 
   Future<void> setOnboardingComplete(bool value) async {
@@ -141,5 +147,20 @@ class SessionManager extends GetxService {
   Future<void> setSavePhotosToGallery(bool value) async {
     savePhotosToGallery.value = value;
     await SharedPreferencesService.to.setBool(key: savePhotosToGalleryKey, value: value);
+  }
+
+  Future<void> setBurnedCaloriesEnabled(bool value) async {
+    burnedCaloriesEnabled.value = value;
+    await SharedPreferencesService.to.setBool(key: burnedCaloriesEnabledKey, value: value);
+  }
+
+  Future<void> setRolloverCaloriesEnabled(bool value) async {
+    rolloverCaloriesEnabled.value = value;
+    await SharedPreferencesService.to.setBool(key: rolloverCaloriesEnabledKey, value: value);
+  }
+
+  Future<void> setAutoAdjustMacrosEnabled(bool value) async {
+    autoAdjustMacrosEnabled.value = value;
+    await SharedPreferencesService.to.setBool(key: autoAdjustMacrosEnabledKey, value: value);
   }
 }
