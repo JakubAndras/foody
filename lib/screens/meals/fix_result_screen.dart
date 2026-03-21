@@ -55,7 +55,7 @@ class _FixResultScreenState extends State<FixResultScreen> {
                     children: [
                       const Icon(Icons.auto_fix_high, size: AppSizes.iconMd, color: AppColors.textPrimary),
                       const SizedBox(width: AppSpacing.s),
-                      Text(tr(LocaleKeys.fix_result_title), style: AppTextStyles.h1Alt),
+                      Text(tr(LocaleKeys.fix_result_title), style: AppTextStyles.h1.copyWith(fontSize: 32)),
                     ],
                   ),
                   const SizedBox(height: AppSpacing.l),
@@ -172,7 +172,7 @@ class _ExampleCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.l),
-      decoration: BoxDecoration(color: AppColors.surfaceSubtle, borderRadius: BorderRadius.circular(AppRadii.md)),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.md)),
       child: RichText(
         text: TextSpan(
           style: AppTextStyles.body15.copyWith(color: AppColors.textPrimary),

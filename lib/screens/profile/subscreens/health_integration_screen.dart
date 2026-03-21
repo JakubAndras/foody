@@ -92,7 +92,7 @@ class HealthIntegrationScreen extends StatelessWidget {
       ),
       _InstructionRow(
         icon: Icons.apps_rounded,
-        iconColor: AppColors.primarySoft,
+        iconColor: AppColors.textPrimary,
         text: tr(LocaleKeys.health_apple_health_step4),
         showDivider: false,
       ),
@@ -113,7 +113,7 @@ class HealthIntegrationScreen extends StatelessWidget {
       ),
       _InstructionRow(
         icon: Icons.touch_app_outlined,
-        iconColor: AppColors.primarySoft,
+        iconColor: AppColors.textPrimary,
         text: tr(LocaleKeys.health_health_connect_step3),
         showDivider: false,
       ),
@@ -170,7 +170,7 @@ class _InstructionRow extends StatelessWidget {
         if (showDivider)
           Padding(
             padding: const EdgeInsets.only(left: AppSizes.settingsDividerIndent),
-            child: Divider(height: AppSizes.dividerThin, color: AppColors.surfaceSubtle),
+            child: Divider(height: AppSizes.dividerThin, color: AppColors.surface),
           ),
       ],
     );

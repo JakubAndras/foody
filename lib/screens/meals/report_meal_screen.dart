@@ -44,7 +44,7 @@ class _ReportMealScreenState extends State<ReportMealScreen> {
                     children: [
                       const Icon(Icons.report_outlined, size: AppSizes.iconMd, color: AppColors.textPrimary),
                       const SizedBox(width: AppSpacing.s),
-                      Text(tr(LocaleKeys.report_meal_title), style: AppTextStyles.h1Alt),
+                      Text(tr(LocaleKeys.report_meal_title), style: AppTextStyles.h1.copyWith(fontSize: 32)),
                     ],
                   ),
                   const SizedBox(height: AppSpacing.l),
@@ -117,7 +117,7 @@ class _FeedbackInput extends StatelessWidget {
         maxLength: maxLength,
         maxLines: null,
         style: AppTextStyles.body16Regular.copyWith(letterSpacing: -0.4316),
-        decoration: InputDecoration(hintText: hintText, hintStyle: AppTextStyles.inputPlaceholder16, border: InputBorder.none, counterText: ''),
+        decoration: InputDecoration(hintText: hintText, hintStyle: AppTextStyles.body16Regular.copyWith(color: AppColors.textTertiary, height: 1.2, letterSpacing: -0.4316), border: InputBorder.none, counterText: ''),
         onChanged: onChanged,
       ),
     );
@@ -134,7 +134,7 @@ class _ExampleCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.l),
-      decoration: BoxDecoration(color: AppColors.surfaceSubtle, borderRadius: BorderRadius.circular(AppRadii.md)),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.md)),
       child: RichText(
         text: TextSpan(
           style: AppTextStyles.body16Regular.copyWith(color: AppColors.textPrimary),

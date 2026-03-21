@@ -31,7 +31,7 @@ class QuickActionSheet extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.s, AppSpacing.m, AppSpacing.m),
           decoration: const BoxDecoration(
             color: AppColors.surface,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.lg3)),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xl)),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -78,7 +78,7 @@ class QuickActionSheet extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   color: AppColors.white,
-                  borderRadius: BorderRadius.circular(AppRadii.lg2),
+                  borderRadius: BorderRadius.circular(AppRadii.lg),
                   boxShadow: const [
                     BoxShadow(
                       offset: Offset(0, 8),
@@ -148,7 +148,7 @@ class _QuickActionTile extends StatelessWidget {
         height: 92,
         decoration: BoxDecoration(
           color: AppColors.white,
-          borderRadius: BorderRadius.circular(AppRadii.lg2),
+          borderRadius: BorderRadius.circular(AppRadii.lg),
           boxShadow: const [
             BoxShadow(
               offset: Offset(0, 8),
@@ -172,7 +172,7 @@ class _QuickActionTile extends StatelessWidget {
                 color: iconBg,
                 borderRadius: BorderRadius.circular(AppRadii.pill),
               ),
-              child: Icon(icon, color: AppColors.textEmphasisAlt),
+              child: Icon(icon, color: AppColors.textEmphasis),
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(label, style: AppTextStyles.body13),
@@ -198,7 +198,7 @@ class _QuickActionRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: onTap,
-      leading: Icon(icon, color: AppColors.textEmphasisAlt),
+      leading: Icon(icon, color: AppColors.textEmphasis),
       title: Text(label, style: AppTextStyles.body14),
       contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
       dense: true,

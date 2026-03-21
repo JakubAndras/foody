@@ -60,7 +60,7 @@ class MealHeroHeader extends StatelessWidget {
                     title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.title24.copyWith(color: AppColors.onPrimary),
+                    style: AppTextStyles.h3.copyWith(height: 1.5, color: AppColors.onPrimary),
                   ),
                 ),
                 const SizedBox(height: AppSpacing.xxs),
@@ -149,7 +149,7 @@ class CaloriesSummaryCard extends StatelessWidget {
       margin: margin,
       height: height,
       padding: padding ?? const EdgeInsets.all(AppSpacing.l),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.lg), boxShadow: AppShadows.cardSmall),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.lg), boxShadow: AppShadows.control),
       child: Stack(
         children: [
           if (badge != null) Positioned(right: 0, top: 0, child: badge!),
@@ -197,7 +197,7 @@ class MacroStatCard extends StatelessWidget {
       width: double.infinity,
       height: height ?? AppSizes.macroCardSize,
       padding: const EdgeInsets.all(AppSpacing.l),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.lg), boxShadow: AppShadows.cardSmall),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.lg), boxShadow: AppShadows.control),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -216,7 +216,7 @@ class MacroStatCard extends StatelessWidget {
             ],
           ),
           const Spacer(),
-          Text(value, style: AppTextStyles.title24.copyWith(color: AppColors.primary)),
+          Text(value, style: AppTextStyles.h3.copyWith(height: 1.5, color: AppColors.primary)),
         ],
       ),
     );
@@ -243,7 +243,7 @@ class MealRecordCard extends StatelessWidget {
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg),
         border: Border.all(color: AppColors.separator),
-        boxShadow: AppShadows.cardSmall,
+        boxShadow: AppShadows.control,
       ),
       child: Column(
         children: [
@@ -273,14 +273,14 @@ class _RecordRow extends StatelessWidget {
         ? Container(
             height: AppSizes.dateChipHeight,
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
-            decoration: BoxDecoration(color: AppColors.surfaceMuted, borderRadius: BorderRadius.circular(AppRadii.sm1)),
+            decoration: BoxDecoration(color: AppColors.surfaceMuted, borderRadius: BorderRadius.circular(AppRadii.sm)),
             alignment: Alignment.center,
-            child: Text(value, style: AppTextStyles.formValue16),
+            child: Text(value, style: AppTextStyles.body16.copyWith(letterSpacing: -0.3125)),
           )
         : Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(value, style: AppTextStyles.formValue16),
+              Text(value, style: AppTextStyles.body16.copyWith(letterSpacing: -0.3125)),
               if (showChevron) ...[const SizedBox(width: AppSpacing.xs), const Icon(Icons.keyboard_arrow_down, size: AppSizes.iconSm, color: AppColors.textSecondary)],
             ],
           );
@@ -293,7 +293,7 @@ class _RecordRow extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(label, style: AppTextStyles.formLabel16),
+            Text(label, style: AppTextStyles.body16.copyWith(letterSpacing: -0.3125)),
             trailing,
           ],
         ),
@@ -383,7 +383,7 @@ class _MacroDotsRow extends StatelessWidget {
       children: [
         _MacroDotLabel(color: AppColors.macroProtein, value: '${ingredient.proteins.toStringAsFixed(0)}g'),
         const SizedBox(width: AppSpacing.xs),
-        _MacroDotLabel(color: AppColors.macroCarbsStrong, value: '${ingredient.carbs.toStringAsFixed(0)}g'),
+        _MacroDotLabel(color: AppColors.warningStrong, value: '${ingredient.carbs.toStringAsFixed(0)}g'),
         const SizedBox(width: AppSpacing.xs),
         _MacroDotLabel(color: AppColors.macroFats, value: '${ingredient.fats.toStringAsFixed(0)}g'),
       ],
@@ -405,12 +405,12 @@ class _MacroDotLabel extends StatelessWidget {
           width: AppSizes.macroDotSm,
           height: AppSizes.macroDotSm,
           decoration: BoxDecoration(
-            color: color.withValues(alpha: AppOpacities.macroDot),
+            color: color.withValues(alpha: AppOpacities.soft),
             shape: BoxShape.circle,
           ),
         ),
         const SizedBox(width: AppSpacing.xxs),
-        Text(value, style: AppTextStyles.macroDotLabel11),
+        Text(value, style: AppTextStyles.label11.copyWith(fontWeight: FontWeight.w500, color: AppColors.textTertiary, letterSpacing: 0.0645)),
       ],
     );
   }
@@ -482,7 +482,7 @@ class MeasurementChips extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Text(
                   options[index],
-                  style: AppTextStyles.formValue16.copyWith(color: isSelected ? AppColors.onPrimary : AppColors.textPrimary, fontWeight: FontWeight.w500),
+                  style: AppTextStyles.body16.copyWith(letterSpacing: -0.3125, color: isSelected ? AppColors.onPrimary : AppColors.textPrimary, fontWeight: FontWeight.w500),
                 ),
               ),
             ),
@@ -555,7 +555,7 @@ class GlassActionSheet extends StatelessWidget {
                             Icon(item.icon, color: item.color ?? AppColors.textPrimary, size: AppSizes.iconMd),
                             const SizedBox(width: AppSpacing.s),
                             Expanded(
-                              child: Text(item.label, style: AppTextStyles.selectMealPickerItem.copyWith(color: item.color ?? AppColors.textPrimary)),
+                              child: Text(item.label, style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600, height: 1.75, color: item.color ?? AppColors.textPrimary, letterSpacing: -0.4492)),
                             ),
                           ],
                         ),
@@ -593,7 +593,7 @@ class SyncCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.m),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.lg3), boxShadow: AppShadows.button),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.xl), boxShadow: AppShadows.button),
       child: Column(
         children: [
           Row(

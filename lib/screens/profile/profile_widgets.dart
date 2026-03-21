@@ -60,7 +60,7 @@ class ProfileGradientScaffold extends StatelessWidget {
           child: useMeshBackground
               ? Stack(children: [const MeshGradientBackground(), body])
               : Container(
-                  decoration: const BoxDecoration(gradient: AppGradients.background),
+                  color: AppColors.background,
                   child: body,
                 ),
         ),
@@ -122,7 +122,7 @@ class ProfileCard extends StatelessWidget {
 }
 
 class ProfilePrimaryButton extends StatelessWidget {
-  const ProfilePrimaryButton({super.key, required this.label, this.onPressed, this.leading, this.height = AppSizes.buttonHeightCompact, this.radius = AppRadii.pill, this.shadow});
+  const ProfilePrimaryButton({super.key, required this.label, this.onPressed, this.leading, this.height = AppSizes.buttonHeight, this.radius = AppRadii.pill, this.shadow});
 
   final String label;
   final VoidCallback? onPressed;
@@ -138,7 +138,7 @@ class ProfilePrimaryButton extends StatelessWidget {
 }
 
 class ProfileOutlineButton extends StatelessWidget {
-  const ProfileOutlineButton({super.key, required this.label, this.onPressed, this.leading, this.height = AppSizes.buttonHeightCompact, this.radius = AppRadii.pill});
+  const ProfileOutlineButton({super.key, required this.label, this.onPressed, this.leading, this.height = AppSizes.buttonHeight, this.radius = AppRadii.pill});
 
   final String label;
   final VoidCallback? onPressed;
@@ -234,9 +234,9 @@ class ProfileToggle extends StatelessWidget {
       child: AnimatedContainer(
         duration: AppTheme.transitionDuration,
         width: AppSizes.toggleWidthSm,
-        height: AppSizes.toggleHeightSm,
+        height: AppSizes.toggleHeight,
         padding: const EdgeInsets.all(2),
-        decoration: BoxDecoration(color: isOn ? AppColors.primarySoft : AppColors.borderStrong, borderRadius: BorderRadius.circular(AppRadii.pill)),
+        decoration: BoxDecoration(color: isOn ? AppColors.textPrimary : AppColors.borderStrong, borderRadius: BorderRadius.circular(AppRadii.pill)),
         child: AnimatedAlign(
           duration: AppTheme.transitionDuration,
           alignment: isOn ? Alignment.centerRight : Alignment.centerLeft,

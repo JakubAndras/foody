@@ -446,7 +446,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
         if (hasPhoto)
           GlassPopupItem(
             label: tr(LocaleKeys.meal_remove_photo),
-            color: AppColors.destructive,
+            color: AppColors.error,
             onTap: () {
               Navigator.of(context).pop();
               Navigator.of(context).pop();
@@ -503,7 +503,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
         GlassPopupItem(
           label: tr(LocaleKeys.common_delete),
           icon: Icons.delete_outline,
-          color: AppColors.destructive,
+          color: AppColors.error,
           showDividerAbove: true,
           onTap: () {
             Navigator.of(context).pop();
@@ -520,7 +520,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.lg3))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xl))),
       clipBehavior: Clip.antiAlias,
       showDragHandle: false,
       builder: (context) => SafeArea(
@@ -543,7 +543,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
     final result = await showModalBottomSheet<double>(
       context: context,
       backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.lg3))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xl))),
       clipBehavior: Clip.antiAlias,
       showDragHandle: false,
       isScrollControlled: true,
@@ -619,7 +619,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
     final updatedName = await showModalBottomSheet<String>(
       context: context,
       backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.lg3))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xl))),
       clipBehavior: Clip.antiAlias,
       showDragHandle: false,
       isScrollControlled: true,
@@ -640,7 +640,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.lg3))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xl))),
       clipBehavior: Clip.antiAlias,
       showDragHandle: false,
       builder: (context) => SafeArea(
@@ -668,7 +668,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.lg3))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xl))),
       clipBehavior: Clip.antiAlias,
       showDragHandle: false,
       isScrollControlled: true,
@@ -774,7 +774,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                             SizedBox(height: AppSizes.mealHeroHeight - heroOverlap),
                             Expanded(
                               child: DecoratedBox(
-                                decoration: const BoxDecoration(color: AppColors.backgroundAlt),
+                                decoration: const BoxDecoration(color: AppColors.surface),
                                 child: const SizedBox.expand(),
                               ),
                             ),
@@ -865,7 +865,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                       label: tr(LocaleKeys.common_carbs),
                                       value: '${_totalCarbs.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
                                       icon: AppIcons.carbs,
-                                      iconColor: AppColors.macroCarbsStrong,
+                                      iconColor: AppColors.warningStrong,
                                     ),
                                   ),
                                 ),
@@ -901,7 +901,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(tr(LocaleKeys.meal_ingredients_title), style: AppTextStyles.sectionHeader16),
+                                Text(tr(LocaleKeys.meal_ingredients_title), style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600, letterSpacing: -0.3125)),
                                 InkWell(
                                   onTap: _isBusy
                                       ? null

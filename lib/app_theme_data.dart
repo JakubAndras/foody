@@ -33,8 +33,8 @@ class AppThemeData {
     cardColor: AppColors.surface,
     hintColor: AppColors.textTertiary,
     disabledColor: AppTheme.onLightColor,
-    dividerColor: AppColors.border,
-    dividerTheme: const DividerThemeData(color: AppColors.border, thickness: 0.8),
+    dividerColor: AppColors.outline,
+    dividerTheme: const DividerThemeData(color: AppColors.outline, thickness: 0.8),
     // dialogBackgroundColor: const Color(0xFF444444),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: AppColors.primary,
@@ -85,9 +85,9 @@ class AppThemeData {
       onPrimary: AppColors.onPrimary,
       onSecondary: AppColors.onPrimary,
       onSurface: AppColors.textPrimary,
-      outline: AppColors.border,
+      outline: AppColors.outline,
     ).copyWith(
-      surfaceContainerHighest: AppColors.surfaceSubtle,
+      surfaceContainerHighest: AppColors.surface,
       onSurfaceVariant: AppColors.textSecondary,
       outlineVariant: AppColors.outline,
     ),

@@ -214,7 +214,7 @@ class ProfileScreen extends StatelessWidget {
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.lg3))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xl))),
       clipBehavior: Clip.antiAlias,
       builder: (sheetContext) {
         return SafeArea(
@@ -436,7 +436,7 @@ class _WidgetSection extends StatelessWidget {
                     strokeWidth: 8,
                     value: progress,
                     backgroundColor: AppColors.outline.withValues(alpha: 0.7),
-                    foregroundColor: AppColors.primarySoft,
+                    foregroundColor: AppColors.textPrimary,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -572,7 +572,7 @@ class _WidgetShortcutCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: ProfileCard(
-        radius: AppRadii.lg2,
+        radius: AppRadii.lg,
         shadow: AppShadows.cardSubtle,
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.xs),
         child: SizedBox(

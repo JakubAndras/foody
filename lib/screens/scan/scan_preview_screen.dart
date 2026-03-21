@@ -101,7 +101,7 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
                   ScanPrimaryButton(
                     label: tr(LocaleKeys.scan_preview_analyze),
                     icon: Icons.auto_awesome,
-                    gradient: AppGradients.scanAnalyze,
+                    gradient: AppGradients.askAiPrimary,
                     onPressed: _isAnalyzing ? null : _analyze,
                     height: AppSizes.scanAnalyzeButtonHeight,
                     hasShadow: false,
@@ -147,7 +147,7 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
               ),
             ),
             const SizedBox(height: AppSpacing.l),
-            Text(tr(LocaleKeys.scan_preview_tips_title), style: AppTextStyles.title18Tight.copyWith(fontWeight: FontWeight.w700)),
+            Text(tr(LocaleKeys.scan_preview_tips_title), style: AppTextStyles.title18.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: AppSpacing.m),
             _PreviewTipRow(icon: Icons.edit_note, text: tr(LocaleKeys.scan_preview_tip_add_description)),
             _PreviewTipRow(icon: Icons.camera_alt_outlined, text: tr(LocaleKeys.scan_preview_tip_retake_blurry)),

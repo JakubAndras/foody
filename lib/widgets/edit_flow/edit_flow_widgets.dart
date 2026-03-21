@@ -65,7 +65,7 @@ class EditConfirmSheet extends StatelessWidget {
     required this.message,
     required this.confirmLabel,
     required this.cancelLabel,
-    this.confirmColor = AppColors.destructive,
+    this.confirmColor = AppColors.error,
     required this.onConfirm,
     required this.onCancel,
   });
@@ -79,7 +79,7 @@ class EditConfirmSheet extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: AppTextStyles.title18Tight.copyWith(color: AppColors.textPrimary)),
+          Text(title, style: AppTextStyles.title18.copyWith(color: AppColors.textPrimary)),
           const SizedBox(height: AppSpacing.xs),
           Text(message, style: AppTextStyles.body14Regular.copyWith(color: AppColors.textSecondary)),
           const SizedBox(height: AppSpacing.l),
@@ -143,7 +143,7 @@ class EditIngredientRow extends StatelessWidget {
                       ),
                     ],
                   ),
-                  if (alertText != null) ...[const SizedBox(height: AppSpacing.xxs), Text(alertText!, style: AppTextStyles.macroDotLabel11.copyWith(color: AppColors.orange))],
+                  if (alertText != null) ...[const SizedBox(height: AppSpacing.xxs), Text(alertText!, style: AppTextStyles.label11.copyWith(fontWeight: FontWeight.w500, color: AppColors.orange, letterSpacing: 0.0645))],
                   const Spacer(),
                   _MacroDotsRow(ingredient: ingredient),
                 ],
@@ -154,8 +154,8 @@ class EditIngredientRow extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(ingredient.calories.toStringAsFixed(0), style: AppTextStyles.kcalValue18),
-                Text(tr(LocaleKeys.common_kcal), style: AppTextStyles.kcalLabel12),
+                Text(ingredient.calories.toStringAsFixed(0), style: AppTextStyles.title),
+                Text(tr(LocaleKeys.common_kcal), style: AppTextStyles.caption12.copyWith(color: AppColors.textTertiary)),
               ],
             ),
           ],
@@ -176,7 +176,7 @@ class _MacroDotsRow extends StatelessWidget {
       children: [
         _MacroDotLabel(color: AppColors.macroProtein, value: '${ingredient.proteins.toStringAsFixed(0)}g'),
         const SizedBox(width: AppSpacing.xs),
-        _MacroDotLabel(color: AppColors.macroCarbsStrong, value: '${ingredient.carbs.toStringAsFixed(0)}g'),
+        _MacroDotLabel(color: AppColors.warningStrong, value: '${ingredient.carbs.toStringAsFixed(0)}g'),
         const SizedBox(width: AppSpacing.xs),
         _MacroDotLabel(color: AppColors.macroFats, value: '${ingredient.fats.toStringAsFixed(0)}g'),
       ],
@@ -198,12 +198,12 @@ class _MacroDotLabel extends StatelessWidget {
           width: AppSizes.macroDotSm,
           height: AppSizes.macroDotSm,
           decoration: BoxDecoration(
-            color: color.withValues(alpha: AppOpacities.macroDot),
+            color: color.withValues(alpha: AppOpacities.soft),
             shape: BoxShape.circle,
           ),
         ),
         const SizedBox(width: AppSpacing.xxs),
-        Text(value, style: AppTextStyles.macroDotLabel11),
+        Text(value, style: AppTextStyles.label11.copyWith(fontWeight: FontWeight.w500, color: AppColors.textTertiary, letterSpacing: 0.0645)),
       ],
     );
   }

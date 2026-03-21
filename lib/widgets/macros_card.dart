@@ -28,7 +28,7 @@ class MacrosCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(AppRadii.md),
-          //boxShadow: AppShadows.cardSmall,
+          //boxShadow: AppShadows.control,
         ),
         padding: const EdgeInsets.all(AppSpacing.m),
         child: Column(

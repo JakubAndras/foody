@@ -152,7 +152,7 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
                           },
                           child: Text(
                             tr(LocaleKeys.common_back_to_today),
-                            style: AppTextStyles.body14.copyWith(color: AppColors.calendarDarkText, fontWeight: FontWeight.w600),
+                            style: AppTextStyles.body14.copyWith(color: AppColors.black, fontWeight: FontWeight.w600),
                           ),
                         ),
                       ),
@@ -182,10 +182,10 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
                 children: [
                   Text(
                     _monthYearLabel(),
-                    style: AppTextStyles.title17.copyWith(color: AppColors.calendarDarkText, fontWeight: FontWeight.w700),
+                    style: AppTextStyles.title17.copyWith(color: AppColors.black, fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(width: AppSpacing.xxs),
-                  Icon(_showMonthYearPicker ? Icons.keyboard_arrow_down_rounded : Icons.keyboard_arrow_right_rounded, color: AppColors.calendarDarkText, size: AppSizes.iconLg),
+                  Icon(_showMonthYearPicker ? Icons.keyboard_arrow_down_rounded : Icons.keyboard_arrow_right_rounded, color: AppColors.black, size: AppSizes.iconLg),
                 ],
               ),
             ),
@@ -197,7 +197,7 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
               behavior: HitTestBehavior.opaque,
               child: const Padding(
                 padding: EdgeInsets.all(AppSpacing.xs),
-                child: Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.calendarDarkText, size: AppSizes.iconMd),
+                child: Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.black, size: AppSizes.iconMd),
               ),
             ),
             const SizedBox(width: AppSpacing.xxs),
@@ -206,7 +206,7 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
               behavior: HitTestBehavior.opaque,
               child: const Padding(
                 padding: EdgeInsets.only(left: AppSpacing.xs),
-                child: Icon(Icons.arrow_forward_ios_rounded, color: AppColors.calendarDarkText, size: AppSizes.iconMd),
+                child: Icon(Icons.arrow_forward_ios_rounded, color: AppColors.black, size: AppSizes.iconMd),
               ),
             ),
           ],
@@ -261,7 +261,7 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
     final isToday = date.year == _today.year && date.month == _today.month && date.day == _today.day;
     final isSelected = date.year == _selectedDate.year && date.month == _selectedDate.month && date.day == _selectedDate.day;
 
-    Color textColor = isSelected ? AppColors.white1 : AppColors.calendarDarkText;
+    Color textColor = isSelected ? AppColors.white1 : AppColors.black;
 
     return GestureDetector(
       onTap: () {
@@ -285,7 +285,7 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
           alignment: Alignment.center,
           child: Text(
             '${date.day}',
-            style: AppTextStyles.body17.copyWith(fontWeight: isToday ? FontWeight.w700 : FontWeight.w500, color: textColor),
+            style: AppTextStyles.body16.copyWith(fontSize: 17, fontWeight: isToday ? FontWeight.w700 : FontWeight.w500, height: 1.412, color: textColor),
           ),
         ),
       ),
@@ -302,7 +302,7 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
             textTheme: CupertinoTextThemeData(
               // Base font is scaled up ~1.12x by CupertinoPicker magnification for the selected row.
               // Use a smaller base so the magnified size matches the non-selected rows visually.
-              dateTimePickerTextStyle: AppTextStyles.h4.copyWith(color: AppColors.calendarDarkText, fontWeight: FontWeight.w400, fontSize: 20),
+              dateTimePickerTextStyle: AppTextStyles.h4.copyWith(color: AppColors.black, fontWeight: FontWeight.w400, fontSize: 20),
             ),
           ),
           child: CupertinoDatePicker(

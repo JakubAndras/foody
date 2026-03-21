@@ -45,25 +45,25 @@ class MeshGradientBackground extends StatelessWidget {
   static const List<MeshBlob> defaultBlobs = [
     // Warm peach — upper right
     MeshBlob(
-      color: AppColors.meshPeach,
+      color: AppColors.meshBase,
       alignment: Alignment(0.85, -0.65),
       radius: 0.55,
     ),
     // Soft lavender — upper left
     MeshBlob(
-      color: AppColors.meshLavender,
+      color: AppColors.meshBase,
       alignment: Alignment(-0.75, -0.5),
       radius: 0.5,
     ),
     // Cool sky-blue — lower left
     MeshBlob(
-      color: AppColors.meshSky,
+      color: AppColors.meshBase,
       alignment: Alignment(-0.6, 0.7),
       radius: 0.45,
     ),
     // Gentle mint — lower right
     MeshBlob(
-      color: AppColors.meshMint,
+      color: AppColors.meshBase,
       alignment: Alignment(0.7, 0.55),
       radius: 0.4,
     ),

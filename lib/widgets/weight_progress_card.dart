@@ -94,7 +94,7 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.xl),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: AppColors.outline),
         boxShadow: AppShadows.cardSoft,
       ),
       padding: const EdgeInsets.all(AppSpacing.l),
@@ -108,7 +108,7 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
                 height: AppSizes.badgeHeight,
                 padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
                 decoration: BoxDecoration(
-                  color: AppColors.surfaceSubtle,
+                  color: AppColors.surface,
                   borderRadius: BorderRadius.circular(AppRadii.pill),
                   border: Border.all(color: AppColors.surfaceMuted),
                 ),
@@ -216,7 +216,7 @@ class _WeightLinePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final gridPaint = Paint()
-      ..color = AppColors.surfaceSubtle
+      ..color = AppColors.surface
       ..strokeWidth = AppSizes.dividerThin;
 
     if (gridLines > 1) {

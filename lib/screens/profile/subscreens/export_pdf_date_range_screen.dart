@@ -66,14 +66,14 @@ class ExportPdfDateRangeScreen extends GetView<ExportController> {
                     children: [
                       ProfilePrimaryButton(
                         label: tr(LocaleKeys.export_pdf),
-                        height: AppSizes.buttonHeightCompact,
+                        height: AppSizes.buttonHeight,
                         radius: AppRadii.pill,
                         onPressed: controller.exportPdf,
                       ),
                       const SizedBox(height: AppSpacing.s),
                       SizedBox(
                         width: double.infinity,
-                        height: AppSizes.buttonHeightCompact,
+                        height: AppSizes.buttonHeight,
                         child: OutlinedButton(
                           onPressed: controller.exportCsv,
                           style: OutlinedButton.styleFrom(
@@ -449,7 +449,7 @@ class _DateRangeButton extends StatelessWidget {
       child: Container(
         height: AppSizes.inputHeightLg,
         decoration: BoxDecoration(
-          color: isSelected ? null : AppColors.surfaceSubtle,
+          color: isSelected ? null : AppColors.surface,
           gradient: isSelected ? AppGradients.primary : null,
           borderRadius: BorderRadius.circular(AppRadii.md),
         ),

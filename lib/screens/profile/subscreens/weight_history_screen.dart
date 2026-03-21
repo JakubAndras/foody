@@ -23,7 +23,7 @@ class WeightHistoryScreen extends StatelessWidget {
         width: MediaQuery.of(context).size.width - (AppSpacing.screen * 2),
         child: ProfilePrimaryButton(
           label: tr(LocaleKeys.weight_log_add_weight),
-          height: AppSizes.buttonHeightCompact,
+          height: AppSizes.buttonHeight,
           onPressed: () => showWeightLogSheet(context),
         ),
       ),
@@ -100,14 +100,14 @@ class _WeightHistoryEntryCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(AppRadii.lg2),
+        borderRadius: BorderRadius.circular(AppRadii.lg),
         child: Container(
           height: AppSizes.listRowHeight,
           decoration: BoxDecoration(
-            color: AppColors.surfaceCard,
-            borderRadius: BorderRadius.circular(AppRadii.lg2),
-            border: Border.all(color: AppColors.surfaceCardBorder),
-            boxShadow: AppShadows.cardLite,
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppRadii.lg),
+            border: Border.all(color: AppColors.surface),
+            boxShadow: AppShadows.cardSubtle,
           ),
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
           child: Row(
@@ -131,10 +131,10 @@ class _WeightHistoryEmptyState extends StatelessWidget {
     return Container(
       height: AppSizes.listRowHeight,
       decoration: BoxDecoration(
-        color: AppColors.surfaceCard,
-        borderRadius: BorderRadius.circular(AppRadii.lg2),
-        border: Border.all(color: AppColors.surfaceCardBorder),
-        boxShadow: AppShadows.cardLite,
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadii.lg),
+        border: Border.all(color: AppColors.surface),
+        boxShadow: AppShadows.cardSubtle,
       ),
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
       alignment: Alignment.center,

@@ -90,7 +90,7 @@ class _OnboardingLoadingPlanScreenState extends State<OnboardingLoadingPlanScree
                       borderRadius: BorderRadius.circular(AppRadii.pill),
                       child: Container(
                         height: AppSizes.progressBarHeight,
-                        color: AppColors.border,
+                        color: AppColors.outline,
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: FractionallySizedBox(

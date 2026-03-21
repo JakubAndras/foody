@@ -20,7 +20,7 @@ class ExportPdfIntroScreen extends StatelessWidget {
         width: MediaQuery.of(context).size.width - (AppSpacing.screen * 2),
         child: ProfilePrimaryButton(
           label: tr(LocaleKeys.common_next),
-          height: AppSizes.buttonHeightCompact,
+          height: AppSizes.buttonHeight,
           radius: AppRadii.pill,
           onPressed: () => Get.to(() => const ExportPdfDateRangeScreen()),
         ),

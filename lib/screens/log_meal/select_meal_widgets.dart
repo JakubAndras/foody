@@ -21,7 +21,7 @@ class SelectMealSearchBar extends StatelessWidget {
       height: AppSizes.searchBarHeight,
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
       decoration: BoxDecoration(
-        color: AppColors.surfaceSearch,
+        color: AppColors.surfaceMuted,
         borderRadius: BorderRadius.circular(AppRadii.pill),
         border: Border.all(color: AppColors.borderStrong, width: 1),
       ),
@@ -80,13 +80,13 @@ class SelectMealQuickActionTile extends StatelessWidget {
       onTap: onTap,
       child: Container(
         height: AppSizes.selectMealActionTileHeight,
-        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.md), boxShadow: AppShadows.cardSmall),
+        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.md), boxShadow: AppShadows.control),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, color: AppColors.primary, size: AppSizes.iconLg),
             const SizedBox(height: AppSpacing.xs),
-            Text(label, style: AppTextStyles.selectMealQuickActionLabel, textAlign: TextAlign.center),
+            Text(label, style: AppTextStyles.label11.copyWith(fontWeight: FontWeight.w500, color: AppColors.primary, letterSpacing: 0.0645), textAlign: TextAlign.center),
           ],
         ),
       ),
@@ -105,7 +105,7 @@ class SelectMealSectionHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(title, style: AppTextStyles.selectMealSectionTitle),
+        Text(title, style: AppTextStyles.title18.copyWith(letterSpacing: -0.4395, color: AppColors.primary)),
         if (trailing != null) trailing!,
       ],
     );
@@ -127,12 +127,12 @@ class SelectMealMacroDot extends StatelessWidget {
           width: 8,
           height: 8,
           decoration: BoxDecoration(
-            color: color.withValues(alpha: AppOpacities.macroDot),
+            color: color.withValues(alpha: AppOpacities.soft),
             shape: BoxShape.circle,
           ),
         ),
         const SizedBox(width: 6),
-        Text(label, style: AppTextStyles.selectMealMacro),
+        Text(label, style: AppTextStyles.caption12.copyWith(fontWeight: FontWeight.w500)),
       ],
     );
   }
@@ -165,19 +165,19 @@ class SelectMealCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: AppSizes.selectMealCardHeight,
+        height: AppSizes.mealImageSize,
         padding: const EdgeInsets.only(right: AppSpacing.m),
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(AppRadii.md),
-          border: Border.all(color: AppColors.border, width: 1),
+          border: Border.all(color: AppColors.outline, width: 1),
           boxShadow: AppShadows.cardSubtle,
         ),
         child: Row(
           children: [
             Container(
-              width: AppSizes.selectMealCardImageSize,
-              height: AppSizes.selectMealCardImageSize,
+              width: AppSizes.mealImageSize,
+              height: AppSizes.mealImageSize,
               decoration: BoxDecoration(
                 color: AppColors.surfaceMuted,
                 borderRadius: BorderRadius.circular(AppRadii.md),
@@ -190,7 +190,7 @@ class SelectMealCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(title, style: AppTextStyles.selectMealMealTitle, maxLines: 1, overflow: TextOverflow.ellipsis),
+                  Text(title, style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600), maxLines: 1, overflow: TextOverflow.ellipsis),
                   const SizedBox(height: 4),
                   Row(
                     children: [
@@ -244,11 +244,11 @@ class SelectMealInlineMacroCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: AppSizes.selectMealCardHeight,
+      height: AppSizes.mealImageSize,
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.md),
-        border: Border.all(color: AppColors.border, width: 1),
+        border: Border.all(color: AppColors.outline, width: 1),
         boxShadow: AppShadows.cardSubtle,
       ),
       child: Padding(
@@ -256,8 +256,8 @@ class SelectMealInlineMacroCard extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              width: AppSizes.selectMealCardImageSize,
-              height: AppSizes.selectMealCardImageSize,
+              width: AppSizes.mealImageSize,
+              height: AppSizes.mealImageSize,
               decoration: BoxDecoration(
                 color: AppColors.surfaceMuted,
                 borderRadius: BorderRadius.circular(AppRadii.md),
@@ -270,33 +270,36 @@ class SelectMealInlineMacroCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: AppTextStyles.selectMealMealTitle, maxLines: 1, overflow: TextOverflow.ellipsis),
+                  Text(title, style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600), maxLines: 1, overflow: TextOverflow.ellipsis),
                   const SizedBox(height: 2),
                   RichText(
                     text: TextSpan(
-                      style: AppTextStyles.selectMealIngredientSubtitle,
+                      style: AppTextStyles.body13.copyWith(letterSpacing: -0.0762),
                       children: [
                         TextSpan(text: '$kcal cal, '),
                         TextSpan(
                           text: protein,
-                          style: AppTextStyles.selectMealIngredientSubtitle.copyWith(
-                            color: AppColors.macroProtein.withValues(alpha: AppOpacities.macroTextSoft),
+                          style: AppTextStyles.body13.copyWith(
+                            letterSpacing: -0.0762,
+                            color: AppColors.macroProtein.withValues(alpha: AppOpacities.soft),
                             fontWeight: FontWeight.w500,
                           ),
                         ),
                         const TextSpan(text: ', '),
                         TextSpan(
                           text: carbs,
-                          style: AppTextStyles.selectMealIngredientSubtitle.copyWith(
-                            color: AppColors.macroCarbs.withValues(alpha: AppOpacities.macroTextStrong),
+                          style: AppTextStyles.body13.copyWith(
+                            letterSpacing: -0.0762,
+                            color: AppColors.macroCarbs.withValues(alpha: AppOpacities.medium),
                             fontWeight: FontWeight.w500,
                           ),
                         ),
                         const TextSpan(text: ', '),
                         TextSpan(
                           text: fats,
-                          style: AppTextStyles.selectMealIngredientSubtitle.copyWith(
-                            color: AppColors.macroFats.withValues(alpha: AppOpacities.macroTextStrong),
+                          style: AppTextStyles.body13.copyWith(
+                            letterSpacing: -0.0762,
+                            color: AppColors.macroFats.withValues(alpha: AppOpacities.medium),
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -338,7 +341,7 @@ class SelectMealIngredientRow extends StatelessWidget {
       child: Container(
         height: AppSizes.selectMealIngredientRowHeight,
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.md), boxShadow: AppShadows.cardSmall),
+        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.md), boxShadow: AppShadows.control),
         child: Row(
           children: [
             Expanded(
@@ -346,9 +349,9 @@ class SelectMealIngredientRow extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: AppTextStyles.selectMealIngredientTitle, maxLines: 1, overflow: TextOverflow.ellipsis),
+                  Text(title, style: AppTextStyles.body15.copyWith(fontWeight: FontWeight.w600, color: AppColors.primary, letterSpacing: -0.2344), maxLines: 1, overflow: TextOverflow.ellipsis),
                   const SizedBox(height: 2),
-                  Text(subtitle, style: AppTextStyles.selectMealIngredientSubtitle, maxLines: 1, overflow: TextOverflow.ellipsis),
+                  Text(subtitle, style: AppTextStyles.body13.copyWith(letterSpacing: -0.0762), maxLines: 1, overflow: TextOverflow.ellipsis),
                 ],
               ),
             ),
@@ -384,7 +387,7 @@ class SelectMealEmptyState extends StatelessWidget {
           children: [
             const Icon(Icons.search_off, color: AppColors.textTertiary, size: AppSizes.emptyStateIconSize),
             const SizedBox(height: AppSpacing.m),
-            Text(title, style: AppTextStyles.title18Tight, textAlign: TextAlign.center),
+            Text(title, style: AppTextStyles.title18, textAlign: TextAlign.center),
             const SizedBox(height: AppSpacing.xs),
             Text(
               message,
@@ -425,7 +428,7 @@ class SelectMealErrorState extends StatelessWidget {
           children: [
             const Icon(Icons.error_outline, color: AppColors.error, size: AppSizes.emptyStateIconSize),
             const SizedBox(height: AppSpacing.m),
-            Text(tr(LocaleKeys.common_something_went_wrong), style: AppTextStyles.title18Tight, textAlign: TextAlign.center),
+            Text(tr(LocaleKeys.common_something_went_wrong), style: AppTextStyles.title18, textAlign: TextAlign.center),
             const SizedBox(height: AppSpacing.xs),
             Text(
               message,
@@ -485,7 +488,7 @@ class SelectMealPickerSheet extends StatelessWidget {
                           child: isSelected ? const Icon(Icons.check, color: AppColors.primary, size: AppSizes.iconMd) : const SizedBox.shrink(),
                         ),
                         const SizedBox(width: AppSpacing.xs),
-                        Text(options[index], style: AppTextStyles.selectMealPickerItem),
+                        Text(options[index], style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600, height: 1.75, color: AppColors.textHeading, letterSpacing: -0.4492)),
                       ],
                     ),
                   ),

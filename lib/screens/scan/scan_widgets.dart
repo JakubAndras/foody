@@ -25,7 +25,7 @@ class ScanPrimaryButton extends StatelessWidget {
       onTap: onPressed,
       icon: icon,
       gradient: gradient,
-      height: height ?? AppSizes.buttonHeightCompact,
+      height: height ?? AppSizes.buttonHeight,
       shadow: hasShadow ? AppShadows.button : null,
     );
   }
@@ -47,7 +47,7 @@ class ScanIndicatorDots extends StatelessWidget {
           width: AppSizes.scanIndicatorDot,
           height: AppSizes.scanIndicatorDot,
           margin: EdgeInsets.symmetric(horizontal: AppSizes.scanIndicatorGap / 2),
-          decoration: BoxDecoration(color: isActive ? AppColors.primary : AppColors.indicatorInactive, borderRadius: BorderRadius.circular(AppRadii.pill)),
+          decoration: BoxDecoration(color: isActive ? AppColors.primary : AppColors.borderStrong, borderRadius: BorderRadius.circular(AppRadii.pill)),
         );
       }),
     );
@@ -70,7 +70,7 @@ class ScanBulletRow extends StatelessWidget {
           child: Icon(icon, size: AppSizes.iconLg, color: AppColors.primary),
         ),
         const SizedBox(width: AppSpacing.m),
-        Expanded(child: Text(label, style: AppTextStyles.body17)),
+        Expanded(child: Text(label, style: AppTextStyles.body16.copyWith(fontSize: 17, fontWeight: FontWeight.w400, height: 1.412, color: AppColors.primary))),
       ],
     );
   }
@@ -85,7 +85,7 @@ class ScanCircleButton extends StatelessWidget {
     this.iconColor = AppColors.primary,
     this.size = AppSizes.scanTopButtonSize,
     this.iconSize = AppSizes.scanTopIconSize,
-    this.shadow = AppShadows.cameraControl,
+    this.shadow = AppShadows.calendarDay,
     this.border,
   });
 
@@ -182,7 +182,7 @@ class ScanZoomToggle extends StatelessWidget {
         width: AppSizes.scanZoomPillWidth,
         height: AppSizes.scanZoomPillHeight,
         padding: const EdgeInsets.all(2),
-        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.pill), boxShadow: AppShadows.cameraControl),
+        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.pill), boxShadow: AppShadows.calendarDay),
         child: Row(
           children: [
             _zoomButton(label: tr(LocaleKeys.scan_zoom_05x), isActive: !isZoomed, onTap: () => onToggle(false)),
@@ -221,7 +221,7 @@ class ScanModeTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color bg = isActive ? (activeColor ?? AppColors.primary) : AppColors.surface;
-    final Color fg = isActive ? AppColors.onPrimary : AppColors.textEmphasisAlt;
+    final Color fg = isActive ? AppColors.onPrimary : AppColors.textEmphasis;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -231,7 +231,7 @@ class ScanModeTile extends StatelessWidget {
           color: bg,
           borderRadius: BorderRadius.circular(AppRadii.md),
           border: isActive ? null : Border.all(color: AppColors.outline, width: 1.08),
-          boxShadow: isActive ? AppShadows.cameraControl : null,
+          boxShadow: isActive ? AppShadows.calendarDay : null,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -258,13 +258,13 @@ class ScanShutterButton extends StatelessWidget {
       child: Container(
         width: AppSizes.scanShutterSize,
         height: AppSizes.scanShutterSize,
-        decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(AppRadii.pill), boxShadow: AppShadows.cameraControl),
+        decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(AppRadii.pill), boxShadow: AppShadows.calendarDay),
         child: Center(
           child: Container(
             width: AppSizes.scanShutterRingSize,
             height: AppSizes.scanShutterRingSize,
             decoration: BoxDecoration(
-              border: Border.all(color: AppColors.onPrimary, width: AppSizes.scanShutterRingStroke),
+              border: Border.all(color: AppColors.onPrimary, width: AppSizes.scanCornerStroke),
               borderRadius: BorderRadius.circular(AppRadii.pill),
             ),
           ),
@@ -285,14 +285,14 @@ class ScanTipOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(AppRadii.lg2),
+      borderRadius: BorderRadius.circular(AppRadii.lg),
       child: BackdropFilter(
         filter: ui.ImageFilter.blur(sigmaX: 16, sigmaY: 16),
         child: Container(
           padding: const EdgeInsets.all(AppSpacing.l),
           decoration: BoxDecoration(
             color: const Color(0x55FFFFFF),
-            borderRadius: BorderRadius.circular(AppRadii.lg2),
+            borderRadius: BorderRadius.circular(AppRadii.lg),
             border: Border.all(color: const Color(0x44FFFFFF), width: 1.2),
           ),
           child: Column(
@@ -304,7 +304,7 @@ class ScanTipOverlay extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     if (child != null) ...[child!, const SizedBox(height: AppSpacing.l)],
-                    Text(title, style: AppTextStyles.scanHeading20, textAlign: TextAlign.center),
+                    Text(title, style: AppTextStyles.h4.copyWith(height: 1.4, color: AppColors.primary), textAlign: TextAlign.center),
                     if (body.isNotEmpty) ...[
                       const SizedBox(height: AppSpacing.s),
                       SizedBox(
@@ -341,7 +341,7 @@ class ScanNutritionLabelCard extends StatelessWidget {
     return Container(
       width: 159,
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.xs), boxShadow: AppShadows.cameraControl),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.xs), boxShadow: AppShadows.calendarDay),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -432,7 +432,7 @@ class ScanInputField extends StatelessWidget {
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.md),
         border: Border.all(color: AppColors.outline, width: 1.08),
-        boxShadow: hasShadow ? AppShadows.cardSmall : null,
+        boxShadow: hasShadow ? AppShadows.control : null,
       ),
       child: TextField(
         controller: controller,

@@ -261,7 +261,7 @@ class _ScrollableCalendarState extends State<ScrollableCalendar> {
                 color: AppColors.calendarDarkSurface,
                 borderRadius: BorderRadius.circular(AppRadii.pill),
               ),
-              child: const Icon(Icons.close, color: AppColors.calendarDarkText, size: AppSizes.iconLg),
+              child: const Icon(Icons.close, color: AppColors.black, size: AppSizes.iconLg),
             ),
           ),
           // Year label
@@ -269,7 +269,7 @@ class _ScrollableCalendarState extends State<ScrollableCalendar> {
             child: Center(
               child: Text(
                 '$_currentVisibleYear',
-                style: AppTextStyles.h4.copyWith(color: AppColors.calendarDarkText),
+                style: AppTextStyles.h4.copyWith(color: AppColors.black),
               ),
             ),
           ),
@@ -286,7 +286,7 @@ class _ScrollableCalendarState extends State<ScrollableCalendar> {
               alignment: Alignment.center,
               child: Text(
                 tr(LocaleKeys.common_today),
-                style: AppTextStyles.body16.copyWith(color: AppColors.calendarDarkText, fontWeight: FontWeight.w600),
+                style: AppTextStyles.body16.copyWith(color: AppColors.black, fontWeight: FontWeight.w600),
               ),
             ),
           ),
@@ -326,7 +326,7 @@ class _ScrollableCalendarState extends State<ScrollableCalendar> {
           child: Text(
             _monthFmt.format(month),
             style: AppTextStyles.h4.copyWith(
-              color: month.year == _today.year && month.month == _today.month ? AppColors.info : AppColors.calendarDarkText,
+              color: month.year == _today.year && month.month == _today.month ? AppColors.info : AppColors.black,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -377,7 +377,7 @@ class _ScrollableCalendarState extends State<ScrollableCalendar> {
     } else if (isWeekend) {
       textColor = AppColors.calendarDarkWeekend;
     } else {
-      textColor = AppColors.calendarDarkText;
+      textColor = AppColors.black;
     }
 
     final dayText = Text(

@@ -110,7 +110,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
         width: MediaQuery.of(context).size.width - (AppSpacing.screen * 2),
         child: ProfilePrimaryButton(
           label: _isSaving ? tr(LocaleKeys.common_saving) : tr(LocaleKeys.exercise_add_title),
-          height: AppSizes.buttonHeightCompact,
+          height: AppSizes.buttonHeight,
           onPressed: _isSaving ? null : _saveExercise,
         ),
       ),
@@ -257,13 +257,13 @@ class _TextInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: AppSizes.exerciseInputHeight,
+      height: AppSizes.scanInputHeight,
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg),
         border: Border.all(color: AppColors.outline, width: 1),
-        // boxShadow: AppShadows.cardSmall,
+        // boxShadow: AppShadows.control,
       ),
       child: TextField(
         controller: controller,
@@ -291,13 +291,13 @@ class _InputCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: AppSizes.exerciseInputHeight,
+      height: AppSizes.scanInputHeight,
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg),
         border: Border.all(color: AppColors.outline, width: 1),
-        // boxShadow: AppShadows.cardSmall,
+        // boxShadow: AppShadows.control,
       ),
       child: Row(
         children: [
@@ -313,7 +313,7 @@ class _InputCard extends StatelessWidget {
               controller: controller,
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
               onChanged: onChanged,
-              style: AppTextStyles.title24.copyWith(color: AppColors.textDisabled),
+              style: AppTextStyles.h3.copyWith(height: 1.5, color: AppColors.textDisabled),
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: label,

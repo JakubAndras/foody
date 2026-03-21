@@ -118,7 +118,7 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
           message: tr(LocaleKeys.weight_log_delete_message),
           confirmLabel: tr(LocaleKeys.common_delete),
           cancelLabel: tr(LocaleKeys.common_cancel),
-          confirmColor: AppColors.destructive,
+          confirmColor: AppColors.error,
           onCancel: () => Navigator.of(context).pop(false),
           onConfirm: () => Navigator.of(context).pop(true),
         ),
@@ -137,7 +137,7 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
       context: context,
       isScrollControlled: true,
       backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.lg3))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xl))),
       clipBehavior: Clip.antiAlias,
       builder: (context) {
         DateTime month = DateTime(_selectedDate.year, _selectedDate.month);
@@ -187,7 +187,7 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
             Expanded(
               child: ProfilePrimaryButton(
                 label: _isSaving ? tr(LocaleKeys.common_saving) : tr(LocaleKeys.common_save),
-                height: AppSizes.buttonHeightCompact,
+                height: AppSizes.buttonHeight,
                 onPressed: _isSaving ? null : _handleSave,
               ),
             ),
@@ -253,11 +253,11 @@ class _LabelledField extends StatelessWidget {
           onTap: onTap,
           borderRadius: BorderRadius.circular(AppRadii.md),
           child: Container(
-            height: AppSizes.inputHeightSm,
+            height: AppSizes.buttonHeightSm,
             decoration: BoxDecoration(
-              color: AppColors.surfaceCard,
+              color: AppColors.surface,
               borderRadius: BorderRadius.circular(AppRadii.md),
-              border: Border.all(color: AppColors.surfaceCardBorder),
+              border: Border.all(color: AppColors.surface),
             ),
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
@@ -281,7 +281,7 @@ class _DangerButton extends StatelessWidget {
     return SizedBox(
       height: AppSizes.buttonHeightSm,
       child: Material(
-        color: AppColors.dangerSoft,
+        color: AppColors.errorContainer,
         borderRadius: BorderRadius.circular(AppRadii.md),
         child: InkWell(
           onTap: onPressed,
@@ -289,11 +289,11 @@ class _DangerButton extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: AppSizes.iconMd, color: AppColors.danger),
+              Icon(icon, size: AppSizes.iconMd, color: AppColors.error),
               const SizedBox(width: AppSpacing.xs),
               Text(
                 label,
-                style: AppTextStyles.title17.copyWith(color: AppColors.danger, fontWeight: FontWeight.w600),
+                style: AppTextStyles.title17.copyWith(color: AppColors.error, fontWeight: FontWeight.w600),
               ),
             ],
           ),

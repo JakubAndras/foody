@@ -122,7 +122,7 @@ class RecentlyUploadedCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.xl),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: AppColors.outline),
         boxShadow: AppShadows.cardSoft,
       ),
       child: Column(
@@ -170,7 +170,7 @@ class RecentlyUploadedCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(AppRadii.lg),
-          border: Border.all(color: AppColors.border),
+          border: Border.all(color: AppColors.outline),
           boxShadow: AppShadows.cardSoft,
         ),
         child: Padding(
@@ -221,7 +221,7 @@ class RecentlyUploadedCard extends StatelessWidget {
                     const SizedBox(height: AppSpacing.s),
                     Container(
                       height: AppSizes.dividerThin,
-                      color: AppColors.border,
+                      color: AppColors.outline,
                     ),
                     const SizedBox(height: AppSpacing.xs),
                     Row(
@@ -284,7 +284,7 @@ class RecentlyUploadedCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(AppRadii.lg),
-          border: Border.all(color: AppColors.border),
+          border: Border.all(color: AppColors.outline),
           boxShadow: AppShadows.cardSoft,
         ),
         child: Padding(
@@ -343,7 +343,7 @@ class RecentlyUploadedCard extends StatelessWidget {
                     const SizedBox(height: AppSpacing.s),
                     Container(
                       height: AppSizes.dividerThin,
-                      color: AppColors.border,
+                      color: AppColors.outline,
                     ),
                     const SizedBox(height: AppSpacing.xs),
                     Align(
@@ -429,7 +429,7 @@ class _AnalyzingMealCardState extends State<AnalyzingMealCard> {
     final subtitle = isExercise ? tr(LocaleKeys.dashboard_recognising_exercise_subtitle) : tr(LocaleKeys.dashboard_recognising_meal_subtitle);
     final cardHeight = isExercise ? AppSizes.exerciseCardHeight : AppSizes.mealCardHeight;
     final leadingDecoration = BoxDecoration(
-      borderRadius: BorderRadius.circular(AppRadii.sm2),
+      borderRadius: BorderRadius.circular(AppRadii.md),
       color: isExercise ? null : AppColors.surfaceMuted,
       gradient: isExercise ? AppGradients.exerciseCalories : null,
     );
@@ -441,7 +441,7 @@ class _AnalyzingMealCardState extends State<AnalyzingMealCard> {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: AppColors.outline),
         boxShadow: AppShadows.cardSoft,
       ),
       child: Padding(
@@ -457,7 +457,7 @@ class _AnalyzingMealCardState extends State<AnalyzingMealCard> {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(AppRadii.sm2),
+                      borderRadius: BorderRadius.circular(AppRadii.md),
                       color: AppColors.overlayDark60,
                     ),
                   ),

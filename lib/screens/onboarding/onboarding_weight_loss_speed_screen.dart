@@ -139,7 +139,7 @@ class _OnboardingWeightLossSpeedScreenState extends State<OnboardingWeightLossSp
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl, vertical: AppSpacing.s),
                   decoration: BoxDecoration(
-                    color: AppColors.surfaceSubtle,
+                    color: AppColors.surface,
                     borderRadius: BorderRadius.circular(AppRadii.md),
                   ),
                   child: Text(

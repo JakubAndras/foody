@@ -40,7 +40,7 @@ class ExerciseDetailOptionsSheet extends StatelessWidget {
               _OptionRow(
                 icon: Icons.delete_outline,
                 label: tr(LocaleKeys.common_delete),
-                color: AppColors.destructive,
+                color: AppColors.error,
                 onTap: onDelete,
               ),
             ],

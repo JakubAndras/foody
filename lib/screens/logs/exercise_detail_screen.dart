@@ -61,7 +61,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
             Expanded(
               child: ProfilePrimaryButton(
                 label: tr(LocaleKeys.exercise_log_btn),
-                height: AppSizes.buttonHeightCompact,
+                height: AppSizes.buttonHeight,
                 onPressed: () => _showSnack(context, tr(LocaleKeys.exercise_log_btn)),
               ),
             ),
@@ -69,7 +69,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
             Expanded(
               child: ProfileOutlineButton(
                 label: tr(LocaleKeys.exercise_save_log),
-                height: AppSizes.buttonHeightCompact,
+                height: AppSizes.buttonHeight,
                 onPressed: () => _showSnack(context, tr(LocaleKeys.exercise_save_log)),
               ),
             ),

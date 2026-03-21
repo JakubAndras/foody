@@ -106,7 +106,7 @@ class _ScanOnboardingScreenState extends State<ScanOnboardingScreen> {
                 child: ScanPrimaryButton(
                   label: isLastPage ? tr(LocaleKeys.scan_scan_now) : tr(LocaleKeys.common_next),
                   onPressed: _next,
-                  height: AppSizes.buttonHeightCompact,
+                  height: AppSizes.buttonHeight,
                 ),
               ),
             ],
@@ -146,7 +146,7 @@ class _ScanOnboardingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const bottomOverlayReserve = AppSpacing.xl + AppSizes.scanIndicatorDot + AppSpacing.m + AppSizes.buttonHeightCompact + AppSpacing.bottom;
+    const bottomOverlayReserve = AppSpacing.xl + AppSizes.scanIndicatorDot + AppSpacing.m + AppSizes.buttonHeight + AppSpacing.bottom;
     return Column(
       children: [
         _buildImageHeader(context),
@@ -192,7 +192,7 @@ class _ScanOnboardingPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(data.title, style: AppTextStyles.scanTitle),
+          Text(data.title, style: AppTextStyles.h2.copyWith(fontWeight: FontWeight.w500, height: 1.214)),
           const SizedBox(height: AppSpacing.l),
           for (final bullet in data.bullets) ...[
             ScanBulletRow(icon: bullet.icon, label: bullet.label),

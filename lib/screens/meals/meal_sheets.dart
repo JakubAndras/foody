@@ -46,7 +46,7 @@ class PickerSheet extends StatelessWidget {
                     Expanded(
                       child: Text(
                         options[index],
-                        style: AppTextStyles.selectMealPickerItem.copyWith(color: AppColors.textHeading),
+                        style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600, height: 1.75, color: AppColors.textHeading, letterSpacing: -0.4492),
                       ),
                     ),
                   ],
@@ -154,20 +154,20 @@ class DatePickerCard extends StatelessWidget {
                   day.year == selectedDate.year && day.month == selectedDate.month && day.day == selectedDate.day;
               return InkWell(
                 onTap: onSelected == null ? null : () => onSelected!(day),
-                borderRadius: BorderRadius.circular(isSelected ? AppRadii.xxl : AppRadii.sm1),
+                borderRadius: BorderRadius.circular(isSelected ? AppRadii.xxl : AppRadii.sm),
                 child: Container(
                   width: isSelected ? AppSizes.datePickerCellSelected : AppSizes.datePickerCell,
                   height: isSelected ? AppSizes.datePickerCellSelected : AppSizes.datePickerCell,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: isSelected ? AppColors.primary : Colors.transparent,
-                    borderRadius: BorderRadius.circular(isSelected ? AppRadii.xxl : AppRadii.sm1),
+                    borderRadius: BorderRadius.circular(isSelected ? AppRadii.xxl : AppRadii.sm),
                     boxShadow: isSelected ? AppShadows.calendarDay : null,
                   ),
                   child: Text(
                     '${day.day}',
-                    style: AppTextStyles.body14Tall.copyWith(
-                      color: isSelected ? AppColors.onPrimary : AppColors.textEmphasisAlt,
+                    style: AppTextStyles.body14.copyWith(
+                      color: isSelected ? AppColors.onPrimary : AppColors.textEmphasis,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -209,12 +209,12 @@ class _HeaderButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(AppRadii.sm1),
+      borderRadius: BorderRadius.circular(AppRadii.sm),
       child: Container(
         height: AppSizes.chipHeight,
         width: AppSizes.chipHeight,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(AppRadii.sm1),
+          borderRadius: BorderRadius.circular(AppRadii.sm),
         ),
         child: Icon(icon, color: AppColors.textHeading),
       ),

@@ -149,7 +149,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
                       const SizedBox(height: AppSpacing.m),
                       Text(
                         tr(LocaleKeys.voice_mic_access),
-                        style: AppTextStyles.title18Tight.copyWith(fontWeight: FontWeight.w700, decoration: TextDecoration.none),
+                        style: AppTextStyles.title18.copyWith(fontWeight: FontWeight.w700, decoration: TextDecoration.none),
                       ),
                       const SizedBox(height: AppSpacing.s),
                       Text(
@@ -428,7 +428,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.lg3))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xl))),
       clipBehavior: Clip.antiAlias,
       builder: (sheetContext) {
         return SafeArea(
@@ -521,7 +521,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
               ),
             ),
             const SizedBox(height: AppSpacing.l),
-            Text(tr(LocaleKeys.voice_tips_title), style: AppTextStyles.title18Tight.copyWith(fontWeight: FontWeight.w700)),
+            Text(tr(LocaleKeys.voice_tips_title), style: AppTextStyles.title18.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: AppSpacing.m),
             _VoiceTipRow(icon: Icons.record_voice_over_outlined, text: tr(LocaleKeys.voice_tips_speak_clearly)),
             _VoiceTipRow(icon: Icons.restaurant_outlined, text: tr(LocaleKeys.voice_tips_one_meal)),

@@ -56,9 +56,11 @@ class GlassPopup extends StatelessWidget {
                                 Expanded(
                                   child: Text(
                                     item.label,
-                                    style: AppTextStyles.selectMealPickerItem.copyWith(
-                                      color: item.color ?? AppColors.textPrimary,
+                                    style: AppTextStyles.body16.copyWith(
                                       fontWeight: item.selected ? FontWeight.w600 : FontWeight.w400,
+                                      height: 1.75,
+                                      color: item.color ?? AppColors.textPrimary,
+                                      letterSpacing: -0.4492,
                                     ),
                                   ),
                                 ),

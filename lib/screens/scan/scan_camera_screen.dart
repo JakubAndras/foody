@@ -724,7 +724,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
           shadow: const <BoxShadow>[],
           size: AppSizes.scanAuxButtonSize,
           iconSize: AppSizes.scanModeIconSize,
-          iconColor: _isFlashOn ? AppColors.onPrimary : AppColors.textEmphasisAlt,
+          iconColor: _isFlashOn ? AppColors.onPrimary : AppColors.textEmphasis,
         ),
         ScanShutterButton(onPressed: _capturePhoto),
         ScanCircleButton(
@@ -734,7 +734,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
           shadow: const <BoxShadow>[],
           size: AppSizes.scanAuxButtonSize,
           iconSize: AppSizes.scanModeIconSize,
-          iconColor: AppColors.textEmphasisAlt,
+          iconColor: AppColors.textEmphasis,
         ),
       ],
     );
@@ -751,7 +751,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
           shadow: const <BoxShadow>[],
           size: AppSizes.scanAuxButtonSize,
           iconSize: AppSizes.scanModeIconSize,
-          iconColor: _isFlashOn ? AppColors.onPrimary : AppColors.textEmphasisAlt,
+          iconColor: _isFlashOn ? AppColors.onPrimary : AppColors.textEmphasis,
         ),
         Expanded(
           child: Padding(
@@ -765,7 +765,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
               alignment: Alignment.center,
               child: Text(
                 tr(LocaleKeys.scan_align_barcode),
-                style: AppTextStyles.body14.copyWith(color: AppColors.textEmphasisAlt),
+                style: AppTextStyles.body14.copyWith(color: AppColors.textEmphasis),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -778,7 +778,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
           shadow: const <BoxShadow>[],
           size: AppSizes.scanAuxButtonSize,
           iconSize: AppSizes.scanModeIconSize,
-          iconColor: AppColors.textEmphasisAlt,
+          iconColor: AppColors.textEmphasis,
         ),
       ],
     );

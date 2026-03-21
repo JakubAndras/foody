@@ -22,7 +22,7 @@ class ExerciseSearchBar extends StatelessWidget {
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg),
         border: Border.all(color: AppColors.outline, width: 1),
-        // boxShadow: AppShadows.cardSmall,
+        // boxShadow: AppShadows.control,
       ),
       child: Row(
         children: [
@@ -120,7 +120,7 @@ class ExerciseListCard extends StatelessWidget {
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(AppRadii.lg),
           border: Border.all(color: AppColors.outline, width: 1),
-          // boxShadow: AppShadows.cardSmall,
+          // boxShadow: AppShadows.control,
         ),
         child: Row(
           children: [
@@ -129,7 +129,7 @@ class ExerciseListCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(title, style: AppTextStyles.title18Tight, maxLines: 1, overflow: TextOverflow.ellipsis),
+                  Text(title, style: AppTextStyles.title18, maxLines: 1, overflow: TextOverflow.ellipsis),
                   const SizedBox(height: AppSpacing.xs),
                   Row(
                     children: [
@@ -196,7 +196,7 @@ class ExerciseStatCard extends StatelessWidget {
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg),
         border: Border.all(color: AppColors.outline, width: 1),
-        // boxShadow: AppShadows.cardSmall,
+        // boxShadow: AppShadows.control,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -215,7 +215,7 @@ class ExerciseStatCard extends StatelessWidget {
           const SizedBox(height: 4),
           Row(
             children: [
-              Text(value, style: AppTextStyles.title24),
+              Text(value, style: AppTextStyles.h3.copyWith(height: 1.5)),
               const SizedBox(width: 4),
               Text(unit, style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary)),
             ],
@@ -250,7 +250,7 @@ class ExerciseInfoCard extends StatelessWidget {
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg),
         border: Border.all(color: AppColors.outline, width: 1),
-        // boxShadow: AppShadows.cardSmall,
+        // boxShadow: AppShadows.control,
       ),
       child: Row(
         children: [
@@ -271,7 +271,7 @@ class ExerciseInfoCard extends StatelessWidget {
               const SizedBox(height: 4),
               Row(
                 children: [
-                  Text(value, style: AppTextStyles.title24),
+                  Text(value, style: AppTextStyles.h3.copyWith(height: 1.5)),
                   const SizedBox(width: 4),
                   Text(unit, style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary)),
                 ],
@@ -340,14 +340,14 @@ class ExerciseBottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.m, AppSpacing.l, AppSpacing.l),
-      color: AppColors.backgroundAlt,
+      color: AppColors.surface,
       child: Row(
         children: [
           Expanded(
             child: GestureDetector(
               onTap: onPrimary,
               child: Container(
-                height: AppSizes.buttonHeightCompact,
+                height: AppSizes.buttonHeight,
                 decoration: BoxDecoration(
                   gradient: AppGradients.primary,
                   borderRadius: BorderRadius.circular(AppRadii.pill),
@@ -356,7 +356,7 @@ class ExerciseBottomBar extends StatelessWidget {
                 child: Center(
                   child: Text(
                     primaryLabel,
-                    style: AppTextStyles.button18.copyWith(color: AppColors.onPrimary),
+                    style: AppTextStyles.title18.copyWith(height: 1.25, color: AppColors.onPrimary),
                   ),
                 ),
               ),
@@ -367,9 +367,9 @@ class ExerciseBottomBar extends StatelessWidget {
             child: GestureDetector(
               onTap: onSecondary,
               child: Container(
-                height: AppSizes.buttonHeightCompact,
+                height: AppSizes.buttonHeight,
                 decoration: BoxDecoration(
-                  color: AppColors.backgroundAlt,
+                  color: AppColors.surface,
                   borderRadius: BorderRadius.circular(AppRadii.pill),
                   border: Border.all(color: AppColors.primary, width: 1),
                   // boxShadow: AppShadows.control,
@@ -379,7 +379,7 @@ class ExerciseBottomBar extends StatelessWidget {
                     shaderCallback: (bounds) => AppGradients.primary.createShader(bounds),
                     child: Text(
                       secondaryLabel,
-                      style: AppTextStyles.button18.copyWith(color: AppColors.onPrimary),
+                      style: AppTextStyles.title18.copyWith(height: 1.25, color: AppColors.onPrimary),
                     ),
                   ),
                 ),
@@ -468,13 +468,13 @@ class ExerciseInputCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: AppSizes.exerciseInputHeight,
+      height: AppSizes.scanInputHeight,
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg),
         border: Border.all(color: AppColors.outline, width: 1),
-        // boxShadow: AppShadows.cardSmall,
+        // boxShadow: AppShadows.control,
       ),
       child: Row(
         children: [
@@ -491,7 +491,7 @@ class ExerciseInputCard extends StatelessWidget {
           Expanded(
             child: Text(
               value,
-              style: AppTextStyles.title24.copyWith(color: AppColors.textDisabled),
+              style: AppTextStyles.h3.copyWith(height: 1.5, color: AppColors.textDisabled),
             ),
           ),
           Text(unit, style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary)),
@@ -512,7 +512,7 @@ class ExerciseTotalSummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: AppSizes.exerciseInputHeight,
+      height: AppSizes.scanInputHeight,
       decoration: BoxDecoration(
         gradient: AppGradients.primary,
         borderRadius: BorderRadius.circular(AppRadii.lg),
@@ -521,7 +521,7 @@ class ExerciseTotalSummaryCard extends StatelessWidget {
       child: Center(
         child: Text(
           value,
-          style: AppTextStyles.headline36.copyWith(color: AppColors.onPrimary),
+          style: AppTextStyles.h1.copyWith(fontSize: 36, height: 1.11, color: AppColors.onPrimary),
         ),
       ),
     );

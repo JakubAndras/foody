@@ -49,7 +49,7 @@ class PersonalDetailsScreen extends StatelessWidget {
             ProfileTopBar(title: tr(LocaleKeys.personal_details_title), onBack: () => Get.back()),
             const SizedBox(height: AppSpacing.l),
             ProfileCard(
-              radius: AppRadii.lg2,
+              radius: AppRadii.lg,
               shadow: AppShadows.cardSubtle,
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen, vertical: AppSpacing.m),
               child: Row(
@@ -81,7 +81,7 @@ class PersonalDetailsScreen extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.m),
             ProfileCard(
-              radius: AppRadii.lg2,
+              radius: AppRadii.lg,
               shadow: AppShadows.cardSubtle,
               padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.xs, AppSpacing.screen, AppSpacing.xs),
               child: Column(
@@ -181,7 +181,7 @@ class PersonalDetailsScreen extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.lg3))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xl))),
       clipBehavior: Clip.antiAlias,
       showDragHandle: false,
       builder: (sheetContext) {
@@ -288,7 +288,7 @@ class PersonalDetailsScreen extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.lg3))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xl))),
       clipBehavior: Clip.antiAlias,
       showDragHandle: false,
       builder: (_) => _CustomDietSheet(initialPreferences: initialPreferences),
@@ -309,7 +309,7 @@ class PersonalDetailsScreen extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.lg3))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xl))),
       clipBehavior: Clip.antiAlias,
       showDragHandle: false,
       builder: (_) => _ProfileNumberSheet(

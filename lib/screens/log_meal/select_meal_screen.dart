@@ -392,7 +392,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                 //leadingIcon: Icons.close,
                 leadingIconSize: AppSizes.iconLg,
                 onBack: () => Get.back(),
-                titleWidget: Text(tr(LocaleKeys.meal_select_title), style: AppTextStyles.selectMealTitle),
+                titleWidget: Text(tr(LocaleKeys.meal_select_title), style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600, letterSpacing: -0.3125, color: AppColors.primary)),
                 actions: [
                   CustomGlassIconButtonGroup(
                     iconSize: AppSizes.iconLg,
@@ -458,7 +458,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                                         const SizedBox(width: 6),
                                         Text(
                                           _sortLabel(_sort),
-                                          style: AppTextStyles.selectMealSegmentLabel.copyWith(color: AppColors.textSecondary),
+                                          style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary, letterSpacing: -0.1504),
                                         ),
                                       ],
                                     ),
@@ -507,7 +507,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                                         const SizedBox(width: 6),
                                         Text(
                                           _sortLabel(_sort),
-                                          style: AppTextStyles.selectMealSegmentLabel.copyWith(color: AppColors.textSecondary),
+                                          style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary, letterSpacing: -0.1504),
                                         ),
                                       ],
                                     ),

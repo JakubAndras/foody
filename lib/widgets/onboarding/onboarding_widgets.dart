@@ -106,7 +106,7 @@ class OnboardingBackButton extends StatelessWidget {
       child: Material(
         color: AppColors.surface,
         shape: const CircleBorder(
-          side: BorderSide(color: AppColors.border, width: 1),
+          side: BorderSide(color: AppColors.outline, width: 1),
         ),
         child: InkWell(
           customBorder: const CircleBorder(),
@@ -137,7 +137,7 @@ class OnboardingProgressBar extends StatelessWidget {
         height: AppSizes.stepIndicatorHeight,
         child: Stack(
           children: [
-            Container(color: AppColors.border),
+            Container(color: AppColors.outline),
             FractionallySizedBox(
               alignment: Alignment.centerLeft,
               widthFactor: value.clamp(0, 1),
@@ -286,7 +286,7 @@ class OnboardingOutlinedButton extends StatelessWidget {
         color: AppColors.surface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppRadii.pill),
-          side: const BorderSide(color: AppColors.border),
+          side: const BorderSide(color: AppColors.outline),
         ),
         child: InkWell(
           onTap: onPressed,
@@ -377,7 +377,7 @@ class OnboardingOptionCard extends StatelessWidget {
     this.leading,
     this.selected = false,
     this.onTap,
-    this.height = AppSizes.optionCardHeight,
+    this.height = AppSizes.buttonHeight,
   });
 
   final String title;
@@ -390,7 +390,7 @@ class OnboardingOptionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
-    final Color background = selected ? AppColors.primary : AppColors.surfaceSubtle;
+    final Color background = selected ? AppColors.primary : AppColors.surface;
     final Color titleColor = selected ? AppColors.onPrimary : AppColors.textPrimary;
     final Color subtitleColor = selected ? AppColors.onPrimary.withValues(alpha: 0.7) : AppColors.textSecondary;
 
@@ -737,7 +737,7 @@ class _RulerPainter extends CustomPainter {
       ..color = AppColors.textTertiary.withValues(alpha: 0.6)
       ..strokeWidth = 2;
 
-    final Paint highlightPaint = Paint()..color = AppColors.border;
+    final Paint highlightPaint = Paint()..color = AppColors.outline;
 
     final double centerX = size.width / 2;
     final Rect highlightRect = Rect.fromCenter(
@@ -794,7 +794,7 @@ class OnboardingPlaceholderImage extends StatelessWidget {
       height: height,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: AppColors.surfaceSubtle,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg),
       ),
       child: const Center(
@@ -823,7 +823,7 @@ class OnboardingGlassCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: AppColors.glassMuted,
             borderRadius: BorderRadius.circular(AppRadii.lg),
-            border: Border.all(color: AppColors.border.withValues(alpha: 0.4)),
+            border: Border.all(color: AppColors.outline.withValues(alpha: 0.4)),
           ),
           child: child,
         ),
@@ -842,7 +842,7 @@ class OnboardingSmallBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s, vertical: AppSpacing.xxs),
       decoration: BoxDecoration(
-        color: AppColors.surfaceSubtle,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.md),
       ),
       child: Text(

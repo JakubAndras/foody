@@ -168,7 +168,7 @@ class _MyWeightCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.xl),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: AppColors.outline),
         boxShadow: AppShadows.cardSoft,
       ),
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.l, horizontal: AppSpacing.m),
@@ -212,7 +212,7 @@ class _MyWeightCard extends StatelessWidget {
           Container(
             height: AppSizes.segmentedHeight,
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-            decoration: BoxDecoration(color: AppColors.surfaceSubtle, borderRadius: BorderRadius.circular(AppRadii.sm2)),
+            decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.md)),
             child: Center(
               child: Text(
                 nextWeighInLabel,
@@ -243,7 +243,7 @@ class _DayStreakCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.xl),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: AppColors.outline),
         boxShadow: AppShadows.cardSoft,
       ),
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.m),
@@ -347,7 +347,7 @@ class _DailyAverageCardState extends State<_DailyAverageCard> {
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(AppRadii.xl),
-          border: Border.all(color: AppColors.border),
+          border: Border.all(color: AppColors.outline),
           boxShadow: AppShadows.cardSoft,
         ),
         padding: const EdgeInsets.all(AppSpacing.l),
@@ -362,7 +362,7 @@ class _DailyAverageCardState extends State<_DailyAverageCard> {
                   Container(
                     width: AppSizes.cardIconLg,
                     height: AppSizes.cardIconLg,
-                    decoration: BoxDecoration(color: AppColors.surfaceSubtle, borderRadius: BorderRadius.circular(AppRadii.md)),
+                    decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.md)),
                     child: const Icon(Icons.bar_chart_rounded, color: AppColors.textTertiary),
                   ),
                   const SizedBox(height: AppSpacing.m),
@@ -436,7 +436,7 @@ class _BmiCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.xl),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: AppColors.outline),
         boxShadow: AppShadows.cardSoft,
       ),
       padding: const EdgeInsets.all(AppSpacing.l),
@@ -456,7 +456,7 @@ class _BmiCard extends StatelessWidget {
           else
             Row(
               children: [
-                Text(bmi.toStringAsFixed(1), style: AppTextStyles.bmiValue),
+                Text(bmi.toStringAsFixed(1), style: AppTextStyles.h1.copyWith(fontSize: 32, fontWeight: FontWeight.w800, height: 1.5)),
                 const SizedBox(width: AppSpacing.s),
                 Text(tr(LocaleKeys.progress_your_weight_is), style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary)),
                 const SizedBox(width: AppSpacing.xs),
@@ -491,7 +491,7 @@ class _BmiCard extends StatelessWidget {
                       child: Container(
                         width: AppSizes.bmiMarkerWidth,
                         height: AppSizes.bmiMarkerHeight,
-                        decoration: BoxDecoration(color: AppColors.primarySoft, borderRadius: BorderRadius.circular(AppRadii.pill)),
+                        decoration: BoxDecoration(color: AppColors.textPrimary, borderRadius: BorderRadius.circular(AppRadii.pill)),
                       ),
                     ),
                 ],

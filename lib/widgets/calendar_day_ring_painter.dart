@@ -36,7 +36,7 @@ class CalendarDayRingPainter extends CustomPainter {
         return;
       }
 
-      paint.color = ringStyle.roundedPercent > 100 ? AppColors.error : AppColors.primarySoft;
+      paint.color = ringStyle.roundedPercent > 100 ? AppColors.error : AppColors.textPrimary;
       canvas.drawArc(rect, startAngleOffset, 2 * math.pi * progress, false, paint);
       return;
     }
@@ -50,7 +50,7 @@ class CalendarDayRingPainter extends CustomPainter {
       if (i < ringStyle.overflowSegments) {
         paint.color = AppColors.error;
       } else if (i < ringStyle.filledSegments) {
-        paint.color = AppColors.primarySoft;
+        paint.color = AppColors.textPrimary;
       } else {
         paint.color = AppColors.borderStrong;
       }

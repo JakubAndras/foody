@@ -90,7 +90,7 @@ class CustomGlassAppBar extends StatelessWidget implements PreferredSizeWidget {
         ? const SizedBox(width: AppSizes.backButtonSize)
         : leading ?? CustomGlassIconButton(icon: leadingIcon ?? Icons.arrow_back_ios_new_rounded, iconSize: leadingIconSize ?? AppSizes.iconMd, onPressed: onBack ?? () => Get.back());
 
-    final titleContent = titleWidget ?? (title != null ? Text(title!, style: AppTextStyles.title18Tight) : null);
+    final titleContent = titleWidget ?? (title != null ? Text(title!, style: AppTextStyles.title18) : null);
 
     return SafeArea(
       bottom: false,

@@ -74,7 +74,7 @@ class _MonthlyCalendarCardState extends State<MonthlyCalendarCard> {
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(AppRadii.xl),
-          border: Border.all(color: AppColors.border),
+          border: Border.all(color: AppColors.outline),
           boxShadow: AppShadows.cardSoft,
         ),
         padding: const EdgeInsets.all(AppSpacing.l),
@@ -237,7 +237,7 @@ class _MonthlyCalendarCardState extends State<MonthlyCalendarCard> {
         // Legend (hidden for now)
         // Row(
         //   children: [
-        //   _LegendDot(color: AppColors.primarySoft),
+        //   _LegendDot(color: AppColors.textPrimary),
         //   const SizedBox(width: AppSpacing.xs),
         //   Text(tr(LocaleKeys.calendar_legend_on_track), style: AppTextStyles.caption12.copyWith(color: AppColors.textTertiary)),
         //   const SizedBox(width: AppSpacing.m),

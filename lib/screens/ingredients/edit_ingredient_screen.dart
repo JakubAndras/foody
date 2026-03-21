@@ -204,7 +204,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
           message: tr(LocaleKeys.ingredient_delete_message),
           confirmLabel: tr(LocaleKeys.common_delete),
           cancelLabel: tr(LocaleKeys.common_cancel),
-          confirmColor: AppColors.destructive,
+          confirmColor: AppColors.error,
           onCancel: () => Navigator.of(context).pop(false),
           onConfirm: () => Navigator.of(context).pop(true),
         ),
@@ -255,17 +255,17 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
                               TextField(
                                 controller: _nameController,
                                 textCapitalization: TextCapitalization.words,
-                                style: AppTextStyles.headline36,
+                                style: AppTextStyles.h1.copyWith(fontSize: 36, height: 1.11),
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                   isDense: true,
                                   contentPadding: EdgeInsets.zero,
                                   hintText: tr(LocaleKeys.ingredient_name),
-                                  hintStyle: AppTextStyles.headline36.copyWith(color: AppColors.textTertiary),
+                                  hintStyle: AppTextStyles.h1.copyWith(fontSize: 36, height: 1.11, color: AppColors.textTertiary),
                                 ),
                               ),
                               const SizedBox(height: AppSpacing.l),
-                              Text(tr(LocaleKeys.ingredient_measurement), style: AppTextStyles.formLabel16),
+                              Text(tr(LocaleKeys.ingredient_measurement), style: AppTextStyles.body16.copyWith(letterSpacing: -0.3125)),
                               const SizedBox(height: AppSpacing.s),
                               MeasurementChips(
                                 options: [
@@ -282,7 +282,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(tr(LocaleKeys.ingredient_amount), style: AppTextStyles.formLabel16),
+                                  Text(tr(LocaleKeys.ingredient_amount), style: AppTextStyles.body16.copyWith(letterSpacing: -0.3125)),
                                   _AmountInputField(controller: _amountController, onChanged: (_) {}),
                                 ],
                               ),
@@ -317,7 +317,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
                                 child: _EditableMacroCard(
                                   label: tr(LocaleKeys.common_carbs),
                                   icon: AppIcons.carbs,
-                                  iconColor: AppColors.macroCarbsStrong,
+                                  iconColor: AppColors.warningStrong,
                                   controller: _carbsController,
                                 ),
                               ),
@@ -343,7 +343,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
             child: FoodyPrimaryButton(
               label: tr(LocaleKeys.common_done),
               gradient: AppGradients.primary,
-              height: AppSizes.buttonHeightCompact,
+              height: AppSizes.buttonHeight,
               onTap: _isValid ? _handleDone : null,
             ),
           ),
@@ -368,7 +368,7 @@ class _AmountInputField extends StatelessWidget {
         controller: controller,
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         textAlign: TextAlign.center,
-        style: AppTextStyles.formValue16,
+        style: AppTextStyles.body16.copyWith(letterSpacing: -0.3125),
         onChanged: onChanged,
         decoration: InputDecoration(
           contentPadding: EdgeInsets.zero,
@@ -398,7 +398,7 @@ class _EditableCaloriesCard extends StatelessWidget {
     return Container(
       height: AppSizes.caloriesCardHeight,
       padding: const EdgeInsets.all(AppSpacing.l),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.lg), boxShadow: AppShadows.cardSmall),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.lg), boxShadow: AppShadows.control),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -443,7 +443,7 @@ class _EditableMacroCard extends StatelessWidget {
       width: double.infinity,
       height: AppSizes.macroCardSize,
       padding: const EdgeInsets.all(AppSpacing.l),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.lg), boxShadow: AppShadows.cardSmall),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.lg), boxShadow: AppShadows.control),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -468,7 +468,7 @@ class _EditableMacroCard extends StatelessWidget {
                 child: TextField(
                   controller: controller,
                   keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  style: AppTextStyles.title24.copyWith(color: AppColors.primary),
+                  style: AppTextStyles.h3.copyWith(height: 1.5, color: AppColors.primary),
                   decoration: const InputDecoration(isDense: true, border: InputBorder.none, contentPadding: EdgeInsets.zero),
                 ),
               ),

@@ -22,7 +22,7 @@ class RingColorsExplainedScreen extends StatelessWidget {
           ProfileTopBar(title: tr(LocaleKeys.ring_colors_title), onBack: () => Get.back()),
           const SizedBox(height: AppSpacing.l),
           ProfileCard(
-            color: AppColors.surfaceCard,
+            color: AppColors.surface,
             radius: AppRadii.xl,
             padding: const EdgeInsets.all(AppSpacing.l),
             child: Column(
@@ -166,10 +166,10 @@ class _WeekDay extends StatelessWidget {
             painter: _SegmentRingPainter(
               filledSegments: day.filledSegments,
               overflowSegments: day.overflowSegments,
-              strokeWidth: AppSizes.dateCircleBorder,
+              strokeWidth: AppSizes.progressRingStroke,
             ),
             child: Padding(
-              padding: const EdgeInsets.all(AppSizes.dateCircleBorder),
+              padding: const EdgeInsets.all(AppSizes.progressRingStroke),
               child: Container(
                 decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.transparent),
                 alignment: Alignment.center,
@@ -214,7 +214,7 @@ class _LegendItem extends StatelessWidget {
             painter: _SegmentRingPainter(
               filledSegments: filledSegments,
               overflowSegments: overflowSegments,
-              strokeWidth: AppSizes.dateCircleBorder,
+              strokeWidth: AppSizes.progressRingStroke,
             ),
           ),
         ),
@@ -265,7 +265,7 @@ class _SegmentRingPainter extends CustomPainter {
       if (i < overflowSegments) {
         paint.color = AppColors.error;
       } else if (i < filledSegments) {
-        paint.color = AppColors.primarySoft;
+        paint.color = AppColors.textPrimary;
       } else {
         paint.color = AppColors.borderStrong;
       }

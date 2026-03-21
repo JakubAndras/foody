@@ -19,7 +19,7 @@ class ConfirmUsernameScreen extends StatelessWidget {
         width: MediaQuery.of(context).size.width - (AppSpacing.l * 2),
         child: ProfilePrimaryButton(
           label: tr(LocaleKeys.common_continue_btn),
-          height: AppSizes.buttonHeightCompact,
+          height: AppSizes.buttonHeight,
         ),
       ),
       child: Column(
@@ -34,7 +34,7 @@ class ConfirmUsernameScreen extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.l),
           Container(
-            height: AppSizes.inputHeightMd,
+            height: AppSizes.buttonHeight,
             decoration: BoxDecoration(
               color: AppColors.surface,
               borderRadius: BorderRadius.circular(AppRadii.md),
@@ -47,7 +47,7 @@ class ConfirmUsernameScreen extends StatelessWidget {
               style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w500),
             ),
           ),
-          const SizedBox(height: AppSpacing.mega + AppSizes.buttonHeightCompact),
+          const SizedBox(height: AppSpacing.mega + AppSizes.buttonHeight),
         ],
       ),
     );

@@ -42,7 +42,7 @@ class VoiceLogToggle extends StatelessWidget {
           onTap: onSelectMeals,
           child: Text(
             tr(LocaleKeys.common_meals),
-            style: AppTextStyles.title18Tight.copyWith(color: isExercise ? AppColors.textMutedLight : AppColors.textPrimary, fontWeight: FontWeight.w600),
+            style: AppTextStyles.title18.copyWith(color: isExercise ? AppColors.textMutedLight : AppColors.textPrimary, fontWeight: FontWeight.w600),
           ),
         ),
         const SizedBox(width: AppSpacing.m),
@@ -62,7 +62,7 @@ class VoiceLogToggle extends StatelessWidget {
               child: Container(
                 width: AppSizes.voiceToggleKnob,
                 height: AppSizes.voiceToggleKnob,
-                decoration: BoxDecoration(color: AppColors.surface, shape: BoxShape.circle, boxShadow: AppShadows.cardSmall),
+                decoration: BoxDecoration(color: AppColors.surface, shape: BoxShape.circle, boxShadow: AppShadows.control),
               ),
             ),
           ),
@@ -72,7 +72,7 @@ class VoiceLogToggle extends StatelessWidget {
           onTap: onSelectExercise,
           child: Text(
             tr(LocaleKeys.common_exercise),
-            style: AppTextStyles.title18Tight.copyWith(color: isExercise ? AppColors.textPrimary : AppColors.textMutedLight, fontWeight: FontWeight.w600),
+            style: AppTextStyles.title18.copyWith(color: isExercise ? AppColors.textPrimary : AppColors.textMutedLight, fontWeight: FontWeight.w600),
           ),
         ),
       ],
@@ -114,7 +114,7 @@ class VoiceLogTextArea extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: AppSizes.voiceTextAreaHeight,
+      height: AppSizes.askAiInputHeight,
       padding: const EdgeInsets.all(AppSpacing.m),
       decoration: BoxDecoration(color: AppColors.surfaceMuted, borderRadius: BorderRadius.circular(AppRadii.md)),
       child: TextField(
@@ -142,7 +142,7 @@ class VoiceLogAnalyzeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FoodyPrimaryButton(label: label, onTap: enabled ? onTap : null, icon: Icons.auto_awesome, gradient: AppGradients.voiceAnalyze, height: AppSizes.voiceAnalyzeHeight);
+    return FoodyPrimaryButton(label: label, onTap: enabled ? onTap : null, icon: Icons.auto_awesome, gradient: AppGradients.askAiPrimary, height: AppSizes.voiceAnalyzeHeight);
   }
 }
 

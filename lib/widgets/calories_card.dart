@@ -30,7 +30,7 @@ class CaloriesCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg),
-        //boxShadow: AppShadows.cardSmall,
+        //boxShadow: AppShadows.control,
       ),
       child: Row(
         children: [
@@ -51,7 +51,7 @@ class CaloriesCard extends StatelessWidget {
                       strokeWidth: AppSizes.ringStroke,
                       value: progress,
                       backgroundColor: AppColors.outline.withValues(alpha: 0.6),
-                      foregroundColor: AppColors.primarySoft,
+                      foregroundColor: AppColors.textPrimary,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [

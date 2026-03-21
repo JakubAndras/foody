@@ -113,7 +113,7 @@ class AskAiPromptCard extends StatelessWidget {
                     textAlignVertical: TextAlignVertical.top,
                     style: AppTextStyles.body14.copyWith(
                       fontWeight: FontWeight.w400,
-                      color: AppColors.textBody,
+                      color: AppColors.textMuted,
                     ),
                     decoration: InputDecoration(
                       hintText: tr(LocaleKeys.ask_ai_hint),
@@ -131,7 +131,7 @@ class AskAiPromptCard extends StatelessWidget {
                 if (!readOnly)
                   InkWell(
                     onTap: onClear,
-                    child: const Icon(Icons.close, size: AppSizes.iconMd, color: AppColors.textSecondaryAlt),
+                    child: const Icon(Icons.close, size: AppSizes.iconMd, color: AppColors.textSecondary),
                   ),
               ],
             ),
@@ -219,7 +219,7 @@ class AskAiExampleQuestionCard extends StatelessWidget {
               label,
               style: AppTextStyles.body14.copyWith(
                 fontWeight: FontWeight.w400,
-                color: AppColors.textBody,
+                color: AppColors.textMuted,
               ),
             ),
           ),
@@ -255,7 +255,7 @@ class AskAiResponseCard extends StatelessWidget {
             text,
             style: AppTextStyles.body15.copyWith(
               fontWeight: FontWeight.w400,
-              color: AppColors.textBody,
+              color: AppColors.textMuted,
             ),
           ),
         ],
@@ -318,7 +318,7 @@ class AskAiSummaryCard extends StatelessWidget {
                   label,
                   style: AppTextStyles.body13.copyWith(
                     fontWeight: FontWeight.w500,
-                    color: AppColors.textSecondaryAlt,
+                    color: AppColors.textSecondary,
                   ),
                 ),
               ],
@@ -592,7 +592,7 @@ class _DayRow extends StatelessWidget {
           width: cellSize,
           height: cellSize,
           decoration: BoxDecoration(
-            color: day == null ? Colors.transparent : AppColors.surfaceSubtle,
+            color: day == null ? Colors.transparent : AppColors.surface,
             gradient: isAffected ? affectedGradient : null,
             borderRadius: BorderRadius.circular(AppRadii.sm),
             boxShadow: isAffected ? AppShadows.calendarDay : null,
@@ -726,7 +726,7 @@ class _LegendItem extends StatelessWidget {
             color: gradient == null ? AppColors.surfaceMuted : null,
             borderRadius: BorderRadius.circular(6),
             border: gradient == null ? Border.all(color: AppColors.outline) : null,
-            boxShadow: useShadow ? AppShadows.cardSmall : null,
+            boxShadow: useShadow ? AppShadows.control : null,
           ),
         ),
         const SizedBox(width: AppSpacing.xs),
@@ -734,7 +734,7 @@ class _LegendItem extends StatelessWidget {
           label,
           style: AppTextStyles.body13.copyWith(
             fontWeight: FontWeight.w500,
-            color: AppColors.textBody,
+            color: AppColors.textMuted,
           ),
         ),
       ],

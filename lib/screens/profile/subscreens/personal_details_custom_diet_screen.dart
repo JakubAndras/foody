@@ -84,7 +84,7 @@ class _PersonalDetailsCustomDietScreenState extends State<PersonalDetailsCustomD
             height: AppSizes.customDietFieldHeight,
             padding: const EdgeInsets.all(AppSpacing.m),
             decoration: BoxDecoration(
-              color: AppColors.surfaceSubtle,
+              color: AppColors.surface,
               borderRadius: BorderRadius.circular(AppRadii.md),
             ),
             child: TextField(

@@ -116,7 +116,7 @@ class _DateSelectorState extends State<DateSelector> {
   Widget _buildDate(DateTime date, bool isSelected) {
     final normalizedDate = _normalizeDate(date);
     final numberColor = isSelected ? AppColors.textPrimary : AppColors.borderStrong;
-    final ringStrokeWidth = AppSizes.dateCircleBorder * 0.8;
+    final ringStrokeWidth = AppSizes.progressRingStroke * 0.8;
     final isToday = _isToday(date);
     final dayNames = [
       tr(LocaleKeys.day_mon),
@@ -156,7 +156,7 @@ class _DateSelectorState extends State<DateSelector> {
                     useSegmentedRing: widget.useSegmentedRing,
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(AppSizes.dateCircleBorder),
+                    padding: const EdgeInsets.all(AppSizes.progressRingStroke),
                     child: Container(
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
