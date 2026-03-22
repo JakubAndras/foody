@@ -40,7 +40,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
           ),
           const SizedBox(height: AppSpacing.m),
           ProfileCard(
-            radius: AppRadii.lg,
+            radius: AppRadii.l,
             shadow: AppShadows.cardSubtle,
             padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.xs, AppSpacing.screen, AppSpacing.xs),
             child: Column(

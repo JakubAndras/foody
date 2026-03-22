@@ -35,7 +35,7 @@ class HealthIntegrationScreen extends StatelessWidget {
           const SizedBox(height: AppSpacing.l),
           // Toggle row
           ProfileCard(
-            radius: AppRadii.lg,
+            radius: AppRadii.l,
             shadow: AppShadows.cardSubtle,
             padding: EdgeInsets.zero,
             child: Obx(() {
@@ -60,7 +60,7 @@ class HealthIntegrationScreen extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.l),
           ProfileCard(
-            radius: AppRadii.lg,
+            radius: AppRadii.l,
             shadow: AppShadows.cardSubtle,
             padding: EdgeInsets.zero,
             child: Column(
@@ -156,7 +156,7 @@ class _InstructionRow extends StatelessWidget {
                 height: 36,
                 decoration: BoxDecoration(
                   color: iconColor.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(AppRadii.sm),
+                  borderRadius: BorderRadius.circular(AppRadii.s),
                 ),
                 child: Icon(icon, size: 20, color: iconColor),
               ),

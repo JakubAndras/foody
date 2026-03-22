@@ -222,7 +222,7 @@ class _DobPickerColumnState extends State<_DobPickerColumn> {
           decoration: BoxDecoration(
             color: Colors.transparent,
             border: Border.all(color: AppColors.outline),
-            borderRadius: BorderRadius.circular(AppRadii.sm),
+            borderRadius: BorderRadius.circular(AppRadii.s),
           ),
         ),
         onSelectedItemChanged: (index) {

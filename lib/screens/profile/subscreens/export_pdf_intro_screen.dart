@@ -34,7 +34,7 @@ class ExportPdfIntroScreen extends StatelessWidget {
           const SizedBox(height: AppSpacing.m),
           ProfileCard(
             padding: const EdgeInsets.all(AppSpacing.m),
-            radius: AppRadii.lg,
+            radius: AppRadii.l,
             shadow: AppShadows.cardSubtle,
             child: Column(
               children: [

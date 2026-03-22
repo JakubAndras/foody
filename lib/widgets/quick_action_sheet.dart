@@ -78,7 +78,7 @@ class QuickActionSheet extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   color: AppColors.white,
-                  borderRadius: BorderRadius.circular(AppRadii.lg),
+                  borderRadius: BorderRadius.circular(AppRadii.l),
                   boxShadow: const [
                     BoxShadow(
                       offset: Offset(0, 8),
@@ -148,7 +148,7 @@ class _QuickActionTile extends StatelessWidget {
         height: 92,
         decoration: BoxDecoration(
           color: AppColors.white,
-          borderRadius: BorderRadius.circular(AppRadii.lg),
+          borderRadius: BorderRadius.circular(AppRadii.l),
           boxShadow: const [
             BoxShadow(
               offset: Offset(0, 8),

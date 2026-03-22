@@ -8,10 +8,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class DashboardCalendarSheet extends StatefulWidget {
-  const DashboardCalendarSheet({super.key, required this.selectedDate, required this.onDateSelected});
+  const DashboardCalendarSheet({super.key, required this.selectedDate, required this.onDateSelected, this.selectOnPickerScroll = true});
 
   final DateTime selectedDate;
   final ValueChanged<DateTime> onDateSelected;
+  final bool selectOnPickerScroll;
 
   static void show(BuildContext context, {required DateTime selectedDate, required ValueChanged<DateTime> onDateSelected}) {
     MainScreenController.to.isCalendarSheetVisible.value = true;
@@ -61,7 +62,7 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
     _today = DateTime(now.year, now.month, now.day);
     _selectedDate = widget.selectedDate;
     _displayedMonth = DateTime(_selectedDate.year, _selectedDate.month, 1);
-    _pickerMonth = _displayedMonth.month - 1;
+    _pickerMonth = _displayedMonth.month;
     _pickerYear = _displayedMonth.year;
   }
 
@@ -80,10 +81,10 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
   void _toggleMonthYearPicker() {
     setState(() {
       if (_showMonthYearPicker) {
-        _displayedMonth = DateTime(_pickerYear, _pickerMonth + 1, 1);
+        _displayedMonth = DateTime(_pickerYear, _pickerMonth, 1);
         _showMonthYearPicker = false;
       } else {
-        _pickerMonth = _displayedMonth.month - 1;
+        _pickerMonth = _displayedMonth.month;
         _pickerYear = _displayedMonth.year;
         _showMonthYearPicker = true;
       }
@@ -91,7 +92,8 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
   }
 
   String _monthYearLabel() {
-    final raw = DateFormat('MMMM yyyy').format(_displayedMonth);
+    final locale = context.locale.toString();
+    final raw = DateFormat('MMMM yyyy', locale).format(_displayedMonth);
     return '${raw[0].toUpperCase()}${raw.substring(1)}';
   }
 
@@ -318,7 +320,9 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
                 _displayedMonth = DateTime(date.year, date.month, 1);
                 _selectedDate = DateTime(date.year, date.month, 1);
               });
-              widget.onDateSelected(_selectedDate);
+              if (widget.selectOnPickerScroll) {
+                widget.onDateSelected(_selectedDate);
+              }
             },
           ),
         ),

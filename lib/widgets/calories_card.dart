@@ -29,7 +29,7 @@ class CaloriesCard extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.l),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.lg),
+        borderRadius: BorderRadius.circular(AppRadii.l),
         //boxShadow: AppShadows.control,
       ),
       child: Row(

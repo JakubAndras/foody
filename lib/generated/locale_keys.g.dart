@@ -60,6 +60,7 @@ abstract class  LocaleKeys {
   static const common_unsaved_changes_message = 'common_unsaved_changes_message';
   static const common_discard = 'common_discard';
   static const common_name = 'common_name';
+  static const common_revert = 'common_revert';
   static const day_monday_short = 'day_monday_short';
   static const day_tuesday_short = 'day_tuesday_short';
   static const day_wednesday_short = 'day_wednesday_short';
@@ -138,6 +139,7 @@ abstract class  LocaleKeys {
   static const progress_missing_weight = 'progress_missing_weight';
   static const progress_weight_progress = 'progress_weight_progress';
   static const progress_since_start = 'progress_since_start';
+  static const progress_of_goal = 'progress_of_goal';
   static const progress_no_weight_data = 'progress_no_weight_data';
   static const progress_log_first_weigh_in = 'progress_log_first_weigh_in';
   static const progress_log_today = 'progress_log_today';
@@ -279,6 +281,8 @@ abstract class  LocaleKeys {
   static const nutrition_goals_invalid_values = 'nutrition_goals_invalid_values';
   static const nutrition_goals_updated = 'nutrition_goals_updated';
   static const nutrition_goals_save_goals = 'nutrition_goals_save_goals';
+  static const nutrition_goals_generate_ai = 'nutrition_goals_generate_ai';
+  static const nutrition_goals_generate_ai_long = 'nutrition_goals_generate_ai_long';
   static const weight_log_title_log = 'weight_log_title_log';
   static const weight_log_title_edit = 'weight_log_title_edit';
   static const weight_log_label_weight = 'weight_log_label_weight';
@@ -289,6 +293,8 @@ abstract class  LocaleKeys {
   static const weight_log_delete_message = 'weight_log_delete_message';
   static const weight_log_add_weight = 'weight_log_add_weight';
   static const weight_log_no_entries = 'weight_log_no_entries';
+  static const weight_log_last_entry = 'weight_log_last_entry';
+  static const weight_log_log_weight = 'weight_log_log_weight';
   static const meal_untitled = 'meal_untitled';
   static const meal_meal_name = 'meal_meal_name';
   static const meal_enter_meal_name = 'meal_enter_meal_name';

@@ -99,7 +99,7 @@ class ProfileCard extends StatelessWidget {
     required this.child,
     this.padding = const EdgeInsets.all(AppSpacing.screen),
     this.color = AppColors.surface,
-    this.radius = AppRadii.lg,
+    this.radius = AppRadii.l,
     this.shadow,
     this.border,
   });

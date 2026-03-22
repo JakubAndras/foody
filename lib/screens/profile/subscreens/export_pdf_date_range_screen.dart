@@ -451,7 +451,7 @@ class _DateRangeButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected ? null : AppColors.surface,
           gradient: isSelected ? AppGradients.primary : null,
-          borderRadius: BorderRadius.circular(AppRadii.md),
+          borderRadius: BorderRadius.circular(AppRadii.m),
         ),
         alignment: Alignment.center,
         child: Text(

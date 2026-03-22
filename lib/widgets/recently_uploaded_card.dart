@@ -169,7 +169,7 @@ class RecentlyUploadedCard extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: AppSpacing.xxs + 1),
         decoration: BoxDecoration(
           color: AppColors.surface,
-          borderRadius: BorderRadius.circular(AppRadii.lg),
+          borderRadius: BorderRadius.circular(AppRadii.l),
           border: Border.all(color: AppColors.outline),
           boxShadow: AppShadows.cardSoft,
         ),
@@ -254,7 +254,7 @@ class RecentlyUploadedCard extends StatelessWidget {
       height: AppSizes.mealImageSize,
       decoration: BoxDecoration(
         color: AppColors.surfaceMuted,
-        borderRadius: BorderRadius.circular(AppRadii.md),
+        borderRadius: BorderRadius.circular(AppRadii.m),
         image: file != null
             ? DecorationImage(
                 image: FileImage(file),
@@ -283,7 +283,7 @@ class RecentlyUploadedCard extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: AppSpacing.xxs + 1),
         decoration: BoxDecoration(
           color: AppColors.surface,
-          borderRadius: BorderRadius.circular(AppRadii.lg),
+          borderRadius: BorderRadius.circular(AppRadii.l),
           border: Border.all(color: AppColors.outline),
           boxShadow: AppShadows.cardSoft,
         ),
@@ -295,7 +295,7 @@ class RecentlyUploadedCard extends StatelessWidget {
                 width: AppSizes.mealImageSize,
                 height: AppSizes.mealImageSize,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(AppRadii.md),
+                  borderRadius: BorderRadius.circular(AppRadii.m),
                   gradient: AppGradients.exerciseCalories,
                 ),
                 child: const Icon(Icons.directions_run_rounded, color: AppColors.onPrimary),
@@ -429,7 +429,7 @@ class _AnalyzingMealCardState extends State<AnalyzingMealCard> {
     final subtitle = isExercise ? tr(LocaleKeys.dashboard_recognising_exercise_subtitle) : tr(LocaleKeys.dashboard_recognising_meal_subtitle);
     final cardHeight = isExercise ? AppSizes.exerciseCardHeight : AppSizes.mealCardHeight;
     final leadingDecoration = BoxDecoration(
-      borderRadius: BorderRadius.circular(AppRadii.md),
+      borderRadius: BorderRadius.circular(AppRadii.m),
       color: isExercise ? null : AppColors.surfaceMuted,
       gradient: isExercise ? AppGradients.exerciseCalories : null,
     );
@@ -440,7 +440,7 @@ class _AnalyzingMealCardState extends State<AnalyzingMealCard> {
       margin: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.lg),
+        borderRadius: BorderRadius.circular(AppRadii.l),
         border: Border.all(color: AppColors.outline),
         boxShadow: AppShadows.cardSoft,
       ),
@@ -457,7 +457,7 @@ class _AnalyzingMealCardState extends State<AnalyzingMealCard> {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(AppRadii.md),
+                      borderRadius: BorderRadius.circular(AppRadii.m),
                       color: AppColors.overlayDark60,
                     ),
                   ),

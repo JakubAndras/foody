@@ -116,7 +116,7 @@ class VoiceLogTextArea extends StatelessWidget {
     return Container(
       height: AppSizes.askAiInputHeight,
       padding: const EdgeInsets.all(AppSpacing.m),
-      decoration: BoxDecoration(color: AppColors.surfaceMuted, borderRadius: BorderRadius.circular(AppRadii.md)),
+      decoration: BoxDecoration(color: AppColors.surfaceMuted, borderRadius: BorderRadius.circular(AppRadii.m)),
       child: TextField(
         controller: controller,
         enabled: enabled,

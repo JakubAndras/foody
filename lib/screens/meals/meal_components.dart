@@ -149,7 +149,7 @@ class CaloriesSummaryCard extends StatelessWidget {
       margin: margin,
       height: height,
       padding: padding ?? const EdgeInsets.all(AppSpacing.l),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.lg), boxShadow: AppShadows.control),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l), boxShadow: AppShadows.control),
       child: Stack(
         children: [
           if (badge != null) Positioned(right: 0, top: 0, child: badge!),
@@ -197,7 +197,7 @@ class MacroStatCard extends StatelessWidget {
       width: double.infinity,
       height: height ?? AppSizes.macroCardSize,
       padding: const EdgeInsets.all(AppSpacing.l),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.lg), boxShadow: AppShadows.control),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l), boxShadow: AppShadows.control),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -241,7 +241,7 @@ class MealRecordCard extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.m, AppSpacing.l, AppSpacing.m),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.lg),
+        borderRadius: BorderRadius.circular(AppRadii.l),
         border: Border.all(color: AppColors.separator),
         boxShadow: AppShadows.control,
       ),
@@ -273,7 +273,7 @@ class _RecordRow extends StatelessWidget {
         ? Container(
             height: AppSizes.dateChipHeight,
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
-            decoration: BoxDecoration(color: AppColors.surfaceMuted, borderRadius: BorderRadius.circular(AppRadii.sm)),
+            decoration: BoxDecoration(color: AppColors.surfaceMuted, borderRadius: BorderRadius.circular(AppRadii.s)),
             alignment: Alignment.center,
             child: Text(value, style: AppTextStyles.body16.copyWith(letterSpacing: -0.3125)),
           )
@@ -287,7 +287,7 @@ class _RecordRow extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(AppRadii.sm),
+      borderRadius: BorderRadius.circular(AppRadii.s),
       child: SizedBox(
         height: AppSizes.editFormRowHeight,
         child: Row(
@@ -316,13 +316,13 @@ class IngredientRow extends StatelessWidget {
     final border = highlighted ? AppColors.warningStrong : Colors.transparent;
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(AppRadii.lg),
+      borderRadius: BorderRadius.circular(AppRadii.l),
       child: Container(
         height: highlighted ? AppSizes.ingredientRowAlertHeight : AppSizes.ingredientRowHeight,
         padding: const EdgeInsets.all(AppSpacing.m),
         decoration: BoxDecoration(
           color: background,
-          borderRadius: BorderRadius.circular(AppRadii.lg),
+          borderRadius: BorderRadius.circular(AppRadii.l),
           border: Border.all(color: border, width: 1),
         ),
         child: Row(
@@ -431,7 +431,7 @@ class AllergyAlertCard extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.s, AppSpacing.m, AppSpacing.s),
       decoration: BoxDecoration(
         color: AppColors.warningSurface,
-        borderRadius: BorderRadius.circular(AppRadii.lg),
+        borderRadius: BorderRadius.circular(AppRadii.l),
         border: Border.all(color: AppColors.warningStrong),
       ),
       child: Row(
@@ -512,11 +512,11 @@ class AmountInputField extends StatelessWidget {
           filled: true,
           fillColor: AppColors.surface,
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(AppRadii.md),
+            borderRadius: BorderRadius.circular(AppRadii.m),
             borderSide: const BorderSide(color: AppColors.surfaceMuted),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(AppRadii.md),
+            borderRadius: BorderRadius.circular(AppRadii.m),
             borderSide: const BorderSide(color: AppColors.primary),
           ),
         ),
@@ -533,12 +533,12 @@ class GlassActionSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(AppRadii.lg),
+      borderRadius: BorderRadius.circular(AppRadii.l),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s, vertical: AppSpacing.m),
-          decoration: BoxDecoration(color: AppColors.glassSheet, borderRadius: BorderRadius.circular(AppRadii.lg)),
+          decoration: BoxDecoration(color: AppColors.glassSheet, borderRadius: BorderRadius.circular(AppRadii.l)),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: items
@@ -547,7 +547,7 @@ class GlassActionSheet extends StatelessWidget {
                     padding: EdgeInsets.only(bottom: item == items.last ? 0 : AppSpacing.s),
                     child: InkWell(
                       onTap: item.onTap,
-                      borderRadius: BorderRadius.circular(AppRadii.sm),
+                      borderRadius: BorderRadius.circular(AppRadii.s),
                       child: SizedBox(
                         height: AppSizes.actionRowHeight,
                         child: Row(

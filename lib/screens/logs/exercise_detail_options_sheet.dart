@@ -18,14 +18,14 @@ class ExerciseDetailOptionsSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(AppRadii.lg),
+      borderRadius: BorderRadius.circular(AppRadii.l),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
         child: Container(
           padding: const EdgeInsets.all(AppSpacing.m),
           decoration: BoxDecoration(
             color: AppColors.glassSheet,
-            borderRadius: BorderRadius.circular(AppRadii.lg),
+            borderRadius: BorderRadius.circular(AppRadii.l),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,

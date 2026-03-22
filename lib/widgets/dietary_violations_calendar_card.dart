@@ -73,11 +73,11 @@ class _MonthlyCalendarCardState extends State<MonthlyCalendarCard> {
       return Container(
         decoration: BoxDecoration(
           color: AppColors.surface,
-          borderRadius: BorderRadius.circular(AppRadii.xl),
+          borderRadius: BorderRadius.circular(AppRadii.l),
           border: Border.all(color: AppColors.outline),
           boxShadow: AppShadows.cardSoft,
         ),
-        padding: const EdgeInsets.all(AppSpacing.l),
+        padding: const EdgeInsets.all(AppSpacing.m),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

@@ -396,10 +396,10 @@ class OnboardingOptionCard extends StatelessWidget {
 
     return Material(
       color: background,
-      borderRadius: BorderRadius.circular(AppRadii.md),
+      borderRadius: BorderRadius.circular(AppRadii.m),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(AppRadii.md),
+        borderRadius: BorderRadius.circular(AppRadii.m),
         child: SizedBox(
           height: height,
           width: double.infinity,
@@ -468,7 +468,7 @@ class OnboardingPillChipSmall extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.xxs),
       decoration: BoxDecoration(
         color: backgroundColor ?? AppColors.surfaceChip,
-        borderRadius: BorderRadius.circular(AppRadii.lg),
+        borderRadius: BorderRadius.circular(AppRadii.l),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -507,7 +507,7 @@ class OnboardingPillChipBig extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.xs),
       decoration: BoxDecoration(
         color: backgroundColor ?? AppColors.surfaceChip,
-        borderRadius: BorderRadius.circular(AppRadii.lg),
+        borderRadius: BorderRadius.circular(AppRadii.l),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -528,7 +528,7 @@ class OnboardingSurfaceCard extends StatelessWidget {
     super.key,
     required this.child,
     this.padding = const EdgeInsets.all(AppSpacing.m),
-    this.radius = AppRadii.lg,
+    this.radius = AppRadii.l,
   });
 
   final Widget child;
@@ -747,7 +747,7 @@ class _RulerPainter extends CustomPainter {
     );
 
     canvas.drawRRect(
-      RRect.fromRectAndRadius(highlightRect, const Radius.circular(AppRadii.sm)),
+      RRect.fromRectAndRadius(highlightRect, const Radius.circular(AppRadii.s)),
       highlightPaint,
     );
 
@@ -795,7 +795,7 @@ class OnboardingPlaceholderImage extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.lg),
+        borderRadius: BorderRadius.circular(AppRadii.l),
       ),
       child: const Center(
         child: Icon(
@@ -816,13 +816,13 @@ class OnboardingGlassCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(AppRadii.lg),
+      borderRadius: BorderRadius.circular(AppRadii.l),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
         child: Container(
           decoration: BoxDecoration(
             color: AppColors.glassMuted,
-            borderRadius: BorderRadius.circular(AppRadii.lg),
+            borderRadius: BorderRadius.circular(AppRadii.l),
             border: Border.all(color: AppColors.outline.withValues(alpha: 0.4)),
           ),
           child: child,
@@ -843,7 +843,7 @@ class OnboardingSmallBadge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s, vertical: AppSpacing.xxs),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.md),
+        borderRadius: BorderRadius.circular(AppRadii.m),
       ),
       child: Text(
         label,

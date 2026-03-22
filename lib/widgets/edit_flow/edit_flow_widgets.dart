@@ -74,7 +74,7 @@ class EditConfirmSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.l),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.lg), boxShadow: AppShadows.sheet),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l), boxShadow: AppShadows.sheet),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,13 +119,13 @@ class EditIngredientRow extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(AppRadii.lg),
+      borderRadius: BorderRadius.circular(AppRadii.l),
       child: Container(
         height: highlighted ? AppSizes.ingredientRowAlertHeight : AppSizes.ingredientRowHeight,
         padding: const EdgeInsets.all(AppSpacing.m),
         decoration: BoxDecoration(
           color: background,
-          borderRadius: BorderRadius.circular(AppRadii.lg),
+          borderRadius: BorderRadius.circular(AppRadii.l),
           border: Border.all(color: border, width: AppSizes.dividerThin),
         ),
         child: Row(

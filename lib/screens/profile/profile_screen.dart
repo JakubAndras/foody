@@ -326,7 +326,7 @@ class _ProfileHeaderCard extends StatelessWidget {
         height: AppSizes.profileHeaderHeight,
         decoration: BoxDecoration(
           color: AppColors.surface,
-          borderRadius: BorderRadius.circular(AppRadii.lg),
+          borderRadius: BorderRadius.circular(AppRadii.l),
           boxShadow: AppShadows.cardSubtle,
         ),
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
@@ -373,7 +373,7 @@ class _ProfileGroupCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProfileCard(
-      radius: AppRadii.lg,
+      radius: AppRadii.l,
       shadow: AppShadows.cardSubtle,
       padding: EdgeInsets.zero,
       child: Column(children: children),
@@ -426,7 +426,7 @@ class _WidgetSection extends StatelessWidget {
           Expanded(
             flex: 5,
             child: ProfileCard(
-              radius: AppRadii.lg,
+              radius: AppRadii.l,
               shadow: AppShadows.cardSubtle,
               padding: const EdgeInsets.all(AppSpacing.m),
               child: Row(
@@ -572,7 +572,7 @@ class _WidgetShortcutCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: ProfileCard(
-        radius: AppRadii.lg,
+        radius: AppRadii.l,
         shadow: AppShadows.cardSubtle,
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.xs),
         child: SizedBox(

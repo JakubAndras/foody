@@ -49,7 +49,7 @@ class PersonalDetailsScreen extends StatelessWidget {
             ProfileTopBar(title: tr(LocaleKeys.personal_details_title), onBack: () => Get.back()),
             const SizedBox(height: AppSpacing.l),
             ProfileCard(
-              radius: AppRadii.lg,
+              radius: AppRadii.l,
               shadow: AppShadows.cardSubtle,
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen, vertical: AppSpacing.m),
               child: Row(
@@ -81,7 +81,7 @@ class PersonalDetailsScreen extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.m),
             ProfileCard(
-              radius: AppRadii.lg,
+              radius: AppRadii.l,
               shadow: AppShadows.cardSubtle,
               padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.xs, AppSpacing.screen, AppSpacing.xs),
               child: Column(
@@ -515,7 +515,7 @@ class _CustomDietSheetState extends State<_CustomDietSheet> {
                 hintStyle: AppTextStyles.body16.copyWith(color: AppColors.textTertiary),
                 filled: true,
                 fillColor: AppColors.surfaceMuted,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadii.md), borderSide: BorderSide.none),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadii.m), borderSide: BorderSide.none),
                 contentPadding: const EdgeInsets.all(AppSpacing.m),
               ),
             ),
@@ -634,7 +634,7 @@ class _ProfileNumberSheetState extends State<_ProfileNumberSheet> {
                 hintStyle: AppTextStyles.body16.copyWith(color: AppColors.textTertiary),
                 filled: true,
                 fillColor: AppColors.surfaceMuted,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadii.md), borderSide: BorderSide.none),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadii.m), borderSide: BorderSide.none),
                 contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.m),
                 suffixText: widget.unit,
                 suffixStyle: AppTextStyles.body15.copyWith(color: AppColors.textSecondary),

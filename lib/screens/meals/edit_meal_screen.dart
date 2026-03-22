@@ -909,7 +909,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                           _ensureEditMode();
                                           _addIngredient();
                                         },
-                                  borderRadius: BorderRadius.circular(AppRadii.sm),
+                                  borderRadius: BorderRadius.circular(AppRadii.s),
                                   child: Row(
                                     children: [
                                       const Icon(Icons.add, size: AppSizes.iconSm, color: AppColors.textTertiary),
@@ -1094,7 +1094,7 @@ class _MealNameEditorSheetState extends State<_MealNameEditorSheet> {
                 hintStyle: AppTextStyles.body16.copyWith(color: AppColors.textTertiary),
                 filled: true,
                 fillColor: AppColors.surfaceMuted,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadii.md), borderSide: BorderSide.none),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadii.m), borderSide: BorderSide.none),
                 contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.m),
               ),
             ),
@@ -1171,7 +1171,7 @@ class _NutrientEditorSheetState extends State<_NutrientEditorSheet> {
                 hintStyle: AppTextStyles.body16.copyWith(color: AppColors.textTertiary),
                 filled: true,
                 fillColor: AppColors.surfaceMuted,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadii.md), borderSide: BorderSide.none),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadii.m), borderSide: BorderSide.none),
                 contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.m),
               ),
             ),

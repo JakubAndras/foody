@@ -81,7 +81,7 @@ class _AskAiScreenState extends State<AskAiScreen> {
                       child: Opacity(
                         opacity: loading ? 0.5 : 1.0,
                         child: ProfileCard(
-                          radius: AppRadii.lg,
+                          radius: AppRadii.l,
                           shadow: AppShadows.cardSubtle,
                           padding: const EdgeInsets.all(AppSpacing.m),
                           child: Column(

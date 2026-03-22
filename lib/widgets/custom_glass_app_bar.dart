@@ -95,7 +95,7 @@ class CustomGlassAppBar extends StatelessWidget implements PreferredSizeWidget {
     return SafeArea(
       bottom: false,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
+        padding: const EdgeInsets.symmetric(horizontal: 0),
         child: SizedBox(
           height: preferredSize.height,
           child: Stack(

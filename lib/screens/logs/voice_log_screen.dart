@@ -506,7 +506,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
       builder: (_) => Container(
         decoration: const BoxDecoration(
           color: AppColors.surface,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.lg)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.l)),
         ),
         padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.m, AppSpacing.l, AppSpacing.xl),
         child: Column(
@@ -579,7 +579,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
                               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
                               child: Container(
                                 padding: const EdgeInsets.all(AppSpacing.m),
-                                decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.lg), boxShadow: AppShadows.cardSubtle),
+                                decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l), boxShadow: AppShadows.cardSubtle),
                                 child: Column(
                                   children: [
                                     VoiceLogTextArea(

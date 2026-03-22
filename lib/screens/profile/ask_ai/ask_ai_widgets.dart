@@ -13,7 +13,7 @@ class AskAiPrimaryButton extends StatelessWidget {
     this.onPressed,
     this.leading,
     this.height = AppSizes.askAiActionHeight,
-    this.radius = AppRadii.md,
+    this.radius = AppRadii.m,
     this.gradient = AppGradients.askAiPrimary,
   });
 
@@ -83,7 +83,7 @@ class AskAiPromptCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProfileCard(
-      radius: AppRadii.lg,
+      radius: AppRadii.l,
       shadow: AppShadows.cardSubtle,
       padding: const EdgeInsets.all(AppSpacing.m),
       child: Column(
@@ -93,7 +93,7 @@ class AskAiPromptCard extends StatelessWidget {
             padding: const EdgeInsets.all(AppSpacing.m),
             decoration: BoxDecoration(
               color: AppColors.surfaceMuted,
-              borderRadius: BorderRadius.circular(AppRadii.md),
+              borderRadius: BorderRadius.circular(AppRadii.m),
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -204,12 +204,12 @@ class AskAiExampleQuestionCard extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        borderRadius: BorderRadius.circular(AppRadii.md),
+        borderRadius: BorderRadius.circular(AppRadii.m),
         onTap: onTap,
         child: Ink(
           decoration: BoxDecoration(
             color: AppColors.surfaceMuted,
-            borderRadius: BorderRadius.circular(AppRadii.md),
+            borderRadius: BorderRadius.circular(AppRadii.m),
           ),
           child: Container(
             constraints: BoxConstraints(minHeight: height ?? 48),
@@ -237,7 +237,7 @@ class AskAiResponseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProfileCard(
-      radius: AppRadii.lg,
+      radius: AppRadii.l,
       shadow: AppShadows.cardSubtle,
       padding: const EdgeInsets.all(AppSpacing.screen),
       child: Column(
@@ -285,7 +285,7 @@ class AskAiSummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProfileCard(
-      radius: AppRadii.lg,
+      radius: AppRadii.l,
       shadow: AppShadows.cardSubtle,
       padding: const EdgeInsets.all(AppSpacing.screen),
       child: Column(
@@ -304,7 +304,7 @@ class AskAiSummaryCard extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: AppSpacing.l),
             decoration: BoxDecoration(
               gradient: panelGradient,
-              borderRadius: BorderRadius.circular(AppRadii.md),
+              borderRadius: BorderRadius.circular(AppRadii.m),
             ),
             child: Column(
               children: [
@@ -421,7 +421,7 @@ class _AskAiCalendarCardState extends State<AskAiCalendarCard> {
     final daysForMonth = _affectedDaysForCurrentMonth();
 
     return ProfileCard(
-      radius: AppRadii.lg,
+      radius: AppRadii.l,
       shadow: AppShadows.cardSubtle,
       padding: const EdgeInsets.all(AppSpacing.screen),
       child: Column(
@@ -594,7 +594,7 @@ class _DayRow extends StatelessWidget {
           decoration: BoxDecoration(
             color: day == null ? Colors.transparent : AppColors.surface,
             gradient: isAffected ? affectedGradient : null,
-            borderRadius: BorderRadius.circular(AppRadii.sm),
+            borderRadius: BorderRadius.circular(AppRadii.s),
             boxShadow: isAffected ? AppShadows.calendarDay : null,
           ),
           alignment: Alignment.center,
@@ -634,7 +634,7 @@ class _MonthSelector extends StatelessWidget {
       height: 48,
       decoration: BoxDecoration(
         color: AppColors.surfaceMuted,
-        borderRadius: BorderRadius.circular(AppRadii.sm),
+        borderRadius: BorderRadius.circular(AppRadii.s),
       ),
       child: Row(
         children: [
@@ -684,7 +684,7 @@ class _LegendRow extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.surfaceMuted,
-        borderRadius: BorderRadius.circular(AppRadii.sm),
+        borderRadius: BorderRadius.circular(AppRadii.s),
       ),
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
       child: Row(

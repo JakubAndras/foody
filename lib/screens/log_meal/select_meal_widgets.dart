@@ -80,7 +80,7 @@ class SelectMealQuickActionTile extends StatelessWidget {
       onTap: onTap,
       child: Container(
         height: AppSizes.selectMealActionTileHeight,
-        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.md), boxShadow: AppShadows.control),
+        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.m), boxShadow: AppShadows.control),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -169,7 +169,7 @@ class SelectMealCard extends StatelessWidget {
         padding: const EdgeInsets.only(right: AppSpacing.m),
         decoration: BoxDecoration(
           color: AppColors.surface,
-          borderRadius: BorderRadius.circular(AppRadii.md),
+          borderRadius: BorderRadius.circular(AppRadii.m),
           border: Border.all(color: AppColors.outline, width: 1),
           boxShadow: AppShadows.cardSubtle,
         ),
@@ -180,7 +180,7 @@ class SelectMealCard extends StatelessWidget {
               height: AppSizes.mealImageSize,
               decoration: BoxDecoration(
                 color: AppColors.surfaceMuted,
-                borderRadius: BorderRadius.circular(AppRadii.md),
+                borderRadius: BorderRadius.circular(AppRadii.m),
                 image: imageProvider != null ? DecorationImage(image: imageProvider!, fit: BoxFit.cover) : null,
               ),
             ),
@@ -247,7 +247,7 @@ class SelectMealInlineMacroCard extends StatelessWidget {
       height: AppSizes.mealImageSize,
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.md),
+        borderRadius: BorderRadius.circular(AppRadii.m),
         border: Border.all(color: AppColors.outline, width: 1),
         boxShadow: AppShadows.cardSubtle,
       ),
@@ -260,7 +260,7 @@ class SelectMealInlineMacroCard extends StatelessWidget {
               height: AppSizes.mealImageSize,
               decoration: BoxDecoration(
                 color: AppColors.surfaceMuted,
-                borderRadius: BorderRadius.circular(AppRadii.md),
+                borderRadius: BorderRadius.circular(AppRadii.m),
                 image: imageProvider != null ? DecorationImage(image: imageProvider!, fit: BoxFit.cover) : null,
               ),
             ),
@@ -341,7 +341,7 @@ class SelectMealIngredientRow extends StatelessWidget {
       child: Container(
         height: AppSizes.selectMealIngredientRowHeight,
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.md), boxShadow: AppShadows.control),
+        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.m), boxShadow: AppShadows.control),
         child: Row(
           children: [
             Expanded(
@@ -458,12 +458,12 @@ class SelectMealPickerSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(AppRadii.lg),
+      borderRadius: BorderRadius.circular(AppRadii.l),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s, vertical: AppSpacing.m),
-          decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.lg)),
+          decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l)),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

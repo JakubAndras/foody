@@ -23,12 +23,12 @@ class GlassPopup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(AppRadii.lg),
+      borderRadius: BorderRadius.circular(AppRadii.l),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.m),
-          decoration: BoxDecoration(color: AppColors.glassSheet, borderRadius: BorderRadius.circular(AppRadii.lg)),
+          decoration: BoxDecoration(color: AppColors.glassSheet, borderRadius: BorderRadius.circular(AppRadii.l)),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: items
@@ -41,7 +41,7 @@ class GlassPopup extends StatelessWidget {
                         padding: EdgeInsets.only(bottom: item == items.last ? 0 : AppSpacing.s, top: item == items.last ? AppSpacing.xs : 0),
                         child: InkWell(
                           onTap: item.onTap,
-                          borderRadius: BorderRadius.circular(AppRadii.sm),
+                          borderRadius: BorderRadius.circular(AppRadii.s),
                           child: SizedBox(
                             height: AppSizes.actionRowHeight,
                             child: Row(
@@ -81,7 +81,7 @@ class GlassPopup extends StatelessWidget {
   }
 }
 
-Future<void> showGlassPopup({required BuildContext context, required List<GlassPopupItem> items, Alignment anchor = Alignment.topRight, BuildContext? targetContext}) {
+Future<void> showGlassPopup({required BuildContext context, required List<GlassPopupItem> items, Alignment anchor = Alignment.topRight, BuildContext? targetContext, Offset targetOffset = Offset.zero}) {
   Rect? targetRect;
   if (targetContext != null) {
     final renderBox = targetContext.findRenderObject() as RenderBox?;
@@ -107,8 +107,8 @@ Future<void> showGlassPopup({required BuildContext context, required List<GlassP
       final double? left;
 
       if (targetRect != null) {
-        top = targetRect.bottom + AppSpacing.xs;
-        right = screenWidth - targetRect.right;
+        top = targetRect.top + targetOffset.dy;
+        right = screenWidth - targetRect.right + targetOffset.dx;
         left = null;
       } else {
         top = safeTop + AppSizes.topBarHeight;

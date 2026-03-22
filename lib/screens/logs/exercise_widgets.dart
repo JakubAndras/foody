@@ -20,7 +20,7 @@ class ExerciseSearchBar extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.lg),
+        borderRadius: BorderRadius.circular(AppRadii.l),
         border: Border.all(color: AppColors.outline, width: 1),
         // boxShadow: AppShadows.control,
       ),
@@ -118,7 +118,7 @@ class ExerciseListCard extends StatelessWidget {
         padding: const EdgeInsets.all(AppSpacing.m),
         decoration: BoxDecoration(
           color: AppColors.surface,
-          borderRadius: BorderRadius.circular(AppRadii.lg),
+          borderRadius: BorderRadius.circular(AppRadii.l),
           border: Border.all(color: AppColors.outline, width: 1),
           // boxShadow: AppShadows.control,
         ),
@@ -194,7 +194,7 @@ class ExerciseStatCard extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.m),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.lg),
+        borderRadius: BorderRadius.circular(AppRadii.l),
         border: Border.all(color: AppColors.outline, width: 1),
         // boxShadow: AppShadows.control,
       ),
@@ -206,7 +206,7 @@ class ExerciseStatCard extends StatelessWidget {
             height: 48,
             decoration: BoxDecoration(
               gradient: gradient,
-              borderRadius: BorderRadius.circular(AppRadii.md),
+              borderRadius: BorderRadius.circular(AppRadii.m),
             ),
             child: Icon(icon, color: AppColors.onPrimary, size: AppSizes.iconMd),
           ),
@@ -248,7 +248,7 @@ class ExerciseInfoCard extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.m),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.lg),
+        borderRadius: BorderRadius.circular(AppRadii.l),
         border: Border.all(color: AppColors.outline, width: 1),
         // boxShadow: AppShadows.control,
       ),
@@ -259,7 +259,7 @@ class ExerciseInfoCard extends StatelessWidget {
             height: 48,
             decoration: BoxDecoration(
               gradient: gradient,
-              borderRadius: BorderRadius.circular(AppRadii.md),
+              borderRadius: BorderRadius.circular(AppRadii.m),
             ),
             child: Icon(icon, color: AppColors.onPrimary, size: AppSizes.iconMd),
           ),
@@ -302,7 +302,7 @@ class ExerciseCalculationCard extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.l),
       decoration: BoxDecoration(
         color: AppColors.surfaceMuted,
-        borderRadius: BorderRadius.circular(AppRadii.lg),
+        borderRadius: BorderRadius.circular(AppRadii.l),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -419,7 +419,7 @@ class ExerciseTrackingOptionCard extends StatelessWidget {
         padding: const EdgeInsets.all(AppSpacing.m),
         decoration: BoxDecoration(
           color: selected ? AppColors.surfaceSelected : AppColors.surface,
-          borderRadius: BorderRadius.circular(AppRadii.lg),
+          borderRadius: BorderRadius.circular(AppRadii.l),
           border: Border.all(
             color: selected ? AppColors.primary : AppColors.outline,
             width: selected ? 1 : 1,
@@ -434,7 +434,7 @@ class ExerciseTrackingOptionCard extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: selected ? gradient : null,
                 color: selected ? null : AppColors.surfaceMuted,
-                borderRadius: BorderRadius.circular(AppRadii.sm),
+                borderRadius: BorderRadius.circular(AppRadii.s),
               ),
               child: Icon(icon, color: selected ? AppColors.onPrimary : AppColors.textTertiary, size: AppSizes.iconMd),
             ),
@@ -472,7 +472,7 @@ class ExerciseInputCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.lg),
+        borderRadius: BorderRadius.circular(AppRadii.l),
         border: Border.all(color: AppColors.outline, width: 1),
         // boxShadow: AppShadows.control,
       ),
@@ -483,7 +483,7 @@ class ExerciseInputCard extends StatelessWidget {
             height: 40,
             decoration: BoxDecoration(
               gradient: gradient,
-              borderRadius: BorderRadius.circular(AppRadii.md),
+              borderRadius: BorderRadius.circular(AppRadii.m),
             ),
             child: Icon(icon, color: AppColors.onPrimary, size: AppSizes.iconSm),
           ),
@@ -515,7 +515,7 @@ class ExerciseTotalSummaryCard extends StatelessWidget {
       height: AppSizes.scanInputHeight,
       decoration: BoxDecoration(
         gradient: AppGradients.primary,
-        borderRadius: BorderRadius.circular(AppRadii.lg),
+        borderRadius: BorderRadius.circular(AppRadii.l),
         // boxShadow: AppShadows.control,
       ),
       child: Center(
@@ -550,7 +550,7 @@ class _MetricPill extends StatelessWidget {
           height: 32,
           decoration: BoxDecoration(
             gradient: gradient,
-            borderRadius: BorderRadius.circular(AppRadii.md),
+            borderRadius: BorderRadius.circular(AppRadii.m),
           ),
           child: Icon(icon, color: AppColors.onPrimary, size: AppSizes.iconSm),
         ),

@@ -124,7 +124,7 @@ class ScanFrameCorners extends StatelessWidget {
               left: BorderSide(color: color, width: AppSizes.scanCornerStroke),
               top: BorderSide(color: color, width: AppSizes.scanCornerStroke),
             ),
-            radius: const BorderRadius.only(topLeft: Radius.circular(AppRadii.lg)),
+            radius: const BorderRadius.only(topLeft: Radius.circular(AppRadii.l)),
           ),
           _corner(
             alignment: Alignment.topRight,
@@ -132,7 +132,7 @@ class ScanFrameCorners extends StatelessWidget {
               right: BorderSide(color: color, width: AppSizes.scanCornerStroke),
               top: BorderSide(color: color, width: AppSizes.scanCornerStroke),
             ),
-            radius: const BorderRadius.only(topRight: Radius.circular(AppRadii.lg)),
+            radius: const BorderRadius.only(topRight: Radius.circular(AppRadii.l)),
           ),
           _corner(
             alignment: Alignment.bottomLeft,
@@ -140,7 +140,7 @@ class ScanFrameCorners extends StatelessWidget {
               left: BorderSide(color: color, width: AppSizes.scanCornerStroke),
               bottom: BorderSide(color: color, width: AppSizes.scanCornerStroke),
             ),
-            radius: const BorderRadius.only(bottomLeft: Radius.circular(AppRadii.lg)),
+            radius: const BorderRadius.only(bottomLeft: Radius.circular(AppRadii.l)),
           ),
           _corner(
             alignment: Alignment.bottomRight,
@@ -148,7 +148,7 @@ class ScanFrameCorners extends StatelessWidget {
               right: BorderSide(color: color, width: AppSizes.scanCornerStroke),
               bottom: BorderSide(color: color, width: AppSizes.scanCornerStroke),
             ),
-            radius: const BorderRadius.only(bottomRight: Radius.circular(AppRadii.lg)),
+            radius: const BorderRadius.only(bottomRight: Radius.circular(AppRadii.l)),
           ),
         ],
       ),
@@ -229,7 +229,7 @@ class ScanModeTile extends StatelessWidget {
         height: AppSizes.scanModeButtonHeight,
         decoration: BoxDecoration(
           color: bg,
-          borderRadius: BorderRadius.circular(AppRadii.md),
+          borderRadius: BorderRadius.circular(AppRadii.m),
           border: isActive ? null : Border.all(color: AppColors.outline, width: 1.08),
           boxShadow: isActive ? AppShadows.calendarDay : null,
         ),
@@ -285,14 +285,14 @@ class ScanTipOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(AppRadii.lg),
+      borderRadius: BorderRadius.circular(AppRadii.l),
       child: BackdropFilter(
         filter: ui.ImageFilter.blur(sigmaX: 16, sigmaY: 16),
         child: Container(
           padding: const EdgeInsets.all(AppSpacing.l),
           decoration: BoxDecoration(
             color: const Color(0x55FFFFFF),
-            borderRadius: BorderRadius.circular(AppRadii.lg),
+            borderRadius: BorderRadius.circular(AppRadii.l),
             border: Border.all(color: const Color(0x44FFFFFF), width: 1.2),
           ),
           child: Column(
@@ -404,7 +404,7 @@ class ScanPreviewImage extends StatelessWidget {
   Widget build(BuildContext context) {
     final decoration = BoxDecoration(
       color: AppColors.surfaceMuted,
-      borderRadius: BorderRadius.circular(AppRadii.lg),
+      borderRadius: BorderRadius.circular(AppRadii.l),
       boxShadow: hasShadow ? AppShadows.previewImage : null,
       image: imagePath != null ? DecorationImage(image: FileImage(File(imagePath!)), fit: BoxFit.cover) : null,
       gradient: imagePath == null ? AppGradients.scanPlaceholder : null,
@@ -430,7 +430,7 @@ class ScanInputField extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l, vertical: AppSpacing.m),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.md),
+        borderRadius: BorderRadius.circular(AppRadii.m),
         border: Border.all(color: AppColors.outline, width: 1.08),
         boxShadow: hasShadow ? AppShadows.control : null,
       ),

@@ -28,7 +28,7 @@ class MotivationalSummaryScreen extends StatelessWidget {
             ProfileTopBar(title: tr(LocaleKeys.motivational_summary_title), onBack: () => Get.back()),
             const SizedBox(height: AppSpacing.l),
             ProfileCard(
-              radius: AppRadii.lg,
+              radius: AppRadii.l,
               shadow: AppShadows.cardSubtle,
               padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.m, AppSpacing.screen, AppSpacing.m),
               child: Text(
@@ -38,7 +38,7 @@ class MotivationalSummaryScreen extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.l),
             ProfileCard(
-              radius: AppRadii.lg,
+              radius: AppRadii.l,
               shadow: AppShadows.cardSubtle,
               padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.xs, AppSpacing.screen, AppSpacing.xs),
               child: Column(
@@ -57,7 +57,7 @@ class MotivationalSummaryScreen extends StatelessWidget {
             if (controller.notificationPermissionDenied.value) ...[
               const SizedBox(height: AppSpacing.l),
               ProfileCard(
-                radius: AppRadii.lg,
+                radius: AppRadii.l,
                 shadow: AppShadows.cardSubtle,
                 padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.m, AppSpacing.screen, AppSpacing.m),
                 child: Column(

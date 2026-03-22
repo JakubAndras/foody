@@ -94,7 +94,7 @@ class _$AppDatabase extends AppDatabase {
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 10,
+      version: 11,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -116,7 +116,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Ingredient` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `mealId` INTEGER NOT NULL, `name` TEXT NOT NULL, `weight` REAL NOT NULL, `calories` REAL NOT NULL, `proteins` REAL NOT NULL, `carbs` REAL NOT NULL, `fats` REAL NOT NULL, `confidence` REAL, FOREIGN KEY (`mealId`) REFERENCES `Meal` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `WeightEntry` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` INTEGER NOT NULL, `weight` REAL NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `WeightEntry` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` INTEGER NOT NULL, `weight` REAL NOT NULL, `photoPath` TEXT)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Exercise` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `dayRecordId` INTEGER NOT NULL, `name` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `durationMinutes` INTEGER, `caloriesBurned` REAL NOT NULL, `isFavorite` INTEGER NOT NULL, `source` TEXT, FOREIGN KEY (`dayRecordId`) REFERENCES `DayRecord` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
@@ -548,7 +548,8 @@ class _$WeightEntryDao extends WeightEntryDao {
             (WeightEntryEntity item) => <String, Object?>{
                   'id': item.id,
                   'date': _dateTimeConverter.encode(item.date),
-                  'weight': item.weight
+                  'weight': item.weight,
+                  'photoPath': item.photoPath
                 },
             changeListener),
         _weightEntryEntityUpdateAdapter = UpdateAdapter(
@@ -558,7 +559,8 @@ class _$WeightEntryDao extends WeightEntryDao {
             (WeightEntryEntity item) => <String, Object?>{
                   'id': item.id,
                   'date': _dateTimeConverter.encode(item.date),
-                  'weight': item.weight
+                  'weight': item.weight,
+                  'photoPath': item.photoPath
                 },
             changeListener),
         _weightEntryEntityDeletionAdapter = DeletionAdapter(
@@ -568,7 +570,8 @@ class _$WeightEntryDao extends WeightEntryDao {
             (WeightEntryEntity item) => <String, Object?>{
                   'id': item.id,
                   'date': _dateTimeConverter.encode(item.date),
-                  'weight': item.weight
+                  'weight': item.weight,
+                  'photoPath': item.photoPath
                 },
             changeListener);
 
@@ -591,7 +594,8 @@ class _$WeightEntryDao extends WeightEntryDao {
         mapper: (Map<String, Object?> row) => WeightEntryEntity(
             id: row['id'] as int?,
             date: _dateTimeConverter.decode(row['date'] as int),
-            weight: row['weight'] as double));
+            weight: row['weight'] as double,
+            photoPath: row['photoPath'] as String?));
   }
 
   @override
@@ -601,7 +605,8 @@ class _$WeightEntryDao extends WeightEntryDao {
         mapper: (Map<String, Object?> row) => WeightEntryEntity(
             id: row['id'] as int?,
             date: _dateTimeConverter.decode(row['date'] as int),
-            weight: row['weight'] as double),
+            weight: row['weight'] as double,
+            photoPath: row['photoPath'] as String?),
         queryableName: 'WeightEntry',
         isView: false);
   }

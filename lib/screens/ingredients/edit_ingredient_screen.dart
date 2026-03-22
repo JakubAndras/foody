@@ -375,11 +375,11 @@ class _AmountInputField extends StatelessWidget {
           filled: true,
           fillColor: AppColors.surface,
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(AppRadii.md),
+            borderRadius: BorderRadius.circular(AppRadii.m),
             borderSide: const BorderSide(color: AppColors.surfaceMuted, width: AppSizes.dividerThin),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(AppRadii.md),
+            borderRadius: BorderRadius.circular(AppRadii.m),
             borderSide: const BorderSide(color: AppColors.primary, width: AppSizes.dividerThin),
           ),
         ),
@@ -398,7 +398,7 @@ class _EditableCaloriesCard extends StatelessWidget {
     return Container(
       height: AppSizes.caloriesCardHeight,
       padding: const EdgeInsets.all(AppSpacing.l),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.lg), boxShadow: AppShadows.control),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l), boxShadow: AppShadows.control),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -443,7 +443,7 @@ class _EditableMacroCard extends StatelessWidget {
       width: double.infinity,
       height: AppSizes.macroCardSize,
       padding: const EdgeInsets.all(AppSpacing.l),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.lg), boxShadow: AppShadows.control),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l), boxShadow: AppShadows.control),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

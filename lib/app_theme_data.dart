@@ -65,14 +65,14 @@ class AppThemeData {
     cardTheme: CardThemeData(
       elevation: Platform.isIOS ? 0 : 1,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppRadii.lg),
+        borderRadius: BorderRadius.circular(AppRadii.l),
       ),
     ),
     bottomSheetTheme: const BottomSheetThemeData(
       backgroundColor: AppColors.surface,
       surfaceTintColor: AppColors.surface,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.lg)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.l)),
       ),
     ),
     bottomAppBarTheme: const BottomAppBarThemeData(color: AppColors.surface),
@@ -131,7 +131,7 @@ class AppThemeData {
     cardTheme: CardThemeData(
       elevation: Platform.isIOS ? 0 : 1,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppRadii.lg),
+        borderRadius: BorderRadius.circular(AppRadii.l),
       ),
     ),
     bottomAppBarTheme: const BottomAppBarThemeData(color: Color(0xFF191919)),

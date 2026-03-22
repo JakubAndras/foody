@@ -37,7 +37,7 @@ class ConfirmUsernameScreen extends StatelessWidget {
             height: AppSizes.buttonHeight,
             decoration: BoxDecoration(
               color: AppColors.surface,
-              borderRadius: BorderRadius.circular(AppRadii.md),
+              borderRadius: BorderRadius.circular(AppRadii.m),
               border: Border.all(color: AppColors.borderStrong),
             ),
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),

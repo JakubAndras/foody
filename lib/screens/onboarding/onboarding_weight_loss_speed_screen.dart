@@ -131,7 +131,7 @@ class _OnboardingWeightLossSpeedScreenState extends State<OnboardingWeightLossSp
             child: Material(
               color: Colors.transparent,
               child: InkWell(
-                borderRadius: BorderRadius.circular(AppRadii.md),
+                borderRadius: BorderRadius.circular(AppRadii.m),
                 onTap: () {
                   final double recommended = _recommendedSpeedFromWeightKg(SessionManager.to.weightKg.value);
                   setState(() => _value = recommended);
@@ -140,7 +140,7 @@ class _OnboardingWeightLossSpeedScreenState extends State<OnboardingWeightLossSp
                   padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl, vertical: AppSpacing.s),
                   decoration: BoxDecoration(
                     color: AppColors.surface,
-                    borderRadius: BorderRadius.circular(AppRadii.md),
+                    borderRadius: BorderRadius.circular(AppRadii.m),
                   ),
                   child: Text(
                     'Recommended',

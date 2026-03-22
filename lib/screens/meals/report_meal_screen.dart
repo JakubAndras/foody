@@ -109,7 +109,7 @@ class _FeedbackInput extends StatelessWidget {
       height: AppSizes.feedbackInputHeight,
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.l),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppRadii.md),
+        borderRadius: BorderRadius.circular(AppRadii.m),
         border: Border.all(color: AppColors.textPrimary, width: 2),
       ),
       child: TextField(
@@ -134,7 +134,7 @@ class _ExampleCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.l),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.md)),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.m)),
       child: RichText(
         text: TextSpan(
           style: AppTextStyles.body16Regular.copyWith(color: AppColors.textPrimary),

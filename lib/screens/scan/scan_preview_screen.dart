@@ -132,7 +132,7 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
       builder: (_) => Container(
         decoration: const BoxDecoration(
           color: AppColors.surface,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.lg)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.l)),
         ),
         padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.m, AppSpacing.l, AppSpacing.xl),
         child: Column(

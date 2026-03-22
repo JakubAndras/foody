@@ -129,7 +129,7 @@ class _RolloverCard extends StatelessWidget {
       height: rolloverCardHeight,
       child: OnboardingSurfaceCard(
         padding: EdgeInsets.zero,
-        radius: AppRadii.lg,
+        radius: AppRadii.l,
         child: Stack(
           children: [
             Container(
@@ -137,8 +137,8 @@ class _RolloverCard extends StatelessWidget {
               decoration: BoxDecoration(
                 color: headerColor,
                 borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(AppRadii.lg),
-                  topRight: Radius.circular(AppRadii.lg),
+                  topLeft: Radius.circular(AppRadii.l),
+                  topRight: Radius.circular(AppRadii.l),
                 ),
               ),
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
@@ -242,7 +242,7 @@ class _CalsLeftBadge extends StatelessWidget {
       height: badgeHeight,
       decoration: BoxDecoration(
         color: AppColors.primary,
-        borderRadius: BorderRadius.circular(AppRadii.md),
+        borderRadius: BorderRadius.circular(AppRadii.m),
       ),
       child: Center(
         child: Column(

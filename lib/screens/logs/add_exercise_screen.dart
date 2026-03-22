@@ -261,7 +261,7 @@ class _TextInput extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.lg),
+        borderRadius: BorderRadius.circular(AppRadii.l),
         border: Border.all(color: AppColors.outline, width: 1),
         // boxShadow: AppShadows.control,
       ),
@@ -295,7 +295,7 @@ class _InputCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.lg),
+        borderRadius: BorderRadius.circular(AppRadii.l),
         border: Border.all(color: AppColors.outline, width: 1),
         // boxShadow: AppShadows.control,
       ),
@@ -304,7 +304,7 @@ class _InputCard extends StatelessWidget {
           Container(
             width: 40,
             height: 40,
-            decoration: BoxDecoration(gradient: gradient, borderRadius: BorderRadius.circular(AppRadii.md)),
+            decoration: BoxDecoration(gradient: gradient, borderRadius: BorderRadius.circular(AppRadii.m)),
             child: Icon(icon, color: AppColors.onPrimary, size: AppSizes.iconSm),
           ),
           const SizedBox(width: AppSpacing.m),

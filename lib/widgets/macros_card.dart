@@ -27,7 +27,7 @@ class MacrosCard extends StatelessWidget {
         height: AppSizes.macroCardHeight,
         decoration: BoxDecoration(
           color: AppColors.surface,
-          borderRadius: BorderRadius.circular(AppRadii.md),
+          borderRadius: BorderRadius.circular(AppRadii.m),
           //boxShadow: AppShadows.control,
         ),
         padding: const EdgeInsets.all(AppSpacing.m),

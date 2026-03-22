@@ -11,6 +11,8 @@ import 'package:get/get.dart';
 
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
+import 'package:diplomka/widgets/foody_glass_buttons.dart';
+import 'package:diplomka/widgets/keyboard_action_scaffold.dart';
 
 class EditNutritionGoalsScreen extends StatefulWidget {
   const EditNutritionGoalsScreen({super.key});
@@ -26,20 +28,49 @@ class _EditNutritionGoalsScreenState extends State<EditNutritionGoalsScreen> {
   final TextEditingController _carbsController = TextEditingController();
   final TextEditingController _fatController = TextEditingController();
 
+  final FocusNode _calorieFocus = FocusNode();
+  final FocusNode _proteinFocus = FocusNode();
+  final FocusNode _carbsFocus = FocusNode();
+  final FocusNode _fatFocus = FocusNode();
+
   bool _isSaving = false;
   bool _isLoading = true;
+  bool _isDirty = false;
   late final DateTime _selectedDate;
+  late NutritionGoals _originalGoals;
 
   @override
   void initState() {
     super.initState();
     _selectedDate = SelectedDateService.to.selectedDate.value;
-    _setControllersFromGoals(_nutritionGoalsService.goalsForDate(_selectedDate));
+    _originalGoals = _nutritionGoalsService.goalsForDate(_selectedDate);
+    _setControllersFromGoals(_originalGoals);
     unawaited(_refreshGoals());
+
+    for (final c in [_calorieController, _proteinController, _carbsController, _fatController]) {
+      c.addListener(_checkDirty);
+    }
+  }
+
+  void _checkDirty() {
+    final dirty = _calorieController.text != _originalGoals.calorieGoal.toStringAsFixed(0) ||
+        _proteinController.text != _originalGoals.proteinGoal.toStringAsFixed(0) ||
+        _carbsController.text != _originalGoals.carbsGoal.toStringAsFixed(0) ||
+        _fatController.text != _originalGoals.fatGoal.toStringAsFixed(0);
+    if (dirty != _isDirty) {
+      setState(() => _isDirty = dirty);
+    }
   }
 
   @override
   void dispose() {
+    for (final c in [_calorieController, _proteinController, _carbsController, _fatController]) {
+      c.removeListener(_checkDirty);
+    }
+    _calorieFocus.dispose();
+    _proteinFocus.dispose();
+    _carbsFocus.dispose();
+    _fatFocus.dispose();
     _calorieController.dispose();
     _proteinController.dispose();
     _carbsController.dispose();
@@ -51,7 +82,8 @@ class _EditNutritionGoalsScreenState extends State<EditNutritionGoalsScreen> {
     try {
       await _nutritionGoalsService.refreshForDate(_selectedDate);
       if (!mounted) return;
-      _setControllersFromGoals(_nutritionGoalsService.goalsForDate(_selectedDate));
+      _originalGoals = _nutritionGoalsService.goalsForDate(_selectedDate);
+      _setControllersFromGoals(_originalGoals);
     } finally {
       if (mounted) {
         setState(() {
@@ -74,6 +106,14 @@ class _EditNutritionGoalsScreenState extends State<EditNutritionGoalsScreen> {
       return null;
     }
     return value;
+  }
+
+  void _revertGoals() {
+    _setControllersFromGoals(_originalGoals);
+  }
+
+  void _generateWithAi() {
+    // TODO: implement AI goal generation
   }
 
   Future<void> _saveGoals() async {
@@ -121,65 +161,95 @@ class _EditNutritionGoalsScreenState extends State<EditNutritionGoalsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ProfileGradientScaffold(
-      scroll: true,
-      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, 0, AppSpacing.screen, AppSpacing.xl),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: SizedBox(
-        width: MediaQuery.of(context).size.width - (AppSpacing.screen * 2),
-        child: ProfilePrimaryButton(
-          label: _isSaving ? tr(LocaleKeys.common_saving) : tr(LocaleKeys.nutrition_goals_save_goals),
-          onPressed: _isSaving || _isLoading ? null : _saveGoals,
-          leading: const Icon(Icons.check, color: AppColors.onPrimary, size: AppSizes.iconMd),
-          height: AppSizes.buttonHeight,
-          shadow: AppShadows.control,
+    final bool enabled = !_isLoading && !_isSaving;
+
+    return KeyboardActionScaffold(
+      focusNodes: [_calorieFocus, _proteinFocus, _carbsFocus, _fatFocus],
+      onRevert: _revertGoals,
+      onSave: _saveGoals,
+      actionsEnabled: enabled,
+      saveLabel: _isSaving ? tr(LocaleKeys.common_saving) : null,
+      bottomBar: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.s, AppSpacing.screen, AppSpacing.s),
+          child: Row(
+            children: [
+              Expanded(
+                child: FoodySecondaryButton(
+                  label: _isDirty ? tr(LocaleKeys.nutrition_goals_generate_ai) : tr(LocaleKeys.nutrition_goals_generate_ai_long),
+                  icon: Icons.auto_awesome,
+                  onTap: enabled ? _generateWithAi : null,
+                  height: AppSizes.buttonHeight,
+                ),
+              ),
+              if (_isDirty) ...[
+                const SizedBox(width: AppSpacing.s),
+                Expanded(
+                  child: FoodyPrimaryButton(
+                    label: _isSaving ? tr(LocaleKeys.common_saving) : tr(LocaleKeys.common_save),
+                    onTap: enabled ? _saveGoals : null,
+                    height: AppSizes.buttonHeight,
+                  ),
+                ),
+              ],
+            ],
+          ),
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ProfileTopBar(title: tr(LocaleKeys.nutrition_goals_title), onBack: () => Get.back()),
-          const SizedBox(height: AppSpacing.l),
-          _GoalRow(
-            label: tr(LocaleKeys.nutrition_goals_calorie_goal),
-            controller: _calorieController,
-            unit: tr(LocaleKeys.common_kcal),
-            color: AppColors.textPrimary,
-            icon: Icons.local_fire_department_outlined,
-            enabled: !_isLoading && !_isSaving,
-          ),
-          const SizedBox(height: AppSpacing.m),
-          _GoalRow(
-            label: tr(LocaleKeys.nutrition_goals_protein_goal),
-            controller: _proteinController,
-            unit: tr(LocaleKeys.common_g),
-            color: AppColors.error,
-            icon: AppIcons.protein,
-            enabled: !_isLoading && !_isSaving,
-          ),
-          const SizedBox(height: AppSpacing.m),
-          _GoalRow(
-            label: tr(LocaleKeys.nutrition_goals_carb_goal),
-            controller: _carbsController,
-            unit: tr(LocaleKeys.common_g),
-            color: AppColors.macroCarbs,
-            icon: AppIcons.carbs,
-            enabled: !_isLoading && !_isSaving,
-          ),
-          const SizedBox(height: AppSpacing.m),
-          _GoalRow(
-            label: tr(LocaleKeys.nutrition_goals_fat_goal),
-            controller: _fatController,
-            unit: tr(LocaleKeys.common_g),
-            color: AppColors.info,
-            icon: AppIcons.fats,
-            enabled: !_isLoading && !_isSaving,
-          ),
-          if (_isLoading) ...[
+      child: SingleChildScrollView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        padding: const EdgeInsets.fromLTRB(AppSpacing.screen, 0, AppSpacing.screen, AppSpacing.xl),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ProfileTopBar(title: tr(LocaleKeys.nutrition_goals_title), onBack: () => Get.back()),
+            const SizedBox(height: AppSpacing.l),
+            _GoalRow(
+              label: tr(LocaleKeys.nutrition_goals_calorie_goal),
+              controller: _calorieController,
+              focusNode: _calorieFocus,
+              unit: tr(LocaleKeys.common_kcal),
+              color: AppColors.textPrimary,
+              icon: Icons.local_fire_department_outlined,
+              enabled: enabled,
+            ),
             const SizedBox(height: AppSpacing.m),
-            const LinearProgressIndicator(),
+            _GoalRow(
+              label: tr(LocaleKeys.nutrition_goals_protein_goal),
+              controller: _proteinController,
+              focusNode: _proteinFocus,
+              unit: tr(LocaleKeys.common_g),
+              color: AppColors.error,
+              icon: AppIcons.protein,
+              enabled: enabled,
+            ),
+            const SizedBox(height: AppSpacing.m),
+            _GoalRow(
+              label: tr(LocaleKeys.nutrition_goals_carb_goal),
+              controller: _carbsController,
+              focusNode: _carbsFocus,
+              unit: tr(LocaleKeys.common_g),
+              color: AppColors.macroCarbs,
+              icon: AppIcons.carbs,
+              enabled: enabled,
+            ),
+            const SizedBox(height: AppSpacing.m),
+            _GoalRow(
+              label: tr(LocaleKeys.nutrition_goals_fat_goal),
+              controller: _fatController,
+              focusNode: _fatFocus,
+              unit: tr(LocaleKeys.common_g),
+              color: AppColors.info,
+              icon: AppIcons.fats,
+              enabled: enabled,
+            ),
+            if (_isLoading) ...[
+              const SizedBox(height: AppSpacing.m),
+              const LinearProgressIndicator(),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
@@ -189,6 +259,7 @@ class _GoalRow extends StatelessWidget {
   const _GoalRow({
     required this.label,
     required this.controller,
+    required this.focusNode,
     required this.unit,
     required this.color,
     required this.icon,
@@ -197,6 +268,7 @@ class _GoalRow extends StatelessWidget {
 
   final String label;
   final TextEditingController controller;
+  final FocusNode focusNode;
   final String unit;
   final Color color;
   final IconData icon;
@@ -215,7 +287,7 @@ class _GoalRow extends StatelessWidget {
               height: AppSizes.goalRowHeight,
               decoration: BoxDecoration(
                 color: AppColors.surface,
-                borderRadius: BorderRadius.circular(AppRadii.md),
+                borderRadius: BorderRadius.circular(AppRadii.m),
                 border: Border.all(color: AppColors.outline),
               ),
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
@@ -230,6 +302,7 @@ class _GoalRow extends StatelessWidget {
                       Expanded(
                         child: TextField(
                           controller: controller,
+                          focusNode: focusNode,
                           enabled: enabled,
                           keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           decoration: const InputDecoration(

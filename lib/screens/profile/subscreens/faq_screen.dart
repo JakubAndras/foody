@@ -110,7 +110,7 @@ class _ExpandableFaqItem extends StatelessWidget {
                       width: double.infinity,
                       decoration: BoxDecoration(
                         color: AppColors.surface,
-                        borderRadius: BorderRadius.circular(AppRadii.sm),
+                        borderRadius: BorderRadius.circular(AppRadii.s),
                         border: Border(left: BorderSide(color: AppColors.outline, width: 3)),
                       ),
                       padding: const EdgeInsets.all(AppSpacing.m),

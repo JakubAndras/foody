@@ -21,7 +21,7 @@ class PickerSheet extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s, vertical: AppSpacing.m),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.lg),
+        borderRadius: BorderRadius.circular(AppRadii.l),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -31,7 +31,7 @@ class PickerSheet extends StatelessWidget {
             padding: EdgeInsets.only(bottom: index == options.length - 1 ? 0 : AppSpacing.xs),
             child: InkWell(
               onTap: onSelected == null ? null : () => onSelected!(index),
-              borderRadius: BorderRadius.circular(AppRadii.sm),
+              borderRadius: BorderRadius.circular(AppRadii.s),
               child: SizedBox(
                 height: AppSizes.actionRowHeight,
                 child: Row(
@@ -109,7 +109,7 @@ class DatePickerCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.m),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.lg),
+        borderRadius: BorderRadius.circular(AppRadii.l),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -154,14 +154,14 @@ class DatePickerCard extends StatelessWidget {
                   day.year == selectedDate.year && day.month == selectedDate.month && day.day == selectedDate.day;
               return InkWell(
                 onTap: onSelected == null ? null : () => onSelected!(day),
-                borderRadius: BorderRadius.circular(isSelected ? AppRadii.xxl : AppRadii.sm),
+                borderRadius: BorderRadius.circular(isSelected ? AppRadii.xxl : AppRadii.s),
                 child: Container(
                   width: isSelected ? AppSizes.datePickerCellSelected : AppSizes.datePickerCell,
                   height: isSelected ? AppSizes.datePickerCellSelected : AppSizes.datePickerCell,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: isSelected ? AppColors.primary : Colors.transparent,
-                    borderRadius: BorderRadius.circular(isSelected ? AppRadii.xxl : AppRadii.sm),
+                    borderRadius: BorderRadius.circular(isSelected ? AppRadii.xxl : AppRadii.s),
                     boxShadow: isSelected ? AppShadows.calendarDay : null,
                   ),
                   child: Text(
@@ -209,12 +209,12 @@ class _HeaderButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(AppRadii.sm),
+      borderRadius: BorderRadius.circular(AppRadii.s),
       child: Container(
         height: AppSizes.chipHeight,
         width: AppSizes.chipHeight,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(AppRadii.sm),
+          borderRadius: BorderRadius.circular(AppRadii.s),
         ),
         child: Icon(icon, color: AppColors.textHeading),
       ),

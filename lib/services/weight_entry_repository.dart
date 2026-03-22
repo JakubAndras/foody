@@ -21,6 +21,7 @@ class WeightEntryRepository extends GetxService {
             id: entity.id,
             date: entity.date,
             weight: entity.weight,
+            photoPath: entity.photoPath,
           ),
         )
         .toList();
@@ -34,6 +35,7 @@ class WeightEntryRepository extends GetxService {
                   id: entity.id,
                   date: entity.date,
                   weight: entity.weight,
+                  photoPath: entity.photoPath,
                 ),
               )
               .toList(),
@@ -45,6 +47,7 @@ class WeightEntryRepository extends GetxService {
       id: entry.id,
       date: entry.date,
       weight: entry.weight,
+      photoPath: entry.photoPath,
     );
     if (entry.id == null) {
       final id = await _weightEntryDao.insertEntry(entity);
