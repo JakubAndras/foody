@@ -3,6 +3,8 @@ import 'package:diplomka/controller/tracking_reminders_controller.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/tracking_reminder_setting.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
+import 'package:diplomka/widgets/glass_toggle_row.dart';
+import 'package:diplomka/widgets/time_picker_sheet.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -25,6 +27,15 @@ class TrackingRemindersScreen extends StatelessWidget {
       scroll: true,
       padding: const EdgeInsets.fromLTRB(AppSpacing.screen, 0, AppSpacing.screen, AppSpacing.xl),
       child: Obx(() {
+        if (!controller.isLoaded.value) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ProfileTopBar(title: tr(LocaleKeys.tracking_reminders_title), onBack: () => Get.back()),
+            ],
+          );
+        }
+
         final remindersByType = {
           for (final reminder in controller.reminders) reminder.type: reminder,
         };
@@ -44,13 +55,15 @@ class TrackingRemindersScreen extends StatelessWidget {
               child: Column(
                 children: [
                   for (int i = 0; i < mealReminders.length; i++)
-                    _ReminderRow(
+                    GlassToggleRow(
                       title: tr(mealReminders[i].type.titleKey),
-                      time: _formatTime(context, mealReminders[i]),
                       isOn: mealReminders[i].enabled,
                       showDivider: i != mealReminders.length - 1,
-                      onToggle: () => controller.toggleReminder(mealReminders[i].type, !mealReminders[i].enabled),
-                      onTimeTap: () => _pickTime(context, controller, mealReminders[i]),
+                      onChanged: (val) => controller.toggleReminder(mealReminders[i].type, val),
+                      trailing: GestureDetector(
+                        onTap: () => _pickTime(context, controller, mealReminders[i]),
+                        child: ProfileTimeChip(label: _formatTime(context, mealReminders[i])),
+                      ),
                     ),
                 ],
               ),
@@ -59,23 +72,17 @@ class TrackingRemindersScreen extends StatelessWidget {
             ProfileCard(
               radius: AppRadii.l,
               shadow: AppShadows.cardSubtle,
-              padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.m, AppSpacing.screen, AppSpacing.m),
+              padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.xs, AppSpacing.screen, AppSpacing.xs),
               child: Column(
                 children: [
-                  _ReminderRow(
+                  GlassToggleRow(
                     title: tr(endOfDayReminder.type.titleKey),
-                    time: _formatTime(context, endOfDayReminder),
                     isOn: endOfDayReminder.enabled,
                     showDivider: false,
-                    onToggle: () => controller.toggleReminder(endOfDayReminder.type, !endOfDayReminder.enabled),
-                    onTimeTap: () => _pickTime(context, controller, endOfDayReminder),
-                  ),
-                  const SizedBox(height: AppSpacing.s),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      tr(LocaleKeys.tracking_reminders_end_of_day_hint),
-                      style: AppTextStyles.body13,
+                    onChanged: (val) => controller.toggleReminder(endOfDayReminder.type, val),
+                    trailing: GestureDetector(
+                      onTap: () => _pickTime(context, controller, endOfDayReminder),
+                      child: ProfileTimeChip(label: _formatTime(context, endOfDayReminder)),
                     ),
                   ),
                 ],
@@ -121,8 +128,9 @@ class TrackingRemindersScreen extends StatelessWidget {
     TrackingRemindersController controller,
     TrackingReminderSetting reminder,
   ) async {
-    final selected = await showTimePicker(
+    final selected = await showTimePickerSheet(
       context: context,
+      title: tr(reminder.type.titleKey),
       initialTime: TimeOfDay(hour: reminder.hour, minute: reminder.minute),
     );
     if (selected != null) {
@@ -131,48 +139,3 @@ class TrackingRemindersScreen extends StatelessWidget {
   }
 }
 
-class _ReminderRow extends StatelessWidget {
-  const _ReminderRow({
-    required this.title,
-    required this.time,
-    required this.isOn,
-    this.onToggle,
-    this.onTimeTap,
-    this.showDivider = true,
-  });
-
-  final String title;
-  final String time;
-  final bool isOn;
-  final VoidCallback? onToggle;
-  final VoidCallback? onTimeTap;
-  final bool showDivider;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: AppSizes.listRowHeight,
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  title,
-                  style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w600),
-                ),
-              ),
-              GestureDetector(
-                onTap: onTimeTap,
-                child: ProfileTimeChip(label: time),
-              ),
-              const SizedBox(width: AppSpacing.s),
-              ProfileToggle(isOn: isOn, onTap: onToggle),
-            ],
-          ),
-        ),
-        if (showDivider) Divider(height: AppSizes.dividerThin, color: AppColors.surfaceMuted),
-      ],
-    );
-  }
-}

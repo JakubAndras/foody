@@ -82,14 +82,15 @@ class ProfileBackButton extends StatelessWidget {
 }
 
 class ProfileTopBar extends StatelessWidget {
-  const ProfileTopBar({super.key, required this.title, this.onBack});
+  const ProfileTopBar({super.key, required this.title, this.onBack, this.actions});
 
   final String title;
   final VoidCallback? onBack;
+  final List<Widget>? actions;
 
   @override
   Widget build(BuildContext context) {
-    return CustomGlassAppBar(title: title, onBack: onBack);
+    return CustomGlassAppBar(title: title, onBack: onBack, actions: actions);
   }
 }
 

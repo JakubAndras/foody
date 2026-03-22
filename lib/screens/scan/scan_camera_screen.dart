@@ -470,7 +470,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
           _buildCameraSurface(),
           Column(
             children: [
-              const ScanStatusBar(),
+              SizedBox(height: AppSpacing.xl),
               Expanded(
                 child: Stack(
                   children: [
@@ -591,8 +591,8 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
       top: false,
       child: Padding(
         padding: const EdgeInsets.only(
-          left: AppSpacing.xl,
-          right: AppSpacing.xl,
+          left: AppSpacing.m,
+          right: AppSpacing.m,
           top: AppSpacing.xl,
         ),
         child: Row(

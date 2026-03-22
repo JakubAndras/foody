@@ -21,6 +21,7 @@ class MotivationalSummaryController extends GetxController {
 
   final RxList<MotivationalSummarySetting> summaries = <MotivationalSummarySetting>[].obs;
   final RxBool notificationPermissionDenied = false.obs;
+  final RxBool isLoaded = false.obs;
 
   @override
   void onInit() {
@@ -31,6 +32,7 @@ class MotivationalSummaryController extends GetxController {
   Future<void> loadInitialState() async {
     summaries.value = await motivationalSummaryService.loadSettingsFromStorage();
     await _refreshPermissionState();
+    isLoaded.value = true;
   }
 
   Future<void> _refreshPermissionState() async {

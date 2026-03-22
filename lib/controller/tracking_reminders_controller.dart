@@ -18,6 +18,7 @@ class TrackingRemindersController extends GetxController {
 
   final RxList<TrackingReminderSetting> reminders = <TrackingReminderSetting>[].obs;
   final RxBool notificationPermissionDenied = false.obs;
+  final RxBool isLoaded = false.obs;
 
   @override
   void onInit() {
@@ -28,6 +29,7 @@ class TrackingRemindersController extends GetxController {
   Future<void> loadInitialState() async {
     reminders.value = await trackingReminderService.loadSettingsFromStorage();
     await refreshPermissionState();
+    isLoaded.value = true;
   }
 
   Future<void> refreshPermissionState() async {

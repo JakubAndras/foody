@@ -75,7 +75,10 @@ class TrackingReminderService extends GetxService {
 
     if (Platform.isIOS) {
       final status = await Permission.notification.status;
-      return status.isGranted || status.isLimited || status.isProvisional;
+      // Only return false for permanentlyDenied — that's when the user
+      // explicitly denied and must go to system settings to fix it.
+      // isDenied on iOS means "not yet asked", so treat it as OK.
+      return !status.isPermanentlyDenied;
     }
 
     return true;

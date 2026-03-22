@@ -1,12 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 import 'package:diplomka/services/session_manager.dart';
+import 'package:diplomka/widgets/glass_toggle_row.dart';
 import 'package:diplomka/widgets/liquid_glass/glass_segmented_tabs.dart';
 
 class PreferencesScreen extends StatefulWidget {
@@ -46,9 +46,9 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
             child: Column(
               children: [
                 // TODO: Live Activity — requires paid Apple Developer account + ActivityKit implementation (see plan: live-activity-ios-lock-screen-dynamic-island.md)
-                // _ToggleRow(title: tr(LocaleKeys.preferences_live_activity), subtitle: tr(LocaleKeys.preferences_live_activity_desc), isOn: false),
+                // GlassToggleRow(title: tr(LocaleKeys.preferences_live_activity), subtitle: tr(LocaleKeys.preferences_live_activity_desc), isOn: false),
                 Obx(
-                  () => _ToggleRow(
+                  () => GlassToggleRow(
                     title: tr(LocaleKeys.preferences_burned_calories),
                     subtitle: tr(LocaleKeys.preferences_burned_calories_desc),
                     isOn: SessionManager.to.burnedCaloriesEnabled.value,
@@ -56,7 +56,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                   ),
                 ),
                 Obx(
-                  () => _ToggleRow(
+                  () => GlassToggleRow(
                     title: tr(LocaleKeys.preferences_rollover_calories),
                     subtitle: tr(LocaleKeys.preferences_rollover_calories_desc),
                     isOn: SessionManager.to.rolloverCaloriesEnabled.value,
@@ -64,7 +64,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                   ),
                 ),
                 Obx(
-                  () => _ToggleRow(
+                  () => GlassToggleRow(
                     title: tr(LocaleKeys.preferences_auto_adjust),
                     subtitle: tr(LocaleKeys.preferences_auto_adjust_desc),
                     isOn: SessionManager.to.autoAdjustMacrosEnabled.value,
@@ -72,7 +72,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                   ),
                 ),
                 Obx(
-                  () => _ToggleRow(
+                  () => GlassToggleRow(
                     title: tr(LocaleKeys.preferences_save_photos_gallery),
                     subtitle: tr(LocaleKeys.preferences_save_photos_gallery_desc),
                     isOn: SessionManager.to.savePhotosToGallery.value,
@@ -89,41 +89,3 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
   }
 }
 
-class _ToggleRow extends StatelessWidget {
-  const _ToggleRow({required this.title, required this.subtitle, required this.isOn, this.onChanged, this.showDivider = true});
-
-  final String title;
-  final String subtitle;
-  final bool isOn;
-  final ValueChanged<bool>? onChanged;
-  final bool showDivider;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title, style: AppTextStyles.body15.copyWith(fontWeight: FontWeight.w600)),
-                    const SizedBox(height: AppSpacing.xxs),
-                    Text(subtitle, style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary)),
-                  ],
-                ),
-              ),
-              const SizedBox(width: AppSpacing.s),
-              GlassSwitch(value: isOn, onChanged: onChanged ?? (_) {}, useOwnLayer: true),
-            ],
-          ),
-        ),
-        if (showDivider) Divider(height: AppSizes.dividerThin, color: AppColors.surfaceMuted),
-      ],
-    );
-  }
-}

@@ -448,24 +448,3 @@ class ScanInputField extends StatelessWidget {
     );
   }
 }
-
-class ScanStatusBar extends StatelessWidget {
-  const ScanStatusBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: AppSizes.scanStatusBarHeight,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('16:54', style: AppTextStyles.body14Regular.copyWith(color: AppColors.statusBarDark)),
-            Text('100%', style: AppTextStyles.caption12.copyWith(color: AppColors.statusBarDark)),
-          ],
-        ),
-      ),
-    );
-  }
-}
