@@ -20,7 +20,7 @@ class RingColorsExplainedScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ProfileTopBar(title: tr(LocaleKeys.ring_colors_title), onBack: () => Get.back()),
-          const SizedBox(height: AppSpacing.l),
+          const SizedBox(height: AppSpacing.m),
           ProfileCard(
             color: AppColors.surface,
             radius: AppRadii.xl,

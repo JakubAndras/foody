@@ -4,6 +4,7 @@ import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/controller/health_integration_controller.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
+import 'package:diplomka/widgets/glass_toggle_row.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,6 +18,7 @@ class HealthIntegrationScreen extends StatelessWidget {
 
     return ProfileGradientScaffold(
       scroll: true,
+      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, 0, AppSpacing.screen, AppSpacing.xl),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: SizedBox(
         width: MediaQuery.of(context).size.width - (AppSpacing.screen * 2),
@@ -32,33 +34,32 @@ class HealthIntegrationScreen extends StatelessWidget {
             title: Platform.isIOS ? tr(LocaleKeys.health_sync_to_apple_health) : tr(LocaleKeys.health_sync_to_health_connect),
             onBack: () => Get.back(),
           ),
-          const SizedBox(height: AppSpacing.l),
+          const SizedBox(height: AppSpacing.m),
           // Toggle row
           ProfileCard(
             radius: AppRadii.l,
             shadow: AppShadows.cardSubtle,
-            padding: EdgeInsets.zero,
+            padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.xs, AppSpacing.screen, AppSpacing.xs),
             child: Obx(() {
-              return ProfileSettingsRow(
+              return GlassToggleRow(
                 title: tr(LocaleKeys.health_sync_burned_calories),
                 subtitle: controller.isEnabled.value ? _formatLastSync(controller.lastSyncTime.value) : null,
+                isOn: controller.isEnabled.value,
                 showDivider: false,
-                trailing: controller.isSyncing.value
-                    ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2))
-                    : ProfileToggle(
-                        isOn: controller.isEnabled.value,
-                        onTap: () => controller.toggleSync(!controller.isEnabled.value),
-                      ),
+                onChanged: controller.isSyncing.value ? null : (val) => controller.toggleSync(val),
               );
             }),
           ),
-          const SizedBox(height: AppSpacing.xl),
+          const SizedBox(height: AppSpacing.m),
           // Instructions
-          Text(
-            Platform.isIOS ? tr(LocaleKeys.health_apple_health_description) : tr(LocaleKeys.health_health_connect_description),
-            style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+            child: Text(
+              Platform.isIOS ? tr(LocaleKeys.health_apple_health_description) : tr(LocaleKeys.health_health_connect_description),
+              style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary),
+            ),
           ),
-          const SizedBox(height: AppSpacing.l),
+          const SizedBox(height: AppSpacing.m),
           ProfileCard(
             radius: AppRadii.l,
             shadow: AppShadows.cardSubtle,

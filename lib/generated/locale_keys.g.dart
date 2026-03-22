@@ -60,6 +60,7 @@ abstract class  LocaleKeys {
   static const common_unsaved_changes_message = 'common_unsaved_changes_message';
   static const common_discard = 'common_discard';
   static const common_name = 'common_name';
+  static const common_meal = 'common_meal';
   static const common_revert = 'common_revert';
   static const day_monday_short = 'day_monday_short';
   static const day_tuesday_short = 'day_tuesday_short';
@@ -517,6 +518,16 @@ abstract class  LocaleKeys {
   static const export_csv_net_calories = 'export_csv_net_calories';
   static const export_csv_weight = 'export_csv_weight';
   static const export_period_averages = 'export_period_averages';
+  static const export_no_data = 'export_no_data';
+  static const export_error = 'export_error';
+  static const export_generating = 'export_generating';
+  static const export_daily_goals = 'export_daily_goals';
+  static const export_diet_type = 'export_diet_type';
+  static const export_period_averages_label = 'export_period_averages_label';
+  static const export_calorie_balance = 'export_calorie_balance';
+  static const export_consumed = 'export_consumed';
+  static const export_burned = 'export_burned';
+  static const export_balance = 'export_balance';
   static const error_generic = 'error_generic';
   static const error_generic_message = 'error_generic_message';
   static const error_timeout = 'error_timeout';

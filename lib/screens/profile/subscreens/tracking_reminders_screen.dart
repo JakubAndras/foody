@@ -47,7 +47,7 @@ class TrackingRemindersScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ProfileTopBar(title: tr(LocaleKeys.tracking_reminders_title), onBack: () => Get.back()),
-            const SizedBox(height: AppSpacing.l),
+            const SizedBox(height: AppSpacing.m),
             ProfileCard(
               radius: AppRadii.l,
               shadow: AppShadows.cardSubtle,

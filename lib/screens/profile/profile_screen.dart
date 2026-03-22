@@ -48,7 +48,7 @@ class ProfileScreen extends StatelessWidget {
           backgroundColor: Colors.transparent,
           fadeColor: AppColors.meshBase,
           backgroundWidget: const MeshGradientBackground(),
-            padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.mega + AppSpacing.s, AppSpacing.l, AppSpacing.mega + 42),
+            padding: const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.mega + AppSpacing.s, AppSpacing.m, AppSpacing.mega + 42),
             //collapsedHeader: Text(tr(LocaleKeys.profile_title), style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w700)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,7 +57,10 @@ class ProfileScreen extends StatelessWidget {
                 //const SizedBox(height: AppSpacing.s),
                 // const _ProfileHeaderCard(),
                 // const SizedBox(height: AppSpacing.l),
-                ProfileSectionHeader(title: tr(LocaleKeys.profile_account)),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.m : 0),
+                  child: ProfileSectionHeader(title: tr(LocaleKeys.profile_account)),
+                ),
                 const SizedBox(height: AppSpacing.s),
                 _ProfileGroupCard(
                   children: [
@@ -80,7 +83,10 @@ class ProfileScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: AppSpacing.l),
-                ProfileSectionHeader(title: tr(LocaleKeys.profile_goals_tracking)),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.m : 0),
+                  child: ProfileSectionHeader(title: tr(LocaleKeys.profile_goals_tracking)),
+                ),
                 const SizedBox(height: AppSpacing.s),
                 _ProfileGroupCard(
                   children: [
@@ -118,16 +124,19 @@ class ProfileScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: AppSpacing.l),
-                ProfileSectionHeader(
-                  title: tr(LocaleKeys.profile_widgets),
-                  trailing: GestureDetector(
-                    onTap: () => Get.snackbar(tr(LocaleKeys.common_coming_soon), tr(LocaleKeys.common_feature_not_available)),
-                    child: Text(
-                      tr(LocaleKeys.profile_how_to_add),
-                      style: TextStyle(
-                        color: AppColors.textSecondary,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.m : 0),
+                  child: ProfileSectionHeader(
+                    title: tr(LocaleKeys.profile_widgets),
+                    trailing: GestureDetector(
+                      onTap: () => Get.snackbar(tr(LocaleKeys.common_coming_soon), tr(LocaleKeys.common_feature_not_available)),
+                      child: Text(
+                        tr(LocaleKeys.profile_how_to_add),
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                        ),
                       ),
                     ),
                   ),
@@ -138,7 +147,10 @@ class ProfileScreen extends StatelessWidget {
                   child: const AbsorbPointer(child: _WidgetSection()),
                 ),
                 const SizedBox(height: AppSpacing.l),
-                ProfileSectionHeader(title: tr(LocaleKeys.profile_progress_data)),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.m : 0),
+                  child: ProfileSectionHeader(title: tr(LocaleKeys.profile_progress_data)),
+                ),
                 const SizedBox(height: AppSpacing.s),
                 _ProfileGroupCard(
                   children: [
@@ -176,7 +188,10 @@ class ProfileScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: AppSpacing.l),
-                ProfileSectionHeader(title: tr(LocaleKeys.profile_account_actions)),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.m : 0),
+                  child: ProfileSectionHeader(title: tr(LocaleKeys.profile_account_actions)),
+                ),
                 const SizedBox(height: AppSpacing.s),
                 _ProfileGroupCard(
                   children: [
@@ -194,10 +209,13 @@ class ProfileScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: AppSpacing.s),
-                Center(
-                  child: Text(
-                    tr(LocaleKeys.profile_version),
-                    style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.m : 0),
+                  child: Center(
+                    child: Text(
+                      tr(LocaleKeys.profile_version),
+                      style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary),
+                    ),
                   ),
                 ),
               ],
@@ -375,6 +393,7 @@ class _ProfileGroupCard extends StatelessWidget {
     return ProfileCard(
       radius: AppRadii.l,
       shadow: AppShadows.cardSubtle,
+      border: Border.all(color: AppColors.outline),
       padding: EdgeInsets.zero,
       child: Column(children: children),
     );
@@ -428,6 +447,7 @@ class _WidgetSection extends StatelessWidget {
             child: ProfileCard(
               radius: AppRadii.l,
               shadow: AppShadows.cardSubtle,
+              border: Border.all(color: AppColors.outline),
               padding: const EdgeInsets.all(AppSpacing.m),
               child: Row(
                 children: [
@@ -574,6 +594,7 @@ class _WidgetShortcutCard extends StatelessWidget {
       child: ProfileCard(
         radius: AppRadii.l,
         shadow: AppShadows.cardSubtle,
+        border: Border.all(color: AppColors.outline),
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.xs),
         child: SizedBox(
           height: 62,

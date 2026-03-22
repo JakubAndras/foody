@@ -36,8 +36,15 @@ class CalendarDayRingPainter extends CustomPainter {
         return;
       }
 
-      paint.color = ringStyle.roundedPercent > 100 ? AppColors.error : AppColors.textPrimary;
+      // Draw black progress arc
+      paint.color = AppColors.textPrimary;
       canvas.drawArc(rect, startAngleOffset, 2 * math.pi * progress, false, paint);
+
+      // Draw red overflow arc on top of full black ring
+      if (ringStyle.overflowFraction > 0) {
+        paint.color = AppColors.error;
+        canvas.drawArc(rect, startAngleOffset, 2 * math.pi * ringStyle.overflowFraction, false, paint);
+      }
       return;
     }
 
@@ -46,17 +53,20 @@ class CalendarDayRingPainter extends CustomPainter {
     final gapSweep = segmentSweep * 0.28;
     final drawSweep = segmentSweep - gapSweep;
 
+    // First pass: draw all segments as black (filled) or gray (empty)
     for (int i = 0; i < ringStyle.totalSegments; i++) {
-      if (i < ringStyle.overflowSegments) {
-        paint.color = AppColors.error;
-      } else if (i < ringStyle.filledSegments) {
-        paint.color = AppColors.textPrimary;
-      } else {
-        paint.color = AppColors.borderStrong;
-      }
-
+      paint.color = i < ringStyle.filledSegments ? AppColors.textPrimary : AppColors.borderStrong;
       final start = startAngleOffset + i * segmentSweep + (gapSweep / 2);
       canvas.drawArc(rect, start, drawSweep, false, paint);
+    }
+
+    // Second pass: draw red overflow segments on top of the black ones
+    if (ringStyle.overflowSegments > 0) {
+      paint.color = AppColors.error;
+      for (int i = 0; i < ringStyle.overflowSegments; i++) {
+        final start = startAngleOffset + i * segmentSweep + (gapSweep / 2);
+        canvas.drawArc(rect, start, drawSweep, false, paint);
+      }
     }
   }
 

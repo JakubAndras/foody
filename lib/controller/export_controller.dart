@@ -5,6 +5,8 @@ import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/model/weight_entry.dart';
 import 'package:diplomka/services/day_record_repository.dart';
 import 'package:diplomka/services/export/export_service.dart';
+import 'package:diplomka/services/nutrition_goals_service.dart';
+import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/services/share/app_share_service.dart';
 import 'package:diplomka/services/weight_entry_repository.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -45,11 +47,18 @@ class ExportController extends GetxController {
     }
   }
 
+  static final _fileDateFmt = DateFormat('dd_MM_yyyy');
+
   String _dateRangeLabel() {
     final fmt = DateFormat('MMM d, yyyy');
     final (start, end) = _resolveDateRange();
     if (selectedRange.value == ExportDateRange.allTime) return tr(LocaleKeys.export_all_time);
-    return '${fmt.format(start)} – ${fmt.format(end)}';
+    return '${fmt.format(start)} - ${fmt.format(end)}';
+  }
+
+  String _fileNameDateRange() {
+    final (start, end) = _resolveDateRange();
+    return '${_fileDateFmt.format(start)}_${_fileDateFmt.format(end)}';
   }
 
   Future<(List<DayRecord>, List<WeightEntry>)> _fetchData() async {
@@ -69,9 +78,24 @@ class ExportController extends GetxController {
     isExporting.value = true;
     try {
       final (records, weights) = await _fetchData();
-      final bytes = await ExportService.generatePdf(records, weights, _dateRangeLabel());
+      if (records.isEmpty && weights.isEmpty) {
+        Get.snackbar(tr(LocaleKeys.export_pdf_title), tr(LocaleKeys.export_no_data), snackPosition: SnackPosition.BOTTOM);
+        return;
+      }
+      final goals = NutritionGoalsService.to.goalsForDate(DateTime.now());
+      final session = SessionManager.to;
+      final bytes = await ExportService.generatePdf(
+        records,
+        weights,
+        _dateRangeLabel(),
+        calorieGoal: goals.calorieGoal,
+        proteinGoal: goals.proteinGoal,
+        carbsGoal: goals.carbsGoal,
+        fatGoal: goals.fatGoal,
+        dietType: session.dietType.value?.name,
+      );
       final dir = await getTemporaryDirectory();
-      final file = File('${dir.path}/foody_report.pdf');
+      final file = File('${dir.path}/foody_report_${_fileNameDateRange()}.pdf');
       await file.writeAsBytes(bytes);
       await AppShareService.share(
         request: AppShareRequest(
@@ -79,6 +103,8 @@ class ExportController extends GetxController {
           subject: tr(LocaleKeys.export_pdf_title),
         ),
       );
+    } catch (e) {
+      Get.snackbar(tr(LocaleKeys.common_error), tr(LocaleKeys.export_error), snackPosition: SnackPosition.BOTTOM);
     } finally {
       isExporting.value = false;
     }
@@ -88,9 +114,13 @@ class ExportController extends GetxController {
     isExporting.value = true;
     try {
       final (records, weights) = await _fetchData();
+      if (records.isEmpty && weights.isEmpty) {
+        Get.snackbar(tr(LocaleKeys.export_pdf_title), tr(LocaleKeys.export_no_data), snackPosition: SnackPosition.BOTTOM);
+        return;
+      }
       final csvString = ExportService.generateCsv(records, weights);
       final dir = await getTemporaryDirectory();
-      final file = File('${dir.path}/foody_report.csv');
+      final file = File('${dir.path}/foody_report_${_fileNameDateRange()}.csv');
       await file.writeAsString(csvString);
       await AppShareService.share(
         request: AppShareRequest(
@@ -98,6 +128,8 @@ class ExportController extends GetxController {
           subject: tr(LocaleKeys.export_pdf_title),
         ),
       );
+    } catch (e) {
+      Get.snackbar(tr(LocaleKeys.common_error), tr(LocaleKeys.export_error), snackPosition: SnackPosition.BOTTOM);
     } finally {
       isExporting.value = false;
     }

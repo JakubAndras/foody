@@ -30,7 +30,7 @@ class CaloriesCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.l),
-        //boxShadow: AppShadows.control,
+        border: Border.all(color: AppColors.outline),
       ),
       child: Row(
         children: [
@@ -78,7 +78,7 @@ class CaloriesCard extends StatelessWidget {
               _StatItem(
                 icon: Icons.flag_outlined,
                 label: tr(LocaleKeys.dashboard_base_goal),
-                value: effectiveGoal.toStringAsFixed(0),
+                value: baseGoal.toStringAsFixed(0),
                 color: AppColors.textMuted,
               ),
               const SizedBox(height: AppSpacing.s),
@@ -102,8 +102,8 @@ class CaloriesCard extends StatelessWidget {
                 _StatItem(
                   icon: Icons.history_rounded,
                   label: tr(LocaleKeys.dashboard_rollover),
-                  value: rolloverAmount.toStringAsFixed(0),
-                  color: AppColors.info,
+                  value: '${rolloverAmount >= 0 ? '+' : ''}${rolloverAmount.toStringAsFixed(0)}',
+                  color: rolloverAmount >= 0 ? AppColors.success : AppColors.error,
                 ),
               ],
             ],

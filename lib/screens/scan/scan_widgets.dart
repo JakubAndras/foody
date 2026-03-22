@@ -84,9 +84,10 @@ class ScanCircleButton extends StatelessWidget {
     this.backgroundColor = AppColors.surface,
     this.iconColor = AppColors.primary,
     this.size = AppSizes.scanTopButtonSize,
-    this.iconSize = AppSizes.scanTopIconSize,
+    this.iconSize = AppSizes.scanIconSize,
     this.shadow = AppShadows.calendarDay,
     this.border,
+    this.child,
   });
 
   final IconData icon;
@@ -97,10 +98,11 @@ class ScanCircleButton extends StatelessWidget {
   final double iconSize;
   final List<BoxShadow> shadow;
   final BoxBorder? border;
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {
-    return CustomGlassIconButton(icon: icon, onPressed: onPressed, size: size, iconSize: iconSize);
+    return CustomGlassIconButton(icon: icon, onPressed: onPressed, size: size, iconSize: iconSize, child: child);
   }
 }
 
@@ -236,7 +238,7 @@ class ScanModeTile extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: AppSizes.scanModeIconSize, color: fg),
+            Icon(icon, size: AppSizes.scanIconSize, color: fg),
             const SizedBox(height: 4),
             Text(label, style: AppTextStyles.label12.copyWith(color: fg)),
           ],

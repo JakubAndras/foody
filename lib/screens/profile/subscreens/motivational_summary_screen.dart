@@ -57,7 +57,7 @@ class _MotivationalSummaryScreenState extends State<MotivationalSummaryScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: AppSpacing.l),
+                const SizedBox(height: AppSpacing.m),
                 ProfileCard(
                   radius: AppRadii.l,
                   shadow: AppShadows.cardSubtle,

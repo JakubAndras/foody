@@ -74,7 +74,7 @@ class _PersonalDetailsCustomDietScreenState extends State<PersonalDetailsCustomD
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ProfileTopBar(title: tr(LocaleKeys.personal_details_custom_diet_title), onBack: widget.onBack),
-          const SizedBox(height: AppSpacing.l),
+          const SizedBox(height: AppSpacing.m),
           Text(
             tr(LocaleKeys.personal_details_custom_diet_subtitle),
             style: textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),

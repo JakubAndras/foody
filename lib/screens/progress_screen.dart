@@ -86,7 +86,7 @@ class ProgressScreen extends StatelessWidget {
           backgroundColor: Colors.transparent,
           fadeColor: AppColors.meshBase,
           backgroundWidget: const MeshGradientBackground(),
-          padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.mega + AppSpacing.s, AppSpacing.l, AppSpacing.mega + 42),
+          padding: const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.mega + AppSpacing.s, AppSpacing.m, AppSpacing.mega + 42),
           //collapsedHeader: Text(tr(LocaleKeys.progress_title), style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w700)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

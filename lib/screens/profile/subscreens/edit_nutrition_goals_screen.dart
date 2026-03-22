@@ -204,7 +204,7 @@ class _EditNutritionGoalsScreenState extends State<EditNutritionGoalsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ProfileTopBar(title: tr(LocaleKeys.nutrition_goals_title), onBack: () => Get.back()),
-            const SizedBox(height: AppSpacing.l),
+            const SizedBox(height: AppSpacing.m),
             _GoalRow(
               label: tr(LocaleKeys.nutrition_goals_calorie_goal),
               controller: _calorieController,

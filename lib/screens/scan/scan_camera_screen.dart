@@ -10,6 +10,7 @@ import 'package:diplomka/screens/main_screen.dart';
 import 'package:diplomka/screens/scan/scan_permission_screen.dart';
 import 'package:diplomka/screens/scan/scan_preview_screen.dart';
 import 'package:diplomka/screens/scan/scan_widgets.dart';
+import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:diplomka/services/barcode_lookup_service.dart';
 import 'package:diplomka/services/selected_date_service.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -94,7 +95,6 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
     _activeBackCamera = null;
     _isInitialized = false;
     _isFlashOn = false;
-    _isZoomed = true;
     _minZoomLevel = 1.0;
     _maxZoomLevel = 1.0;
     controller?.dispose().catchError((_) {});
@@ -393,6 +393,15 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
     } catch (_) {}
   }
 
+  Future<void> _setBarcodeZoom(bool isNormalZoom) async {
+    try {
+      final scale = isNormalZoom ? 0.5 : 0.0;
+      await _barcodeScannerController.setZoomScale(scale);
+      if (!mounted) return;
+      setState(() => _isZoomed = isNormalZoom);
+    } catch (_) {}
+  }
+
   Future<void> _pauseBarcodeScanner() async {
     try {
       await _barcodeScannerController.stop();
@@ -403,6 +412,8 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
     if (_mode != ScanMode.barcode || !_hasPermission) return;
     try {
       await _barcodeScannerController.start();
+      final scale = _isZoomed ? 0.5 : 0.0;
+      await _barcodeScannerController.setZoomScale(scale);
     } catch (_) {}
   }
 
@@ -599,8 +610,9 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             ScanCircleButton(
-              icon: Icons.close,
+              icon: Icons.close_rounded,
               onPressed: () => Get.back(),
+              child: GlassStrokeIcon.close(),
             ),
             ScanCircleButton(
               icon: Icons.help_outline,
@@ -647,7 +659,18 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
   }
 
   Widget _buildZoomToggle() {
-    if (_mode == ScanMode.barcode) return const SizedBox.shrink();
+    if (_mode == ScanMode.barcode) {
+      return Align(
+        alignment: const Alignment(0, 0.94),
+        child: ScanZoomToggle(
+          isEnabled: true,
+          isZoomed: _isZoomed,
+          onToggle: (value) async {
+            await _setBarcodeZoom(value);
+          },
+        ),
+      );
+    }
 
     final hasLensSwitchOption = _wideBackCamera != null && _ultraWideBackCamera != null;
     final hasDifferentZoomSteps = hasLensSwitchOption || (_zoomLevelForSelection(true) - _zoomLevelForSelection(false)).abs() > 0.01;
@@ -723,7 +746,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
           backgroundColor: _isFlashOn ? AppColors.primary : AppColors.surfaceMuted,
           shadow: const <BoxShadow>[],
           size: AppSizes.scanAuxButtonSize,
-          iconSize: AppSizes.scanModeIconSize,
+          iconSize: AppSizes.scanIconSize,
           iconColor: _isFlashOn ? AppColors.onPrimary : AppColors.textEmphasis,
         ),
         ScanShutterButton(onPressed: _capturePhoto),
@@ -733,7 +756,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
           backgroundColor: AppColors.surfaceMuted,
           shadow: const <BoxShadow>[],
           size: AppSizes.scanAuxButtonSize,
-          iconSize: AppSizes.scanModeIconSize,
+          iconSize: AppSizes.scanIconSize,
           iconColor: AppColors.textEmphasis,
         ),
       ],
@@ -741,7 +764,9 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
   }
 
   Widget _buildBarcodeControls() {
-    return Row(
+    return SizedBox(
+      height: AppSizes.scanShutterSize,
+      child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         ScanCircleButton(
@@ -750,26 +775,8 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
           backgroundColor: _isFlashOn ? AppColors.primary : AppColors.surfaceMuted,
           shadow: const <BoxShadow>[],
           size: AppSizes.scanAuxButtonSize,
-          iconSize: AppSizes.scanModeIconSize,
+          iconSize: AppSizes.scanIconSize,
           iconColor: _isFlashOn ? AppColors.onPrimary : AppColors.textEmphasis,
-        ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
-            child: Container(
-              height: AppSizes.scanAuxButtonSize,
-              decoration: BoxDecoration(
-                color: AppColors.surfaceMuted,
-                borderRadius: BorderRadius.circular(AppRadii.pill),
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                tr(LocaleKeys.scan_align_barcode),
-                style: AppTextStyles.body14.copyWith(color: AppColors.textEmphasis),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
         ),
         ScanCircleButton(
           icon: Icons.refresh,
@@ -777,10 +784,11 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
           backgroundColor: AppColors.surfaceMuted,
           shadow: const <BoxShadow>[],
           size: AppSizes.scanAuxButtonSize,
-          iconSize: AppSizes.scanModeIconSize,
+          iconSize: AppSizes.scanIconSize,
           iconColor: AppColors.textEmphasis,
         ),
       ],
+      ),
     );
   }
 
@@ -837,3 +845,4 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
     );
   }
 }
+

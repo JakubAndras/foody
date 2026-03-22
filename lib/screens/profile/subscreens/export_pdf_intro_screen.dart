@@ -29,8 +29,14 @@ class ExportPdfIntroScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ProfileTopBar(title: tr(LocaleKeys.export_intro_title), onBack: () => Get.back()),
-          const SizedBox(height: AppSpacing.l),
-          Text(tr(LocaleKeys.export_intro_subtitle), style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w500)),
+          const SizedBox(height: AppSpacing.m),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+            child: Text(
+              tr(LocaleKeys.export_intro_subtitle),
+              style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w500),
+            ),
+          ),
           const SizedBox(height: AppSpacing.m),
           ProfileCard(
             padding: const EdgeInsets.all(AppSpacing.m),

@@ -35,7 +35,7 @@ class _FaqScreenState extends State<FaqScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ProfileTopBar(title: tr(LocaleKeys.profile_faq), onBack: () => Get.back()),
-          const SizedBox(height: AppSpacing.l),
+          const SizedBox(height: AppSpacing.m),
           ..._items.asMap().entries.map((entry) {
             final index = entry.key;
             final item = entry.value;

@@ -261,8 +261,8 @@ class AppSizes {
   static const double scanIndicatorDot = 6;
   static const double scanIndicatorGap = 6;
   static const double scanStatusBarHeight = 44;
-  static const double scanTopButtonSize = 40;
-  static const double scanTopIconSize = 20;
+  static const double scanTopButtonSize = 44;
+  static const double scanIconSize = 24;
   static const double scanCornerSize = 64;
   static const double scanCornerStroke = 3.233;
   static const double scanCornerRadius = 24;
@@ -272,7 +272,6 @@ class AppSizes {
   static const double scanZoomButtonHeight = 28;
   static const double scanModeButtonWidth = 120;
   static const double scanModeButtonHeight = 69;
-  static const double scanModeIconSize = 24;
   static const double scanBottomBarHeight = 214;
   static const double scanShutterSize = 64;
   static const double scanShutterRingSize = 56;

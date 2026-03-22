@@ -47,7 +47,7 @@ class PersonalDetailsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ProfileTopBar(title: tr(LocaleKeys.personal_details_title), onBack: () => Get.back()),
-            const SizedBox(height: AppSpacing.l),
+            const SizedBox(height: AppSpacing.m),
             ProfileCard(
               radius: AppRadii.l,
               shadow: AppShadows.cardSubtle,

@@ -68,7 +68,7 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
                             fadeColor: AppColors.meshBase,
                             backgroundWidget: const MeshGradientBackground(),
                             controller: controller.scrollController,
-                            padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.xs, AppSpacing.l, AppSpacing.mega + 42),
+                            padding: const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.xs, AppSpacing.m, AppSpacing.mega + 42),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [

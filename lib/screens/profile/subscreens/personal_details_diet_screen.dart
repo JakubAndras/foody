@@ -67,7 +67,7 @@ class _PersonalDetailsDietScreenState extends State<PersonalDetailsDietScreen> w
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ProfileTopBar(title: tr(LocaleKeys.personal_details_diet), onBack: widget.onBack),
-          const SizedBox(height: AppSpacing.l),
+          const SizedBox(height: AppSpacing.m),
           OnboardingOptionCard(
             title: tr(LocaleKeys.onboarding_classic),
             selected: _selected == 'classic',

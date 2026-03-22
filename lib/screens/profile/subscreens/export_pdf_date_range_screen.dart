@@ -13,81 +13,90 @@ class ExportPdfDateRangeScreen extends GetView<ExportController> {
 
   @override
   Widget build(BuildContext context) {
-    return ProfileGradientScaffold(
-      padding: EdgeInsets.zero,
-      child: Column(
-        children: [
-          // ── Scrollable content ──
-          // ── Top bar ──
-          Padding(
-            padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.l, AppSpacing.screen, 0),
-            child: ProfileTopBar(title: tr(LocaleKeys.export_select_date_range), onBack: () => Get.back()),
-          ),
+    return Stack(
+      children: [
+        ProfileGradientScaffold(
+          padding: EdgeInsets.zero,
+          child: Column(
+            children: [
+              // ── Top bar ──
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
+                child: ProfileTopBar(title: tr(LocaleKeys.export_select_date_range), onBack: () => Get.back()),
+              ),
 
-          // ── Centered content ──
-          Expanded(
-            child: Center(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen, vertical: AppSpacing.m),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ...ExportDateRange.values.map((range) => Padding(
-                          padding: const EdgeInsets.only(bottom: AppSpacing.m),
-                          child: Obx(() => _DateRangeButton(
-                                label: _rangeLabel(range),
-                                isSelected: controller.selectedRange.value == range,
-                                onTap: () async {
-                                  controller.selectRange(range);
-                                  if (range == ExportDateRange.custom) {
-                                    await _pickCustomRange(context);
-                                  }
-                                },
-                              )),
-                        )),
-                    Obx(() {
-                      final range = controller.selectedRange.value;
-                      final show = range == ExportDateRange.custom && controller.customStart.value != null && controller.customEnd.value != null;
-                      return Center(
-                        child: Text(
-                          show ? '${_fmtDate(controller.customStart.value!)} – ${_fmtDate(controller.customEnd.value!)}' : ' ',
-                          style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w600),
-                        ),
-                      );
-                    }),
-                  ],
+              // ── Centered content ──
+              Expanded(
+                child: Center(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen, vertical: AppSpacing.m),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ...ExportDateRange.values.map((range) => Padding(
+                              padding: const EdgeInsets.only(bottom: AppSpacing.m),
+                              child: Obx(() => _DateRangeButton(
+                                    label: _rangeLabel(range),
+                                    isSelected: controller.selectedRange.value == range,
+                                    onTap: () async {
+                                      controller.selectRange(range);
+                                      if (range == ExportDateRange.custom) {
+                                        await _pickCustomRange(context);
+                                      }
+                                    },
+                                  )),
+                            )),
+                        Obx(() {
+                          final range = controller.selectedRange.value;
+                          final show = range == ExportDateRange.custom && controller.customStart.value != null && controller.customEnd.value != null;
+                          return Center(
+                            child: Text(
+                              show ? '${_fmtDate(controller.customStart.value!)} – ${_fmtDate(controller.customEnd.value!)}' : ' ',
+                              style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w600),
+                            ),
+                          );
+                        }),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.screen, AppSpacing.screen, AppSpacing.bottom),
-            child: Column(
-                    children: [
-                      ProfilePrimaryButton(
-                        label: tr(LocaleKeys.export_pdf),
-                        height: AppSizes.buttonHeight,
-                        radius: AppRadii.pill,
-                        onPressed: controller.exportPdf,
-                      ),
-                      const SizedBox(height: AppSpacing.s),
-                      SizedBox(
-                        width: double.infinity,
-                        height: AppSizes.buttonHeight,
-                        child: OutlinedButton(
-                          onPressed: controller.exportCsv,
-                          style: OutlinedButton.styleFrom(
-                            side: const BorderSide(color: AppColors.textSecondary),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadii.pill)),
-                          ),
-                          child: Text(tr(LocaleKeys.export_csv), style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.screen, AppSpacing.screen, AppSpacing.bottom),
+                child: Obx(() => Column(
+                      children: [
+                        ProfilePrimaryButton(
+                          label: tr(LocaleKeys.export_pdf),
+                          height: AppSizes.buttonHeight,
+                          radius: AppRadii.pill,
+                          onPressed: controller.isExporting.value ? null : controller.exportPdf,
                         ),
-                      ),
-                    ],
-                  ),
+                        const SizedBox(height: AppSpacing.s),
+                        SizedBox(
+                          width: double.infinity,
+                          height: AppSizes.buttonHeight,
+                          child: OutlinedButton(
+                            onPressed: controller.isExporting.value ? null : controller.exportCsv,
+                            style: OutlinedButton.styleFrom(
+                              side: const BorderSide(color: AppColors.textSecondary),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadii.pill)),
+                            ),
+                            child: Text(tr(LocaleKeys.export_csv), style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                          ),
+                        ),
+                      ],
+                    )),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+        Obx(() => controller.isExporting.value
+            ? Container(
+                color: Colors.black26,
+                child: const Center(child: CircularProgressIndicator()),
+              )
+            : const SizedBox.shrink()),
+      ],
     );
   }
 

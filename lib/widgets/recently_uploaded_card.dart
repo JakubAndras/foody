@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/services/session_manager.dart';
 
 class RecentlyUploadedCard extends StatelessWidget {
   final List<Meal> meals;
@@ -37,9 +38,12 @@ class RecentlyUploadedCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          tr(LocaleKeys.dashboard_meals_title, namedArgs: {'date': DateFormat('MMM d').format(selectedDate)}),
-          style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.m : 0),
+          child: Text(
+            tr(LocaleKeys.dashboard_meals_title, namedArgs: {'date': DateFormat('MMM d').format(selectedDate)}),
+            style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700),
+          ),
         ),
         Obx(() {
           final isMealLoading = DashboardController.to.newMealAnalyzeLoading.value;
@@ -106,11 +110,14 @@ class RecentlyUploadedCard extends StatelessWidget {
   }
 
   Widget _buildExerciseHeader() {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Text(
-        tr(LocaleKeys.dashboard_exercises_title),
-        style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.m : 0),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          tr(LocaleKeys.dashboard_exercises_title),
+          style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700),
+        ),
       ),
     );
   }

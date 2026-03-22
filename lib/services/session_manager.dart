@@ -36,6 +36,7 @@ class SessionManager extends GetxService {
   final RxBool burnedCaloriesEnabled = true.obs;
   final RxBool rolloverCaloriesEnabled = false.obs;
   final RxBool autoAdjustMacrosEnabled = true.obs;
+  final RxBool sectionHeaderPaddingEnabled = false.obs;
 
   Future<void> onAppInit() async {
     themeModeIndex.value = ThemeMode.values[await SharedPreferencesService.to.getInt(key: themeModeKey) ?? 0];
@@ -162,5 +163,9 @@ class SessionManager extends GetxService {
   Future<void> setAutoAdjustMacrosEnabled(bool value) async {
     autoAdjustMacrosEnabled.value = value;
     await SharedPreferencesService.to.setBool(key: autoAdjustMacrosEnabledKey, value: value);
+  }
+
+  void setSectionHeaderPaddingEnabled(bool value) {
+    sectionHeaderPaddingEnabled.value = value;
   }
 }

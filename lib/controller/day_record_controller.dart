@@ -13,6 +13,7 @@ import 'package:diplomka/services/day_record_repository.dart';
 import 'package:diplomka/services/exercise_template_repository.dart';
 import 'package:diplomka/services/home_widget/widget_sync_service.dart';
 import 'package:diplomka/services/meal_template_repository.dart';
+import 'package:diplomka/services/session_manager.dart';
 
 import '../model/meal.dart';
 import 'base_controller.dart';
@@ -40,12 +41,23 @@ class DayRecordController extends BaseController {
 
   // Method to load ring states for a week
   Future<void> loadWeek(DateTime mondayOfWeek) async {
+    final bool burnedEnabled = SessionManager.to.burnedCaloriesEnabled.value;
+    final bool rolloverEnabled = SessionManager.to.rolloverCaloriesEnabled.value;
+
+    // Load the day before Monday to compute Monday's rollover
+    final sunday = mondayOfWeek.subtract(const Duration(days: 1));
+    DayRecord? prevRecord = await getDayRecord(DateTime(sunday.year, sunday.month, sunday.day));
+
     final Map<DateTime, CalendarDayRingStyle> newStatuses = {};
     for (int i = 0; i < 7; i++) {
       final currentDay = mondayOfWeek.add(Duration(days: i));
       final normalizedDay = DateTime(currentDay.year, currentDay.month, currentDay.day);
       final dayRecord = await getDayRecord(normalizedDay);
-      newStatuses[normalizedDay] = _resolveRingStyle(dayRecord);
+
+      final double rollover = _computeRollover(prevRecord, burnedEnabled: burnedEnabled, rolloverEnabled: rolloverEnabled);
+      newStatuses[normalizedDay] = _resolveRingStyleWithSettings(dayRecord, burnedEnabled: burnedEnabled, rollover: rollover);
+
+      prevRecord = dayRecord;
     }
     weekRingStyles.addAll(newStatuses);
   }
@@ -194,10 +206,20 @@ class DayRecordController extends BaseController {
   Future<void> refreshDayRecords() async {
     final records = await _repository.getAllDayRecords();
     dayRecords.assignAll(records);
+
+    final bool burnedEnabled = SessionManager.to.burnedCaloriesEnabled.value;
+    final bool rolloverEnabled = SessionManager.to.rolloverCaloriesEnabled.value;
+
+    // Sort by date so we can compute rollover from previous day
+    final sorted = List<DayRecord>.from(records)..sort((a, b) => a.date.compareTo(b.date));
+
     weekRingStyles.clear();
-    for (final record in records) {
+    DayRecord? prevRecord;
+    for (final record in sorted) {
       final normalizedDate = DateTime(record.date.year, record.date.month, record.date.day);
-      weekRingStyles[normalizedDate] = _resolveRingStyle(record);
+      final double rollover = _computeRollover(prevRecord, burnedEnabled: burnedEnabled, rolloverEnabled: rolloverEnabled);
+      weekRingStyles[normalizedDate] = _resolveRingStyleWithSettings(record, burnedEnabled: burnedEnabled, rollover: rollover);
+      prevRecord = record;
     }
     _syncHomeWidgetForToday(records);
   }
@@ -225,8 +247,22 @@ class DayRecordController extends BaseController {
     );
   }
 
+  CalendarDayRingStyle _resolveRingStyleWithSettings(DayRecord? dayRecord, {required bool burnedEnabled, required double rollover}) {
+    if (dayRecord == null) return CalendarDayRingService.emptyStyle;
+    final double consumed = burnedEnabled ? dayRecord.netCalories : dayRecord.totalCalories;
+    final double goal = dayRecord.calorieGoal + rollover;
+    return _calendarDayRingService?.resolve(dayRecord, consumed: consumed, effectiveGoal: goal > 0 ? goal : null) ?? CalendarDayRingService.emptyStyle;
+  }
+
+  double _computeRollover(DayRecord? prevRecord, {required bool burnedEnabled, required bool rolloverEnabled}) {
+    if (!rolloverEnabled || prevRecord == null || prevRecord.calorieGoal <= 0) return 0;
+    final double prevConsumed = burnedEnabled ? prevRecord.netCalories : prevRecord.totalCalories;
+    return (prevRecord.calorieGoal - prevConsumed).clamp(0, 500);
+  }
+
   CalendarDayRingStyle _resolveRingStyle(DayRecord? dayRecord) {
-    return _calendarDayRingService?.resolve(dayRecord) ?? CalendarDayRingService.emptyStyle;
+    final bool burnedEnabled = SessionManager.to.burnedCaloriesEnabled.value;
+    return _resolveRingStyleWithSettings(dayRecord, burnedEnabled: burnedEnabled, rollover: 0);
   }
 
   @override

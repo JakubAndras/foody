@@ -6,12 +6,13 @@ import 'package:diplomka/app_theme.dart';
 /// Glass icon button with dark icon — wraps [GlassButton.custom] so we can
 /// control icon colour (the stock [GlassIconButton] hardcodes white).
 class CustomGlassIconButton extends StatelessWidget {
-  const CustomGlassIconButton({super.key, required this.icon, required this.onPressed, this.size = 44, this.iconSize});
+  const CustomGlassIconButton({super.key, required this.icon, required this.onPressed, this.size = 44, this.iconSize, this.child});
 
   final IconData icon;
   final VoidCallback? onPressed;
   final double size;
   final double? iconSize;
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {
@@ -30,13 +31,60 @@ class CustomGlassIconButton extends StatelessWidget {
         settings: AppGlass.standard,
         quality: GlassQuality.premium,
         interactionScale: 0.95,
-        child: Padding(
-          padding: icon == Icons.arrow_back_ios_new_rounded ? const EdgeInsets.only(right: 1.5) : EdgeInsets.zero,
-          child: Icon(icon, size: effectiveIconSize, color: AppColors.black),
-        ),
+        child: child ??
+            Padding(
+              padding: icon == Icons.arrow_back_ios_new_rounded ? const EdgeInsets.only(right: 1.5) : EdgeInsets.zero,
+              child: Icon(icon, size: effectiveIconSize, color: AppColors.black),
+            ),
       ),
     );
   }
+}
+
+/// Custom-painted icon that matches iOS native glass button style.
+/// Use with [CustomGlassIconButton.child] for consistent stroke weight.
+class GlassStrokeIcon extends StatelessWidget {
+  const GlassStrokeIcon({
+    super.key,
+    required this.painter,
+    this.size = AppSizes.scanIconSize,
+  });
+
+  final CustomPainter painter;
+  final double size;
+
+  /// X mark — close / dismiss.
+  factory GlassStrokeIcon.close({double size = AppSizes.scanIconSize}) => GlassStrokeIcon(painter: const _CloseStrokePainter(), size: size);
+
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(size: Size(size, size), painter: painter);
+  }
+}
+
+const _kStrokeWidth = 2.0;
+const _kInsetFraction = 0.19;
+
+Paint _glassStrokePaint() => Paint()
+  ..color = AppColors.black
+  ..strokeWidth = _kStrokeWidth
+  ..strokeCap = StrokeCap.round
+  ..style = PaintingStyle.stroke;
+
+class _CloseStrokePainter extends CustomPainter {
+  const _CloseStrokePainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = _glassStrokePaint();
+    final inset = size.width * _kInsetFraction;
+    canvas.drawLine(Offset(inset, inset), Offset(size.width - inset, size.height - inset), paint);
+    canvas.drawLine(Offset(size.width - inset, inset), Offset(inset, size.height - inset), paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 /// Group of icon buttons in a single glass pill — iOS 26 style.
