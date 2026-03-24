@@ -10,10 +10,12 @@ class ExerciseDetailOptionsSheet extends StatelessWidget {
     super.key,
     required this.onReport,
     required this.onDelete,
+    this.onDuplicate,
   });
 
   final VoidCallback onReport;
   final VoidCallback onDelete;
+  final VoidCallback? onDuplicate;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +32,15 @@ class ExerciseDetailOptionsSheet extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              if (onDuplicate != null) ...[
+                _OptionRow(
+                  icon: Icons.content_copy_outlined,
+                  label: tr(LocaleKeys.exercise_duplicate_to_today),
+                  color: AppColors.textPrimary,
+                  onTap: onDuplicate!,
+                ),
+                const SizedBox(height: AppSpacing.s),
+              ],
               _OptionRow(
                 icon: Icons.report_gmailerrorred_outlined,
                 label: tr(LocaleKeys.common_report),

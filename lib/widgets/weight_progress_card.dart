@@ -114,8 +114,8 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.l),
-        border: Border.all(color: AppColors.outline),
-        boxShadow: AppShadows.cardSoft,
+        border: AppBorders.screenCard,
+        boxShadow: AppShadows.screenCard,
       ),
       padding: const EdgeInsets.all(AppSpacing.m),
       child: Column(
@@ -148,7 +148,7 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
                 ),
             ],
           ),
-          const SizedBox(height: AppSpacing.l),
+          const SizedBox(height: AppSpacing.m),
           if (!hasEntries)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: AppSpacing.l),
@@ -156,7 +156,7 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
             )
           else
             _WeightLineChart(entries: entries, ticks: ticks, formatWeight: _formatWeight),
-          const SizedBox(height: AppSpacing.l),
+          const SizedBox(height: AppSpacing.m),
           _SegmentedControl(labels: _rangeLabels, selectedIndex: _selectedIndex, onTap: (index) => setState(() => _selectedIndex = index)),
         ],
       ),
@@ -213,39 +213,45 @@ class _WeightLineChart extends StatelessWidget {
 
     return Column(
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: AppSizes.chartLabelWidth,
-              height: totalHeight,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: ticks
-                    .map(
-                      (value) => Text(
-                        formatWeight(value),
-                        style: AppTextStyles.caption12.copyWith(color: AppColors.textTertiary, fontWeight: FontWeight.w600),
-                      ),
-                    )
-                    .toList(),
-              ),
-            ),
-            const SizedBox(width: AppSpacing.s),
-            Expanded(
-              child: SizedBox(
+        Padding(
+          padding: const EdgeInsets.only(right: AppSpacing.s),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: 18,
                 height: totalHeight,
-                child: CustomPaint(
-                  painter: _WeightLinePainter(entries: data, minWeight: minWeight, maxWeight: maxWeight, gridLines: ticks.length, vPad: _vPad),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: ticks
+                      .map(
+                        (value) => Transform.translate(
+                          offset: const Offset(0, -1),
+                          child: Text(
+                            formatWeight(value),
+                            style: AppTextStyles.caption12.copyWith(color: AppColors.textTertiary, fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      )
+                      .toList(),
                 ),
               ),
-            ),
-          ],
+              const SizedBox(width: AppSpacing.xs),
+              Expanded(
+                child: SizedBox(
+                  height: totalHeight,
+                  child: CustomPaint(
+                    painter: _WeightLinePainter(entries: data, minWeight: minWeight, maxWeight: maxWeight, gridLines: ticks.length, vPad: _vPad),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: AppSpacing.s),
+        const SizedBox(height: AppSpacing.xxs),
         Padding(
-          padding: EdgeInsets.only(left: AppSizes.chartLabelWidth + AppSpacing.s),
+          padding: const EdgeInsets.only(left: 18 + AppSpacing.xxs, right: AppSpacing.s),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: dateLabels

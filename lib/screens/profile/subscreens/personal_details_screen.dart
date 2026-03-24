@@ -50,7 +50,7 @@ class PersonalDetailsScreen extends StatelessWidget {
             const SizedBox(height: AppSpacing.m),
             ProfileCard(
               radius: AppRadii.l,
-              shadow: AppShadows.cardSubtle,
+              shadow: AppShadows.screenCard,
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen, vertical: AppSpacing.m),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -82,7 +82,7 @@ class PersonalDetailsScreen extends StatelessWidget {
             const SizedBox(height: AppSpacing.m),
             ProfileCard(
               radius: AppRadii.l,
-              shadow: AppShadows.cardSubtle,
+              shadow: AppShadows.screenCard,
               padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.xs, AppSpacing.screen, AppSpacing.xs),
               child: Column(
                 children: [

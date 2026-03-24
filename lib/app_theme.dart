@@ -196,7 +196,7 @@ class AppSizes {
   static const double ringSize = 128;
   static const double ringStroke = 8;
   static const double ringSizeSmall = 100;
-  static const double summaryRingSize = 125;
+  static const double summaryRingSize = 142;
   static const double macroRingSize = 64;
   static const double widgetRingSize = 112;
   static const double macroRingStroke = 6;
@@ -225,8 +225,10 @@ class AppSizes {
   static const double calorieBurnImageSize = 384;
   static const double infoCardWidth = 210;
   static const double macroCardHeight = 160;
-  static const double mealCardHeight = 132;
+  static const double mealCardHeight = 110;
   static const double mealImageSize = 90;
+  static const double exerciseImageSize = 94;
+  static const double mealDashboardImageSize = 94;
   static const double mealHeroHeight = 300;
   static const double macroCardSize = 125.34;
   static const double caloriesCardHeight = 136;
@@ -348,7 +350,24 @@ class AppGradients {
   static const LinearGradient scanCameraSurface = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [AppColors.surfaceMuted, AppColors.outline]);
 }
 
+class AppQuickAction {
+  /// Switch between quick action sheet styles:
+  /// - false: glass sheet background, white option cards (v1)
+  /// - true: transparent sheet background, glass option cards (v2)
+  static const bool useGlassCards = false;
+}
+
+class AppBorders {
+  /// Single variable to control card borders across Dashboard, Progress, and Profile screens.
+  /// Change this to adjust all screen card borders from one place (set to null to remove them).
+  static final BoxBorder? screenCard = Border.all(color: AppColors.outline);
+}
+
 class AppShadows {
+  /// Single variable to control card shadows across Dashboard, Progress, and Profile screens.
+  /// Change this to adjust all screen card shadows from one place (set to [] to remove them).
+  static const List<BoxShadow> screenCard = [];
+
   static const List<BoxShadow> cardSubtle = [BoxShadow(offset: Offset(0, 2), blurRadius: 20, color: Color(0x05000000))];
 
   static const List<BoxShadow> cardSoft = [BoxShadow(offset: Offset(0, 2), blurRadius: 20, color: Color(0x0A000000))];

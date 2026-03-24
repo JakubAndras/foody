@@ -163,7 +163,7 @@ class _VariableBlurScrollViewState extends State<VariableBlurScrollView> {
           VariableBlur(
             sigma: 8,
             blurSides: BlurSides.vertical(top: widget.topBlurHeight), // ResponsiveBlurSides.vertical(top: 200.0),
-            edgeIntensity: 0.05,
+            edgeIntensity: widget.edgeIntensity,
             child: scrollContent,
           )
         else

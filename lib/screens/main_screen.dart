@@ -19,7 +19,6 @@ import 'package:diplomka/widgets/quick_action_sheet.dart';
 import 'package:diplomka/screens/logs/voice_log_screen.dart';
 import 'package:diplomka/screens/logs/exercise_log_home_screen.dart';
 import 'package:diplomka/screens/log_meal/select_meal_screen.dart';
-import 'package:diplomka/screens/logs/weight_log_sheet.dart';
 import 'package:diplomka/services/session_manager.dart';
 
 class MainScreen extends GetView<MainScreenController> {
@@ -41,51 +40,33 @@ class MainScreen extends GetView<MainScreenController> {
               children: [
                 activeBody,
                 if (isDashboard) ...[
-                  Positioned(
-                    left: AppSpacing.l,
-                    top: AppSpacing.safeAreaTop,
-                    child: const _DashboardStreakPill(),
-                  ),
-                  Positioned(
-                    right: AppSpacing.l,
-                    top: AppSpacing.safeAreaTop,
-                    child: const _DashboardCalendarPill(),
-                  ),
+                  Positioned(left: AppSpacing.l, top: AppSpacing.safeAreaTop, child: const _DashboardStreakPill()),
+                  Positioned(right: AppSpacing.l, top: AppSpacing.safeAreaTop, child: const _DashboardCalendarPill()),
                 ],
               ],
             ),
           ),
-          bottomNavigationBar: GlassBottomBar(
-            quality: GlassQuality.premium,
-            barHeight: AppSizes.bottomNavHeight,
-            selectedIconColor: AppColors.textPrimary,
-            unselectedIconColor: AppColors.grey4,
-            glassSettings: AppGlass.standard,
-            tabs: [
-              GlassBottomBarTab(
+          bottomNavigationBar: _BorderedGlassBottomBar(
+            child: GlassBottomBar(
+              quality: GlassQuality.premium,
+              barHeight: AppSizes.bottomNavHeight,
+              selectedIconColor: AppColors.textPrimary,
+              unselectedIconColor: AppColors.grey4,
+              glassSettings: AppGlass.standard,
+              tabs: [
+                GlassBottomBarTab(label: tr(LocaleKeys.nav_home), icon: Icons.home_rounded, selectedIcon: Icons.home_rounded),
+                GlassBottomBarTab(label: tr(LocaleKeys.nav_progress), icon: Icons.bar_chart_rounded, selectedIcon: Icons.bar_chart_rounded),
+                GlassBottomBarTab(label: tr(LocaleKeys.nav_profile), icon: Icons.person_outline_rounded, selectedIcon: Icons.person_outline_rounded),
+              ],
+              selectedIndex: selectedIndex,
+              onTabSelected: controller._onItemTapped,
+              extraButton: GlassBottomBarExtraButton(
+                icon: Icons.add,
                 label: tr(LocaleKeys.nav_home),
-                icon: Icons.home_rounded,
-                selectedIcon: Icons.home_rounded,
+                onTap: () => controller._showQuickActions(context),
+                iconColor: AppColors.primary,
+                size: AppSizes.fabSize,
               ),
-              GlassBottomBarTab(
-                label: tr(LocaleKeys.nav_progress),
-                icon: Icons.bar_chart_rounded,
-                selectedIcon: Icons.bar_chart_rounded,
-              ),
-              GlassBottomBarTab(
-                label: tr(LocaleKeys.nav_profile),
-                icon: Icons.person_outline_rounded,
-                selectedIcon: Icons.person_outline_rounded,
-              ),
-            ],
-            selectedIndex: selectedIndex,
-            onTabSelected: controller._onItemTapped,
-            extraButton: GlassBottomBarExtraButton(
-              icon: Icons.add,
-              label: tr(LocaleKeys.nav_home),
-              onTap: () => controller._showQuickActions(context),
-              iconColor: AppColors.primary,
-              size: AppSizes.fabSize,
             ),
           ),
         ),
@@ -117,7 +98,8 @@ class MainScreenController extends BaseController {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      barrierColor: AppColors.overlayDark40,
+      elevation: 0,
+      barrierColor: AppColors.overlayDark,
       isScrollControlled: false,
       builder: (_) => QuickActionSheet(
         onLogMeal: () {
@@ -139,10 +121,6 @@ class MainScreenController extends BaseController {
           } else {
             Get.to(() => const ScanOnboardingScreen());
           }
-        },
-        onWeight: () {
-          Navigator.of(context).pop();
-          Get.to(() => const WeightLogSheet());
         },
         onExercise: () {
           Navigator.of(context).pop();
@@ -190,7 +168,10 @@ class _DashboardStreakPill extends StatelessWidget {
           children: [
             const Icon(Icons.emoji_events_outlined, color: AppColors.textSecondary, size: 18),
             const SizedBox(width: AppSpacing.xs),
-            Text('$streak', style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w700)),
+            Text(
+              '$streak',
+              style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w700),
+            ),
           ],
         );
       }
@@ -225,11 +206,7 @@ class _DashboardCalendarPill extends StatelessWidget {
 
       return LiquidGlassTapEffect(
         onTap: () {
-          DashboardCalendarSheet.show(
-            context,
-            selectedDate: dc.selectedDate.value,
-            onDateSelected: (date) => DashboardController.to.updateDate(date),
-          );
+          DashboardCalendarSheet.show(context, selectedDate: dc.selectedDate.value, onDateSelected: (date) => DashboardController.to.updateDate(date));
         },
         child: GlassContainer(
           width: pillWidth,
@@ -240,12 +217,58 @@ class _DashboardCalendarPill extends StatelessWidget {
               children: [
                 const Icon(Icons.calendar_month, color: AppColors.textSecondary, size: 18),
                 const SizedBox(width: AppSpacing.xs),
-                Text(label, style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w700)),
+                Text(
+                  label,
+                  style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w700),
+                ),
               ],
             ),
           ),
         ),
       );
     });
+  }
+}
+
+class _BorderedGlassBottomBar extends StatelessWidget {
+  const _BorderedGlassBottomBar({required this.child});
+
+  final GlassBottomBar child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        child,
+        Positioned.fill(
+          child: IgnorePointer(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: child.horizontalPadding, vertical: child.verticalPadding),
+              child: Row(
+                spacing: child.spacing,
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: child.barHeight,
+                      decoration: const BoxDecoration(),
+                    ),
+                  ),
+                  if (child.extraButton != null)
+                    Container(
+                      width: child.extraButton!.size,
+                      height: child.extraButton!.size,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        // TODO do I want this or no?
+                        // border: Border.all(color: AppColors.outline),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

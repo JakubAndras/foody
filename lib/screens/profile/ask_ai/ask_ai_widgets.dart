@@ -84,7 +84,7 @@ class AskAiPromptCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProfileCard(
       radius: AppRadii.l,
-      shadow: AppShadows.cardSubtle,
+      shadow: AppShadows.screenCard,
       padding: const EdgeInsets.all(AppSpacing.m),
       child: Column(
         children: [
@@ -238,7 +238,7 @@ class AskAiResponseCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProfileCard(
       radius: AppRadii.l,
-      shadow: AppShadows.cardSubtle,
+      shadow: AppShadows.screenCard,
       padding: const EdgeInsets.all(AppSpacing.screen),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -286,7 +286,7 @@ class AskAiSummaryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProfileCard(
       radius: AppRadii.l,
-      shadow: AppShadows.cardSubtle,
+      shadow: AppShadows.screenCard,
       padding: const EdgeInsets.all(AppSpacing.screen),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -422,7 +422,7 @@ class _AskAiCalendarCardState extends State<AskAiCalendarCard> {
 
     return ProfileCard(
       radius: AppRadii.l,
-      shadow: AppShadows.cardSubtle,
+      shadow: AppShadows.screenCard,
       padding: const EdgeInsets.all(AppSpacing.screen),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

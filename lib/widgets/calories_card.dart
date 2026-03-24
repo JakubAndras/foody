@@ -26,11 +26,11 @@ class CaloriesCard extends StatelessWidget {
     final double progress = (consumed / effectiveGoal).clamp(0.0, 1.0);
 
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.l),
+      padding: const EdgeInsets.only(left: AppSpacing.m, right: AppSpacing.l, top: AppSpacing.m, bottom: AppSpacing.l),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.l),
-        border: Border.all(color: AppColors.outline),
+        border: AppBorders.screenCard,
       ),
       child: Row(
         children: [
@@ -42,7 +42,7 @@ class CaloriesCard extends StatelessWidget {
                   tr(LocaleKeys.common_calories),
                   style: AppTextStyles.body16.copyWith(color: AppColors.textMuted, fontWeight: FontWeight.w600),
                 ),
-                const SizedBox(height: AppSpacing.m),
+                const SizedBox(height: AppSpacing.xs),
                 SizedBox(
                   width: double.infinity,
                   child: Center(
@@ -71,22 +71,23 @@ class CaloriesCard extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(width: AppSpacing.m),
+          const SizedBox(width: AppSpacing.s),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(height: AppSpacing.xxs),
               _StatItem(
                 icon: Icons.flag_outlined,
                 label: tr(LocaleKeys.dashboard_base_goal),
                 value: baseGoal.toStringAsFixed(0),
-                color: AppColors.textMuted,
+                color: AppColors.black,
               ),
               const SizedBox(height: AppSpacing.s),
               _StatItem(
                 icon: Icons.restaurant_rounded,
                 label: tr(LocaleKeys.dashboard_food),
                 value: food.toStringAsFixed(0),
-                color: AppColors.info,
+                color: AppColors.black,
               ),
               if (burnedEnabled) ...[
                 const SizedBox(height: AppSpacing.s),
@@ -94,7 +95,7 @@ class CaloriesCard extends StatelessWidget {
                   icon: Icons.directions_run_rounded,
                   label: tr(LocaleKeys.common_exercise),
                   value: exercise.toStringAsFixed(0),
-                  color: AppColors.warning,
+                  color: AppColors.black,
                 ),
               ],
               if (rolloverEnabled) ...[
@@ -103,7 +104,7 @@ class CaloriesCard extends StatelessWidget {
                   icon: Icons.history_rounded,
                   label: tr(LocaleKeys.dashboard_rollover),
                   value: '${rolloverAmount >= 0 ? '+' : ''}${rolloverAmount.toStringAsFixed(0)}',
-                  color: rolloverAmount >= 0 ? AppColors.success : AppColors.error,
+                  color: AppColors.black,
                 ),
               ],
             ],
@@ -131,7 +132,7 @@ class _StatItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, size: AppSizes.iconMd, color: color),
+        Icon(icon, size: AppSizes.iconLg, color: color),
         const SizedBox(width: AppSpacing.xs),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,

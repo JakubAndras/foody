@@ -1,22 +1,26 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/controller/day_record_controller.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/exercise.dart';
 import 'package:diplomka/model/exercise_template.dart';
 import 'package:diplomka/services/exercise_template_repository.dart';
+import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/screens/logs/exercise_detail_options_sheet.dart';
 import 'package:diplomka/screens/logs/exercise_widgets.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 
 class ExerciseDetailScreen extends StatefulWidget {
-  const ExerciseDetailScreen({super.key, required this.exercise, this.openedFromLogScreen = false});
+  const ExerciseDetailScreen({super.key, required this.exercise, this.openedFromLogScreen = false, this.selectedDate});
 
   final Exercise exercise;
   final bool openedFromLogScreen;
+  final DateTime? selectedDate;
 
   @override
   State<ExerciseDetailScreen> createState() => _ExerciseDetailScreenState();
@@ -29,6 +33,23 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
   void initState() {
     super.initState();
     _exercise = widget.exercise;
+  }
+
+  bool get _isFromToday {
+    final now = DateTime.now();
+    final date = widget.selectedDate ?? _exercise.timestamp;
+    return date.year == now.year && date.month == now.month && date.day == now.day;
+  }
+
+  Future<void> _handleDuplicateExercise() async {
+    final today = DateTime.now();
+    final todayNormalized = DateTime(today.year, today.month, today.day);
+    final duplicate = _exercise.copyWith(id: null, dayRecordId: null, timestamp: today, source: null);
+    await DayRecordController.to.saveExerciseForDate(date: todayNormalized, exerciseToSave: duplicate);
+    SelectedDateService.to.setSelectedDate(todayNormalized);
+    DashboardController.to.refresh();
+    if (!mounted) return;
+    GlassToast.show(context, message: tr(LocaleKeys.exercise_duplicated_to, namedArgs: {'date': DateFormat.MMMMd(context.locale.languageCode).format(todayNormalized)}), type: GlassToastType.success, position: GlassToastPosition.bottom);
   }
 
   Future<void> _toggleFavorite() async {
@@ -153,6 +174,12 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
       builder: (_) => Padding(
         padding: const EdgeInsets.all(AppSpacing.l),
         child: ExerciseDetailOptionsSheet(
+          onDuplicate: _isFromToday
+              ? null
+              : () {
+                  Navigator.of(context).pop();
+                  _handleDuplicateExercise();
+                },
           onReport: () {
             Navigator.of(context).pop();
             _showSnack(context, tr(LocaleKeys.common_report));

@@ -19,6 +19,7 @@ class OpenaiRestClient {
   final String mealPrompt = Prompt().analyzeMeal;
   final String exercisePrompt = Prompt().analyzeExercise;
   final String queryPrompt = Prompt().analyzeQuery;
+  final String estimateScopePrompt = Prompt().estimateQueryScope;
 
   Future<Map<String, dynamic>> generateResponse({
     List<File>? imageFiles,
@@ -88,10 +89,40 @@ class OpenaiRestClient {
     }
   }
 
+  Future<Map<String, dynamic>> estimateQueryScope({
+    required String query,
+    required String dataMetadata,
+  }) async {
+    try {
+      await fetchChatGptApiKey();
+      if (chatGptApiKey == null) {
+        throw Error.generic(message: "Failed to fetch the ChatGPT key.");
+      }
+
+      return _postChatCompletion(
+        context: queryContext,
+        prompt: estimateScopePrompt,
+        textPrompt: query,
+        imageContents: const <Map<String, dynamic>>[],
+        additionalTextContent: [
+          'Available data metadata:\n$dataMetadata',
+        ],
+      );
+    } on DioError catch (e) {
+      throw Error.fromDioError(e);
+    } catch (e) {
+      if (e is Error) {
+        rethrow;
+      }
+      throw Error.generic();
+    }
+  }
+
   Future<Map<String, dynamic>> generateQueryResponse({
     required String query,
     required String nutritionContext,
     String? userProfileContext,
+    String? languageCode,
   }) async {
     try {
       await fetchChatGptApiKey();
@@ -107,6 +138,7 @@ class OpenaiRestClient {
         additionalTextContent: [
           'User nutrition data:\n$nutritionContext',
           if (userProfileContext != null && userProfileContext.isNotEmpty) 'User profile context: $userProfileContext',
+          if (languageCode != null) 'Respond in language: $languageCode',
         ],
       );
     } on DioError catch (e) {

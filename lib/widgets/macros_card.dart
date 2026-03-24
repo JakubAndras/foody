@@ -27,8 +27,8 @@ class MacrosCard extends StatelessWidget {
         height: AppSizes.macroCardHeight,
         decoration: BoxDecoration(
           color: AppColors.surface,
-          borderRadius: BorderRadius.circular(AppRadii.m),
-          border: Border.all(color: AppColors.outline),
+          borderRadius: BorderRadius.circular(AppRadii.l),
+          border: AppBorders.screenCard,
         ),
         padding: const EdgeInsets.all(AppSpacing.m),
         child: Column(
@@ -46,7 +46,7 @@ class MacrosCard extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: AppSpacing.xs),
+            const SizedBox(height: AppSpacing.xxs),
             Text(
               label,
               style: AppTextStyles.caption12.copyWith(color: AppColors.textMuted),

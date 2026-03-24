@@ -145,6 +145,17 @@ abstract class  LocaleKeys {
   static const progress_log_first_weigh_in = 'progress_log_first_weigh_in';
   static const progress_log_today = 'progress_log_today';
   static const progress_next_weigh_in = 'progress_next_weigh_in';
+  static const progress_bmi_info_title = 'progress_bmi_info_title';
+  static const progress_bmi_info_body = 'progress_bmi_info_body';
+  static const progress_calendar_info_title = 'progress_calendar_info_title';
+  static const progress_calendar_info_body = 'progress_calendar_info_body';
+  static const progress_weekly_energy = 'progress_weekly_energy';
+  static const progress_burned = 'progress_burned';
+  static const progress_consumed = 'progress_consumed';
+  static const progress_energy = 'progress_energy';
+  static const progress_insights_actions = 'progress_insights_actions';
+  static const progress_export_summary = 'progress_export_summary';
+  static const progress_ask_ai = 'progress_ask_ai';
   static const onboarding_welcome_title = 'onboarding_welcome_title';
   static const onboarding_get_started = 'onboarding_get_started';
   static const onboarding_skip_onboarding = 'onboarding_skip_onboarding';
@@ -342,6 +353,9 @@ abstract class  LocaleKeys {
   static const meal_duplicate_to_today = 'meal_duplicate_to_today';
   static const meal_duplicated = 'meal_duplicated';
   static const meal_duplicated_to = 'meal_duplicated_to';
+  static const exercise_duplicate_to_today = 'exercise_duplicate_to_today';
+  static const exercise_duplicated = 'exercise_duplicated';
+  static const exercise_duplicated_to = 'exercise_duplicated_to';
   static const ingredient_title = 'ingredient_title';
   static const ingredient_name = 'ingredient_name';
   static const ingredient_measurement = 'ingredient_measurement';

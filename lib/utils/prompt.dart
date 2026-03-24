@@ -5,6 +5,7 @@ class Prompt {
   String get analyzeMeal => jsonEncode(analyzeMealJson);
   String get analyzeExercise => jsonEncode(analyzeExerciseJson);
   String get analyzeQuery => jsonEncode(analyzeQueryJson);
+  String get estimateQueryScope => jsonEncode(estimateQueryScopeJson);
 
   static const Map<String, dynamic> analyzeMealJson = {
     "task":
@@ -63,7 +64,32 @@ class Prompt {
         "summary_value should be a meaningful integer (count, rounded average, etc.).",
         "If the data is insufficient to answer, set response_text to explain what data is missing, summary_value to 0, and affected_days to empty array.",
         "Keep response_text concise and informative — no filler phrases.",
-        "period_label should reflect the actual date range of the data you analyzed."
+        "period_label should reflect the actual date range of the data you analyzed.",
+        "Respond in the same language the user used in their question.",
+        "If the user asks about nutrients not present in the data (e.g. fiber, sodium, sugar), explain that this nutrient is not currently tracked in the app.",
+        "If the question is not related to nutrition, meals, exercises, or dietary habits, politely explain that you can only answer nutrition-related questions."
+      ]
+    }
+  };
+
+  static const Map<String, dynamic> estimateQueryScopeJson = {
+    "task":
+        "You are a query scope estimator for a nutrition tracking app. Given a user's question, today's date, and metadata about available data, determine the exact date range needed to answer the question. Return only a JSON object with from/to dates.",
+    "expected_output": {
+      "format": "json",
+      "schema": {
+        "date_from": "string — start date in YYYY-MM-DD format (inclusive)",
+        "date_to": "string — end date in YYYY-MM-DD format (inclusive)"
+      },
+      "rules": [
+        "Return only JSON.",
+        "Use the provided today date to resolve relative references like 'today', 'yesterday', 'last week', 'last month', 'last Christmas'.",
+        "For a specific day (e.g. 'last Christmas', 'yesterday'), date_from and date_to should be the same date.",
+        "For a range (e.g. 'this week', 'January'), set from/to to cover the full range.",
+        "For 'all time', 'ever', or general trends, use the earliest_record as date_from and today as date_to.",
+        "For vague questions without a time reference, use the last 30 days.",
+        "Never set date_from earlier than the earliest_record date.",
+        "Never set date_to later than today."
       ]
     }
   };

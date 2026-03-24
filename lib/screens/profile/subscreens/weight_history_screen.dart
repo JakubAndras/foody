@@ -162,8 +162,8 @@ class _WeightHistoryEntryCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: AppColors.surface,
             borderRadius: BorderRadius.circular(AppRadii.l),
-            border: Border.all(color: AppColors.outline),
-            boxShadow: AppShadows.cardSoft,
+            border: AppBorders.screenCard,
+            boxShadow: AppShadows.screenCard,
           ),
           clipBehavior: Clip.antiAlias,
           child: Row(
@@ -212,7 +212,7 @@ class _WeightHistoryEmptyState extends StatelessWidget {
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.l),
         border: Border.all(color: AppColors.surface),
-        boxShadow: AppShadows.cardSubtle,
+        boxShadow: AppShadows.screenCard,
       ),
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
       alignment: Alignment.center,

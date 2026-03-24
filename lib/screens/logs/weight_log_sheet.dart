@@ -124,81 +124,92 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xl), bottom: Radius.circular(AppRadii.xxl + 10)),
       ),
       padding: EdgeInsets.only(bottom: max(bottomPadding, AppSpacing.l)),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const SizedBox(height: AppSpacing.s),
-          Container(width: 36, height: 5, decoration: BoxDecoration(color: AppColors.textTertiary.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(AppRadii.pill))),
-          const SizedBox(height: AppSpacing.xl),
-          Text(tr(LocaleKeys.weight_log_label_weight).toUpperCase(), style: AppTextStyles.body15.copyWith(color: AppColors.textTertiary)),
-          const SizedBox(height: AppSpacing.xs),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: [
-              Text(_formatWeight(_selectedWeight), style: AppTextStyles.displayXL.copyWith(fontSize: 56)),
-              const SizedBox(width: AppSpacing.xs),
-              Text(tr(LocaleKeys.common_kg), style: AppTextStyles.h3),
-            ],
-          ),
-          if (lastWeight != null) ...[
-            const SizedBox(height: AppSpacing.xxs),
-            Text(tr(LocaleKeys.weight_log_last_entry, args: [_formatWeight(lastWeight)]), style: AppTextStyles.body15.copyWith(color: AppColors.textTertiary)),
-          ],
-          const SizedBox(height: AppSpacing.l),
-          SizedBox(
-            height: 60,
-            child: _WeightRulerPicker(
-              value: _selectedWeight,
-              onChanged: (v) => setState(() => _selectedWeight = v),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: AppSpacing.s),
+            Container(
+              width: 36,
+              height: 5,
+              decoration: BoxDecoration(color: AppColors.textTertiary.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(AppRadii.pill)),
             ),
-          ),
-          const SizedBox(height: AppSpacing.l),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
-            child: InkWell(
-              onTap: _openDatePicker,
-              borderRadius: BorderRadius.circular(AppRadii.l),
-              child: Container(
-                height: AppSizes.buttonHeightSm,
-                decoration: BoxDecoration(
-                  color: AppColors.surface,
+            const SizedBox(height: AppSpacing.xl),
+            Text(tr(LocaleKeys.weight_log_label_weight).toUpperCase(), style: AppTextStyles.body15.copyWith(color: AppColors.textTertiary)),
+            const SizedBox(height: AppSpacing.xs),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                Text(_formatWeight(_selectedWeight), style: AppTextStyles.displayXL.copyWith(fontSize: 56)),
+                const SizedBox(width: AppSpacing.xs),
+                Text(tr(LocaleKeys.common_kg), style: AppTextStyles.h3),
+              ],
+            ),
+            if (lastWeight != null) ...[
+              const SizedBox(height: AppSpacing.xxs),
+              Text(
+                tr(LocaleKeys.weight_log_last_entry, args: [_formatWeight(lastWeight)]),
+                style: AppTextStyles.body15.copyWith(color: AppColors.textTertiary),
+              ),
+            ],
+            const SizedBox(height: AppSpacing.l),
+            SizedBox(
+              height: 60,
+              child: _WeightRulerPicker(value: _selectedWeight, onChanged: (v) => setState(() => _selectedWeight = v)),
+            ),
+            const SizedBox(height: AppSpacing.l),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: _openDatePicker,
                   borderRadius: BorderRadius.circular(AppRadii.l),
-                  border: Border.all(color: AppColors.outline),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-                child: Row(
-                  children: [
-                    Text(tr(LocaleKeys.weight_log_label_date), style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w500)),
-                    const Spacer(),
-                    Text(_formatDateLabel(_selectedDate), style: AppTextStyles.title17.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w500)),
-                    const SizedBox(width: AppSpacing.xs),
-                    Icon(Icons.chevron_right, size: AppSizes.iconMd, color: AppColors.textTertiary),
-                  ],
+                  child: Container(
+                    height: AppSizes.buttonHeightSm,
+                    decoration: BoxDecoration(
+                      color: AppColors.surface,
+                      borderRadius: BorderRadius.circular(AppRadii.l),
+                      border: Border.all(color: AppColors.outline),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+                    child: Row(
+                      children: [
+                        Text(tr(LocaleKeys.weight_log_label_date), style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w500)),
+                        const Spacer(),
+                        Text(
+                          _formatDateLabel(_selectedDate),
+                          style: AppTextStyles.title17.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w500),
+                        ),
+                        const SizedBox(width: AppSpacing.xs),
+                        Icon(Icons.chevron_right, size: AppSizes.iconMd, color: AppColors.textTertiary),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(height: AppSpacing.l),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
-            child: Row(
-              children: [
-                if (_isEditing) ...[
-                  Expanded(child: _DangerButton(label: tr(LocaleKeys.common_delete), onPressed: _handleDelete)),
-                  const SizedBox(width: AppSpacing.s),
-                ],
-                Expanded(
-                  child: FoodyPrimaryButton(
-                    label: _isSaving ? tr(LocaleKeys.common_saving) : tr(LocaleKeys.common_save),
-                    onTap: _isSaving ? null : _handleSave,
+            const SizedBox(height: AppSpacing.l),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
+              child: Row(
+                children: [
+                  if (_isEditing) ...[
+                    Expanded(
+                      child: _DangerButton(label: tr(LocaleKeys.common_delete), onPressed: _handleDelete),
+                    ),
+                    const SizedBox(width: AppSpacing.s),
+                  ],
+                  Expanded(
+                    child: FoodyPrimaryButton(label: _isSaving ? tr(LocaleKeys.common_saving) : tr(LocaleKeys.common_save), onTap: _isSaving ? null : _handleSave),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -280,10 +291,7 @@ class _WeightRulerPickerState extends State<_WeightRulerPicker> {
             physics: const ClampingScrollPhysics(),
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: halfScreen),
-              child: CustomPaint(
-                size: Size(contentWidth, 60),
-                painter: _RulerPainter(),
-              ),
+              child: CustomPaint(size: Size(contentWidth, 60), painter: _RulerPainter()),
             ),
           ),
           IgnorePointer(
@@ -365,7 +373,10 @@ class _DangerButton extends StatelessWidget {
           onTap: onPressed,
           borderRadius: BorderRadius.circular(AppRadii.pill),
           child: Center(
-            child: Text(label, style: AppTextStyles.title17.copyWith(color: AppColors.error, fontWeight: FontWeight.w600)),
+            child: Text(
+              label,
+              style: AppTextStyles.title17.copyWith(color: AppColors.error, fontWeight: FontWeight.w600),
+            ),
           ),
         ),
       ),

@@ -50,7 +50,7 @@ class TrackingRemindersScreen extends StatelessWidget {
             const SizedBox(height: AppSpacing.m),
             ProfileCard(
               radius: AppRadii.l,
-              shadow: AppShadows.cardSubtle,
+              shadow: AppShadows.screenCard,
               padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.xs, AppSpacing.screen, AppSpacing.xs),
               child: Column(
                 children: [
@@ -71,7 +71,7 @@ class TrackingRemindersScreen extends StatelessWidget {
             const SizedBox(height: AppSpacing.l),
             ProfileCard(
               radius: AppRadii.l,
-              shadow: AppShadows.cardSubtle,
+              shadow: AppShadows.screenCard,
               padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.xs, AppSpacing.screen, AppSpacing.xs),
               child: Column(
                 children: [
@@ -92,7 +92,7 @@ class TrackingRemindersScreen extends StatelessWidget {
               const SizedBox(height: AppSpacing.l),
               ProfileCard(
                 radius: AppRadii.l,
-                shadow: AppShadows.cardSubtle,
+                shadow: AppShadows.screenCard,
                 padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.m, AppSpacing.screen, AppSpacing.m),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

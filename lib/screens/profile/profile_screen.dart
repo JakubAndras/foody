@@ -345,7 +345,7 @@ class _ProfileHeaderCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(AppRadii.l),
-          boxShadow: AppShadows.cardSubtle,
+          boxShadow: AppShadows.screenCard,
         ),
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
         child: Row(
@@ -392,8 +392,8 @@ class _ProfileGroupCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProfileCard(
       radius: AppRadii.l,
-      shadow: AppShadows.cardSubtle,
-      border: Border.all(color: AppColors.outline),
+      shadow: AppShadows.screenCard,
+      border: AppBorders.screenCard,
       padding: EdgeInsets.zero,
       child: Column(children: children),
     );
@@ -446,8 +446,8 @@ class _WidgetSection extends StatelessWidget {
             flex: 5,
             child: ProfileCard(
               radius: AppRadii.l,
-              shadow: AppShadows.cardSubtle,
-              border: Border.all(color: AppColors.outline),
+              shadow: AppShadows.screenCard,
+              border: AppBorders.screenCard,
               padding: const EdgeInsets.all(AppSpacing.m),
               child: Row(
                 children: [
@@ -593,8 +593,8 @@ class _WidgetShortcutCard extends StatelessWidget {
       onTap: onTap,
       child: ProfileCard(
         radius: AppRadii.l,
-        shadow: AppShadows.cardSubtle,
-        border: Border.all(color: AppColors.outline),
+        shadow: AppShadows.screenCard,
+        border: AppBorders.screenCard,
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.xs),
         child: SizedBox(
           height: 62,

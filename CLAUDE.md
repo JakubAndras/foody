@@ -162,7 +162,7 @@ Thesis requirements (FR-01 to FR-35). Status as of current codebase:
 | FR-28 | Data export (CSV/PDF) | Done |
 | FR-29 | Offline tolerance | Partial — local DB works offline, AI needs connectivity |
 | FR-30 | Cloud storage and sync | Deferred (out of scope) |
-| FR-31 | Natural-language queries (Ask AI) | Not implemented — hardcoded mock responses |
+| FR-31 | Natural-language queries (Ask AI) | Done |
 | FR-32 | Monthly motivational summary | Not implemented |
 | FR-33 | Gentle, configurable notifications | Done |
 | FR-34 | AI accuracy evaluation | Not implemented |

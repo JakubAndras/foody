@@ -22,6 +22,7 @@ class RecentlyUploadedCard extends StatelessWidget {
   final Function(Meal meal)? onMealTap;
   final Function(Meal meal)? onMealLongPress;
   final Function(Exercise exercise)? onExerciseTap;
+  final Function(Exercise exercise)? onExerciseLongPress;
 
   const RecentlyUploadedCard({
     super.key,
@@ -31,6 +32,7 @@ class RecentlyUploadedCard extends StatelessWidget {
     this.onMealTap,
     this.onMealLongPress,
     this.onExerciseTap,
+    this.onExerciseLongPress,
   });
 
   @override
@@ -41,7 +43,7 @@ class RecentlyUploadedCard extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.m : 0),
           child: Text(
-            tr(LocaleKeys.dashboard_meals_title, namedArgs: {'date': DateFormat('MMM d').format(selectedDate)}),
+            tr(LocaleKeys.dashboard_meals_title, namedArgs: {'date': DateFormat('MMM d').format(selectedDate).replaceFirstMapped(RegExp(r'^.'), (m) => m[0]!.toUpperCase())}),
             style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700),
           ),
         ),
@@ -128,9 +130,9 @@ class RecentlyUploadedCard extends StatelessWidget {
       height: AppSizes.emptyStateHeight,
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.xl),
-        border: Border.all(color: AppColors.outline),
-        boxShadow: AppShadows.cardSoft,
+        borderRadius: BorderRadius.circular(AppRadii.l),
+        border: AppBorders.screenCard,
+        boxShadow: AppShadows.screenCard,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -166,7 +168,7 @@ class RecentlyUploadedCard extends StatelessWidget {
   }
 
   Widget _buildMealItem(BuildContext context, Meal meal) {
-    final String mealTime = DateFormat('h:mm a').format(meal.timestamp);
+    final String mealTime = DateFormat('HH:mm').format(meal.timestamp);
 
     return GestureDetector(
       onTap: () => onMealTap?.call(meal),
@@ -177,11 +179,11 @@ class RecentlyUploadedCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(AppRadii.l),
-          border: Border.all(color: AppColors.outline),
-          boxShadow: AppShadows.cardSoft,
+          border: AppBorders.screenCard,
+          boxShadow: AppShadows.screenCard,
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+          padding: const EdgeInsets.only(left: AppSpacing.xs, right: AppSpacing.m),
           child: Row(
             children: [
               _buildMealImage(meal),
@@ -200,32 +202,27 @@ class RecentlyUploadedCard extends StatelessWidget {
                               Text(
                                 meal.name,
                                 style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600),
+                                //maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              const SizedBox(height: AppSpacing.xs),
+                              const SizedBox(height: AppSpacing.xxs),
                               Text(
-                                mealTime,
-                                style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary),
+                                '${meal.totalCalories.toStringAsFixed(0)} ${tr(LocaleKeys.common_kcal)}',
+                                style: AppTextStyles.body13.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w500),
                               ),
                             ],
                           ),
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              meal.totalCalories.toStringAsFixed(0),
-                              style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w700),
-                            ),
-                            Text(
-                              tr(LocaleKeys.common_kcal),
-                              style: AppTextStyles.caption12.copyWith(color: AppColors.textTertiary),
-                            ),
-                          ],
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2),
+                          child: Text(
+                            mealTime,
+                            style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary),
+                          ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: AppSpacing.s),
+                    const SizedBox(height: AppSpacing.xs),
                     Container(
                       height: AppSizes.dividerThin,
                       color: AppColors.outline,
@@ -257,8 +254,8 @@ class RecentlyUploadedCard extends StatelessWidget {
   Widget _buildMealImage(Meal meal) {
     final file = MediaStorage.existingMealPhotoFile(meal.photoPath);
     return Container(
-      width: AppSizes.mealImageSize,
-      height: AppSizes.mealImageSize,
+      width: AppSizes.mealDashboardImageSize,
+      height: AppSizes.mealDashboardImageSize,
       decoration: BoxDecoration(
         color: AppColors.surfaceMuted,
         borderRadius: BorderRadius.circular(AppRadii.m),
@@ -280,27 +277,28 @@ class RecentlyUploadedCard extends StatelessWidget {
   }
 
   Widget _buildExerciseItem(BuildContext context, Exercise exercise) {
-    final String exerciseTime = DateFormat('h:mm a').format(exercise.timestamp);
+    final String exerciseTime = DateFormat('HH:mm').format(exercise.timestamp);
     final String exerciseDuration = exercise.durationMinutes == null ? '-' : '${exercise.durationMinutes} min';
 
     return GestureDetector(
       onTap: exercise.isFromHealthSync ? null : () => onExerciseTap?.call(exercise),
+      onLongPress: exercise.isFromHealthSync ? null : () => onExerciseLongPress?.call(exercise),
       child: Container(
         height: AppSizes.exerciseCardHeight,
         margin: const EdgeInsets.symmetric(vertical: AppSpacing.xxs + 1),
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(AppRadii.l),
-          border: Border.all(color: AppColors.outline),
-          boxShadow: AppShadows.cardSoft,
+          border: AppBorders.screenCard,
+          boxShadow: AppShadows.screenCard,
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+          padding: const EdgeInsets.only(left: AppSpacing.xs, right: AppSpacing.m),
           child: Row(
             children: [
               Container(
-                width: AppSizes.mealImageSize,
-                height: AppSizes.mealImageSize,
+                width: AppSizes.exerciseImageSize,
+                height: AppSizes.exerciseImageSize,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(AppRadii.m),
                   gradient: AppGradients.exerciseCalories,
@@ -326,24 +324,18 @@ class RecentlyUploadedCard extends StatelessWidget {
                               ),
                               const SizedBox(height: AppSpacing.xs),
                               Text(
-                                exerciseTime,
+                                '${exercise.caloriesBurned.toStringAsFixed(0)} ${tr(LocaleKeys.common_kcal)}',
                                 style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary),
                               ),
                             ],
                           ),
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              exercise.caloriesBurned.toStringAsFixed(0),
-                              style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w700),
-                            ),
-                            Text(
-                              tr(LocaleKeys.common_kcal),
-                              style: AppTextStyles.caption12.copyWith(color: AppColors.textTertiary),
-                            ),
-                          ],
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2),
+                          child: Text(
+                            exerciseTime,
+                            style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary),
+                          ),
                         ),
                       ],
                     ),
@@ -448,8 +440,8 @@ class _AnalyzingMealCardState extends State<AnalyzingMealCard> {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.l),
-        border: Border.all(color: AppColors.outline),
-        boxShadow: AppShadows.cardSoft,
+        border: AppBorders.screenCard,
+        boxShadow: AppShadows.screenCard,
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
@@ -544,7 +536,7 @@ class _MacroDot extends StatelessWidget {
         const SizedBox(width: AppSpacing.xs),
         Text(
           '${value}g',
-          style: AppTextStyles.caption12.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w500),
+          style: AppTextStyles.body13.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w500),
         ),
       ],
     );

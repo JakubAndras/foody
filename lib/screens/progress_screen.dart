@@ -8,6 +8,8 @@ import 'package:diplomka/model/streak_info.dart';
 import 'package:diplomka/model/weight_entry.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/services/streak_service.dart';
+import 'package:diplomka/screens/profile/ask_ai/ask_ai_screen.dart';
+import 'package:diplomka/screens/profile/subscreens/export_pdf_intro_screen.dart';
 import 'package:diplomka/widgets/dietary_violations_calendar_card.dart';
 import 'package:diplomka/widgets/weight_progress_card.dart';
 import 'package:diplomka/widgets/variable_blur_scroll_view.dart';
@@ -15,6 +17,8 @@ import 'package:diplomka/widgets/mesh_gradient_background.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../widgets/weekly_energy_card.dart';
 
 DateTime _dateOnly(DateTime date) => DateTime(date.year, date.month, date.day);
 
@@ -121,7 +125,7 @@ class ProgressScreen extends StatelessWidget {
                   ],
                 );
               }),
-              const SizedBox(height: AppSpacing.l),
+              const SizedBox(height: AppSpacing.m),
               Obx(() {
                 final entries = WeightEntryController.to.entries;
                 if (entries.isEmpty) {
@@ -129,13 +133,11 @@ class ProgressScreen extends StatelessWidget {
                 }
                 return WeightProgressCard(entries: entries.toList(growable: false));
               }),
-              const Padding(
-                padding: EdgeInsets.only(top: AppSpacing.l),
-                child: MonthlyCalendarCard(),
-              ),
-              const SizedBox(height: AppSpacing.l),
-              const _DailyAverageCard(),
-              const SizedBox(height: AppSpacing.l),
+              const SizedBox(height: AppSpacing.m),
+              const MonthlyCalendarCard(),
+              const SizedBox(height: AppSpacing.m),
+              const WeeklyEnergyCard(),
+              const SizedBox(height: AppSpacing.m),
               Obx(() {
                 final weightEntries = WeightEntryController.to.entries.toList(growable: false);
                 final sorted = _sortWeightEntries(weightEntries);
@@ -533,6 +535,81 @@ class _LegendItem extends StatelessWidget {
         const SizedBox(width: AppSpacing.xs),
         Text(label, style: AppTextStyles.label10.copyWith(color: AppColors.textTertiary)),
       ],
+    );
+  }
+}
+
+class _InsightsActionsCard extends StatelessWidget {
+  const _InsightsActionsCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadii.l),
+        border: Border.all(color: AppColors.outline),
+        boxShadow: AppShadows.cardSoft,
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.m, AppSpacing.m, 0),
+            child: Text(tr(LocaleKeys.progress_insights_actions), style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700)),
+          ),
+          const SizedBox(height: AppSpacing.s),
+          _InsightActionRow(
+            icon: Icons.ios_share_outlined,
+            title: tr(LocaleKeys.progress_export_summary),
+            onTap: () => Get.to(() => const ExportPdfIntroScreen()),
+          ),
+          _InsightActionRow(
+            icon: Icons.auto_awesome_outlined,
+            title: tr(LocaleKeys.progress_ask_ai),
+            showDivider: false,
+            onTap: () => Get.to(() => const AskAiScreen()),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _InsightActionRow extends StatelessWidget {
+  const _InsightActionRow({required this.icon, required this.title, this.showDivider = true, this.onTap});
+
+  final IconData icon;
+  final String title;
+  final bool showDivider;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.s),
+            child: Row(
+              children: [
+                Icon(icon, size: AppSizes.iconMd, color: AppColors.textPrimary),
+                const SizedBox(width: AppSpacing.m),
+                Expanded(child: Text(title, style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w500))),
+                const Icon(Icons.chevron_right, size: AppSizes.iconMd, color: AppColors.textTertiary),
+              ],
+            ),
+          ),
+          if (showDivider)
+            Padding(
+              padding: const EdgeInsets.only(left: AppSizes.settingsDividerIndent),
+              child: Divider(height: AppSizes.dividerThin, color: AppColors.surfaceMuted),
+            ),
+        ],
+      ),
     );
   }
 }

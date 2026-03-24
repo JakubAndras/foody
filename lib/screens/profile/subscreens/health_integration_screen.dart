@@ -38,7 +38,7 @@ class HealthIntegrationScreen extends StatelessWidget {
           // Toggle row
           ProfileCard(
             radius: AppRadii.l,
-            shadow: AppShadows.cardSubtle,
+            shadow: AppShadows.screenCard,
             padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.xs, AppSpacing.screen, AppSpacing.xs),
             child: Obx(() {
               return GlassToggleRow(
@@ -62,7 +62,7 @@ class HealthIntegrationScreen extends StatelessWidget {
           const SizedBox(height: AppSpacing.m),
           ProfileCard(
             radius: AppRadii.l,
-            shadow: AppShadows.cardSubtle,
+            shadow: AppShadows.screenCard,
             padding: EdgeInsets.zero,
             child: Column(
               children: Platform.isIOS ? _buildIosSteps() : _buildAndroidSteps(),

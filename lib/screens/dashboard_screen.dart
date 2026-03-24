@@ -1,7 +1,9 @@
 import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/controller/day_record_controller.dart';
+import 'package:diplomka/screens/logs/exercise_detail_screen.dart';
 import 'package:diplomka/screens/meals/meal_detail_screen.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
+import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:diplomka/services/day_record_repository.dart';
 import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/widgets/calories_card.dart';
@@ -17,7 +19,6 @@ import 'package:diplomka/widgets/recently_uploaded_card.dart';
 import 'package:diplomka/controller/base_controller.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/services/nutrition_goals_service.dart';
-import 'package:diplomka/widgets/faded_edge_scroll_view.dart';
 import 'package:diplomka/widgets/variable_blur_scroll_view.dart';
 import 'package:diplomka/widgets/mesh_gradient_background.dart';
 
@@ -99,6 +100,19 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
                                     SelectedDateService.to.setSelectedDate(todayNormalized);
                                     dashboardController.refresh();
                                     Get.snackbar(tr(LocaleKeys.meal_duplicated), meal.name, snackPosition: SnackPosition.BOTTOM);
+                                  },
+                                  onExerciseTap: (exercise) async {
+                                    await Get.to(() => ExerciseDetailScreen(exercise: exercise));
+                                    dashboardController.refresh();
+                                  },
+                                  onExerciseLongPress: (exercise) async {
+                                    final today = DateTime.now();
+                                    final todayNormalized = DateTime(today.year, today.month, today.day);
+                                    final duplicate = exercise.copyWith(id: null, dayRecordId: null, timestamp: today, source: null);
+                                    await DayRecordController.to.saveExerciseForDate(date: todayNormalized, exerciseToSave: duplicate);
+                                    SelectedDateService.to.setSelectedDate(todayNormalized);
+                                    dashboardController.refresh();
+                                    Get.snackbar(tr(LocaleKeys.exercise_duplicated), exercise.name, snackPosition: SnackPosition.BOTTOM);
                                   },
                                 ),
                               ],
@@ -226,41 +240,79 @@ class _DashboardPreviewScreenState extends State<DashboardPreviewScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.meshBase,
-      body: Stack(children: [
-        const MeshGradientBackground(),
-        SafeArea(
-          bottom: true,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.m, AppSpacing.l, AppSpacing.xs),
-                child: ProfileTopBar(title: dateLabel, onBack: () => Get.back()),
-              ),
-              Expanded(
-                child: _isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : SingleChildScrollView(
-                        padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.xs, AppSpacing.l, AppSpacing.l),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildCaloriesTracker(recordToShow),
-                            const SizedBox(height: AppSpacing.m),
-                            RecentlyUploadedCard(
-                              meals: recordToShow.meals,
-                              exercises: recordToShow.exercises,
-                              selectedDate: widget.date,
-                              onMealTap: (meal) => Get.to(() => MealDetailScreen(meal: meal)),
-                            ),
-                          ],
+      body: SafeArea(
+        top: false,
+        bottom: false,
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : Stack(
+                children: [
+                  VariableBlurScrollView(
+                    topBlurSigma: 52,
+                    topBlurHeight: 0.16,
+                    edgeIntensity: 0.075,
+                    topFadeHeight: 40,
+                    bottomFadeHeight: 0,
+                    backgroundColor: Colors.transparent,
+                    fadeColor: AppColors.meshBase,
+                    backgroundWidget: const MeshGradientBackground(),
+                    padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.huge + 4, AppSpacing.l, AppSpacing.l),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: AppSizes.topBarHeight),
+                        const SizedBox(height: AppSpacing.m),
+                        _buildCaloriesTracker(recordToShow),
+                        const SizedBox(height: AppSpacing.m),
+                        RecentlyUploadedCard(
+                          meals: recordToShow.meals,
+                          exercises: recordToShow.exercises,
+                          selectedDate: widget.date,
+                          onMealTap: (meal) => Get.to(() => MealDetailScreen(meal: meal)),
+                        ),
+                        const SizedBox(height: AppSpacing.huge),
+                      ],
+                    ),
+                  ),
+                  // Custom linear bottom fade
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: IgnorePointer(
+                      child: Container(
+                        height: 44,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                            colors: [
+                              AppColors.meshBase.withValues(alpha: 0.6),
+                              AppColors.meshBase.withValues(alpha: 0.3),
+                              AppColors.meshBase.withValues(alpha: 0.1),
+                              AppColors.meshBase.withValues(alpha: 0),
+                            ],
+                            stops: const [0.0, 0.35, 0.7, 1.0],
+                          ),
                         ),
                       ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 0,
+                    left: AppSpacing.l,
+                    right: AppSpacing.l,
+                    child: SafeArea(
+                      bottom: false,
+                      child: CustomGlassAppBar(
+                        title: dateLabel,
+                        onBack: () => Get.back(),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
-      ]),
+      ),
     );
   }
 

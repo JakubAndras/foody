@@ -41,7 +41,7 @@ class ExportPdfIntroScreen extends StatelessWidget {
           ProfileCard(
             padding: const EdgeInsets.all(AppSpacing.m),
             radius: AppRadii.l,
-            shadow: AppShadows.cardSubtle,
+            shadow: AppShadows.screenCard,
             child: Column(
               children: [
                 _FeatureItem(icon: Icons.restaurant_menu, title: tr(LocaleKeys.export_meal_history), subtitle: tr(LocaleKeys.export_meal_history_desc)),
