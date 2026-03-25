@@ -12,7 +12,6 @@ import 'package:diplomka/screens/profile/subscreens/preferences_screen.dart';
 import 'package:diplomka/controller/language_settings_controller.dart';
 import 'package:diplomka/model/language_settings.dart';
 import 'package:diplomka/screens/profile/subscreens/edit_nutrition_goals_screen.dart';
-import 'package:diplomka/screens/profile/subscreens/weight_history_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/health_integration_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/ring_colors_explained_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/motivational_summary_screen.dart';
@@ -94,11 +93,6 @@ class ProfileScreen extends StatelessWidget {
                       title: tr(LocaleKeys.profile_edit_nutrition_goals),
                       icon: Icons.gps_fixed,
                       onTap: () => Get.to(() => const EditNutritionGoalsScreen()),
-                    ),
-                    _ProfileActionRow(
-                      title: tr(LocaleKeys.profile_weight_history),
-                      icon: Icons.history,
-                      onTap: () => Get.to(() => const WeightHistoryScreen()),
                     ),
                     _ProfileActionRow(
                       title: tr(LocaleKeys.profile_tracking_reminders),

@@ -149,15 +149,18 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
             ],
           ),
           const SizedBox(height: AppSpacing.m),
-          if (!hasEntries)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: AppSpacing.l),
-              child: Text(tr(LocaleKeys.progress_no_weight_data), style: AppTextStyles.body15.copyWith(color: AppColors.textSecondary)),
-            )
-          else
-            _WeightLineChart(entries: entries, ticks: ticks, formatWeight: _formatWeight),
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            child: !hasEntries
+                ? Padding(
+                    key: ValueKey('empty_$_selectedIndex'),
+                    padding: const EdgeInsets.symmetric(vertical: AppSpacing.l),
+                    child: Text(tr(LocaleKeys.progress_no_weight_data), style: AppTextStyles.body15.copyWith(color: AppColors.textSecondary)),
+                  )
+                : _WeightLineChart(key: ValueKey(_selectedIndex), entries: entries, ticks: ticks, formatWeight: _formatWeight),
+          ),
           const SizedBox(height: AppSpacing.m),
-          _SegmentedControl(labels: _rangeLabels, selectedIndex: _selectedIndex, onTap: (index) => setState(() => _selectedIndex = index)),
+          _SegmentedControl(labels: _rangeLabels, selectedIndex: _selectedIndex, onTap: (i) => setState(() => _selectedIndex = i)),
         ],
       ),
     );
@@ -165,7 +168,7 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
 }
 
 class _WeightLineChart extends StatelessWidget {
-  const _WeightLineChart({required this.entries, required this.ticks, required this.formatWeight});
+  const _WeightLineChart({super.key, required this.entries, required this.ticks, required this.formatWeight});
 
   final List<WeightEntry> entries;
   final List<double> ticks;

@@ -63,7 +63,7 @@ class MainScreen extends GetView<MainScreenController> {
               extraButton: GlassBottomBarExtraButton(
                 icon: Icons.add,
                 label: tr(LocaleKeys.nav_home),
-                onTap: () => controller._showQuickActions(context),
+                onTap: () => controller.showQuickActions(context),
                 iconColor: AppColors.primary,
                 size: AppSizes.fabSize,
               ),
@@ -94,7 +94,7 @@ class MainScreenController extends BaseController {
     _selectedIndex.value = 1;
   }
 
-  void _showQuickActions(BuildContext context) {
+  void showQuickActions(BuildContext context) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,

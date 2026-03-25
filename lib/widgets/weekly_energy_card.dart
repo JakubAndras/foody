@@ -37,11 +37,11 @@ class _WeeklyEnergyCardState extends State<WeeklyEnergyCard> {
 
   List<String> get _labels => [tr(LocaleKeys.progress_this_wk), tr(LocaleKeys.progress_last_wk), tr(LocaleKeys.progress_two_wk_ago), tr(LocaleKeys.progress_three_wk_ago)];
 
-  DateTime _startOfWeekSunday(DateTime date) => date.subtract(Duration(days: date.weekday % 7));
+  DateTime _startOfWeekMonday(DateTime date) => date.subtract(Duration(days: date.weekday - 1));
 
   _WeeklyEnergyStats _calculateStats(List<DayRecord> records, int index) {
     final today = _dateOnly(DateTime.now());
-    final weekStart = _startOfWeekSunday(today).subtract(Duration(days: 7 * index));
+    final weekStart = _startOfWeekMonday(today).subtract(Duration(days: 7 * index));
     final byDate = {for (final r in records) _dateOnly(r.date): r};
 
     double totalBurned = 0;
@@ -95,7 +95,7 @@ class _WeeklyEnergyCardState extends State<WeeklyEnergyCard> {
       final ticks = _computeTicks(maxBar);
       final double chartMax = ticks.isNotEmpty ? ticks.first.toDouble() : 1;
 
-      final weekStart = _startOfWeekSunday(_dateOnly(DateTime.now())).subtract(Duration(days: 7 * _selectedIndex));
+      final weekStart = _startOfWeekMonday(_dateOnly(DateTime.now())).subtract(Duration(days: 7 * _selectedIndex));
       final dayLabels = List.generate(7, (i) {
         final date = weekStart.add(Duration(days: i));
         return DateFormat.E(context.locale.toString()).format(date);
@@ -114,22 +114,30 @@ class _WeeklyEnergyCardState extends State<WeeklyEnergyCard> {
           children: [
             Text(tr(LocaleKeys.progress_weekly_energy), style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: AppSpacing.s),
-            Row(
-              children: [
-                Expanded(child: _EnergyStat(label: tr(LocaleKeys.progress_burned), value: _formatCalories(stats.totalBurned), unit: calUnit, valueColor: AppColors.exerciseOrange)),
-                Expanded(child: _EnergyStat(label: tr(LocaleKeys.progress_consumed), value: _formatCalories(stats.totalConsumed), unit: calUnit, valueColor: AppColors.greenStrong)),
-                Expanded(
-                  child: _EnergyStat(
-                    label: tr(LocaleKeys.progress_energy),
-                    value: stats.totalEnergy > 0 ? '+${_formatCalories(stats.totalEnergy)}' : _formatCalories(stats.totalEnergy),
-                    unit: calUnit,
-                    valueColor: AppColors.black,
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: Column(
+                key: ValueKey(_selectedIndex),
+                children: [
+                  Row(
+                    children: [
+                      Expanded(child: _EnergyStat(label: tr(LocaleKeys.progress_burned), value: _formatCalories(stats.totalBurned), unit: calUnit, valueColor: AppColors.exerciseOrange)),
+                      Expanded(child: _EnergyStat(label: tr(LocaleKeys.progress_consumed), value: _formatCalories(stats.totalConsumed), unit: calUnit, valueColor: AppColors.greenStrong)),
+                      Expanded(
+                        child: _EnergyStat(
+                          label: tr(LocaleKeys.progress_energy),
+                          value: stats.totalEnergy > 0 ? '+${_formatCalories(stats.totalEnergy)}' : _formatCalories(stats.totalEnergy),
+                          unit: calUnit,
+                          valueColor: AppColors.black,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                  const SizedBox(height: AppSpacing.l),
+                  _WeeklyEnergyChart(days: stats.days, ticks: ticks, chartMax: chartMax, dayLabels: dayLabels),
+                ],
+              ),
             ),
-            const SizedBox(height: AppSpacing.l),
-            _WeeklyEnergyChart(days: stats.days, ticks: ticks, chartMax: chartMax, dayLabels: dayLabels),
             const SizedBox(height: AppSpacing.m),
             GlassSegmentedTabs(labels: _labels, activeIndex: _selectedIndex, onTap: (i) => setState(() => _selectedIndex = i)),
           ],

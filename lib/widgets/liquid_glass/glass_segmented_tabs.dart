@@ -12,7 +12,7 @@ class GlassSegmentedTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const double tabHeight = 44;
+    const double tabHeight = 36;
     return GlassTabBar(
       tabs: labels.map((l) => GlassTab(label: l)).toList(),
       selectedIndex: activeIndex,
@@ -21,8 +21,8 @@ class GlassSegmentedTabs extends StatelessWidget {
       borderRadius: BorderRadius.circular(tabHeight / 2),
       indicatorBorderRadius: BorderRadius.circular(tabHeight / 2),
       labelPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
-      selectedLabelStyle: AppTextStyles.body13.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w500),
-      unselectedLabelStyle: AppTextStyles.body13.copyWith(color: AppColors.grey4, fontWeight: FontWeight.w500),
+      selectedLabelStyle: AppTextStyles.body13.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w500, height: 1.0),
+      unselectedLabelStyle: AppTextStyles.body13.copyWith(color: AppColors.grey4, fontWeight: FontWeight.w500, height: 1.0),
       indicatorColor: AppColors.background,
       backgroundColor: Colors.white,
       useOwnLayer: true,

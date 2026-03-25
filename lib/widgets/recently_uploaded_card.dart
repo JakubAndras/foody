@@ -23,6 +23,7 @@ class RecentlyUploadedCard extends StatelessWidget {
   final Function(Meal meal)? onMealLongPress;
   final Function(Exercise exercise)? onExerciseTap;
   final Function(Exercise exercise)? onExerciseLongPress;
+  final VoidCallback? onEmptyStateTap;
 
   const RecentlyUploadedCard({
     super.key,
@@ -33,6 +34,7 @@ class RecentlyUploadedCard extends StatelessWidget {
     this.onMealLongPress,
     this.onExerciseTap,
     this.onExerciseLongPress,
+    this.onEmptyStateTap,
   });
 
   @override
@@ -125,37 +127,40 @@ class RecentlyUploadedCard extends StatelessWidget {
   }
 
   Widget _buildEmptyState() {
-    return Container(
-      width: double.infinity,
-      height: AppSizes.emptyStateHeight,
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.l),
-        border: AppBorders.screenCard,
-        boxShadow: AppShadows.screenCard,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: AppSizes.emptyStateIconSize,
-            height: AppSizes.emptyStateIconSize,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: AppColors.outline),
+    return GestureDetector(
+      onTap: onEmptyStateTap,
+      child: Container(
+        width: double.infinity,
+        height: AppSizes.emptyStateHeight,
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(AppRadii.l),
+          border: AppBorders.screenCard,
+          boxShadow: AppShadows.screenCard,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: AppSizes.emptyStateIconSize,
+              height: AppSizes.emptyStateIconSize,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: AppColors.outline),
+              ),
+              child: const Icon(Icons.add, color: AppColors.textTertiary),
             ),
-            child: const Icon(Icons.add, color: AppColors.textTertiary),
-          ),
-          const SizedBox(height: AppSpacing.m),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
-            child: Text(
-              tr(LocaleKeys.dashboard_empty_state),
-              style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary),
-              textAlign: TextAlign.center,
+            const SizedBox(height: AppSpacing.m),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
+              child: Text(
+                tr(LocaleKeys.dashboard_empty_state),
+                style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary),
+                textAlign: TextAlign.center,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

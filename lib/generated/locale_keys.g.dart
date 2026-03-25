@@ -145,6 +145,10 @@ abstract class  LocaleKeys {
   static const progress_log_first_weigh_in = 'progress_log_first_weigh_in';
   static const progress_log_today = 'progress_log_today';
   static const progress_next_weigh_in = 'progress_next_weigh_in';
+  static const progress_current_weight = 'progress_current_weight';
+  static const progress_start_label = 'progress_start_label';
+  static const progress_goal_label = 'progress_goal_label';
+  static const progress_goal_eta = 'progress_goal_eta';
   static const progress_bmi_info_title = 'progress_bmi_info_title';
   static const progress_bmi_info_body = 'progress_bmi_info_body';
   static const progress_calendar_info_title = 'progress_calendar_info_title';

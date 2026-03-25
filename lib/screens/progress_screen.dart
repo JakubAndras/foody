@@ -1,4 +1,5 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/widgets/info_dialog.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:diplomka/controller/day_record_controller.dart';
 import 'package:diplomka/controller/weight_entry_controller.dart';
@@ -10,6 +11,7 @@ import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/services/streak_service.dart';
 import 'package:diplomka/screens/profile/ask_ai/ask_ai_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/export_pdf_intro_screen.dart';
+import 'package:diplomka/widgets/current_weight_card.dart';
 import 'package:diplomka/widgets/dietary_violations_calendar_card.dart';
 import 'package:diplomka/widgets/weight_progress_card.dart';
 import 'package:diplomka/widgets/variable_blur_scroll_view.dart';
@@ -52,7 +54,7 @@ String _nextWeighInLabel(WeightEntry? latestEntry) {
   final DateTime today = _dateOnly(DateTime.now());
   final DateTime entryDate = _dateOnly(latestEntry.date);
   final int daysSince = today.difference(entryDate).inDays;
-  if (daysSince >= 7 && daysSince % 7 == 0) {
+  if (true || daysSince >= 7 && daysSince % 7 == 0) { // TODO: revert
     return tr(LocaleKeys.progress_log_today);
   }
   final int remaining = 7 - (daysSince % 7);
@@ -95,34 +97,30 @@ class ProgressScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // CollapsibleTitle(child: Text(tr(LocaleKeys.progress_title), style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w700))),
-              // const SizedBox(height: AppSpacing.s),
+
               Obx(() {
                 final weightEntries = WeightEntryController.to.entries.toList(growable: false);
-                final dayRecords = DayRecordController.to.dayRecords.toList(growable: false);
                 final double? profileWeight = SessionManager.to.weightKg.value;
                 final double? goalWeight = SessionManager.to.goalWeightKg.value;
 
                 final sortedWeights = _sortWeightEntries(weightEntries);
-                final latestWeight = sortedWeights.isNotEmpty ? sortedWeights.first : null;
-                final earliestWeight = sortedWeights.isNotEmpty ? sortedWeights.last : null;
-                final double? currentWeight = latestWeight?.weight ?? profileWeight;
-                final double? startWeight = earliestWeight?.weight ?? profileWeight;
-                final goalProgress = currentWeight != null && startWeight != null && goalWeight != null
-                    ? _computeGoalProgress(current: currentWeight, start: startWeight, goal: goalWeight)
-                    : null;
-                final streakMetrics = _computeStreakMetrics(dayRecords);
+                final latestEntry = sortedWeights.isNotEmpty ? sortedWeights.first : null;
+                final earliestEntry = sortedWeights.isNotEmpty ? sortedWeights.last : null;
+                final double? currentWeight = latestEntry?.weight ?? profileWeight;
+                final double? startWeight = earliestEntry?.weight ?? profileWeight;
+                final goalProgress = currentWeight != null && startWeight != null && goalWeight != null ? _computeGoalProgress(current: currentWeight, start: startWeight, goal: goalWeight) : null;
 
-                return Row(
-                  children: [
-                    Expanded(
-                      child: _MyWeightCard(currentWeight: currentWeight, goalWeight: goalWeight, goalProgress: goalProgress, nextWeighInLabel: _nextWeighInLabel(latestWeight)),
-                    ),
-                    const SizedBox(width: AppSpacing.m),
-                    Expanded(
-                      child: _DayStreakCard(currentStreak: streakMetrics.currentStreak, activeDays: streakMetrics.activeDaysThisWeek),
-                    ),
-                  ],
+                final nextLabel = _nextWeighInLabel(latestEntry);
+                final logToday = nextLabel == tr(LocaleKeys.progress_log_today) || nextLabel == tr(LocaleKeys.progress_log_first_weigh_in);
+
+                return CurrentWeightCard(
+                  currentWeight: currentWeight,
+                  startWeight: startWeight,
+                  goalWeight: goalWeight,
+                  goalProgress: goalProgress,
+                  nextWeighInLabel: nextLabel,
+                  isLogToday: logToday,
+                  weightEntries: sortedWeights,
                 );
               }),
               const SizedBox(height: AppSpacing.m),
@@ -147,140 +145,6 @@ class ProgressScreen extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _MyWeightCard extends StatelessWidget {
-  const _MyWeightCard({this.currentWeight, this.goalWeight, this.goalProgress, required this.nextWeighInLabel});
-
-  final double? currentWeight;
-  final double? goalWeight;
-  final double? goalProgress;
-  final String nextWeighInLabel;
-
-  @override
-  Widget build(BuildContext context) {
-    final String weightLabel = currentWeight == null ? '—' : '${_formatWeight(currentWeight!)} ${tr(LocaleKeys.common_kg)}';
-    final double progress = goalProgress ?? 0;
-
-    return Container(
-      height: AppSizes.progressStatCardHeight,
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.l),
-        border: Border.all(color: AppColors.outline),
-        boxShadow: AppShadows.cardSoft,
-      ),
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.l, horizontal: AppSpacing.m),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            children: [
-              Text(tr(LocaleKeys.progress_my_weight), style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary)),
-              const SizedBox(height: AppSpacing.xs),
-              Text(weightLabel, style: AppTextStyles.weightValue),
-            ],
-          ),
-          Column(
-            children: [
-              Stack(
-                alignment: Alignment.centerLeft,
-                children: [
-                  Container(
-                    width: AppSizes.goalBarWidth,
-                    height: AppSizes.stepIndicatorHeight,
-                    decoration: BoxDecoration(color: AppColors.surfaceMuted, borderRadius: BorderRadius.circular(AppRadii.pill)),
-                  ),
-                  if (goalProgress != null)
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(AppRadii.pill),
-                      child: Container(width: AppSizes.goalBarWidth * progress, height: AppSizes.stepIndicatorHeight, color: AppColors.primary),
-                    ),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.xs),
-              if (goalWeight == null)
-                Text(tr(LocaleKeys.progress_goal_dash), style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary))
-              else
-                Text(
-                  tr(LocaleKeys.progress_goal_value, namedArgs: {'value': _formatWeight(goalWeight!)}),
-                  style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w700),
-                ),
-            ],
-          ),
-          Container(
-            height: AppSizes.segmentedHeight,
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-            decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.m)),
-            child: Center(
-              child: Text(
-                nextWeighInLabel,
-                style: AppTextStyles.caption12.copyWith(color: AppColors.textTertiary, fontWeight: FontWeight.w600),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _DayStreakCard extends StatelessWidget {
-  const _DayStreakCard({required this.currentStreak, required this.activeDays});
-
-  final int currentStreak;
-  final List<bool> activeDays;
-
-  @override
-  Widget build(BuildContext context) {
-    final String title = currentStreak > 0 ? tr(LocaleKeys.progress_n_day_streak, namedArgs: {'count': '$currentStreak'}) : tr(LocaleKeys.progress_day_streak);
-    final DateTime today = _dateOnly(DateTime.now());
-    final int todayIndex = today.weekday - 1;
-
-    return Container(
-      height: AppSizes.progressStatCardHeight,
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.l),
-        border: Border.all(color: AppColors.outline),
-        boxShadow: AppShadows.cardSoft,
-      ),
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.m),
-      child: Column(
-        children: [
-          const SizedBox(height: AppSpacing.xs),
-          Icon(Icons.local_fire_department, color: AppColors.orange, size: AppSizes.streakIconSize),
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            title,
-            style: AppTextStyles.title.copyWith(color: AppColors.orange, fontWeight: FontWeight.w700),
-          ),
-          const SizedBox(height: AppSpacing.s),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(7, (index) {
-              final bool isActive = index < activeDays.length ? activeDays[index] : false;
-              final Color dotColor = isActive ? AppColors.warningSoft : AppColors.surfaceMuted;
-              return Container(
-                margin: const EdgeInsets.symmetric(horizontal: AppSpacing.xxs),
-                width: AppSizes.streakDotSize,
-                height: AppSizes.streakDotSize,
-                decoration: BoxDecoration(color: dotColor, shape: BoxShape.circle),
-              );
-            }),
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(7, (index) {
-              final label = ['M', 'T', 'W', 'T', 'F', 'S', 'S'][index];
-              return _DayLabel(label, highlight: index == todayIndex);
-            }),
-          ),
-        ],
       ),
     );
   }
@@ -438,8 +302,8 @@ class _BmiCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.l),
-        border: Border.all(color: AppColors.outline),
-        boxShadow: AppShadows.cardSoft,
+        border: AppBorders.screenCard,
+        boxShadow: AppShadows.screenCard,
       ),
       padding: const EdgeInsets.all(AppSpacing.m),
       child: Column(
@@ -449,7 +313,10 @@ class _BmiCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(tr(LocaleKeys.progress_your_bmi), style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700)),
-              const Icon(Icons.info_outline, size: AppSizes.iconMd, color: AppColors.textTertiary),
+              GestureDetector(
+                onTap: () => showInfoDialog(context, title: tr(LocaleKeys.progress_bmi_info_title), body: tr(LocaleKeys.progress_bmi_info_body)),
+                child: const Icon(Icons.info_outline, size: AppSizes.iconMd, color: AppColors.textTertiary),
+              ),
             ],
           ),
           const SizedBox(height: AppSpacing.m),
@@ -458,7 +325,7 @@ class _BmiCard extends StatelessWidget {
           else
             Row(
               children: [
-                Text(bmi.toStringAsFixed(1), style: AppTextStyles.h1.copyWith(fontSize: 32, fontWeight: FontWeight.w800, height: 1.5)),
+                Text(bmi.toStringAsFixed(1), style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w800)),
                 const SizedBox(width: AppSpacing.s),
                 Text(tr(LocaleKeys.progress_your_weight_is), style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary)),
                 const SizedBox(width: AppSpacing.xs),

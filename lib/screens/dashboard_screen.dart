@@ -1,4 +1,5 @@
 import 'package:diplomka/controller/dashboard_controller.dart';
+import 'package:diplomka/screens/main_screen.dart';
 import 'package:diplomka/controller/day_record_controller.dart';
 import 'package:diplomka/screens/logs/exercise_detail_screen.dart';
 import 'package:diplomka/screens/meals/meal_detail_screen.dart';
@@ -114,6 +115,7 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
                                     dashboardController.refresh();
                                     Get.snackbar(tr(LocaleKeys.exercise_duplicated), exercise.name, snackPosition: SnackPosition.BOTTOM);
                                   },
+                                  onEmptyStateTap: () => MainScreenController.to.showQuickActions(context),
                                 ),
                               ],
                             ),
@@ -269,6 +271,7 @@ class _DashboardPreviewScreenState extends State<DashboardPreviewScreen> {
                           exercises: recordToShow.exercises,
                           selectedDate: widget.date,
                           onMealTap: (meal) => Get.to(() => MealDetailScreen(meal: meal)),
+                          onEmptyStateTap: () => MainScreenController.to.showQuickActions(context),
                         ),
                         const SizedBox(height: AppSpacing.huge),
                       ],
