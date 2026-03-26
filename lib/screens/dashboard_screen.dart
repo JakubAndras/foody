@@ -56,7 +56,7 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
                           final isAnalyzingMeal = dashboardController.newMealAnalyzeLoading.value;
                           final hasLoadedRecord = dashboardController.dayRecord.value != null;
 
-                          if (dashboardController.isLoadingDayRecord.value && !hasLoadedRecord && !isAnalyzingMeal) {
+                          if (!dashboardController.initialLoadComplete.value && dashboardController.isLoadingDayRecord.value && !hasLoadedRecord && !isAnalyzingMeal) {
                             return const Center(child: CircularProgressIndicator());
                           }
                           if (dashboardController.dayRecordError.isNotEmpty) {
@@ -258,7 +258,7 @@ class _DashboardPreviewScreenState extends State<DashboardPreviewScreen> {
                     backgroundColor: Colors.transparent,
                     fadeColor: AppColors.meshBase,
                     backgroundWidget: const MeshGradientBackground(),
-                    padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.huge + 4, AppSpacing.l, AppSpacing.l),
+                    padding: const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.huge + 4, AppSpacing.m, AppSpacing.l),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

@@ -1,12 +1,12 @@
-import 'dart:math' as math;
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
+import 'package:diplomka/model/calendar_day_ring_style.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
+import 'package:diplomka/widgets/calendar_day_ring_painter.dart';
 
 class RingColorsExplainedScreen extends StatelessWidget {
   const RingColorsExplainedScreen({super.key});
@@ -25,83 +25,61 @@ class RingColorsExplainedScreen extends StatelessWidget {
             color: AppColors.surface,
             radius: AppRadii.xl,
             padding: const EdgeInsets.all(AppSpacing.l),
+            child: const _WeekStrip(),
+          ),
+          const SizedBox(height: AppSpacing.m),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(tr(LocaleKeys.ring_colors_header), style: AppTextStyles.h4.copyWith(fontWeight: FontWeight.w700)),
-                    _FirePill(),
-                  ],
+                Text(
+                  tr(LocaleKeys.ring_colors_segment_info),
+                  style: AppTextStyles.body14Relaxed,
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  tr(LocaleKeys.ring_colors_segment_calc),
+                  style: AppTextStyles.body14Relaxed,
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  tr(LocaleKeys.ring_colors_segment_example),
+                  style: AppTextStyles.body14Relaxed,
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  tr(LocaleKeys.ring_colors_red_info),
+                  style: AppTextStyles.body14Relaxed,
                 ),
                 const SizedBox(height: AppSpacing.m),
-                const _WeekStrip(),
+                _LegendItem(
+                  title: tr(LocaleKeys.ring_colors_dark_segment),
+                  description: tr(LocaleKeys.ring_colors_dark_desc),
+                  ringStyle: CalendarDayRingStyle(filledSegments: 8, roundedPercent: 80),
+                ),
+                const SizedBox(height: AppSpacing.m),
+                _LegendItem(
+                  title: tr(LocaleKeys.ring_colors_red_segment),
+                  description: tr(LocaleKeys.ring_colors_red_desc),
+                  ringStyle: CalendarDayRingStyle(filledSegments: 10, overflowSegments: 3, roundedPercent: 100, overflowFraction: 0.3),
+                ),
+                const SizedBox(height: AppSpacing.m),
+                _LegendItem(
+                  title: tr(LocaleKeys.ring_colors_gray_segment),
+                  description: tr(LocaleKeys.ring_colors_gray_desc),
+                  ringStyle: CalendarDayRingStyle(filledSegments: 3, roundedPercent: 30),
+                ),
+                const SizedBox(height: AppSpacing.m),
+                _LegendItem(
+                  title: tr(LocaleKeys.ring_colors_empty_segment),
+                  description: tr(LocaleKeys.ring_colors_empty_desc),
+                  ringStyle: CalendarDayRingStyle(filledSegments: 0, roundedPercent: 0),
+                ),
+                const SizedBox(height: AppSpacing.m),
               ],
             ),
           ),
-          const SizedBox(height: AppSpacing.m),
-          Text(
-            tr(LocaleKeys.ring_colors_segment_info),
-            style: AppTextStyles.body14Relaxed,
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            tr(LocaleKeys.ring_colors_segment_calc),
-            style: AppTextStyles.body14Relaxed,
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            tr(LocaleKeys.ring_colors_segment_example),
-            style: AppTextStyles.body14Relaxed,
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            tr(LocaleKeys.ring_colors_red_info),
-            style: AppTextStyles.body14Relaxed,
-          ),
-          const SizedBox(height: AppSpacing.l),
-          _LegendItem(
-            title: tr(LocaleKeys.ring_colors_dark_segment),
-            description: tr(LocaleKeys.ring_colors_dark_desc),
-            filledSegments: 8,
-            overflowSegments: 0,
-          ),
-          const SizedBox(height: AppSpacing.m),
-          _LegendItem(
-            title: tr(LocaleKeys.ring_colors_red_segment),
-            description: tr(LocaleKeys.ring_colors_red_desc),
-            filledSegments: 10,
-            overflowSegments: 3,
-          ),
-          const SizedBox(height: AppSpacing.m),
-          _LegendItem(
-            title: tr(LocaleKeys.ring_colors_gray_segment),
-            description: tr(LocaleKeys.ring_colors_gray_desc),
-            filledSegments: 3,
-            overflowSegments: 0,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _FirePill extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: AppSizes.buttonHeightXs,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.pill),
-        boxShadow: AppShadows.control,
-      ),
-      child: Row(
-        children: [
-          const Text('🔥', style: TextStyle(fontSize: 16)),
-          const SizedBox(width: 6),
-          Text('6', style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w700)),
         ],
       ),
     );
@@ -114,13 +92,13 @@ class _WeekStrip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final days = [
-      _DayData('Mon', '10', filledSegments: 0, overflowSegments: 0),
-      _DayData('Tue', '11', filledSegments: 8, overflowSegments: 0),
-      _DayData('Wed', '12', filledSegments: 10, overflowSegments: 0),
-      _DayData('Thu', '13', filledSegments: 6, overflowSegments: 0),
-      _DayData('Fri', '14', filledSegments: 10, overflowSegments: 1),
-      _DayData('Sat', '15', filledSegments: 3, overflowSegments: 0),
-      _DayData('Sun', '16', filledSegments: 10, overflowSegments: 4, selected: true),
+      _DayData('Mon', '10', roundedPercent: 0),
+      _DayData('Tue', '11', roundedPercent: 80),
+      _DayData('Wed', '12', roundedPercent: 100),
+      _DayData('Thu', '13', roundedPercent: 60),
+      _DayData('Fri', '14', roundedPercent: 110, overflowFraction: 0.1),
+      _DayData('Sat', '15', roundedPercent: 30),
+      _DayData('Sun', '16', roundedPercent: 140, overflowFraction: 0.4, selected: true),
     ];
 
     return Row(
@@ -134,16 +112,27 @@ class _DayData {
   const _DayData(
     this.label,
     this.value, {
-    required this.filledSegments,
-    required this.overflowSegments,
+    required this.roundedPercent,
+    this.overflowFraction = 0.0,
     this.selected = false,
   });
 
   final String label;
   final String value;
-  final int filledSegments;
-  final int overflowSegments;
+  final int roundedPercent;
+  final double overflowFraction;
   final bool selected;
+
+  CalendarDayRingStyle toRingStyle() {
+    final filledSegments = (roundedPercent / 10).round().clamp(0, 10);
+    final overflowSegments = overflowFraction > 0 ? ((roundedPercent - 100) / 10).round().clamp(1, 10) : 0;
+    return CalendarDayRingStyle(
+      filledSegments: filledSegments,
+      overflowSegments: overflowSegments,
+      roundedPercent: roundedPercent,
+      overflowFraction: overflowFraction,
+    );
+  }
 }
 
 class _WeekDay extends StatelessWidget {
@@ -154,6 +143,7 @@ class _WeekDay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textColor = day.selected ? AppColors.textPrimary : AppColors.borderStrong;
+    final ringStrokeWidth = AppSizes.progressRingStroke * 0.8;
 
     return Column(
       children: [
@@ -163,10 +153,10 @@ class _WeekDay extends StatelessWidget {
           width: AppSizes.dateCircleSize,
           height: AppSizes.dateCircleSize,
           child: CustomPaint(
-            painter: _SegmentRingPainter(
-              filledSegments: day.filledSegments,
-              overflowSegments: day.overflowSegments,
-              strokeWidth: AppSizes.progressRingStroke,
+            painter: CalendarDayRingPainter(
+              ringStyle: day.toRingStyle(),
+              strokeWidth: ringStrokeWidth,
+              useSegmentedRing: false,
             ),
             child: Padding(
               padding: const EdgeInsets.all(AppSizes.progressRingStroke),
@@ -193,14 +183,12 @@ class _LegendItem extends StatelessWidget {
   const _LegendItem({
     required this.title,
     required this.description,
-    required this.filledSegments,
-    required this.overflowSegments,
+    required this.ringStyle,
   });
 
   final String title;
   final String description;
-  final int filledSegments;
-  final int overflowSegments;
+  final CalendarDayRingStyle ringStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -211,10 +199,10 @@ class _LegendItem extends StatelessWidget {
           width: 44,
           height: 44,
           child: CustomPaint(
-            painter: _SegmentRingPainter(
-              filledSegments: filledSegments,
-              overflowSegments: overflowSegments,
+            painter: CalendarDayRingPainter(
+              ringStyle: ringStyle,
               strokeWidth: AppSizes.progressRingStroke,
+              useSegmentedRing: false,
             ),
           ),
         ),
@@ -231,52 +219,5 @@ class _LegendItem extends StatelessWidget {
         ),
       ],
     );
-  }
-}
-
-class _SegmentRingPainter extends CustomPainter {
-  const _SegmentRingPainter({
-    required this.filledSegments,
-    required this.overflowSegments,
-    required this.strokeWidth,
-  });
-
-  final int filledSegments;
-  final int overflowSegments;
-  final double strokeWidth;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth
-      ..strokeCap = StrokeCap.round;
-
-    final radius = (size.shortestSide - strokeWidth) / 2;
-    final center = Offset(size.width / 2, size.height / 2);
-    final rect = Rect.fromCircle(center: center, radius: radius);
-    const int totalSegments = 10;
-    final segmentSweep = (2 * math.pi) / totalSegments;
-    final gapSweep = segmentSweep * 0.28;
-    final drawSweep = segmentSweep - gapSweep;
-    const startAngleOffset = -math.pi / 2;
-
-    for (int i = 0; i < totalSegments; i++) {
-      if (i < overflowSegments) {
-        paint.color = AppColors.error;
-      } else if (i < filledSegments) {
-        paint.color = AppColors.textPrimary;
-      } else {
-        paint.color = AppColors.borderStrong;
-      }
-
-      final start = startAngleOffset + i * segmentSweep + (gapSweep / 2);
-      canvas.drawArc(rect, start, drawSweep, false, paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _SegmentRingPainter oldDelegate) {
-    return oldDelegate.filledSegments != filledSegments || oldDelegate.overflowSegments != overflowSegments || oldDelegate.strokeWidth != strokeWidth;
   }
 }

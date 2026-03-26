@@ -103,6 +103,7 @@ class CustomGlassIconButtonGroup extends StatelessWidget {
       glassSettings: AppGlass.standard,
       quality: GlassQuality.premium,
       borderRadius: height / 2,
+      borderColor: Colors.transparent,
       children: items
           .map((item) => GestureDetector(
                 onTap: item.onPressed,
@@ -143,7 +144,7 @@ class CustomGlassAppBar extends StatelessWidget implements PreferredSizeWidget {
     return SafeArea(
       bottom: false,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 0),
+        padding: const EdgeInsets.symmetric(horizontal: 0), // horizontal: AppSpacing.m
         child: SizedBox(
           height: preferredSize.height,
           child: Stack(

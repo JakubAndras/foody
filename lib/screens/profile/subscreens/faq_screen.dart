@@ -31,6 +31,7 @@ class _FaqScreenState extends State<FaqScreen> {
   Widget build(BuildContext context) {
     return ProfileGradientScaffold(
       scroll: true,
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

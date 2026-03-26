@@ -341,7 +341,21 @@ class AppGradients {
 
   static const LinearGradient askAiWarningSurface = LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [AppColors.yellowSubtle, AppColors.yellowSoft]);
 
-  static const LinearGradient bmi = LinearGradient(begin: Alignment.centerLeft, end: Alignment.centerRight, colors: [AppColors.info, AppColors.warning, AppColors.error]);
+  static const LinearGradient bmi = LinearGradient(
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
+    colors: [
+      AppColors.info,
+      AppColors.info,
+      AppColors.success,
+      AppColors.success,
+      AppColors.warning,
+      AppColors.warning,
+      AppColors.error,
+      AppColors.error,
+    ],
+    stops: [0.0, 0.15, 0.25, 0.50, 0.60, 0.75, 0.85, 1.0],
+  );
 
   static const LinearGradient loading = LinearGradient(begin: Alignment.centerLeft, end: Alignment.centerRight, colors: [Color(0xFFFF6B6B), Color(0xFFC084FC), Color(0xFF60A5FA)]);
 

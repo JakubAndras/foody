@@ -32,7 +32,7 @@ class ProfileGradientScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Widget content = Padding(padding: padding ?? const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.l, AppSpacing.screen, AppSpacing.xl), child: child);
+    final Widget content = Padding(padding: padding ?? const EdgeInsets.fromLTRB(0, AppSpacing.l, 0, AppSpacing.xl), child: child);
 
     final Widget body = SafeArea(
       top: safeTop,

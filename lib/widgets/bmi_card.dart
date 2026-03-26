@@ -87,8 +87,23 @@ class BmiCard extends StatelessWidget {
             builder: (context, constraints) {
               double indicatorX = 0;
               if (bmi != null) {
-                final double clamped = bmi.clamp(16, 40);
-                indicatorX = ((clamped - 16) / (40 - 16)) * constraints.maxWidth;
+                final double clamped = bmi.clamp(16.0, 40.0);
+                // Map BMI to gradient position matching the non-linear stops:
+                // Underweight: BMI 16–18.5 → pos 0.0–0.20
+                // Healthy:     BMI 18.5–25 → pos 0.20–0.55
+                // Overweight:  BMI 25–30   → pos 0.55–0.80
+                // Obese:       BMI 30–40   → pos 0.80–1.0
+                double fraction;
+                if (clamped < 18.5) {
+                  fraction = (clamped - 16) / (18.5 - 16) * 0.20;
+                } else if (clamped < 25) {
+                  fraction = 0.20 + (clamped - 18.5) / (25 - 18.5) * 0.35;
+                } else if (clamped < 30) {
+                  fraction = 0.55 + (clamped - 25) / (30 - 25) * 0.25;
+                } else {
+                  fraction = 0.80 + (clamped - 30) / (40 - 30) * 0.20;
+                }
+                indicatorX = fraction * constraints.maxWidth;
               }
               return Stack(
                 alignment: Alignment.centerLeft,

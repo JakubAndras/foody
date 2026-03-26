@@ -21,9 +21,6 @@ class NutritionGoalsService extends GetxService {
   void onInit() {
     super.onInit();
     unawaited(refreshForDate(SelectedDateService.to.selectedDate.value));
-    ever<DateTime>(SelectedDateService.to.selectedDate, (date) {
-      unawaited(refreshForDate(date));
-    });
   }
 
   NutritionGoals goalsForDate(DateTime date, {DayRecord? fallbackRecord}) {

@@ -38,25 +38,30 @@ class DayRecordController extends BaseController {
 
   final RxList<DayRecord> dayRecords = RxList<DayRecord>();
   final RxMap<DateTime, CalendarDayRingStyle> weekRingStyles = <DateTime, CalendarDayRingStyle>{}.obs;
+  int _loadWeekGeneration = 0;
 
   // Method to load ring states for a week
   Future<void> loadWeek(DateTime mondayOfWeek) async {
+    final generation = ++_loadWeekGeneration;
     final bool burnedEnabled = SessionManager.to.burnedCaloriesEnabled.value;
     final bool rolloverEnabled = SessionManager.to.rolloverCaloriesEnabled.value;
 
-    // Load the day before Monday to compute Monday's rollover
+    // Load all 8 days in parallel (Sunday for rollover + Mon-Sun)
     final sunday = mondayOfWeek.subtract(const Duration(days: 1));
-    DayRecord? prevRecord = await getDayRecord(DateTime(sunday.year, sunday.month, sunday.day));
+    final daysToLoad = [DateTime(sunday.year, sunday.month, sunday.day), ...List.generate(7, (i) {
+      final d = mondayOfWeek.add(Duration(days: i));
+      return DateTime(d.year, d.month, d.day);
+    })];
+    final results = await Future.wait(daysToLoad.map(getDayRecord));
+    if (generation != _loadWeekGeneration) return;
 
     final Map<DateTime, CalendarDayRingStyle> newStatuses = {};
-    for (int i = 0; i < 7; i++) {
-      final currentDay = mondayOfWeek.add(Duration(days: i));
-      final normalizedDay = DateTime(currentDay.year, currentDay.month, currentDay.day);
-      final dayRecord = await getDayRecord(normalizedDay);
-
+    DayRecord? prevRecord = results[0]; // Sunday
+    for (int i = 1; i < results.length; i++) {
+      final normalizedDay = daysToLoad[i];
+      final dayRecord = results[i];
       final double rollover = _computeRollover(prevRecord, burnedEnabled: burnedEnabled, rolloverEnabled: rolloverEnabled);
       newStatuses[normalizedDay] = _resolveRingStyleWithSettings(dayRecord, burnedEnabled: burnedEnabled, rollover: rollover);
-
       prevRecord = dayRecord;
     }
     weekRingStyles.addAll(newStatuses);

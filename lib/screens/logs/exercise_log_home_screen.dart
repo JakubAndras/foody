@@ -73,7 +73,7 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
   Widget build(BuildContext context) {
     return ProfileGradientScaffold(
       safeBottom: false,
-      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, 0, AppSpacing.screen, 0),
+      padding: const EdgeInsets.symmetric(horizontal: 0),
       child: Column(
         children: [
           CustomGlassAppBar(
@@ -88,19 +88,25 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
             ],
           ),
           const SizedBox(height: AppSpacing.l),
-          ExerciseSearchBar(controller: _searchController, onChanged: (_) => setState(() {})),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
+            child: ExerciseSearchBar(controller: _searchController, onChanged: (_) => setState(() {})),
+          ),
           const SizedBox(height: AppSpacing.s),
-          Row(
-            children: [
-              ExerciseFilterChip(label: tr(LocaleKeys.common_all), selected: !_showFavorites, onTap: () => setState(() => _showFavorites = false)),
-              const SizedBox(width: AppSpacing.s),
-              ExerciseFilterChip(
-                label: tr(LocaleKeys.common_favorites),
-                selected: _showFavorites,
-                icon: Icons.close,
-                onTap: () => setState(() => _showFavorites = true),
-              ),
-            ],
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
+            child: Row(
+              children: [
+                ExerciseFilterChip(label: tr(LocaleKeys.common_all), selected: !_showFavorites, onTap: () => setState(() => _showFavorites = false)),
+                const SizedBox(width: AppSpacing.s),
+                ExerciseFilterChip(
+                  label: tr(LocaleKeys.common_favorites),
+                  selected: _showFavorites,
+                  icon: Icons.close,
+                  onTap: () => setState(() => _showFavorites = true),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: AppSpacing.s),
           Expanded(
@@ -115,7 +121,7 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
                 );
               }
               return ListView.separated(
-                padding: EdgeInsets.fromLTRB(0, AppSpacing.s, 0, AppSpacing.l + MediaQuery.paddingOf(context).bottom),
+                padding: EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.s, AppSpacing.screen, AppSpacing.l + MediaQuery.paddingOf(context).bottom),
                 itemCount: filtered.length,
                 separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.s),
                 itemBuilder: (context, index) {

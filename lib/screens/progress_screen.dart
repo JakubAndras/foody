@@ -1,5 +1,4 @@
 import 'package:diplomka/app_theme.dart';
-import 'package:diplomka/widgets/info_dialog.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:diplomka/controller/day_record_controller.dart';
 import 'package:diplomka/controller/weight_entry_controller.dart';
@@ -11,6 +10,7 @@ import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/services/streak_service.dart';
 import 'package:diplomka/screens/profile/ask_ai/ask_ai_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/export_pdf_intro_screen.dart';
+import 'package:diplomka/widgets/bmi_card.dart';
 import 'package:diplomka/widgets/current_weight_card.dart';
 import 'package:diplomka/widgets/dietary_violations_calendar_card.dart';
 import 'package:diplomka/widgets/weight_progress_card.dart';
@@ -67,13 +67,6 @@ class _DailyAverageStats {
   final String rangeLabel;
 
   const _DailyAverageStats({required this.average, required this.hasMeals, required this.rangeLabel});
-}
-
-class _BmiCategory {
-  final String label;
-  final Color color;
-
-  const _BmiCategory({required this.label, required this.color});
 }
 
 class ProgressScreen extends StatelessWidget {
@@ -140,7 +133,7 @@ class ProgressScreen extends StatelessWidget {
                 final weightEntries = WeightEntryController.to.entries.toList(growable: false);
                 final sorted = _sortWeightEntries(weightEntries);
                 final latest = sorted.isNotEmpty ? sorted.first : null;
-                return _BmiCard(currentWeight: latest?.weight, heightCm: SessionManager.to.heightCm.value);
+                return BmiCard(currentWeight: latest?.weight, heightCm: SessionManager.to.heightCm.value);
               }),
             ],
           ),
@@ -264,219 +257,5 @@ class _SegmentedControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GlassSegmentedControl(segments: labels, selectedIndex: selectedIndex, onSegmentSelected: onTap ?? (_) {}, useOwnLayer: true);
-  }
-}
-
-class _BmiCard extends StatelessWidget {
-  const _BmiCard({this.currentWeight, this.heightCm});
-
-  final double? currentWeight;
-  final double? heightCm;
-
-  double? get _bmiValue {
-    if (currentWeight == null || heightCm == null || heightCm! <= 0) return null;
-    final heightM = heightCm! / 100;
-    return currentWeight! / (heightM * heightM);
-  }
-
-  _BmiCategory _bmiCategory(double bmi) {
-    if (bmi < 18.5) return _BmiCategory(label: tr(LocaleKeys.progress_bmi_underweight), color: AppColors.info);
-    if (bmi < 25) return _BmiCategory(label: tr(LocaleKeys.progress_bmi_healthy), color: AppColors.success);
-    if (bmi < 30) return _BmiCategory(label: tr(LocaleKeys.progress_bmi_overweight), color: AppColors.warning);
-    return _BmiCategory(label: tr(LocaleKeys.progress_bmi_obese), color: AppColors.error);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final double? bmi = _bmiValue;
-    final _BmiCategory? category = bmi == null ? null : _bmiCategory(bmi);
-    final bool hasWeight = currentWeight != null;
-    final bool hasHeight = heightCm != null && heightCm! > 0;
-    final String missingLabel = !hasHeight && !hasWeight
-        ? tr(LocaleKeys.progress_missing_height_weight)
-        : !hasHeight
-        ? tr(LocaleKeys.progress_missing_height)
-        : tr(LocaleKeys.progress_missing_weight);
-
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.l),
-        border: AppBorders.screenCard,
-        boxShadow: AppShadows.screenCard,
-      ),
-      padding: const EdgeInsets.all(AppSpacing.m),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(tr(LocaleKeys.progress_your_bmi), style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700)),
-              GestureDetector(
-                onTap: () => showInfoDialog(context, title: tr(LocaleKeys.progress_bmi_info_title), body: tr(LocaleKeys.progress_bmi_info_body)),
-                child: const Icon(Icons.info_outline, size: AppSizes.iconMd, color: AppColors.textTertiary),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.m),
-          if (bmi == null)
-            Text(missingLabel, style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary))
-          else
-            Row(
-              children: [
-                Text(bmi.toStringAsFixed(1), style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w800)),
-                const SizedBox(width: AppSpacing.s),
-                Text(tr(LocaleKeys.progress_your_weight_is), style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary)),
-                const SizedBox(width: AppSpacing.xs),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.xxs),
-                  decoration: BoxDecoration(color: category!.color, borderRadius: BorderRadius.circular(AppRadii.xs)),
-                  child: Text(
-                    category.label,
-                    style: AppTextStyles.caption12.copyWith(color: AppColors.onPrimary, fontWeight: FontWeight.w700),
-                  ),
-                ),
-              ],
-            ),
-          const SizedBox(height: AppSpacing.m),
-          LayoutBuilder(
-            builder: (context, constraints) {
-              double indicatorX = 0;
-              if (bmi != null) {
-                final double clamped = bmi.clamp(16, 40);
-                indicatorX = ((clamped - 16) / (40 - 16)) * constraints.maxWidth;
-              }
-              return Stack(
-                alignment: Alignment.centerLeft,
-                children: [
-                  Container(
-                    height: AppSizes.bmiBarHeight,
-                    decoration: BoxDecoration(gradient: AppGradients.bmi, borderRadius: BorderRadius.circular(AppRadii.pill)),
-                  ),
-                  if (bmi != null)
-                    Positioned(
-                      left: indicatorX,
-                      child: Container(
-                        width: AppSizes.bmiMarkerWidth,
-                        height: AppSizes.bmiMarkerHeight,
-                        decoration: BoxDecoration(color: AppColors.textPrimary, borderRadius: BorderRadius.circular(AppRadii.pill)),
-                      ),
-                    ),
-                ],
-              );
-            },
-          ),
-          const SizedBox(height: AppSpacing.m),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _LegendItem(label: tr(LocaleKeys.progress_bmi_underweight), color: AppColors.info),
-              _LegendItem(label: tr(LocaleKeys.progress_bmi_healthy), color: AppColors.success),
-              _LegendItem(label: tr(LocaleKeys.progress_bmi_overweight), color: AppColors.warning),
-              _LegendItem(label: tr(LocaleKeys.progress_bmi_obese), color: AppColors.error),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _LegendItem extends StatelessWidget {
-  final String label;
-  final Color color;
-
-  const _LegendItem({required this.label, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: AppSizes.legendDot,
-          height: AppSizes.legendDot,
-          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-        ),
-        const SizedBox(width: AppSpacing.xs),
-        Text(label, style: AppTextStyles.label10.copyWith(color: AppColors.textTertiary)),
-      ],
-    );
-  }
-}
-
-class _InsightsActionsCard extends StatelessWidget {
-  const _InsightsActionsCard();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.l),
-        border: Border.all(color: AppColors.outline),
-        boxShadow: AppShadows.cardSoft,
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.m, AppSpacing.m, 0),
-            child: Text(tr(LocaleKeys.progress_insights_actions), style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700)),
-          ),
-          const SizedBox(height: AppSpacing.s),
-          _InsightActionRow(
-            icon: Icons.ios_share_outlined,
-            title: tr(LocaleKeys.progress_export_summary),
-            onTap: () => Get.to(() => const ExportPdfIntroScreen()),
-          ),
-          _InsightActionRow(
-            icon: Icons.auto_awesome_outlined,
-            title: tr(LocaleKeys.progress_ask_ai),
-            showDivider: false,
-            onTap: () => Get.to(() => const AskAiScreen()),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _InsightActionRow extends StatelessWidget {
-  const _InsightActionRow({required this.icon, required this.title, this.showDivider = true, this.onTap});
-
-  final IconData icon;
-  final String title;
-  final bool showDivider;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: onTap,
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.s),
-            child: Row(
-              children: [
-                Icon(icon, size: AppSizes.iconMd, color: AppColors.textPrimary),
-                const SizedBox(width: AppSpacing.m),
-                Expanded(child: Text(title, style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w500))),
-                const Icon(Icons.chevron_right, size: AppSizes.iconMd, color: AppColors.textTertiary),
-              ],
-            ),
-          ),
-          if (showDivider)
-            Padding(
-              padding: const EdgeInsets.only(left: AppSizes.settingsDividerIndent),
-              child: Divider(height: AppSizes.dividerThin, color: AppColors.surfaceMuted),
-            ),
-        ],
-      ),
-    );
   }
 }

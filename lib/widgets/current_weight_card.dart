@@ -145,24 +145,24 @@ class CurrentWeightCard extends StatelessWidget {
                 ],
               ),
             ],
-            if (etaLabel != null) ...[
-              const SizedBox(height: AppSpacing.s),
-              Builder(builder: (context) {
-                final fullText = tr(LocaleKeys.progress_goal_eta, namedArgs: {'date': etaLabel});
-                final dateIndex = fullText.indexOf(etaLabel);
-                if (dateIndex < 0) {
-                  return Text(fullText, style: AppTextStyles.caption12.copyWith(color: AppColors.textTertiary));
-                }
-                return Text.rich(
-                  TextSpan(children: [
-                    TextSpan(text: fullText.substring(0, dateIndex)),
-                    TextSpan(text: etaLabel, style: const TextStyle(fontWeight: FontWeight.w700)),
-                    TextSpan(text: fullText.substring(dateIndex + etaLabel.length)),
-                  ]),
-                  style: AppTextStyles.caption12.copyWith(color: AppColors.textTertiary),
-                );
-              }),
-            ],
+            // if (etaLabel != null) ...[
+            //   const SizedBox(height: AppSpacing.s),
+            //   Builder(builder: (context) {
+            //     final fullText = tr(LocaleKeys.progress_goal_eta, namedArgs: {'date': etaLabel});
+            //     final dateIndex = fullText.indexOf(etaLabel);
+            //     if (dateIndex < 0) {
+            //       return Text(fullText, style: AppTextStyles.caption12.copyWith(color: AppColors.textTertiary));
+            //     }
+            //     return Text.rich(
+            //       TextSpan(children: [
+            //         TextSpan(text: fullText.substring(0, dateIndex)),
+            //         TextSpan(text: etaLabel, style: const TextStyle(fontWeight: FontWeight.w700)),
+            //         TextSpan(text: fullText.substring(dateIndex + etaLabel.length)),
+            //       ]),
+            //       style: AppTextStyles.caption12.copyWith(color: AppColors.textTertiary),
+            //     );
+            //   }),
+            // ],
           ],
         ),
       ),

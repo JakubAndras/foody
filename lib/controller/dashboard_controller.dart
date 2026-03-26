@@ -37,6 +37,7 @@ class DashboardController extends BaseController {
 
   final Rx<DayRecord?> dayRecord = Rx<DayRecord?>(null);
   final RxBool isLoadingDayRecord = false.obs;
+  final RxBool initialLoadComplete = false.obs;
   final RxString dayRecordError = ''.obs;
 
   final Rx<StreakInfo?> streakInfo = Rx<StreakInfo?>(null);
@@ -44,6 +45,8 @@ class DashboardController extends BaseController {
   final RxString streakError = ''.obs;
 
   final RxDouble rolloverAmount = 0.0.obs;
+
+  int _fetchGeneration = 0;
 
   final RxBool newMealAnalyzeLoading = false.obs;
   final RxBool newExerciseAnalyzeLoading = false.obs;
@@ -86,21 +89,28 @@ class DashboardController extends BaseController {
   }
 
   Future<void> _fetchDayRecord(DateTime date) async {
+    final generation = ++_fetchGeneration;
     isLoadingDayRecord.value = true;
     dayRecordError.value = '';
     try {
       final record = await _dayRecordController.getDayRecord(date);
+      if (generation != _fetchGeneration) return;
       dayRecord.value = record;
       NutritionGoalsService.to.syncFromDayRecord(date: date, dayRecord: record);
       rolloverAmount.value = await _calculateRollover(date);
+      if (generation != _fetchGeneration) return;
+      initialLoadComplete.value = true;
     } catch (e) {
+      if (generation != _fetchGeneration) return;
       dayRecordError.value = e.toString();
       dayRecord.value = null;
       rolloverAmount.value = 0;
       NutritionGoalsService.to.syncFromDayRecord(date: date, dayRecord: null);
       Get.snackbar(tr(LocaleKeys.common_error), tr(LocaleKeys.common_something_went_wrong));
     } finally {
-      isLoadingDayRecord.value = false;
+      if (generation == _fetchGeneration) {
+        isLoadingDayRecord.value = false;
+      }
     }
   }
 
