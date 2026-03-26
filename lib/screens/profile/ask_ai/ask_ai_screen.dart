@@ -69,13 +69,14 @@ class _AskAiScreenState extends State<AskAiScreen> {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const SizedBox(height: AppSpacing.s),
                     AskAiPromptCard(
                       controller: _textController,
                       isLoading: loading,
                       onAsk: _handleAsk,
                       onClear: () => _textController.clear(),
                     ),
-                    const SizedBox(height: AppSpacing.l),
+                    const SizedBox(height: AppSpacing.m),
                     IgnorePointer(
                       ignoring: loading,
                       child: Opacity(

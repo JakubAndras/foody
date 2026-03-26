@@ -8,12 +8,12 @@ import 'package:flutter/material.dart';
 class ExerciseDetailOptionsSheet extends StatelessWidget {
   const ExerciseDetailOptionsSheet({
     super.key,
-    required this.onReport,
+    // required this.onReport,
     required this.onDelete,
     this.onDuplicate,
   });
 
-  final VoidCallback onReport;
+  // final VoidCallback onReport;
   final VoidCallback onDelete;
   final VoidCallback? onDuplicate;
 
@@ -41,13 +41,13 @@ class ExerciseDetailOptionsSheet extends StatelessWidget {
                 ),
                 const SizedBox(height: AppSpacing.s),
               ],
-              _OptionRow(
-                icon: Icons.report_gmailerrorred_outlined,
-                label: tr(LocaleKeys.common_report),
-                color: AppColors.textPrimary,
-                onTap: onReport,
-              ),
-              const SizedBox(height: AppSpacing.s),
+              // _OptionRow(
+              //   icon: Icons.report_gmailerrorred_outlined,
+              //   label: tr(LocaleKeys.common_report),
+              //   color: AppColors.textPrimary,
+              //   onTap: onReport,
+              // ),
+              // const SizedBox(height: AppSpacing.s),
               _OptionRow(
                 icon: Icons.delete_outline,
                 label: tr(LocaleKeys.common_delete),

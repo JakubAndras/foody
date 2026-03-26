@@ -240,10 +240,10 @@ class RecentlyUploadedCard extends StatelessWidget {
                         _MacroDot(value: meal.totalCarbs.toStringAsFixed(0), color: AppColors.macroCarbs),
                         const SizedBox(width: AppSpacing.s),
                         _MacroDot(value: meal.totalFats.toStringAsFixed(0), color: AppColors.macroFats),
-                        if (meal.confidence != null) ...[
-                          const Spacer(),
-                          ConfidenceBadge(confidence: meal.confidence!),
-                        ],
+                        // if (meal.confidence != null) ...[
+                        //   const Spacer(),
+                        //   ConfidenceBadge(confidence: meal.confidence!),
+                        // ],
                       ],
                     ),
                   ],

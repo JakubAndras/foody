@@ -35,6 +35,7 @@ abstract class  LocaleKeys {
   static const common_duration = 'common_duration';
   static const common_try_again = 'common_try_again';
   static const common_something_went_wrong = 'common_something_went_wrong';
+  static const common_cannot_undo = 'common_cannot_undo';
   static const common_no_items_found = 'common_no_items_found';
   static const common_try_adjusting_search = 'common_try_adjusting_search';
   static const common_all = 'common_all';
@@ -399,6 +400,8 @@ abstract class  LocaleKeys {
   static const exercise_calculation = 'exercise_calculation';
   static const exercise_rate = 'exercise_rate';
   static const exercise_duration_min = 'exercise_duration_min';
+  static const exercise_delete_title = 'exercise_delete_title';
+  static const exercise_delete_message = 'exercise_delete_message';
   static const scan_scan_meal = 'scan_scan_meal';
   static const scan_barcode = 'scan_barcode';
   static const scan_food_label = 'scan_food_label';

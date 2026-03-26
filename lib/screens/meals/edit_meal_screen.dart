@@ -9,6 +9,7 @@ import 'package:diplomka/screens/meals/fix_result_screen.dart';
 import 'package:diplomka/screens/meals/report_meal_screen.dart';
 import 'package:diplomka/screens/meals/meal_components.dart';
 import 'package:diplomka/screens/meals/meal_sheets.dart';
+import 'package:diplomka/widgets/confirm_delete_dialog.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:diplomka/widgets/glass_popup.dart';
 import 'package:diplomka/widgets/foody_glass_buttons.dart';
@@ -415,6 +416,14 @@ class _EditMealScreenState extends State<EditMealScreen> {
       return;
     }
 
+    final confirmed = await showConfirmDeleteDialog(
+      context: context,
+      title: tr(LocaleKeys.meal_delete_title),
+      cancelLabel: tr(LocaleKeys.common_cancel),
+      deleteLabel: tr(LocaleKeys.common_delete),
+    );
+    if (confirmed != true || !mounted) return;
+
     setState(() => _isDeleting = true);
     await DayRecordController.to.deleteMeal(_meal);
 
@@ -494,14 +503,14 @@ class _EditMealScreenState extends State<EditMealScreen> {
             _handleShareMeal();
           },
         ),
-        GlassPopupItem(
-          label: tr(LocaleKeys.common_report),
-          icon: Icons.report_outlined,
-          onTap: () {
-            Navigator.of(context).pop();
-            Get.to(() => const ReportMealScreen());
-          },
-        ),
+        // GlassPopupItem(
+        //   label: tr(LocaleKeys.common_report),
+        //   icon: Icons.report_outlined,
+        //   onTap: () {
+        //     Navigator.of(context).pop();
+        //     Get.to(() => const ReportMealScreen());
+        //   },
+        // ),
         if (!_isFromToday)
           GlassPopupItem(
             label: tr(LocaleKeys.meal_duplicate_to_today),

@@ -6,9 +6,11 @@ import 'package:diplomka/model/exercise.dart';
 import 'package:diplomka/model/exercise_template.dart';
 import 'package:diplomka/services/exercise_template_repository.dart';
 import 'package:diplomka/services/selected_date_service.dart';
-import 'package:diplomka/screens/logs/exercise_detail_options_sheet.dart';
 import 'package:diplomka/screens/logs/exercise_widgets.dart';
+import 'package:diplomka/widgets/confirm_delete_dialog.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
+import 'package:diplomka/widgets/foody_glass_buttons.dart';
+import 'package:diplomka/widgets/glass_popup.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -102,10 +104,16 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
         children: [
           CustomGlassAppBar(
             title: tr(LocaleKeys.exercise_detail_title),
+            leadingIconSize: AppSizes.iconLg,
             onBack: () => Navigator.of(context).maybePop(),
             actions: [
-              CustomGlassIconButton(icon: _exercise.isFavorite ? Icons.bookmark : Icons.bookmark_border, iconSize: AppSizes.iconMd, onPressed: _toggleFavorite),
-              CustomGlassIconButton(icon: Icons.more_horiz, iconSize: AppSizes.iconMd, onPressed: () => _showOptions(context)),
+              CustomGlassIconButtonGroup(
+                iconSize: AppSizes.iconLg,
+                items: [
+                  (icon: _exercise.isFavorite ? Icons.bookmark : Icons.bookmark_border, onPressed: _toggleFavorite),
+                  (icon: Icons.more_horiz, onPressed: () => _showOptions(context)),
+                ],
+              ),
             ],
           ),
           const SizedBox(height: AppSpacing.l),
@@ -167,30 +175,54 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
   }
 
   void _showOptions(BuildContext context) {
-    showModalBottomSheet(
+    showGlassPopup(
       context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (_) => Padding(
-        padding: const EdgeInsets.all(AppSpacing.l),
-        child: ExerciseDetailOptionsSheet(
-          onDuplicate: _isFromToday
-              ? null
-              : () {
-                  Navigator.of(context).pop();
-                  _handleDuplicateExercise();
-                },
-          onReport: () {
+      items: [
+        GlassPopupItem(
+          label: tr(LocaleKeys.common_share),
+          icon: Icons.share_outlined,
+          onTap: () {
             Navigator.of(context).pop();
-            _showSnack(context, tr(LocaleKeys.common_report));
-          },
-          onDelete: () {
-            Navigator.of(context).pop();
-            _showSnack(context, tr(LocaleKeys.common_delete));
+            _showSnack(context, tr(LocaleKeys.common_share));
           },
         ),
-      ),
+        if (!_isFromToday)
+          GlassPopupItem(
+            label: tr(LocaleKeys.exercise_duplicate_to_today),
+            icon: Icons.content_copy_outlined,
+            onTap: () {
+              Navigator.of(context).pop();
+              _handleDuplicateExercise();
+            },
+          ),
+        GlassPopupItem(
+          label: tr(LocaleKeys.common_delete),
+          icon: Icons.delete_outline,
+          color: AppColors.error,
+          showDividerAbove: true,
+          onTap: () {
+            Navigator.of(context).pop();
+            _handleDeleteExercise();
+          },
+        ),
+      ],
     );
+  }
+
+  Future<void> _handleDeleteExercise() async {
+    if (_exercise.id == null) return;
+
+    final confirmed = await showConfirmDeleteDialog(
+      context: context,
+      title: tr(LocaleKeys.exercise_delete_title),
+      cancelLabel: tr(LocaleKeys.common_cancel),
+      deleteLabel: tr(LocaleKeys.common_delete),
+    );
+    if (confirmed != true || !mounted) return;
+
+    await DayRecordController.to.deleteExercise(_exercise);
+    if (!mounted) return;
+    Get.back(result: true);
   }
 
   void _showSnack(BuildContext context, String message) {

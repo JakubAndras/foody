@@ -1,6 +1,8 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/controller/weight_entry_controller.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/user_profile.dart';
+import 'package:diplomka/model/weight_entry.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
 import 'package:diplomka/widgets/picker_column.dart';
@@ -150,6 +152,7 @@ class _OnboardingHeightWeightScreenState
           await SessionManager.to.setHeightCm(_selectedHeightCm.toDouble());
           await SessionManager.to.setWeightKg(_selectedWeightKg.toDouble());
           await SessionManager.to.setPrefersMetric(_metric);
+          await WeightEntryController.to.saveEntry(WeightEntry(date: DateTime.now(), weight: _selectedWeightKg.toDouble()));
           widget.onNext();
         },
       ),

@@ -53,9 +53,10 @@ class AppColors {
   static const successStrong = Color(0xFF00C950);
   static const successText = Color(0xFF008236);
   static const orange = Color(0xFFFF6900);
-  static const error = Color(0xFFFB2C36);
+  static const accentColor = Color(0xFFDA0027);
+  static const error = accentColor;
   static const errorContainer = Color(0xFFFFE5E5);
-  static const errorText = Color(0xFFC10007);
+  static const errorText = accentColor;
 
   // Mesh
   static const meshBase = Color(0xFFF0F0F0);

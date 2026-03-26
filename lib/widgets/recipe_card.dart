@@ -1,3 +1,4 @@
+import 'package:diplomka/app_theme.dart';
 import 'package:flutter/material.dart';
 
 import '../model/recipe.dart';
@@ -125,7 +126,7 @@ class _RecipeCardState extends State<RecipeCard> {
           ),
           const SizedBox(height: 8.0),
           _buildNutrientRow('Energy', '${widget.recipe.calories.toStringAsFixed(0)} kcal', Colors.white, theme),
-          _buildNutrientRow('Protein', '${widget.recipe.protein.toStringAsFixed(0)} g', Colors.red.shade300, theme),
+          _buildNutrientRow('Protein', '${widget.recipe.protein.toStringAsFixed(0)} g', AppColors.accentColor, theme),
           _buildNutrientRow('Carbs', '${widget.recipe.carbs.toStringAsFixed(0)} g', Colors.blue.shade300, theme),
           _buildNutrientRow('Fat', '${widget.recipe.fat.toStringAsFixed(0)} g', Colors.yellow.shade600, theme),
           _buildNutrientRow('Fiber', '${widget.recipe.fiber.toStringAsFixed(0)} g', Colors.green.shade300, theme),

@@ -1,3 +1,4 @@
+import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/model/streak_info.dart';
 import 'package:diplomka/controller/streak_controller.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -26,7 +27,7 @@ class StreakDialog extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.error_outline, color: Colors.red, size: 48),
+                  const Icon(Icons.error_outline, color: AppColors.accentColor, size: 48),
                   const SizedBox(height: 16),
                   Text(tr(LocaleKeys.streak_error_loading, namedArgs: {'error': snapshot.error.toString()}), textAlign: TextAlign.center),
                 ],

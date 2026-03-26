@@ -1,14 +1,16 @@
+import 'dart:ui';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:get/get.dart';
 
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/widgets/liquid_glass/liquid_glass_tap_effect.dart' show LiquidGlassTapEffect;
 import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/screens/dashboard_screen.dart';
 import 'package:diplomka/screens/progress_screen.dart';
 import 'package:diplomka/screens/profile/profile_screen.dart';
 import 'package:diplomka/widgets/dashboard_calendar_sheet.dart';
-import 'package:diplomka/widgets/liquid_glass/liquid_glass_tap_effect.dart' show LiquidGlassTapEffect;
 import 'package:diplomka/widgets/streak_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
@@ -180,10 +182,21 @@ class _DashboardStreakPill extends StatelessWidget {
         onTap: () {
           showDialog(context: context, builder: (_) => const StreakDialog());
         },
-        child: GlassContainer(
-          width: AppSizes.streakPillMinWidthTripleDigit,
-          height: AppSizes.streakPillHeight,
-          child: Center(child: content),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(AppRadii.pill),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 2.5, sigmaY: 2.5),
+            child: Container(
+              width: AppSizes.streakPillMinWidthTripleDigit,
+              height: AppSizes.streakPillHeight,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.25),
+                borderRadius: BorderRadius.circular(AppRadii.pill),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.8), width: 0.5),
+              ),
+              child: Center(child: content),
+            ),
+          ),
         ),
       );
     });
@@ -208,20 +221,31 @@ class _DashboardCalendarPill extends StatelessWidget {
         onTap: () {
           DashboardCalendarSheet.show(context, selectedDate: dc.selectedDate.value, onDateSelected: (date) => DashboardController.to.updateDate(date));
         },
-        child: GlassContainer(
-          width: pillWidth,
-          height: AppSizes.streakPillHeight,
-          child: Center(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.calendar_month, color: AppColors.textSecondary, size: 18),
-                const SizedBox(width: AppSpacing.xs),
-                Text(
-                  label,
-                  style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w700),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(AppRadii.pill),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 2.5, sigmaY: 2.5),
+            child: Container(
+              width: pillWidth,
+              height: AppSizes.streakPillHeight,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.25),
+                borderRadius: BorderRadius.circular(AppRadii.pill),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.8), width: 0.5),
+              ),
+              child: Center(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.calendar_month, color: AppColors.textSecondary, size: 18),
+                    const SizedBox(width: AppSpacing.xs),
+                    Text(
+                      label,
+                      style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w700),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
