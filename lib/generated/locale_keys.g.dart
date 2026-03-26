@@ -372,6 +372,7 @@ abstract class  LocaleKeys {
   static const ingredient_delete_title = 'ingredient_delete_title';
   static const ingredient_delete_message = 'ingredient_delete_message';
   static const ingredient_fraction = 'ingredient_fraction';
+  static const ingredient_decimal = 'ingredient_decimal';
   static const ingredient_small = 'ingredient_small';
   static const ingredient_medium = 'ingredient_medium';
   static const ingredient_large = 'ingredient_large';

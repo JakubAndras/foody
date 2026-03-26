@@ -140,11 +140,25 @@ class CaloriesSummaryCard extends StatelessWidget {
   final EdgeInsetsGeometry? margin;
   final EdgeInsetsGeometry? padding;
   final double? height;
+  final TextEditingController? controller;
 
-  const CaloriesSummaryCard({super.key, required this.label, required this.value, this.delta, this.badge, this.margin, this.padding, this.height});
+  const CaloriesSummaryCard({super.key, required this.label, required this.value, this.delta, this.badge, this.margin, this.padding, this.height, this.controller});
 
   @override
   Widget build(BuildContext context) {
+    final bool editable = controller != null;
+
+    final Widget valueWidget = editable
+        ? Expanded(
+            child: TextField(
+              controller: controller,
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              style: AppTextStyles.stat48.copyWith(color: AppColors.primary),
+              decoration: const InputDecoration(isDense: true, border: InputBorder.none, contentPadding: EdgeInsets.zero),
+            ),
+          )
+        : Text(value, style: AppTextStyles.h1.copyWith(height: 1, color: AppColors.primary));
+
     return Container(
       margin: margin,
       height: height,
@@ -158,22 +172,33 @@ class CaloriesSummaryCard extends StatelessWidget {
             children: [
               Text(label, style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary)),
               const SizedBox(height: AppSpacing.xs),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(value, style: AppTextStyles.h1.copyWith(height: 1, color: AppColors.primary)),
-                  if (delta != null) ...[
-                    const SizedBox(width: AppSpacing.xs),
-                    Container(
-                      height: AppSizes.matchBadgeHeight,
-                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
-                      decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(AppRadii.pill)),
-                      alignment: Alignment.center,
-                      child: Text(delta!, style: AppTextStyles.badge14.copyWith(color: AppColors.onPrimary)),
+              editable
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        valueWidget,
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+                          child: Text(tr(LocaleKeys.common_kcal), style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary)),
+                        ),
+                      ],
+                    )
+                  : Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        valueWidget,
+                        if (delta != null) ...[
+                          const SizedBox(width: AppSpacing.xs),
+                          Container(
+                            height: AppSizes.matchBadgeHeight,
+                            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
+                            decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(AppRadii.pill)),
+                            alignment: Alignment.center,
+                            child: Text(delta!, style: AppTextStyles.badge14.copyWith(color: AppColors.onPrimary)),
+                          ),
+                        ],
+                      ],
                     ),
-                  ],
-                ],
-              ),
             ],
           ),
         ],
@@ -188,11 +213,21 @@ class MacroStatCard extends StatelessWidget {
   final IconData icon;
   final Color iconColor;
   final double? height;
+  final TextEditingController? controller;
 
-  const MacroStatCard({super.key, required this.label, required this.value, required this.icon, required this.iconColor, this.height});
+  const MacroStatCard({super.key, required this.label, required this.value, required this.icon, required this.iconColor, this.height, this.controller});
 
   @override
   Widget build(BuildContext context) {
+    final Widget valueWidget = controller != null
+        ? TextField(
+            controller: controller,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            style: AppTextStyles.h3.copyWith(height: 1.5, color: AppColors.textPrimary),
+            decoration: const InputDecoration(isDense: true, border: InputBorder.none, contentPadding: EdgeInsets.zero),
+          )
+        : Text(value, style: AppTextStyles.title);
+
     return Container(
       width: double.infinity,
       height: height ?? AppSizes.macroCardSize,
@@ -220,9 +255,7 @@ class MacroStatCard extends StatelessWidget {
             children: [
               Icon(icon, size: AppSizes.iconMd, color: Colors.transparent),
               const SizedBox(width: AppSpacing.xs),
-              Expanded(
-                child: Text(value, style: AppTextStyles.title),
-              ),
+              Expanded(child: valueWidget),
             ],
           ),
         ],

@@ -383,6 +383,7 @@
   "ingredient_delete_title": "Delete ingredient?",
   "ingredient_delete_message": "This will remove the ingredient from the meal.",
   "ingredient_fraction": "Fraction",
+  "ingredient_decimal": "Decimal",
   "ingredient_small": "Small",
   "ingredient_medium": "Medium",
   "ingredient_large": "Large",

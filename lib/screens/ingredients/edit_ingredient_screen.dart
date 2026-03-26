@@ -297,7 +297,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
                         const SizedBox(height: AppSpacing.l),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.edge),
-                          child: _EditableCaloriesCard(controller: _caloriesController),
+                          child: CaloriesSummaryCard(label: tr(LocaleKeys.common_calories), value: '', height: AppSizes.caloriesCardHeight, controller: _caloriesController),
                         ),
                         const SizedBox(height: AppSpacing.m),
                         Padding(
@@ -305,8 +305,9 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
                           child: Row(
                             children: [
                               Expanded(
-                                child: _EditableMacroCard(
+                                child: MacroStatCard(
                                   label: tr(LocaleKeys.common_protein),
+                                  value: '',
                                   icon: AppIcons.protein,
                                   iconColor: AppColors.macroProtein,
                                   controller: _proteinController,
@@ -314,8 +315,9 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
                               ),
                               const SizedBox(width: AppSpacing.s),
                               Expanded(
-                                child: _EditableMacroCard(
+                                child: MacroStatCard(
                                   label: tr(LocaleKeys.common_carbs),
+                                  value: '',
                                   icon: AppIcons.carbs,
                                   iconColor: AppColors.warningStrong,
                                   controller: _carbsController,
@@ -323,7 +325,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
                               ),
                               const SizedBox(width: AppSpacing.s),
                               Expanded(
-                                child: _EditableMacroCard(label: tr(LocaleKeys.common_fats), icon: AppIcons.fats, iconColor: AppColors.macroFats, controller: _fatController),
+                                child: MacroStatCard(label: tr(LocaleKeys.common_fats), value: '', icon: AppIcons.fats, iconColor: AppColors.macroFats, controller: _fatController),
                               ),
                             ],
                           ),
@@ -340,12 +342,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
           top: false,
           child: Padding(
             padding: EdgeInsets.fromLTRB(AppSpacing.edge, AppSpacing.s, AppSpacing.edge, AppSpacing.bottom + MediaQuery.of(context).viewInsets.bottom),
-            child: FoodyPrimaryButton(
-              label: tr(LocaleKeys.common_done),
-              gradient: AppGradients.primary,
-              height: AppSizes.buttonHeight,
-              onTap: _isValid ? _handleDone : null,
-            ),
+            child: FoodyPrimaryButton(label: tr(LocaleKeys.common_done), gradient: AppGradients.primary, height: AppSizes.buttonHeight, onTap: _isValid ? _handleDone : null),
           ),
         ),
       ),
@@ -383,100 +380,6 @@ class _AmountInputField extends StatelessWidget {
             borderSide: const BorderSide(color: AppColors.primary, width: AppSizes.dividerThin),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _EditableCaloriesCard extends StatelessWidget {
-  final TextEditingController controller;
-
-  const _EditableCaloriesCard({required this.controller});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: AppSizes.caloriesCardHeight,
-      padding: const EdgeInsets.all(AppSpacing.l),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l), border: AppBorders.screenCard, boxShadow: AppShadows.screenCard),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(tr(LocaleKeys.common_calories), style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary)),
-          const SizedBox(height: AppSpacing.xs),
-          Expanded(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: controller,
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    style: AppTextStyles.stat48.copyWith(color: AppColors.primary),
-                    decoration: const InputDecoration(isDense: true, border: InputBorder.none, contentPadding: EdgeInsets.zero),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.xs),
-                  child: Text(tr(LocaleKeys.common_kcal), style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary)),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _EditableMacroCard extends StatelessWidget {
-  final String label;
-  final TextEditingController controller;
-  final IconData icon;
-  final Color iconColor;
-
-  const _EditableMacroCard({required this.label, required this.controller, required this.icon, required this.iconColor});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: AppSizes.macroCardSize,
-      padding: const EdgeInsets.all(AppSpacing.s),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l), border: AppBorders.screenCard, boxShadow: AppShadows.screenCard),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(icon, size: AppSizes.iconMd, color: iconColor),
-              const SizedBox(width: AppSpacing.xs),
-              Expanded(
-                child: Text(
-                  label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary),
-                ),
-              ),
-            ],
-          ),
-          const Spacer(),
-          Row(
-            children: [
-              Icon(icon, size: AppSizes.iconMd, color: Colors.transparent),
-              const SizedBox(width: AppSpacing.xs),
-              Expanded(
-                child: TextField(
-                  controller: controller,
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  style: AppTextStyles.h3.copyWith(height: 1.5, color: AppColors.textPrimary),
-                  decoration: const InputDecoration(isDense: true, border: InputBorder.none, contentPadding: EdgeInsets.zero),
-                ),
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }

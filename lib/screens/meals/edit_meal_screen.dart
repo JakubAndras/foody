@@ -71,11 +71,9 @@ class _EditMealScreenState extends State<EditMealScreen> {
   ImageProvider? _heroImage;
   double _topPullExtent = 0;
   String _mealtime = 'Lunch'; // internal key, not displayed directly
-  String _amountLabel = '400 x 1 g';
+  double _amountValue = 1;
   bool _isSaving = false;
   bool _isDeleting = false;
-
-  List<String> get _portionOptions => [tr(LocaleKeys.meal_portion_300g), tr(LocaleKeys.meal_portion_150g), tr(LocaleKeys.meal_portion_100g), tr(LocaleKeys.meal_portion_1g)];
 
   static const List<String> _mealtimeKeys = ['Breakfast', 'Morning snack', 'Lunch', 'Afternoon snack', 'Dinner', 'Second dinner'];
 
@@ -103,7 +101,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
     _selectedDate = DateTime(initialDate.year, initialDate.month, initialDate.day);
     _meal = _meal.copyWith(timestamp: _applyDate(_meal.timestamp, _selectedDate));
     _mealtime = _mealtimeFromTimestamp(_meal.timestamp);
-    _amountLabel = _initialAmountLabel();
+    _amountValue = _initialAmountValue();
     _ingredients = List<Ingredient>.from(_meal.ingredients);
     _initialName = _meal.name;
     _initialIngredients = List<Ingredient>.from(_meal.ingredients);
@@ -245,15 +243,29 @@ class _EditMealScreenState extends State<EditMealScreen> {
     return _meal.copyWith(ingredients: List<Ingredient>.from(_ingredients), timestamp: _applyDate(_meal.timestamp, date));
   }
 
-  String _initialAmountLabel() {
+  double _initialAmountValue() {
     final totalWeight = _meal.ingredients.fold<double>(0, (sum, ingredient) => sum + ingredient.weight);
-    if (totalWeight <= 0) {
-      return _portionOptions.first;
+    return totalWeight > 0 ? totalWeight : 1;
+  }
+
+  static const List<String> _fractionLabels = ['\u2013', '\u215B', '\u00BC', '\u2153', '\u215C', '\u00BD', '\u2154', '\u215D', '\u00BE', '\u215E'];
+  static const List<double> _fractionValues = [0, 0.125, 0.25, 1 / 3, 0.375, 0.5, 2 / 3, 0.625, 0.75, 0.875];
+
+  String get _amountLabel {
+    final whole = _amountValue.truncate();
+    final frac = _amountValue - whole;
+    if (frac < 0.001) return '$whole';
+    int bestIndex = 0;
+    double bestDiff = double.infinity;
+    for (int i = 1; i < _fractionValues.length; i++) {
+      final diff = (frac - _fractionValues[i]).abs();
+      if (diff < bestDiff) {
+        bestDiff = diff;
+        bestIndex = i;
+      }
     }
-    if ((totalWeight - totalWeight.roundToDouble()).abs() < 0.01) {
-      return '${totalWeight.toStringAsFixed(0)} g';
-    }
-    return '${totalWeight.toStringAsFixed(1)} g';
+    if (whole == 0) return _fractionLabels[bestIndex];
+    return '$whole${_fractionLabels[bestIndex]}';
   }
 
   String _mealtimeFromTimestamp(DateTime timestamp) {
@@ -546,23 +558,11 @@ class _EditMealScreenState extends State<EditMealScreen> {
   void _openPortionPicker() {
     if (_isBusy) return;
     _ensureEditMode();
-    showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xl))),
-      clipBehavior: Clip.antiAlias,
-      showDragHandle: false,
-      builder: (context) => SafeArea(
-        top: false,
-        child: PickerSheet(
-          options: _portionOptions,
-          selectedIndex: _portionOptions.indexOf(_amountLabel).clamp(0, _portionOptions.length - 1),
-          onSelected: (index) {
-            setState(() => _amountLabel = _portionOptions[index]);
-            Navigator.of(context).pop();
-          },
-        ),
-      ),
+    AmountPickerSheet.show(
+      context,
+      title: _mealTitle,
+      initialValue: _amountValue,
+      onChanged: (value) => setState(() => _amountValue = value),
     );
   }
 

@@ -383,6 +383,7 @@
   "ingredient_delete_title": "Smazat ingredienci?",
   "ingredient_delete_message": "Ingredience bude odstraněna z jídla.",
   "ingredient_fraction": "Zlomek",
+  "ingredient_decimal": "Desetinné",
   "ingredient_small": "Malá",
   "ingredient_medium": "Střední",
   "ingredient_large": "Velká",
