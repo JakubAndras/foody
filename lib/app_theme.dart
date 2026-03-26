@@ -304,7 +304,10 @@ class AppOpacities {
 }
 
 class AppGradients {
-  static const LinearGradient primary = LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [AppColors.primary, AppColors.primaryMuted]);
+  static const LinearGradient primary = darkDiagonal;
+  static const LinearGradient justBlack = LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [AppColors.primary, AppColors.primary]);
+  static const LinearGradient darkLinear = LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [AppColors.primary, AppColors.primaryMuted]);
+  static const LinearGradient darkDiagonal = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF0D0D0D), Color(0xFF1D1D1D)], stops: [0, 1.0]);
 
   static const LinearGradient askAiPrimary = LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [AppColors.violet, AppColors.violetDark]);
 

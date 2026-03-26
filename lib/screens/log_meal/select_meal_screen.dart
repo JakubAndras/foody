@@ -327,7 +327,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                 child: SafeArea(
                   bottom: false,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
                     child: SizedBox(
                       height: AppSizes.topBarHeight,
                       child: Row(
@@ -388,20 +388,29 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                   ),
                 ),
               )
-            : CustomGlassAppBar(
-                //leadingIcon: Icons.close,
-                leadingIconSize: AppSizes.iconLg,
-                onBack: () => Get.back(),
-                titleWidget: Text(tr(LocaleKeys.meal_select_title), style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600, letterSpacing: -0.3125, color: AppColors.primary)),
-                actions: [
-                  CustomGlassIconButtonGroup(
-                    iconSize: AppSizes.iconLg,
-                    items: [
-                      (icon: Icons.search_rounded, onPressed: _toggleSearch),
-                      (icon: Icons.add_rounded, onPressed: _openManualLog),
-                    ],
+            : PreferredSize(
+                preferredSize: const Size.fromHeight(AppSizes.topBarHeight),
+                child: SafeArea(
+                  bottom: false,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
+                    child: CustomGlassAppBar(
+                      //leadingIcon: Icons.close,
+                      leadingIconSize: AppSizes.iconLg,
+                      onBack: () => Get.back(),
+                      titleWidget: Text(tr(LocaleKeys.meal_select_title), style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600, letterSpacing: -0.3125, color: AppColors.primary)),
+                      actions: [
+                        CustomGlassIconButtonGroup(
+                          iconSize: AppSizes.iconLg,
+                          items: [
+                            (icon: Icons.search_rounded, onPressed: _toggleSearch),
+                            (icon: Icons.add_rounded, onPressed: _openManualLog),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ],
+                ),
               ),
         body: LiquidGlassBackground(
           child: Obx(() {

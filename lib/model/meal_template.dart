@@ -33,6 +33,7 @@ class MealTemplate {
       ingredients: ingredients,
       timestamp: timestamp,
       photoPath: photoPath,
+      isFavorite: isFavorite,
     );
   }
 

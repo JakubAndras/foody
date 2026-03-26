@@ -547,15 +547,24 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
         extendBodyBehindAppBar: true,
         backgroundColor: AppColors.background,
         resizeToAvoidBottomInset: false,
-        appBar: CustomGlassAppBar(
-          leadingIcon: Icons.close,
-          onBack: () => Navigator.of(context).maybePop(),
-          actions: [
-            CustomGlassIconButtonGroup(items: [
-              (icon: Icons.translate_outlined, onPressed: () => _showVoiceLanguageSheet(context)),
-              (icon: Icons.help_outline, onPressed: () => _showVoiceTips(context)),
-            ]),
-          ],
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(AppSizes.topBarHeight),
+          child: SafeArea(
+            bottom: false,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
+              child: CustomGlassAppBar(
+                leadingIcon: Icons.close,
+                onBack: () => Navigator.of(context).maybePop(),
+                actions: [
+                  CustomGlassIconButtonGroup(items: [
+                    (icon: Icons.translate_outlined, onPressed: () => _showVoiceLanguageSheet(context)),
+                    (icon: Icons.help_outline, onPressed: () => _showVoiceTips(context)),
+                  ]),
+                ],
+              ),
+            ),
+          ),
         ),
         body: LiquidGlassBackground(
           child: SafeArea(

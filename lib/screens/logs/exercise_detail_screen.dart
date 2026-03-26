@@ -58,13 +58,14 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     final next = !_exercise.isFavorite;
     setState(() => _exercise = _exercise.copyWith(isFavorite: next));
 
-    if (widget.openedFromLogScreen) {
-      final normalized = ExerciseTemplate.normalize(_exercise.name);
-      final template = ExerciseTemplateRepository.to.allTemplates.firstWhereOrNull((t) => t.normalizedName == normalized);
-      if (template != null) await ExerciseTemplateRepository.to.setFavorite(template, next);
-      return;
-    }
+    // Always sync to template (both paths need this)
+    final normalized = ExerciseTemplate.normalize(_exercise.name);
+    final template = ExerciseTemplateRepository.to.allTemplates.firstWhereOrNull((t) => t.normalizedName == normalized);
+    if (template != null) await ExerciseTemplateRepository.to.setFavorite(template, next);
 
+    if (widget.openedFromLogScreen) return;
+
+    // Dashboard path: also update the Exercise record
     if (_exercise.id == null || _exercise.dayRecordId == null) return;
     await DayRecordController.to.setExerciseFavorite(exercise: _exercise, isFavorite: next);
   }
@@ -210,8 +211,6 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
   }
 
   Future<void> _handleDeleteExercise() async {
-    if (_exercise.id == null) return;
-
     final confirmed = await showConfirmDeleteDialog(
       context: context,
       title: tr(LocaleKeys.exercise_delete_title),
@@ -220,7 +219,16 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     );
     if (confirmed != true || !mounted) return;
 
-    await DayRecordController.to.deleteExercise(_exercise);
+    if (widget.openedFromLogScreen) {
+      // Log screen path: delete the template
+      final normalized = ExerciseTemplate.normalize(_exercise.name);
+      final template = ExerciseTemplateRepository.to.allTemplates.firstWhereOrNull((t) => t.normalizedName == normalized);
+      if (template != null) await ExerciseTemplateRepository.to.deleteTemplate(template);
+    } else {
+      // Dashboard path: delete the exercise record
+      if (_exercise.id == null) return;
+      await DayRecordController.to.deleteExercise(_exercise);
+    }
     if (!mounted) return;
     Get.back(result: true);
   }

@@ -76,16 +76,19 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 0),
       child: Column(
         children: [
-          CustomGlassAppBar(
-            title: tr(LocaleKeys.exercise_log_title),
-            onBack: () => Navigator.of(context).maybePop(),
-            actions: [
-              CustomGlassIconButton(
-                icon: Icons.add,
-                iconSize: AppSizes.iconMd,
-                onPressed: () => Get.to(() => const AddExerciseScreen()),
-              ),
-            ],
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
+            child: CustomGlassAppBar(
+              title: tr(LocaleKeys.exercise_log_title),
+              onBack: () => Navigator.of(context).maybePop(),
+              actions: [
+                CustomGlassIconButton(
+                  icon: Icons.add,
+                  iconSize: AppSizes.iconMd,
+                  onPressed: () => Get.to(() => const AddExerciseScreen()),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: AppSpacing.l),
           Padding(

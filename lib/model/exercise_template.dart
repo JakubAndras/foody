@@ -27,6 +27,7 @@ class ExerciseTemplate {
       timestamp: timestamp,
       durationMinutes: durationMinutes,
       caloriesBurned: caloriesBurned,
+      isFavorite: isFavorite,
     );
   }
 

@@ -398,13 +398,14 @@ class _EditMealScreenState extends State<EditMealScreen> {
     final next = !_meal.isFavorite;
     setState(() => _meal = _meal.copyWith(isFavorite: next));
 
-    if (widget.openedFromLogScreen) {
-      final normalized = MealTemplate.normalize(_meal.name);
-      final template = MealTemplateRepository.to.allTemplates.firstWhereOrNull((t) => t.normalizedName == normalized);
-      if (template != null) await MealTemplateRepository.to.setFavorite(template, next);
-      return;
-    }
+    // Always sync to template (both paths need this)
+    final normalized = MealTemplate.normalize(_meal.name);
+    final template = MealTemplateRepository.to.allTemplates.firstWhereOrNull((t) => t.normalizedName == normalized);
+    if (template != null) await MealTemplateRepository.to.setFavorite(template, next);
 
+    if (widget.openedFromLogScreen) return;
+
+    // Dashboard path: also update the Meal record
     if (_meal.id == null || _meal.dayRecordId == null) return;
     await DayRecordController.to.setMealFavorite(meal: _meal, isFavorite: next);
   }
