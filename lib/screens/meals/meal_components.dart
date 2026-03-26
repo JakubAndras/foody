@@ -149,7 +149,7 @@ class CaloriesSummaryCard extends StatelessWidget {
       margin: margin,
       height: height,
       padding: padding ?? const EdgeInsets.all(AppSpacing.l),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l), boxShadow: AppShadows.control),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l), border: AppBorders.screenCard, boxShadow: AppShadows.screenCard),
       child: Stack(
         children: [
           if (badge != null) Positioned(right: 0, top: 0, child: badge!),
@@ -161,7 +161,7 @@ class CaloriesSummaryCard extends StatelessWidget {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(value, style: AppTextStyles.stat48.copyWith(color: AppColors.primary)),
+                  Text(value, style: AppTextStyles.h1.copyWith(height: 1, color: AppColors.primary)),
                   if (delta != null) ...[
                     const SizedBox(width: AppSpacing.xs),
                     Container(
@@ -196,8 +196,8 @@ class MacroStatCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: height ?? AppSizes.macroCardSize,
-      padding: const EdgeInsets.all(AppSpacing.l),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l), boxShadow: AppShadows.control),
+      padding: const EdgeInsets.all(AppSpacing.s),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l), border: AppBorders.screenCard, boxShadow: AppShadows.screenCard),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -210,13 +210,21 @@ class MacroStatCard extends StatelessWidget {
                   label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.caption12.copyWith(color: AppColors.textSecondary),
+                  style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary),
                 ),
               ),
             ],
           ),
           const Spacer(),
-          Text(value, style: AppTextStyles.h3.copyWith(height: 1.5, color: AppColors.primary)),
+          Row(
+            children: [
+              Icon(icon, size: AppSizes.iconMd, color: Colors.transparent),
+              const SizedBox(width: AppSpacing.xs),
+              Expanded(
+                child: Text(value, style: AppTextStyles.title),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -242,8 +250,8 @@ class MealRecordCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.l),
-        border: Border.all(color: AppColors.separator),
-        boxShadow: AppShadows.control,
+        border: AppBorders.screenCard ?? Border.all(color: AppColors.separator),
+        boxShadow: AppShadows.screenCard,
       ),
       child: Column(
         children: [
@@ -313,7 +321,7 @@ class IngredientRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final background = highlighted ? AppColors.warningSurface : AppColors.surface;
-    final border = highlighted ? AppColors.warningStrong : Colors.transparent;
+    final border = highlighted ? AppColors.warningStrong : AppColors.outline;
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(AppRadii.l),
@@ -410,7 +418,10 @@ class _MacroDotLabel extends StatelessWidget {
           ),
         ),
         const SizedBox(width: AppSpacing.xxs),
-        Text(value, style: AppTextStyles.label11.copyWith(fontWeight: FontWeight.w500, color: AppColors.textTertiary, letterSpacing: 0.0645)),
+        Text(
+          value,
+          style: AppTextStyles.label11.copyWith(fontWeight: FontWeight.w500, color: AppColors.textTertiary, letterSpacing: 0.0645),
+        ),
       ],
     );
   }
@@ -555,7 +566,10 @@ class GlassActionSheet extends StatelessWidget {
                             Icon(item.icon, color: item.color ?? AppColors.textPrimary, size: AppSizes.iconMd),
                             const SizedBox(width: AppSpacing.s),
                             Expanded(
-                              child: Text(item.label, style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600, height: 1.75, color: item.color ?? AppColors.textPrimary, letterSpacing: -0.4492)),
+                              child: Text(
+                                item.label,
+                                style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600, height: 1.75, color: item.color ?? AppColors.textPrimary, letterSpacing: -0.4492),
+                              ),
                             ),
                           ],
                         ),
@@ -593,7 +607,7 @@ class SyncCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.m),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.xl), boxShadow: AppShadows.button),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.xl), border: AppBorders.screenCard, boxShadow: AppShadows.screenCard),
       child: Column(
         children: [
           Row(

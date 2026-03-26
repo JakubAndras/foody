@@ -398,7 +398,7 @@ class _EditableCaloriesCard extends StatelessWidget {
     return Container(
       height: AppSizes.caloriesCardHeight,
       padding: const EdgeInsets.all(AppSpacing.l),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l), boxShadow: AppShadows.control),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l), border: AppBorders.screenCard, boxShadow: AppShadows.screenCard),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -442,8 +442,8 @@ class _EditableMacroCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: AppSizes.macroCardSize,
-      padding: const EdgeInsets.all(AppSpacing.l),
-      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l), boxShadow: AppShadows.control),
+      padding: const EdgeInsets.all(AppSpacing.s),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l), border: AppBorders.screenCard, boxShadow: AppShadows.screenCard),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -456,7 +456,7 @@ class _EditableMacroCard extends StatelessWidget {
                   label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.caption12.copyWith(color: AppColors.textSecondary),
+                  style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary),
                 ),
               ),
             ],
@@ -464,15 +464,16 @@ class _EditableMacroCard extends StatelessWidget {
           const Spacer(),
           Row(
             children: [
+              Icon(icon, size: AppSizes.iconMd, color: Colors.transparent),
+              const SizedBox(width: AppSpacing.xs),
               Expanded(
                 child: TextField(
                   controller: controller,
                   keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  style: AppTextStyles.h3.copyWith(height: 1.5, color: AppColors.primary),
+                  style: AppTextStyles.h3.copyWith(height: 1.5, color: AppColors.textPrimary),
                   decoration: const InputDecoration(isDense: true, border: InputBorder.none, contentPadding: EdgeInsets.zero),
                 ),
               ),
-              Text(tr(LocaleKeys.common_g), style: AppTextStyles.caption12.copyWith(color: AppColors.textSecondary)),
             ],
           ),
         ],

@@ -115,7 +115,7 @@ class EditIngredientRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final background = highlighted ? AppColors.warningSurface : AppColors.surface;
-    final border = highlighted ? AppColors.warningStrong : Colors.transparent;
+    final border = highlighted ? AppColors.warningStrong : AppColors.outline;
 
     return InkWell(
       onTap: onTap,

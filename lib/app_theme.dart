@@ -231,8 +231,8 @@ class AppSizes {
   static const double exerciseImageSize = 94;
   static const double mealDashboardImageSize = 94;
   static const double mealHeroHeight = 300;
-  static const double macroCardSize = 125.34;
-  static const double caloriesCardHeight = 136;
+  static const double macroCardSize = 72;
+  static const double caloriesCardHeight = 112;
   static const double actionSheetWidth = 220;
   static const double emptyStateHeight = 168;
   static const double emptyStateIconSize = 64;
