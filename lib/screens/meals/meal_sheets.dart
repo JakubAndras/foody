@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/widgets/sheet_drag_handle.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/widgets/picker_column.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -251,13 +252,6 @@ class _AmountPickerSheetState extends State<AmountPickerSheet> {
 
   double get _currentValue => _wholeIndex + _fractionValues[_fractionIndex];
 
-  String get _displayValue {
-    final whole = _wholeValues[_wholeIndex];
-    if (_fractionIndex == 0) return whole;
-    if (_wholeIndex == 0) return _fractionLabels[_fractionIndex];
-    return '$whole${_fractionLabels[_fractionIndex]}';
-  }
-
   /// When whole is 0, hide the "–" option so the user can't pick 0 + nothing.
   List<String> get _activeFractionLabels => _wholeIndex == 0 ? _fractionLabels.sublist(1) : _fractionLabels;
 
@@ -284,13 +278,7 @@ class _AmountPickerSheetState extends State<AmountPickerSheet> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const SizedBox(height: AppSpacing.xxs),
-                  Center(
-                    child: Container(
-                      width: 36,
-                      height: 4,
-                      decoration: BoxDecoration(color: AppColors.greyLight3, borderRadius: BorderRadius.circular(42)),
-                    ),
-                  ),
+                  const SheetDragHandle(color: AppColors.greyLight3),
                   const SizedBox(height: AppSpacing.s),
                   _buildHeader(),
                   Padding(
@@ -369,6 +357,128 @@ class _AmountPickerSheetState extends State<AmountPickerSheet> {
       ],
     );
   }
+}
+
+class MealtimePickerSheet extends StatefulWidget {
+  final List<String> options;
+  final int initialIndex;
+  final ValueChanged<int>? onChanged;
+
+  const MealtimePickerSheet({super.key, required this.options, required this.initialIndex, this.onChanged});
+
+  static void show(BuildContext context, {required List<String> options, required int initialIndex, required ValueChanged<int> onChanged}) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      barrierColor: AppColors.overlayDark,
+      isScrollControlled: true,
+      builder: (_) => MealtimePickerSheet(options: options, initialIndex: initialIndex, onChanged: onChanged),
+    );
+  }
+
+  @override
+  State<MealtimePickerSheet> createState() => _MealtimePickerSheetState();
+}
+
+class _MealtimePickerSheetState extends State<MealtimePickerSheet> {
+  late int _selectedIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialIndex.clamp(0, widget.options.length - 1);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(0),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadii.xxl)),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+          child: CustomPaint(
+            painter: const _GlassPickerSheetPainter(),
+            child: SafeArea(
+              top: false,
+              bottom: false,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: AppSpacing.xxs),
+                  const SheetDragHandle(color: AppColors.greyLight3),
+                  const SizedBox(height: AppSpacing.s),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+                    child: Row(
+                      children: [
+                        Text(
+                          tr(LocaleKeys.meal_mealtime),
+                          style: AppTextStyles.title17.copyWith(color: AppColors.black, fontWeight: FontWeight.w700),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl * 2),
+                    child: SizedBox(
+                      height: 200,
+                      child: PickerColumn(
+                        values: widget.options,
+                        selectedIndex: _selectedIndex,
+                        height: 200,
+                        selectionHighlightBorderRadius: AppRadii.l,
+                        onSelected: (index) {
+                          setState(() => _selectedIndex = index);
+                          widget.onChanged?.call(index);
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xxl),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _GlassPickerSheetPainter extends CustomPainter {
+  const _GlassPickerSheetPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rrect = RRect.fromLTRBAndCorners(
+      0, 0, size.width, size.height,
+      topLeft: Radius.circular(AppRadii.xxl),
+      topRight: Radius.circular(AppRadii.xxl),
+    );
+
+    canvas.drawRRect(rrect, Paint()..color = const Color(0xFFFFFFFF));
+
+    final highlightRect = Rect.fromLTWH(size.width * 0.1, 0, size.width * 0.8, size.height * 0.12);
+    canvas.drawRRect(
+      RRect.fromRectAndCorners(highlightRect, topLeft: Radius.circular(AppRadii.xxl), topRight: Radius.circular(AppRadii.xxl)),
+      Paint()
+        ..shader = const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x30FFFFFF), Color(0x00FFFFFF)]).createShader(highlightRect)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2.0),
+    );
+
+    canvas.drawRRect(
+      rrect.deflate(0.4),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 0.8
+        ..color = AppColors.white1,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class _AmountSheetPainter extends CustomPainter {

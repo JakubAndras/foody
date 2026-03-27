@@ -1,4 +1,5 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/widgets/sheet_drag_handle.dart';
 import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/screens/main_screen.dart';
@@ -139,13 +140,7 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: Container(
-                width: 36,
-                height: 4,
-                decoration: BoxDecoration(color: AppColors.outline, borderRadius: BorderRadius.circular(AppRadii.pill)),
-              ),
-            ),
+            const SheetDragHandle(color: AppColors.outline),
             const SizedBox(height: AppSpacing.l),
             Text(tr(LocaleKeys.scan_preview_tips_title), style: AppTextStyles.title18.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: AppSpacing.m),

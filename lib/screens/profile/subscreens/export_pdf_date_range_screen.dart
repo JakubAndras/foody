@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/widgets/sheet_drag_handle.dart';
 import 'package:diplomka/controller/export_controller.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
@@ -224,11 +225,7 @@ class _CalendarRangeSheetState extends State<_CalendarRangeSheet> {
         children: [
           // ── Handle bar ──
           const SizedBox(height: AppSpacing.s),
-          Container(
-            width: 36,
-            height: 4,
-            decoration: BoxDecoration(color: AppColors.outline, borderRadius: BorderRadius.circular(2)),
-          ),
+          const SheetDragHandle(color: AppColors.outline),
 
           // ── Header ──
           Padding(

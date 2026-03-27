@@ -8,6 +8,7 @@ import 'package:diplomka/screens/ingredients/edit_ingredient_screen.dart';
 import 'package:diplomka/screens/meals/fix_result_screen.dart';
 import 'package:diplomka/screens/meals/report_meal_screen.dart';
 import 'package:diplomka/screens/meals/meal_components.dart';
+import 'package:diplomka/screens/meals/meal_date_picker_sheet.dart';
 import 'package:diplomka/screens/meals/meal_sheets.dart';
 import 'package:diplomka/widgets/confirm_delete_dialog.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
@@ -666,66 +667,33 @@ class _EditMealScreenState extends State<EditMealScreen> {
   void _openMealtimePicker() {
     if (_isBusy) return;
     _ensureEditMode();
-    showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xl))),
-      clipBehavior: Clip.antiAlias,
-      showDragHandle: false,
-      builder: (context) => SafeArea(
-        top: false,
-        child: PickerSheet(
-          options: _mealtimeDisplayOptions,
-          selectedIndex: _mealtimeKeys.indexOf(_mealtime).clamp(0, _mealtimeKeys.length - 1),
-          onSelected: (index) {
-            final selectedMealtime = _mealtimeKeys[index];
-            final selectedTime = _timeOfDayForMealtime(selectedMealtime);
-            setState(() {
-              _mealtime = selectedMealtime;
-              _meal = _meal.copyWith(timestamp: DateTime(_meal.timestamp.year, _meal.timestamp.month, _meal.timestamp.day, selectedTime.hour, selectedTime.minute));
-            });
-            Navigator.of(context).pop();
-          },
-        ),
-      ),
+    MealtimePickerSheet.show(
+      context,
+      options: _mealtimeDisplayOptions,
+      initialIndex: _mealtimeKeys.indexOf(_mealtime).clamp(0, _mealtimeKeys.length - 1),
+      onChanged: (index) {
+        final selectedMealtime = _mealtimeKeys[index];
+        final selectedTime = _timeOfDayForMealtime(selectedMealtime);
+        setState(() {
+          _mealtime = selectedMealtime;
+          _meal = _meal.copyWith(timestamp: DateTime(_meal.timestamp.year, _meal.timestamp.month, _meal.timestamp.day, selectedTime.hour, selectedTime.minute));
+        });
+      },
     );
   }
 
   void _openDatePicker() {
     if (_isBusy) return;
     _ensureEditMode();
-    showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xl))),
-      clipBehavior: Clip.antiAlias,
-      showDragHandle: false,
-      isScrollControlled: true,
-      builder: (context) {
-        DateTime displayMonth = DateTime(_selectedDate.year, _selectedDate.month);
-        return SafeArea(
-          top: false,
-          child: StatefulBuilder(
-            builder: (context, setSheetState) => DatePickerCard(
-              month: displayMonth,
-              selectedDate: _selectedDate,
-              onPrevMonth: () => setSheetState(() {
-                displayMonth = DateTime(displayMonth.year, displayMonth.month - 1);
-              }),
-              onNextMonth: () => setSheetState(() {
-                displayMonth = DateTime(displayMonth.year, displayMonth.month + 1);
-              }),
-              onSelected: (date) {
-                final normalizedDate = DateTime(date.year, date.month, date.day);
-                setState(() {
-                  _selectedDate = normalizedDate;
-                  _meal = _meal.copyWith(timestamp: _applyDate(_meal.timestamp, normalizedDate));
-                });
-                Navigator.of(context).pop();
-              },
-            ),
-          ),
-        );
+    MealDatePickerSheet.show(
+      context,
+      selectedDate: _selectedDate,
+      onDateSelected: (date) {
+        final normalizedDate = DateTime(date.year, date.month, date.day);
+        setState(() {
+          _selectedDate = normalizedDate;
+          _meal = _meal.copyWith(timestamp: _applyDate(_meal.timestamp, normalizedDate));
+        });
       },
     );
   }

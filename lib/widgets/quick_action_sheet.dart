@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/widgets/sheet_drag_handle.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -64,12 +65,7 @@ class QuickActionSheet extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (!AppQuickAction.useGlassCards)
-            Container(
-              width: 36,
-              height: 4,
-              decoration: BoxDecoration(color: AppColors.calendarDarkMuted, borderRadius: BorderRadius.circular(2)),
-            ),
+          if (!AppQuickAction.useGlassCards) const SheetDragHandle(),
           if (!AppQuickAction.useGlassCards) const SizedBox(height: AppSpacing.m),
           _buildGridRow(
             left: _QuickActionTile(

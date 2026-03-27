@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/widgets/sheet_drag_handle.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/model/day_record.dart';
@@ -236,11 +237,7 @@ class ProfileScreen extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  width: 36,
-                  height: 4,
-                  decoration: BoxDecoration(color: AppColors.textTertiary.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(2)),
-                ),
+                SheetDragHandle(color: AppColors.textTertiary.withValues(alpha: 0.3)),
                 const SizedBox(height: AppSpacing.m),
                 Row(
                   children: [

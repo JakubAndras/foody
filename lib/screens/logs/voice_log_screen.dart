@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'dart:async';
 
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/widgets/sheet_drag_handle.dart';
 import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/screens/main_screen.dart';
@@ -438,11 +439,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  width: 36,
-                  height: 4,
-                  decoration: BoxDecoration(color: AppColors.textTertiary.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(2)),
-                ),
+                SheetDragHandle(color: AppColors.textTertiary.withValues(alpha: 0.3)),
                 const SizedBox(height: AppSpacing.m),
                 Row(
                   children: [
@@ -513,13 +510,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: Container(
-                width: 36,
-                height: 4,
-                decoration: BoxDecoration(color: AppColors.outline, borderRadius: BorderRadius.circular(AppRadii.pill)),
-              ),
-            ),
+            const SheetDragHandle(color: AppColors.outline),
             const SizedBox(height: AppSpacing.l),
             Text(tr(LocaleKeys.voice_tips_title), style: AppTextStyles.title18.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: AppSpacing.m),
