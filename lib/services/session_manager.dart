@@ -36,7 +36,8 @@ class SessionManager extends GetxService {
   final RxBool burnedCaloriesEnabled = true.obs;
   final RxBool rolloverCaloriesEnabled = false.obs;
   final RxBool autoAdjustMacrosEnabled = true.obs;
-  final RxBool sectionHeaderPaddingEnabled = false.obs;
+  final RxBool editableNutrientsEnabled1 = false.obs;
+  final RxBool sectionHeaderPaddingEnabled = true.obs;
 
   Future<void> onAppInit() async {
     themeModeIndex.value = ThemeMode.values[await SharedPreferencesService.to.getInt(key: themeModeKey) ?? 0];

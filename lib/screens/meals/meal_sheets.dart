@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/widgets/sheet_drag_handle.dart';
+import 'package:diplomka/widgets/sheet_top_bar.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/widgets/picker_column.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -280,7 +281,7 @@ class _AmountPickerSheetState extends State<AmountPickerSheet> {
                   const SizedBox(height: AppSpacing.xxs),
                   const SheetDragHandle(color: AppColors.greyLight3),
                   const SizedBox(height: AppSpacing.s),
-                  _buildHeader(),
+                  SheetTopBar(title: tr(LocaleKeys.ingredient_amount), onClose: () => Navigator.of(context).pop()),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl * 2),
                     child: SizedBox(height: 200, child: _buildPicker()),
@@ -291,22 +292,6 @@ class _AmountPickerSheetState extends State<AmountPickerSheet> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-      child: Row(
-        children: [
-          Text(
-            tr(LocaleKeys.ingredient_amount),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: AppTextStyles.title17.copyWith(color: AppColors.black, fontWeight: FontWeight.w700),
-          ),
-        ],
       ),
     );
   }
@@ -409,17 +394,7 @@ class _MealtimePickerSheetState extends State<MealtimePickerSheet> {
                   const SizedBox(height: AppSpacing.xxs),
                   const SheetDragHandle(color: AppColors.greyLight3),
                   const SizedBox(height: AppSpacing.s),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-                    child: Row(
-                      children: [
-                        Text(
-                          tr(LocaleKeys.meal_mealtime),
-                          style: AppTextStyles.title17.copyWith(color: AppColors.black, fontWeight: FontWeight.w700),
-                        ),
-                      ],
-                    ),
-                  ),
+                  SheetTopBar(title: tr(LocaleKeys.meal_mealtime), onClose: () => Navigator.of(context).pop()),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl * 2),
                     child: SizedBox(
@@ -491,8 +466,8 @@ class _AmountSheetPainter extends CustomPainter {
       0,
       size.width,
       size.height,
-      topLeft: Radius.circular(AppRadii.xl),
-      topRight: Radius.circular(AppRadii.xl),
+      topLeft: Radius.circular(AppRadii.xxl),
+      topRight: Radius.circular(AppRadii.xxl),
       bottomRight: Radius.circular(AppRadii.xxl + 10),
       bottomLeft: Radius.circular(AppRadii.xxl + 10),
     );
@@ -501,7 +476,7 @@ class _AmountSheetPainter extends CustomPainter {
 
     final highlightRect = Rect.fromLTWH(size.width * 0.1, 0, size.width * 0.8, size.height * 0.12);
     canvas.drawRRect(
-      RRect.fromRectAndCorners(highlightRect, topLeft: Radius.circular(AppRadii.xl), topRight: Radius.circular(AppRadii.xl)),
+      RRect.fromRectAndCorners(highlightRect, topLeft: Radius.circular(AppRadii.xxl), topRight: Radius.circular(AppRadii.xxl)),
       Paint()
         ..shader = const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x30FFFFFF), Color(0x00FFFFFF)]).createShader(highlightRect)
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2.0),

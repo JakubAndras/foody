@@ -50,6 +50,7 @@ abstract class  LocaleKeys {
   static const common_ingredients = 'common_ingredients';
   static const common_today = 'common_today';
   static const common_back_to_today = 'common_back_to_today';
+  static const common_back_to_original_date = 'common_back_to_original_date';
   static const common_food_logged = 'common_food_logged';
   static const common_exercise_logged = 'common_exercise_logged';
   static const common_view = 'common_view';
@@ -358,6 +359,10 @@ abstract class  LocaleKeys {
   static const meal_duplicate_to_today = 'meal_duplicate_to_today';
   static const meal_duplicated = 'meal_duplicated';
   static const meal_duplicated_to = 'meal_duplicated_to';
+  static const meal_copy_to = 'meal_copy_to';
+  static const meal_copy_to_dates = 'meal_copy_to_dates';
+  static const meal_copied_to_dates = 'meal_copied_to_dates';
+  static const meal_select_dates = 'meal_select_dates';
   static const exercise_duplicate_to_today = 'exercise_duplicate_to_today';
   static const exercise_duplicated = 'exercise_duplicated';
   static const exercise_duplicated_to = 'exercise_duplicated_to';
@@ -601,6 +606,7 @@ abstract class  LocaleKeys {
   static const fix_result_updating = 'fix_result_updating';
   static const fix_result_update = 'fix_result_update';
   static const fix_result_add_details = 'fix_result_add_details';
+  static const fix_result_tip_body = 'fix_result_tip_body';
   static const report_meal_title = 'report_meal_title';
   static const report_meal_hint = 'report_meal_hint';
   static const report_meal_example_prefix = 'report_meal_example_prefix';
@@ -721,6 +727,8 @@ abstract class  LocaleKeys {
   static const health_sync_error = 'health_sync_error';
   static const meal_mealtime = 'meal_mealtime';
   static const meal_date = 'meal_date';
+  static const meal_move_date_title = 'meal_move_date_title';
+  static const common_move = 'common_move';
   static const meal_allergy_contains = 'meal_allergy_contains';
   static const scan_camera_access = 'scan_camera_access';
   static const scan_camera_disabled_message = 'scan_camera_disabled_message';

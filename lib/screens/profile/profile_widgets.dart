@@ -52,7 +52,7 @@ class ProfileGradientScaffold extends StatelessWidget {
 
     return LiquidGlassScope(
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: useMeshBackground ? Colors.transparent : AppColors.background,
         extendBodyBehindAppBar: true,
         floatingActionButton: floatingActionButton,
         floatingActionButtonLocation: floatingActionButtonLocation,

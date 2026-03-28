@@ -47,6 +47,7 @@
   "common_ingredients": "Ingredience",
   "common_today": "Dnes",
   "common_back_to_today": "Zpět na dnešek",
+  "common_back_to_original_date": "Zpět na datum jídla",
   "common_food_logged": "Jídlo zaznamenáno",
   "common_exercise_logged": "Cvičení zaznamenáno",
   "common_view": "Zobrazit",
@@ -368,6 +369,10 @@
   "meal_duplicate_to_today": "Duplikovat na dnešek",
   "meal_duplicated": "Jídlo duplikováno",
   "meal_duplicated_to": "Jídlo duplikováno na {date}",
+  "meal_copy_to": "Kopírovat do",
+  "meal_copy_to_dates": "Kopírovat do dnů",
+  "meal_copied_to_dates": "Jídlo zkopírováno do {count} dnů",
+  "meal_select_dates": "Vyberte dny, kam chcete jídlo zkopírovat.",
   "exercise_duplicate_to_today": "Duplikovat na dnešek",
   "exercise_duplicated": "Cvičení duplikováno",
   "exercise_duplicated_to": "Cvičení duplikováno na {date}",
@@ -619,6 +624,7 @@
   "fix_result_updating": "Aktualizování...",
   "fix_result_update": "Aktualizovat",
   "fix_result_add_details": "Přidat podrobnosti",
+  "fix_result_tip_body": "Popište, co AI špatně rozpoznalo, aby mohlo jídlo znovu analyzovat.\n\n\u2022 \"Je to grilované kuře, ne smažené.\"\n\u2022 \"Na sendviči není žádný sýr.\"\n\u2022 \"Porce je asi 300 g, ne 150 g.\"\n\u2022 \"Chybí příloha rýže.\"\n\u2022 \"Dresink je olivový olej, ne majonéza.\"",
 
   "report_meal_title": "Nahlásit jídlo",
   "report_meal_hint": "Co je špatně s tímto záznamem jídla?",
@@ -751,6 +757,8 @@
 
   "meal_mealtime": "Druh jídla",
   "meal_date": "Datum",
+  "meal_move_date_title": "Jídlo bude přesunuto ze záznamu aktuálního dne do záznamu vybraného dne.",
+  "common_move": "Přesunout",
   "meal_allergy_contains": "Toto jídlo obsahuje: {allergen}",
 
   "scan_camera_access": "Přístup ke kameře",

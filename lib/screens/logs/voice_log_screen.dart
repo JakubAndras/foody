@@ -617,8 +617,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
                                 return Transform.scale(scale: scale, child: child);
                               },
                               child: VoiceMicButton(
-                                gradient: !isExercise && !_isListening ? AppGradients.primary : null,
-                                color: isExercise || _isListening ? AppColors.violetStrong : null,
+                                gradient: isExercise || _isListening ? AppGradients.askAiPrimary : AppGradients.primary,
                                 onTap: _isListening ? _stopListening : _startListening,
                                 onLongPress: _togglePause,
                               ),
@@ -627,7 +626,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
                             if (_isListening || _isPaused || _isAnalyzing || _speechErrorMessage != null)
                               Text(
                                 _speechErrorMessage ?? (_isAnalyzing ? tr(LocaleKeys.voice_analyzing) : (_isPaused ? tr(LocaleKeys.voice_paused) : tr(LocaleKeys.voice_listening))),
-                                style: AppTextStyles.body14.copyWith(color: _speechErrorMessage == null ? AppColors.violetStrong : AppColors.error, fontWeight: FontWeight.w600),
+                                style: AppTextStyles.body14.copyWith(color: _speechErrorMessage == null ? AppColors.textPrimary : AppColors.error, fontWeight: FontWeight.w600),
                                 textAlign: TextAlign.center,
                               ),
                             const SizedBox(height: AppSpacing.xl),
@@ -720,7 +719,7 @@ class _VoiceTipRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(icon, size: AppSizes.iconMd, color: AppColors.violetStrong),
+          Icon(icon, size: AppSizes.iconMd, color: AppColors.textPrimary),
           const SizedBox(width: AppSpacing.s),
           Expanded(child: Text(text, style: AppTextStyles.body14Relaxed)),
         ],

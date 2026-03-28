@@ -53,8 +53,7 @@ class VoiceLogToggle extends StatelessWidget {
             height: AppSizes.voiceToggleHeight,
             padding: const EdgeInsets.all(2),
             decoration: BoxDecoration(
-              gradient: isExercise ? null : AppGradients.primary,
-              color: isExercise ? AppColors.violet : null,
+              gradient: isExercise ? AppGradients.askAiPrimary : AppGradients.primary,
               borderRadius: BorderRadius.circular(AppRadii.pill),
             ),
             child: Align(
@@ -88,13 +87,13 @@ class VoiceLogFrostedSurface extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadii.xl)),
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadii.xxl)),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
         child: Container(
           decoration: const BoxDecoration(
             gradient: AppGradients.voiceFrostedSurface,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xl)),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xxl)),
           ),
           child: child,
         ),

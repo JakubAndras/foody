@@ -1,8 +1,9 @@
 import 'dart:ui';
 
 import 'package:diplomka/app_theme.dart';
-import 'package:diplomka/widgets/sheet_circle_button.dart';
+import 'package:diplomka/widgets/confirm_delete_dialog.dart';
 import 'package:diplomka/widgets/sheet_drag_handle.dart';
+import 'package:diplomka/widgets/sheet_top_bar.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
@@ -31,8 +32,8 @@ class MealDatePickerSheet extends StatefulWidget {
 
 class _MealDatePickerSheetState extends State<MealDatePickerSheet> {
   late DateTime _displayedMonth;
-  late DateTime _today;
   late DateTime _selectedDate;
+  late DateTime _originalDate;
   bool _showMonthYearPicker = false;
 
   int _pickerMonth = 0;
@@ -55,9 +56,8 @@ class _MealDatePickerSheetState extends State<MealDatePickerSheet> {
   @override
   void initState() {
     super.initState();
-    final now = DateTime.now();
-    _today = DateTime(now.year, now.month, now.day);
     _selectedDate = widget.selectedDate;
+    _originalDate = DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day);
     _displayedMonth = DateTime(_selectedDate.year, _selectedDate.month, 1);
     _pickerMonth = _displayedMonth.month;
     _pickerYear = _displayedMonth.year;
@@ -103,7 +103,7 @@ class _MealDatePickerSheetState extends State<MealDatePickerSheet> {
     final contentHeight = MediaQuery.of(context).size.height * 0.36;
     final contentHeightWithoutBottom = MediaQuery.of(context).size.height * 0.34;
     final backToTodayHeight = MediaQuery.of(context).size.height * 0.02;
-    final selectedDayIsNotToday = _selectedDate != _today || _displayedMonth.year != _today.year || _displayedMonth.month != _today.month;
+    final showBackToOriginal = _selectedDate != _originalDate || _displayedMonth.year != _originalDate.year || _displayedMonth.month != _originalDate.month;
 
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.xs),
@@ -121,31 +121,31 @@ class _MealDatePickerSheetState extends State<MealDatePickerSheet> {
                 children: [
                   const SizedBox(height: AppSpacing.xxs),
                   const SheetDragHandle(),
-                  const SizedBox(height: AppSpacing.s),
+                  const SizedBox(height: AppSpacing.xs),
                   _buildTopBar(),
-                  const SizedBox(height: AppSpacing.s),
+                  const SizedBox(height: AppSpacing.xs),
                   _buildHeader(),
                   const SizedBox(height: AppSpacing.xs),
                   SizedBox(
-                    height: selectedDayIsNotToday ? contentHeightWithoutBottom : contentHeight,
+                    height: showBackToOriginal ? contentHeightWithoutBottom : contentHeight,
                     child: _showMonthYearPicker ? _buildMonthYearPicker() : _buildCalendarGrid(daysInMonth, firstWeekday, rowCount),
                   ),
-                  if (selectedDayIsNotToday)
+                  if (showBackToOriginal)
                     SizedBox(
                       height: backToTodayHeight,
                       child: Center(
                         child: GestureDetector(
                           onTap: () {
                             setState(() {
-                              _selectedDate = _today;
-                              _displayedMonth = DateTime(_today.year, _today.month, 1);
-                              _pickerMonth = _today.month - 1;
-                              _pickerYear = _today.year;
+                              _selectedDate = _originalDate;
+                              _displayedMonth = DateTime(_originalDate.year, _originalDate.month, 1);
+                              _pickerMonth = _originalDate.month;
+                              _pickerYear = _originalDate.year;
                               _showMonthYearPicker = false;
                             });
                           },
                           child: Text(
-                            tr(LocaleKeys.common_back_to_today),
+                            tr(LocaleKeys.common_back_to_original_date),
                             style: AppTextStyles.body14.copyWith(color: AppColors.black, fontWeight: FontWeight.w600),
                           ),
                         ),
@@ -161,36 +161,26 @@ class _MealDatePickerSheetState extends State<MealDatePickerSheet> {
     );
   }
 
+  Future<void> _handleConfirm() async {
+    final dateChanged = _selectedDate != _originalDate;
+    if (dateChanged) {
+      final confirmed = await showConfirmationDialog(
+        context: context,
+        title: tr(LocaleKeys.meal_move_date_title),
+        primaryLabel: tr(LocaleKeys.common_move),
+        secondaryLabel: tr(LocaleKeys.common_cancel),
+      );
+      if (confirmed != true || !mounted) return;
+    }
+    widget.onDateSelected(_selectedDate);
+    if (mounted) Navigator.of(context).pop();
+  }
+
   Widget _buildTopBar() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-      child: SizedBox(
-        height: 44,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Center(child: Text(tr(LocaleKeys.meal_date), style: AppTextStyles.title17.copyWith(color: AppColors.black, fontWeight: FontWeight.w600))),
-            Row(
-              children: [
-                SheetCircleButton(
-                  icon: Icons.close_rounded,
-                  onTap: () => Navigator.of(context).pop(),
-                ),
-                const Spacer(),
-                SheetCircleButton(
-                  icon: Icons.check_rounded,
-                  backgroundColor: AppColors.primary,
-                  iconColor: AppColors.white1,
-                  onTap: () {
-                    widget.onDateSelected(_selectedDate);
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
+    return SheetTopBar(
+      title: tr(LocaleKeys.meal_date),
+      onClose: () => Navigator.of(context).pop(),
+      onConfirm: _handleConfirm,
     );
   }
 
@@ -285,7 +275,7 @@ class _MealDatePickerSheetState extends State<MealDatePickerSheet> {
   }
 
   Widget _buildDayCell(DateTime date) {
-    final isToday = date.year == _today.year && date.month == _today.month && date.day == _today.day;
+    final isOriginalDate = date.year == _originalDate.year && date.month == _originalDate.month && date.day == _originalDate.day;
     final isSelected = date.year == _selectedDate.year && date.month == _selectedDate.month && date.day == _selectedDate.day;
 
     Color textColor = isSelected ? AppColors.white1 : AppColors.black;
@@ -301,14 +291,14 @@ class _MealDatePickerSheetState extends State<MealDatePickerSheet> {
             shape: BoxShape.circle,
             color: isSelected
                 ? AppColors.calendarDarkSurface
-                : isToday
-                    ? AppColors.calendarDarkMuted.withValues(alpha: 0.5)
+                : isOriginalDate
+                    ? AppColors.calendarDarkMuted.withValues(alpha: 0.3)
                     : Colors.transparent,
           ),
           alignment: Alignment.center,
           child: Text(
             '${date.day}',
-            style: AppTextStyles.body16.copyWith(fontSize: 17, fontWeight: isToday ? FontWeight.w700 : FontWeight.w500, height: 1.412, color: textColor),
+            style: AppTextStyles.body16.copyWith(fontSize: 17, fontWeight: isOriginalDate ? FontWeight.w700 : FontWeight.w500, height: 1.412, color: textColor),
           ),
         ),
       ),
@@ -356,8 +346,8 @@ class _MealDateGlassSheetPainter extends CustomPainter {
       0,
       size.width,
       size.height,
-      topLeft: Radius.circular(AppRadii.xl),
-      topRight: Radius.circular(AppRadii.xl),
+      topLeft: Radius.circular(AppRadii.xxl),
+      topRight: Radius.circular(AppRadii.xxl),
       bottomRight: Radius.circular(AppRadii.xxl + 10),
       bottomLeft: Radius.circular(AppRadii.xxl + 10),
     );
@@ -366,7 +356,7 @@ class _MealDateGlassSheetPainter extends CustomPainter {
 
     final highlightRect = Rect.fromLTWH(size.width * 0.1, 0, size.width * 0.8, size.height * 0.12);
     canvas.drawRRect(
-      RRect.fromRectAndCorners(highlightRect, topLeft: Radius.circular(AppRadii.xl), topRight: Radius.circular(AppRadii.xl)),
+      RRect.fromRectAndCorners(highlightRect, topLeft: Radius.circular(AppRadii.xxl), topRight: Radius.circular(AppRadii.xxl)),
       Paint()
         ..shader = const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x30FFFFFF), Color(0x00FFFFFF)]).createShader(highlightRect)
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2.0),

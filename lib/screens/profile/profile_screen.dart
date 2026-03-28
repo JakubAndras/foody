@@ -58,7 +58,7 @@ class ProfileScreen extends StatelessWidget {
                 // const _ProfileHeaderCard(),
                 // const SizedBox(height: AppSpacing.l),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.m : 0),
+                  padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
                   child: ProfileSectionHeader(title: tr(LocaleKeys.profile_account)),
                 ),
                 const SizedBox(height: AppSpacing.s),
@@ -84,7 +84,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: AppSpacing.l),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.m : 0),
+                  padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
                   child: ProfileSectionHeader(title: tr(LocaleKeys.profile_goals_tracking)),
                 ),
                 const SizedBox(height: AppSpacing.s),
@@ -120,7 +120,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: AppSpacing.l),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.m : 0),
+                  padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
                   child: ProfileSectionHeader(
                     title: tr(LocaleKeys.profile_widgets),
                     trailing: GestureDetector(
@@ -143,7 +143,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: AppSpacing.l),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.m : 0),
+                  padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
                   child: ProfileSectionHeader(title: tr(LocaleKeys.profile_progress_data)),
                 ),
                 const SizedBox(height: AppSpacing.s),
@@ -184,7 +184,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: AppSpacing.l),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.m : 0),
+                  padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
                   child: ProfileSectionHeader(title: tr(LocaleKeys.profile_account_actions)),
                 ),
                 const SizedBox(height: AppSpacing.s),
@@ -205,7 +205,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: AppSpacing.s),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.m : 0),
+                  padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
                   child: Center(
                     child: Text(
                       tr(LocaleKeys.profile_version),

@@ -12,7 +12,7 @@ class SheetDragHandle extends StatelessWidget {
       child: Container(
         width: 36,
         height: 4,
-        decoration: BoxDecoration(color: color ?? AppColors.calendarDarkMuted.withValues(alpha: 0.5), borderRadius: BorderRadius.circular(2)),
+        decoration: BoxDecoration(color: color ?? AppColors.calendarDarkMuted.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(2)),
       ),
     );
   }

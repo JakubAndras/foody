@@ -43,7 +43,7 @@ class RecentlyUploadedCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.m : 0),
+          padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
           child: Text(
             tr(LocaleKeys.dashboard_meals_title, namedArgs: {'date': DateFormat('MMM d').format(selectedDate).replaceFirstMapped(RegExp(r'^.'), (m) => m[0]!.toUpperCase())}),
             style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700),
@@ -115,7 +115,7 @@ class RecentlyUploadedCard extends StatelessWidget {
 
   Widget _buildExerciseHeader() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.m : 0),
+      padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
       child: Align(
         alignment: Alignment.centerLeft,
         child: Text(

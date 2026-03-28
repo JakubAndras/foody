@@ -211,11 +211,13 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
   }
 
   Future<void> _handleDeleteExercise() async {
-    final confirmed = await showConfirmDeleteDialog(
+    final confirmed = await showConfirmationDialog(
       context: context,
       title: tr(LocaleKeys.exercise_delete_title),
-      cancelLabel: tr(LocaleKeys.common_cancel),
-      deleteLabel: tr(LocaleKeys.common_delete),
+      subtitle: tr(LocaleKeys.common_cannot_undo),
+      primaryLabel: tr(LocaleKeys.common_delete),
+      secondaryLabel: tr(LocaleKeys.common_cancel),
+      isDestructive: true,
     );
     if (confirmed != true || !mounted) return;
 

@@ -47,6 +47,7 @@
   "common_ingredients": "Ingredients",
   "common_today": "Today",
   "common_back_to_today": "Back to today",
+  "common_back_to_original_date": "Back to meal's date",
   "common_food_logged": "Food logged",
   "common_exercise_logged": "Exercise logged",
   "common_view": "View",
@@ -368,6 +369,10 @@
   "meal_duplicate_to_today": "Duplicate to today",
   "meal_duplicated": "Meal duplicated",
   "meal_duplicated_to": "Meal duplicated to {date}",
+  "meal_copy_to": "Copy to",
+  "meal_copy_to_dates": "Copy to dates",
+  "meal_copied_to_dates": "Meal copied to {count} dates",
+  "meal_select_dates": "Select dates to copy this meal to.",
   "exercise_duplicate_to_today": "Duplicate to today",
   "exercise_duplicated": "Exercise duplicated",
   "exercise_duplicated_to": "Exercise duplicated to {date}",
@@ -619,6 +624,7 @@
   "fix_result_updating": "Updating...",
   "fix_result_update": "Update",
   "fix_result_add_details": "Add details",
+  "fix_result_tip_body": "Describe what the AI got wrong so it can re-analyze your meal.\n\n\u2022 \"It's grilled chicken, not fried.\"\n\u2022 \"There's no cheese on the sandwich.\"\n\u2022 \"The portion is about 300 g, not 150 g.\"\n\u2022 \"Add a side of rice that's missing.\"\n\u2022 \"The dressing is olive oil, not mayo.\"",
 
   "report_meal_title": "Report Meal",
   "report_meal_hint": "Tell us what is the issue with this meal log?",
@@ -751,6 +757,8 @@
 
   "meal_mealtime": "Mealtime",
   "meal_date": "Date",
+  "meal_move_date_title": "This will move the meal from its current date log to the selected date log.",
+  "common_move": "Move",
   "meal_allergy_contains": "This meal contains: {allergen}",
 
   "scan_camera_access": "Camera access",

@@ -2,41 +2,36 @@ import 'dart:ui';
 
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/widgets/sheet_drag_handle.dart';
-import 'package:diplomka/screens/main_screen.dart';
+import 'package:diplomka/widgets/sheet_top_bar.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class DashboardCalendarSheet extends StatefulWidget {
-  const DashboardCalendarSheet({super.key, required this.selectedDate, required this.onDateSelected, this.selectOnPickerScroll = true});
+class MealCopyToSheet extends StatefulWidget {
+  final DateTime currentDate;
+  final ValueChanged<List<DateTime>> onDatesSelected;
 
-  final DateTime selectedDate;
-  final ValueChanged<DateTime> onDateSelected;
-  final bool selectOnPickerScroll;
+  const MealCopyToSheet({super.key, required this.currentDate, required this.onDatesSelected});
 
-  static void show(BuildContext context, {required DateTime selectedDate, required ValueChanged<DateTime> onDateSelected}) {
-    MainScreenController.to.isCalendarSheetVisible.value = true;
+  static void show(BuildContext context, {required DateTime currentDate, required ValueChanged<List<DateTime>> onDatesSelected}) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       elevation: 0,
       barrierColor: AppColors.overlayDark,
       isScrollControlled: true,
-      builder: (sheetContext) => DashboardCalendarSheet(selectedDate: selectedDate, onDateSelected: onDateSelected),
-    ).whenComplete(() {
-      MainScreenController.to.isCalendarSheetVisible.value = false;
-    });
+      builder: (_) => MealCopyToSheet(currentDate: currentDate, onDatesSelected: onDatesSelected),
+    );
   }
 
   @override
-  State<DashboardCalendarSheet> createState() => _DashboardCalendarSheetState();
+  State<MealCopyToSheet> createState() => _MealCopyToSheetState();
 }
 
-class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
+class _MealCopyToSheetState extends State<MealCopyToSheet> {
   late DateTime _displayedMonth;
-  late DateTime _today;
-  late DateTime _selectedDate;
+  final Set<DateTime> _selectedDates = {};
   bool _showMonthYearPicker = false;
 
   int _pickerMonth = 0;
@@ -59,12 +54,31 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
   @override
   void initState() {
     super.initState();
-    final now = DateTime.now();
-    _today = DateTime(now.year, now.month, now.day);
-    _selectedDate = widget.selectedDate;
-    _displayedMonth = DateTime(_selectedDate.year, _selectedDate.month, 1);
+    _displayedMonth = DateTime(widget.currentDate.year, widget.currentDate.month, 1);
     _pickerMonth = _displayedMonth.month;
     _pickerYear = _displayedMonth.year;
+  }
+
+  DateTime _normalizeDate(DateTime date) => DateTime(date.year, date.month, date.day);
+
+  bool _isCurrentDate(DateTime date) {
+    final current = _normalizeDate(widget.currentDate);
+    return date.year == current.year && date.month == current.month && date.day == current.day;
+  }
+
+  bool _isDateSelected(DateTime date) {
+    return _selectedDates.any((d) => d.year == date.year && d.month == date.month && d.day == date.day);
+  }
+
+  void _toggleDate(DateTime date) {
+    if (_isCurrentDate(date)) return;
+    setState(() {
+      if (_isDateSelected(date)) {
+        _selectedDates.removeWhere((d) => d.year == date.year && d.month == date.month && d.day == date.day);
+      } else {
+        _selectedDates.add(_normalizeDate(date));
+      }
+    });
   }
 
   void _goToPreviousMonth() {
@@ -98,16 +112,22 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
     return '${raw[0].toUpperCase()}${raw.substring(1)}';
   }
 
+  void _handleConfirm() {
+    if (_selectedDates.isEmpty) return;
+    widget.onDatesSelected(_selectedDates.toList()..sort());
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     final daysInMonth = DateUtils.getDaysInMonth(_displayedMonth.year, _displayedMonth.month);
     final firstWeekday = DateTime(_displayedMonth.year, _displayedMonth.month, 1).weekday;
     final totalSlots = (firstWeekday - 1) + daysInMonth;
     final rowCount = (totalSlots / 7).ceil();
-    final contentHeightSheet = MediaQuery.of(context).size.height * 0.36;
-    final contentHeightSheetWithoutBottom = MediaQuery.of(context).size.height * 0.34;
-    final contentHeightSheetBackToToday = MediaQuery.of(context).size.height * 0.02;
-    final selectedDayIsToday = _selectedDate != _today || _displayedMonth.year != _today.year || _displayedMonth.month != _today.month;
+    final contentHeight = MediaQuery.of(context).size.height * 0.36;
+    final contentHeightWithCount = MediaQuery.of(context).size.height * 0.34;
+    final countBarHeight = MediaQuery.of(context).size.height * 0.02;
+    final showCountBar = _selectedDates.isNotEmpty;
 
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.xs),
@@ -116,7 +136,7 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
           child: CustomPaint(
-            painter: const _GlassSheetPainter(),
+            painter: const _CopyToGlassSheetPainter(),
             child: SafeArea(
               top: false,
               bottom: false,
@@ -125,32 +145,26 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
                 children: [
                   const SizedBox(height: AppSpacing.xxs),
                   const SheetDragHandle(),
-                  const SizedBox(height: AppSpacing.xl),
+                  const SizedBox(height: AppSpacing.xs),
+                  SheetTopBar(
+                    title: tr(LocaleKeys.meal_copy_to_dates),
+                    onClose: () => Navigator.of(context).pop(),
+                    onConfirm: _selectedDates.isNotEmpty ? _handleConfirm : null,
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
                   _buildHeader(),
                   const SizedBox(height: AppSpacing.xs),
                   SizedBox(
-                    height: selectedDayIsToday ? contentHeightSheetWithoutBottom : contentHeightSheet,
+                    height: showCountBar ? contentHeightWithCount : contentHeight,
                     child: _showMonthYearPicker ? _buildMonthYearPicker() : _buildCalendarGrid(daysInMonth, firstWeekday, rowCount),
                   ),
-                  if (selectedDayIsToday)
+                  if (showCountBar)
                     SizedBox(
-                      height: contentHeightSheetBackToToday,
+                      height: countBarHeight,
                       child: Center(
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _selectedDate = _today;
-                              _displayedMonth = DateTime(_today.year, _today.month, 1);
-                              _pickerMonth = _today.month - 1;
-                              _pickerYear = _today.year;
-                              _showMonthYearPicker = false;
-                            });
-                            widget.onDateSelected(_today);
-                          },
-                          child: Text(
-                            tr(LocaleKeys.common_back_to_today),
-                            style: AppTextStyles.body14.copyWith(color: AppColors.black, fontWeight: FontWeight.w600),
-                          ),
+                        child: Text(
+                          tr(LocaleKeys.meal_copied_to_dates, namedArgs: {'count': '${_selectedDates.length}'}),
+                          style: AppTextStyles.body14.copyWith(color: AppColors.black, fontWeight: FontWeight.w600),
                         ),
                       ),
                     ),
@@ -255,16 +269,20 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
   }
 
   Widget _buildDayCell(DateTime date) {
-    final isToday = date.year == _today.year && date.month == _today.month && date.day == _today.day;
-    final isSelected = date.year == _selectedDate.year && date.month == _selectedDate.month && date.day == _selectedDate.day;
+    final isCurrent = _isCurrentDate(date);
+    final isSelected = _isDateSelected(date);
 
-    Color textColor = isSelected ? AppColors.white1 : AppColors.black;
+    Color textColor;
+    if (isSelected) {
+      textColor = AppColors.white1;
+    } else if (isCurrent) {
+      textColor = AppColors.calendarDarkMuted;
+    } else {
+      textColor = AppColors.black;
+    }
 
     return GestureDetector(
-      onTap: () {
-        setState(() => _selectedDate = date);
-        widget.onDateSelected(date);
-      },
+      onTap: () => _toggleDate(date),
       behavior: HitTestBehavior.opaque,
       child: Center(
         child: Container(
@@ -272,17 +290,16 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
           height: 38,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            //gradient: isSelected ? AppGradients.primary : null,
             color: isSelected
                 ? AppColors.calendarDarkSurface
-                : isToday
-                ? AppColors.calendarDarkMuted.withValues(alpha: 0.3)
-                : Colors.transparent,
+                : isCurrent
+                    ? AppColors.calendarDarkMuted.withValues(alpha: 0.15)
+                    : Colors.transparent,
           ),
           alignment: Alignment.center,
           child: Text(
             '${date.day}',
-            style: AppTextStyles.body16.copyWith(fontSize: 17, fontWeight: isToday ? FontWeight.w700 : FontWeight.w500, height: 1.412, color: textColor),
+            style: AppTextStyles.body16.copyWith(fontSize: 17, fontWeight: isCurrent || isSelected ? FontWeight.w700 : FontWeight.w500, height: 1.412, color: textColor),
           ),
         ),
       ),
@@ -297,8 +314,6 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
         child: CupertinoTheme(
           data: CupertinoThemeData(
             textTheme: CupertinoTextThemeData(
-              // Base font is scaled up ~1.12x by CupertinoPicker magnification for the selected row.
-              // Use a smaller base so the magnified size matches the non-selected rows visually.
               dateTimePickerTextStyle: AppTextStyles.h4.copyWith(color: AppColors.black, fontWeight: FontWeight.w400, fontSize: 20),
             ),
           ),
@@ -313,11 +328,7 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
                 _pickerMonth = date.month;
                 _pickerYear = date.year;
                 _displayedMonth = DateTime(date.year, date.month, 1);
-                _selectedDate = DateTime(date.year, date.month, 1);
               });
-              if (widget.selectOnPickerScroll) {
-                widget.onDateSelected(_selectedDate);
-              }
             },
           ),
         ),
@@ -326,8 +337,8 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
   }
 }
 
-class _GlassSheetPainter extends CustomPainter {
-  const _GlassSheetPainter();
+class _CopyToGlassSheetPainter extends CustomPainter {
+  const _CopyToGlassSheetPainter();
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -342,10 +353,8 @@ class _GlassSheetPainter extends CustomPainter {
       bottomLeft: Radius.circular(AppRadii.xxl + 10),
     );
 
-    // Glass fill
-    canvas.drawRRect(rrect, Paint()..color = const Color(0xB0FFFFFF));
+    canvas.drawRRect(rrect, Paint()..color = const Color(0xFFFFFFFF));
 
-    //Specular highlight at the top
     final highlightRect = Rect.fromLTWH(size.width * 0.1, 0, size.width * 0.8, size.height * 0.12);
     canvas.drawRRect(
       RRect.fromRectAndCorners(highlightRect, topLeft: Radius.circular(AppRadii.xxl), topRight: Radius.circular(AppRadii.xxl)),
@@ -354,7 +363,6 @@ class _GlassSheetPainter extends CustomPainter {
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2.0),
     );
 
-    // Border
     canvas.drawRRect(
       rrect.deflate(0.4),
       Paint()

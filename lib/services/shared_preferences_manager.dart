@@ -20,6 +20,7 @@ const String savePhotosToGalleryKey = "savePhotosToGalleryKey";
 const String burnedCaloriesEnabledKey = "burnedCaloriesEnabledKey";
 const String rolloverCaloriesEnabledKey = "rolloverCaloriesEnabledKey";
 const String autoAdjustMacrosEnabledKey = "autoAdjustMacrosEnabledKey";
+const String editableNutrientsEnabledKey = "editableNutrientsEnabledKey";
 const String healthIntegrationEnabledKey = "healthIntegration_enabled";
 const String healthIntegrationLastSyncKey = "healthIntegration_lastSync";
 

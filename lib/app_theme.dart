@@ -135,6 +135,7 @@ class AppSpacing {
   static const double edge = m;
   static const double bottom = m;
   static const double safeAreaTop = 64;
+  static const double safeAreaBottom = 20;
 }
 
 class AppRadii {
@@ -177,6 +178,7 @@ class AppSizes {
   static const double iconXs = 14;
   static const double iconMd = 20;
   static const double iconLg = 24;
+  static const double iconLiOS = 28;
   static const double iconXl = 40;
   static const double iconTabBar = 32;
   static const double cardIconLg = 48;
@@ -309,7 +311,9 @@ class AppGradients {
   static const LinearGradient darkLinear = LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [AppColors.primary, AppColors.primaryMuted]);
   static const LinearGradient darkDiagonal = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF0D0D0D), Color(0xFF1D1D1D)], stops: [0, 1.0]);
 
-  static const LinearGradient askAiPrimary = LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [AppColors.violet, AppColors.violetDark]);
+  static const LinearGradient askAiPrimary = darkAI5;
+  static const LinearGradient purpleAI = LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [AppColors.violet, AppColors.violetDark]);
+  static const LinearGradient darkAI5 = LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF1E1E1E), Color(0xFF121212)]);
 
   static const LinearGradient voiceFrostedSurface = LinearGradient(
     begin: Alignment.topLeft,
@@ -366,6 +370,31 @@ class AppGradients {
   static const LinearGradient scanPlaceholder = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFFE5E7EB), Color(0xFFD1D5DC)]);
 
   static const LinearGradient scanCameraSurface = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [AppColors.surfaceMuted, AppColors.outline]);
+
+  /// Bottom bar fade — matches the bottom edge gradient used in Dashboard / Progress / Profile scroll views.
+  static final LinearGradient bottomBarFadeSurface = LinearGradient(
+    begin: Alignment.bottomCenter,
+    end: Alignment.topCenter,
+    colors: [
+      AppColors.surface,
+      AppColors.surface,
+      AppColors.surface.withValues(alpha: 0.8),
+      AppColors.surface.withValues(alpha: 0.4),
+      AppColors.surface.withValues(alpha: 0),
+    ],
+  );
+
+  static final LinearGradient bottomBarFadeGrey = LinearGradient(
+    begin: Alignment.bottomCenter,
+    end: Alignment.topCenter,
+    colors: [
+      AppColors.surface.withValues(alpha: 0.8),
+      AppColors.surface.withValues(alpha: 0.8),
+      AppColors.surface.withValues(alpha: 0.6),
+      AppColors.surface.withValues(alpha: 0.3),
+      AppColors.surface.withValues(alpha: 0),
+    ],
+  );
 }
 
 class AppQuickAction {
