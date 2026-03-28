@@ -2,6 +2,7 @@ import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/ingredient.dart';
 import 'package:diplomka/widgets/foody_glass_buttons.dart';
+import 'package:diplomka/widgets/glass_popup.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -109,8 +110,11 @@ class EditIngredientRow extends StatelessWidget {
   final bool highlighted;
   final String? alertText;
   final VoidCallback? onTap;
+  final VoidCallback? onFavorite;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
 
-  const EditIngredientRow({super.key, required this.ingredient, this.highlighted = false, this.alertText, this.onTap});
+  const EditIngredientRow({super.key, required this.ingredient, this.highlighted = false, this.alertText, this.onTap, this.onFavorite, this.onEdit, this.onDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -137,49 +141,27 @@ class EditIngredientRow extends StatelessWidget {
                   Row(
                     children: [
                       if (highlighted) ...[const Icon(Icons.warning_amber_rounded, size: AppSizes.iconSm, color: AppColors.warningStrong), const SizedBox(width: AppSpacing.xs)],
-                      Text(
-                        ingredient.name,
-                        style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+                      Flexible(
+                        child: Text(
+                          ingredient.name,
+                          style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ],
                   ),
                   if (alertText != null) ...[const SizedBox(height: AppSpacing.xxs), Text(alertText!, style: AppTextStyles.label11.copyWith(fontWeight: FontWeight.w500, color: AppColors.orange, letterSpacing: 0.0645))],
                   const Spacer(),
-                  _MacroDotsRow(ingredient: ingredient),
+                  _MacroDotsRowWithCalories(ingredient: ingredient),
                 ],
               ),
             ),
-            const SizedBox(width: AppSpacing.s),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(ingredient.calories.toStringAsFixed(0), style: AppTextStyles.title),
-                Text(tr(LocaleKeys.common_kcal), style: AppTextStyles.caption12.copyWith(color: AppColors.textTertiary)),
-              ],
-            ),
+            const SizedBox(width: AppSpacing.xs),
+            _EditIngredientPopupButton(onFavorite: onFavorite, onEdit: onEdit, onDelete: onDelete),
           ],
         ),
       ),
-    );
-  }
-}
-
-class _MacroDotsRow extends StatelessWidget {
-  final Ingredient ingredient;
-
-  const _MacroDotsRow({required this.ingredient});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        _MacroDotLabel(color: AppColors.macroProtein, value: '${ingredient.proteins.toStringAsFixed(0)}g'),
-        const SizedBox(width: AppSpacing.xs),
-        _MacroDotLabel(color: AppColors.warningStrong, value: '${ingredient.carbs.toStringAsFixed(0)}g'),
-        const SizedBox(width: AppSpacing.xs),
-        _MacroDotLabel(color: AppColors.macroFats, value: '${ingredient.fats.toStringAsFixed(0)}g'),
-      ],
     );
   }
 }
@@ -204,6 +186,104 @@ class _MacroDotLabel extends StatelessWidget {
         ),
         const SizedBox(width: AppSpacing.xxs),
         Text(value, style: AppTextStyles.label11.copyWith(fontWeight: FontWeight.w500, color: AppColors.textTertiary, letterSpacing: 0.0645)),
+      ],
+    );
+  }
+}
+
+class _MacroDotsRowWithCalories extends StatelessWidget {
+  final Ingredient ingredient;
+
+  const _MacroDotsRowWithCalories({required this.ingredient});
+
+  @override
+  Widget build(BuildContext context) {
+    final showAmount = (ingredient.amount - 1.0).abs() > 0.001;
+    return Row(
+      children: [
+        if (showAmount) ...[
+          Text(
+            ingredient.amountLabel,
+            style: AppTextStyles.label11.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary, letterSpacing: 0.0645),
+          ),
+          _separator,
+        ],
+        Text(
+          '${ingredient.weight.toStringAsFixed(0)}g',
+          style: AppTextStyles.label11.copyWith(fontWeight: FontWeight.w600, color: AppColors.textSecondary, letterSpacing: 0.0645),
+        ),
+        _separator,
+        Text(
+          '${ingredient.calories.toStringAsFixed(0)} ${tr(LocaleKeys.common_kcal)}',
+          style: AppTextStyles.label11.copyWith(fontWeight: FontWeight.w500, color: AppColors.textTertiary, letterSpacing: 0.0645),
+        ),
+        _separator,
+        _MacroDotLabel(color: AppColors.macroProtein, value: '${ingredient.proteins.toStringAsFixed(0)}g'),
+        const SizedBox(width: AppSpacing.xs),
+        _MacroDotLabel(color: AppColors.warningStrong, value: '${ingredient.carbs.toStringAsFixed(0)}g'),
+        const SizedBox(width: AppSpacing.xs),
+        _MacroDotLabel(color: AppColors.macroFats, value: '${ingredient.fats.toStringAsFixed(0)}g'),
+      ],
+    );
+  }
+
+  static final Widget _separator = Padding(
+    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxs),
+    child: Text('·', style: AppTextStyles.label11.copyWith(color: AppColors.textTertiary)),
+  );
+}
+
+class _EditIngredientPopupButton extends StatelessWidget {
+  final VoidCallback? onFavorite;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
+
+  const _EditIngredientPopupButton({this.onFavorite, this.onEdit, this.onDelete});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => _showPopup(context),
+      child: SizedBox(
+        width: 32,
+        height: 32,
+        child: Icon(Icons.more_horiz, size: AppSizes.iconMd, color: AppColors.textSecondary),
+      ),
+    );
+  }
+
+  void _showPopup(BuildContext context) {
+    showGlassPopup(
+      context: context,
+      targetContext: context,
+      targetOffset: const Offset(0, 8),
+      items: [
+        GlassPopupItem(
+          label: tr(LocaleKeys.common_favorites),
+          icon: Icons.bookmark_border,
+          onTap: () {
+            Navigator.of(context).pop();
+            onFavorite?.call();
+          },
+        ),
+        GlassPopupItem(
+          label: tr(LocaleKeys.common_edit),
+          icon: Icons.edit_outlined,
+          onTap: () {
+            Navigator.of(context).pop();
+            onEdit?.call();
+          },
+        ),
+        GlassPopupItem(
+          label: tr(LocaleKeys.common_delete),
+          icon: Icons.delete_outline,
+          color: AppColors.error,
+          showDividerAbove: true,
+          onTap: () {
+            Navigator.of(context).pop();
+            onDelete?.call();
+          },
+        ),
       ],
     );
   }

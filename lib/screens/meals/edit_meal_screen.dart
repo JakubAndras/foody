@@ -169,15 +169,14 @@ class _EditMealScreenState extends State<EditMealScreen> {
     final confirmed = await showConfirmationDialog(
       context: context,
       title: tr(LocaleKeys.common_unsaved_changes_message),
-      //subtitle: tr(LocaleKeys.common_unsaved_changes_message),
       primaryLabel: tr(LocaleKeys.common_save),
       secondaryLabel: tr(LocaleKeys.common_discard),
     );
     if (!mounted || confirmed == null) return;
     if (confirmed) {
-      _handlePrimaryAction(); // save
+      _handlePrimaryAction();
     } else {
-      Navigator.of(context).pop(); // discard — close screen
+      Navigator.of(context).pop();
     }
   }
 
@@ -280,24 +279,6 @@ class _EditMealScreenState extends State<EditMealScreen> {
     return 'Second dinner';
   }
 
-  TimeOfDay _timeOfDayForMealtime(String mealtime) {
-    switch (mealtime) {
-      case 'Breakfast':
-        return const TimeOfDay(hour: 8, minute: 0);
-      case 'Morning snack':
-        return const TimeOfDay(hour: 10, minute: 30);
-      case 'Lunch':
-        return const TimeOfDay(hour: 13, minute: 0);
-      case 'Afternoon snack':
-        return const TimeOfDay(hour: 16, minute: 0);
-      case 'Dinner':
-        return const TimeOfDay(hour: 19, minute: 0);
-      case 'Second dinner':
-        return const TimeOfDay(hour: 21, minute: 30);
-    }
-    return const TimeOfDay(hour: 13, minute: 0);
-  }
-
   void _ensureEditMode() {
     if (_isEditMode) return;
     setState(() => _mode = MealScreenMode.edit);
@@ -360,7 +341,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
     for (final date in dates) {
       final copy = Meal(
         name: baseMeal.name,
-        ingredients: baseMeal.ingredients.map((i) => Ingredient(name: i.name, weight: i.weight, calories: i.calories, proteins: i.proteins, carbs: i.carbs, fats: i.fats, confidence: i.confidence)).toList(),
+        ingredients: baseMeal.ingredients.map((i) => Ingredient(name: i.name, weight: i.weight, amount: i.amount, calories: i.calories, proteins: i.proteins, carbs: i.carbs, fats: i.fats, confidence: i.confidence)).toList(),
         timestamp: DateTime(date.year, date.month, date.day, baseMeal.timestamp.hour, baseMeal.timestamp.minute),
         photoPath: baseMeal.photoPath,
         isFavorite: baseMeal.isFavorite,
@@ -1006,6 +987,14 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                                   _ensureEditMode();
                                                   _editIngredient(index);
                                                 },
+                                          onFavorite: () {},
+                                          onEdit: _isBusy
+                                              ? null
+                                              : () {
+                                                  _ensureEditMode();
+                                                  _editIngredient(index);
+                                                },
+                                          onDelete: _isBusy ? null : () => setState(() => _ingredients.removeAt(index)),
                                         ),
                                       );
                                     }
@@ -1016,6 +1005,9 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                         highlighted: isAlert,
                                         alertText: isAlert ? 'Contains: Fish' : null,
                                         onTap: _isBusy ? null : () => _editIngredient(index),
+                                        onFavorite: () {},
+                                        onEdit: _isBusy ? null : () => _editIngredient(index),
+                                        onDelete: _isBusy ? null : () => setState(() => _ingredients.removeAt(index)),
                                       ),
                                     );
                                   }),

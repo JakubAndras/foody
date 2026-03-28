@@ -105,6 +105,12 @@ final Migration migration10to11 = Migration(10, 11, (database) async {
   } catch (_) {}
 });
 
+final Migration migration11to12 = Migration(11, 12, (database) async {
+  try {
+    await database.execute('ALTER TABLE `Ingredient` ADD COLUMN `amount` REAL NOT NULL DEFAULT 1.0');
+  } catch (_) {}
+});
+
 final Migration migration9to10 = Migration(9, 10, (database) async {
   await database.execute('''
     CREATE TABLE IF NOT EXISTS `MealTemplate` (

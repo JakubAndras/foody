@@ -94,7 +94,7 @@ class _$AppDatabase extends AppDatabase {
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 11,
+      version: 12,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -114,7 +114,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Meal` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `dayRecordId` INTEGER NOT NULL, `name` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `photoPath` TEXT, `isFavorite` INTEGER NOT NULL, `confidence` REAL, FOREIGN KEY (`dayRecordId`) REFERENCES `DayRecord` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Ingredient` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `mealId` INTEGER NOT NULL, `name` TEXT NOT NULL, `weight` REAL NOT NULL, `calories` REAL NOT NULL, `proteins` REAL NOT NULL, `carbs` REAL NOT NULL, `fats` REAL NOT NULL, `confidence` REAL, FOREIGN KEY (`mealId`) REFERENCES `Meal` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `Ingredient` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `mealId` INTEGER NOT NULL, `name` TEXT NOT NULL, `weight` REAL NOT NULL, `amount` REAL, `calories` REAL NOT NULL, `proteins` REAL NOT NULL, `carbs` REAL NOT NULL, `fats` REAL NOT NULL, `confidence` REAL, FOREIGN KEY (`mealId`) REFERENCES `Meal` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `WeightEntry` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` INTEGER NOT NULL, `weight` REAL NOT NULL, `photoPath` TEXT)');
         await database.execute(
@@ -441,6 +441,7 @@ class _$IngredientDao extends IngredientDao {
                   'mealId': item.mealId,
                   'name': item.name,
                   'weight': item.weight,
+                  'amount': item.amount,
                   'calories': item.calories,
                   'proteins': item.proteins,
                   'carbs': item.carbs,
@@ -456,6 +457,7 @@ class _$IngredientDao extends IngredientDao {
                   'mealId': item.mealId,
                   'name': item.name,
                   'weight': item.weight,
+                  'amount': item.amount,
                   'calories': item.calories,
                   'proteins': item.proteins,
                   'carbs': item.carbs,
@@ -471,6 +473,7 @@ class _$IngredientDao extends IngredientDao {
                   'mealId': item.mealId,
                   'name': item.name,
                   'weight': item.weight,
+                  'amount': item.amount,
                   'calories': item.calories,
                   'proteins': item.proteins,
                   'carbs': item.carbs,
@@ -498,6 +501,7 @@ class _$IngredientDao extends IngredientDao {
             mealId: row['mealId'] as int,
             name: row['name'] as String,
             weight: row['weight'] as double,
+            amount: row['amount'] as double?,
             calories: row['calories'] as double,
             proteins: row['proteins'] as double,
             carbs: row['carbs'] as double,

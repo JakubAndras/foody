@@ -31,7 +31,8 @@ class CustomGlassIconButton extends StatelessWidget {
         settings: AppGlass.standard,
         quality: GlassQuality.premium,
         interactionScale: 0.95,
-        child: child ??
+        child:
+            child ??
             Padding(
               padding: icon == Icons.arrow_back_ios_new_rounded ? const EdgeInsets.only(right: 1.5) : EdgeInsets.zero,
               child: Icon(icon, size: effectiveIconSize, color: AppColors.black),
@@ -44,18 +45,13 @@ class CustomGlassIconButton extends StatelessWidget {
 /// Custom-painted icon that matches iOS native glass button style.
 /// Use with [CustomGlassIconButton.child] for consistent stroke weight.
 class GlassStrokeIcon extends StatelessWidget {
-  const GlassStrokeIcon({
-    super.key,
-    required this.painter,
-    this.size = AppSizes.scanIconSize,
-  });
+  const GlassStrokeIcon({super.key, required this.painter, this.size = AppSizes.scanIconSize});
 
   final CustomPainter painter;
   final double size;
 
   /// X mark — close / dismiss.
   factory GlassStrokeIcon.close({double size = AppSizes.scanIconSize}) => GlassStrokeIcon(painter: const _CloseStrokePainter(), size: size);
-
 
   @override
   Widget build(BuildContext context) {
@@ -105,11 +101,19 @@ class CustomGlassIconButtonGroup extends StatelessWidget {
       borderRadius: height / 2,
       borderColor: Colors.transparent,
       children: items
-          .map((item) => GestureDetector(
-                onTap: item.onPressed,
-                behavior: HitTestBehavior.opaque,
-                child: SizedBox(width: height, height: height, child: Center(child: Icon(item.icon, size: effectiveIconSize, color: AppColors.black))),
-              ))
+          .map(
+            (item) => GestureDetector(
+              onTap: item.onPressed,
+              behavior: HitTestBehavior.opaque,
+              child: SizedBox(
+                width: height,
+                height: height,
+                child: Center(
+                  child: Icon(item.icon, size: effectiveIconSize, color: AppColors.black),
+                ),
+              ),
+            ),
+          )
           .toList(),
     );
   }
@@ -119,7 +123,18 @@ class CustomGlassIconButtonGroup extends StatelessWidget {
 /// Back/action buttons are standalone glass pills; title is plain text.
 /// No shared glass layer.
 class CustomGlassAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomGlassAppBar({super.key, this.title, this.titleWidget, this.leading, this.leadingIcon, this.leadingIconSize, this.actions, this.onBack, this.showLeading = true});
+  const CustomGlassAppBar({
+    super.key,
+    this.title,
+    this.titleWidget,
+    this.leading,
+    this.leadingIcon,
+    this.leadingIconSize,
+    this.actions,
+    this.onBack,
+    this.showLeading = true,
+    this.horizontalPadding,
+  });
 
   final String? title;
   final Widget? titleWidget;
@@ -129,6 +144,7 @@ class CustomGlassAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
   final VoidCallback? onBack;
   final bool showLeading;
+  final double? horizontalPadding;
 
   @override
   Size get preferredSize => const Size.fromHeight(AppSizes.topBarHeight);
@@ -137,14 +153,15 @@ class CustomGlassAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final leadingWidget = !showLeading
         ? const SizedBox(width: AppSizes.backButtonSize)
-        : leading ?? CustomGlassIconButton(icon: leadingIcon ?? Icons.arrow_back_ios_new_rounded, iconSize: leadingIconSize ?? AppSizes.iconMd, onPressed: onBack ?? () => Get.back());
+        : leading ??
+              CustomGlassIconButton(icon: leadingIcon ?? Icons.arrow_back_ios_new_rounded, iconSize: leadingIconSize ?? AppSizes.iconMd, onPressed: onBack ?? () => Get.back());
 
     final titleContent = titleWidget ?? (title != null ? Text(title!, style: AppTextStyles.title18) : null);
 
     return SafeArea(
       bottom: false,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 0), // horizontal: AppSpacing.m
+        padding: EdgeInsets.symmetric(horizontal: horizontalPadding ?? 0),
         child: SizedBox(
           height: preferredSize.height,
           child: Stack(

@@ -19,6 +19,7 @@ class IngredientEntity {
   final int mealId;
   final String name;
   final double weight;
+  final double? amount;
   final double calories;
   final double proteins;
   final double carbs;
@@ -30,6 +31,7 @@ class IngredientEntity {
     required this.mealId,
     required this.name,
     required this.weight,
+    this.amount = 1.0,
     required this.calories,
     required this.proteins,
     required this.carbs,
@@ -42,6 +44,7 @@ class IngredientEntity {
     int? mealId,
     String? name,
     double? weight,
+    double? amount,
     double? calories,
     double? proteins,
     double? carbs,
@@ -53,6 +56,7 @@ class IngredientEntity {
       mealId: mealId ?? this.mealId,
       name: name ?? this.name,
       weight: weight ?? this.weight,
+      amount: amount ?? this.amount,
       calories: calories ?? this.calories,
       proteins: proteins ?? this.proteins,
       carbs: carbs ?? this.carbs,

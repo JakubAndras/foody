@@ -154,7 +154,7 @@ class AppSizes {
   static const double buttonHeightXs = 36;
   static const double buttonHeightXxs = 32;
   static const double minTap = 48;
-  static const double topBarHeight = 56;
+  static const double topBarHeight = 48;
   static const double bottomNavHeight = 64;
   static const double backButtonSize = 40;
   static const double askAiActionHeight = 54.5;
