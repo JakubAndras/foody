@@ -5,6 +5,7 @@ import 'package:diplomka/widgets/liquid_glass/glass_segmented_tabs.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class SelectMealSearchBar extends StatelessWidget {
   const SelectMealSearchBar({super.key, required this.controller, required this.onChanged, required this.onClear, this.focusNode});
@@ -27,7 +28,7 @@ class SelectMealSearchBar extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(Icons.search, color: AppColors.textSecondary, size: AppSizes.iconMd),
+          const Icon(CupertinoIcons.search, color: AppColors.textSecondary, size: AppSizes.iconMd),
           const SizedBox(width: AppSpacing.s),
           Expanded(
             child: TextField(
@@ -46,7 +47,7 @@ class SelectMealSearchBar extends StatelessWidget {
           if (hasValue)
             GestureDetector(
               onTap: onClear,
-              child: const Icon(Icons.close, color: AppColors.textSecondary, size: AppSizes.iconMd),
+              child: const Icon(CupertinoIcons.xmark, color: AppColors.textSecondary, size: AppSizes.iconMd),
             ),
         ],
       ),
@@ -211,7 +212,7 @@ class SelectMealCard extends StatelessWidget {
                 width: 32,
                 height: 32,
                 decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
-                child: const Icon(Icons.add, color: AppColors.onPrimary, size: AppSizes.iconMd),
+                child: const Icon(CupertinoIcons.add, color: AppColors.onPrimary, size: AppSizes.iconMd),
               ),
             ),
           ],
@@ -316,7 +317,7 @@ class SelectMealInlineMacroCard extends StatelessWidget {
                 width: 32,
                 height: 32,
                 decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
-                child: const Icon(Icons.add, color: AppColors.onPrimary, size: AppSizes.iconMd),
+                child: const Icon(CupertinoIcons.add, color: AppColors.onPrimary, size: AppSizes.iconMd),
               ),
             ),
           ],
@@ -361,7 +362,7 @@ class SelectMealIngredientRow extends StatelessWidget {
                 width: 32,
                 height: 32,
                 decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
-                child: const Icon(Icons.add, color: AppColors.onPrimary, size: AppSizes.iconMd),
+                child: const Icon(CupertinoIcons.add, color: AppColors.onPrimary, size: AppSizes.iconMd),
               ),
             ),
           ],
@@ -385,7 +386,7 @@ class SelectMealEmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.search_off, color: AppColors.textTertiary, size: AppSizes.emptyStateIconSize),
+            const Icon(CupertinoIcons.search, color: AppColors.textTertiary, size: AppSizes.emptyStateIconSize),
             const SizedBox(height: AppSpacing.m),
             Text(title, style: AppTextStyles.title18, textAlign: TextAlign.center),
             const SizedBox(height: AppSpacing.xs),
@@ -426,7 +427,7 @@ class SelectMealErrorState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.error_outline, color: AppColors.error, size: AppSizes.emptyStateIconSize),
+            const Icon(CupertinoIcons.exclamationmark_circle, color: AppColors.error, size: AppSizes.emptyStateIconSize),
             const SizedBox(height: AppSpacing.m),
             Text(tr(LocaleKeys.common_something_went_wrong), style: AppTextStyles.title18, textAlign: TextAlign.center),
             const SizedBox(height: AppSpacing.xs),
@@ -485,7 +486,7 @@ class SelectMealPickerSheet extends StatelessWidget {
                         SizedBox(
                           width: AppSizes.iconLg,
                           height: AppSizes.iconLg,
-                          child: isSelected ? const Icon(Icons.check, color: AppColors.primary, size: AppSizes.iconMd) : const SizedBox.shrink(),
+                          child: isSelected ? const Icon(CupertinoIcons.checkmark, color: AppColors.primary, size: AppSizes.iconMd) : const SizedBox.shrink(),
                         ),
                         const SizedBox(width: AppSpacing.xs),
                         Text(options[index], style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600, height: 1.75, color: AppColors.textHeading, letterSpacing: -0.4492)),
@@ -517,7 +518,7 @@ class SelectMealSuggestionTile extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: 10),
         child: Row(
           children: [
-            const Icon(Icons.history, color: AppColors.textTertiary, size: AppSizes.iconSm),
+            const Icon(CupertinoIcons.clock, color: AppColors.textTertiary, size: AppSizes.iconSm),
             const SizedBox(width: AppSpacing.s),
             Expanded(
               child: Text(name, style: AppTextStyles.body14, maxLines: 1, overflow: TextOverflow.ellipsis),

@@ -11,6 +11,7 @@ import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:diplomka/widgets/foody_glass_buttons.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class FixResultScreen extends StatefulWidget {
@@ -51,7 +52,7 @@ class _FixResultScreenState extends State<FixResultScreen> {
                 onBack: () => Navigator.of(context).maybePop(),
                 actions: [
                   CustomGlassIconButton(
-                    icon: Icons.help_outline,
+                    icon: CupertinoIcons.info,
                     onPressed: () => setState(() => _showTip = true),
                   ),
                 ],

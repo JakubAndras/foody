@@ -8,6 +8,7 @@ import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
@@ -59,7 +60,7 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
         extendBodyBehindAppBar: true,
         backgroundColor: AppColors.background,
         appBar: CustomGlassAppBar(
-          leadingIcon: Icons.close,
+          leadingIcon: CupertinoIcons.xmark,
           onBack: () => Get.back(),
           titleWidget: Container(
             height: AppSizes.scanTopButtonSize,
@@ -101,7 +102,7 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
                   const SizedBox(height: AppSpacing.xl),
                   ScanPrimaryButton(
                     label: tr(LocaleKeys.scan_preview_analyze),
-                    icon: Icons.auto_awesome,
+                    icon: CupertinoIcons.sparkles,
                     gradient: AppGradients.askAiPrimary,
                     onPressed: _isAnalyzing ? null : _analyze,
                     height: AppSizes.scanAnalyzeButtonHeight,
@@ -144,10 +145,10 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
             const SizedBox(height: AppSpacing.l),
             Text(tr(LocaleKeys.scan_preview_tips_title), style: AppTextStyles.title18.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: AppSpacing.m),
-            _PreviewTipRow(icon: Icons.edit_note, text: tr(LocaleKeys.scan_preview_tip_add_description)),
-            _PreviewTipRow(icon: Icons.camera_alt_outlined, text: tr(LocaleKeys.scan_preview_tip_retake_blurry)),
-            _PreviewTipRow(icon: Icons.visibility_outlined, text: tr(LocaleKeys.scan_preview_tip_all_visible)),
-            _PreviewTipRow(icon: Icons.tune_outlined, text: tr(LocaleKeys.scan_preview_tip_review_results)),
+            _PreviewTipRow(icon: CupertinoIcons.pencil, text: tr(LocaleKeys.scan_preview_tip_add_description)),
+            _PreviewTipRow(icon: CupertinoIcons.camera, text: tr(LocaleKeys.scan_preview_tip_retake_blurry)),
+            _PreviewTipRow(icon: CupertinoIcons.eye, text: tr(LocaleKeys.scan_preview_tip_all_visible)),
+            _PreviewTipRow(icon: CupertinoIcons.slider_horizontal_3, text: tr(LocaleKeys.scan_preview_tip_review_results)),
           ],
         ),
       ),

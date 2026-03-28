@@ -18,6 +18,7 @@ import 'package:diplomka/widgets/variable_blur_scroll_view.dart';
 import 'package:diplomka/widgets/mesh_gradient_background.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 import '../widgets/weekly_energy_card.dart';
@@ -222,7 +223,7 @@ class _DailyAverageCardState extends State<_DailyAverageCard> {
                     width: AppSizes.cardIconLg,
                     height: AppSizes.cardIconLg,
                     decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.m)),
-                    child: const Icon(Icons.bar_chart_rounded, color: AppColors.textTertiary),
+                    child: const Icon(CupertinoIcons.chart_bar, color: AppColors.textTertiary),
                   ),
                   const SizedBox(height: AppSpacing.m),
                   if (stats.hasMeals)

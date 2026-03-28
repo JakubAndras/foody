@@ -5,6 +5,7 @@ import 'package:diplomka/widgets/sheet_drag_handle.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class QuickActionSheet extends StatelessWidget {
   const QuickActionSheet({super.key, required this.onLogMeal, required this.onBarcode, required this.onVoiceLog, required this.onMealScan, required this.onExercise});
@@ -69,7 +70,7 @@ class QuickActionSheet extends StatelessWidget {
           if (!AppQuickAction.useGlassCards) const SizedBox(height: AppSpacing.m),
           _buildGridRow(
             left: _QuickActionTile(
-              icon: Icons.center_focus_strong,
+              icon: CupertinoIcons.viewfinder,
               label: tr(LocaleKeys.quick_action_log_meal),
               iconBg: const Color(0x212B7FFF),
               onTap: onLogMeal,
@@ -78,7 +79,7 @@ class QuickActionSheet extends StatelessWidget {
               textStyle: tileTextStyle,
             ),
             right: _QuickActionTile(
-              icon: Icons.qr_code_2,
+              icon: CupertinoIcons.qrcode_viewfinder,
               label: tr(LocaleKeys.quick_action_barcode_scan),
               iconBg: const Color(0x21FB2C36),
               onTap: onBarcode,
@@ -90,7 +91,7 @@ class QuickActionSheet extends StatelessWidget {
           const SizedBox(height: AppSpacing.s),
           _buildGridRow(
             left: _QuickActionTile(
-              icon: Icons.mic,
+              icon: CupertinoIcons.mic,
               label: tr(LocaleKeys.quick_action_voice_log),
               iconBg: const Color(0x216366F1),
               onTap: onVoiceLog,
@@ -99,7 +100,7 @@ class QuickActionSheet extends StatelessWidget {
               textStyle: tileTextStyle,
             ),
             right: _QuickActionTile(
-              icon: Icons.photo_camera_outlined,
+              icon: CupertinoIcons.camera,
               label: tr(LocaleKeys.quick_action_meal_scan),
               iconBg: const Color(0x2105DF72),
               onTap: onMealScan,
@@ -110,7 +111,7 @@ class QuickActionSheet extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.m),
           _ActionRow(
-            icon: Icons.fitness_center_outlined,
+            icon: Icons.directions_run_rounded,
             label: tr(LocaleKeys.quick_action_exercise),
             onTap: onExercise,
             decoration: rowDecoration,

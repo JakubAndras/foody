@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 import 'package:diplomka/app_theme.dart';
@@ -90,7 +91,7 @@ class _AskAiScreenState extends State<AskAiScreen> {
                             children: [
                               AskAiSectionHeader(
                                 title: tr(LocaleKeys.ask_ai_example_questions),
-                                icon: Icons.question_mark,
+                                icon: CupertinoIcons.question,
                                 iconGradient: AppGradients.askAiExample,
                                 iconRadius: AppRadii.xs,
                                 iconSize: 28,

@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/services/session_manager.dart';
@@ -77,7 +78,7 @@ class CaloriesCard extends StatelessWidget {
             children: [
               const SizedBox(height: AppSpacing.xxs),
               _StatItem(
-                icon: Icons.flag_outlined,
+                icon: CupertinoIcons.flag,
                 label: tr(LocaleKeys.dashboard_base_goal),
                 value: baseGoal.toStringAsFixed(0),
                 color: AppColors.black,
@@ -101,7 +102,7 @@ class CaloriesCard extends StatelessWidget {
               if (rolloverEnabled) ...[
                 const SizedBox(height: AppSpacing.s),
                 _StatItem(
-                  icon: Icons.history_rounded,
+                  icon: CupertinoIcons.clock,
                   label: tr(LocaleKeys.dashboard_rollover),
                   value: '${rolloverAmount >= 0 ? '+' : ''}${rolloverAmount.toStringAsFixed(0)}',
                   color: AppColors.black,

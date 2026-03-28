@@ -4,6 +4,7 @@ import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:diplomka/widgets/foody_glass_buttons.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 class ReportMealScreen extends StatefulWidget {
@@ -38,11 +39,11 @@ class _ReportMealScreenState extends State<ReportMealScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CustomGlassIconButton(icon: Icons.chevron_left, onPressed: () => Navigator.of(context).maybePop()),
+                  CustomGlassIconButton(icon: CupertinoIcons.chevron_left, onPressed: () => Navigator.of(context).maybePop()),
                   const SizedBox(height: AppSpacing.l),
                   Row(
                     children: [
-                      const Icon(Icons.report_outlined, size: AppSizes.iconMd, color: AppColors.textPrimary),
+                      const Icon(CupertinoIcons.flag, size: AppSizes.iconMd, color: AppColors.textPrimary),
                       const SizedBox(width: AppSpacing.s),
                       Text(tr(LocaleKeys.report_meal_title), style: AppTextStyles.h1.copyWith(fontSize: 32)),
                     ],

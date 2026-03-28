@@ -13,6 +13,7 @@ import 'package:diplomka/widgets/foody_glass_buttons.dart';
 import 'package:diplomka/widgets/glass_popup.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
@@ -111,8 +112,8 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
               CustomGlassIconButtonGroup(
                 iconSize: AppSizes.iconLg,
                 items: [
-                  (icon: _exercise.isFavorite ? Icons.bookmark : Icons.bookmark_border, onPressed: _toggleFavorite),
-                  (icon: Icons.more_horiz, onPressed: () => _showOptions(context)),
+                  (icon: _exercise.isFavorite ? Icons.bookmark : CupertinoIcons.bookmark, onPressed: _toggleFavorite),
+                  (icon: CupertinoIcons.ellipsis, onPressed: () => _showOptions(context)),
                 ],
               ),
             ],
@@ -137,7 +138,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
               Expanded(
                 child: ExerciseStatCard(
                   gradient: AppGradients.exerciseCalories,
-                  icon: Icons.local_fire_department,
+                  icon: CupertinoIcons.flame,
                   label: tr(LocaleKeys.exercise_total_calories),
                   value: '${_exercise.caloriesBurned.round()}',
                   unit: tr(LocaleKeys.common_kcal),
@@ -147,7 +148,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
               Expanded(
                 child: ExerciseStatCard(
                   gradient: AppGradients.exerciseDuration,
-                  icon: Icons.schedule,
+                  icon: CupertinoIcons.clock,
                   label: tr(LocaleKeys.common_duration),
                   value: '${_exercise.durationMinutes ?? 0}',
                   unit: tr(LocaleKeys.common_min),
@@ -158,7 +159,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
           const SizedBox(height: AppSpacing.m),
           ExerciseInfoCard(
             gradient: AppGradients.exerciseCaloriesAlt,
-            icon: Icons.trending_up,
+            icon: CupertinoIcons.graph_square,
             label: tr(LocaleKeys.exercise_calories_per_minute),
             value: '$rate',
             unit: tr(LocaleKeys.exercise_kcal_min),
@@ -181,7 +182,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
       items: [
         GlassPopupItem(
           label: tr(LocaleKeys.common_share),
-          icon: Icons.share_outlined,
+          icon: CupertinoIcons.share,
           onTap: () {
             Navigator.of(context).pop();
             _showSnack(context, tr(LocaleKeys.common_share));
@@ -190,7 +191,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
         if (!_isFromToday)
           GlassPopupItem(
             label: tr(LocaleKeys.exercise_duplicate_to_today),
-            icon: Icons.content_copy_outlined,
+            icon: CupertinoIcons.doc_on_doc,
             onTap: () {
               Navigator.of(context).pop();
               _handleDuplicateExercise();
@@ -198,7 +199,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
           ),
         GlassPopupItem(
           label: tr(LocaleKeys.common_delete),
-          icon: Icons.delete_outline,
+          icon: CupertinoIcons.trash,
           color: AppColors.error,
           showDividerAbove: true,
           onTap: () {

@@ -15,6 +15,7 @@ import 'package:diplomka/services/voice/voice_transcription_service.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -145,7 +146,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
                         width: 54,
                         height: 54,
                         decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.pill)),
-                        child: const Icon(Icons.mic_rounded, color: AppColors.violetStrong, size: AppSizes.iconLg),
+                        child: const Icon(CupertinoIcons.mic_fill, color: AppColors.violetStrong, size: AppSizes.iconLg),
                       ),
                       const SizedBox(height: AppSpacing.m),
                       Text(
@@ -450,7 +451,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
                         width: AppSizes.iconButtonSm,
                         height: AppSizes.iconButtonSm,
                         decoration: const BoxDecoration(color: AppColors.surfaceMuted, shape: BoxShape.circle),
-                        child: const Icon(Icons.close, size: AppSizes.iconSm, color: AppColors.textPrimary),
+                        child: const Icon(CupertinoIcons.xmark, size: AppSizes.iconSm, color: AppColors.textPrimary),
                       ),
                     ),
                   ],
@@ -514,13 +515,13 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
             const SizedBox(height: AppSpacing.l),
             Text(tr(LocaleKeys.voice_tips_title), style: AppTextStyles.title18.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: AppSpacing.m),
-            _VoiceTipRow(icon: Icons.record_voice_over_outlined, text: tr(LocaleKeys.voice_tips_speak_clearly)),
-            _VoiceTipRow(icon: Icons.restaurant_outlined, text: tr(LocaleKeys.voice_tips_one_meal)),
-            _VoiceTipRow(icon: Icons.scale_outlined, text: tr(LocaleKeys.voice_tips_include_portions)),
-            _VoiceTipRow(icon: Icons.tune_outlined, text: tr(LocaleKeys.voice_tips_be_specific)),
-            _VoiceTipRow(icon: Icons.pause_circle_outline, text: tr(LocaleKeys.voice_tips_pause_resume)),
-            _VoiceTipRow(icon: Icons.edit_outlined, text: tr(LocaleKeys.voice_tips_edit_text)),
-            _VoiceTipRow(icon: Icons.language_outlined, text: tr(LocaleKeys.voice_tips_languages)),
+            _VoiceTipRow(icon: CupertinoIcons.mic, text: tr(LocaleKeys.voice_tips_speak_clearly)),
+            _VoiceTipRow(icon: CupertinoIcons.flame, text: tr(LocaleKeys.voice_tips_one_meal)),
+            _VoiceTipRow(icon: CupertinoIcons.speedometer, text: tr(LocaleKeys.voice_tips_include_portions)),
+            _VoiceTipRow(icon: CupertinoIcons.slider_horizontal_3, text: tr(LocaleKeys.voice_tips_be_specific)),
+            _VoiceTipRow(icon: CupertinoIcons.pause_circle, text: tr(LocaleKeys.voice_tips_pause_resume)),
+            _VoiceTipRow(icon: CupertinoIcons.pencil, text: tr(LocaleKeys.voice_tips_edit_text)),
+            _VoiceTipRow(icon: CupertinoIcons.globe, text: tr(LocaleKeys.voice_tips_languages)),
           ],
         ),
       ),
@@ -545,12 +546,12 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
               child: CustomGlassAppBar(
-                leadingIcon: Icons.close,
+                leadingIcon: CupertinoIcons.xmark,
                 onBack: () => Navigator.of(context).maybePop(),
                 actions: [
                   CustomGlassIconButtonGroup(items: [
-                    (icon: Icons.translate_outlined, onPressed: () => _showVoiceLanguageSheet(context)),
-                    (icon: Icons.help_outline, onPressed: () => _showVoiceTips(context)),
+                    (icon: CupertinoIcons.globe, onPressed: () => _showVoiceLanguageSheet(context)),
+                    (icon: CupertinoIcons.question_circle, onPressed: () => _showVoiceTips(context)),
                   ]),
                 ],
               ),
@@ -697,7 +698,7 @@ class _VoiceLanguageRow extends StatelessWidget {
                 width: AppSizes.iconMd + 4,
                 height: AppSizes.iconMd + 4,
                 decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
-                child: const Icon(Icons.check, size: AppSizes.iconSm, color: AppColors.onPrimary),
+                child: const Icon(CupertinoIcons.checkmark, size: AppSizes.iconSm, color: AppColors.onPrimary),
               ),
           ],
         ),

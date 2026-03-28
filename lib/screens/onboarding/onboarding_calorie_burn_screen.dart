@@ -3,6 +3,7 @@ import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class OnboardingCalorieBurnScreen extends StatelessWidget {
   const OnboardingCalorieBurnScreen({
@@ -66,7 +67,7 @@ class OnboardingCalorieBurnScreen extends StatelessWidget {
                           const SizedBox(height: AppSpacing.s),
                           Row(
                             children: [
-                              const Icon(Icons.local_fire_department, color: AppColors.textPrimary, size: AppSizes.iconLg),
+                              const Icon(CupertinoIcons.flame, color: AppColors.textPrimary, size: AppSizes.iconLg),
                               const SizedBox(width: AppSpacing.s),
                               Text(
                                 '500 Cals',
@@ -84,7 +85,7 @@ class OnboardingCalorieBurnScreen extends StatelessWidget {
                                   color: AppColors.primaryDark,
                                   shape: BoxShape.circle,
                                 ),
-                                child: const Icon(Icons.directions_run, color: AppColors.onPrimary, size: AppSizes.iconMd),
+                                child: const Icon(CupertinoIcons.flame, color: AppColors.onPrimary, size: AppSizes.iconMd),
                               ),
                               const SizedBox(width: AppSpacing.s),
                               Column(

@@ -4,6 +4,7 @@ import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class ExerciseDetailOptionsSheet extends StatelessWidget {
   const ExerciseDetailOptionsSheet({
@@ -34,7 +35,7 @@ class ExerciseDetailOptionsSheet extends StatelessWidget {
             children: [
               if (onDuplicate != null) ...[
                 _OptionRow(
-                  icon: Icons.content_copy_outlined,
+                  icon: CupertinoIcons.doc_on_doc,
                   label: tr(LocaleKeys.exercise_duplicate_to_today),
                   color: AppColors.textPrimary,
                   onTap: onDuplicate!,
@@ -42,14 +43,14 @@ class ExerciseDetailOptionsSheet extends StatelessWidget {
                 const SizedBox(height: AppSpacing.s),
               ],
               // _OptionRow(
-              //   icon: Icons.report_gmailerrorred_outlined,
+              //   icon: CupertinoIcons.exclamationmark_triangle,
               //   label: tr(LocaleKeys.common_report),
               //   color: AppColors.textPrimary,
               //   onTap: onReport,
               // ),
               // const SizedBox(height: AppSpacing.s),
               _OptionRow(
-                icon: Icons.delete_outline,
+                icon: CupertinoIcons.trash,
                 label: tr(LocaleKeys.common_delete),
                 color: AppColors.error,
                 onTap: onDelete,

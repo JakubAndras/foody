@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
@@ -84,7 +85,7 @@ class AskAiResponseScreen extends StatelessWidget {
             width: double.infinity,
             child: AskAiPrimaryButton(
               label: tr(LocaleKeys.common_share),
-              leading: const Icon(Icons.share, size: AppSizes.iconMd, color: AppColors.onPrimary),
+              leading: const Icon(CupertinoIcons.share, size: AppSizes.iconMd, color: AppColors.onPrimary),
               gradient: AppGradients.primary,
               onPressed: () => _handleShare(context),
             ),

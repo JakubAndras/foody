@@ -4,6 +4,7 @@ import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class OnboardingPlanReadyScreen extends StatelessWidget {
   const OnboardingPlanReadyScreen({
@@ -111,7 +112,7 @@ class OnboardingPlanReadyScreen extends StatelessWidget {
             childAspectRatio: 0.9,
             children: [
               _MacroTile(
-                icon: Icons.local_fire_department,
+                icon: CupertinoIcons.flame,
                 label: tr(LocaleKeys.common_calories),
                 value: '2086',
                 unit: '',

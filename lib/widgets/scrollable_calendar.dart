@@ -2,6 +2,7 @@ import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 /// Cell height for each day row.
 const double _cellSize = AppSizes.datePickerCell;
@@ -261,7 +262,7 @@ class _ScrollableCalendarState extends State<ScrollableCalendar> {
                 color: AppColors.calendarDarkSurface,
                 borderRadius: BorderRadius.circular(AppRadii.pill),
               ),
-              child: const Icon(Icons.close, color: AppColors.black, size: AppSizes.iconLg),
+              child: const Icon(CupertinoIcons.xmark, color: AppColors.black, size: AppSizes.iconLg),
             ),
           ),
           // Year label

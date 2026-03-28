@@ -5,6 +5,7 @@ import 'package:diplomka/widgets/foody_glass_buttons.dart';
 import 'package:diplomka/widgets/glass_popup.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class InlineErrorText extends StatelessWidget {
   final String message;
@@ -140,7 +141,7 @@ class EditIngredientRow extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      if (highlighted) ...[const Icon(Icons.warning_amber_rounded, size: AppSizes.iconSm, color: AppColors.warningStrong), const SizedBox(width: AppSpacing.xs)],
+                      if (highlighted) ...[const Icon(CupertinoIcons.exclamationmark_triangle, size: AppSizes.iconSm, color: AppColors.warningStrong), const SizedBox(width: AppSpacing.xs)],
                       Flexible(
                         child: Text(
                           ingredient.name,
@@ -247,7 +248,7 @@ class _EditIngredientPopupButton extends StatelessWidget {
       child: SizedBox(
         width: 32,
         height: 32,
-        child: Icon(Icons.more_horiz, size: AppSizes.iconMd, color: AppColors.textSecondary),
+        child: Icon(CupertinoIcons.ellipsis, size: AppSizes.iconMd, color: AppColors.textSecondary),
       ),
     );
   }
@@ -260,7 +261,7 @@ class _EditIngredientPopupButton extends StatelessWidget {
       items: [
         GlassPopupItem(
           label: tr(LocaleKeys.common_favorites),
-          icon: Icons.bookmark_border,
+          icon: CupertinoIcons.bookmark,
           onTap: () {
             Navigator.of(context).pop();
             onFavorite?.call();
@@ -268,7 +269,7 @@ class _EditIngredientPopupButton extends StatelessWidget {
         ),
         GlassPopupItem(
           label: tr(LocaleKeys.common_edit),
-          icon: Icons.edit_outlined,
+          icon: CupertinoIcons.pencil,
           onTap: () {
             Navigator.of(context).pop();
             onEdit?.call();
@@ -276,7 +277,7 @@ class _EditIngredientPopupButton extends StatelessWidget {
         ),
         GlassPopupItem(
           label: tr(LocaleKeys.common_delete),
-          icon: Icons.delete_outline,
+          icon: CupertinoIcons.trash,
           color: AppColors.error,
           showDividerAbove: true,
           onTap: () {

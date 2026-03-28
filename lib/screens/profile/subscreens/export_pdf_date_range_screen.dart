@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -234,7 +235,7 @@ class _CalendarRangeSheetState extends State<_CalendarRangeSheet> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(tr(LocaleKeys.export_custom_date_range), style: AppTextStyles.h4.copyWith(fontWeight: FontWeight.w700)),
-                ProfileBackButton(icon: Icons.close, onPressed: () => Navigator.of(context).pop()),
+                ProfileBackButton(icon: CupertinoIcons.xmark, onPressed: () => Navigator.of(context).pop()),
               ],
             ),
           ),

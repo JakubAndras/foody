@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 import 'package:diplomka/app_theme.dart';
@@ -95,7 +96,7 @@ class _ExpandableFaqItem extends StatelessWidget {
                 AnimatedRotation(
                   turns: isExpanded ? 0.25 : 0,
                   duration: AppTheme.transitionDuration,
-                  child: const Icon(Icons.chevron_right, size: AppSizes.iconMd, color: AppColors.textSecondary),
+                  child: const Icon(CupertinoIcons.chevron_right, size: AppSizes.iconMd, color: AppColors.textSecondary),
                 ),
               ],
             ),

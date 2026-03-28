@@ -182,7 +182,7 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
                     style: AppTextStyles.title17.copyWith(color: AppColors.black, fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(width: AppSpacing.xxs),
-                  Icon(_showMonthYearPicker ? Icons.keyboard_arrow_down_rounded : Icons.keyboard_arrow_right_rounded, color: AppColors.black, size: AppSizes.iconLg),
+                  Icon(_showMonthYearPicker ? CupertinoIcons.chevron_down : CupertinoIcons.chevron_right, color: AppColors.black, size: AppSizes.iconLg),
                 ],
               ),
             ),
@@ -194,7 +194,7 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
               behavior: HitTestBehavior.opaque,
               child: const Padding(
                 padding: EdgeInsets.all(AppSpacing.xs),
-                child: Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.black, size: AppSizes.iconMd),
+                child: Icon(CupertinoIcons.chevron_left, color: AppColors.black, size: AppSizes.iconMd),
               ),
             ),
             const SizedBox(width: AppSpacing.xxs),
@@ -203,7 +203,7 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
               behavior: HitTestBehavior.opaque,
               child: const Padding(
                 padding: EdgeInsets.only(left: AppSpacing.xs),
-                child: Icon(Icons.arrow_forward_ios_rounded, color: AppColors.black, size: AppSizes.iconMd),
+                child: Icon(CupertinoIcons.chevron_right, color: AppColors.black, size: AppSizes.iconMd),
               ),
             ),
           ],

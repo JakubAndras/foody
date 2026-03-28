@@ -13,6 +13,7 @@ import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class ExerciseLogHomeScreen extends StatefulWidget {
@@ -83,7 +84,7 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
               onBack: () => Navigator.of(context).maybePop(),
               actions: [
                 CustomGlassIconButton(
-                  icon: Icons.add,
+                  icon: CupertinoIcons.add,
                   iconSize: AppSizes.iconMd,
                   onPressed: () => Get.to(() => const AddExerciseScreen()),
                 ),
@@ -105,7 +106,7 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
                 ExerciseFilterChip(
                   label: tr(LocaleKeys.common_favorites),
                   selected: _showFavorites,
-                  icon: Icons.close,
+                  icon: CupertinoIcons.xmark,
                   onTap: () => setState(() => _showFavorites = true),
                 ),
               ],

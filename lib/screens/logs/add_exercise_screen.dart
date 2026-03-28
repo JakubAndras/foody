@@ -8,6 +8,7 @@ import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 
 enum ExerciseTrackingMode { total, perMinute }
@@ -121,7 +122,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
             title: tr(LocaleKeys.exercise_add_title),
             onBack: () => Navigator.of(context).maybePop(),
             actions: [
-              CustomGlassIconButton(icon: _isFavorite ? Icons.bookmark : Icons.bookmark_border, iconSize: AppSizes.iconMd, onPressed: () => setState(() => _isFavorite = !_isFavorite)),
+              CustomGlassIconButton(icon: _isFavorite ? Icons.bookmark : CupertinoIcons.bookmark, iconSize: AppSizes.iconMd, onPressed: () => setState(() => _isFavorite = !_isFavorite)),
             ],
           ),
           const SizedBox(height: AppSpacing.l),
@@ -137,7 +138,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
                 child: ExerciseTrackingOptionCard(
                   selected: _mode == ExerciseTrackingMode.total,
                   gradient: AppGradients.exerciseCalories,
-                  icon: Icons.local_fire_department,
+                  icon: CupertinoIcons.flame,
                   label: tr(LocaleKeys.exercise_total_calories),
                   subtitle: tr(LocaleKeys.exercise_enter_total),
                   onTap: () => setState(() => _mode = ExerciseTrackingMode.total),
@@ -148,7 +149,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
                 child: ExerciseTrackingOptionCard(
                   selected: _mode == ExerciseTrackingMode.perMinute,
                   gradient: AppGradients.exerciseCaloriesAlt,
-                  icon: Icons.trending_up,
+                  icon: CupertinoIcons.graph_square,
                   label: tr(LocaleKeys.exercise_per_minute),
                   subtitle: tr(LocaleKeys.exercise_kcal_min_desc),
                   onTap: () => setState(() => _mode = ExerciseTrackingMode.perMinute),
@@ -165,7 +166,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
               label: tr(LocaleKeys.common_calories),
               unit: tr(LocaleKeys.common_kcal),
               gradient: AppGradients.exerciseCalories,
-              icon: Icons.local_fire_department,
+              icon: CupertinoIcons.flame,
             ),
             const SizedBox(height: AppSpacing.s),
             Text(tr(LocaleKeys.exercise_enter_total), style: AppTextStyles.label12.copyWith(color: AppColors.textTertiary)),
@@ -177,7 +178,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
               label: tr(LocaleKeys.exercise_kcal_min),
               unit: tr(LocaleKeys.exercise_kcal_min),
               gradient: AppGradients.exerciseCaloriesAlt,
-              icon: Icons.trending_up,
+              icon: CupertinoIcons.graph_square,
               onChanged: (_) => setState(() {}),
             ),
             const SizedBox(height: AppSpacing.m),
@@ -188,7 +189,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
               label: tr(LocaleKeys.common_min),
               unit: tr(LocaleKeys.common_min),
               gradient: AppGradients.exerciseDuration,
-              icon: Icons.schedule,
+              icon: CupertinoIcons.clock,
               onChanged: (_) => setState(() {}),
             ),
             const SizedBox(height: AppSpacing.m),

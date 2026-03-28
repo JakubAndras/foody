@@ -4,6 +4,7 @@ import 'package:diplomka/controller/streak_controller.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 // Displays streak information in a dialog.
 class StreakDialog extends StatelessWidget {
@@ -27,7 +28,7 @@ class StreakDialog extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.error_outline, color: AppColors.accentColor, size: 48),
+                  const Icon(CupertinoIcons.exclamationmark_circle, color: AppColors.accentColor, size: 48),
                   const SizedBox(height: 16),
                   Text(tr(LocaleKeys.streak_error_loading, namedArgs: {'error': snapshot.error.toString()}), textAlign: TextAlign.center),
                 ],
@@ -39,7 +40,7 @@ class StreakDialog extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const SizedBox(height: 24),
-                Icon(Icons.local_fire_department, size: 80, color: Colors.orange), // Large flame icon
+                Icon(CupertinoIcons.flame, size: 80, color: Colors.orange), // Large flame icon
                 const SizedBox(height: 16),
                 Text(
                   tr(LocaleKeys.streak_title, namedArgs: {'count': streakInfo.currentStreak.toString()}),
@@ -72,7 +73,7 @@ class StreakDialog extends StatelessWidget {
                             ),
                           ),
                           child: isActive
-                              ? const Icon(Icons.check, size: 14, color: Colors.orange)
+                              ? const Icon(CupertinoIcons.checkmark, size: 14, color: Colors.orange)
                               : null,
                         ),
                       ],

@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
@@ -100,7 +101,7 @@ class AskAiPromptCard extends StatelessWidget {
               children: [
                 const Padding(
                   padding: EdgeInsets.only(top: 2),
-                  child: Icon(Icons.search, size: AppSizes.iconMd, color: AppColors.violet),
+                  child: Icon(CupertinoIcons.search, size: AppSizes.iconMd, color: AppColors.violet),
                 ),
                 const SizedBox(width: AppSpacing.s),
                 Expanded(
@@ -131,7 +132,7 @@ class AskAiPromptCard extends StatelessWidget {
                 if (!readOnly)
                   InkWell(
                     onTap: onClear,
-                    child: const Icon(Icons.close, size: AppSizes.iconMd, color: AppColors.textSecondary),
+                    child: const Icon(CupertinoIcons.xmark, size: AppSizes.iconMd, color: AppColors.textSecondary),
                   ),
               ],
             ),
@@ -142,7 +143,7 @@ class AskAiPromptCard extends StatelessWidget {
               label: isLoading ? tr(LocaleKeys.voice_analyzing) : tr(LocaleKeys.ask_ai_title),
               leading: isLoading
                   ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.onPrimary))
-                  : const Icon(Icons.auto_awesome, size: AppSizes.iconMd, color: AppColors.onPrimary),
+                  : const Icon(CupertinoIcons.sparkles, size: AppSizes.iconMd, color: AppColors.onPrimary),
               onPressed: isLoading ? null : onAsk,
             ),
           ],
@@ -245,7 +246,7 @@ class AskAiResponseCard extends StatelessWidget {
         children: [
           AskAiSectionHeader(
             title: tr(LocaleKeys.ask_ai_response_title),
-            icon: Icons.auto_awesome,
+            icon: CupertinoIcons.sparkles,
             iconGradient: AppGradients.askAiPrimary,
             iconRadius: AppRadii.pill,
             iconSize: 32,
@@ -429,7 +430,7 @@ class _AskAiCalendarCardState extends State<AskAiCalendarCard> {
         children: [
           AskAiSectionHeader(
             title: tr(LocaleKeys.ask_ai_affected_days),
-            icon: Icons.calendar_month,
+            icon: CupertinoIcons.calendar,
             iconGradient: AppGradients.primary,
             iconRadius: AppRadii.xs,
             iconSize: 28,
@@ -638,14 +639,14 @@ class _MonthSelector extends StatelessWidget {
       ),
       child: Row(
         children: [
-          _MonthButton(icon: Icons.chevron_left, onTap: onPrev),
+          _MonthButton(icon: CupertinoIcons.chevron_left, onTap: onPrev),
           const Spacer(),
           Text(
             label,
             style: AppTextStyles.title.copyWith(fontSize: 18, height: 1.55),
           ),
           const Spacer(),
-          _MonthButton(icon: Icons.chevron_right, onTap: onNext),
+          _MonthButton(icon: CupertinoIcons.chevron_right, onTap: onNext),
         ],
       ),
     );

@@ -3,6 +3,7 @@ import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/widgets/info_dialog.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class _BmiCategory {
   final String label;
@@ -58,7 +59,7 @@ class BmiCard extends StatelessWidget {
               Text(tr(LocaleKeys.progress_your_bmi), style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700)),
               GestureDetector(
                 onTap: () => showInfoDialog(context, title: tr(LocaleKeys.progress_bmi_info_title), body: tr(LocaleKeys.progress_bmi_info_body)),
-                child: const Icon(Icons.info_outline, size: AppSizes.iconMd, color: AppColors.textTertiary),
+                child: const Icon(CupertinoIcons.info, size: AppSizes.iconMd, color: AppColors.textTertiary),
               ),
             ],
           ),

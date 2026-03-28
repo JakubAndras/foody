@@ -4,6 +4,7 @@ import 'package:diplomka/utils/media_storage.dart';
 import 'package:diplomka/widgets/glass_popup.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 
 typedef PhotoActionCallback = void Function(String? photoPath);
@@ -21,7 +22,7 @@ Future<void> showPhotoActionPopup({
     items: [
       GlassPopupItem(
         label: tr(LocaleKeys.meal_take_photo),
-        icon: Icons.camera_alt_outlined,
+        icon: CupertinoIcons.camera,
         onTap: () {
           Navigator.of(context).pop();
           _pickPhoto(context, ImageSource.camera, onResult);
@@ -29,7 +30,7 @@ Future<void> showPhotoActionPopup({
       ),
       GlassPopupItem(
         label: tr(LocaleKeys.meal_upload_photo),
-        icon: Icons.photo_library_outlined,
+        icon: CupertinoIcons.photo_on_rectangle,
         onTap: () {
           Navigator.of(context).pop();
           _pickPhoto(context, ImageSource.gallery, onResult);
@@ -38,7 +39,7 @@ Future<void> showPhotoActionPopup({
       if (hasPhoto)
         GlassPopupItem(
           label: tr(LocaleKeys.meal_remove_photo),
-          icon: Icons.delete_outline,
+          icon: CupertinoIcons.trash,
           color: AppColors.error,
           onTap: () {
             Navigator.of(context).pop();

@@ -7,6 +7,7 @@ import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/widgets/picker_column.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class PickerSheet extends StatelessWidget {
   final List<String> options;
@@ -35,7 +36,7 @@ class PickerSheet extends StatelessWidget {
                   children: [
                     SizedBox(
                       width: AppSizes.iconLg,
-                      child: isSelected ? const Icon(Icons.check, color: AppColors.textPrimary, size: AppSizes.iconMd) : const SizedBox(width: AppSizes.iconMd),
+                      child: isSelected ? const Icon(CupertinoIcons.checkmark, color: AppColors.textPrimary, size: AppSizes.iconMd) : const SizedBox(width: AppSizes.iconMd),
                     ),
                     const SizedBox(width: AppSpacing.xs),
                     Expanded(
@@ -102,9 +103,9 @@ class DatePickerCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _HeaderButton(icon: Icons.chevron_left, onTap: onPrevMonth),
+              _HeaderButton(icon: CupertinoIcons.chevron_left, onTap: onPrevMonth),
               Text(_formatMonth(month), style: AppTextStyles.title18.copyWith(color: AppColors.textHeading, letterSpacing: -0.4395)),
-              _HeaderButton(icon: Icons.chevron_right, onTap: onNextMonth),
+              _HeaderButton(icon: CupertinoIcons.chevron_right, onTap: onNextMonth),
             ],
           ),
           const SizedBox(height: AppSpacing.m),

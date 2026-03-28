@@ -8,6 +8,7 @@ import 'package:diplomka/widgets/dashboard_calendar_sheet.dart';
 import 'package:diplomka/widgets/foody_glass_buttons.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
 Future<void> showWeightLogSheet(BuildContext context, {WeightEntry? entry}) async {
@@ -184,7 +185,7 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
                           style: AppTextStyles.title17.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w500),
                         ),
                         const SizedBox(width: AppSpacing.xs),
-                        Icon(Icons.chevron_right, size: AppSizes.iconMd, color: AppColors.textTertiary),
+                        Icon(CupertinoIcons.chevron_right, size: AppSizes.iconMd, color: AppColors.textTertiary),
                       ],
                     ),
                   ),

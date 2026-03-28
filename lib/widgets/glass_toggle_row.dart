@@ -39,7 +39,7 @@ class GlassToggleRow extends StatelessWidget {
                 trailing!,
               ],
               const SizedBox(width: AppSpacing.s),
-              GlassSwitch(value: isOn, onChanged: onChanged ?? (_) {}, useOwnLayer: true, inactiveColor: AppColors.grey4.withValues(alpha: 0.4)),
+              GlassSwitch(value: isOn, onChanged: onChanged ?? (_) {}, useOwnLayer: true, activeColor: AppColors.primary, inactiveColor: AppColors.grey4.withValues(alpha: 0.4)),
             ],
           ),
         ),

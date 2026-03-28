@@ -5,6 +5,7 @@ import 'package:diplomka/screens/scan/scan_widgets.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class ScanOnboardingScreen extends StatefulWidget {
@@ -22,41 +23,41 @@ class _ScanOnboardingScreenState extends State<ScanOnboardingScreen> {
     _ScanOnboardingPageData(
       title: tr(LocaleKeys.scan_best_scan),
       bullets: [
-        _BulletData(icon: Icons.photo_camera_outlined, label: tr(LocaleKeys.scan_hold_still)),
-        _BulletData(icon: Icons.wb_sunny_outlined, label: tr(LocaleKeys.scan_use_light)),
-        _BulletData(icon: Icons.visibility_outlined, label: tr(LocaleKeys.scan_ensure_visible)),
+        _BulletData(icon: CupertinoIcons.camera, label: tr(LocaleKeys.scan_hold_still)),
+        _BulletData(icon: CupertinoIcons.sun_max, label: tr(LocaleKeys.scan_use_light)),
+        _BulletData(icon: CupertinoIcons.eye, label: tr(LocaleKeys.scan_ensure_visible)),
       ],
     ),
     _ScanOnboardingPageData(
       title: tr(LocaleKeys.scan_ai_analyzes),
       bullets: [
-        _BulletData(icon: Icons.camera_outlined, label: tr(LocaleKeys.scan_ingredients_identified)),
-        _BulletData(icon: Icons.flash_on_outlined, label: tr(LocaleKeys.scan_takes_few_seconds)),
-        _BulletData(icon: Icons.schedule_outlined, label: tr(LocaleKeys.scan_see_calories_macros)),
+        _BulletData(icon: CupertinoIcons.camera, label: tr(LocaleKeys.scan_ingredients_identified)),
+        _BulletData(icon: CupertinoIcons.bolt, label: tr(LocaleKeys.scan_takes_few_seconds)),
+        _BulletData(icon: CupertinoIcons.clock, label: tr(LocaleKeys.scan_see_calories_macros)),
       ],
     ),
     _ScanOnboardingPageData(
       title: tr(LocaleKeys.scan_fix_results),
       bullets: [
-        _BulletData(icon: Icons.auto_awesome_outlined, label: tr(LocaleKeys.scan_check_accurate)),
-        _BulletData(icon: Icons.add_circle_outline, label: tr(LocaleKeys.scan_add_remove_ingredients)),
-        _BulletData(icon: Icons.search_outlined, label: tr(LocaleKeys.scan_tap_fix)),
+        _BulletData(icon: CupertinoIcons.sparkles, label: tr(LocaleKeys.scan_check_accurate)),
+        _BulletData(icon: CupertinoIcons.add_circled, label: tr(LocaleKeys.scan_add_remove_ingredients)),
+        _BulletData(icon: CupertinoIcons.search, label: tr(LocaleKeys.scan_tap_fix)),
       ],
     ),
     _ScanOnboardingPageData(
       title: tr(LocaleKeys.scan_highest_accuracy),
       bullets: [
-        _BulletData(icon: Icons.auto_awesome_outlined, label: tr(LocaleKeys.scan_add_text_description)),
-        _BulletData(icon: Icons.qr_code_outlined, label: tr(LocaleKeys.scan_scan_the_barcode)),
-        _BulletData(icon: Icons.description_outlined, label: tr(LocaleKeys.scan_photo_food_label)),
+        _BulletData(icon: CupertinoIcons.sparkles, label: tr(LocaleKeys.scan_add_text_description)),
+        _BulletData(icon: CupertinoIcons.qrcode, label: tr(LocaleKeys.scan_scan_the_barcode)),
+        _BulletData(icon: CupertinoIcons.doc_text, label: tr(LocaleKeys.scan_photo_food_label)),
       ],
     ),
     _ScanOnboardingPageData(
       title: tr(LocaleKeys.scan_fastest_process),
       bullets: [
-        _BulletData(icon: Icons.soup_kitchen_outlined, label: tr(LocaleKeys.scan_cooking_own_meal)),
-        _BulletData(icon: Icons.photo_library_outlined, label: tr(LocaleKeys.scan_capture_together)),
-        _BulletData(icon: Icons.bolt_outlined, label: tr(LocaleKeys.scan_save_time)),
+        _BulletData(icon: CupertinoIcons.flame, label: tr(LocaleKeys.scan_cooking_own_meal)),
+        _BulletData(icon: CupertinoIcons.photo_on_rectangle, label: tr(LocaleKeys.scan_capture_together)),
+        _BulletData(icon: CupertinoIcons.bolt, label: tr(LocaleKeys.scan_save_time)),
       ],
     ),
   ];

@@ -7,6 +7,7 @@ import 'package:diplomka/screens/profile/profile_widgets.dart';
 import 'package:diplomka/widgets/glass_toggle_row.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class HealthIntegrationScreen extends StatelessWidget {
@@ -77,22 +78,22 @@ class HealthIntegrationScreen extends StatelessWidget {
   List<Widget> _buildIosSteps() {
     return [
       _InstructionRow(
-        icon: Icons.favorite_rounded,
+        icon: CupertinoIcons.heart_fill,
         iconColor: const Color(0xFFFF2D55),
         text: tr(LocaleKeys.health_apple_health_step1),
       ),
       _InstructionRow(
-        icon: Icons.account_circle_outlined,
+        icon: CupertinoIcons.person_circle,
         iconColor: AppColors.textSecondary,
         text: tr(LocaleKeys.health_apple_health_step2),
       ),
       _InstructionRow(
-        icon: Icons.privacy_tip_outlined,
+        icon: CupertinoIcons.shield,
         iconColor: AppColors.textSecondary,
         text: tr(LocaleKeys.health_apple_health_step3),
       ),
       _InstructionRow(
-        icon: Icons.apps_rounded,
+        icon: CupertinoIcons.square_grid_2x2_fill,
         iconColor: AppColors.textPrimary,
         text: tr(LocaleKeys.health_apple_health_step4),
         showDivider: false,
@@ -103,17 +104,17 @@ class HealthIntegrationScreen extends StatelessWidget {
   List<Widget> _buildAndroidSteps() {
     return [
       _InstructionRow(
-        icon: Icons.health_and_safety_outlined,
+        icon: CupertinoIcons.heart_circle,
         iconColor: const Color(0xFF4285F4),
         text: tr(LocaleKeys.health_health_connect_step1),
       ),
       _InstructionRow(
-        icon: Icons.apps_rounded,
+        icon: CupertinoIcons.square_grid_2x2_fill,
         iconColor: AppColors.textSecondary,
         text: tr(LocaleKeys.health_health_connect_step2),
       ),
       _InstructionRow(
-        icon: Icons.touch_app_outlined,
+        icon: CupertinoIcons.hand_draw,
         iconColor: AppColors.textPrimary,
         text: tr(LocaleKeys.health_health_connect_step3),
         showDivider: false,

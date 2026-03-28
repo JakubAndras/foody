@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:diplomka/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class GlassPopupItem {
   final String label;
@@ -38,7 +39,7 @@ class GlassPopup extends StatelessWidget {
                     children: [
                       if (item.showDividerAbove) FractionallySizedBox(widthFactor: 0.95, child: Divider(height: AppSpacing.s, thickness: AppSizes.dividerThin, color: AppColors.textPrimary.withValues(alpha: 0.2))),
                       Padding(
-                        padding: EdgeInsets.only(bottom: item == items.last ? 0 : AppSpacing.s, top: item == items.last ? AppSpacing.xs : 0),
+                        padding: EdgeInsets.only(bottom: item == items.last ? 0 : AppSpacing.s, top: item.showDividerAbove ? AppSpacing.xs : 0),
                         child: InkWell(
                           onTap: item.onTap,
                           borderRadius: BorderRadius.circular(AppRadii.s),
@@ -47,7 +48,7 @@ class GlassPopup extends StatelessWidget {
                             child: Row(
                               children: [
                                 if (item.selected)
-                                  Icon(Icons.check_rounded, color: item.color ?? AppColors.primary, size: AppSizes.iconMd)
+                                  Icon(CupertinoIcons.checkmark, color: item.color ?? AppColors.primary, size: AppSizes.iconMd)
                                 else if (item.icon != null)
                                   Icon(item.icon, color: item.color ?? AppColors.textPrimary, size: AppSizes.iconMd)
                                 else
@@ -111,7 +112,7 @@ Future<void> showGlassPopup({required BuildContext context, required List<GlassP
         right = screenWidth - targetRect.right + targetOffset.dx;
         left = null;
       } else {
-        top = safeTop + AppSizes.topBarHeight;
+        top = safeTop + AppSizes.topBarHeight + 4;
         right = anchor == Alignment.topRight ? AppSpacing.edge : null;
         left = anchor == Alignment.topLeft ? AppSpacing.edge : null;
       }

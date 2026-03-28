@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:diplomka/app_theme.dart';
@@ -34,7 +35,7 @@ class CustomGlassIconButton extends StatelessWidget {
         child:
             child ??
             Padding(
-              padding: icon == Icons.arrow_back_ios_new_rounded ? const EdgeInsets.only(right: 1.5) : EdgeInsets.zero,
+              padding: icon == CupertinoIcons.chevron_left ? const EdgeInsets.only(right: 1.5) : EdgeInsets.zero,
               child: Icon(icon, size: effectiveIconSize, color: AppColors.black),
             ),
       ),
@@ -154,7 +155,7 @@ class CustomGlassAppBar extends StatelessWidget implements PreferredSizeWidget {
     final leadingWidget = !showLeading
         ? const SizedBox(width: AppSizes.backButtonSize)
         : leading ??
-              CustomGlassIconButton(icon: leadingIcon ?? Icons.arrow_back_ios_new_rounded, iconSize: leadingIconSize ?? AppSizes.iconMd, onPressed: onBack ?? () => Get.back());
+              CustomGlassIconButton(icon: leadingIcon ?? CupertinoIcons.chevron_left, iconSize: leadingIconSize ?? AppSizes.iconMd, onPressed: onBack ?? () => Get.back());
 
     final titleContent = titleWidget ?? (title != null ? Text(title!, style: AppTextStyles.title18) : null);
 

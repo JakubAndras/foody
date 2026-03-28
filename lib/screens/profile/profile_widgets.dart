@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:diplomka/widgets/foody_glass_buttons.dart';
@@ -70,7 +71,7 @@ class ProfileGradientScaffold extends StatelessWidget {
 }
 
 class ProfileBackButton extends StatelessWidget {
-  const ProfileBackButton({super.key, this.onPressed, this.icon = Icons.chevron_left});
+  const ProfileBackButton({super.key, this.onPressed, this.icon = CupertinoIcons.chevron_left});
 
   final VoidCallback? onPressed;
   final IconData icon;
@@ -201,7 +202,7 @@ class ProfileSettingsRow extends StatelessWidget {
               ],
             ),
           ),
-          trailing ?? const Icon(Icons.arrow_forward_ios_rounded, size: AppSizes.iconMd, color: AppColors.textTertiary),
+          trailing ?? const Icon(CupertinoIcons.chevron_right, size: AppSizes.iconMd, color: AppColors.textTertiary),
         ],
       ),
     );

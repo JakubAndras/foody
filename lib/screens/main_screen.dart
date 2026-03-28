@@ -13,6 +13,7 @@ import 'package:diplomka/screens/profile/profile_screen.dart';
 import 'package:diplomka/widgets/dashboard_calendar_sheet.dart';
 import 'package:diplomka/widgets/streak_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:diplomka/screens/scan/scan_onboarding_screen.dart';
 import 'package:diplomka/controller/base_controller.dart';
@@ -56,14 +57,14 @@ class MainScreen extends GetView<MainScreenController> {
               unselectedIconColor: AppColors.grey4,
               glassSettings: AppGlass.standard,
               tabs: [
-                GlassBottomBarTab(label: tr(LocaleKeys.nav_home), icon: Icons.home_rounded, selectedIcon: Icons.home_rounded),
-                GlassBottomBarTab(label: tr(LocaleKeys.nav_progress), icon: Icons.bar_chart_rounded, selectedIcon: Icons.bar_chart_rounded),
-                GlassBottomBarTab(label: tr(LocaleKeys.nav_profile), icon: Icons.person_outline_rounded, selectedIcon: Icons.person_outline_rounded),
+                GlassBottomBarTab(label: tr(LocaleKeys.nav_home), icon: CupertinoIcons.house_fill, selectedIcon: CupertinoIcons.house_fill),
+                GlassBottomBarTab(label: tr(LocaleKeys.nav_progress), icon: CupertinoIcons.chart_bar, selectedIcon: CupertinoIcons.chart_bar),
+                GlassBottomBarTab(label: tr(LocaleKeys.nav_profile), icon: CupertinoIcons.person, selectedIcon: CupertinoIcons.person),
               ],
               selectedIndex: selectedIndex,
               onTabSelected: controller._onItemTapped,
               extraButton: GlassBottomBarExtraButton(
-                icon: Icons.add,
+                icon: CupertinoIcons.add,
                 label: tr(LocaleKeys.nav_home),
                 onTap: () => controller.showQuickActions(context),
                 iconColor: AppColors.primary,
@@ -162,13 +163,13 @@ class _DashboardStreakPill extends StatelessWidget {
 
       Widget content;
       if (dc.streakError.isNotEmpty) {
-        content = const Icon(Icons.error_outline, color: AppColors.error, size: AppSizes.iconSm);
+        content = const Icon(CupertinoIcons.exclamationmark_circle, color: AppColors.error, size: AppSizes.iconSm);
       } else {
         final streak = dc.streakInfo.value?.currentStreak ?? 0;
         content = Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.emoji_events_outlined, color: AppColors.textSecondary, size: 18),
+            const Icon(CupertinoIcons.star, color: AppColors.textPrimary, size: 18),
             const SizedBox(width: AppSpacing.xs),
             Text(
               '$streak',
@@ -237,7 +238,7 @@ class _DashboardCalendarPill extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.calendar_month, color: AppColors.textSecondary, size: 18),
+                    const Icon(CupertinoIcons.calendar, color: AppColors.textPrimary, size: 18),
                     const SizedBox(width: AppSpacing.xs),
                     Text(
                       label,

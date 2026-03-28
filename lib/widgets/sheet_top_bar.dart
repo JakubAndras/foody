@@ -1,6 +1,7 @@
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/widgets/sheet_circle_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 /// Reusable top bar for bottom sheets.
 ///
@@ -25,10 +26,10 @@ class SheetTopBar extends StatelessWidget {
             Center(child: Text(title, style: AppTextStyles.title17.copyWith(color: AppColors.black, fontWeight: FontWeight.w600))),
             Row(
               children: [
-                SheetCircleButton(icon: Icons.close_rounded, onTap: onClose),
+                SheetCircleButton(icon: CupertinoIcons.xmark, onTap: onClose),
                 const Spacer(),
                 if (onConfirm != null)
-                  SheetCircleButton(icon: Icons.check_rounded, backgroundColor: AppColors.primary, iconColor: AppColors.white1, onTap: onConfirm!),
+                  SheetCircleButton(icon: CupertinoIcons.checkmark, backgroundColor: AppColors.primary, iconColor: AppColors.white1, onTap: onConfirm!),
               ],
             ),
           ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:diplomka/app_theme.dart';
 
 class AskAiQueryResponse {
@@ -44,11 +45,11 @@ class AskAiQueryResponse {
   IconData get summaryIcon {
     switch (insightType) {
       case 'violations':
-        return Icons.report_gmailerrorred_outlined;
+        return CupertinoIcons.exclamationmark_triangle;
       case 'achieved':
-        return Icons.check_circle_outline;
+        return CupertinoIcons.checkmark_circle;
       default:
-        return Icons.info_outline;
+        return CupertinoIcons.info_circle;
     }
   }
 

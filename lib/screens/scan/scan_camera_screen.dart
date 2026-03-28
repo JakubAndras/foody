@@ -15,6 +15,7 @@ import 'package:diplomka/services/barcode_lookup_service.dart';
 import 'package:diplomka/services/selected_date_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -610,12 +611,12 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             ScanCircleButton(
-              icon: Icons.close_rounded,
+              icon: CupertinoIcons.xmark,
               onPressed: () => Get.back(),
               child: GlassStrokeIcon.close(),
             ),
             ScanCircleButton(
-              icon: Icons.help_outline,
+              icon: CupertinoIcons.question_circle,
               onPressed: () {
                 setState(() {
                   _showTip = !_showTip;
@@ -703,7 +704,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
             children: [
               ScanModeTile(
                 label: tr(LocaleKeys.scan_scan_meal),
-                icon: Icons.center_focus_strong,
+                icon: CupertinoIcons.viewfinder,
                 isActive: _mode == ScanMode.scanMeal,
                 onTap: () => _toggleMode(ScanMode.scanMeal),
                 activeColor: AppColors.primary,
@@ -711,7 +712,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
               const SizedBox(width: AppSpacing.s),
               ScanModeTile(
                 label: tr(LocaleKeys.scan_barcode),
-                icon: Icons.qr_code_2,
+                icon: CupertinoIcons.qrcode_viewfinder,
                 isActive: _mode == ScanMode.barcode,
                 onTap: () => _toggleMode(ScanMode.barcode),
                 activeColor: AppColors.textHeading,
@@ -719,7 +720,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
               const SizedBox(width: AppSpacing.s),
               ScanModeTile(
                 label: tr(LocaleKeys.scan_food_label),
-                icon: Icons.description_outlined,
+                icon: CupertinoIcons.doc_text,
                 isActive: _mode == ScanMode.foodLabel,
                 onTap: () => _toggleMode(ScanMode.foodLabel),
                 activeColor: AppColors.textHeading,
@@ -741,7 +742,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         ScanCircleButton(
-          icon: _isFlashOn ? Icons.flash_on : Icons.flash_off,
+          icon: _isFlashOn ? Icons.flash_on : CupertinoIcons.bolt_slash,
           onPressed: _toggleFlash,
           backgroundColor: _isFlashOn ? AppColors.primary : AppColors.surfaceMuted,
           shadow: const <BoxShadow>[],
@@ -751,7 +752,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
         ),
         ScanShutterButton(onPressed: _capturePhoto),
         ScanCircleButton(
-          icon: Icons.photo_library_outlined,
+          icon: CupertinoIcons.photo_on_rectangle,
           onPressed: _pickFromGallery,
           backgroundColor: AppColors.surfaceMuted,
           shadow: const <BoxShadow>[],
@@ -770,7 +771,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         ScanCircleButton(
-          icon: _isFlashOn ? Icons.flash_on : Icons.flash_off,
+          icon: _isFlashOn ? Icons.flash_on : CupertinoIcons.bolt_slash,
           onPressed: _toggleFlash,
           backgroundColor: _isFlashOn ? AppColors.primary : AppColors.surfaceMuted,
           shadow: const <BoxShadow>[],
@@ -779,7 +780,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
           iconColor: _isFlashOn ? AppColors.onPrimary : AppColors.textEmphasis,
         ),
         ScanCircleButton(
-          icon: Icons.refresh,
+          icon: CupertinoIcons.arrow_clockwise,
           onPressed: _restartBarcodeScan,
           backgroundColor: AppColors.surfaceMuted,
           shadow: const <BoxShadow>[],
@@ -804,13 +805,13 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
         child = Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ScanBulletRow(icon: Icons.center_focus_strong, label: tr(LocaleKeys.scan_meal_tip_center_food)),
+            ScanBulletRow(icon: CupertinoIcons.viewfinder, label: tr(LocaleKeys.scan_meal_tip_center_food)),
             const SizedBox(height: AppSpacing.s),
-            ScanBulletRow(icon: Icons.light_mode, label: tr(LocaleKeys.scan_meal_tip_good_lighting)),
+            ScanBulletRow(icon: CupertinoIcons.sun_max, label: tr(LocaleKeys.scan_meal_tip_good_lighting)),
             const SizedBox(height: AppSpacing.s),
-            ScanBulletRow(icon: Icons.visibility, label: tr(LocaleKeys.scan_meal_tip_include_all)),
+            ScanBulletRow(icon: CupertinoIcons.eye, label: tr(LocaleKeys.scan_meal_tip_include_all)),
             const SizedBox(height: AppSpacing.s),
-            ScanBulletRow(icon: Icons.edit_note, label: tr(LocaleKeys.scan_meal_tip_add_description)),
+            ScanBulletRow(icon: CupertinoIcons.pencil, label: tr(LocaleKeys.scan_meal_tip_add_description)),
           ],
         );
       case ScanMode.barcode:

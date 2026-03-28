@@ -4,6 +4,7 @@ import 'package:diplomka/screens/profile/profile_widgets.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class PersonalDetailsDietScreen extends StatefulWidget {
   const PersonalDetailsDietScreen({
@@ -72,7 +73,7 @@ class _PersonalDetailsDietScreenState extends State<PersonalDetailsDietScreen> w
             title: tr(LocaleKeys.onboarding_classic),
             selected: _selected == 'classic',
             height: AppSizes.optionCardHeightLarge,
-            leading: const _DietIcon(icon: Icons.restaurant),
+            leading: const _DietIcon(icon: CupertinoIcons.flame),
             onTap: () => _selectDiet('classic'),
           ),
           const SizedBox(height: AppSpacing.s),
@@ -80,7 +81,7 @@ class _PersonalDetailsDietScreenState extends State<PersonalDetailsDietScreen> w
             title: tr(LocaleKeys.onboarding_vegetarian),
             selected: _selected == 'vegetarian',
             height: AppSizes.optionCardHeightLarge,
-            leading: const _DietIcon(icon: Icons.eco_outlined),
+            leading: const _DietIcon(icon: CupertinoIcons.leaf_arrow_circlepath),
             onTap: () => _selectDiet('vegetarian'),
           ),
           const SizedBox(height: AppSpacing.s),
@@ -88,7 +89,7 @@ class _PersonalDetailsDietScreenState extends State<PersonalDetailsDietScreen> w
             title: tr(LocaleKeys.onboarding_vegan),
             selected: _selected == 'vegan',
             height: AppSizes.optionCardHeightLarge,
-            leading: const _DietIcon(icon: Icons.energy_savings_leaf_outlined),
+            leading: const _DietIcon(icon: CupertinoIcons.leaf_arrow_circlepath),
             onTap: () => _selectDiet('vegan'),
           ),
           const SizedBox(height: AppSpacing.m),
@@ -100,7 +101,7 @@ class _PersonalDetailsDietScreenState extends State<PersonalDetailsDietScreen> w
             title: tr(LocaleKeys.onboarding_custom),
             selected: _selected == 'custom',
             height: AppSizes.optionCardHeightLarge,
-            leading: const _DietIcon(icon: Icons.add),
+            leading: const _DietIcon(icon: CupertinoIcons.add),
             onTap: () => _selectDiet('custom'),
           ),
           if (_selected == 'custom' && (widget.customPreferences?.trim().isNotEmpty ?? false)) ...[

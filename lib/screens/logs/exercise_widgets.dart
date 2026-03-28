@@ -2,6 +2,7 @@ import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class ExerciseSearchBar extends StatelessWidget {
   const ExerciseSearchBar({
@@ -26,7 +27,7 @@ class ExerciseSearchBar extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(Icons.search, color: AppColors.textTertiary, size: AppSizes.iconMd),
+          const Icon(CupertinoIcons.search, color: AppColors.textTertiary, size: AppSizes.iconMd),
           const SizedBox(width: AppSpacing.s),
           Expanded(
             child: TextField(
@@ -135,14 +136,14 @@ class ExerciseListCard extends StatelessWidget {
                     children: [
                       _MetricPill(
                         gradient: AppGradients.exerciseCalories,
-                        icon: Icons.local_fire_department,
+                        icon: CupertinoIcons.flame,
                         value: '$kcal',
                         unit: 'kcal',
                       ),
                       const SizedBox(width: AppSpacing.s),
                       _MetricPill(
                         gradient: AppGradients.exerciseDuration,
-                        icon: Icons.schedule,
+                        icon: CupertinoIcons.clock,
                         value: '$minutes',
                         unit: 'min',
                       ),
@@ -161,7 +162,7 @@ class ExerciseListCard extends StatelessWidget {
                   shape: BoxShape.circle,
                   // boxShadow: AppShadows.control,
                 ),
-                child: const Icon(Icons.add, color: AppColors.onPrimary, size: AppSizes.iconMd),
+                child: const Icon(CupertinoIcons.add, color: AppColors.onPrimary, size: AppSizes.iconMd),
               ),
             ),
           ],

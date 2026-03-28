@@ -624,7 +624,7 @@
   "fix_result_updating": "Aktualizování...",
   "fix_result_update": "Aktualizovat",
   "fix_result_add_details": "Přidat podrobnosti",
-  "fix_result_tip_body": "Popište, co AI špatně rozpoznalo, aby mohlo jídlo znovu analyzovat.\n\n\u2022 \"Je to grilované kuře, ne smažené.\"\n\u2022 \"Na sendviči není žádný sýr.\"\n\u2022 \"Porce je asi 300 g, ne 150 g.\"\n\u2022 \"Chybí příloha rýže.\"\n\u2022 \"Dresink je olivový olej, ne majonéza.\"",
+  "fix_result_tip_body": "Popište, co AI špatně rozpoznalo, aby mohlo jídlo znovu analyzovat.\n\n\"Je to grilované kuře, ne smažené.\"\n\"Na sendviči není žádný sýr.\"\n\"Porce je asi 300 g, ne 150 g.\"\n\"Chybí příloha rýže.\"\n\"Dresink je olivový olej, ne majonéza.\"",
 
   "report_meal_title": "Nahlásit jídlo",
   "report_meal_hint": "Co je špatně s tímto záznamem jídla?",

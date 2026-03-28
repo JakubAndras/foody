@@ -3,6 +3,7 @@ import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class OnboardingWorkoutsScreen extends StatefulWidget {
   const OnboardingWorkoutsScreen({
@@ -69,7 +70,7 @@ class _OnboardingWorkoutsScreenState extends State<OnboardingWorkoutsScreen> wit
             subtitle: tr(LocaleKeys.onboarding_workouts_0_2_desc),
             selected: _selected == '0-2',
             height: AppSizes.workoutCardHeight,
-            leading: _WorkoutIcon(selected: _selected == '0-2', icon: Icons.circle_outlined),
+            leading: _WorkoutIcon(selected: _selected == '0-2', icon: CupertinoIcons.circle),
             onTap: () {
               setState(() => _selected = '0-2');
               widget.onCanProceedChanged?.call(true);
@@ -81,7 +82,7 @@ class _OnboardingWorkoutsScreenState extends State<OnboardingWorkoutsScreen> wit
             subtitle: tr(LocaleKeys.onboarding_workouts_3_5_desc),
             selected: _selected == '3-5',
             height: AppSizes.workoutCardHeight,
-            leading: _WorkoutIcon(selected: _selected == '3-5', icon: Icons.more_horiz),
+            leading: _WorkoutIcon(selected: _selected == '3-5', icon: CupertinoIcons.ellipsis),
             onTap: () {
               setState(() => _selected = '3-5');
               widget.onCanProceedChanged?.call(true);
@@ -93,7 +94,7 @@ class _OnboardingWorkoutsScreenState extends State<OnboardingWorkoutsScreen> wit
             subtitle: tr(LocaleKeys.onboarding_workouts_6_plus_desc),
             selected: _selected == '6+',
             height: AppSizes.workoutCardHeight,
-            leading: _WorkoutIcon(selected: _selected == '6+', icon: Icons.apps_outlined),
+            leading: _WorkoutIcon(selected: _selected == '6+', icon: CupertinoIcons.square_grid_2x2),
             onTap: () {
               setState(() => _selected = '6+');
               widget.onCanProceedChanged?.call(true);

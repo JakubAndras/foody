@@ -101,7 +101,7 @@ class _MonthlyCalendarCardState extends State<MonthlyCalendarCard> {
                       children: [
                         Text(monthLabel, style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w600)),
                         const SizedBox(width: AppSpacing.xxs),
-                        Icon(_showMonthYearPicker ? Icons.keyboard_arrow_down_rounded : Icons.keyboard_arrow_right_rounded, color: AppColors.textSecondary, size: AppSizes.iconLg),
+                        Icon(_showMonthYearPicker ? CupertinoIcons.chevron_down : CupertinoIcons.chevron_right, color: AppColors.textSecondary, size: AppSizes.iconLg),
                       ],
                     ),
                   ),
@@ -113,7 +113,7 @@ class _MonthlyCalendarCardState extends State<MonthlyCalendarCard> {
                     behavior: HitTestBehavior.opaque,
                     child: const Padding(
                       padding: EdgeInsets.all(AppSpacing.xs),
-                      child: Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.textSecondary, size: AppSizes.iconMd),
+                      child: Icon(CupertinoIcons.chevron_left, color: AppColors.textSecondary, size: AppSizes.iconMd),
                     ),
                   ),
                   const SizedBox(width: AppSpacing.xxs),
@@ -122,7 +122,7 @@ class _MonthlyCalendarCardState extends State<MonthlyCalendarCard> {
                     behavior: HitTestBehavior.opaque,
                     child: const Padding(
                       padding: EdgeInsets.only(left: AppSpacing.xs),
-                      child: Icon(Icons.arrow_forward_ios_rounded, color: AppColors.textSecondary, size: AppSizes.iconMd),
+                      child: Icon(CupertinoIcons.chevron_right, color: AppColors.textSecondary, size: AppSizes.iconMd),
                     ),
                   ),
                 ],

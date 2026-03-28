@@ -3,6 +3,7 @@ import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class OnboardingSaveProgressScreen extends StatelessWidget {
   const OnboardingSaveProgressScreen({
@@ -63,7 +64,7 @@ class OnboardingSaveProgressScreen extends StatelessWidget {
                   children: [
                     OnboardingSolidButton(
                       label: tr(LocaleKeys.onboarding_sign_in_apple),
-                      leading: const Icon(Icons.apple, color: AppColors.onPrimary, size: AppSizes.iconLg),
+                      leading: const Icon(CupertinoIcons.app, color: AppColors.onPrimary, size: AppSizes.iconLg),
                       onPressed: onNext,
                     ),
                     const SizedBox(height: AppSpacing.m),

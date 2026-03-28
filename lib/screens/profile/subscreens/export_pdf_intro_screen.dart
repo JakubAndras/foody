@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 import 'package:diplomka/app_theme.dart';
@@ -44,13 +45,13 @@ class ExportPdfIntroScreen extends StatelessWidget {
             shadow: AppShadows.screenCard,
             child: Column(
               children: [
-                _FeatureItem(icon: Icons.restaurant_menu, title: tr(LocaleKeys.export_meal_history), subtitle: tr(LocaleKeys.export_meal_history_desc)),
+                _FeatureItem(icon: CupertinoIcons.book, title: tr(LocaleKeys.export_meal_history), subtitle: tr(LocaleKeys.export_meal_history_desc)),
                 const SizedBox(height: AppSpacing.m),
-                _FeatureItem(icon: Icons.directions_run, title: tr(LocaleKeys.export_exercise_history), subtitle: tr(LocaleKeys.export_exercise_history_desc)),
+                _FeatureItem(icon: CupertinoIcons.flame, title: tr(LocaleKeys.export_exercise_history), subtitle: tr(LocaleKeys.export_exercise_history_desc)),
                 const SizedBox(height: AppSpacing.m),
-                _FeatureItem(icon: Icons.show_chart, title: tr(LocaleKeys.export_weight_progress), subtitle: tr(LocaleKeys.export_weight_progress_desc)),
+                _FeatureItem(icon: CupertinoIcons.graph_square, title: tr(LocaleKeys.export_weight_progress), subtitle: tr(LocaleKeys.export_weight_progress_desc)),
                 const SizedBox(height: AppSpacing.m),
-                _FeatureItem(icon: Icons.pie_chart_outline, title: tr(LocaleKeys.export_calorie_macros), subtitle: tr(LocaleKeys.export_calorie_macros_desc)),
+                _FeatureItem(icon: CupertinoIcons.chart_pie, title: tr(LocaleKeys.export_calorie_macros), subtitle: tr(LocaleKeys.export_calorie_macros_desc)),
               ],
             ),
           ),

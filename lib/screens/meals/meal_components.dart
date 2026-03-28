@@ -7,6 +7,7 @@ import 'package:diplomka/widgets/foody_glass_buttons.dart';
 import 'package:diplomka/widgets/glass_popup.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 enum MatchBadgeVariant { good, medium, low }
 
@@ -44,7 +45,7 @@ class MealHeroHeader extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.access_time, size: AppSizes.iconSm, color: AppColors.onPrimary.withValues(alpha: 0.8)),
+                    Icon(CupertinoIcons.time, size: AppSizes.iconSm, color: AppColors.onPrimary.withValues(alpha: 0.8)),
                     const SizedBox(width: AppSpacing.xs),
                     Column(
                       children: [
@@ -142,8 +143,9 @@ class CaloriesSummaryCard extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final double? height;
   final TextEditingController? controller;
+  final FocusNode? focusNode;
 
-  const CaloriesSummaryCard({super.key, required this.label, required this.value, this.delta, this.badge, this.margin, this.padding, this.height, this.controller});
+  const CaloriesSummaryCard({super.key, required this.label, required this.value, this.delta, this.badge, this.margin, this.padding, this.height, this.controller, this.focusNode});
 
   @override
   Widget build(BuildContext context) {
@@ -153,14 +155,39 @@ class CaloriesSummaryCard extends StatelessWidget {
         ? Expanded(
             child: TextField(
               controller: controller,
+              focusNode: focusNode,
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              style: AppTextStyles.stat48.copyWith(color: AppColors.primary),
+              style: AppTextStyles.h1.copyWith(height: 1, color: AppColors.primary),
               decoration: const InputDecoration(isDense: true, border: InputBorder.none, contentPadding: EdgeInsets.zero),
             ),
           )
         : Text(value, style: AppTextStyles.h1.copyWith(height: 1, color: AppColors.primary));
 
-    return Container(
+    final Widget valueRow = editable
+        ? Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              valueWidget,
+            ],
+          )
+        : Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              valueWidget,
+              if (delta != null) ...[
+                const SizedBox(width: AppSpacing.xs),
+                Container(
+                  height: AppSizes.matchBadgeHeight,
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
+                  decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(AppRadii.pill)),
+                  alignment: Alignment.center,
+                  child: Text(delta!, style: AppTextStyles.badge14.copyWith(color: AppColors.onPrimary)),
+                ),
+              ],
+            ],
+          );
+
+    final card = Container(
       margin: margin,
       height: height,
       padding: padding ?? const EdgeInsets.all(AppSpacing.l),
@@ -173,38 +200,14 @@ class CaloriesSummaryCard extends StatelessWidget {
             children: [
               Text(label, style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary)),
               const SizedBox(height: AppSpacing.xs),
-              editable
-                  ? Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        valueWidget,
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: AppSpacing.xs),
-                          child: Text(tr(LocaleKeys.common_kcal), style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary)),
-                        ),
-                      ],
-                    )
-                  : Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        valueWidget,
-                        if (delta != null) ...[
-                          const SizedBox(width: AppSpacing.xs),
-                          Container(
-                            height: AppSizes.matchBadgeHeight,
-                            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
-                            decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(AppRadii.pill)),
-                            alignment: Alignment.center,
-                            child: Text(delta!, style: AppTextStyles.badge14.copyWith(color: AppColors.onPrimary)),
-                          ),
-                        ],
-                      ],
-                    ),
+              valueRow,
             ],
           ),
         ],
       ),
     );
+    if (focusNode == null) return card;
+    return GestureDetector(behavior: HitTestBehavior.opaque, onTap: () => focusNode!.requestFocus(), child: card);
   }
 }
 
@@ -215,21 +218,26 @@ class MacroStatCard extends StatelessWidget {
   final Color iconColor;
   final double? height;
   final TextEditingController? controller;
+  final FocusNode? focusNode;
 
-  const MacroStatCard({super.key, required this.label, required this.value, required this.icon, required this.iconColor, this.height, this.controller});
+  const MacroStatCard({super.key, required this.label, required this.value, required this.icon, required this.iconColor, this.height, this.controller, this.focusNode});
 
   @override
   Widget build(BuildContext context) {
     final Widget valueWidget = controller != null
-        ? TextField(
-            controller: controller,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            style: AppTextStyles.h3.copyWith(height: 1.5, color: AppColors.textPrimary),
-            decoration: const InputDecoration(isDense: true, border: InputBorder.none, contentPadding: EdgeInsets.zero),
+        ? SizedBox(
+            height: AppSizes.iconMd,
+            child: TextField(
+              controller: controller,
+              focusNode: focusNode,
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              style: AppTextStyles.title.copyWith(height: 1),
+              decoration: const InputDecoration(isDense: true, border: InputBorder.none, contentPadding: EdgeInsets.zero),
+            ),
           )
         : Text(value, style: AppTextStyles.title);
 
-    return Container(
+    final card = Container(
       width: double.infinity,
       height: height ?? AppSizes.macroCardSize,
       padding: const EdgeInsets.all(AppSpacing.s),
@@ -262,6 +270,8 @@ class MacroStatCard extends StatelessWidget {
         ],
       ),
     );
+    if (focusNode == null) return card;
+    return GestureDetector(behavior: HitTestBehavior.opaque, onTap: () => focusNode!.requestFocus(), child: card);
   }
 }
 
@@ -323,7 +333,7 @@ class _RecordRow extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(value, style: AppTextStyles.body16.copyWith(letterSpacing: -0.3125)),
-              if (showChevron) ...[const SizedBox(width: AppSpacing.xs), const Icon(Icons.keyboard_arrow_down, size: AppSizes.iconSm, color: AppColors.textSecondary)],
+              if (showChevron) ...[const SizedBox(width: AppSpacing.xs), const Icon(CupertinoIcons.chevron_down, size: AppSizes.iconSm, color: AppColors.textSecondary)],
             ],
           );
 
@@ -378,7 +388,7 @@ class IngredientRow extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      if (highlighted) ...[const Icon(Icons.warning_amber_rounded, size: AppSizes.iconSm, color: AppColors.warningStrong), const SizedBox(width: AppSpacing.xs)],
+                      if (highlighted) ...[const Icon(CupertinoIcons.exclamationmark_triangle, size: AppSizes.iconSm, color: AppColors.warningStrong), const SizedBox(width: AppSpacing.xs)],
                       Flexible(
                         child: Text(
                           ingredient.name,
@@ -494,7 +504,7 @@ class _IngredientPopupButton extends StatelessWidget {
       child: SizedBox(
         width: 32,
         height: 32,
-        child: Icon(Icons.more_horiz, size: AppSizes.iconMd, color: AppColors.textSecondary),
+        child: Icon(CupertinoIcons.ellipsis, size: AppSizes.iconMd, color: AppColors.textSecondary),
       ),
     );
   }
@@ -507,7 +517,7 @@ class _IngredientPopupButton extends StatelessWidget {
       items: [
         GlassPopupItem(
           label: tr(LocaleKeys.common_favorites),
-          icon: Icons.bookmark_border,
+          icon: CupertinoIcons.bookmark,
           onTap: () {
             Navigator.of(context).pop();
             onFavorite?.call();
@@ -515,7 +525,7 @@ class _IngredientPopupButton extends StatelessWidget {
         ),
         GlassPopupItem(
           label: tr(LocaleKeys.common_edit),
-          icon: Icons.edit_outlined,
+          icon: CupertinoIcons.pencil,
           onTap: () {
             Navigator.of(context).pop();
             onEdit?.call();
@@ -523,7 +533,7 @@ class _IngredientPopupButton extends StatelessWidget {
         ),
         GlassPopupItem(
           label: tr(LocaleKeys.common_delete),
-          icon: Icons.delete_outline,
+          icon: CupertinoIcons.trash,
           color: AppColors.error,
           showDividerAbove: true,
           onTap: () {
@@ -556,7 +566,7 @@ class AllergyAlertCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(Icons.warning_amber_rounded, color: AppColors.warningStrong, size: AppSizes.iconMd),
+          const Icon(CupertinoIcons.exclamationmark_triangle, color: AppColors.warningStrong, size: AppSizes.iconMd),
           const SizedBox(width: AppSpacing.xs),
           Expanded(
             child: Column(
@@ -721,7 +731,7 @@ class SyncCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.sync, size: AppSizes.iconMd, color: AppColors.textPrimary),
+              const Icon(CupertinoIcons.arrow_2_circlepath, size: AppSizes.iconMd, color: AppColors.textPrimary),
               const SizedBox(width: AppSpacing.s),
               Expanded(
                 child: Text(title, style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w500)),

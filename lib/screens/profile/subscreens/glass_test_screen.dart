@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 
@@ -91,7 +92,7 @@ class _GlassTestScreenState extends State<GlassTestScreen> {
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: _refreshSnapshot,
-                      icon: const Icon(Icons.refresh),
+                      icon: const Icon(CupertinoIcons.arrow_clockwise),
                       label: const Text('Refresh'),
                     ),
                   ),
@@ -99,14 +100,14 @@ class _GlassTestScreenState extends State<GlassTestScreen> {
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: _nextBackground,
-                      icon: const Icon(Icons.image_outlined),
+                      icon: const Icon(CupertinoIcons.photo),
                       label: const Text('Next BG'),
                     ),
                   ),
                   const SizedBox(width: 12),
                   ElevatedButton(
                     onPressed: () => Get.back(),
-                    child: const Icon(Icons.close),
+                    child: const Icon(CupertinoIcons.xmark),
                   ),
                 ],
               ),
@@ -139,7 +140,7 @@ class _GlassTestScreenState extends State<GlassTestScreen> {
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(50)),
             child: InkWell(
               borderRadius: BorderRadius.circular(50),
-              child: SizedBox(height: 50, width: 50, child: Icon(Icons.pause, size: 36, color: Colors.white)),
+              child: SizedBox(height: 50, width: 50, child: Icon(CupertinoIcons.pause, size: 36, color: Colors.white)),
             ),
           ),
         );
@@ -177,7 +178,7 @@ class _GlassTestScreenState extends State<GlassTestScreen> {
               maxTemp: 30.5,
               humidity: 58,
               windSpeed: 14.3,
-              weatherIcon: Icons.water_drop_rounded,
+              weatherIcon: CupertinoIcons.drop,
             ),
           ),
         );
@@ -267,7 +268,7 @@ class _WeatherWidget extends StatelessWidget {
     required this.maxTemp,
     required this.humidity,
     required this.windSpeed,
-    this.weatherIcon = Icons.wb_sunny_rounded,
+    this.weatherIcon = CupertinoIcons.sun_max_fill,
   });
 
   @override
@@ -313,8 +314,8 @@ class _WeatherWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _extraInfo(Icons.water_drop_rounded, 'Humidity', '$humidity%'),
-              _extraInfo(Icons.air_rounded, 'Wind', '$windSpeed km/h'),
+              _extraInfo(CupertinoIcons.drop, 'Humidity', '$humidity%'),
+              _extraInfo(CupertinoIcons.wind, 'Wind', '$windSpeed km/h'),
             ],
           ),
         ],

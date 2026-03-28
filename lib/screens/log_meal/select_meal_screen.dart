@@ -23,6 +23,7 @@ import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
@@ -343,7 +344,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                                 child: Row(
                                   children: [
                                     const SizedBox(width: AppSpacing.m),
-                                    Icon(Icons.search_rounded, color: AppColors.textSecondary, size: AppSizes.iconMd),
+                                    Icon(CupertinoIcons.search, color: AppColors.textSecondary, size: AppSizes.iconMd),
                                     const SizedBox(width: AppSpacing.s),
                                     Expanded(
                                       child: TextField(
@@ -364,12 +365,12 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                                     if (_searchController.text.isNotEmpty)
                                       GestureDetector(
                                         onTap: _clearSearch,
-                                        child: Icon(Icons.cancel_rounded, color: AppColors.textSecondary, size: AppSizes.iconMd),
+                                        child: Icon(CupertinoIcons.xmark_circle_fill, color: AppColors.textSecondary, size: AppSizes.iconMd),
                                       )
                                     else
                                       GestureDetector(
                                         onTap: _toggleVoiceSearch,
-                                        child: Icon(Icons.mic_rounded, color: _isListening ? AppColors.error : AppColors.textSecondary, size: AppSizes.iconMd),
+                                        child: Icon(CupertinoIcons.mic_fill, color: _isListening ? AppColors.error : AppColors.textSecondary, size: AppSizes.iconMd),
                                       ),
                                     const SizedBox(width: AppSpacing.m),
                                   ],
@@ -379,7 +380,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                           ),
                           const SizedBox(width: AppSpacing.s),
                           CustomGlassIconButton(
-                            icon: Icons.close_rounded,
+                            icon: CupertinoIcons.xmark,
                             onPressed: _toggleSearch,
                           ),
                         ],
@@ -395,7 +396,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
                     child: CustomGlassAppBar(
-                      //leadingIcon: Icons.close,
+                      //leadingIcon: CupertinoIcons.xmark,
                       leadingIconSize: AppSizes.iconLg,
                       onBack: () => Get.back(),
                       titleWidget: Text(tr(LocaleKeys.meal_select_title), style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600, letterSpacing: -0.3125, color: AppColors.primary)),
@@ -403,8 +404,8 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                         CustomGlassIconButtonGroup(
                           iconSize: AppSizes.iconLg,
                           items: [
-                            (icon: Icons.search_rounded, onPressed: _toggleSearch),
-                            (icon: Icons.add_rounded, onPressed: _openManualLog),
+                            (icon: CupertinoIcons.search, onPressed: _toggleSearch),
+                            (icon: CupertinoIcons.add, onPressed: _openManualLog),
                           ],
                         ),
                       ],
@@ -463,7 +464,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        const Icon(Icons.tune, color: AppColors.textSecondary, size: AppSizes.iconSm),
+                                        const Icon(CupertinoIcons.slider_horizontal_3, color: AppColors.textSecondary, size: AppSizes.iconSm),
                                         const SizedBox(width: 6),
                                         Text(
                                           _sortLabel(_sort),
@@ -512,7 +513,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        const Icon(Icons.tune, color: AppColors.textSecondary, size: AppSizes.iconSm),
+                                        const Icon(CupertinoIcons.slider_horizontal_3, color: AppColors.textSecondary, size: AppSizes.iconSm),
                                         const SizedBox(width: 6),
                                         Text(
                                           _sortLabel(_sort),

@@ -13,6 +13,7 @@ import 'package:diplomka/widgets/variable_blur_scroll_view.dart';
 import 'package:diplomka/widgets/weight_progress_card.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class WeightHistoryScreen extends StatelessWidget {
@@ -79,7 +80,7 @@ class WeightHistoryScreen extends StatelessWidget {
                   onBack: () => Get.back(),
                   actions: [
                     CustomGlassIconButton(
-                      icon: Icons.add,
+                      icon: CupertinoIcons.add,
                       onPressed: () => showWeightLogSheet(context),
                     ),
                   ],
@@ -177,7 +178,7 @@ class _WeightHistoryEntryCard extends StatelessWidget {
                     height: _thumbnailSize,
                     child: photoFile != null
                         ? Image.file(photoFile!, fit: BoxFit.cover, width: _thumbnailSize, height: _thumbnailSize)
-                        : Icon(Icons.camera_alt_outlined, color: AppColors.textTertiary, size: AppSizes.iconLg),
+                        : Icon(CupertinoIcons.camera, color: AppColors.textTertiary, size: AppSizes.iconLg),
                   ),
                 ),
               ),

@@ -6,8 +6,8 @@ import 'package:diplomka/screens/meals/meal_sheets.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/widgets/edit_flow/edit_flow_widgets.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
-import 'package:diplomka/widgets/foody_glass_buttons.dart';
 import 'package:diplomka/widgets/glass_popup.dart';
+import 'package:diplomka/widgets/confirm_delete_dialog.dart';
 import 'package:diplomka/widgets/glass_toggle_row.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
@@ -42,15 +42,28 @@ class EditIngredientScreen extends StatefulWidget {
 
 class _EditIngredientScreenState extends State<EditIngredientScreen> {
   late final TextEditingController _nameController;
+  late final TextEditingController _caloriesController;
+  late final TextEditingController _proteinsController;
+  late final TextEditingController _carbsController;
+  late final TextEditingController _fatsController;
+  late final TextEditingController _amountController;
+  final FocusNode _amountFocusNode = FocusNode();
+  final FocusNode _caloriesFocusNode = FocusNode();
+  final FocusNode _proteinsFocusNode = FocusNode();
+  final FocusNode _carbsFocusNode = FocusNode();
+  final FocusNode _fatsFocusNode = FocusNode();
   late Ingredient _baseIngredient;
   late double _calories;
   late double _proteins;
   late double _carbs;
   late double _fats;
   late double _weight;
-  late double _amount;
   late bool _autoSync;
   bool _showValidationError = false;
+  bool _isSyncing = false;
+
+  late List<_UnitOption> _unitOptions;
+  late _UnitOption _selectedUnit;
 
   @override
   void initState() {
@@ -62,174 +75,212 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
     _carbs = _baseIngredient.carbs;
     _fats = _baseIngredient.fats;
     _weight = _baseIngredient.weight;
-    _amount = _baseIngredient.amount;
     _autoSync = SessionManager.to.autoAdjustMacrosEnabled.value;
+
+    // Build unit options — per-unit weight derived from AI data
+    final perUnit = _baseIngredient.amount > 0 ? _weight / _baseIngredient.amount : _weight;
+    _unitOptions = [const _UnitOption('1 g', 1), const _UnitOption('100 g', 100), if (perUnit > 1 && perUnit != 100) _UnitOption('${perUnit.toStringAsFixed(0)} g', perUnit)];
+    // Pick the best matching default unit
+    _selectedUnit = _unitOptions.firstWhere((u) => u.grams == perUnit, orElse: () => _unitOptions.first);
+    final amount = (_weight / _selectedUnit.grams).round();
+
+    _amountController = TextEditingController(text: amount.toString());
+    _caloriesController = TextEditingController(text: _calories.toStringAsFixed(0));
+    _proteinsController = TextEditingController(text: _proteins.toStringAsFixed(0));
+    _carbsController = TextEditingController(text: _carbs.toStringAsFixed(0));
+    _fatsController = TextEditingController(text: _fats.toStringAsFixed(0));
+
+    _amountController.addListener(_onAmountChanged);
+    _caloriesController.addListener(_onCaloriesChanged);
+    _proteinsController.addListener(_onProteinsChanged);
+    _carbsController.addListener(_onCarbsChanged);
+    _fatsController.addListener(_onFatsChanged);
   }
 
   @override
   void dispose() {
     _nameController.dispose();
+    _amountFocusNode.dispose();
+    _caloriesFocusNode.dispose();
+    _proteinsFocusNode.dispose();
+    _carbsFocusNode.dispose();
+    _fatsFocusNode.dispose();
+    _amountController.dispose();
+    _caloriesController.dispose();
+    _proteinsController.dispose();
+    _carbsController.dispose();
+    _fatsController.dispose();
     super.dispose();
   }
 
-  String get _amountLabel {
-    final whole = _amount.truncate();
-    final frac = _amount - whole;
-    if (frac < 0.001) return '$whole';
-    const fractionLabels = ['\u2013', '\u215B', '\u00BC', '\u2153', '\u215C', '\u00BD', '\u2154', '\u215D', '\u00BE', '\u215E'];
-    const fractionValues = [0.0, 0.125, 0.25, 1 / 3, 0.375, 0.5, 2 / 3, 0.625, 0.75, 0.875];
-    int bestIndex = 0;
-    double bestDiff = double.infinity;
-    for (int i = 1; i < fractionValues.length; i++) {
-      final diff = (frac - fractionValues[i]).abs();
-      if (diff < bestDiff) {
-        bestDiff = diff;
-        bestIndex = i;
-      }
+  void _onCaloriesChanged() {
+    if (_isSyncing) return;
+    final value = double.tryParse(_caloriesController.text.replaceAll(',', '.'));
+    if (value == null || value < 0) return;
+    if (_autoSync && _calories > 0) {
+      final ratio = value / _calories;
+      _isSyncing = true;
+      setState(() {
+        _proteins = (_proteins * ratio).roundToDouble();
+        _carbs = (_carbs * ratio).roundToDouble();
+        _fats = (_fats * ratio).roundToDouble();
+        _calories = value;
+        _proteinsController.text = _proteins.toStringAsFixed(0);
+        _carbsController.text = _carbs.toStringAsFixed(0);
+        _fatsController.text = _fats.toStringAsFixed(0);
+      });
+      _isSyncing = false;
+    } else {
+      _calories = value;
     }
-    if (whole == 0) return fractionLabels[bestIndex];
-    return '$whole${fractionLabels[bestIndex]}';
+  }
+
+  void _onProteinsChanged() {
+    if (_isSyncing) return;
+    final value = double.tryParse(_proteinsController.text.replaceAll(',', '.'));
+    if (value == null || value < 0) return;
+    _proteins = value;
+    if (_autoSync) {
+      _isSyncing = true;
+      _recalcCalories();
+      _caloriesController.text = _calories.toStringAsFixed(0);
+      _isSyncing = false;
+    }
+  }
+
+  void _onCarbsChanged() {
+    if (_isSyncing) return;
+    final value = double.tryParse(_carbsController.text.replaceAll(',', '.'));
+    if (value == null || value < 0) return;
+    _carbs = value;
+    if (_autoSync) {
+      _isSyncing = true;
+      _recalcCalories();
+      _caloriesController.text = _calories.toStringAsFixed(0);
+      _isSyncing = false;
+    }
+  }
+
+  void _onFatsChanged() {
+    if (_isSyncing) return;
+    final value = double.tryParse(_fatsController.text.replaceAll(',', '.'));
+    if (value == null || value < 0) return;
+    _fats = value;
+    if (_autoSync) {
+      _isSyncing = true;
+      _recalcCalories();
+      _caloriesController.text = _calories.toStringAsFixed(0);
+      _isSyncing = false;
+    }
+  }
+
+  void _onAmountChanged() {
+    if (_isSyncing) return;
+    final value = int.tryParse(_amountController.text);
+    if (value == null || value <= 0) return;
+    final newWeight = value * _selectedUnit.grams;
+    if (_weight > 0) {
+      final ratio = newWeight / _weight;
+      _isSyncing = true;
+      setState(() {
+        _calories = (_calories * ratio).roundToDouble();
+        _proteins = (_proteins * ratio).roundToDouble();
+        _carbs = (_carbs * ratio).roundToDouble();
+        _fats = (_fats * ratio).roundToDouble();
+        _weight = newWeight;
+        _caloriesController.text = _calories.toStringAsFixed(0);
+        _proteinsController.text = _proteins.toStringAsFixed(0);
+        _carbsController.text = _carbs.toStringAsFixed(0);
+        _fatsController.text = _fats.toStringAsFixed(0);
+      });
+      _isSyncing = false;
+    } else {
+      _weight = newWeight;
+    }
+  }
+
+  void _onUnitSelected(_UnitOption unit) {
+    if (unit == _selectedUnit) return;
+    setState(() {
+      _selectedUnit = unit;
+      final newAmount = (_weight / unit.grams).round().clamp(1, 999999);
+      _isSyncing = true;
+      _amountController.text = newAmount.toString();
+      _isSyncing = false;
+    });
+  }
+
+  void _openUnitPicker() {
+    final labels = _unitOptions.map((u) => u.label).toList();
+    final initialIndex = _unitOptions.indexOf(_selectedUnit).clamp(0, _unitOptions.length - 1);
+    MealtimePickerSheet.show(context, options: labels, initialIndex: initialIndex, onChanged: (index) => _onUnitSelected(_unitOptions[index]));
   }
 
   Ingredient? _buildIngredientFromInputs() {
     final name = _nameController.text.trim();
     if (name.isEmpty) return null;
-    if (_weight <= 0 || _calories < 0 || _proteins < 0 || _carbs < 0 || _fats < 0) return null;
-    return _baseIngredient.copyWith(name: name, weight: _weight, amount: _amount, calories: _calories, proteins: _proteins, carbs: _carbs, fats: _fats);
+    final calories = double.tryParse(_caloriesController.text.replaceAll(',', '.')) ?? _calories;
+    final proteins = double.tryParse(_proteinsController.text.replaceAll(',', '.')) ?? _proteins;
+    final carbs = double.tryParse(_carbsController.text.replaceAll(',', '.')) ?? _carbs;
+    final fats = double.tryParse(_fatsController.text.replaceAll(',', '.')) ?? _fats;
+    final amount = int.tryParse(_amountController.text) ?? 1;
+    final weight = amount * _selectedUnit.grams;
+    if (weight <= 0 || calories < 0 || proteins < 0 || carbs < 0 || fats < 0) return null;
+    return _baseIngredient.copyWith(name: name, weight: weight, amount: amount.toDouble(), calories: calories, proteins: proteins, carbs: carbs, fats: fats);
   }
 
   String? get _validationMessage {
     if (_nameController.text.trim().isEmpty) return tr(LocaleKeys.ingredient_name_required);
-    if (_weight <= 0) return tr(LocaleKeys.ingredient_valid_amount);
+    final amount = int.tryParse(_amountController.text) ?? 0;
+    if (amount <= 0) return tr(LocaleKeys.ingredient_valid_amount);
     if (_calories < 0 || _proteins < 0 || _carbs < 0 || _fats < 0) return tr(LocaleKeys.ingredient_no_negative);
     return null;
-  }
-
-  Future<void> _openNutrientEditor({required String label, required double currentValue, required void Function(double) onSave}) async {
-    final result = await showModalBottomSheet<double>(
-      context: context,
-      backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xl))),
-      clipBehavior: Clip.antiAlias,
-      isScrollControlled: true,
-      builder: (context) => _NutrientEditorSheet(label: label, initialValue: currentValue),
-    );
-    if (result == null) return;
-    onSave(result);
-  }
-
-  void _openCaloriesEditor() {
-    _openNutrientEditor(
-      label: tr(LocaleKeys.common_calories),
-      currentValue: _calories,
-      onSave: (value) {
-        if (_autoSync && _calories > 0) {
-          final ratio = value / _calories;
-          setState(() {
-            _proteins = (_proteins * ratio).roundToDouble();
-            _carbs = (_carbs * ratio).roundToDouble();
-            _fats = (_fats * ratio).roundToDouble();
-            _calories = value;
-          });
-        } else {
-          setState(() => _calories = value);
-        }
-      },
-    );
-  }
-
-  void _openProteinEditor() {
-    _openNutrientEditor(
-      label: tr(LocaleKeys.common_protein),
-      currentValue: _proteins,
-      onSave: (value) => setState(() {
-        _proteins = value;
-        if (_autoSync) _recalcCalories();
-      }),
-    );
-  }
-
-  void _openCarbsEditor() {
-    _openNutrientEditor(
-      label: tr(LocaleKeys.common_carbs),
-      currentValue: _carbs,
-      onSave: (value) => setState(() {
-        _carbs = value;
-        if (_autoSync) _recalcCalories();
-      }),
-    );
-  }
-
-  void _openFatsEditor() {
-    _openNutrientEditor(
-      label: tr(LocaleKeys.common_fats),
-      currentValue: _fats,
-      onSave: (value) => setState(() {
-        _fats = value;
-        if (_autoSync) _recalcCalories();
-      }),
-    );
   }
 
   void _recalcCalories() {
     _calories = (_proteins * 4 + _carbs * 4 + _fats * 9).roundToDouble();
   }
 
-  void _openWeightEditor() {
-    _openNutrientEditor(
-      label: tr(LocaleKeys.common_weight),
-      currentValue: _weight,
-      onSave: (value) {
-        if (value <= 0) return;
-        if (_weight > 0) {
-          final ratio = value / _weight;
-          setState(() {
-            _calories = (_calories * ratio).roundToDouble();
-            _proteins = (_proteins * ratio).roundToDouble();
-            _carbs = (_carbs * ratio).roundToDouble();
-            _fats = (_fats * ratio).roundToDouble();
-            _weight = value;
-          });
-        } else {
-          setState(() => _weight = value);
-        }
-      },
-    );
+  bool get _hasUnsavedChanges {
+    if (_nameController.text.trim() != _baseIngredient.name) return true;
+    if ((_calories - _baseIngredient.calories).abs() > 0.01) return true;
+    if ((_proteins - _baseIngredient.proteins).abs() > 0.01) return true;
+    if ((_carbs - _baseIngredient.carbs).abs() > 0.01) return true;
+    if ((_fats - _baseIngredient.fats).abs() > 0.01) return true;
+    final amount = int.tryParse(_amountController.text) ?? 1;
+    final currentWeight = amount * _selectedUnit.grams;
+    if ((currentWeight - _baseIngredient.weight).abs() > 0.01) return true;
+    return false;
   }
 
-  void _openAmountPicker() {
-    AmountPickerSheet.show(
-      context,
-      title: _nameController.text.trim().isNotEmpty ? _nameController.text.trim() : tr(LocaleKeys.ingredient_amount),
-      initialValue: _amount,
-      onChanged: (value) {
-        if (_amount == 0 || value == _amount) return;
-        final scale = value / _amount;
-        setState(() {
-          _weight = (_weight * scale).roundToDouble();
-          _calories = (_calories * scale).roundToDouble();
-          _proteins = (_proteins * scale).roundToDouble();
-          _carbs = (_carbs * scale).roundToDouble();
-          _fats = (_fats * scale).roundToDouble();
-          _amount = value;
-        });
-      },
+  Future<void> _handleBack() async {
+    if (!_hasUnsavedChanges) {
+      Navigator.of(context).pop();
+      return;
+    }
+    final confirmed = await showConfirmationDialog(
+      context: context,
+      title: tr(LocaleKeys.common_unsaved_changes_message),
+      primaryLabel: tr(LocaleKeys.common_save),
+      secondaryLabel: tr(LocaleKeys.common_discard),
     );
+    if (!mounted || confirmed == null) return;
+    if (confirmed) {
+      _handleDone();
+    } else {
+      Navigator.of(context).pop();
+    }
   }
 
   void _openMoreMenu() {
     showGlassPopup(
       context: context,
       items: [
-        GlassPopupItem(
-          label: tr(LocaleKeys.common_favorites),
-          icon: Icons.bookmark_border,
-          onTap: () => Navigator.of(context).pop(),
-        ),
+        GlassPopupItem(label: tr(LocaleKeys.common_favorites), icon: CupertinoIcons.bookmark, onTap: () => Navigator.of(context).pop()),
         if (widget.allowDelete)
           GlassPopupItem(
             label: tr(LocaleKeys.common_delete),
-            icon: Icons.delete_outline,
+            icon: CupertinoIcons.trash,
             color: AppColors.error,
             showDividerAbove: true,
             onTap: () {
@@ -275,125 +326,172 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return LiquidGlassScope(
-      child: Scaffold(
-        extendBodyBehindAppBar: true,
-        backgroundColor: AppColors.background,
-        appBar: CustomGlassAppBar(
-          title: "Ingredient",
-          leadingIconSize: AppSizes.iconLg,
-          horizontalPadding: AppSpacing.m,
-          onBack: () => Navigator.of(context).maybePop(),
-          actions: [
-            CustomGlassIconButtonGroup(
-              iconSize: AppSizes.iconLg,
-              items: [
-                (icon: CupertinoIcons.checkmark, onPressed: _handleDone),
-                (icon: Icons.more_horiz, onPressed: _openMoreMenu),
-              ],
-            ),
-          ],
-        ),
-        body: LiquidGlassBackground(
-          child: SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.edge),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: AppSpacing.m),
-                  // Name field
-                  TextField(
-                    controller: _nameController,
-                    style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w700, color: AppColors.textPrimary),
-                    decoration: InputDecoration(
-                      hintText: tr(LocaleKeys.ingredient_name),
-                      hintStyle: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w700, color: AppColors.textTertiary),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.zero,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        _handleBack();
+      },
+      child: LiquidGlassScope(
+        child: Scaffold(
+          extendBodyBehindAppBar: true,
+          backgroundColor: AppColors.background,
+          appBar: CustomGlassAppBar(
+            title: "Ingredient",
+            leadingIconSize: AppSizes.iconLg,
+            horizontalPadding: AppSpacing.m,
+            onBack: _handleBack,
+            actions: [
+              CustomGlassIconButtonGroup(
+                iconSize: AppSizes.iconLg,
+                items: [
+                  (icon: CupertinoIcons.checkmark, onPressed: _handleDone),
+                  (icon: CupertinoIcons.ellipsis, onPressed: _openMoreMenu)
+                ],
+              ),
+            ],
+          ),
+          body: LiquidGlassBackground(
+            child: SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.edge),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: AppSpacing.xs),
+                    // Name field
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
+                      child: TextField(
+                        controller: _nameController,
+                        style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w700, color: AppColors.textPrimary),
+                        decoration: InputDecoration(
+                          hintText: tr(LocaleKeys.ingredient_name),
+                          hintStyle: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w700, color: AppColors.textTertiary),
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.zero,
+                        ),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: AppSpacing.l),
-                  // Calories card
-                  GestureDetector(
-                    onTap: _openCaloriesEditor,
-                    child: CaloriesSummaryCard(label: tr(LocaleKeys.common_calories), value: _calories.toStringAsFixed(0), height: AppSizes.caloriesCardHeight),
-                  ),
-                  const SizedBox(height: AppSpacing.s),
-                  // Macro cards row
-                  Row(
-                    children: [
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: _openProteinEditor,
+                    // Calories card
+                    CaloriesSummaryCard(
+                      label: tr(LocaleKeys.common_calories),
+                      value: _calories.toStringAsFixed(0),
+                      height: AppSizes.caloriesCardHeight,
+                      controller: _caloriesController,
+                      focusNode: _caloriesFocusNode,
+                    ),
+                    const SizedBox(height: AppSpacing.s),
+                    // Macro cards row
+                    Row(
+                      children: [
+                        Expanded(
                           child: MacroStatCard(
                             label: tr(LocaleKeys.common_protein),
                             value: '${_proteins.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
                             icon: AppIcons.protein,
                             iconColor: AppColors.macroProtein,
+                            controller: _proteinsController,
+                            focusNode: _proteinsFocusNode,
                           ),
                         ),
-                      ),
-                      const SizedBox(width: AppSpacing.s),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: _openCarbsEditor,
+                        const SizedBox(width: AppSpacing.s),
+                        Expanded(
                           child: MacroStatCard(
                             label: tr(LocaleKeys.common_carbs),
                             value: '${_carbs.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
                             icon: AppIcons.carbs,
                             iconColor: AppColors.warningStrong,
+                            controller: _carbsController,
+                            focusNode: _carbsFocusNode,
                           ),
                         ),
-                      ),
-                      const SizedBox(width: AppSpacing.s),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: _openFatsEditor,
+                        const SizedBox(width: AppSpacing.s),
+                        Expanded(
                           child: MacroStatCard(
                             label: tr(LocaleKeys.common_fats),
                             value: '${_fats.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
                             icon: AppIcons.fats,
                             iconColor: AppColors.macroFats,
+                            controller: _fatsController,
+                            focusNode: _fatsFocusNode,
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: AppSpacing.s),
-                  GlassToggleRow(
-                    title: tr(LocaleKeys.preferences_auto_adjust),
-                    subtitle: tr(LocaleKeys.preferences_auto_adjust_desc),
-                    isOn: _autoSync,
-                    onChanged: (value) => setState(() => _autoSync = value),
-                    showDivider: false,
-                  ),
-                  const SizedBox(height: AppSpacing.s),
-                  // Amount card (weight + fraction)
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.m, AppSpacing.l, AppSpacing.m),
-                    decoration: BoxDecoration(
-                      color: AppColors.surface,
-                      borderRadius: BorderRadius.circular(AppRadii.l),
-                      border: AppBorders.screenCard ?? Border.all(color: AppColors.separator),
-                      boxShadow: AppShadows.screenCard,
-                    ),
-                    child: Column(
-                      children: [
-                        _RecordRow(
-                          label: tr(LocaleKeys.common_weight),
-                          value: '${_weight.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
-                          onTap: _openWeightEditor,
-                          showChevron: true,
-                        ),
-                        const Divider(color: AppColors.separator, height: AppSpacing.m, thickness: AppSizes.dividerThin),
-                        _RecordRow(label: tr(LocaleKeys.ingredient_amount), value: _amountLabel, onTap: _openAmountPicker, showChevron: true),
                       ],
                     ),
-                  ),
-                  if (_showValidationError && _validationMessage != null) ...[const SizedBox(height: AppSpacing.s), InlineErrorText(message: _validationMessage!)],
-                  const SizedBox(height: AppSpacing.xl),
-                ],
+                    const SizedBox(height: AppSpacing.xxs),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
+                      child: GlassToggleRow(
+                        title: tr(LocaleKeys.preferences_auto_adjust),
+                        subtitle: tr(LocaleKeys.preferences_auto_adjust_desc),
+                        isOn: _autoSync,
+                        onChanged: (value) => setState(() => _autoSync = value),
+                        showDivider: false,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    // Amount × Unit card
+                    Row(
+                      children: [
+                        // Amount pill — same width as one MacroStatCard (1/3)
+                        Expanded(
+                          child: GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () => _amountFocusNode.requestFocus(),
+                            child: Container(
+                              height: AppSizes.editFormRowHeight,
+                              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(AppRadii.pill),
+                                border: Border.all(color: AppColors.outline),
+                                color: AppColors.surface,
+                              ),
+                              child: Center(
+                                child: IntrinsicWidth(
+                                  child: TextField(
+                                    controller: _amountController,
+                                    focusNode: _amountFocusNode,
+                                    keyboardType: TextInputType.number,
+                                    textAlign: TextAlign.center,
+                                    style: AppTextStyles.body16,
+                                    decoration: const InputDecoration(isDense: true, border: InputBorder.none, contentPadding: EdgeInsets.zero),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: AppSpacing.s),
+                        // Unit pill — takes remaining 2/3
+                        Expanded(
+                          flex: 2,
+                          child: GestureDetector(
+                            onTap: _openUnitPicker,
+                            child: Container(
+                              height: AppSizes.editFormRowHeight,
+                              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(AppRadii.pill),
+                                border: Border.all(color: AppColors.outline),
+                                color: AppColors.surface,
+                              ),
+                              child: Row(
+                                children: [
+                                  Text(_selectedUnit.label, style: AppTextStyles.body16),
+                                  const Spacer(),
+                                  const Icon(CupertinoIcons.chevron_down, size: AppSizes.iconSm, color: AppColors.textTertiary),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (_showValidationError && _validationMessage != null) ...[const SizedBox(height: AppSpacing.s), InlineErrorText(message: _validationMessage!)],
+                    const SizedBox(height: AppSpacing.xl),
+                  ],
+                ),
               ),
             ),
           ),
@@ -403,116 +501,9 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
   }
 }
 
-class _RecordRow extends StatelessWidget {
+class _UnitOption {
   final String label;
-  final String value;
-  final bool showChevron;
-  final VoidCallback? onTap;
+  final double grams;
 
-  const _RecordRow({required this.label, required this.value, this.showChevron = false, this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(AppRadii.s),
-      child: SizedBox(
-        height: AppSizes.editFormRowHeight,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(label, style: AppTextStyles.body16.copyWith(letterSpacing: -0.3125)),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(value, style: AppTextStyles.body16.copyWith(letterSpacing: -0.3125)),
-                if (showChevron) ...[const SizedBox(width: AppSpacing.xs), const Icon(Icons.keyboard_arrow_down, size: AppSizes.iconSm, color: AppColors.textSecondary)],
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _NutrientEditorSheet extends StatefulWidget {
-  final String label;
-  final double initialValue;
-
-  const _NutrientEditorSheet({required this.label, required this.initialValue});
-
-  @override
-  State<_NutrientEditorSheet> createState() => _NutrientEditorSheetState();
-}
-
-class _NutrientEditorSheetState extends State<_NutrientEditorSheet> {
-  late final TextEditingController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    final display = widget.initialValue == widget.initialValue.roundToDouble() ? widget.initialValue.toStringAsFixed(0) : widget.initialValue.toStringAsFixed(1);
-    _controller = TextEditingController(text: display);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _submit() {
-    final parsed = double.tryParse(_controller.text.replaceAll(',', '.'));
-    if (parsed != null && parsed >= 0) Navigator.of(context).pop(parsed);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: Padding(
-        padding: EdgeInsets.only(left: AppSpacing.l, right: AppSpacing.l, top: AppSpacing.l, bottom: AppSpacing.l + MediaQuery.viewInsetsOf(context).bottom),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(widget.label, style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700)),
-            const SizedBox(height: AppSpacing.m),
-            TextField(
-              controller: _controller,
-              autofocus: true,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              textInputAction: TextInputAction.done,
-              onSubmitted: (_) => _submit(),
-              decoration: InputDecoration(
-                hintText: widget.label,
-                hintStyle: AppTextStyles.body16.copyWith(color: AppColors.textTertiary),
-                filled: true,
-                fillColor: AppColors.surfaceMuted,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadii.m), borderSide: BorderSide.none),
-                contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.m),
-              ),
-            ),
-            const SizedBox(height: AppSpacing.m),
-            Row(
-              children: [
-                Expanded(
-                  child: FoodySecondaryButton(label: tr(LocaleKeys.common_cancel), onTap: () => Navigator.of(context).pop()),
-                ),
-                const SizedBox(width: AppSpacing.s),
-                Expanded(
-                  child: FoodyPrimaryButton(
-                    label: tr(LocaleKeys.common_save),
-                    gradient: LinearGradient(colors: [AppColors.primary, AppColors.primary]),
-                    onTap: _submit,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  const _UnitOption(this.label, this.grams);
 }

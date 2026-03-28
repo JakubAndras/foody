@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 import 'package:diplomka/app_theme.dart';
@@ -66,17 +67,17 @@ class ProfileScreen extends StatelessWidget {
                   children: [
                     _ProfileActionRow(
                       title: tr(LocaleKeys.profile_personal_details),
-                      icon: Icons.credit_card_outlined,
+                      icon: CupertinoIcons.creditcard,
                       onTap: () => Get.to(() => const PersonalDetailsScreen()),
                     ),
                     _ProfileActionRow(
                       title: tr(LocaleKeys.profile_preferences),
-                      icon: Icons.settings_outlined,
+                      icon: CupertinoIcons.gear,
                       onTap: () => Get.to(() => const PreferencesScreen()),
                     ),
                     _ProfileActionRow(
                       title: tr(LocaleKeys.profile_language),
-                      icon: Icons.translate_outlined,
+                      icon: CupertinoIcons.globe,
                       showDivider: false,
                       onTap: () => _showLanguageSheet(context),
                     ),
@@ -92,27 +93,27 @@ class ProfileScreen extends StatelessWidget {
                   children: [
                     _ProfileActionRow(
                       title: tr(LocaleKeys.profile_edit_nutrition_goals),
-                      icon: Icons.gps_fixed,
+                      icon: CupertinoIcons.location,
                       onTap: () => Get.to(() => const EditNutritionGoalsScreen()),
                     ),
                     _ProfileActionRow(
                       title: tr(LocaleKeys.profile_tracking_reminders),
-                      icon: Icons.notifications_none_outlined,
+                      icon: CupertinoIcons.bell,
                       onTap: () => Get.to(() => const TrackingRemindersScreen()),
                     ),
                     _ProfileActionRow(
                       title: tr(LocaleKeys.profile_motivational_summary),
-                      icon: Icons.emoji_events_outlined,
+                      icon: CupertinoIcons.star,
                       onTap: () => Get.to(() => const MotivationalSummaryScreen()),
                     ),
                     _ProfileActionRow(
                       title: Platform.isIOS ? tr(LocaleKeys.health_apple_health) : tr(LocaleKeys.health_health_connect),
-                      icon: Icons.favorite_outline,
+                      icon: CupertinoIcons.heart,
                       onTap: () => Get.to(() => const HealthIntegrationScreen()),
                     ),
                     _ProfileActionRow(
                       title: tr(LocaleKeys.profile_ring_colors),
-                      icon: Icons.brightness_1_outlined,
+                      icon: CupertinoIcons.circle,
                       showDivider: false,
                       onTap: () => Get.to(() => const RingColorsExplainedScreen()),
                     ),
@@ -151,32 +152,32 @@ class ProfileScreen extends StatelessWidget {
                   children: [
                     _ProfileActionRow(
                       title: tr(LocaleKeys.profile_export_summary),
-                      icon: Icons.ios_share_outlined,
+                      icon: CupertinoIcons.share,
                       onTap: () => Get.to(() => const ExportPdfIntroScreen()),
                     ),
                     _ProfileActionRow(
                       title: tr(LocaleKeys.profile_ask_ai),
-                      icon: Icons.auto_awesome_outlined,
+                      icon: CupertinoIcons.sparkles,
                       onTap: () => Get.to(() => const AskAiScreen()),
                     ),
                     _ProfileActionRow(
                       title: tr(LocaleKeys.profile_faq),
-                      icon: Icons.help_outline_rounded,
+                      icon: CupertinoIcons.question_circle,
                       onTap: () => Get.to(() => const FaqScreen()),
                     ),
                     _ProfileActionRow(
                       title: 'Glass Test',
-                      icon: Icons.blur_on,
+                      icon: CupertinoIcons.circle_filled,
                       onTap: () => Get.to(() => const GlassTestScreen()),
                     ),
                     _ProfileActionRow(
                       title: 'Liquid Glass Widgets Test',
-                      icon: Icons.auto_awesome,
+                      icon: CupertinoIcons.sparkles,
                       onTap: () => Get.to(() => const LiquidGlassWidgetsTestScreen()),
                     ),
                     _ProfileActionRow(
                       title: 'Test Onboarding',
-                      icon: Icons.play_circle_outline,
+                      icon: CupertinoIcons.play_circle,
                       showDivider: false,
                       onTap: () => Get.to(() => const OnboardingFlowScreen()),
                     ),
@@ -192,12 +193,12 @@ class ProfileScreen extends StatelessWidget {
                   children: [
                     _ProfileActionRow(
                       title: tr(LocaleKeys.profile_logout),
-                      icon: Icons.logout,
+                      icon: CupertinoIcons.square_arrow_right,
                       onTap: () => Get.snackbar(tr(LocaleKeys.profile_logout), tr(LocaleKeys.profile_logout_stub)),
                     ),
                     _ProfileActionRow(
                       title: tr(LocaleKeys.profile_delete_account),
-                      icon: Icons.person_remove_outlined,
+                      icon: CupertinoIcons.person_badge_minus,
                       showDivider: false,
                       onTap: () => Get.snackbar(tr(LocaleKeys.profile_delete_account), tr(LocaleKeys.profile_delete_account_stub)),
                     ),
@@ -248,7 +249,7 @@ class ProfileScreen extends StatelessWidget {
                         width: AppSizes.iconButtonSm,
                         height: AppSizes.iconButtonSm,
                         decoration: const BoxDecoration(color: AppColors.surfaceMuted, shape: BoxShape.circle),
-                        child: const Icon(Icons.close, size: AppSizes.iconSm, color: AppColors.textPrimary),
+                        child: const Icon(CupertinoIcons.xmark, size: AppSizes.iconSm, color: AppColors.textPrimary),
                       ),
                     ),
                   ],
@@ -315,7 +316,7 @@ class _LanguageRow extends StatelessWidget {
                 width: AppSizes.iconMd + 4,
                 height: AppSizes.iconMd + 4,
                 decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
-                child: const Icon(Icons.check, size: AppSizes.iconSm, color: AppColors.onPrimary),
+                child: const Icon(CupertinoIcons.checkmark, size: AppSizes.iconSm, color: AppColors.onPrimary),
               ),
           ],
         ),
@@ -364,7 +365,7 @@ class _ProfileHeaderCard extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right, color: AppColors.textTertiary, size: AppSizes.iconSm),
+            const Icon(CupertinoIcons.chevron_right, color: AppColors.textTertiary, size: AppSizes.iconSm),
           ],
         ),
       ),
@@ -501,7 +502,7 @@ class _WidgetSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 _WidgetShortcutCard(
-                  icon: Icons.center_focus_strong,
+                  icon: CupertinoIcons.viewfinder,
                   label: tr(LocaleKeys.profile_scan_food),
                   onTap: () {
                     if (SessionManager.to.scanOnboardingComplete.value) {
@@ -513,7 +514,7 @@ class _WidgetSection extends StatelessWidget {
                 ),
                 const SizedBox(height: AppSpacing.s),
                 _WidgetShortcutCard(
-                  icon: Icons.qr_code,
+                  icon: CupertinoIcons.qrcode,
                   label: tr(LocaleKeys.profile_barcode),
                   onTap: () => Get.to(() => const ScanCameraScreen(initialMode: ScanMode.barcode)),
                 ),

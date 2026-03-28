@@ -9,6 +9,7 @@ import 'package:diplomka/widgets/glass_toggle_row.dart';
 import 'package:diplomka/widgets/time_picker_sheet.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class MotivationalSummaryScreen extends StatefulWidget {
@@ -52,7 +53,7 @@ class _MotivationalSummaryScreenState extends State<MotivationalSummaryScreen> {
                   onBack: () => Get.back(),
                   actions: [
                     CustomGlassIconButton(
-                      icon: Icons.help_outline,
+                      icon: CupertinoIcons.info,
                       onPressed: () => setState(() => _showTip = true),
                     ),
                   ],

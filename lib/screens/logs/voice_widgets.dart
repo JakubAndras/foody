@@ -5,6 +5,7 @@ import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/widgets/foody_glass_buttons.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class VoiceLogIconButton extends StatelessWidget {
   const VoiceLogIconButton({super.key, required this.icon, required this.onTap});
@@ -141,7 +142,7 @@ class VoiceLogAnalyzeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FoodyPrimaryButton(label: label, onTap: enabled ? onTap : null, icon: Icons.auto_awesome, gradient: AppGradients.askAiPrimary, height: AppSizes.voiceAnalyzeHeight);
+    return FoodyPrimaryButton(label: label, onTap: enabled ? onTap : null, icon: CupertinoIcons.sparkles, gradient: AppGradients.askAiPrimary, height: AppSizes.voiceAnalyzeHeight);
   }
 }
 
@@ -162,7 +163,7 @@ class VoiceMicButton extends StatelessWidget {
         width: AppSizes.voiceMicSize,
         height: AppSizes.voiceMicSize,
         decoration: BoxDecoration(gradient: gradient, color: color, shape: BoxShape.circle, boxShadow: AppShadows.button),
-        child: Icon(Icons.mic_rounded, size: AppSizes.voiceMicIcon, color: AppColors.onPrimary),
+        child: Icon(CupertinoIcons.mic_fill, size: AppSizes.voiceMicIcon, color: AppColors.onPrimary),
       ),
     );
   }

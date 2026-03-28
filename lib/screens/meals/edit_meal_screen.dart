@@ -5,6 +5,7 @@ import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/ingredient.dart';
 import 'package:diplomka/model/meal.dart';
 import 'package:diplomka/screens/ingredients/edit_ingredient_screen.dart';
+import 'package:diplomka/screens/log_meal/select_meal_screen.dart';
 import 'package:diplomka/screens/meals/fix_result_screen.dart';
 import 'package:diplomka/screens/meals/report_meal_screen.dart';
 import 'package:diplomka/screens/meals/meal_components.dart';
@@ -28,6 +29,7 @@ import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 enum MealScreenMode { view, edit }
@@ -329,11 +331,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
 
   void _openCopyToSheet() {
     if (_isBusy) return;
-    MealCopyToSheet.show(
-      context,
-      currentDate: _selectedDate,
-      onDatesSelected: (dates) => _handleCopyToMultipleDates(dates),
-    );
+    MealCopyToSheet.show(context, currentDate: _selectedDate, onDatesSelected: (dates) => _handleCopyToMultipleDates(dates));
   }
 
   Future<void> _handleCopyToMultipleDates(List<DateTime> dates) async {
@@ -341,7 +339,12 @@ class _EditMealScreenState extends State<EditMealScreen> {
     for (final date in dates) {
       final copy = Meal(
         name: baseMeal.name,
-        ingredients: baseMeal.ingredients.map((i) => Ingredient(name: i.name, weight: i.weight, amount: i.amount, calories: i.calories, proteins: i.proteins, carbs: i.carbs, fats: i.fats, confidence: i.confidence)).toList(),
+        ingredients: baseMeal.ingredients
+            .map(
+              (i) =>
+                  Ingredient(name: i.name, weight: i.weight, amount: i.amount, calories: i.calories, proteins: i.proteins, carbs: i.carbs, fats: i.fats, confidence: i.confidence),
+            )
+            .toList(),
         timestamp: DateTime(date.year, date.month, date.day, baseMeal.timestamp.hour, baseMeal.timestamp.minute),
         photoPath: baseMeal.photoPath,
         isFavorite: baseMeal.isFavorite,
@@ -481,12 +484,13 @@ class _EditMealScreenState extends State<EditMealScreen> {
       items: [
         GlassPopupItem(
           label: hasPhoto ? tr(LocaleKeys.meal_change_photo) : tr(LocaleKeys.meal_add_photo),
-          icon: Icons.photo_outlined,
-          trailingIcon: Icons.keyboard_arrow_down_rounded,
+          icon: CupertinoIcons.photo,
+          trailingIcon: CupertinoIcons.chevron_down,
+          onTap: () => Navigator.of(context).pop(),
         ),
         GlassPopupItem(
-          label: tr(LocaleKeys.meal_take_photo),
           showDividerAbove: true,
+          label: tr(LocaleKeys.meal_take_photo),
           onTap: () {
             Navigator.of(context).pop();
             Navigator.of(context).pop();
@@ -521,13 +525,13 @@ class _EditMealScreenState extends State<EditMealScreen> {
       items: [
         GlassPopupItem(
           label: _meal.photoPath != null && _meal.photoPath!.isNotEmpty ? tr(LocaleKeys.meal_change_photo) : tr(LocaleKeys.meal_add_photo),
-          icon: Icons.photo_outlined,
-          trailingIcon: Icons.chevron_right_rounded,
+          icon: CupertinoIcons.photo,
+          trailingIcon: CupertinoIcons.chevron_right,
           onTap: () => _openPhotoSheet(),
         ),
         GlassPopupItem(
           label: tr(LocaleKeys.meal_copy_to),
-          icon: Icons.copy_outlined,
+          icon: CupertinoIcons.doc_on_doc,
           onTap: () {
             Navigator.of(context).pop();
             _openCopyToSheet();
@@ -535,7 +539,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
         ),
         GlassPopupItem(
           label: tr(LocaleKeys.common_share),
-          icon: Icons.share_outlined,
+          icon: CupertinoIcons.share,
           onTap: () {
             Navigator.of(context).pop();
             _handleShareMeal();
@@ -543,7 +547,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
         ),
         // GlassPopupItem(
         //   label: tr(LocaleKeys.common_report),
-        //   icon: Icons.report_outlined,
+        //   icon: CupertinoIcons.flag,
         //   onTap: () {
         //     Navigator.of(context).pop();
         //     Get.to(() => const ReportMealScreen());
@@ -552,15 +556,23 @@ class _EditMealScreenState extends State<EditMealScreen> {
         if (!_isFromToday)
           GlassPopupItem(
             label: tr(LocaleKeys.meal_duplicate_to_today),
-            icon: Icons.content_copy_outlined,
+            icon: CupertinoIcons.doc_on_doc,
             onTap: () {
               Navigator.of(context).pop();
               _handleDuplicateMeal();
             },
           ),
         GlassPopupItem(
+          label: tr(LocaleKeys.meal_fix_issue),
+          icon: CupertinoIcons.sparkles,
+          onTap: () {
+            Navigator.of(context).pop();
+            if (!_isBusy) Get.to(() => FixResultScreen(baseMeal: _buildWorkingMeal(), selectedDate: _selectedDate, isNewMeal: widget.isNewMeal));
+          },
+        ),
+        GlassPopupItem(
           label: tr(LocaleKeys.meal_save_image),
-          icon: Icons.download_outlined,
+          icon: CupertinoIcons.arrow_down_to_line,
           onTap: () {
             Navigator.of(context).pop();
             _handleSaveImageToGallery();
@@ -568,7 +580,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
         ),
         GlassPopupItem(
           label: tr(LocaleKeys.common_delete),
-          icon: Icons.delete_outline,
+          icon: CupertinoIcons.trash,
           color: AppColors.error,
           showDividerAbove: true,
           onTap: () {
@@ -592,13 +604,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
         final scale = value / _amountValue;
         setState(() {
           _ingredients = _ingredients
-              .map((i) => i.copyWith(
-                    weight: i.weight * scale,
-                    calories: i.calories * scale,
-                    proteins: i.proteins * scale,
-                    carbs: i.carbs * scale,
-                    fats: i.fats * scale,
-                  ))
+              .map((i) => i.copyWith(weight: i.weight * scale, calories: i.calories * scale, proteins: i.proteins * scale, carbs: i.carbs * scale, fats: i.fats * scale))
               .toList();
           _amountValue = value;
         });
@@ -747,19 +753,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
   }
 
   Future<void> _addIngredient() async {
-    final newIngredient = Ingredient(name: tr(LocaleKeys.meal_new_ingredient), weight: 0, calories: 0, proteins: 0, carbs: 0, fats: 0);
-
-    final result = await Get.to<EditIngredientResult>(() => EditIngredientScreen(ingredient: newIngredient, allowDelete: false));
-
-    if (!mounted || result == null || result.deleted) return;
-    if (result.ingredient != null) {
-      setState(() => _ingredients.add(result.ingredient!));
-    }
-  }
-
-  String get _primaryLabel {
-    if (_isSaving) return tr(LocaleKeys.common_saving);
-    return tr(LocaleKeys.common_done);
+    Get.to(() => const SelectMealScreen(initialTab: SelectMealTab.ingredients));
   }
 
   VoidCallback? get _onPrimaryTap {
@@ -945,7 +939,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                       borderRadius: BorderRadius.circular(AppRadii.s),
                                       child: Row(
                                         children: [
-                                          const Icon(Icons.add, size: AppSizes.iconSm, color: AppColors.textTertiary),
+                                          const Icon(CupertinoIcons.add, size: AppSizes.iconSm, color: AppColors.textTertiary),
                                           const SizedBox(width: AppSpacing.xxs),
                                           Text(
                                             tr(LocaleKeys.common_add),
@@ -1045,7 +1039,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
-                    child: _EditMealTopBar(onBack: _handleBack, isFavorite: _meal.isFavorite, onBookmark: _toggleFavorite, onMenu: _openActionSheet),
+                    child: _EditMealTopBar(onBack: _handleBack, onDone: _onPrimaryTap, isFavorite: _meal.isFavorite, onBookmark: _toggleFavorite, onMenu: _openActionSheet),
                   ),
                   if (_isBusy)
                     Positioned.fill(
@@ -1055,22 +1049,6 @@ class _EditMealScreenState extends State<EditMealScreen> {
                       ),
                     ),
                 ],
-              ),
-            ),
-            bottomSheet: Container(
-              decoration: BoxDecoration(
-                gradient: AppGradients.bottomBarFadeGrey,
-              ),
-              child: SafeArea(
-                top: false,
-                child: EditBottomActionBar(
-                  primaryLabel: _primaryLabel,
-                  onPrimary: _onPrimaryTap,
-                  secondaryLabel: tr(LocaleKeys.meal_fix_issue),
-                  secondaryIcon: Icons.auto_fix_high,
-                  onSecondary: _isBusy ? null : () => Get.to(() => FixResultScreen(baseMeal: _buildWorkingMeal(), selectedDate: _selectedDate, isNewMeal: widget.isNewMeal)),
-                  padding: const EdgeInsets.fromLTRB(AppSpacing.safeAreaBottom, AppSpacing.s, AppSpacing.safeAreaBottom, 32),
-                ),
               ),
             ),
           ),
@@ -1264,22 +1242,27 @@ class _NutrientEditorSheetState extends State<_NutrientEditorSheet> {
 
 class _EditMealTopBar extends StatelessWidget {
   final VoidCallback onBack;
+  final VoidCallback? onDone;
   final VoidCallback onBookmark;
   final VoidCallback onMenu;
   final bool isFavorite;
 
-  const _EditMealTopBar({required this.onBack, required this.onBookmark, required this.onMenu, required this.isFavorite});
+  const _EditMealTopBar({required this.onBack, this.onDone, required this.onBookmark, required this.onMenu, required this.isFavorite});
 
   @override
   Widget build(BuildContext context) {
     return CustomGlassAppBar(
-      //leadingIcon: Icons.close,
+      //leadingIcon: CupertinoIcons.xmark,
       leadingIconSize: AppSizes.iconLg,
       onBack: onBack,
       actions: [
         CustomGlassIconButtonGroup(
           iconSize: AppSizes.iconLg,
-          items: [(icon: isFavorite ? Icons.bookmark : Icons.bookmark_border, onPressed: onBookmark), (icon: Icons.more_horiz, onPressed: onMenu)],
+          items: [
+            (icon: CupertinoIcons.checkmark, onPressed: onDone ?? () {}),
+            (icon: isFavorite ? CupertinoIcons.bookmark_fill : CupertinoIcons.bookmark, onPressed: onBookmark),
+            (icon: CupertinoIcons.ellipsis, onPressed: onMenu),
+          ],
         ),
       ],
     );

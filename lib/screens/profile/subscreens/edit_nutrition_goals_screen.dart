@@ -7,6 +7,7 @@ import 'package:diplomka/services/nutrition_goals_service.dart';
 import 'package:diplomka/services/selected_date_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 import 'package:diplomka/app_theme.dart';
@@ -178,7 +179,7 @@ class _EditNutritionGoalsScreenState extends State<EditNutritionGoalsScreen> {
               Expanded(
                 child: FoodySecondaryButton(
                   label: _isDirty ? tr(LocaleKeys.nutrition_goals_generate_ai) : tr(LocaleKeys.nutrition_goals_generate_ai_long),
-                  icon: Icons.auto_awesome,
+                  icon: CupertinoIcons.sparkles,
                   onTap: enabled ? _generateWithAi : null,
                   height: AppSizes.buttonHeight,
                 ),
@@ -211,7 +212,7 @@ class _EditNutritionGoalsScreenState extends State<EditNutritionGoalsScreen> {
               focusNode: _calorieFocus,
               unit: tr(LocaleKeys.common_kcal),
               color: AppColors.textPrimary,
-              icon: Icons.local_fire_department_outlined,
+              icon: CupertinoIcons.flame,
               enabled: enabled,
             ),
             const SizedBox(height: AppSpacing.m),

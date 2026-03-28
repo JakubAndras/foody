@@ -1,6 +1,7 @@
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 import 'package:diplomka/app_theme.dart';
@@ -43,7 +44,7 @@ class SaveProgressScreen extends StatelessWidget {
           const SizedBox(height: AppSpacing.xl),
           ProfilePrimaryButton(
             label: tr(LocaleKeys.onboarding_sign_in_apple),
-            leading: const Icon(Icons.apple, color: AppColors.onPrimary, size: AppSizes.iconMd),
+            leading: const Icon(CupertinoIcons.app, color: AppColors.onPrimary, size: AppSizes.iconMd),
             height: AppSizes.buttonHeight,
           ),
           const SizedBox(height: AppSpacing.m),

@@ -165,7 +165,7 @@ class AppSizes {
   static const double ingredientRowHeight = 80;
   static const double ingredientRowAlertHeight = 100;
   static const double alertCardHeight = 80;
-  static const double editFormRowHeight = 37;
+  static const double editFormRowHeight = 48;
   static const double datePickerCell = 48;
   static const double datePickerCellSelected = 50;
   static const double iconButtonSm = 32;

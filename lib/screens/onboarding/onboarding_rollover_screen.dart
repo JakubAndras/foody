@@ -3,6 +3,7 @@ import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class OnboardingRolloverScreen extends StatelessWidget {
   const OnboardingRolloverScreen({
@@ -151,7 +152,7 @@ class _RolloverCard extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
-                          Icons.local_fire_department,
+                          CupertinoIcons.flame,
                           size: AppSizes.iconMd,
                           color: AppColors.textPrimary,
                         ),
@@ -203,7 +204,7 @@ class _RolloverCard extends StatelessWidget {
                   size: AppSizes.ringSizeSmall,
                   strokeWidth: AppSizes.ringStroke,
                   centerChild: const Icon(
-                    Icons.local_fire_department,
+                    CupertinoIcons.flame,
                     size: AppSizes.iconLg,
                     color: AppColors.primaryDark,
                   ),
