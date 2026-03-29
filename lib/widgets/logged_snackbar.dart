@@ -1,67 +1,108 @@
 import 'package:diplomka/app_theme.dart';
-import 'package:diplomka/generated/locale_keys.g.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
 
-void showLoggedSnackbar({
-  required BuildContext context,
+enum SnackBarType { success, error, info, warning }
+
+void showSnackBar({
+  BuildContext? context,
   required String message,
-  required VoidCallback onView,
-  required VoidCallback onUndo,
+  String? subtitle,
+  SnackBarType type = SnackBarType.success,
+  IconData? icon,
+  Color? iconColor,
+  String? primaryLabel,
+  VoidCallback? onPrimary,
+  String? secondaryLabel,
+  VoidCallback? onSecondary,
+  Duration duration = const Duration(seconds: 3),
 }) {
-  ScaffoldMessenger.of(context).clearSnackBars();
-  ScaffoldMessenger.of(context).showSnackBar(
+  final ctx = context ?? Get.context!;
+
+  final IconData resolvedIcon;
+  final Color resolvedColor;
+  switch (type) {
+    case SnackBarType.success:
+      resolvedIcon = icon ?? CupertinoIcons.checkmark_circle_fill;
+      resolvedColor = iconColor ?? AppColors.success;
+    case SnackBarType.error:
+      resolvedIcon = icon ?? CupertinoIcons.xmark_circle_fill;
+      resolvedColor = iconColor ?? const Color(0xFFFF3B30);
+    case SnackBarType.info:
+      resolvedIcon = icon ?? CupertinoIcons.info_circle_fill;
+      resolvedColor = iconColor ?? const Color(0xFF3478F6);
+    case SnackBarType.warning:
+      resolvedIcon = icon ?? CupertinoIcons.exclamationmark_triangle_fill;
+      resolvedColor = iconColor ?? const Color(0xFFFF9500);
+  }
+
+  ScaffoldMessenger.of(ctx).clearSnackBars();
+  ScaffoldMessenger.of(ctx).showSnackBar(
     SnackBar(
       content: Row(
         children: [
-          const Icon(CupertinoIcons.checkmark_circle_fill, color: Color(0xFF22C55E), size: 28),
+          Icon(resolvedIcon, color: resolvedColor, size: 28),
           const SizedBox(width: AppSpacing.s),
           Expanded(
-            child: Text(
-              message,
-              style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w600),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  message,
+                  style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w600),
+                ),
+                if (subtitle != null)
+                  Text(
+                    subtitle,
+                    style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary),
+                  ),
+              ],
             ),
           ),
-          GestureDetector(
-            onTap: () {
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              onView();
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              decoration: BoxDecoration(
-                color: AppColors.black,
-                borderRadius: BorderRadius.circular(AppRadii.pill),
+          if (onPrimary != null)
+            GestureDetector(
+              onTap: () {
+                ScaffoldMessenger.of(ctx).hideCurrentSnackBar();
+                onPrimary();
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.xs),
+                decoration: BoxDecoration(
+                  color: AppColors.black,
+                  borderRadius: BorderRadius.circular(AppRadii.pill),
+                ),
+                child: Text(
+                  primaryLabel ?? '',
+                  style: AppTextStyles.body14.copyWith(color: AppColors.white, fontWeight: FontWeight.w600),
+                ),
               ),
+            ),
+          if (onPrimary != null && onSecondary != null) const SizedBox(width: AppSpacing.m),
+          if (onSecondary != null)
+            GestureDetector(
+              onTap: () {
+                ScaffoldMessenger.of(ctx).hideCurrentSnackBar();
+                onSecondary();
+              },
               child: Text(
-                tr(LocaleKeys.common_view),
-                style: AppTextStyles.body14.copyWith(color: AppColors.white, fontWeight: FontWeight.w600),
+                secondaryLabel ?? '',
+                style: AppTextStyles.body14.copyWith(
+                  color: AppColors.textPrimary,
+                  decoration: TextDecoration.underline,
+                ),
               ),
             ),
-          ),
-          const SizedBox(width: AppSpacing.m),
-          GestureDetector(
-            onTap: () {
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              onUndo();
-            },
-            child: Text(
-              tr(LocaleKeys.common_undo),
-              style: AppTextStyles.body14.copyWith(
-                color: AppColors.textPrimary,
-                decoration: TextDecoration.underline,
-              ),
-            ),
-          ),
         ],
       ),
       backgroundColor: AppColors.white,
-      elevation: 8,
+      elevation: 2,
       behavior: SnackBarBehavior.floating,
+      margin: const EdgeInsets.fromLTRB(AppSpacing.m, 0, AppSpacing.m, AppSpacing.xxs),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadii.pill)),
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.m),
-      duration: const Duration(seconds: 4),
+      duration: duration,
     ),
   );
 }

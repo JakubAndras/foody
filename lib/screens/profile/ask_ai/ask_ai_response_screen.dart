@@ -1,3 +1,4 @@
+import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -42,10 +43,11 @@ class AskAiResponseScreen extends StatelessWidget {
         context: context,
       );
     } catch (_) {
-      Get.snackbar(
-        tr(LocaleKeys.ask_ai_share_unavailable),
-        tr(LocaleKeys.ask_ai_share_error),
-        snackPosition: SnackPosition.BOTTOM,
+      showSnackBar(
+        context: context,
+        message: tr(LocaleKeys.ask_ai_share_unavailable),
+        subtitle: tr(LocaleKeys.ask_ai_share_error),
+        type: SnackBarType.error,
       );
     }
   }

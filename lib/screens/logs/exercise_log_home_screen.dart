@@ -57,11 +57,13 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
     DashboardController.to.refresh();
 
     if (!mounted) return;
-    showLoggedSnackbar(
+    showSnackBar(
       context: context,
       message: tr(LocaleKeys.common_exercise_logged),
-      onView: () => Get.back(),
-      onUndo: () async {
+      primaryLabel: tr(LocaleKeys.common_view),
+      onPrimary: () => Get.back(),
+      secondaryLabel: tr(LocaleKeys.common_undo),
+      onSecondary: () async {
         if (savedExercise != null) {
           await DayRecordController.to.deleteExercise(savedExercise);
           DashboardController.to.refresh();
@@ -91,7 +93,7 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
               ],
             ),
           ),
-          const SizedBox(height: AppSpacing.l),
+          const SizedBox(height: AppSpacing.m),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
             child: ExerciseSearchBar(controller: _searchController, onChanged: (_) => setState(() {})),
@@ -106,7 +108,6 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
                 ExerciseFilterChip(
                   label: tr(LocaleKeys.common_favorites),
                   selected: _showFavorites,
-                  icon: CupertinoIcons.xmark,
                   onTap: () => setState(() => _showFavorites = true),
                 ),
               ],

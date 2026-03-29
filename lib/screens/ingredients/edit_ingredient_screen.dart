@@ -1,4 +1,5 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/controller/day_record_controller.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/ingredient.dart';
 import 'package:diplomka/screens/meals/meal_components.dart';
@@ -6,7 +7,6 @@ import 'package:diplomka/screens/meals/meal_sheets.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/widgets/edit_flow/edit_flow_widgets.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
-import 'package:diplomka/widgets/glass_popup.dart';
 import 'package:diplomka/widgets/confirm_delete_dialog.dart';
 import 'package:diplomka/widgets/glass_toggle_row.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -61,9 +61,11 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
   late bool _autoSync;
   bool _showValidationError = false;
   bool _isSyncing = false;
+  late bool _isFavorite;
 
   late List<_UnitOption> _unitOptions;
   late _UnitOption _selectedUnit;
+  late final double _initialDisplayWeight;
 
   @override
   void initState() {
@@ -76,6 +78,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
     _fats = _baseIngredient.fats;
     _weight = _baseIngredient.weight;
     _autoSync = SessionManager.to.autoAdjustMacrosEnabled.value;
+    _isFavorite = _baseIngredient.isFavorite;
 
     // Build unit options — per-unit weight derived from AI data
     final perUnit = _baseIngredient.amount > 0 ? _weight / _baseIngredient.amount : _weight;
@@ -83,6 +86,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
     // Pick the best matching default unit
     _selectedUnit = _unitOptions.firstWhere((u) => u.grams == perUnit, orElse: () => _unitOptions.first);
     final amount = (_weight / _selectedUnit.grams).round();
+    _initialDisplayWeight = amount * _selectedUnit.grams;
 
     _amountController = TextEditingController(text: amount.toString());
     _caloriesController = TextEditingController(text: _calories.toStringAsFixed(0));
@@ -226,7 +230,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
     final amount = int.tryParse(_amountController.text) ?? 1;
     final weight = amount * _selectedUnit.grams;
     if (weight <= 0 || calories < 0 || proteins < 0 || carbs < 0 || fats < 0) return null;
-    return _baseIngredient.copyWith(name: name, weight: weight, amount: amount.toDouble(), calories: calories, proteins: proteins, carbs: carbs, fats: fats);
+    return _baseIngredient.copyWith(name: name, weight: weight, amount: amount.toDouble(), calories: calories, proteins: proteins, carbs: carbs, fats: fats, isFavorite: _isFavorite);
   }
 
   String? get _validationMessage {
@@ -249,13 +253,18 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
     if ((_fats - _baseIngredient.fats).abs() > 0.01) return true;
     final amount = int.tryParse(_amountController.text) ?? 1;
     final currentWeight = amount * _selectedUnit.grams;
-    if ((currentWeight - _baseIngredient.weight).abs() > 0.01) return true;
+    if ((currentWeight - _initialDisplayWeight).abs() > 0.01) return true;
     return false;
   }
 
   Future<void> _handleBack() async {
-    if (!_hasUnsavedChanges) {
+    final favoriteChanged = _isFavorite != _baseIngredient.isFavorite;
+    if (!_hasUnsavedChanges && !favoriteChanged) {
       Navigator.of(context).pop();
+      return;
+    }
+    if (!_hasUnsavedChanges && favoriteChanged) {
+      Navigator.of(context).pop(EditIngredientResult.updated(_baseIngredient.copyWith(isFavorite: _isFavorite)));
       return;
     }
     final confirmed = await showConfirmationDialog(
@@ -272,47 +281,25 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
     }
   }
 
-  void _openMoreMenu() {
-    showGlassPopup(
-      context: context,
-      items: [
-        GlassPopupItem(label: tr(LocaleKeys.common_favorites), icon: CupertinoIcons.bookmark, onTap: () => Navigator.of(context).pop()),
-        if (widget.allowDelete)
-          GlassPopupItem(
-            label: tr(LocaleKeys.common_delete),
-            icon: CupertinoIcons.trash,
-            color: AppColors.error,
-            showDividerAbove: true,
-            onTap: () {
-              Navigator.of(context).pop();
-              _confirmDelete();
-            },
-          ),
-      ],
-    );
+  void _toggleFavorite() {
+    final next = !_isFavorite;
+    setState(() => _isFavorite = next);
+    if (_baseIngredient.id != null && _baseIngredient.mealId != null) {
+      DayRecordController.to.setIngredientFavorite(ingredient: _baseIngredient, isFavorite: next);
+    }
   }
 
   Future<void> _confirmDelete() async {
-    final result = await showModalBottomSheet<bool>(
+    final confirmed = await showConfirmationDialog(
       context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) => Padding(
-        padding: const EdgeInsets.all(AppSpacing.m),
-        child: EditConfirmSheet(
-          title: tr(LocaleKeys.ingredient_delete_title),
-          message: tr(LocaleKeys.ingredient_delete_message),
-          confirmLabel: tr(LocaleKeys.common_delete),
-          cancelLabel: tr(LocaleKeys.common_cancel),
-          confirmColor: AppColors.error,
-          onCancel: () => Navigator.of(context).pop(false),
-          onConfirm: () => Navigator.of(context).pop(true),
-        ),
-      ),
+      title: tr(LocaleKeys.ingredient_delete_title),
+      subtitle: tr(LocaleKeys.ingredient_delete_message),
+      primaryLabel: tr(LocaleKeys.common_delete),
+      secondaryLabel: tr(LocaleKeys.common_cancel),
+      isDestructive: true,
     );
-
-    if (result == true) {
-      Get.back(result: EditIngredientResult.deleted());
-    }
+    if (confirmed != true) return;
+    Get.back(result: EditIngredientResult.deleted());
   }
 
   void _handleDone() {
@@ -337,7 +324,6 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
           extendBodyBehindAppBar: true,
           backgroundColor: AppColors.background,
           appBar: CustomGlassAppBar(
-            title: "Ingredient",
             leadingIconSize: AppSizes.iconLg,
             horizontalPadding: AppSpacing.m,
             onBack: _handleBack,
@@ -346,7 +332,8 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
                 iconSize: AppSizes.iconLg,
                 items: [
                   (icon: CupertinoIcons.checkmark, onPressed: _handleDone),
-                  (icon: CupertinoIcons.ellipsis, onPressed: _openMoreMenu)
+                  (icon: _isFavorite ? CupertinoIcons.bookmark_fill : CupertinoIcons.bookmark, onPressed: _toggleFavorite),
+                  if (widget.allowDelete) (icon: CupertinoIcons.trash, onPressed: _confirmDelete),
                 ],
               ),
             ],

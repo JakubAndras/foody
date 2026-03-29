@@ -159,7 +159,7 @@ class EditIngredientRow extends StatelessWidget {
               ),
             ),
             const SizedBox(width: AppSpacing.xs),
-            _EditIngredientPopupButton(onFavorite: onFavorite, onEdit: onEdit, onDelete: onDelete),
+            _EditIngredientPopupButton(onFavorite: onFavorite, onEdit: onEdit, onDelete: onDelete, isFavorite: ingredient.isFavorite),
           ],
         ),
       ),
@@ -202,13 +202,13 @@ class _MacroDotsRowWithCalories extends StatelessWidget {
     final showAmount = (ingredient.amount - 1.0).abs() > 0.001;
     return Row(
       children: [
-        if (showAmount) ...[
-          Text(
-            ingredient.amountLabel,
-            style: AppTextStyles.label11.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary, letterSpacing: 0.0645),
-          ),
-          _separator,
-        ],
+        // if (showAmount) ...[
+        //   Text(
+        //     ingredient.amountLabel,
+        //     style: AppTextStyles.label11.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary, letterSpacing: 0.0645),
+        //   ),
+        //   _separator,
+        // ],
         Text(
           '${ingredient.weight.toStringAsFixed(0)}g',
           style: AppTextStyles.label11.copyWith(fontWeight: FontWeight.w600, color: AppColors.textSecondary, letterSpacing: 0.0645),
@@ -238,8 +238,9 @@ class _EditIngredientPopupButton extends StatelessWidget {
   final VoidCallback? onFavorite;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
+  final bool isFavorite;
 
-  const _EditIngredientPopupButton({this.onFavorite, this.onEdit, this.onDelete});
+  const _EditIngredientPopupButton({this.onFavorite, this.onEdit, this.onDelete, this.isFavorite = false});
 
   @override
   Widget build(BuildContext context) {
@@ -261,7 +262,7 @@ class _EditIngredientPopupButton extends StatelessWidget {
       items: [
         GlassPopupItem(
           label: tr(LocaleKeys.common_favorites),
-          icon: CupertinoIcons.bookmark,
+          icon: isFavorite ? CupertinoIcons.bookmark_fill : CupertinoIcons.bookmark,
           onTap: () {
             Navigator.of(context).pop();
             onFavorite?.call();

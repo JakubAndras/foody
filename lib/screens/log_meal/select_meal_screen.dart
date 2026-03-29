@@ -9,6 +9,7 @@ import 'package:diplomka/model/meal.dart';
 import 'package:diplomka/model/meal_template.dart';
 import 'package:diplomka/services/meal_template_repository.dart';
 import 'package:diplomka/screens/meals/edit_meal_screen.dart';
+import 'package:diplomka/screens/meals/meal_components.dart';
 import 'package:diplomka/screens/meals/meal_detail_screen.dart';
 import 'package:diplomka/screens/log_meal/select_meal_widgets.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
@@ -19,6 +20,7 @@ import 'package:diplomka/services/voice/voice_transcription_service.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:diplomka/widgets/glass_popup.dart';
 import 'package:diplomka/widgets/logged_snackbar.dart';
+import 'package:diplomka/widgets/recently_uploaded_card.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:get/get.dart';
@@ -280,11 +282,13 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
     final savedMeal = await DayRecordController.to.saveMealForDate(date: selectedDate, mealToSave: newMeal);
     DashboardController.to.refresh();
     if (!mounted) return;
-    showLoggedSnackbar(
+    showSnackBar(
       context: context,
       message: tr(LocaleKeys.common_food_logged),
-      onView: () => Get.back(),
-      onUndo: () async {
+      primaryLabel: tr(LocaleKeys.common_view),
+      onPrimary: () => Get.back(),
+      secondaryLabel: tr(LocaleKeys.common_undo),
+      onSecondary: () async {
         if (savedMeal != null) {
           await DayRecordController.to.deleteMeal(savedMeal);
           DashboardController.to.refresh();
@@ -299,11 +303,13 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
     final savedMeal = await DayRecordController.to.saveMealForDate(date: selectedDate, mealToSave: meal);
     DashboardController.to.refresh();
     if (!mounted) return;
-    showLoggedSnackbar(
+    showSnackBar(
       context: context,
       message: tr(LocaleKeys.common_food_logged),
-      onView: () => Get.back(),
-      onUndo: () async {
+      primaryLabel: tr(LocaleKeys.common_view),
+      onPrimary: () => Get.back(),
+      secondaryLabel: tr(LocaleKeys.common_undo),
+      onSecondary: () async {
         if (savedMeal != null) {
           await DayRecordController.to.deleteMeal(savedMeal);
           DashboardController.to.refresh();
@@ -476,7 +482,6 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                                 ),
                               ),
                             ),
-                            const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.s)),
                             SliverPadding(
                               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
                               sliver: SliverList(
@@ -484,23 +489,20 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                                   final template = meals[index];
                                   final selectedDate = SelectedDateService.to.selectedDate.value;
                                   final previewMeal = template.toMeal(timestamp: _applyDateToTime(DateTime.now(), selectedDate));
-                                  return Padding(
-                                    padding: const EdgeInsets.only(bottom: AppSpacing.xs),
-                                    child: SelectMealCard(
-                                      title: template.name,
-                                      kcal: template.totalCalories.toStringAsFixed(0),
-                                      protein: '${template.totalProteins.toStringAsFixed(0)}g',
-                                      carbs: '${template.totalCarbs.toStringAsFixed(0)}g',
-                                      fats: '${template.totalFats.toStringAsFixed(0)}g',
-                                      imageProvider: _resolveImage(template.photoPath),
-                                      onTap: () => Get.to(() => MealDetailScreen(meal: previewMeal, openedFromLogScreen: true, selectedDate: selectedDate)),
-                                      onAdd: () => _addMealToToday(template),
-                                    ),
+                                  return MealItemCard(
+                                    name: template.name,
+                                    kcalText: '${template.totalCalories.toStringAsFixed(0)} ${tr(LocaleKeys.common_kcal)}',
+                                    proteins: template.totalProteins,
+                                    carbs: template.totalCarbs,
+                                    fats: template.totalFats,
+                                    imageProvider: _resolveImage(template.photoPath),
+                                    onTap: () => Get.to(() => MealDetailScreen(meal: previewMeal, openedFromLogScreen: true, selectedDate: selectedDate)),
+                                    onAdd: () => _addMealToToday(template),
                                   );
                                 }, childCount: meals.length),
                               ),
                             ),
-                            const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.l)),
+                            const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xxs)),
                           ],
                           if (_showIngredientsSection) ...[
                             SliverPadding(
@@ -508,36 +510,37 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                               sliver: SliverToBoxAdapter(
                                 child: SelectMealSectionHeader(
                                   title: tr(LocaleKeys.common_ingredients),
-                                  trailing: GestureDetector(
-                                    onTap: _openSortPicker,
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        const Icon(CupertinoIcons.slider_horizontal_3, color: AppColors.textSecondary, size: AppSizes.iconSm),
-                                        const SizedBox(width: 6),
-                                        Text(
-                                          _sortLabel(_sort),
-                                          style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary, letterSpacing: -0.1504),
+                                  trailing: _showMealsSection
+                                      ? null
+                                      : GestureDetector(
+                                          onTap: _openSortPicker,
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              const Icon(CupertinoIcons.slider_horizontal_3, color: AppColors.textSecondary, size: AppSizes.iconSm),
+                                              const SizedBox(width: 6),
+                                              Text(
+                                                _sortLabel(_sort),
+                                                style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary, letterSpacing: -0.1504),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ],
-                                    ),
-                                  ),
                                 ),
                               ),
                             ),
-                            const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.s)),
+                            const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xs)),
                             SliverPadding(
-                              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+                              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
                               sliver: SliverList(
                                 delegate: SliverChildBuilderDelegate((context, index) {
                                   final item = ingredients[index];
                                   return Padding(
                                     padding: const EdgeInsets.only(bottom: AppSpacing.xs),
-                                    child: SelectMealIngredientRow(
-                                      title: item.ingredient.name,
-                                      subtitle: item.subtitle,
+                                    child: IngredientRow(
+                                      ingredient: item.ingredient,
                                       onAdd: () => _addIngredientToToday(item.ingredient),
-                                      onTap: () => Get.snackbar(tr(LocaleKeys.common_ingredients), item.ingredient.name),
+                                      onTap: () => showSnackBar(context: context, message: tr(LocaleKeys.common_ingredients), subtitle: item.ingredient.name, type: SnackBarType.info),
                                     ),
                                   );
                                 }, childCount: ingredients.length),

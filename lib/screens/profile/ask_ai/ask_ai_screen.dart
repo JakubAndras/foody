@@ -1,3 +1,4 @@
+import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -41,10 +42,11 @@ class _AskAiScreenState extends State<AskAiScreen> {
     if (result != null) {
       Get.to(() => AskAiResponseScreen(response: result, query: query));
     } else if (_controller.errorMessage.value != null) {
-      Get.snackbar(
-        tr(LocaleKeys.ask_ai_title),
-        _controller.errorMessage.value!,
-        snackPosition: SnackPosition.BOTTOM,
+      showSnackBar(
+        context: context,
+        message: tr(LocaleKeys.ask_ai_title),
+        subtitle: _controller.errorMessage.value!,
+        type: SnackBarType.error,
       );
     }
   }

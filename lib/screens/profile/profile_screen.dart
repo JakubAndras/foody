@@ -1,3 +1,4 @@
+import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -125,7 +126,7 @@ class ProfileScreen extends StatelessWidget {
                   child: ProfileSectionHeader(
                     title: tr(LocaleKeys.profile_widgets),
                     trailing: GestureDetector(
-                      onTap: () => Get.snackbar(tr(LocaleKeys.common_coming_soon), tr(LocaleKeys.common_feature_not_available)),
+                      onTap: () => showSnackBar(message: tr(LocaleKeys.common_coming_soon), subtitle: tr(LocaleKeys.common_feature_not_available), type: SnackBarType.info),
                       child: Text(
                         tr(LocaleKeys.profile_how_to_add),
                         style: TextStyle(
@@ -139,7 +140,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: AppSpacing.s),
                 GestureDetector(
-                  onTap: () => Get.snackbar(tr(LocaleKeys.common_coming_soon), tr(LocaleKeys.common_feature_not_available)),
+                  onTap: () => showSnackBar(message: tr(LocaleKeys.common_coming_soon), subtitle: tr(LocaleKeys.common_feature_not_available), type: SnackBarType.info),
                   child: const AbsorbPointer(child: _WidgetSection()),
                 ),
                 const SizedBox(height: AppSpacing.l),
@@ -194,13 +195,13 @@ class ProfileScreen extends StatelessWidget {
                     _ProfileActionRow(
                       title: tr(LocaleKeys.profile_logout),
                       icon: CupertinoIcons.square_arrow_right,
-                      onTap: () => Get.snackbar(tr(LocaleKeys.profile_logout), tr(LocaleKeys.profile_logout_stub)),
+                      onTap: () => showSnackBar(message: tr(LocaleKeys.profile_logout), subtitle: tr(LocaleKeys.profile_logout_stub), type: SnackBarType.info),
                     ),
                     _ProfileActionRow(
                       title: tr(LocaleKeys.profile_delete_account),
                       icon: CupertinoIcons.person_badge_minus,
                       showDivider: false,
-                      onTap: () => Get.snackbar(tr(LocaleKeys.profile_delete_account), tr(LocaleKeys.profile_delete_account_stub)),
+                      onTap: () => showSnackBar(message: tr(LocaleKeys.profile_delete_account), subtitle: tr(LocaleKeys.profile_delete_account_stub), type: SnackBarType.info),
                     ),
                   ],
                 ),
@@ -331,7 +332,7 @@ class _ProfileHeaderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Get.snackbar(tr(LocaleKeys.common_coming_soon), tr(LocaleKeys.common_feature_not_available)),
+      onTap: () => showSnackBar(message: tr(LocaleKeys.common_coming_soon), subtitle: tr(LocaleKeys.common_feature_not_available), type: SnackBarType.info),
       child: Container(
         height: AppSizes.profileHeaderHeight,
         decoration: BoxDecoration(

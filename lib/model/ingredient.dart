@@ -9,6 +9,7 @@ class Ingredient {
   final double carbs;
   final double fats;
   final double? confidence;
+  final bool isFavorite;
 
   Ingredient({
     this.id,
@@ -21,6 +22,7 @@ class Ingredient {
     required this.carbs,
     required this.fats,
     this.confidence,
+    this.isFavorite = false,
   });
 
   // Factory constructor for creating a new Ingredient instance from a map.
@@ -36,6 +38,7 @@ class Ingredient {
       carbs: (json['carbs'] as num).toDouble(),
       fats: (json['fats'] as num).toDouble(),
       confidence: (json['confidence'] as num?)?.toDouble(),
+      isFavorite: json['isFavorite'] == true || json['isFavorite'] == 1,
     );
   }
 
@@ -52,6 +55,7 @@ class Ingredient {
       'carbs': carbs,
       'fats': fats,
       'confidence': confidence,
+      'isFavorite': isFavorite,
     };
   }
 
@@ -67,6 +71,7 @@ class Ingredient {
     double? carbs,
     double? fats,
     double? confidence,
+    bool? isFavorite,
   }) {
     return Ingredient(
       id: id ?? this.id,
@@ -79,6 +84,7 @@ class Ingredient {
       carbs: carbs ?? this.carbs,
       fats: fats ?? this.fats,
       confidence: confidence ?? this.confidence,
+      isFavorite: isFavorite ?? this.isFavorite,
     );
   }
 

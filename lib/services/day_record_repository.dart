@@ -112,6 +112,7 @@ class DayRecordRepository extends GetxService {
               carbs: ingredient.carbs,
               fats: ingredient.fats,
               confidence: ingredient.confidence,
+              isFavorite: ingredient.isFavorite,
             ))
         .toList();
 
@@ -171,6 +172,24 @@ class DayRecordRepository extends GetxService {
       confidence: meal.confidence,
     );
     await _mealDao.updateMeal(entity);
+  }
+
+  Future<void> updateIngredientFavorite({required Ingredient ingredient, required bool isFavorite}) async {
+    if (ingredient.id == null || ingredient.mealId == null) return;
+    final entity = IngredientEntity(
+      id: ingredient.id,
+      mealId: ingredient.mealId!,
+      name: ingredient.name,
+      weight: ingredient.weight,
+      amount: ingredient.amount,
+      calories: ingredient.calories,
+      proteins: ingredient.proteins,
+      carbs: ingredient.carbs,
+      fats: ingredient.fats,
+      confidence: ingredient.confidence,
+      isFavorite: isFavorite,
+    );
+    await _ingredientDao.updateIngredient(entity);
   }
 
   Future<void> updateExerciseFavorite({required Exercise exercise, required bool isFavorite}) async {
@@ -285,6 +304,7 @@ class DayRecordRepository extends GetxService {
             carbs: ingredient.carbs,
             fats: ingredient.fats,
             confidence: ingredient.confidence,
+            isFavorite: ingredient.isFavorite,
           ),
         )
         .toList();

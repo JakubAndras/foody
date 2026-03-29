@@ -94,7 +94,7 @@ class _$AppDatabase extends AppDatabase {
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 12,
+      version: 13,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -114,7 +114,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Meal` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `dayRecordId` INTEGER NOT NULL, `name` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `photoPath` TEXT, `isFavorite` INTEGER NOT NULL, `confidence` REAL, FOREIGN KEY (`dayRecordId`) REFERENCES `DayRecord` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Ingredient` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `mealId` INTEGER NOT NULL, `name` TEXT NOT NULL, `weight` REAL NOT NULL, `amount` REAL, `calories` REAL NOT NULL, `proteins` REAL NOT NULL, `carbs` REAL NOT NULL, `fats` REAL NOT NULL, `confidence` REAL, FOREIGN KEY (`mealId`) REFERENCES `Meal` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `Ingredient` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `mealId` INTEGER NOT NULL, `name` TEXT NOT NULL, `weight` REAL NOT NULL, `amount` REAL, `calories` REAL NOT NULL, `proteins` REAL NOT NULL, `carbs` REAL NOT NULL, `fats` REAL NOT NULL, `confidence` REAL, `isFavorite` INTEGER NOT NULL, FOREIGN KEY (`mealId`) REFERENCES `Meal` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `WeightEntry` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` INTEGER NOT NULL, `weight` REAL NOT NULL, `photoPath` TEXT)');
         await database.execute(
@@ -446,7 +446,8 @@ class _$IngredientDao extends IngredientDao {
                   'proteins': item.proteins,
                   'carbs': item.carbs,
                   'fats': item.fats,
-                  'confidence': item.confidence
+                  'confidence': item.confidence,
+                  'isFavorite': item.isFavorite ? 1 : 0
                 }),
         _ingredientEntityUpdateAdapter = UpdateAdapter(
             database,
@@ -462,7 +463,8 @@ class _$IngredientDao extends IngredientDao {
                   'proteins': item.proteins,
                   'carbs': item.carbs,
                   'fats': item.fats,
-                  'confidence': item.confidence
+                  'confidence': item.confidence,
+                  'isFavorite': item.isFavorite ? 1 : 0
                 }),
         _ingredientEntityDeletionAdapter = DeletionAdapter(
             database,
@@ -478,7 +480,8 @@ class _$IngredientDao extends IngredientDao {
                   'proteins': item.proteins,
                   'carbs': item.carbs,
                   'fats': item.fats,
-                  'confidence': item.confidence
+                  'confidence': item.confidence,
+                  'isFavorite': item.isFavorite ? 1 : 0
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -506,7 +509,8 @@ class _$IngredientDao extends IngredientDao {
             proteins: row['proteins'] as double,
             carbs: row['carbs'] as double,
             fats: row['fats'] as double,
-            confidence: row['confidence'] as double?),
+            confidence: row['confidence'] as double?,
+            isFavorite: (row['isFavorite'] as int) != 0),
         arguments: [mealId]);
   }
 

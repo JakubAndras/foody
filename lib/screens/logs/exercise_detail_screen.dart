@@ -1,21 +1,19 @@
 import 'package:diplomka/app_theme.dart';
-import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/controller/day_record_controller.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/exercise.dart';
 import 'package:diplomka/model/exercise_template.dart';
 import 'package:diplomka/services/exercise_template_repository.dart';
-import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/screens/logs/exercise_widgets.dart';
 import 'package:diplomka/widgets/confirm_delete_dialog.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:diplomka/widgets/foody_glass_buttons.dart';
 import 'package:diplomka/widgets/glass_popup.dart';
+import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 
 class ExerciseDetailScreen extends StatefulWidget {
@@ -36,23 +34,6 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
   void initState() {
     super.initState();
     _exercise = widget.exercise;
-  }
-
-  bool get _isFromToday {
-    final now = DateTime.now();
-    final date = widget.selectedDate ?? _exercise.timestamp;
-    return date.year == now.year && date.month == now.month && date.day == now.day;
-  }
-
-  Future<void> _handleDuplicateExercise() async {
-    final today = DateTime.now();
-    final todayNormalized = DateTime(today.year, today.month, today.day);
-    final duplicate = _exercise.copyWith(id: null, dayRecordId: null, timestamp: today, source: null);
-    await DayRecordController.to.saveExerciseForDate(date: todayNormalized, exerciseToSave: duplicate);
-    SelectedDateService.to.setSelectedDate(todayNormalized);
-    DashboardController.to.refresh();
-    if (!mounted) return;
-    GlassToast.show(context, message: tr(LocaleKeys.exercise_duplicated_to, namedArgs: {'date': DateFormat.MMMMd(context.locale.languageCode).format(todayNormalized)}), type: GlassToastType.success, position: GlassToastPosition.bottom);
   }
 
   Future<void> _toggleFavorite() async {
@@ -188,15 +169,6 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
             _showSnack(context, tr(LocaleKeys.common_share));
           },
         ),
-        if (!_isFromToday)
-          GlassPopupItem(
-            label: tr(LocaleKeys.exercise_duplicate_to_today),
-            icon: CupertinoIcons.doc_on_doc,
-            onTap: () {
-              Navigator.of(context).pop();
-              _handleDuplicateExercise();
-            },
-          ),
         GlassPopupItem(
           label: tr(LocaleKeys.common_delete),
           icon: CupertinoIcons.trash,
@@ -237,6 +209,6 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
   }
 
   void _showSnack(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    showSnackBar(context: context, message: message, type: SnackBarType.info);
   }
 }

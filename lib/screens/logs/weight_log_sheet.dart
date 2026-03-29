@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/controller/weight_entry_controller.dart';
+import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/weight_entry.dart';
 import 'package:diplomka/widgets/dashboard_calendar_sheet.dart';
@@ -82,7 +83,7 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
       Navigator.of(context).pop();
     } catch (_) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(tr(LocaleKeys.weight_log_save_failed))));
+      showSnackBar(context: context, message: tr(LocaleKeys.weight_log_save_failed), type: SnackBarType.error);
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }

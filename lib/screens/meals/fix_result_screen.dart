@@ -9,6 +9,7 @@ import 'package:diplomka/services/ai_feature/ai_pipeline_service.dart';
 import 'package:diplomka/utils/media_storage.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:diplomka/widgets/foody_glass_buttons.dart';
+import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -125,7 +126,7 @@ class _FixResultScreenState extends State<FixResultScreen> {
   Future<void> _handleUpdate() async {
     final text = _controller.text.trim();
     if (text.isEmpty) {
-      Get.snackbar(tr(LocaleKeys.fix_result_add_details), tr(LocaleKeys.fix_result_hint));
+      showSnackBar(context: context, message: tr(LocaleKeys.fix_result_add_details), subtitle: tr(LocaleKeys.fix_result_hint), type: SnackBarType.info);
       return;
     }
 
@@ -139,12 +140,12 @@ class _FixResultScreenState extends State<FixResultScreen> {
     setState(() => _isSubmitting = false);
 
     if (!result.isSuccess || result.response == null) {
-      Get.snackbar(tr(LocaleKeys.error_analysis_failed), result.message ?? tr(LocaleKeys.common_try_again));
+      showSnackBar(context: context, message: tr(LocaleKeys.error_analysis_failed), subtitle: result.message ?? tr(LocaleKeys.common_try_again), type: SnackBarType.error);
       return;
     }
 
     if (result.status == AiAnalysisStatus.lowConfidence) {
-      Get.snackbar(tr(LocaleKeys.error_low_confidence), result.message ?? tr(LocaleKeys.error_low_confidence_review));
+      showSnackBar(context: context, message: tr(LocaleKeys.error_low_confidence), subtitle: result.message ?? tr(LocaleKeys.error_low_confidence_review), type: SnackBarType.warning);
     }
 
     final analyzedMeal = Meal.fromAnswer(result.response!.answer);

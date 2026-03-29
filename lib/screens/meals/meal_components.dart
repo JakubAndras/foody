@@ -362,8 +362,9 @@ class IngredientRow extends StatelessWidget {
   final VoidCallback? onFavorite;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
+  final VoidCallback? onAdd;
 
-  const IngredientRow({super.key, required this.ingredient, this.highlighted = false, this.alertText, this.onTap, this.onFavorite, this.onEdit, this.onDelete});
+  const IngredientRow({super.key, required this.ingredient, this.highlighted = false, this.alertText, this.onTap, this.onFavorite, this.onEdit, this.onDelete, this.onAdd});
 
   @override
   Widget build(BuildContext context) {
@@ -412,7 +413,18 @@ class IngredientRow extends StatelessWidget {
               ),
             ),
             const SizedBox(width: AppSpacing.xs),
-            _IngredientPopupButton(onFavorite: onFavorite, onEdit: onEdit, onDelete: onDelete),
+            if (onAdd != null)
+              GestureDetector(
+                onTap: onAdd,
+                child: Container(
+                  width: 32,
+                  height: 32,
+                  decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
+                  child: const Icon(CupertinoIcons.add, color: AppColors.onPrimary, size: AppSizes.iconMd),
+                ),
+              )
+            else
+              _IngredientPopupButton(onFavorite: onFavorite, onEdit: onEdit, onDelete: onDelete, isFavorite: ingredient.isFavorite),
           ],
         ),
       ),
@@ -494,8 +506,9 @@ class _IngredientPopupButton extends StatelessWidget {
   final VoidCallback? onFavorite;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
+  final bool isFavorite;
 
-  const _IngredientPopupButton({this.onFavorite, this.onEdit, this.onDelete});
+  const _IngredientPopupButton({this.onFavorite, this.onEdit, this.onDelete, this.isFavorite = false});
 
   @override
   Widget build(BuildContext context) {
@@ -504,7 +517,7 @@ class _IngredientPopupButton extends StatelessWidget {
       child: SizedBox(
         width: 32,
         height: 32,
-        child: Icon(CupertinoIcons.ellipsis, size: AppSizes.iconMd, color: AppColors.textSecondary),
+        child: Icon(CupertinoIcons.ellipsis, size: AppSizes.iconMd, color: AppColors.textPrimary),
       ),
     );
   }
@@ -517,7 +530,7 @@ class _IngredientPopupButton extends StatelessWidget {
       items: [
         GlassPopupItem(
           label: tr(LocaleKeys.common_favorites),
-          icon: CupertinoIcons.bookmark,
+          icon: isFavorite ? CupertinoIcons.bookmark_fill : CupertinoIcons.bookmark,
           onTap: () {
             Navigator.of(context).pop();
             onFavorite?.call();

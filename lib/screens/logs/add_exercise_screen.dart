@@ -1,6 +1,7 @@
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/controller/day_record_controller.dart';
+import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/exercise.dart';
 import 'package:diplomka/screens/logs/exercise_widgets.dart';
@@ -211,7 +212,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
         : (double.tryParse(_rateController.text.trim()) ?? 0) * (durationMinutes ?? 0);
 
     if (caloriesBurned <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(tr(LocaleKeys.exercise_invalid_calories))));
+      showSnackBar(context: context, message: tr(LocaleKeys.exercise_invalid_calories), type: SnackBarType.warning);
       return;
     }
 
@@ -233,7 +234,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
       DashboardController.to.refresh();
 
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(tr(LocaleKeys.exercise_exercise_added))));
+      showSnackBar(context: context, message: tr(LocaleKeys.exercise_exercise_added));
       Navigator.of(context).maybePop();
     } finally {
       if (mounted) {

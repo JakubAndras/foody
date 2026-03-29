@@ -57,9 +57,9 @@ class MainScreen extends GetView<MainScreenController> {
               unselectedIconColor: AppColors.grey4,
               glassSettings: AppGlass.standard,
               tabs: [
-                GlassBottomBarTab(label: tr(LocaleKeys.nav_home), icon: CupertinoIcons.house_fill, selectedIcon: CupertinoIcons.house_fill),
-                GlassBottomBarTab(label: tr(LocaleKeys.nav_progress), icon: CupertinoIcons.chart_bar, selectedIcon: CupertinoIcons.chart_bar),
-                GlassBottomBarTab(label: tr(LocaleKeys.nav_profile), icon: CupertinoIcons.person, selectedIcon: CupertinoIcons.person),
+                GlassBottomBarTab(label: tr(LocaleKeys.nav_home), icon: CupertinoIcons.house, selectedIcon: CupertinoIcons.house_fill),
+                GlassBottomBarTab(label: tr(LocaleKeys.nav_progress), icon: CupertinoIcons.chart_bar, selectedIcon: CupertinoIcons.chart_bar_fill),
+                GlassBottomBarTab(label: tr(LocaleKeys.nav_profile), icon: CupertinoIcons.person, selectedIcon: CupertinoIcons.person_fill),
               ],
               selectedIndex: selectedIndex,
               onTabSelected: controller._onItemTapped,

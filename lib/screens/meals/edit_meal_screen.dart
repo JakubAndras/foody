@@ -24,6 +24,7 @@ import 'package:diplomka/utils/media_storage.dart';
 import 'package:diplomka/model/meal_template.dart';
 import 'package:diplomka/services/meal_template_repository.dart';
 import 'package:diplomka/widgets/edit_flow/edit_flow_widgets.dart';
+import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -141,11 +142,6 @@ class _EditMealScreenState extends State<EditMealScreen> {
   bool get _isBusy => _isSaving || _isDeleting;
 
   bool get _canEditNutrients => SessionManager.to.editableNutrientsEnabled1.value;
-
-  bool get _isFromToday {
-    final now = DateTime.now();
-    return _selectedDate.year == now.year && _selectedDate.month == now.month && _selectedDate.day == now.day;
-  }
 
   String get _mealTitle => _meal.name.trim().isEmpty ? tr(LocaleKeys.meal_untitled) : _meal.name.trim();
 
@@ -313,22 +309,6 @@ class _EditMealScreenState extends State<EditMealScreen> {
     Get.back(result: mealToSave);
   }
 
-  Future<void> _handleDuplicateMeal() async {
-    final today = DateTime.now();
-    final todayNormalized = DateTime(today.year, today.month, today.day);
-    final duplicate = _buildWorkingMeal(forDate: todayNormalized).copyWith(id: null, dayRecordId: null, timestamp: today);
-    await DayRecordController.to.saveMealForDate(date: todayNormalized, mealToSave: duplicate);
-    SelectedDateService.to.setSelectedDate(todayNormalized);
-    DashboardController.to.refresh();
-    if (!mounted) return;
-    GlassToast.show(
-      context,
-      message: tr(LocaleKeys.meal_duplicated_to, namedArgs: {'date': DateFormat.MMMMd(context.locale.languageCode).format(todayNormalized)}),
-      type: GlassToastType.success,
-      position: GlassToastPosition.bottom,
-    );
-  }
-
   void _openCopyToSheet() {
     if (_isBusy) return;
     MealCopyToSheet.show(context, currentDate: _selectedDate, onDatesSelected: (dates) => _handleCopyToMultipleDates(dates));
@@ -345,7 +325,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                   Ingredient(name: i.name, weight: i.weight, amount: i.amount, calories: i.calories, proteins: i.proteins, carbs: i.carbs, fats: i.fats, confidence: i.confidence),
             )
             .toList(),
-        timestamp: DateTime(date.year, date.month, date.day, baseMeal.timestamp.hour, baseMeal.timestamp.minute),
+        timestamp: DateTime(date.year, date.month, date.day, DateTime.now().hour, DateTime.now().minute),
         photoPath: baseMeal.photoPath,
         isFavorite: baseMeal.isFavorite,
         confidence: baseMeal.confidence,
@@ -354,11 +334,15 @@ class _EditMealScreenState extends State<EditMealScreen> {
     }
     DashboardController.to.refresh();
     if (!mounted) return;
-    GlassToast.show(
-      context,
+    final viewDate = dates.first;
+    showSnackBar(
+      context: context,
       message: tr(LocaleKeys.meal_copied_to_dates, namedArgs: {'count': '${dates.length}'}),
-      type: GlassToastType.success,
-      position: GlassToastPosition.bottom,
+      primaryLabel: tr(LocaleKeys.common_view),
+      onPrimary: () {
+        SelectedDateService.to.setSelectedDate(viewDate);
+        Get.back();
+      },
     );
   }
 
@@ -366,9 +350,9 @@ class _EditMealScreenState extends State<EditMealScreen> {
     final saved = await MediaStorage.saveToGallery(_meal.photoPath);
     if (!mounted) return;
     if (saved) {
-      Get.snackbar(tr(LocaleKeys.meal_save_image), tr(LocaleKeys.meal_save_image_success), snackPosition: SnackPosition.BOTTOM);
+      showSnackBar(context: context, message: tr(LocaleKeys.meal_save_image), subtitle: tr(LocaleKeys.meal_save_image_success));
     } else {
-      Get.snackbar(tr(LocaleKeys.meal_save_image), tr(LocaleKeys.meal_save_image_error), snackPosition: SnackPosition.BOTTOM);
+      showSnackBar(context: context, message: tr(LocaleKeys.meal_save_image), subtitle: tr(LocaleKeys.meal_save_image_error), type: SnackBarType.error);
     }
   }
 
@@ -443,7 +427,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
   Future<void> _handleDeleteMeal() async {
     if (_isDeleting) return;
     if (_meal.id == null) {
-      Get.snackbar(tr(LocaleKeys.meal_delete_title), tr(LocaleKeys.meal_delete_message), snackPosition: SnackPosition.BOTTOM);
+      showSnackBar(context: context, message: tr(LocaleKeys.meal_delete_title), subtitle: tr(LocaleKeys.meal_delete_message), type: SnackBarType.warning);
       return;
     }
 
@@ -473,7 +457,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
       await AppShareService.share(request: request, context: context);
     } catch (_) {
       if (!mounted) return;
-      Get.snackbar(tr(LocaleKeys.common_share), tr(LocaleKeys.common_something_went_wrong), snackPosition: SnackPosition.BOTTOM);
+      showSnackBar(context: context, message: tr(LocaleKeys.common_share), subtitle: tr(LocaleKeys.common_something_went_wrong), type: SnackBarType.error);
     }
   }
 
@@ -553,15 +537,6 @@ class _EditMealScreenState extends State<EditMealScreen> {
         //     Get.to(() => const ReportMealScreen());
         //   },
         // ),
-        if (!_isFromToday)
-          GlassPopupItem(
-            label: tr(LocaleKeys.meal_duplicate_to_today),
-            icon: CupertinoIcons.doc_on_doc,
-            onTap: () {
-              Navigator.of(context).pop();
-              _handleDuplicateMeal();
-            },
-          ),
         GlassPopupItem(
           label: tr(LocaleKeys.meal_fix_issue),
           icon: CupertinoIcons.sparkles,
@@ -738,6 +713,29 @@ class _EditMealScreenState extends State<EditMealScreen> {
         });
       },
     );
+  }
+
+  Future<void> _confirmDeleteIngredient(int index) async {
+    final confirmed = await showConfirmationDialog(
+      context: context,
+      title: tr(LocaleKeys.ingredient_delete_title),
+      subtitle: tr(LocaleKeys.common_cannot_undo),
+      primaryLabel: tr(LocaleKeys.common_delete),
+      secondaryLabel: tr(LocaleKeys.common_cancel),
+      isDestructive: true,
+    );
+    if (confirmed != true || !mounted) return;
+    setState(() => _ingredients.removeAt(index));
+  }
+
+  Future<void> _toggleIngredientFavorite(int index) async {
+    final ingredient = _ingredients[index];
+    final next = !ingredient.isFavorite;
+    setState(() => _ingredients[index] = ingredient.copyWith(isFavorite: next));
+
+    if (widget.openedFromLogScreen) return;
+    if (ingredient.id == null || ingredient.mealId == null) return;
+    await DayRecordController.to.setIngredientFavorite(ingredient: ingredient, isFavorite: next);
   }
 
   Future<void> _editIngredient(int index) async {
@@ -967,28 +965,25 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                 child: Column(
                                   children: List.generate(_ingredients.length, (index) {
                                     final ingredient = _ingredients[index];
-                                    final isAlert = widget.showAllergyAlert && index == 0;
                                     if (!_isEditMode) {
                                       return Padding(
                                         padding: const EdgeInsets.only(bottom: AppSpacing.s),
                                         child: IngredientRow(
                                           ingredient: ingredient,
-                                          highlighted: isAlert,
-                                          alertText: isAlert ? 'Contains: Fish' : null,
                                           onTap: _isBusy
                                               ? null
                                               : () {
                                                   _ensureEditMode();
                                                   _editIngredient(index);
                                                 },
-                                          onFavorite: () {},
+                                          onFavorite: _isBusy ? null : () => _toggleIngredientFavorite(index),
                                           onEdit: _isBusy
                                               ? null
                                               : () {
                                                   _ensureEditMode();
                                                   _editIngredient(index);
                                                 },
-                                          onDelete: _isBusy ? null : () => setState(() => _ingredients.removeAt(index)),
+                                          onDelete: _isBusy ? null : () => _confirmDeleteIngredient(index),
                                         ),
                                       );
                                     }
@@ -996,12 +991,10 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                       padding: const EdgeInsets.only(bottom: AppSpacing.s),
                                       child: EditIngredientRow(
                                         ingredient: ingredient,
-                                        highlighted: isAlert,
-                                        alertText: isAlert ? 'Contains: Fish' : null,
                                         onTap: _isBusy ? null : () => _editIngredient(index),
-                                        onFavorite: () {},
+                                        onFavorite: _isBusy ? null : () => _toggleIngredientFavorite(index),
                                         onEdit: _isBusy ? null : () => _editIngredient(index),
-                                        onDelete: _isBusy ? null : () => setState(() => _ingredients.removeAt(index)),
+                                        onDelete: _isBusy ? null : () => _confirmDeleteIngredient(index),
                                       ),
                                     );
                                   }),

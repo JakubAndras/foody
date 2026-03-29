@@ -9,6 +9,7 @@ import 'package:diplomka/services/nutrition_goals_service.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/services/share/app_share_service.dart';
 import 'package:diplomka/services/weight_entry_repository.dart';
+import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -79,7 +80,7 @@ class ExportController extends GetxController {
     try {
       final (records, weights) = await _fetchData();
       if (records.isEmpty && weights.isEmpty) {
-        Get.snackbar(tr(LocaleKeys.export_pdf_title), tr(LocaleKeys.export_no_data), snackPosition: SnackPosition.BOTTOM);
+        showSnackBar(message: tr(LocaleKeys.export_pdf_title), subtitle: tr(LocaleKeys.export_no_data), type: SnackBarType.info);
         return;
       }
       final goals = NutritionGoalsService.to.goalsForDate(DateTime.now());
@@ -104,7 +105,7 @@ class ExportController extends GetxController {
         ),
       );
     } catch (e) {
-      Get.snackbar(tr(LocaleKeys.common_error), tr(LocaleKeys.export_error), snackPosition: SnackPosition.BOTTOM);
+      showSnackBar(message: tr(LocaleKeys.common_error), subtitle: tr(LocaleKeys.export_error), type: SnackBarType.error);
     } finally {
       isExporting.value = false;
     }
@@ -115,7 +116,7 @@ class ExportController extends GetxController {
     try {
       final (records, weights) = await _fetchData();
       if (records.isEmpty && weights.isEmpty) {
-        Get.snackbar(tr(LocaleKeys.export_pdf_title), tr(LocaleKeys.export_no_data), snackPosition: SnackPosition.BOTTOM);
+        showSnackBar(message: tr(LocaleKeys.export_pdf_title), subtitle: tr(LocaleKeys.export_no_data), type: SnackBarType.info);
         return;
       }
       final csvString = ExportService.generateCsv(records, weights);
@@ -129,7 +130,7 @@ class ExportController extends GetxController {
         ),
       );
     } catch (e) {
-      Get.snackbar(tr(LocaleKeys.common_error), tr(LocaleKeys.export_error), snackPosition: SnackPosition.BOTTOM);
+      showSnackBar(message: tr(LocaleKeys.common_error), subtitle: tr(LocaleKeys.export_error), type: SnackBarType.error);
     } finally {
       isExporting.value = false;
     }

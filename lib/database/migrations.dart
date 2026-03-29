@@ -111,6 +111,12 @@ final Migration migration11to12 = Migration(11, 12, (database) async {
   } catch (_) {}
 });
 
+final Migration migration12to13 = Migration(12, 13, (database) async {
+  try {
+    await database.execute('ALTER TABLE `Ingredient` ADD COLUMN `isFavorite` INTEGER NOT NULL DEFAULT 0');
+  } catch (_) {}
+});
+
 final Migration migration9to10 = Migration(9, 10, (database) async {
   await database.execute('''
     CREATE TABLE IF NOT EXISTS `MealTemplate` (

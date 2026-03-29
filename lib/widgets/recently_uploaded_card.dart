@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/model/exercise.dart';
 import 'package:diplomka/model/meal.dart';
-import 'package:diplomka/screens/meals/meal_components.dart';
 import 'package:diplomka/utils/media_storage.dart';
 import 'package:diplomka/widgets/progress_ring.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -174,105 +173,17 @@ class RecentlyUploadedCard extends StatelessWidget {
   }
 
   Widget _buildMealItem(BuildContext context, Meal meal) {
-    final String mealTime = DateFormat('HH:mm').format(meal.timestamp);
-
-    return GestureDetector(
+    final file = MediaStorage.existingMealPhotoFile(meal.photoPath);
+    return MealItemCard(
+      name: meal.name,
+      kcalText: '${meal.totalCalories.toStringAsFixed(0)} ${tr(LocaleKeys.common_kcal)}',
+      proteins: meal.totalProteins,
+      carbs: meal.totalCarbs,
+      fats: meal.totalFats,
+      timeText: DateFormat('HH:mm').format(meal.timestamp),
+      imageProvider: file != null ? FileImage(file) : null,
       onTap: () => onMealTap?.call(meal),
       onLongPress: () => onMealLongPress?.call(meal),
-      child: Container(
-        height: AppSizes.mealCardHeight,
-        margin: const EdgeInsets.symmetric(vertical: AppSpacing.xxs + 1),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(AppRadii.l),
-          border: AppBorders.screenCard,
-          boxShadow: AppShadows.screenCard,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(left: AppSpacing.xs, right: AppSpacing.m),
-          child: Row(
-            children: [
-              _buildMealImage(meal),
-              const SizedBox(width: AppSpacing.m),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                meal.name,
-                                style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600),
-                                //maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              const SizedBox(height: AppSpacing.xxs),
-                              Text(
-                                '${meal.totalCalories.toStringAsFixed(0)} ${tr(LocaleKeys.common_kcal)}',
-                                style: AppTextStyles.body13.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 2),
-                          child: Text(
-                            mealTime,
-                            style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: AppSpacing.xs),
-                    Container(
-                      height: AppSizes.dividerThin,
-                      color: AppColors.outline,
-                    ),
-                    const SizedBox(height: AppSpacing.xs),
-                    Row(
-                      children: [
-                        _MacroDot(value: meal.totalProteins.toStringAsFixed(0), color: AppColors.macroProtein),
-                        const SizedBox(width: AppSpacing.s),
-                        _MacroDot(value: meal.totalCarbs.toStringAsFixed(0), color: AppColors.macroCarbs),
-                        const SizedBox(width: AppSpacing.s),
-                        _MacroDot(value: meal.totalFats.toStringAsFixed(0), color: AppColors.macroFats),
-                        // if (meal.confidence != null) ...[
-                        //   const Spacer(),
-                        //   ConfidenceBadge(confidence: meal.confidence!),
-                        // ],
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMealImage(Meal meal) {
-    final file = MediaStorage.existingMealPhotoFile(meal.photoPath);
-    return Container(
-      width: AppSizes.mealDashboardImageSize,
-      height: AppSizes.mealDashboardImageSize,
-      decoration: BoxDecoration(
-        color: AppColors.surfaceMuted,
-        borderRadius: BorderRadius.circular(AppRadii.m),
-        image: file != null
-            ? DecorationImage(
-                image: FileImage(file),
-                fit: BoxFit.cover,
-              )
-            : null,
-      ),
-      child: file == null ? const Icon(Icons.restaurant, color: AppColors.textTertiary) : null,
     );
   }
 
@@ -517,6 +428,141 @@ class _AnalyzingMealCardState extends State<AnalyzingMealCard> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class MealItemCard extends StatelessWidget {
+  const MealItemCard({
+    super.key,
+    required this.name,
+    required this.kcalText,
+    required this.proteins,
+    required this.carbs,
+    required this.fats,
+    this.timeText,
+    this.imageProvider,
+    this.onTap,
+    this.onLongPress,
+    this.onAdd,
+  });
+
+  final String name;
+  final String kcalText;
+  final double proteins;
+  final double carbs;
+  final double fats;
+  final String? timeText;
+  final ImageProvider? imageProvider;
+  final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
+  final VoidCallback? onAdd;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      onLongPress: onLongPress,
+      child: Container(
+        height: AppSizes.mealCardHeight,
+        margin: const EdgeInsets.symmetric(vertical: AppSpacing.xxs + 1),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(AppRadii.l),
+          border: AppBorders.screenCard,
+          boxShadow: AppShadows.screenCard,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(left: AppSpacing.xs, right: AppSpacing.m),
+          child: Row(
+            children: [
+              _buildImage(),
+              const SizedBox(width: AppSpacing.m),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                name,
+                                style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: AppSpacing.xxs),
+                              Text(
+                                kcalText,
+                                style: AppTextStyles.body13.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                        ),
+                        if (timeText != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 2),
+                            child: Text(
+                              timeText!,
+                              style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary),
+                            ),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    FractionallySizedBox(
+                      widthFactor: 0.85,
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        height: AppSizes.dividerThin,
+                        color: AppColors.outline,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Row(
+                      children: [
+                        _MacroDot(value: proteins.toStringAsFixed(0), color: AppColors.macroProtein),
+                        const SizedBox(width: AppSpacing.s),
+                        _MacroDot(value: carbs.toStringAsFixed(0), color: AppColors.macroCarbs),
+                        const SizedBox(width: AppSpacing.s),
+                        _MacroDot(value: fats.toStringAsFixed(0), color: AppColors.macroFats),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              if (onAdd != null) ...[
+                const SizedBox(width: AppSpacing.s),
+                GestureDetector(
+                  onTap: onAdd,
+                  child: Container(
+                    width: 32,
+                    height: 32,
+                    decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
+                    child: const Icon(CupertinoIcons.add, color: AppColors.onPrimary, size: AppSizes.iconMd),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildImage() {
+    return Container(
+      width: AppSizes.mealDashboardImageSize,
+      height: AppSizes.mealDashboardImageSize,
+      decoration: BoxDecoration(
+        color: AppColors.surfaceMuted,
+        borderRadius: BorderRadius.circular(AppRadii.m),
+        image: imageProvider != null ? DecorationImage(image: imageProvider!, fit: BoxFit.cover) : null,
+      ),
+      child: imageProvider == null ? const Icon(Icons.restaurant, color: AppColors.textTertiary) : null,
     );
   }
 }

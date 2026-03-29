@@ -25,6 +25,7 @@ class IngredientEntity {
   final double carbs;
   final double fats;
   final double? confidence;
+  final bool isFavorite;
 
   IngredientEntity({
     this.id,
@@ -37,6 +38,7 @@ class IngredientEntity {
     required this.carbs,
     required this.fats,
     this.confidence,
+    this.isFavorite = false,
   });
 
   IngredientEntity copyWith({
@@ -50,6 +52,7 @@ class IngredientEntity {
     double? carbs,
     double? fats,
     double? confidence,
+    bool? isFavorite,
   }) {
     return IngredientEntity(
       id: id ?? this.id,
@@ -62,6 +65,7 @@ class IngredientEntity {
       carbs: carbs ?? this.carbs,
       fats: fats ?? this.fats,
       confidence: confidence ?? this.confidence,
+      isFavorite: isFavorite ?? this.isFavorite,
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/nutrition_goals.dart';
 import 'package:diplomka/services/nutrition_goals_service.dart';
 import 'package:diplomka/services/selected_date_service.dart';
+import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -124,9 +125,7 @@ class _EditNutritionGoalsScreenState extends State<EditNutritionGoalsScreen> {
     final fatGoal = _parseGoal(_fatController);
 
     if (calorieGoal == null || proteinGoal == null || carbsGoal == null || fatGoal == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(tr(LocaleKeys.nutrition_goals_invalid_values))),
-      );
+      showSnackBar(context: context, message: tr(LocaleKeys.nutrition_goals_invalid_values), type: SnackBarType.warning);
       return;
     }
 
@@ -147,9 +146,7 @@ class _EditNutritionGoalsScreenState extends State<EditNutritionGoalsScreen> {
       DashboardController.to.refresh();
 
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(tr(LocaleKeys.nutrition_goals_updated))),
-      );
+      showSnackBar(context: context, message: tr(LocaleKeys.nutrition_goals_updated));
       Get.back();
     } finally {
       if (mounted) {

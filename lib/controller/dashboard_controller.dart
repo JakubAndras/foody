@@ -8,6 +8,7 @@ import 'package:diplomka/model/barcode_lookup_result.dart';
 import 'package:diplomka/model/exercise.dart';
 import 'package:diplomka/model/meal_analysis_request.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -106,7 +107,7 @@ class DashboardController extends BaseController {
       dayRecord.value = null;
       rolloverAmount.value = 0;
       NutritionGoalsService.to.syncFromDayRecord(date: date, dayRecord: null);
-      Get.snackbar(tr(LocaleKeys.common_error), tr(LocaleKeys.common_something_went_wrong));
+      showSnackBar(message: tr(LocaleKeys.common_error), subtitle: tr(LocaleKeys.common_something_went_wrong), type: SnackBarType.error);
     } finally {
       if (generation == _fetchGeneration) {
         isLoadingDayRecord.value = false;
@@ -134,7 +135,7 @@ class DashboardController extends BaseController {
     } catch (e) {
       streakError.value = e.toString();
       streakInfo.value = null;
-      Get.snackbar(tr(LocaleKeys.common_error), tr(LocaleKeys.common_something_went_wrong));
+      showSnackBar(message: tr(LocaleKeys.common_error), subtitle: tr(LocaleKeys.common_something_went_wrong), type: SnackBarType.error);
     } finally {
       isLoadingStreak.value = false;
     }
@@ -175,18 +176,17 @@ class DashboardController extends BaseController {
       String message;
       if (status.isPermanentlyDenied) {
         message = source == ImageSource.camera ? tr(LocaleKeys.error_camera_permanently_denied) : tr(LocaleKeys.error_gallery_permanently_denied);
-        Get.snackbar(
-          tr(LocaleKeys.error_permission_denied),
-          message,
-          mainButton: TextButton(
-            onPressed: () => openAppSettings(),
-            child: Text(tr(LocaleKeys.tracking_reminders_open_settings)),
-          ),
+        showSnackBar(
+          message: tr(LocaleKeys.error_permission_denied),
+          subtitle: message,
+          type: SnackBarType.error,
+          primaryLabel: tr(LocaleKeys.tracking_reminders_open_settings),
+          onPrimary: () => openAppSettings(),
           duration: const Duration(seconds: 5),
         );
       } else {
         message = source == ImageSource.camera ? tr(LocaleKeys.error_camera_denied) : tr(LocaleKeys.error_gallery_denied);
-        Get.snackbar(tr(LocaleKeys.error_permission_denied), message, duration: const Duration(seconds: 3));
+        showSnackBar(message: tr(LocaleKeys.error_permission_denied), subtitle: message, type: SnackBarType.error, duration: const Duration(seconds: 3));
       }
       debugPrint(message);
       return;
@@ -196,7 +196,7 @@ class DashboardController extends BaseController {
     final XFile? imageFile = await picker.pickImage(source: source);
 
     if (imageFile == null) {
-      Get.snackbar(tr(LocaleKeys.error_image_picker_title), tr(LocaleKeys.error_no_image_selected), duration: const Duration(seconds: 2));
+      showSnackBar(message: tr(LocaleKeys.error_image_picker_title), subtitle: tr(LocaleKeys.error_no_image_selected), type: SnackBarType.info, duration: const Duration(seconds: 2));
       debugPrint('No image selected.');
       return;
     }
@@ -207,9 +207,10 @@ class DashboardController extends BaseController {
         imagePath: imageFile.path,
       );
     } catch (e) {
-      Get.snackbar(
-        tr(LocaleKeys.common_error),
-        tr(LocaleKeys.error_analysis_image),
+      showSnackBar(
+        message: tr(LocaleKeys.common_error),
+        subtitle: tr(LocaleKeys.error_analysis_image),
+        type: SnackBarType.error,
         duration: const Duration(seconds: 3),
       );
       debugPrint('Error calling AI Service: $e');
@@ -266,9 +267,10 @@ class DashboardController extends BaseController {
       final String? rawImagePath = request.trimmedImagePath;
       final String? storedPhotoRef = await _resolvePhotoPath(rawImagePath);
       if (request.source == MealInputSource.photo && rawImagePath != null && storedPhotoRef == null) {
-        Get.snackbar(
-          tr(LocaleKeys.error_analysis_failed),
-          tr(LocaleKeys.error_analysis_no_photo),
+        showSnackBar(
+          message: tr(LocaleKeys.error_analysis_failed),
+          subtitle: tr(LocaleKeys.error_analysis_no_photo),
+          type: SnackBarType.error,
           duration: const Duration(seconds: 3),
         );
         return MealAnalysisFlowResult.failure(
@@ -295,9 +297,10 @@ class DashboardController extends BaseController {
       );
       return flowResult;
     } catch (e) {
-      Get.snackbar(
-        tr(LocaleKeys.common_error),
-        tr(LocaleKeys.error_analysis_meal),
+      showSnackBar(
+        message: tr(LocaleKeys.common_error),
+        subtitle: tr(LocaleKeys.error_analysis_meal),
+        type: SnackBarType.error,
         duration: const Duration(seconds: 3),
       );
       debugPrint('Error calling AI Service: $e');
@@ -348,9 +351,10 @@ class DashboardController extends BaseController {
         preferredMealName: lookupResult?.productName,
       );
     } catch (e) {
-      Get.snackbar(
-        tr(LocaleKeys.common_error),
-        tr(LocaleKeys.error_analysis_barcode),
+      showSnackBar(
+        message: tr(LocaleKeys.common_error),
+        subtitle: tr(LocaleKeys.error_analysis_barcode),
+        type: SnackBarType.error,
         duration: const Duration(seconds: 3),
       );
       debugPrint('Error calling barcode analysis flow: $e');
@@ -366,9 +370,10 @@ class DashboardController extends BaseController {
   }) async {
     final trimmedDescription = description.trim();
     if (trimmedDescription.isEmpty) {
-      Get.snackbar(
-        tr(LocaleKeys.error_exercise_analysis_failed),
-        tr(LocaleKeys.error_exercise_empty_desc),
+      showSnackBar(
+        message: tr(LocaleKeys.error_exercise_analysis_failed),
+        subtitle: tr(LocaleKeys.error_exercise_empty_desc),
+        type: SnackBarType.error,
       );
       return;
     }
@@ -381,14 +386,15 @@ class DashboardController extends BaseController {
     try {
       final result = await AiPipelineService.to.analyzeExercise(description: trimmedDescription);
       if (!result.isSuccess || result.analysis == null) {
-        Get.snackbar(tr(LocaleKeys.error_exercise_analysis_failed), result.message ?? tr(LocaleKeys.common_try_again));
+        showSnackBar(message: tr(LocaleKeys.error_exercise_analysis_failed), subtitle: result.message ?? tr(LocaleKeys.common_try_again), type: SnackBarType.error);
         return;
       }
 
       if (result.status == AiExerciseAnalysisStatus.lowConfidence) {
-        Get.snackbar(
-          tr(LocaleKeys.error_low_confidence),
-          result.message ?? tr(LocaleKeys.error_low_confidence_review),
+        showSnackBar(
+          message: tr(LocaleKeys.error_low_confidence),
+          subtitle: result.message ?? tr(LocaleKeys.error_low_confidence_review),
+          type: SnackBarType.warning,
         );
       }
 
@@ -397,9 +403,10 @@ class DashboardController extends BaseController {
       final double caloriesBurned = answer.caloriesTotal?.toDouble() ?? ((answer.caloriesPerMinute ?? 0) * (duration ?? 0));
 
       if (caloriesBurned <= 0) {
-        Get.snackbar(
-          tr(LocaleKeys.error_exercise_analysis_failed),
-          tr(LocaleKeys.error_exercise_no_calories),
+        showSnackBar(
+          message: tr(LocaleKeys.error_exercise_analysis_failed),
+          subtitle: tr(LocaleKeys.error_exercise_no_calories),
+          type: SnackBarType.error,
         );
         return;
       }
@@ -417,9 +424,10 @@ class DashboardController extends BaseController {
       );
       refresh();
     } catch (e) {
-      Get.snackbar(
-        tr(LocaleKeys.error_exercise_analysis_failed),
-        tr(LocaleKeys.error_exercise_create_failed),
+      showSnackBar(
+        message: tr(LocaleKeys.error_exercise_analysis_failed),
+        subtitle: tr(LocaleKeys.error_exercise_create_failed),
+        type: SnackBarType.error,
       );
       debugPrint('Error in exercise voice analysis flow: $e');
     } finally {
@@ -451,7 +459,7 @@ class DashboardController extends BaseController {
 
     if (result.isSuccess && result.response != null) {
       if (result.status == AiAnalysisStatus.lowConfidence) {
-        Get.snackbar(tr(LocaleKeys.error_low_confidence), result.message ?? tr(LocaleKeys.error_low_confidence_review));
+        showSnackBar(message: tr(LocaleKeys.error_low_confidence), subtitle: result.message ?? tr(LocaleKeys.error_low_confidence_review), type: SnackBarType.warning);
       }
       Meal meal = Meal.fromAnswer(result.response!.answer).copyWith(
         timestamp: _applyDateToTime(DateTime.now(), selectedDate),
@@ -469,9 +477,10 @@ class DashboardController extends BaseController {
       refresh();
       return MealAnalysisFlowResult.success(status: result.status);
     } else {
-      Get.snackbar(
-        tr(LocaleKeys.error_analysis_failed),
-        result.message ?? tr(LocaleKeys.error_analysis_could_not),
+      showSnackBar(
+        message: tr(LocaleKeys.error_analysis_failed),
+        subtitle: result.message ?? tr(LocaleKeys.error_analysis_could_not),
+        type: SnackBarType.error,
         duration: const Duration(seconds: 3),
       );
       return MealAnalysisFlowResult.failure(message: result.message);

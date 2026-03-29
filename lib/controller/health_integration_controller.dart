@@ -1,6 +1,7 @@
 import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/services/health_integration_service.dart';
+import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:get/get.dart';
 
@@ -18,9 +19,10 @@ class HealthIntegrationController extends GetxController {
     try {
       final success = await _service.toggleEnabled(enabled);
       if (!success && enabled) {
-        Get.snackbar(
-          tr(LocaleKeys.error_permission_denied),
-          tr(LocaleKeys.health_sync_error, namedArgs: {'platform': platformName}),
+        showSnackBar(
+          message: tr(LocaleKeys.error_permission_denied),
+          subtitle: tr(LocaleKeys.health_sync_error, namedArgs: {'platform': platformName}),
+          type: SnackBarType.error,
         );
       }
       if (success) {
