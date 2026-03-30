@@ -29,11 +29,7 @@ import '../app_theme.dart';
 /// )
 /// ```
 class MeshGradientBackground extends StatelessWidget {
-  const MeshGradientBackground({
-    super.key,
-    this.blobs,
-    this.baseColor,
-  });
+  const MeshGradientBackground({super.key, this.blobs, this.baseColor});
 
   /// Custom blob definitions. Falls back to [defaultBlobs].
   final List<MeshBlob>? blobs;
@@ -44,39 +40,20 @@ class MeshGradientBackground extends StatelessWidget {
   /// Default set of blobs that produce a subtle warm-cool mesh.
   static const List<MeshBlob> defaultBlobs = [
     // Warm peach — upper right
-    MeshBlob(
-      color: AppColors.meshBase,
-      alignment: Alignment(0.85, -0.65),
-      radius: 0.55,
-    ),
+    MeshBlob(color: AppColors.meshPeach, alignment: Alignment(0.85, -0.65), radius: 0.45),
     // Soft lavender — upper left
-    MeshBlob(
-      color: AppColors.meshBase,
-      alignment: Alignment(-0.75, -0.5),
-      radius: 0.5,
-    ),
+    MeshBlob(color: AppColors.meshLavender, alignment: Alignment(-0.75, -0.5), radius: 0.4),
     // Cool sky-blue — lower left
-    MeshBlob(
-      color: AppColors.meshBase,
-      alignment: Alignment(-0.6, 0.7),
-      radius: 0.45,
-    ),
+    MeshBlob(color: AppColors.meshSky, alignment: Alignment(-0.6, 0.7), radius: 0.35),
     // Gentle mint — lower right
-    MeshBlob(
-      color: AppColors.meshBase,
-      alignment: Alignment(0.7, 0.55),
-      radius: 0.4,
-    ),
+    MeshBlob(color: AppColors.meshMint, alignment: Alignment(0.7, 0.55), radius: 0.3),
   ];
 
   @override
   Widget build(BuildContext context) {
     return RepaintBoundary(
       child: CustomPaint(
-        painter: _MeshGradientPainter(
-          blobs: blobs ?? defaultBlobs,
-          baseColor: baseColor ?? AppColors.meshBase,
-        ),
+        painter: _MeshGradientPainter(blobs: blobs ?? defaultBlobs, baseColor: baseColor ?? AppColors.meshBase),
         size: Size.infinite,
       ),
     );
@@ -85,11 +62,7 @@ class MeshGradientBackground extends StatelessWidget {
 
 /// Describes a single colour blob in the mesh gradient.
 class MeshBlob {
-  const MeshBlob({
-    required this.color,
-    required this.alignment,
-    this.radius = 0.5,
-  });
+  const MeshBlob({required this.color, required this.alignment, this.radius = 0.5});
 
   /// The blob colour (typically a light pastel).
   final Color color;
@@ -120,12 +93,7 @@ class _MeshGradientPainter extends CustomPainter {
       final center = blob.alignment.alongSize(size);
       final blobRadius = diagonal * blob.radius;
 
-      final gradient = ui.Gradient.radial(
-        center,
-        blobRadius,
-        [blob.color, blob.color.withAlpha(0)],
-        [0.0, 1.0],
-      );
+      final gradient = ui.Gradient.radial(center, blobRadius, [blob.color, blob.color.withAlpha(0)], [0.0, 1.0]);
 
       canvas.drawRect(
         Offset.zero & size,

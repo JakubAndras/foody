@@ -7,8 +7,6 @@ import 'package:diplomka/services/exercise_template_repository.dart';
 import 'package:diplomka/screens/logs/exercise_widgets.dart';
 import 'package:diplomka/widgets/confirm_delete_dialog.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
-import 'package:diplomka/widgets/foody_glass_buttons.dart';
-import 'package:diplomka/widgets/glass_popup.dart';
 import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -54,8 +52,6 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final rate = (_exercise.caloriesBurned / (_exercise.durationMinutes ?? 1)).round();
-
     return ProfileGradientScaffold(
       scroll: true,
       padding: const EdgeInsets.fromLTRB(AppSpacing.screen, 0, AppSpacing.screen, AppSpacing.xl),
@@ -94,13 +90,14 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                 iconSize: AppSizes.iconLg,
                 items: [
                   (icon: _exercise.isFavorite ? Icons.bookmark : CupertinoIcons.bookmark, onPressed: _toggleFavorite),
-                  (icon: CupertinoIcons.ellipsis, onPressed: () => _showOptions(context)),
+                  (icon: CupertinoIcons.trash, onPressed: _handleDeleteExercise),
                 ],
               ),
             ],
           ),
           const SizedBox(height: AppSpacing.l),
           Container(
+            width: double.infinity,
             height: 118,
             padding: const EdgeInsets.all(AppSpacing.l),
             decoration: BoxDecoration(gradient: AppGradients.primary, borderRadius: BorderRadius.circular(AppRadii.l)),
@@ -137,49 +134,9 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.m),
-          ExerciseInfoCard(
-            gradient: AppGradients.exerciseCaloriesAlt,
-            icon: CupertinoIcons.graph_square,
-            label: tr(LocaleKeys.exercise_calories_per_minute),
-            value: '$rate',
-            unit: tr(LocaleKeys.exercise_kcal_min),
-          ),
-          const SizedBox(height: AppSpacing.m),
-          ExerciseCalculationCard(
-            rate: '$rate ${tr(LocaleKeys.exercise_kcal_min)}',
-            duration: '${_exercise.durationMinutes ?? 0} ${tr(LocaleKeys.common_min)}',
-            total: '${_exercise.caloriesBurned.round()} ${tr(LocaleKeys.common_kcal)}',
-          ),
           const SizedBox(height: AppSpacing.huge),
         ],
       ),
-    );
-  }
-
-  void _showOptions(BuildContext context) {
-    showGlassPopup(
-      context: context,
-      items: [
-        GlassPopupItem(
-          label: tr(LocaleKeys.common_share),
-          icon: CupertinoIcons.share,
-          onTap: () {
-            Navigator.of(context).pop();
-            _showSnack(context, tr(LocaleKeys.common_share));
-          },
-        ),
-        GlassPopupItem(
-          label: tr(LocaleKeys.common_delete),
-          icon: CupertinoIcons.trash,
-          color: AppColors.error,
-          showDividerAbove: true,
-          onTap: () {
-            Navigator.of(context).pop();
-            _handleDeleteExercise();
-          },
-        ),
-      ],
     );
   }
 

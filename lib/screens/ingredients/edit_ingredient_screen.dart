@@ -217,7 +217,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
   void _openUnitPicker() {
     final labels = _unitOptions.map((u) => u.label).toList();
     final initialIndex = _unitOptions.indexOf(_selectedUnit).clamp(0, _unitOptions.length - 1);
-    MealtimePickerSheet.show(context, options: labels, initialIndex: initialIndex, onChanged: (index) => _onUnitSelected(_unitOptions[index]));
+    MealtimePickerSheet.show(context, title: tr(LocaleKeys.ingredient_amount), options: labels, initialIndex: initialIndex, onChanged: (index) => _onUnitSelected(_unitOptions[index]));
   }
 
   Ingredient? _buildIngredientFromInputs() {

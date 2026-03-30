@@ -8,6 +8,7 @@ import 'package:diplomka/model/ingredient.dart';
 import 'package:diplomka/model/meal.dart';
 import 'package:diplomka/model/meal_template.dart';
 import 'package:diplomka/services/meal_template_repository.dart';
+import 'package:diplomka/screens/ingredients/edit_ingredient_screen.dart';
 import 'package:diplomka/screens/meals/edit_meal_screen.dart';
 import 'package:diplomka/screens/meals/meal_components.dart';
 import 'package:diplomka/screens/meals/meal_detail_screen.dart';
@@ -540,7 +541,12 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                                     child: IngredientRow(
                                       ingredient: item.ingredient,
                                       onAdd: () => _addIngredientToToday(item.ingredient),
-                                      onTap: () => showSnackBar(context: context, message: tr(LocaleKeys.common_ingredients), subtitle: item.ingredient.name, type: SnackBarType.info),
+                                      onTap: () async {
+                                        final result = await Get.to<EditIngredientResult>(() => EditIngredientScreen(ingredient: item.ingredient, allowDelete: false));
+                                        if (result?.ingredient != null) {
+                                          _addIngredientToToday(result!.ingredient!);
+                                        }
+                                      },
                                     ),
                                   );
                                 }, childCount: ingredients.length),

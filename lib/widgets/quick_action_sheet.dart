@@ -62,7 +62,7 @@ class QuickActionSheet extends StatelessWidget {
 
   Widget _buildContent(BoxDecoration tileDecoration, BoxDecoration rowDecoration, Color iconColor, TextStyle tileTextStyle, TextStyle rowTextStyle) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.s, AppSpacing.m, AppSpacing.m),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.xxs, AppSpacing.m, AppSpacing.m),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -70,7 +70,7 @@ class QuickActionSheet extends StatelessWidget {
           if (!AppQuickAction.useGlassCards) const SizedBox(height: AppSpacing.m),
           _buildGridRow(
             left: _QuickActionTile(
-              icon: CupertinoIcons.viewfinder,
+              icon: CupertinoIcons.search,
               label: tr(LocaleKeys.quick_action_log_meal),
               iconBg: const Color(0x212B7FFF),
               onTap: onLogMeal,
@@ -79,7 +79,7 @@ class QuickActionSheet extends StatelessWidget {
               textStyle: tileTextStyle,
             ),
             right: _QuickActionTile(
-              icon: CupertinoIcons.qrcode_viewfinder,
+              icon: CupertinoIcons.barcode_viewfinder,
               label: tr(LocaleKeys.quick_action_barcode_scan),
               iconBg: const Color(0x21FB2C36),
               onTap: onBarcode,
@@ -91,7 +91,7 @@ class QuickActionSheet extends StatelessWidget {
           const SizedBox(height: AppSpacing.s),
           _buildGridRow(
             left: _QuickActionTile(
-              icon: CupertinoIcons.mic,
+              icon: CupertinoIcons.mic_fill,
               label: tr(LocaleKeys.quick_action_voice_log),
               iconBg: const Color(0x216366F1),
               onTap: onVoiceLog,
@@ -109,7 +109,7 @@ class QuickActionSheet extends StatelessWidget {
               textStyle: tileTextStyle,
             ),
           ),
-          const SizedBox(height: AppSpacing.m),
+          const SizedBox(height: AppSpacing.s),
           _ActionRow(
             icon: Icons.directions_run_rounded,
             label: tr(LocaleKeys.quick_action_exercise),
@@ -222,11 +222,13 @@ class _ActionRow extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: decoration,
-        child: ListTile(
-          leading: Icon(icon, color: iconColor),
-          title: Text(label, style: textStyle),
-          contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
-          dense: true,
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m + 4, vertical: AppSpacing.s),
+        child: Row(
+          children: [
+            Icon(icon, color: iconColor),
+            const SizedBox(width: AppSpacing.s),
+            Text(label, style: textStyle),
+          ],
         ),
       ),
     );

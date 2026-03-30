@@ -58,7 +58,7 @@ class MacrosCard extends StatelessWidget {
                 size: AppSizes.macroRingSize,
                 strokeWidth: AppSizes.macroRingStroke,
                 value: progress,
-                backgroundColor: AppColors.outline.withValues(alpha: 0.6),
+                backgroundColor: AppColors.outline.withValues(alpha: 0.8),
                 foregroundColor: color,
                 child: Icon(icon, color: color, size: AppSizes.iconLg),
               ),

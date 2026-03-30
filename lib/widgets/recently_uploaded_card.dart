@@ -52,50 +52,25 @@ class RecentlyUploadedCard extends StatelessWidget {
         Obx(() {
           final isMealLoading = DashboardController.to.newMealAnalyzeLoading.value;
           final isExerciseLoading = DashboardController.to.newExerciseAnalyzeLoading.value;
-          final mealSection = _buildMealSection(
-            context,
-            isMealLoading: isMealLoading,
-          );
-          final exerciseSection = _buildExerciseSection(
-            context,
-            isExerciseLoading: isExerciseLoading,
-            hasMealSectionContent: mealSection.isNotEmpty,
-          );
+          final mealSection = _buildMealSection(context, isMealLoading: isMealLoading);
+          final exerciseSection = _buildExerciseSection(context, isExerciseLoading: isExerciseLoading, hasMealSectionContent: mealSection.isNotEmpty);
 
-          return Column(
-            children: [
-              ...mealSection,
-              ...exerciseSection,
-            ],
-          );
+          return Column(children: [...mealSection, ...exerciseSection]);
         }),
       ],
     );
   }
 
-  List<Widget> _buildMealSection(
-    BuildContext context, {
-    required bool isMealLoading,
-  }) {
+  List<Widget> _buildMealSection(BuildContext context, {required bool isMealLoading}) {
     final hasMeals = meals.isNotEmpty;
     return <Widget>[
       if (hasMeals) _buildMealsList(context),
-      if (isMealLoading) ...<Widget>[
-        if (hasMeals) const SizedBox(height: AppSpacing.xs),
-        const AnalyzingMealCard(),
-      ],
-      if (!isMealLoading && !hasMeals) ...<Widget>[
-        const SizedBox(height: AppSpacing.xs),
-        _buildEmptyState(),
-      ],
+      if (isMealLoading) ...<Widget>[if (hasMeals) const SizedBox(height: AppSpacing.xs), const AnalyzingMealCard()],
+      if (!isMealLoading && !hasMeals) ...<Widget>[const SizedBox(height: AppSpacing.xs), _buildEmptyState()],
     ];
   }
 
-  List<Widget> _buildExerciseSection(
-    BuildContext context, {
-    required bool isExerciseLoading,
-    required bool hasMealSectionContent,
-  }) {
+  List<Widget> _buildExerciseSection(BuildContext context, {required bool isExerciseLoading, required bool hasMealSectionContent}) {
     final hasExercises = exercises.isNotEmpty;
     if (!hasExercises && !isExerciseLoading) {
       return const <Widget>[];
@@ -106,10 +81,7 @@ class RecentlyUploadedCard extends StatelessWidget {
       _buildExerciseHeader(),
       const SizedBox(height: AppSpacing.xxs),
       if (hasExercises) _buildExercisesList(context),
-      if (isExerciseLoading) ...<Widget>[
-        if (hasExercises) const SizedBox(height: AppSpacing.xs),
-        const AnalyzingMealCard(analysisType: AnalysisCardType.exercise),
-      ],
+      if (isExerciseLoading) ...<Widget>[if (hasExercises) const SizedBox(height: AppSpacing.xs), const AnalyzingMealCard(analysisType: AnalysisCardType.exercise)],
     ];
   }
 
@@ -118,10 +90,7 @@ class RecentlyUploadedCard extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
       child: Align(
         alignment: Alignment.centerLeft,
-        child: Text(
-          tr(LocaleKeys.dashboard_exercises_title),
-          style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700),
-        ),
+        child: Text(tr(LocaleKeys.dashboard_exercises_title), style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700)),
       ),
     );
   }
@@ -132,12 +101,7 @@ class RecentlyUploadedCard extends StatelessWidget {
       child: Container(
         width: double.infinity,
         height: AppSizes.emptyStateHeight,
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(AppRadii.l),
-          border: AppBorders.screenCard,
-          boxShadow: AppShadows.screenCard,
-        ),
+        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l), border: AppBorders.screenCard, boxShadow: AppShadows.screenCard),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -167,9 +131,7 @@ class RecentlyUploadedCard extends StatelessWidget {
 
   Widget _buildMealsList(BuildContext context) {
     final sorted = [...meals]..sort((a, b) => a.timestamp.compareTo(b.timestamp));
-    return Column(
-      children: sorted.map((meal) => _buildMealItem(context, meal)).toList(),
-    );
+    return Column(children: sorted.map((meal) => _buildMealItem(context, meal)).toList());
   }
 
   Widget _buildMealItem(BuildContext context, Meal meal) {
@@ -188,9 +150,7 @@ class RecentlyUploadedCard extends StatelessWidget {
   }
 
   Widget _buildExercisesList(BuildContext context) {
-    return Column(
-      children: exercises.map((exercise) => _buildExerciseItem(context, exercise)).toList(),
-    );
+    return Column(children: exercises.map((exercise) => _buildExerciseItem(context, exercise)).toList());
   }
 
   Widget _buildExerciseItem(BuildContext context, Exercise exercise) {
@@ -203,12 +163,7 @@ class RecentlyUploadedCard extends StatelessWidget {
       child: Container(
         height: AppSizes.exerciseCardHeight,
         margin: const EdgeInsets.symmetric(vertical: AppSpacing.xxs + 1),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(AppRadii.l),
-          border: AppBorders.screenCard,
-          boxShadow: AppShadows.screenCard,
-        ),
+        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l), border: AppBorders.screenCard, boxShadow: AppShadows.screenCard),
         child: Padding(
           padding: const EdgeInsets.only(left: AppSpacing.xs, right: AppSpacing.m),
           child: Row(
@@ -216,10 +171,7 @@ class RecentlyUploadedCard extends StatelessWidget {
               Container(
                 width: AppSizes.exerciseImageSize,
                 height: AppSizes.exerciseImageSize,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(AppRadii.m),
-                  gradient: AppGradients.exerciseCalories,
-                ),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppRadii.m), gradient: AppGradients.exerciseCalories),
                 child: const Icon(Icons.directions_run_rounded, color: AppColors.onPrimary),
               ),
               const SizedBox(width: AppSpacing.m),
@@ -249,27 +201,18 @@ class RecentlyUploadedCard extends StatelessWidget {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 2),
-                          child: Text(
-                            exerciseTime,
-                            style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary),
-                          ),
+                          child: Text(exerciseTime, style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary)),
                         ),
                       ],
                     ),
                     const SizedBox(height: AppSpacing.s),
-                    Container(
-                      height: AppSizes.dividerThin,
-                      color: AppColors.outline,
-                    ),
+                    Container(height: AppSizes.dividerThin, color: AppColors.outline),
                     const SizedBox(height: AppSpacing.xs),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
                         tr(LocaleKeys.dashboard_exercise_duration, namedArgs: {'duration': exerciseDuration}),
-                        style: AppTextStyles.caption12.copyWith(
-                          color: AppColors.textSecondary,
-                          fontWeight: FontWeight.w500,
-                        ),
+                        style: AppTextStyles.caption12.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w500),
                       ),
                     ),
                   ],
@@ -286,10 +229,7 @@ class RecentlyUploadedCard extends StatelessWidget {
 enum AnalysisCardType { meal, exercise }
 
 class AnalyzingMealCard extends StatefulWidget {
-  const AnalyzingMealCard({
-    super.key,
-    this.analysisType = AnalysisCardType.meal,
-  });
+  const AnalyzingMealCard({super.key, this.analysisType = AnalysisCardType.meal});
 
   final AnalysisCardType analysisType;
 
@@ -354,12 +294,7 @@ class _AnalyzingMealCardState extends State<AnalyzingMealCard> {
     return Container(
       height: cardHeight,
       margin: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.l),
-        border: AppBorders.screenCard,
-        boxShadow: AppShadows.screenCard,
-      ),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l), border: AppBorders.screenCard, boxShadow: AppShadows.screenCard),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
         child: Row(
@@ -372,17 +307,9 @@ class _AnalyzingMealCardState extends State<AnalyzingMealCard> {
                 alignment: Alignment.center,
                 children: [
                   Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(AppRadii.m),
-                      color: AppColors.overlayDark60,
-                    ),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppRadii.m), color: AppColors.overlayDark60),
                   ),
-                  if (isExercise)
-                    Icon(
-                      leadingIcon,
-                      color: AppColors.onPrimary.withValues(alpha: 0.45),
-                      size: AppSizes.iconLg,
-                    ),
+                  if (isExercise) Icon(leadingIcon, color: AppColors.onPrimary.withValues(alpha: 0.45), size: AppSizes.iconLg),
                   ProgressRing(
                     size: AppSizes.macroRingSize,
                     strokeWidth: AppSizes.progressRingStroke,
@@ -403,10 +330,7 @@ class _AnalyzingMealCardState extends State<AnalyzingMealCard> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                    style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w600),
-                  ),
+                  Text(title, style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w600)),
                   const SizedBox(height: AppSpacing.s),
                   Row(
                     children: [
@@ -418,10 +342,7 @@ class _AnalyzingMealCardState extends State<AnalyzingMealCard> {
                     ],
                   ),
                   const SizedBox(height: AppSpacing.s),
-                  Text(
-                    subtitle,
-                    style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary),
-                  ),
+                  Text(subtitle, style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary)),
                 ],
               ),
             ),
@@ -466,12 +387,7 @@ class MealItemCard extends StatelessWidget {
       child: Container(
         height: AppSizes.mealCardHeight,
         margin: const EdgeInsets.symmetric(vertical: AppSpacing.xxs + 1),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(AppRadii.l),
-          border: AppBorders.screenCard,
-          boxShadow: AppShadows.screenCard,
-        ),
+        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l), border: AppBorders.screenCard, boxShadow: AppShadows.screenCard),
         child: Padding(
           padding: const EdgeInsets.only(left: AppSpacing.xs, right: AppSpacing.m),
           child: Row(
@@ -505,21 +421,14 @@ class MealItemCard extends StatelessWidget {
                         if (timeText != null)
                           Padding(
                             padding: const EdgeInsets.only(top: 2),
-                            child: Text(
-                              timeText!,
-                              style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary),
-                            ),
+                            child: Text(timeText!, style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary)),
                           ),
                       ],
                     ),
                     const SizedBox(height: AppSpacing.xs),
-                    FractionallySizedBox(
-                      widthFactor: 0.85,
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        height: AppSizes.dividerThin,
-                        color: AppColors.outline,
-                      ),
+                    Container(
+                      height: AppSizes.dividerThin,
+                      color: AppColors.outline,
                     ),
                     const SizedBox(height: AppSpacing.xs),
                     Row(
@@ -575,21 +484,25 @@ class _MacroDot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final style = AppTextStyles.body13.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w500);
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Container(
-          width: AppSizes.macroDot,
-          height: AppSizes.macroDot,
-          decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.7),
-            shape: BoxShape.circle,
+        SizedBox(
+          height: style.fontSize! * (style.height ?? 1.0),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 0.5),
+              child: Container(
+                width: AppSizes.macroDot,
+                height: AppSizes.macroDot,
+                decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+              ),
+            ),
           ),
         ),
-        const SizedBox(width: AppSpacing.xs),
-        Text(
-          '${value}g',
-          style: AppTextStyles.body13.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w500),
-        ),
+        const SizedBox(width: AppSpacing.xxs),
+        Text('${value}g', style: style),
       ],
     );
   }

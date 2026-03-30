@@ -266,9 +266,9 @@ class _AmountPickerSheetState extends State<AmountPickerSheet> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(0), // out spacing
+      padding: const EdgeInsets.all(AppSpacing.xs),
       child: ClipRRect(
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadii.xxl)), // bottom: Radius.circular(AppRadii.xxl + 10)
+        borderRadius: const BorderRadius.only(topLeft: Radius.circular(AppRadii.xxl), topRight: Radius.circular(AppRadii.xxl), bottomLeft: Radius.circular(AppRadii.xxl + 10), bottomRight: Radius.circular(AppRadii.xxl + 10)),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
           child: CustomPaint(
@@ -346,20 +346,21 @@ class _AmountPickerSheetState extends State<AmountPickerSheet> {
 }
 
 class MealtimePickerSheet extends StatefulWidget {
+  final String? title;
   final List<String> options;
   final int initialIndex;
   final ValueChanged<int>? onChanged;
 
-  const MealtimePickerSheet({super.key, required this.options, required this.initialIndex, this.onChanged});
+  const MealtimePickerSheet({super.key, this.title, required this.options, required this.initialIndex, this.onChanged});
 
-  static void show(BuildContext context, {required List<String> options, required int initialIndex, required ValueChanged<int> onChanged}) {
+  static void show(BuildContext context, {String? title, required List<String> options, required int initialIndex, required ValueChanged<int> onChanged}) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       elevation: 0,
       barrierColor: AppColors.overlayDark,
       isScrollControlled: true,
-      builder: (_) => MealtimePickerSheet(options: options, initialIndex: initialIndex, onChanged: onChanged),
+      builder: (_) => MealtimePickerSheet(title: title, options: options, initialIndex: initialIndex, onChanged: onChanged),
     );
   }
 
@@ -379,9 +380,9 @@ class _MealtimePickerSheetState extends State<MealtimePickerSheet> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(0),
+      padding: const EdgeInsets.all(AppSpacing.xs),
       child: ClipRRect(
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadii.xxl)),
+        borderRadius: const BorderRadius.only(topLeft: Radius.circular(AppRadii.xxl), topRight: Radius.circular(AppRadii.xxl), bottomLeft: Radius.circular(AppRadii.xxl + 10), bottomRight: Radius.circular(AppRadii.xxl + 10)),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
           child: CustomPaint(
@@ -395,7 +396,7 @@ class _MealtimePickerSheetState extends State<MealtimePickerSheet> {
                   const SizedBox(height: AppSpacing.xxs),
                   const SheetDragHandle(color: AppColors.greyLight3),
                   const SizedBox(height: AppSpacing.s),
-                  SheetTopBar(title: tr(LocaleKeys.meal_mealtime), onClose: () => Navigator.of(context).pop()),
+                  SheetTopBar(title: widget.title ?? tr(LocaleKeys.meal_mealtime), onClose: () => Navigator.of(context).pop()),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl * 2),
                     child: SizedBox(
@@ -432,6 +433,8 @@ class _GlassPickerSheetPainter extends CustomPainter {
       0, 0, size.width, size.height,
       topLeft: Radius.circular(AppRadii.xxl),
       topRight: Radius.circular(AppRadii.xxl),
+      bottomLeft: Radius.circular(AppRadii.xxl + 10),
+      bottomRight: Radius.circular(AppRadii.xxl + 10),
     );
 
     canvas.drawRRect(rrect, Paint()..color = const Color(0xFFFFFFFF));

@@ -408,6 +408,8 @@
   "exercise_kcal_min": "kcal/min",
   "exercise_duration_label": "Doba trvání",
   "exercise_invalid_calories": "Zadejte prosím platné kalorie cvičení.",
+  "exercise_name_required": "Zadejte prosím název cvičení.",
+  "exercise_duration_optional": "Volitelné",
   "exercise_exercise_added": "Cvičení přidáno",
   "exercise_activity": "Aktivita",
   "exercise_log_btn": "Zaznamenat",

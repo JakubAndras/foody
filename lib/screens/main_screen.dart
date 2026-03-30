@@ -29,17 +29,17 @@ class MainScreen extends GetView<MainScreenController> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      final selectedIndex = controller._selectedIndex.value;
-      final activeBody = controller.widgetOptions.elementAt(selectedIndex);
-      final bool isDashboard = selectedIndex == 0;
+    return LiquidGlassScope(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        extendBody: true,
+        body: LiquidGlassBackground(
+          child: Obx(() {
+            final selectedIndex = controller._selectedIndex.value;
+            final activeBody = controller.widgetOptions.elementAt(selectedIndex);
+            final bool isDashboard = selectedIndex == 0;
 
-      return LiquidGlassScope(
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          extendBody: true,
-          body: LiquidGlassBackground(
-            child: Stack(
+            return Stack(
               children: [
                 activeBody,
                 if (isDashboard) ...[
@@ -47,34 +47,34 @@ class MainScreen extends GetView<MainScreenController> {
                   Positioned(right: AppSpacing.l, top: AppSpacing.safeAreaTop, child: const _DashboardCalendarPill()),
                 ],
               ],
-            ),
-          ),
-          bottomNavigationBar: _BorderedGlassBottomBar(
-            child: GlassBottomBar(
-              quality: GlassQuality.premium,
-              barHeight: AppSizes.bottomNavHeight,
-              selectedIconColor: AppColors.textPrimary,
-              unselectedIconColor: AppColors.grey4,
-              glassSettings: AppGlass.standard,
-              tabs: [
-                GlassBottomBarTab(label: tr(LocaleKeys.nav_home), icon: CupertinoIcons.house, selectedIcon: CupertinoIcons.house_fill),
-                GlassBottomBarTab(label: tr(LocaleKeys.nav_progress), icon: CupertinoIcons.chart_bar, selectedIcon: CupertinoIcons.chart_bar_fill),
-                GlassBottomBarTab(label: tr(LocaleKeys.nav_profile), icon: CupertinoIcons.person, selectedIcon: CupertinoIcons.person_fill),
-              ],
-              selectedIndex: selectedIndex,
-              onTabSelected: controller._onItemTapped,
-              extraButton: GlassBottomBarExtraButton(
-                icon: CupertinoIcons.add,
-                label: tr(LocaleKeys.nav_home),
-                onTap: () => controller.showQuickActions(context),
-                iconColor: AppColors.primary,
-                size: AppSizes.fabSize,
-              ),
-            ),
-          ),
+            );
+          }),
         ),
-      );
-    });
+        bottomNavigationBar: Obx(() => _BorderedGlassBottomBar(
+              child: GlassBottomBar(
+                quality: GlassQuality.premium,
+                barHeight: AppSizes.bottomNavHeight,
+                selectedIconColor: AppColors.textPrimary,
+                unselectedIconColor: AppColors.grey4,
+                glassSettings: AppGlass.standard,
+                tabs: [
+                  GlassBottomBarTab(label: tr(LocaleKeys.nav_home), icon: CupertinoIcons.house, selectedIcon: CupertinoIcons.house_fill),
+                  GlassBottomBarTab(label: tr(LocaleKeys.nav_progress), icon: CupertinoIcons.chart_bar, selectedIcon: CupertinoIcons.chart_bar_fill),
+                  GlassBottomBarTab(label: tr(LocaleKeys.nav_profile), icon: CupertinoIcons.person, selectedIcon: CupertinoIcons.person_fill),
+                ],
+                selectedIndex: controller._selectedIndex.value,
+                onTabSelected: controller._onItemTapped,
+                extraButton: GlassBottomBarExtraButton(
+                  icon: CupertinoIcons.add,
+                  label: tr(LocaleKeys.nav_home),
+                  onTap: () => controller.showQuickActions(context),
+                  iconColor: AppColors.primary,
+                  size: AppSizes.fabSize,
+                ),
+              ),
+            )),
+      ),
+    );
   }
 }
 

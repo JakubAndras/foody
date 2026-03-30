@@ -393,7 +393,7 @@ class IngredientRow extends StatelessWidget {
                       Flexible(
                         child: Text(
                           ingredient.name,
-                          style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+                          style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -441,10 +441,11 @@ class _MacroDotLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
-          width: AppSizes.macroDotSm,
-          height: AppSizes.macroDotSm,
+          width: AppSizes.macroDot,
+          height: AppSizes.macroDot,
           decoration: BoxDecoration(
             color: color.withValues(alpha: AppOpacities.soft),
             shape: BoxShape.circle,
@@ -453,7 +454,7 @@ class _MacroDotLabel extends StatelessWidget {
         const SizedBox(width: AppSpacing.xxs),
         Text(
           value,
-          style: AppTextStyles.label11.copyWith(fontWeight: FontWeight.w500, color: AppColors.textTertiary, letterSpacing: 0.0645),
+          style: AppTextStyles.body13.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w500),
         ),
       ],
     );
@@ -469,28 +470,29 @@ class _MacroDotsRowWithCalories extends StatelessWidget {
   Widget build(BuildContext context) {
     final showAmount = (ingredient.amount - 1.0).abs() > 0.001;
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         if (showAmount) ...[
           Text(
             ingredient.amountLabel,
-            style: AppTextStyles.label11.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary, letterSpacing: 0.0645),
+            style: AppTextStyles.body13.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w500),
           ),
           _separator,
         ],
         Text(
           '${ingredient.weight.toStringAsFixed(0)}g',
-          style: AppTextStyles.label11.copyWith(fontWeight: FontWeight.w600, color: AppColors.textSecondary, letterSpacing: 0.0645),
+          style: AppTextStyles.body13.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w500),
         ),
-        _separator,
+        const SizedBox(width: AppSpacing.xs),
         Text(
           '${ingredient.calories.toStringAsFixed(0)} ${tr(LocaleKeys.common_kcal)}',
-          style: AppTextStyles.label11.copyWith(fontWeight: FontWeight.w500, color: AppColors.textTertiary, letterSpacing: 0.0645),
+          style: AppTextStyles.body13.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w500),
         ),
-        _separator,
+        const SizedBox(width: AppSpacing.s),
         _MacroDotLabel(color: AppColors.macroProtein, value: '${ingredient.proteins.toStringAsFixed(0)}g'),
-        const SizedBox(width: AppSpacing.xs),
+        const SizedBox(width: AppSpacing.s),
         _MacroDotLabel(color: AppColors.warningStrong, value: '${ingredient.carbs.toStringAsFixed(0)}g'),
-        const SizedBox(width: AppSpacing.xs),
+        const SizedBox(width: AppSpacing.s),
         _MacroDotLabel(color: AppColors.macroFats, value: '${ingredient.fats.toStringAsFixed(0)}g'),
       ],
     );

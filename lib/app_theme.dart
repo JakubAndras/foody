@@ -58,8 +58,12 @@ class AppColors {
   static const errorContainer = Color(0xFFFFE5E5);
   static const errorText = accentColor;
 
-  // Mesh
-  static const meshBase = Color(0xFFF0F0F0);
+  // Mesh gradient — default (peach + lavender)
+  static const meshBase = Color(0xFFF0F0F0); // scaffold fill behind blobs
+  static const meshPeach = Color(0x0FE8B4B8); // warm peach blob
+  static const meshLavender = Color(0x08D4C4E8); // soft lavender blob
+  static const meshSky = Color(0x06B8D4E8); // cool sky-blue blob
+  static const meshMint = Color(0x06C4E8D4); // gentle mint blob
 
   // Overlays / glass
   static const overlayDark = Color(0x33000000);
@@ -77,9 +81,9 @@ class AppColors {
   static const statusBarDark = Color(0xFF1E2939);
 
   // Macro colors
-  static const macroProtein = error;
-  static const macroCarbs = Color(0xFFFE9A00);
-  static const macroFats = info;
+  static const macroProtein = Color(0xDDDA0027);
+  static const macroCarbs = Color(0xDDFE9A00);
+  static const macroFats = Color(0xDD2B7FFF);
 
   // Accent palettes used in Ask AI / charts
   static const violet = Color(0xFF6366F1);
@@ -197,13 +201,13 @@ class AppSizes {
   static const double sliderTickSize = 4;
   static const double dividerThin = 1;
   static const double ringSize = 128;
-  static const double ringStroke = 8;
+  static const double ringStroke = 12;
   static const double ringSizeSmall = 100;
   static const double summaryRingSize = 142;
   static const double macroRingSize = 64;
   static const double widgetRingSize = 112;
   static const double macroRingStroke = 6;
-  static const double progressRingStroke = 3;
+  static const double progressRingStroke = 4;
   static const double progressSegmentSm = 48;
   static const double progressSegmentMd = 64;
   static const double progressSegmentLg = 80;

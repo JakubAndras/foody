@@ -8,6 +8,8 @@ class ProgressRing extends StatelessWidget {
   final Color backgroundColor;
   final Color foregroundColor;
   final Widget? child;
+  final double overflowValue;
+  final Color? overflowColor;
 
   const ProgressRing({
     super.key,
@@ -17,6 +19,8 @@ class ProgressRing extends StatelessWidget {
     required this.backgroundColor,
     required this.foregroundColor,
     this.child,
+    this.overflowValue = 0,
+    this.overflowColor,
   });
 
   @override
@@ -34,6 +38,8 @@ class ProgressRing extends StatelessWidget {
               strokeWidth: strokeWidth,
               backgroundColor: backgroundColor,
               foregroundColor: foregroundColor,
+              overflowValue: overflowValue,
+              overflowColor: overflowColor,
             ),
           ),
           if (child != null) child!,
@@ -48,18 +54,25 @@ class _RingPainter extends CustomPainter {
   final double strokeWidth;
   final Color backgroundColor;
   final Color foregroundColor;
+  final double overflowValue;
+  final Color? overflowColor;
 
   _RingPainter({
     required this.value,
     required this.strokeWidth,
     required this.backgroundColor,
     required this.foregroundColor,
+    this.overflowValue = 0,
+    this.overflowColor,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = (size.width - strokeWidth) / 2;
+    final rect = Rect.fromCircle(center: center, radius: radius);
+    const startAngle = -math.pi / 2;
+
     final backgroundPaint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth
@@ -73,13 +86,18 @@ class _RingPainter extends CustomPainter {
 
     canvas.drawCircle(center, radius, backgroundPaint);
     final sweep = (value.clamp(0.0, 1.0)) * 2 * math.pi;
-    canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius),
-      -math.pi / 2,
-      sweep,
-      false,
-      foregroundPaint,
-    );
+    canvas.drawArc(rect, startAngle, sweep, false, foregroundPaint);
+
+    // Draw red overflow arc on top of full ring
+    if (overflowValue > 0 && overflowColor != null) {
+      final overflowPaint = Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = strokeWidth
+        ..color = overflowColor!
+        ..strokeCap = StrokeCap.round;
+      final overflowSweep = (overflowValue.clamp(0.0, 1.0)) * 2 * math.pi;
+      canvas.drawArc(rect, startAngle, overflowSweep, false, overflowPaint);
+    }
   }
 
   @override
@@ -87,6 +105,8 @@ class _RingPainter extends CustomPainter {
     return oldDelegate.value != value ||
         oldDelegate.strokeWidth != strokeWidth ||
         oldDelegate.backgroundColor != backgroundColor ||
-        oldDelegate.foregroundColor != foregroundColor;
+        oldDelegate.foregroundColor != foregroundColor ||
+        oldDelegate.overflowValue != overflowValue ||
+        oldDelegate.overflowColor != overflowColor;
   }
 }

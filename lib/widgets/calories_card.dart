@@ -24,7 +24,9 @@ class CaloriesCard extends StatelessWidget {
     final double exercise = dayRecord.totalExerciseCalories;
     final double remaining = burnedEnabled ? effectiveGoal - dayRecord.netCalories : effectiveGoal - dayRecord.totalCalories;
     final double consumed = burnedEnabled ? dayRecord.netCalories : dayRecord.totalCalories;
-    final double progress = (consumed / effectiveGoal).clamp(0.0, 1.0);
+    final double ratio = consumed / effectiveGoal;
+    final double progress = ratio.clamp(0.0, 1.0);
+    final double overflowFraction = ratio > 1.0 ? ((consumed - effectiveGoal) / effectiveGoal).clamp(0.0, 1.0) : 0.0;
 
     return Container(
       padding: const EdgeInsets.only(left: AppSpacing.m, right: AppSpacing.l, top: AppSpacing.m, bottom: AppSpacing.l),
@@ -51,8 +53,10 @@ class CaloriesCard extends StatelessWidget {
                       size: AppSizes.summaryRingSize,
                       strokeWidth: AppSizes.ringStroke,
                       value: progress,
-                      backgroundColor: AppColors.outline.withValues(alpha: 0.6),
+                      backgroundColor: AppColors.outline.withValues(alpha: 0.8),
                       foregroundColor: AppColors.textPrimary,
+                      overflowValue: overflowFraction,
+                      overflowColor: AppColors.error,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [

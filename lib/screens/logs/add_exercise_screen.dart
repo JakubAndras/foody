@@ -4,7 +4,6 @@ import 'package:diplomka/controller/day_record_controller.dart';
 import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/exercise.dart';
-import 'package:diplomka/screens/logs/exercise_widgets.dart';
 import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -12,16 +11,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 
-enum ExerciseTrackingMode { total, perMinute }
-
 class AddExerciseScreen extends StatefulWidget {
-  const AddExerciseScreen({super.key, this.initialName, this.initialDurationMinutes, this.initialCaloriesTotal, this.initialCaloriesPerMinute, this.initialTrackingMode});
+  const AddExerciseScreen({super.key, this.initialName, this.initialDurationMinutes, this.initialCaloriesTotal});
 
   final String? initialName;
   final int? initialDurationMinutes;
   final int? initialCaloriesTotal;
-  final double? initialCaloriesPerMinute;
-  final ExerciseTrackingMode? initialTrackingMode;
 
   @override
   State<AddExerciseScreen> createState() => _AddExerciseScreenState();
@@ -30,40 +25,21 @@ class AddExerciseScreen extends StatefulWidget {
 class _AddExerciseScreenState extends State<AddExerciseScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _totalController = TextEditingController();
-  final TextEditingController _rateController = TextEditingController();
   final TextEditingController _durationController = TextEditingController();
-  ExerciseTrackingMode _mode = ExerciseTrackingMode.total;
   bool _isSaving = false;
   bool _isFavorite = false;
 
   @override
   void initState() {
     super.initState();
-    _mode = _resolveInitialMode();
     if (widget.initialName != null && widget.initialName!.isNotEmpty) {
       _nameController.text = widget.initialName!;
-    } else {
-      _nameController.text = 'Morning Run';
     }
-
     if (widget.initialCaloriesTotal != null) {
       _totalController.text = widget.initialCaloriesTotal.toString();
     }
-    if (widget.initialCaloriesPerMinute != null) {
-      _rateController.text = _formatNumber(widget.initialCaloriesPerMinute!);
-    }
     if (widget.initialDurationMinutes != null) {
       _durationController.text = widget.initialDurationMinutes.toString();
-    }
-
-    if (_totalController.text.isEmpty) {
-      _totalController.text = '123';
-    }
-    if (_rateController.text.isEmpty) {
-      _rateController.text = '10';
-    }
-    if (_durationController.text.isEmpty) {
-      _durationController.text = '30';
     }
   }
 
@@ -71,35 +47,8 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
   void dispose() {
     _nameController.dispose();
     _totalController.dispose();
-    _rateController.dispose();
     _durationController.dispose();
     super.dispose();
-  }
-
-  int get _calculatedTotal {
-    final rate = double.tryParse(_rateController.text) ?? 0;
-    final duration = int.tryParse(_durationController.text) ?? 0;
-    return (rate * duration).round();
-  }
-
-  ExerciseTrackingMode _resolveInitialMode() {
-    if (widget.initialTrackingMode != null) {
-      return widget.initialTrackingMode!;
-    }
-    if (widget.initialCaloriesTotal != null) {
-      return ExerciseTrackingMode.total;
-    }
-    if (widget.initialCaloriesPerMinute != null) {
-      return ExerciseTrackingMode.perMinute;
-    }
-    return ExerciseTrackingMode.total;
-  }
-
-  String _formatNumber(double value) {
-    if (value == value.roundToDouble()) {
-      return value.toInt().toString();
-    }
-    return value.toStringAsFixed(1);
   }
 
   @override
@@ -107,23 +56,21 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
     return ProfileGradientScaffold(
       scroll: true,
       padding: const EdgeInsets.fromLTRB(AppSpacing.screen, 0, AppSpacing.screen, AppSpacing.xl),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: SizedBox(
-        width: MediaQuery.of(context).size.width - (AppSpacing.screen * 2),
-        child: ProfilePrimaryButton(
-          label: _isSaving ? tr(LocaleKeys.common_saving) : tr(LocaleKeys.exercise_add_title),
-          height: AppSizes.buttonHeight,
-          onPressed: _isSaving ? null : _saveExercise,
-        ),
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CustomGlassAppBar(
             title: tr(LocaleKeys.exercise_add_title),
+            leadingIconSize: AppSizes.iconLg,
             onBack: () => Navigator.of(context).maybePop(),
             actions: [
-              CustomGlassIconButton(icon: _isFavorite ? Icons.bookmark : CupertinoIcons.bookmark, iconSize: AppSizes.iconMd, onPressed: () => setState(() => _isFavorite = !_isFavorite)),
+              CustomGlassIconButtonGroup(
+                iconSize: AppSizes.iconLg,
+                items: [
+                  (icon: CupertinoIcons.checkmark, onPressed: _isSaving ? () {} : _saveExercise),
+                  (icon: _isFavorite ? CupertinoIcons.bookmark_fill : CupertinoIcons.bookmark, onPressed: () => setState(() => _isFavorite = !_isFavorite)),
+                ],
+              ),
             ],
           ),
           const SizedBox(height: AppSpacing.l),
@@ -131,73 +78,25 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
           const SizedBox(height: AppSpacing.xs),
           _TextInput(controller: _nameController, hintText: tr(LocaleKeys.exercise_name_hint)),
           const SizedBox(height: AppSpacing.l),
-          Text(tr(LocaleKeys.exercise_track_question), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
+          Text(tr(LocaleKeys.exercise_total_burned), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
           const SizedBox(height: AppSpacing.xs),
-          Row(
-            children: [
-              Expanded(
-                child: ExerciseTrackingOptionCard(
-                  selected: _mode == ExerciseTrackingMode.total,
-                  gradient: AppGradients.exerciseCalories,
-                  icon: CupertinoIcons.flame,
-                  label: tr(LocaleKeys.exercise_total_calories),
-                  subtitle: tr(LocaleKeys.exercise_enter_total),
-                  onTap: () => setState(() => _mode = ExerciseTrackingMode.total),
-                ),
-              ),
-              const SizedBox(width: AppSpacing.m),
-              Expanded(
-                child: ExerciseTrackingOptionCard(
-                  selected: _mode == ExerciseTrackingMode.perMinute,
-                  gradient: AppGradients.exerciseCaloriesAlt,
-                  icon: CupertinoIcons.graph_square,
-                  label: tr(LocaleKeys.exercise_per_minute),
-                  subtitle: tr(LocaleKeys.exercise_kcal_min_desc),
-                  onTap: () => setState(() => _mode = ExerciseTrackingMode.perMinute),
-                ),
-              ),
-            ],
+          _InputCard(
+            controller: _totalController,
+            label: tr(LocaleKeys.common_calories),
+            unit: tr(LocaleKeys.common_kcal),
+            gradient: AppGradients.exerciseCalories,
+            icon: CupertinoIcons.flame,
           ),
           const SizedBox(height: AppSpacing.l),
-          if (_mode == ExerciseTrackingMode.total) ...[
-            Text(tr(LocaleKeys.exercise_total_burned), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
-            const SizedBox(height: AppSpacing.xs),
-            _InputCard(
-              controller: _totalController,
-              label: tr(LocaleKeys.common_calories),
-              unit: tr(LocaleKeys.common_kcal),
-              gradient: AppGradients.exerciseCalories,
-              icon: CupertinoIcons.flame,
-            ),
-            const SizedBox(height: AppSpacing.s),
-            Text(tr(LocaleKeys.exercise_enter_total), style: AppTextStyles.label12.copyWith(color: AppColors.textTertiary)),
-          ] else ...[
-            Text(tr(LocaleKeys.exercise_calories_per_minute), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
-            const SizedBox(height: AppSpacing.xs),
-            _InputCard(
-              controller: _rateController,
-              label: tr(LocaleKeys.exercise_kcal_min),
-              unit: tr(LocaleKeys.exercise_kcal_min),
-              gradient: AppGradients.exerciseCaloriesAlt,
-              icon: CupertinoIcons.graph_square,
-              onChanged: (_) => setState(() {}),
-            ),
-            const SizedBox(height: AppSpacing.m),
-            Text(tr(LocaleKeys.exercise_duration_label), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
-            const SizedBox(height: AppSpacing.xs),
-            _InputCard(
-              controller: _durationController,
-              label: tr(LocaleKeys.common_min),
-              unit: tr(LocaleKeys.common_min),
-              gradient: AppGradients.exerciseDuration,
-              icon: CupertinoIcons.clock,
-              onChanged: (_) => setState(() {}),
-            ),
-            const SizedBox(height: AppSpacing.m),
-            Text(tr(LocaleKeys.exercise_total_burned), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
-            const SizedBox(height: AppSpacing.xs),
-            ExerciseTotalSummaryCard(value: '$_calculatedTotal'),
-          ],
+          Text(tr(LocaleKeys.exercise_duration_label), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
+          const SizedBox(height: AppSpacing.xs),
+          _InputCard(
+            controller: _durationController,
+            label: tr(LocaleKeys.common_min),
+            unit: tr(LocaleKeys.common_min),
+            gradient: AppGradients.exerciseDuration,
+            icon: CupertinoIcons.clock,
+          ),
           const SizedBox(height: AppSpacing.huge),
         ],
       ),
@@ -205,16 +104,20 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
   }
 
   Future<void> _saveExercise() async {
-    final String exerciseName = _nameController.text.trim().isEmpty ? tr(LocaleKeys.common_exercise) : _nameController.text.trim();
-    final int? durationMinutes = int.tryParse(_durationController.text.trim());
-    final double caloriesBurned = _mode == ExerciseTrackingMode.total
-        ? (double.tryParse(_totalController.text.trim()) ?? 0)
-        : (double.tryParse(_rateController.text.trim()) ?? 0) * (durationMinutes ?? 0);
+    final String exerciseName = _nameController.text.trim();
 
+    if (exerciseName.isEmpty) {
+      showSnackBar(context: context, message: tr(LocaleKeys.exercise_name_required), type: SnackBarType.warning);
+      return;
+    }
+
+    final double caloriesBurned = double.tryParse(_totalController.text.trim()) ?? 0;
     if (caloriesBurned <= 0) {
       showSnackBar(context: context, message: tr(LocaleKeys.exercise_invalid_calories), type: SnackBarType.warning);
       return;
     }
+
+    final int? durationMinutes = int.tryParse(_durationController.text.trim());
 
     setState(() {
       _isSaving = true;
@@ -265,30 +168,32 @@ class _TextInput extends StatelessWidget {
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.l),
         border: Border.all(color: AppColors.outline, width: 1),
-        // boxShadow: AppShadows.control,
       ),
-      child: TextField(
-        controller: controller,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: hintText,
-          hintStyle: AppTextStyles.body16.copyWith(color: AppColors.textTertiary),
+      child: Center(
+        child: TextField(
+          controller: controller,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            isCollapsed: true,
+            contentPadding: EdgeInsets.zero,
+            hintText: hintText,
+            hintStyle: AppTextStyles.body16.copyWith(color: AppColors.textTertiary),
+          ),
+          style: AppTextStyles.body16,
         ),
-        style: AppTextStyles.body16,
       ),
     );
   }
 }
 
 class _InputCard extends StatelessWidget {
-  const _InputCard({required this.controller, required this.label, required this.unit, required this.gradient, required this.icon, this.onChanged});
+  const _InputCard({required this.controller, required this.label, required this.unit, required this.gradient, required this.icon});
 
   final TextEditingController controller;
   final String label;
   final String unit;
   final Gradient gradient;
   final IconData icon;
-  final ValueChanged<String>? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -299,9 +204,9 @@ class _InputCard extends StatelessWidget {
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.l),
         border: Border.all(color: AppColors.outline, width: 1),
-        // boxShadow: AppShadows.control,
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
             width: 40,
@@ -311,15 +216,18 @@ class _InputCard extends StatelessWidget {
           ),
           const SizedBox(width: AppSpacing.m),
           Expanded(
-            child: TextField(
-              controller: controller,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              onChanged: onChanged,
-              style: AppTextStyles.h3.copyWith(height: 1.5, color: AppColors.textDisabled),
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: label,
-                hintStyle: AppTextStyles.body14.copyWith(color: AppColors.textTertiary),
+            child: Center(
+              child: TextField(
+                controller: controller,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                style: AppTextStyles.body16,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  isCollapsed: true,
+                  contentPadding: EdgeInsets.zero,
+                  hintText: label,
+                  hintStyle: AppTextStyles.body16.copyWith(color: AppColors.textTertiary),
+                ),
               ),
             ),
           ),

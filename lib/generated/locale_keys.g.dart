@@ -396,6 +396,8 @@ abstract class  LocaleKeys {
   static const exercise_kcal_min = 'exercise_kcal_min';
   static const exercise_duration_label = 'exercise_duration_label';
   static const exercise_invalid_calories = 'exercise_invalid_calories';
+  static const exercise_name_required = 'exercise_name_required';
+  static const exercise_duration_optional = 'exercise_duration_optional';
   static const exercise_exercise_added = 'exercise_exercise_added';
   static const exercise_activity = 'exercise_activity';
   static const exercise_log_btn = 'exercise_log_btn';

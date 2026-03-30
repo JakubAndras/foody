@@ -429,66 +429,80 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
 
     showModalBottomSheet<void>(
       context: context,
-      backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xl))),
-      clipBehavior: Clip.antiAlias,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      barrierColor: AppColors.overlayDark,
       builder: (sheetContext) {
-        return SafeArea(
-          top: false,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.s, AppSpacing.l, AppSpacing.l),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SheetDragHandle(color: AppColors.textTertiary.withValues(alpha: 0.3)),
-                const SizedBox(height: AppSpacing.m),
-                Row(
+        return Padding(
+          padding: const EdgeInsets.all(AppSpacing.xs),
+          child: Container(
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(AppRadii.xxl),
+                topRight: Radius.circular(AppRadii.xxl),
+                bottomLeft: Radius.circular(AppRadii.xxl + 10),
+                bottomRight: Radius.circular(AppRadii.xxl + 10),
+              ),
+            ),
+            child: SafeArea(
+              top: false,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.xxs, AppSpacing.l, AppSpacing.xl),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Expanded(child: Text(tr(LocaleKeys.language_settings_voice_language_title), style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700))),
-                    GestureDetector(
-                      onTap: () => Navigator.of(sheetContext).pop(),
-                      child: Container(
-                        width: AppSizes.iconButtonSm,
-                        height: AppSizes.iconButtonSm,
-                        decoration: const BoxDecoration(color: AppColors.surfaceMuted, shape: BoxShape.circle),
-                        child: const Icon(CupertinoIcons.xmark, size: AppSizes.iconSm, color: AppColors.textPrimary),
-                      ),
+                    SheetDragHandle(color: AppColors.textTertiary.withValues(alpha: 0.3)),
+                    const SizedBox(height: AppSpacing.m),
+                    Row(
+                      children: [
+                        Expanded(child: Text(tr(LocaleKeys.language_settings_voice_language_title), style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700))),
+                        GestureDetector(
+                          onTap: () => Navigator.of(sheetContext).pop(),
+                          child: Container(
+                            width: AppSizes.iconButtonSm,
+                            height: AppSizes.iconButtonSm,
+                            decoration: const BoxDecoration(color: AppColors.surfaceMuted, shape: BoxShape.circle),
+                            child: const Icon(CupertinoIcons.xmark, size: AppSizes.iconSm, color: AppColors.textPrimary),
+                          ),
+                        ),
+                      ],
                     ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(tr(LocaleKeys.language_settings_voice_language_subtitle), style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary)),
+                    ),
+                    const SizedBox(height: AppSpacing.m),
+                    Obx(() {
+                      final current = service.voiceLogLanguagePreference.value;
+                      return Column(
+                        children: [
+                          _VoiceLanguageRow(
+                            flag: '🇺🇸',
+                            label: tr(LocaleKeys.language_settings_option_english),
+                            selected: current == VoiceLogLanguagePreference.english,
+                            onTap: () async {
+                              await service.setVoiceLogLanguagePreference(VoiceLogLanguagePreference.english);
+                              if (sheetContext.mounted) Navigator.of(sheetContext).pop();
+                            },
+                          ),
+                          Divider(height: AppSizes.dividerThin, color: AppColors.surfaceMuted),
+                          _VoiceLanguageRow(
+                            flag: '🇨🇿',
+                            label: tr(LocaleKeys.language_settings_option_czech),
+                            selected: current == VoiceLogLanguagePreference.czech,
+                            onTap: () async {
+                              await service.setVoiceLogLanguagePreference(VoiceLogLanguagePreference.czech);
+                              if (sheetContext.mounted) Navigator.of(sheetContext).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    }),
                   ],
                 ),
-                const SizedBox(height: AppSpacing.xs),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(tr(LocaleKeys.language_settings_voice_language_subtitle), style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary)),
-                ),
-                const SizedBox(height: AppSpacing.m),
-                Obx(() {
-                  final current = service.voiceLogLanguagePreference.value;
-                  return Column(
-                    children: [
-                      _VoiceLanguageRow(
-                        flag: '🇺🇸',
-                        label: tr(LocaleKeys.language_settings_option_english),
-                        selected: current == VoiceLogLanguagePreference.english,
-                        onTap: () async {
-                          await service.setVoiceLogLanguagePreference(VoiceLogLanguagePreference.english);
-                          if (sheetContext.mounted) Navigator.of(sheetContext).pop();
-                        },
-                      ),
-                      Divider(height: AppSizes.dividerThin, color: AppColors.surfaceMuted),
-                      _VoiceLanguageRow(
-                        flag: '🇨🇿',
-                        label: tr(LocaleKeys.language_settings_option_czech),
-                        selected: current == VoiceLogLanguagePreference.czech,
-                        onTap: () async {
-                          await service.setVoiceLogLanguagePreference(VoiceLogLanguagePreference.czech);
-                          if (sheetContext.mounted) Navigator.of(sheetContext).pop();
-                        },
-                      ),
-                    ],
-                  );
-                }),
-              ],
+              ),
             ),
           ),
         );
@@ -500,18 +514,27 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
+      elevation: 0,
+      barrierColor: AppColors.overlayDark,
       isScrollControlled: true,
-      builder: (_) => Container(
-        decoration: const BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.l)),
-        ),
-        padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.m, AppSpacing.l, AppSpacing.xl),
-        child: Column(
+      builder: (_) => Padding(
+        padding: const EdgeInsets.all(AppSpacing.xs),
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(AppRadii.xxl),
+              topRight: Radius.circular(AppRadii.xxl),
+              bottomLeft: Radius.circular(AppRadii.xxl + 10),
+              bottomRight: Radius.circular(AppRadii.xxl + 10),
+            ),
+          ),
+          padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.xxs, AppSpacing.l, AppSpacing.xl),
+          child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SheetDragHandle(color: AppColors.outline),
+            SheetDragHandle(color: AppColors.textTertiary.withValues(alpha: 0.3)),
             const SizedBox(height: AppSpacing.l),
             Text(tr(LocaleKeys.voice_tips_title), style: AppTextStyles.title18.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: AppSpacing.m),
@@ -522,7 +545,8 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
             _VoiceTipRow(icon: CupertinoIcons.pause_circle, text: tr(LocaleKeys.voice_tips_pause_resume)),
             _VoiceTipRow(icon: CupertinoIcons.pencil, text: tr(LocaleKeys.voice_tips_edit_text)),
             _VoiceTipRow(icon: CupertinoIcons.globe, text: tr(LocaleKeys.voice_tips_languages)),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -551,7 +575,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
                 actions: [
                   CustomGlassIconButtonGroup(items: [
                     (icon: CupertinoIcons.globe, onPressed: () => _showVoiceLanguageSheet(context)),
-                    (icon: CupertinoIcons.question_circle, onPressed: () => _showVoiceTips(context)),
+                    (icon: CupertinoIcons.info_circle, onPressed: () => _showVoiceTips(context)),
                   ]),
                 ],
               ),

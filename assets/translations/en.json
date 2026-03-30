@@ -408,6 +408,8 @@
   "exercise_kcal_min": "kcal/min",
   "exercise_duration_label": "Duration",
   "exercise_invalid_calories": "Please enter valid exercise calories.",
+  "exercise_name_required": "Please enter an exercise name.",
+  "exercise_duration_optional": "Optional",
   "exercise_exercise_added": "Exercise added",
   "exercise_activity": "Activity",
   "exercise_log_btn": "Log",

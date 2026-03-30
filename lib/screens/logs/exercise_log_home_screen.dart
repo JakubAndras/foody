@@ -83,6 +83,7 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
             child: CustomGlassAppBar(
               title: tr(LocaleKeys.exercise_log_title),
+              leadingIconSize: AppSizes.iconLg,
               onBack: () => Navigator.of(context).maybePop(),
               actions: [
                 CustomGlassIconButton(
