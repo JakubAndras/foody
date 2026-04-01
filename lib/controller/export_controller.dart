@@ -119,7 +119,21 @@ class ExportController extends GetxController {
         showSnackBar(message: tr(LocaleKeys.export_pdf_title), subtitle: tr(LocaleKeys.export_no_data), type: SnackBarType.info);
         return;
       }
-      final csvString = ExportService.generateCsv(records, weights);
+      final session = SessionManager.to;
+      final csvString = ExportService.generateCsv(
+        records,
+        weights,
+        heightCm: session.heightCm.value,
+        weightKg: session.weightKg.value,
+        goalWeightKg: session.goalWeightKg.value,
+        sex: session.sex.value?.name,
+        goal: session.goal.value?.name,
+        dietType: session.dietType.value?.name,
+        customDietPreferences: session.customDietPreferences.value,
+        weightChangeRateKgPerWeek: session.weightChangeRateKgPerWeek.value,
+        prefersMetric: session.prefersMetric.value,
+        dateOfBirth: session.dateOfBirth.value,
+      );
       final dir = await getTemporaryDirectory();
       final file = File('${dir.path}/foody_report_${_fileNameDateRange()}.csv');
       await file.writeAsString(csvString);

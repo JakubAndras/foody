@@ -27,7 +27,8 @@
       "WebFetch(domain:docs.aimlapi.com)",
       "WebFetch(domain:openai.com)",
       "Bash(flutter analyze lib/screens/meals/edit_meal_screen.dart lib/screens/meals/meal_components.dart 2>&1 | tail -20)",
-      "Skill(plan-implement)"
+      "Skill(plan-implement)",
+      "Skill(plan-create)"
     ]
   }
 }

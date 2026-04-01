@@ -19,10 +19,37 @@ class ExportService {
 
   // ─── CSV ──────────────────────────────────────────────────────────────
 
-  static String generateCsv(List<DayRecord> records, List<WeightEntry> weights) {
+  static String generateCsv(
+    List<DayRecord> records,
+    List<WeightEntry> weights, {
+    double? heightCm,
+    double? weightKg,
+    double? goalWeightKg,
+    String? sex,
+    String? goal,
+    String? dietType,
+    String? customDietPreferences,
+    double? weightChangeRateKgPerWeek,
+    bool? prefersMetric,
+    DateTime? dateOfBirth,
+  }) {
     final rows = <List<dynamic>>[];
 
+    // ── Section 0: User Profile ──
+    rows.add(['--- ${tr(LocaleKeys.export_user_profile)} ---']);
+    rows.add([tr(LocaleKeys.export_csv_height), heightCm != null ? '${heightCm.round()}' : '']);
+    rows.add([tr(LocaleKeys.export_csv_weight), weightKg != null ? '$weightKg' : '']);
+    rows.add([tr(LocaleKeys.export_csv_goal_weight), goalWeightKg != null ? '$goalWeightKg' : '']);
+    rows.add([tr(LocaleKeys.export_csv_sex), sex ?? '']);
+    rows.add([tr(LocaleKeys.export_csv_goal), goal ?? '']);
+    rows.add([tr(LocaleKeys.export_csv_diet_type_label), dietType ?? '']);
+    rows.add([tr(LocaleKeys.export_csv_custom_diet), customDietPreferences ?? '']);
+    rows.add([tr(LocaleKeys.export_csv_weight_change_rate), weightChangeRateKgPerWeek != null ? '$weightChangeRateKgPerWeek' : '']);
+    rows.add([tr(LocaleKeys.export_csv_prefers_metric), prefersMetric != null ? (prefersMetric ? 'yes' : 'no') : '']);
+    rows.add([tr(LocaleKeys.export_csv_date_of_birth), dateOfBirth != null ? _dateFmt.format(dateOfBirth) : '']);
+
     // ── Section 1: Daily Summary ──
+    rows.add([]);
     rows.add(['--- ${tr(LocaleKeys.export_daily_summary)} ---']);
     rows.add([
       tr(LocaleKeys.export_csv_date),
@@ -31,8 +58,13 @@ class ExportService {
       tr(LocaleKeys.export_csv_carbs),
       tr(LocaleKeys.export_csv_fat),
       tr(LocaleKeys.export_csv_calorie_goal),
+      tr(LocaleKeys.export_csv_protein_goal),
+      tr(LocaleKeys.export_csv_carbs_goal),
+      tr(LocaleKeys.export_csv_fat_goal),
       tr(LocaleKeys.export_csv_exercise_calories),
       tr(LocaleKeys.export_csv_net_calories),
+      tr(LocaleKeys.export_csv_meal_count),
+      tr(LocaleKeys.export_csv_exercise_count),
     ]);
     for (final r in records) {
       rows.add([
@@ -42,15 +74,20 @@ class ExportService {
         r.totalCarbs.round(),
         r.totalFats.round(),
         r.calorieGoal.round(),
+        r.proteinGoal.round(),
+        r.carbsGoal.round(),
+        r.fatGoal.round(),
         r.totalExerciseCalories.round(),
         r.netCalories.round(),
+        r.meals.length,
+        r.exercises.length,
       ]);
     }
 
     // ── Calorie balance ──
+    final totalConsumed = records.fold<double>(0, (s, r) => s + r.totalCalories);
+    final totalBurned = records.fold<double>(0, (s, r) => s + r.totalExerciseCalories);
     if (records.isNotEmpty) {
-      final totalConsumed = records.fold<double>(0, (s, r) => s + r.totalCalories);
-      final totalBurned = records.fold<double>(0, (s, r) => s + r.totalExerciseCalories);
       rows.add([]);
       rows.add([tr(LocaleKeys.export_consumed), '${totalConsumed.round()} ${tr(LocaleKeys.common_kcal)}']);
       rows.add([tr(LocaleKeys.export_burned), '${totalBurned.round()} ${tr(LocaleKeys.common_kcal)}']);
@@ -65,28 +102,41 @@ class ExportService {
       rows.add([
         tr(LocaleKeys.export_csv_date),
         tr(LocaleKeys.common_meal),
+        tr(LocaleKeys.export_csv_meal_timestamp),
+        tr(LocaleKeys.export_csv_meal_confidence),
+        tr(LocaleKeys.export_csv_has_photo),
         tr(LocaleKeys.common_ingredients),
         tr(LocaleKeys.common_weight),
+        tr(LocaleKeys.export_csv_ingredient_amount),
         tr(LocaleKeys.export_csv_calories),
         tr(LocaleKeys.export_csv_protein),
         tr(LocaleKeys.export_csv_carbs),
         tr(LocaleKeys.export_csv_fat),
+        tr(LocaleKeys.export_csv_ingredient_confidence),
       ]);
       for (final r in records) {
         for (final meal in r.meals) {
+          final mealTimestamp = _dateTimeFmt.format(meal.timestamp);
+          final mealConf = meal.confidence != null ? meal.confidence!.toStringAsFixed(2) : '';
+          final hasPhoto = meal.photoPath != null ? 'yes' : 'no';
           if (meal.ingredients.isEmpty) {
-            rows.add([_dateFmt.format(r.date), meal.name, '', '', '', '', '', '']);
+            rows.add([_dateFmt.format(r.date), meal.name, mealTimestamp, mealConf, hasPhoto, '', '', '', '', '', '', '', '']);
           }
           for (final ing in meal.ingredients) {
             rows.add([
               _dateFmt.format(r.date),
               meal.name,
+              mealTimestamp,
+              mealConf,
+              hasPhoto,
               ing.name,
               ing.weight.round(),
+              ing.amount,
               ing.calories.round(),
               ing.proteins.round(),
               ing.carbs.round(),
               ing.fats.round(),
+              ing.confidence != null ? ing.confidence!.toStringAsFixed(2) : '',
             ]);
           }
         }
@@ -103,14 +153,16 @@ class ExportService {
         tr(LocaleKeys.common_name),
         tr(LocaleKeys.common_duration),
         tr(LocaleKeys.export_csv_calories),
+        tr(LocaleKeys.export_csv_source),
       ]);
       for (final r in records) {
         for (final e in r.exercises) {
           rows.add([
             _dateTimeFmt.format(e.timestamp),
             e.name,
-            e.durationMinutes != null ? '${e.durationMinutes} ${tr(LocaleKeys.common_min)}' : '',
+            e.durationMinutes ?? '',
             e.caloriesBurned.round(),
+            e.source ?? 'manual',
           ]);
         }
       }
@@ -120,10 +172,30 @@ class ExportService {
     if (weights.isNotEmpty) {
       rows.add([]);
       rows.add(['--- ${tr(LocaleKeys.progress_weight_progress)} ---']);
-      rows.add([tr(LocaleKeys.export_csv_date), tr(LocaleKeys.export_csv_weight)]);
+      rows.add([tr(LocaleKeys.export_csv_date), tr(LocaleKeys.export_csv_weight), tr(LocaleKeys.export_csv_has_photo)]);
       for (final w in weights) {
-        rows.add([_dateFmt.format(w.date), w.weight]);
+        rows.add([_dateFmt.format(w.date), w.weight, w.photoPath != null ? 'yes' : 'no']);
       }
+    }
+
+    // ── Section 5: Summary Statistics ──
+    final totalMeals = records.fold<int>(0, (s, r) => s + r.meals.length);
+    final totalIngredients = records.fold<int>(0, (s, r) => s + r.meals.fold<int>(0, (ms, m) => ms + m.ingredients.length));
+    final totalExercises = records.fold<int>(0, (s, r) => s + r.exercises.length);
+    rows.add([]);
+    rows.add(['--- ${tr(LocaleKeys.export_summary_statistics)} ---']);
+    rows.add([tr(LocaleKeys.export_csv_total_days), records.length]);
+    rows.add([tr(LocaleKeys.export_csv_total_meals), totalMeals]);
+    rows.add([tr(LocaleKeys.export_csv_total_ingredients), totalIngredients]);
+    rows.add([tr(LocaleKeys.export_csv_total_exercises), totalExercises]);
+    rows.add([tr(LocaleKeys.export_csv_total_weight_entries), weights.length]);
+    if (records.isNotEmpty) {
+      rows.add([tr(LocaleKeys.export_csv_avg_calories_per_day), (totalConsumed / records.length).round()]);
+      rows.add([tr(LocaleKeys.export_csv_avg_protein_per_day), (records.fold<double>(0, (s, r) => s + r.totalProteins) / records.length).round()]);
+      rows.add([tr(LocaleKeys.export_csv_avg_carbs_per_day), (records.fold<double>(0, (s, r) => s + r.totalCarbs) / records.length).round()]);
+      rows.add([tr(LocaleKeys.export_csv_avg_fat_per_day), (records.fold<double>(0, (s, r) => s + r.totalFats) / records.length).round()]);
+      rows.add([tr(LocaleKeys.export_csv_avg_meals_per_day), (totalMeals / records.length).toStringAsFixed(1)]);
+      rows.add([tr(LocaleKeys.export_csv_avg_exercises_per_day), (totalExercises / records.length).toStringAsFixed(1)]);
     }
 
     return const ListToCsvConverter().convert(rows);
