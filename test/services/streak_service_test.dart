@@ -42,6 +42,51 @@ void main() {
       expect(result.currentStreak, 1);
     });
 
+    test('streak spans across week boundary', () {
+      // Sunday March 29 → Monday March 30 (new week)
+      final now = DateTime(2026, 3, 30); // Monday
+      final records = <DayRecord>[
+        _dayRecord(DateTime(2026, 3, 30), hasMeal: true), // Mon (this week)
+        _dayRecord(DateTime(2026, 3, 29), hasMeal: true), // Sun (last week)
+        _dayRecord(DateTime(2026, 3, 28), hasMeal: true), // Sat
+        _dayRecord(DateTime(2026, 3, 27), hasMeal: true), // Fri
+        _dayRecord(DateTime(2026, 3, 26), hasMeal: true), // Thu
+        _dayRecord(DateTime(2026, 3, 25), hasMeal: true), // Wed
+        _dayRecord(DateTime(2026, 3, 24), hasMeal: true), // Tue
+        _dayRecord(DateTime(2026, 3, 23), hasMeal: true), // Mon (last week)
+      ];
+
+      final result = service.calculateStreakInfo(records, now: now);
+
+      expect(result.currentStreak, 8);
+    });
+
+    test('streak spans multiple weeks', () {
+      final now = DateTime(2026, 3, 30); // Monday
+      final records = <DayRecord>[
+        for (int i = 0; i < 21; i++) _dayRecord(DateTime(2026, 3, 30 - i), hasMeal: true),
+      ];
+
+      final result = service.calculateStreakInfo(records, now: now);
+
+      expect(result.currentStreak, 21);
+    });
+
+    test('longest streak counts correctly across DST spring-forward (Mar 29 CET)', () {
+      final now = DateTime(2026, 4, 1);
+      final records = <DayRecord>[
+        _dayRecord(DateTime(2026, 3, 25), hasMeal: true),
+        _dayRecord(DateTime(2026, 3, 26), hasMeal: true),
+        _dayRecord(DateTime(2026, 3, 27), hasMeal: true),
+        _dayRecord(DateTime(2026, 3, 28), hasMeal: true),
+        _dayRecord(DateTime(2026, 3, 29), hasMeal: true), // DST spring-forward
+      ];
+
+      final result = service.calculateStreakInfo(records, now: now);
+
+      expect(result.longestStreak, 5);
+    });
+
     test('calculates active days in current week and ignores future logs', () {
       final now = DateTime(2026, 2, 26); // Thursday
       final records = <DayRecord>[

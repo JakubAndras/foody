@@ -15,11 +15,13 @@ class OpenaiRestClient {
   final String mealContext = 'You are an AI food analyzer. Never include anything outside of the JSON response.';
   final String exerciseContext = 'You are an AI exercise analyzer. Never include anything outside of the JSON response.';
   final String queryContext = 'You are a personal nutrition data analyst. Analyze the user\'s logged nutrition data to answer their question. Never include anything outside of the JSON response.';
+  final String goalsContext = 'You are a certified sports nutritionist. Generate personalized daily nutrition goals based on the user\'s profile. Never include anything outside of the JSON response.';
 
   final String mealPrompt = Prompt().analyzeMeal;
   final String exercisePrompt = Prompt().analyzeExercise;
   final String queryPrompt = Prompt().analyzeQuery;
   final String estimateScopePrompt = Prompt().estimateQueryScope;
+  final String goalsPrompt = Prompt().generateNutritionGoals;
 
   Future<Map<String, dynamic>> generateResponse({
     List<File>? imageFiles,
@@ -139,6 +141,34 @@ class OpenaiRestClient {
           'User nutrition data:\n$nutritionContext',
           if (userProfileContext != null && userProfileContext.isNotEmpty) 'User profile context: $userProfileContext',
           if (languageCode != null) 'Respond in language: $languageCode',
+        ],
+      );
+    } on DioError catch (e) {
+      throw Error.fromDioError(e);
+    } catch (e) {
+      if (e is Error) {
+        rethrow;
+      }
+      throw Error.generic();
+    }
+  }
+
+  Future<Map<String, dynamic>> generateGoalsResponse({
+    required Map<String, dynamic> userProfile,
+  }) async {
+    try {
+      await fetchChatGptApiKey();
+      if (chatGptApiKey == null) {
+        throw Error.generic(message: "Failed to fetch the ChatGPT key.");
+      }
+
+      return _postChatCompletion(
+        context: goalsContext,
+        prompt: goalsPrompt,
+        textPrompt: null,
+        imageContents: const <Map<String, dynamic>>[],
+        additionalTextContent: [
+          'User profile: ${jsonEncode(userProfile)}',
         ],
       );
     } on DioError catch (e) {

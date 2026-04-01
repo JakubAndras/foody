@@ -19,7 +19,7 @@ class HealthIntegrationScreen extends StatelessWidget {
 
     return ProfileGradientScaffold(
       scroll: true,
-      padding: const EdgeInsets.fromLTRB(AppSpacing.screen, 0, AppSpacing.screen, AppSpacing.xl),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: SizedBox(
         width: MediaQuery.of(context).size.width - (AppSpacing.screen * 2),

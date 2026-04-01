@@ -816,7 +816,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                     height: AppSizes.mealHeroHeight + AppSizes.alertCardHeight - heroOverlap,
                                     child: Stack(
                                       children: [
-                                        MealHeroHeader(title: _mealTitle, timeLabel: _formatTime(_meal.timestamp), onTitleTap: _isBusy ? null : _openMealNameEditor),
+                                        MealHeroHeader(title: _mealTitle, timeLabel: _formatTime(_meal.timestamp), showTime: !widget.openedFromLogScreen, onTitleTap: _isBusy ? null : _openMealNameEditor),
                                         Positioned(
                                           left: AppSpacing.edge,
                                           right: AppSpacing.edge,
@@ -847,7 +847,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                 height: AppSizes.mealHeroHeight + AppSizes.caloriesCardHeight - heroOverlap,
                                 child: Stack(
                                   children: [
-                                    MealHeroHeader(title: _mealTitle, timeLabel: _formatTime(_meal.timestamp), onTitleTap: _isBusy ? null : _openMealNameEditor),
+                                    MealHeroHeader(title: _mealTitle, timeLabel: _formatTime(_meal.timestamp), showTime: !widget.openedFromLogScreen, onTitleTap: _isBusy ? null : _openMealNameEditor),
                                     Positioned(
                                       left: AppSpacing.edge,
                                       right: AppSpacing.edge,

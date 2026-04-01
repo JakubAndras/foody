@@ -10,11 +10,15 @@ import 'package:diplomka/screens/logs/exercise_widgets.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
+import 'package:diplomka/widgets/glass_popup.dart';
+import 'package:diplomka/widgets/liquid_glass/glass_segmented_tabs.dart';
 import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+
+enum ExerciseSort { mostRecent, aToZ, zToA }
 
 class ExerciseLogHomeScreen extends StatefulWidget {
   const ExerciseLogHomeScreen({super.key});
@@ -26,6 +30,7 @@ class ExerciseLogHomeScreen extends StatefulWidget {
 class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
   final TextEditingController _searchController = TextEditingController();
   bool _showFavorites = false;
+  ExerciseSort _sort = ExerciseSort.mostRecent;
 
   @override
   void dispose() {
@@ -39,11 +44,47 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
 
   List<ExerciseTemplate> _applyFilters(List<ExerciseTemplate> exercises) {
     final query = _searchController.text.toLowerCase();
-    return exercises.where((e) {
+    var filtered = exercises.where((e) {
       final matchesQuery = query.isEmpty || e.name.toLowerCase().contains(query);
       final matchesFavorite = !_showFavorites || e.isFavorite;
       return matchesQuery && matchesFavorite;
-    }).toList()..sort((a, b) => b.lastUsedAt.compareTo(a.lastUsedAt));
+    }).toList();
+    switch (_sort) {
+      case ExerciseSort.mostRecent:
+        filtered.sort((a, b) => b.lastUsedAt.compareTo(a.lastUsedAt));
+      case ExerciseSort.aToZ:
+        filtered.sort((a, b) => a.name.compareTo(b.name));
+      case ExerciseSort.zToA:
+        filtered.sort((a, b) => b.name.compareTo(a.name));
+    }
+    return filtered;
+  }
+
+  void _openSortPicker() {
+    showGlassPopup(
+      context: context,
+      items: ExerciseSort.values.map((sort) {
+        return GlassPopupItem(
+          label: _sortLabel(sort),
+          selected: _sort == sort,
+          onTap: () {
+            setState(() => _sort = sort);
+            Navigator.of(context).pop();
+          },
+        );
+      }).toList(),
+    );
+  }
+
+  String _sortLabel(ExerciseSort sort) {
+    switch (sort) {
+      case ExerciseSort.mostRecent:
+        return tr(LocaleKeys.common_most_recent);
+      case ExerciseSort.aToZ:
+        return tr(LocaleKeys.common_a_z);
+      case ExerciseSort.zToA:
+        return tr(LocaleKeys.common_z_a);
+    }
   }
 
   Future<void> _addExerciseFromTemplate(ExerciseTemplate template) async {
@@ -104,17 +145,30 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
             child: Row(
               children: [
-                ExerciseFilterChip(label: tr(LocaleKeys.common_all), selected: !_showFavorites, onTap: () => setState(() => _showFavorites = false)),
-                const SizedBox(width: AppSpacing.s),
-                ExerciseFilterChip(
-                  label: tr(LocaleKeys.common_favorites),
-                  selected: _showFavorites,
-                  onTap: () => setState(() => _showFavorites = true),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width / 2 - AppSpacing.m,
+                  child: GlassSegmentedTabs(
+                    labels: [tr(LocaleKeys.common_all), tr(LocaleKeys.common_favorites)],
+                    activeIndex: _showFavorites ? 1 : 0,
+                    onTap: (index) => setState(() => _showFavorites = index == 1),
+                  ),
+                ),
+                const Spacer(),
+                GestureDetector(
+                  onTap: _openSortPicker,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(CupertinoIcons.slider_horizontal_3, color: AppColors.textSecondary, size: AppSizes.iconSm),
+                      const SizedBox(width: 6),
+                      Text(_sortLabel(_sort), style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary, letterSpacing: -0.1504)),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: AppSpacing.s),
+          const SizedBox(height: 2),
           Expanded(
             child: Obx(() {
               final filtered = _applyFilters(_allExercises());

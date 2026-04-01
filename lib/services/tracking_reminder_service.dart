@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:diplomka/generated/locale_keys.g.dart';
+import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/model/tracking_reminder_setting.dart';
 import 'package:diplomka/screens/main_screen.dart';
 import 'package:diplomka/services/shared_preferences_manager.dart';
@@ -199,7 +200,11 @@ class TrackingReminderService extends GetxService {
   static void _onNotificationTap(NotificationResponse response) {
     final payload = response.payload ?? '';
     if (payload.startsWith('motivational_')) {
-      MainScreenController.to.showProgressTab();
+      MainScreenController.to.showProgressTabAndScrollToEnergy();
+    } else {
+      // Tracking reminders → Dashboard on today's date
+      MainScreenController.to.showDashboardTab();
+      DashboardController.to.updateDate(DateTime.now());
     }
   }
 }

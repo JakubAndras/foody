@@ -83,6 +83,9 @@ class MainScreenController extends BaseController {
   final RxInt _selectedIndex = 0.obs;
   final RxBool isCalendarSheetVisible = false.obs;
 
+  /// Set to true when navigating to Progress tab should also scroll to the energy section.
+  final RxBool scrollToEnergy = false.obs;
+
   final List<Widget> widgetOptions = <Widget>[const DashboardScreen(), const ProgressScreen(), const ProfileScreen()];
 
   void _onItemTapped(int index) {
@@ -94,6 +97,12 @@ class MainScreenController extends BaseController {
   }
 
   void showProgressTab() {
+    _selectedIndex.value = 1;
+  }
+
+  /// Navigate to Progress tab and scroll to the Monthly Calendar / Weekly Energy section.
+  void showProgressTabAndScrollToEnergy() {
+    scrollToEnergy.value = true;
     _selectedIndex.value = 1;
   }
 
@@ -181,7 +190,7 @@ class _DashboardStreakPill extends StatelessWidget {
 
       return LiquidGlassTapEffect(
         onTap: () {
-          showDialog(context: context, builder: (_) => const StreakDialog());
+          StreakSheet.show(context);
         },
         child: ClipRRect(
           borderRadius: BorderRadius.circular(AppRadii.pill),

@@ -6,6 +6,7 @@ class Prompt {
   String get analyzeExercise => jsonEncode(analyzeExerciseJson);
   String get analyzeQuery => jsonEncode(analyzeQueryJson);
   String get estimateQueryScope => jsonEncode(estimateQueryScopeJson);
+  String get generateNutritionGoals => jsonEncode(generateNutritionGoalsJson);
 
   static const Map<String, dynamic> analyzeMealJson = {
     "task":
@@ -90,6 +91,33 @@ class Prompt {
         "For vague questions without a time reference, use the last 30 days.",
         "Never set date_from earlier than the earliest_record date.",
         "Never set date_to later than today."
+      ]
+    }
+  };
+
+  static const Map<String, dynamic> generateNutritionGoalsJson = {
+    "task":
+        "Generate personalized daily nutrition goals (calories, protein, carbs, fat) based on the user's profile. Use established nutrition science (Mifflin-St Jeor for BMR, appropriate activity multipliers, and evidence-based macro splits). Return only JSON.",
+    "expected_output": {
+      "format": "json",
+      "schema": {
+        "calories": "int — total daily calorie target",
+        "protein": "int — grams of protein per day",
+        "carbs": "int — grams of carbohydrates per day",
+        "fat": "int — grams of fat per day"
+      },
+      "rules": [
+        "Return only JSON.",
+        "Use Mifflin-St Jeor equation for BMR calculation.",
+        "Apply activity multiplier: sedentary=1.2, light=1.375, moderate=1.55, active=1.725.",
+        "For weight loss goal, create a deficit of 300-500 kcal/day depending on the desired rate.",
+        "For weight gain goal, create a surplus of 250-500 kcal/day depending on the desired rate.",
+        "Protein: 1.6-2.2 g/kg for active individuals, 1.2-1.6 g/kg for sedentary.",
+        "Fat: 25-35% of total calories.",
+        "Carbs: remaining calories after protein and fat.",
+        "Round all values to whole numbers.",
+        "If insufficient data is provided, use reasonable defaults (e.g. moderate activity, 30 years old).",
+        "Respect dietary preferences (vegan/vegetarian may need adjusted protein sources but same macro targets)."
       ]
     }
   };

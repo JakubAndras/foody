@@ -301,6 +301,8 @@ abstract class  LocaleKeys {
   static const nutrition_goals_save_goals = 'nutrition_goals_save_goals';
   static const nutrition_goals_generate_ai = 'nutrition_goals_generate_ai';
   static const nutrition_goals_generate_ai_long = 'nutrition_goals_generate_ai_long';
+  static const nutrition_goals_ai_failed = 'nutrition_goals_ai_failed';
+  static const nutrition_goals_revert = 'nutrition_goals_revert';
   static const weight_log_title_log = 'weight_log_title_log';
   static const weight_log_title_edit = 'weight_log_title_edit';
   static const weight_log_label_weight = 'weight_log_label_weight';
@@ -654,7 +656,10 @@ abstract class  LocaleKeys {
   static const language_settings_option_english = 'language_settings_option_english';
   static const language_settings_option_czech = 'language_settings_option_czech';
   static const streak_title = 'streak_title';
+  static const streak_your_record = 'streak_your_record';
+  static const streak_days = 'streak_days';
   static const streak_motivational = 'streak_motivational';
+  static const streak_new_record = 'streak_new_record';
   static const streak_no_data = 'streak_no_data';
   static const streak_error_loading = 'streak_error_loading';
   static const streak_continue = 'streak_continue';

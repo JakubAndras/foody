@@ -4,8 +4,11 @@ import 'package:diplomka/controller/day_record_controller.dart';
 import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/exercise.dart';
+import 'package:diplomka/screens/logs/exercise_widgets.dart';
 import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
+import 'package:diplomka/utils/app_limits.dart';
+import 'package:diplomka/widgets/duration_picker_sheet.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,32 +26,79 @@ class AddExerciseScreen extends StatefulWidget {
 }
 
 class _AddExerciseScreenState extends State<AddExerciseScreen> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _totalController = TextEditingController();
-  final TextEditingController _durationController = TextEditingController();
+  late final TextEditingController _nameController;
+  late final TextEditingController _caloriesController;
+  late int _durationMinutes;
   bool _isSaving = false;
   bool _isFavorite = false;
 
   @override
   void initState() {
     super.initState();
-    if (widget.initialName != null && widget.initialName!.isNotEmpty) {
-      _nameController.text = widget.initialName!;
-    }
-    if (widget.initialCaloriesTotal != null) {
-      _totalController.text = widget.initialCaloriesTotal.toString();
-    }
-    if (widget.initialDurationMinutes != null) {
-      _durationController.text = widget.initialDurationMinutes.toString();
-    }
+    _nameController = TextEditingController(text: widget.initialName ?? '');
+    _caloriesController = TextEditingController(text: widget.initialCaloriesTotal != null ? '${widget.initialCaloriesTotal}' : '');
+    _durationMinutes = widget.initialDurationMinutes ?? 0;
   }
 
   @override
   void dispose() {
     _nameController.dispose();
-    _totalController.dispose();
-    _durationController.dispose();
+    _caloriesController.dispose();
     super.dispose();
+  }
+
+  String _formatDuration(int minutes) {
+    final h = minutes ~/ 60;
+    final m = minutes % 60;
+    if (h > 0) return '${h}h ${m}min';
+    return '${m}min';
+  }
+
+  Future<void> _openDurationPicker() async {
+    await showDurationPickerSheet(
+      context: context,
+      title: tr(LocaleKeys.common_duration),
+      initialMinutes: _durationMinutes,
+      onChanged: (minutes) => setState(() => _durationMinutes = minutes),
+    );
+  }
+
+  Future<void> _saveExercise() async {
+    final String exerciseName = _nameController.text.trim();
+
+    if (exerciseName.isEmpty) {
+      showSnackBar(context: context, message: tr(LocaleKeys.exercise_name_required), type: SnackBarType.warning);
+      return;
+    }
+
+    final double caloriesBurned = double.tryParse(_caloriesController.text.trim()) ?? 0;
+    if (caloriesBurned <= 0) {
+      showSnackBar(context: context, message: tr(LocaleKeys.exercise_invalid_calories), type: SnackBarType.warning);
+      return;
+    }
+
+    setState(() => _isSaving = true);
+
+    try {
+      final selectedDate = SelectedDateService.to.selectedDate.value;
+      final now = DateTime.now();
+      final exercise = Exercise(
+        name: exerciseName,
+        timestamp: DateTime(selectedDate.year, selectedDate.month, selectedDate.day, now.hour, now.minute, now.second, now.millisecond, now.microsecond),
+        durationMinutes: _durationMinutes > 0 ? _durationMinutes : null,
+        caloriesBurned: caloriesBurned,
+        isFavorite: _isFavorite,
+      );
+
+      await DayRecordController.to.saveExerciseForDate(date: selectedDate, exerciseToSave: exercise);
+      DashboardController.to.refresh();
+
+      if (!mounted) return;
+      showSnackBar(context: context, message: tr(LocaleKeys.exercise_exercise_added));
+      Navigator.of(context).maybePop();
+    } finally {
+      if (mounted) setState(() => _isSaving = false);
+    }
   }
 
   @override
@@ -74,164 +124,61 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
             ],
           ),
           const SizedBox(height: AppSpacing.l),
-          Text(tr(LocaleKeys.exercise_exercise_name), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
-          const SizedBox(height: AppSpacing.xs),
-          _TextInput(controller: _nameController, hintText: tr(LocaleKeys.exercise_name_hint)),
-          const SizedBox(height: AppSpacing.l),
-          Text(tr(LocaleKeys.exercise_total_burned), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
-          const SizedBox(height: AppSpacing.xs),
-          _InputCard(
-            controller: _totalController,
-            label: tr(LocaleKeys.common_calories),
-            unit: tr(LocaleKeys.common_kcal),
-            gradient: AppGradients.exerciseCalories,
-            icon: CupertinoIcons.flame,
-          ),
-          const SizedBox(height: AppSpacing.l),
-          Text(tr(LocaleKeys.exercise_duration_label), style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w500)),
-          const SizedBox(height: AppSpacing.xs),
-          _InputCard(
-            controller: _durationController,
-            label: tr(LocaleKeys.common_min),
-            unit: tr(LocaleKeys.common_min),
-            gradient: AppGradients.exerciseDuration,
-            icon: CupertinoIcons.clock,
-          ),
-          const SizedBox(height: AppSpacing.huge),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _saveExercise() async {
-    final String exerciseName = _nameController.text.trim();
-
-    if (exerciseName.isEmpty) {
-      showSnackBar(context: context, message: tr(LocaleKeys.exercise_name_required), type: SnackBarType.warning);
-      return;
-    }
-
-    final double caloriesBurned = double.tryParse(_totalController.text.trim()) ?? 0;
-    if (caloriesBurned <= 0) {
-      showSnackBar(context: context, message: tr(LocaleKeys.exercise_invalid_calories), type: SnackBarType.warning);
-      return;
-    }
-
-    final int? durationMinutes = int.tryParse(_durationController.text.trim());
-
-    setState(() {
-      _isSaving = true;
-    });
-
-    try {
-      final selectedDate = SelectedDateService.to.selectedDate.value;
-      final exercise = Exercise(
-        name: exerciseName,
-        timestamp: _applyDateToTime(DateTime.now(), selectedDate),
-        durationMinutes: durationMinutes,
-        caloriesBurned: caloriesBurned,
-        isFavorite: _isFavorite,
-      );
-
-      await DayRecordController.to.saveExerciseForDate(date: selectedDate, exerciseToSave: exercise);
-      DashboardController.to.refresh();
-
-      if (!mounted) return;
-      showSnackBar(context: context, message: tr(LocaleKeys.exercise_exercise_added));
-      Navigator.of(context).maybePop();
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isSaving = false;
-        });
-      }
-    }
-  }
-
-  DateTime _applyDateToTime(DateTime source, DateTime targetDate) {
-    return DateTime(targetDate.year, targetDate.month, targetDate.day, source.hour, source.minute, source.second, source.millisecond, source.microsecond);
-  }
-}
-
-class _TextInput extends StatelessWidget {
-  const _TextInput({required this.controller, required this.hintText});
-
-  final TextEditingController controller;
-  final String hintText;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: AppSizes.scanInputHeight,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.l),
-        border: Border.all(color: AppColors.outline, width: 1),
-      ),
-      child: Center(
-        child: TextField(
-          controller: controller,
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            isCollapsed: true,
-            contentPadding: EdgeInsets.zero,
-            hintText: hintText,
-            hintStyle: AppTextStyles.body16.copyWith(color: AppColors.textTertiary),
-          ),
-          style: AppTextStyles.body16,
-        ),
-      ),
-    );
-  }
-}
-
-class _InputCard extends StatelessWidget {
-  const _InputCard({required this.controller, required this.label, required this.unit, required this.gradient, required this.icon});
-
-  final TextEditingController controller;
-  final String label;
-  final String unit;
-  final Gradient gradient;
-  final IconData icon;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: AppSizes.scanInputHeight,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.l),
-        border: Border.all(color: AppColors.outline, width: 1),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
           Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(gradient: gradient, borderRadius: BorderRadius.circular(AppRadii.m)),
-            child: Icon(icon, color: AppColors.onPrimary, size: AppSizes.iconSm),
-          ),
-          const SizedBox(width: AppSpacing.m),
-          Expanded(
-            child: Center(
-              child: TextField(
-                controller: controller,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                style: AppTextStyles.body16,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  isCollapsed: true,
-                  contentPadding: EdgeInsets.zero,
-                  hintText: label,
-                  hintStyle: AppTextStyles.body16.copyWith(color: AppColors.textTertiary),
+            width: double.infinity,
+            padding: const EdgeInsets.all(AppSpacing.l),
+            decoration: BoxDecoration(gradient: AppGradients.primary, borderRadius: BorderRadius.circular(AppRadii.l)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(tr(LocaleKeys.common_exercise), style: AppTextStyles.body14.copyWith(color: AppColors.onPrimary.withValues(alpha: 0.6))),
+                const SizedBox(height: AppSpacing.xs),
+                TextField(
+                  controller: _nameController,
+                  textCapitalization: TextCapitalization.sentences,
+                  cursorColor: AppColors.onPrimary,
+                  style: AppTextStyles.h2.copyWith(color: AppColors.onPrimary),
+                  decoration: InputDecoration(
+                    hintText: tr(LocaleKeys.common_name),
+                    hintStyle: AppTextStyles.h2.copyWith(color: AppColors.onPrimary.withValues(alpha: 0.6)),
+                    border: InputBorder.none,
+                    isDense: true,
+                    contentPadding: EdgeInsets.zero,
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
-          Text(unit, style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary)),
+          const SizedBox(height: AppSpacing.m),
+          Row(
+            children: [
+              Expanded(
+                child: ExerciseStatCard(
+                  gradient: AppGradients.exerciseCalories,
+                  icon: CupertinoIcons.flame,
+                  label: tr(LocaleKeys.exercise_total_calories),
+                  value: '',
+                  unit: tr(LocaleKeys.common_kcal),
+                  controller: _caloriesController,
+                  maxValue: AppLimits.exerciseMaxCalories,
+                ),
+              ),
+              const SizedBox(width: AppSpacing.m),
+              Expanded(
+                child: GestureDetector(
+                  onTap: _openDurationPicker,
+                  child: ExerciseStatCard(
+                    gradient: AppGradients.exerciseDuration,
+                    icon: CupertinoIcons.clock,
+                    label: tr(LocaleKeys.common_duration),
+                    value: _formatDuration(_durationMinutes),
+                    unit: '',
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.huge),
         ],
       ),
     );

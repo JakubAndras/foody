@@ -4,7 +4,9 @@ import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/services/calendar_day_ring_service.dart';
 import 'package:diplomka/widgets/calendar_day_ring_painter.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class DateSelector extends StatefulWidget {
@@ -55,12 +57,17 @@ class _DateSelectorState extends State<DateSelector> {
 
   DateTime _getMondayForWeekContaining(DateTime date) {
     final normalized = DateTime(date.year, date.month, date.day);
-    return normalized.subtract(Duration(days: normalized.weekday - DateTime.monday));
+    return DateTime(normalized.year, normalized.month, normalized.day - (normalized.weekday - DateTime.monday));
   }
 
   DateTime _normalizeDate(DateTime date) => DateTime(date.year, date.month, date.day);
 
-  void _handleDateTap(DateTime date) => widget.onDateSelected(date);
+  void _handleDateTap(DateTime date) {
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      HapticFeedback.mediumImpact();
+    }
+    widget.onDateSelected(date);
+  }
 
   @override
   void didUpdateWidget(covariant DateSelector oldWidget) {
@@ -82,11 +89,16 @@ class _DateSelectorState extends State<DateSelector> {
         controller: _pageController,
         itemCount: _totalPages,
         onPageChanged: (pageIndex) {
-          final mondayOfWeek = _getMondayForWeekContaining(DateTime.now()).add(Duration(days: (pageIndex - _initialPageIndex) * 7));
+          if (defaultTargetPlatform == TargetPlatform.iOS) {
+            HapticFeedback.mediumImpact();
+          }
+          final baseMonday = _getMondayForWeekContaining(DateTime.now());
+          final mondayOfWeek = DateTime(baseMonday.year, baseMonday.month, baseMonday.day + (pageIndex - _initialPageIndex) * 7);
           _dayRecordController.loadWeek(mondayOfWeek);
         },
         itemBuilder: (context, pageIndex) {
-          final mondayOfWeek = _getMondayForWeekContaining(DateTime.now()).add(Duration(days: (pageIndex - _initialPageIndex) * 7));
+          final baseMonday = _getMondayForWeekContaining(DateTime.now());
+          final mondayOfWeek = DateTime(baseMonday.year, baseMonday.month, baseMonday.day + (pageIndex - _initialPageIndex) * 7);
           return _buildWeekView(mondayOfWeek);
         },
       ),
@@ -96,7 +108,7 @@ class _DateSelectorState extends State<DateSelector> {
   Widget _buildWeekView(DateTime mondayOfWeek) {
     return Row(
       children: List.generate(7, (dayIndex) {
-        final date = mondayOfWeek.add(Duration(days: dayIndex));
+        final date = DateTime(mondayOfWeek.year, mondayOfWeek.month, mondayOfWeek.day + dayIndex);
         final isSelected = date.year == widget.selectedDate.year && date.month == widget.selectedDate.month && date.day == widget.selectedDate.day;
         return Expanded(
           child: GestureDetector(

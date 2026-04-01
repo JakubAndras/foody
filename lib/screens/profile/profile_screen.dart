@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/widgets/sheet_drag_handle.dart';
+import 'package:diplomka/widgets/sheet_top_bar.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/model/day_record.dart';
@@ -50,175 +51,118 @@ class ProfileScreen extends StatelessWidget {
           backgroundColor: Colors.transparent,
           fadeColor: AppColors.meshBase,
           backgroundWidget: const MeshGradientBackground(),
-            padding: const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.mega + AppSpacing.s, AppSpacing.m, AppSpacing.mega + 42),
-            //collapsedHeader: Text(tr(LocaleKeys.profile_title), style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w700)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                //CollapsibleTitle(child: Text(tr(LocaleKeys.profile_title), style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w700))),
-                //const SizedBox(height: AppSpacing.s),
-                // const _ProfileHeaderCard(),
-                // const SizedBox(height: AppSpacing.l),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
-                  child: ProfileSectionHeader(title: tr(LocaleKeys.profile_account)),
-                ),
-                const SizedBox(height: AppSpacing.s),
-                _ProfileGroupCard(
-                  children: [
-                    _ProfileActionRow(
-                      title: tr(LocaleKeys.profile_personal_details),
-                      icon: CupertinoIcons.creditcard,
-                      onTap: () => Get.to(() => const PersonalDetailsScreen()),
-                    ),
-                    _ProfileActionRow(
-                      title: tr(LocaleKeys.profile_preferences),
-                      icon: CupertinoIcons.gear,
-                      onTap: () => Get.to(() => const PreferencesScreen()),
-                    ),
-                    _ProfileActionRow(
-                      title: tr(LocaleKeys.profile_language),
-                      icon: CupertinoIcons.globe,
-                      showDivider: false,
-                      onTap: () => _showLanguageSheet(context),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: AppSpacing.l),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
-                  child: ProfileSectionHeader(title: tr(LocaleKeys.profile_goals_tracking)),
-                ),
-                const SizedBox(height: AppSpacing.s),
-                _ProfileGroupCard(
-                  children: [
-                    _ProfileActionRow(
-                      title: tr(LocaleKeys.profile_edit_nutrition_goals),
-                      icon: CupertinoIcons.location,
-                      onTap: () => Get.to(() => const EditNutritionGoalsScreen()),
-                    ),
-                    _ProfileActionRow(
-                      title: tr(LocaleKeys.profile_tracking_reminders),
-                      icon: CupertinoIcons.bell,
-                      onTap: () => Get.to(() => const TrackingRemindersScreen()),
-                    ),
-                    _ProfileActionRow(
-                      title: tr(LocaleKeys.profile_motivational_summary),
-                      icon: CupertinoIcons.star,
-                      onTap: () => Get.to(() => const MotivationalSummaryScreen()),
-                    ),
-                    _ProfileActionRow(
-                      title: Platform.isIOS ? tr(LocaleKeys.health_apple_health) : tr(LocaleKeys.health_health_connect),
-                      icon: CupertinoIcons.heart,
-                      onTap: () => Get.to(() => const HealthIntegrationScreen()),
-                    ),
-                    _ProfileActionRow(
-                      title: tr(LocaleKeys.profile_ring_colors),
-                      icon: CupertinoIcons.circle,
-                      showDivider: false,
-                      onTap: () => Get.to(() => const RingColorsExplainedScreen()),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: AppSpacing.l),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
-                  child: ProfileSectionHeader(
-                    title: tr(LocaleKeys.profile_widgets),
-                    trailing: GestureDetector(
-                      onTap: () => showSnackBar(message: tr(LocaleKeys.common_coming_soon), subtitle: tr(LocaleKeys.common_feature_not_available), type: SnackBarType.info),
-                      child: Text(
-                        tr(LocaleKeys.profile_how_to_add),
-                        style: TextStyle(
-                          color: AppColors.textSecondary,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
+          padding: const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.mega + AppSpacing.s, AppSpacing.m, AppSpacing.mega + 42),
+          //collapsedHeader: Text(tr(LocaleKeys.profile_title), style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w700)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              //CollapsibleTitle(child: Text(tr(LocaleKeys.profile_title), style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w700))),
+              //const SizedBox(height: AppSpacing.s),
+              // const _ProfileHeaderCard(),
+              // const SizedBox(height: AppSpacing.l),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
+                child: ProfileSectionHeader(title: tr(LocaleKeys.profile_account)),
+              ),
+              const SizedBox(height: AppSpacing.s),
+              _ProfileGroupCard(
+                children: [
+                  _ProfileActionRow(title: tr(LocaleKeys.profile_personal_details), icon: CupertinoIcons.creditcard, onTap: () => Get.to(() => const PersonalDetailsScreen())),
+                  _ProfileActionRow(title: tr(LocaleKeys.profile_preferences), icon: CupertinoIcons.gear, onTap: () => Get.to(() => const PreferencesScreen())),
+                  _ProfileActionRow(title: tr(LocaleKeys.profile_language), icon: CupertinoIcons.globe, showDivider: false, onTap: () => _showLanguageSheet(context)),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.l),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
+                child: ProfileSectionHeader(title: tr(LocaleKeys.profile_goals_tracking)),
+              ),
+              const SizedBox(height: AppSpacing.s),
+              _ProfileGroupCard(
+                children: [
+                  _ProfileActionRow(title: tr(LocaleKeys.nutrition_goals_title), icon: CupertinoIcons.location, onTap: () => Get.to(() => const EditNutritionGoalsScreen())),
+                  _ProfileActionRow(title: tr(LocaleKeys.profile_tracking_reminders), icon: CupertinoIcons.bell, onTap: () => Get.to(() => const TrackingRemindersScreen())),
+                  _ProfileActionRow(title: tr(LocaleKeys.profile_motivational_summary), icon: CupertinoIcons.star, onTap: () => Get.to(() => const MotivationalSummaryScreen())),
+                  _ProfileActionRow(
+                    title: Platform.isIOS ? tr(LocaleKeys.health_apple_health) : tr(LocaleKeys.health_health_connect),
+                    icon: CupertinoIcons.heart,
+                    onTap: () => Get.to(() => const HealthIntegrationScreen()),
                   ),
-                ),
-                const SizedBox(height: AppSpacing.s),
-                GestureDetector(
-                  onTap: () => showSnackBar(message: tr(LocaleKeys.common_coming_soon), subtitle: tr(LocaleKeys.common_feature_not_available), type: SnackBarType.info),
-                  child: const AbsorbPointer(child: _WidgetSection()),
-                ),
-                const SizedBox(height: AppSpacing.l),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
-                  child: ProfileSectionHeader(title: tr(LocaleKeys.profile_progress_data)),
-                ),
-                const SizedBox(height: AppSpacing.s),
-                _ProfileGroupCard(
-                  children: [
-                    _ProfileActionRow(
-                      title: tr(LocaleKeys.profile_export_summary),
-                      icon: CupertinoIcons.share,
-                      onTap: () => Get.to(() => const ExportPdfIntroScreen()),
-                    ),
-                    _ProfileActionRow(
-                      title: tr(LocaleKeys.profile_ask_ai),
-                      icon: CupertinoIcons.sparkles,
-                      onTap: () => Get.to(() => const AskAiScreen()),
-                    ),
-                    _ProfileActionRow(
-                      title: tr(LocaleKeys.profile_faq),
-                      icon: CupertinoIcons.question_circle,
-                      onTap: () => Get.to(() => const FaqScreen()),
-                    ),
-                    _ProfileActionRow(
-                      title: 'Glass Test',
-                      icon: CupertinoIcons.circle_filled,
-                      onTap: () => Get.to(() => const GlassTestScreen()),
-                    ),
-                    _ProfileActionRow(
-                      title: 'Liquid Glass Widgets Test',
-                      icon: CupertinoIcons.sparkles,
-                      onTap: () => Get.to(() => const LiquidGlassWidgetsTestScreen()),
-                    ),
-                    _ProfileActionRow(
-                      title: 'Test Onboarding',
-                      icon: CupertinoIcons.play_circle,
-                      showDivider: false,
-                      onTap: () => Get.to(() => const OnboardingFlowScreen()),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: AppSpacing.l),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
-                  child: ProfileSectionHeader(title: tr(LocaleKeys.profile_account_actions)),
-                ),
-                const SizedBox(height: AppSpacing.s),
-                _ProfileGroupCard(
-                  children: [
-                    _ProfileActionRow(
-                      title: tr(LocaleKeys.profile_logout),
-                      icon: CupertinoIcons.square_arrow_right,
-                      onTap: () => showSnackBar(message: tr(LocaleKeys.profile_logout), subtitle: tr(LocaleKeys.profile_logout_stub), type: SnackBarType.info),
-                    ),
-                    _ProfileActionRow(
-                      title: tr(LocaleKeys.profile_delete_account),
-                      icon: CupertinoIcons.person_badge_minus,
-                      showDivider: false,
-                      onTap: () => showSnackBar(message: tr(LocaleKeys.profile_delete_account), subtitle: tr(LocaleKeys.profile_delete_account_stub), type: SnackBarType.info),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: AppSpacing.s),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
-                  child: Center(
+                  _ProfileActionRow(
+                    title: tr(LocaleKeys.profile_ring_colors),
+                    icon: CupertinoIcons.circle,
+                    showDivider: false,
+                    onTap: () => Get.to(() => const RingColorsExplainedScreen()),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.l),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
+                child: ProfileSectionHeader(
+                  title: tr(LocaleKeys.profile_widgets),
+                  trailing: GestureDetector(
+                    onTap: () => showSnackBar(message: tr(LocaleKeys.common_coming_soon), subtitle: tr(LocaleKeys.common_feature_not_available), type: SnackBarType.info),
                     child: Text(
-                      tr(LocaleKeys.profile_version),
-                      style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary),
+                      tr(LocaleKeys.profile_how_to_add),
+                      style: TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.w600, fontSize: 14),
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(height: AppSpacing.s),
+              GestureDetector(
+                onTap: () => showSnackBar(message: tr(LocaleKeys.common_coming_soon), subtitle: tr(LocaleKeys.common_feature_not_available), type: SnackBarType.info),
+                child: const AbsorbPointer(child: _WidgetSection()),
+              ),
+              const SizedBox(height: AppSpacing.l),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
+                child: ProfileSectionHeader(title: tr(LocaleKeys.profile_progress_data)),
+              ),
+              const SizedBox(height: AppSpacing.s),
+              _ProfileGroupCard(
+                children: [
+                  _ProfileActionRow(title: tr(LocaleKeys.profile_export_summary), icon: CupertinoIcons.share, onTap: () => Get.to(() => const ExportPdfIntroScreen())),
+                  _ProfileActionRow(title: tr(LocaleKeys.profile_ask_ai), icon: CupertinoIcons.sparkles, onTap: () => Get.to(() => const AskAiScreen())),
+                  _ProfileActionRow(title: tr(LocaleKeys.profile_faq), icon: CupertinoIcons.question_circle, onTap: () => Get.to(() => const FaqScreen())),
+                  _ProfileActionRow(title: 'Glass Test', icon: CupertinoIcons.circle_filled, onTap: () => Get.to(() => const GlassTestScreen())),
+                  _ProfileActionRow(title: 'Liquid Glass Widgets Test', icon: CupertinoIcons.sparkles, onTap: () => Get.to(() => const LiquidGlassWidgetsTestScreen())),
+                  _ProfileActionRow(title: 'Test Onboarding', icon: CupertinoIcons.play_circle, showDivider: false, onTap: () => Get.to(() => const OnboardingFlowScreen())),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.l),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
+                child: ProfileSectionHeader(title: tr(LocaleKeys.profile_account_actions)),
+              ),
+              const SizedBox(height: AppSpacing.s),
+              _ProfileGroupCard(
+                children: [
+                  _ProfileActionRow(
+                    title: tr(LocaleKeys.profile_logout),
+                    icon: CupertinoIcons.square_arrow_right,
+                    onTap: () => showSnackBar(message: tr(LocaleKeys.profile_logout), subtitle: tr(LocaleKeys.profile_logout_stub), type: SnackBarType.info),
+                  ),
+                  _ProfileActionRow(
+                    title: tr(LocaleKeys.profile_delete_account),
+                    icon: CupertinoIcons.person_badge_minus,
+                    showDivider: false,
+                    onTap: () => showSnackBar(message: tr(LocaleKeys.profile_delete_account), subtitle: tr(LocaleKeys.profile_delete_account_stub), type: SnackBarType.info),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.s),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
+                child: Center(
+                  child: Text(tr(LocaleKeys.profile_version), style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary)),
+                ),
+              ),
+            ],
           ),
         ),
+      ),
     );
   }
 
@@ -234,31 +178,19 @@ class ProfileScreen extends StatelessWidget {
       builder: (sheetContext) {
         return SafeArea(
           top: false,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.s, AppSpacing.l, AppSpacing.l),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SheetDragHandle(color: AppColors.textTertiary.withValues(alpha: 0.3)),
-                const SizedBox(height: AppSpacing.m),
-                Row(
-                  children: [
-                    Expanded(child: Text(tr(LocaleKeys.language_settings_title), style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700))),
-                    GestureDetector(
-                      onTap: () => Navigator.of(sheetContext).pop(),
-                      child: Container(
-                        width: AppSizes.iconButtonSm,
-                        height: AppSizes.iconButtonSm,
-                        decoration: const BoxDecoration(color: AppColors.surfaceMuted, shape: BoxShape.circle),
-                        child: const Icon(CupertinoIcons.xmark, size: AppSizes.iconSm, color: AppColors.textPrimary),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: AppSpacing.m),
-                Obx(() {
-                  final current = controller.appLanguage.value;
-                  return Column(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: AppSpacing.xxs),
+              SheetDragHandle(color: AppColors.textTertiary.withValues(alpha: 0.3)),
+              const SizedBox(height: AppSpacing.s),
+              SheetTopBar(title: tr(LocaleKeys.language_settings_title), onClose: () => Navigator.of(sheetContext).pop()),
+              const SizedBox(height: AppSpacing.m),
+              Obx(() {
+                final current = controller.appLanguage.value;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+                  child: Column(
                     children: [
                       _LanguageRow(
                         flag: '🇺🇸',
@@ -282,10 +214,10 @@ class ProfileScreen extends StatelessWidget {
                         },
                       ),
                     ],
-                  );
-                }),
-              ],
-            ),
+                  ),
+                );
+              }),
+            ],
           ),
         );
       },
@@ -311,7 +243,9 @@ class _LanguageRow extends StatelessWidget {
           children: [
             Text(flag, style: const TextStyle(fontSize: 24)),
             const SizedBox(width: AppSpacing.m),
-            Expanded(child: Text(label, style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w500))),
+            Expanded(
+              child: Text(label, style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w500)),
+            ),
             if (selected)
               Container(
                 width: AppSizes.iconMd + 4,
@@ -335,21 +269,14 @@ class _ProfileHeaderCard extends StatelessWidget {
       onTap: () => showSnackBar(message: tr(LocaleKeys.common_coming_soon), subtitle: tr(LocaleKeys.common_feature_not_available), type: SnackBarType.info),
       child: Container(
         height: AppSizes.profileHeaderHeight,
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(AppRadii.l),
-          boxShadow: AppShadows.screenCard,
-        ),
+        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l), boxShadow: AppShadows.screenCard),
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
         child: Row(
           children: [
             Container(
               width: AppSizes.avatarSize,
               height: AppSizes.avatarSize,
-              decoration: const BoxDecoration(
-                gradient: AppGradients.primary,
-                shape: BoxShape.circle,
-              ),
+              decoration: const BoxDecoration(gradient: AppGradients.primary, shape: BoxShape.circle),
               child: Center(
                 child: Text('E', style: AppTextStyles.h3.copyWith(color: AppColors.onPrimary)),
               ),
@@ -375,9 +302,7 @@ class _ProfileHeaderCard extends StatelessWidget {
 }
 
 class _ProfileGroupCard extends StatelessWidget {
-  const _ProfileGroupCard({
-    required this.children,
-  });
+  const _ProfileGroupCard({required this.children});
 
   final List<Widget> children;
 
@@ -394,12 +319,7 @@ class _ProfileGroupCard extends StatelessWidget {
 }
 
 class _ProfileActionRow extends StatelessWidget {
-  const _ProfileActionRow({
-    required this.title,
-    required this.icon,
-    this.showDivider = true,
-    this.onTap,
-  });
+  const _ProfileActionRow({required this.title, required this.icon, this.showDivider = true, this.onTap});
 
   final String title;
   final IconData icon;
@@ -453,14 +373,8 @@ class _WidgetSection extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          caloriesText,
-                          style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w700),
-                        ),
-                        Text(
-                          tr(LocaleKeys.common_calories),
-                          style: AppTextStyles.caption12.copyWith(color: AppColors.textSecondary),
-                        ),
+                        Text(caloriesText, style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w700)),
+                        Text(tr(LocaleKeys.common_calories), style: AppTextStyles.caption12.copyWith(color: AppColors.textSecondary)),
                       ],
                     ),
                   ),
@@ -469,26 +383,11 @@ class _WidgetSection extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _MacroLeftRow(
-                          icon: AppIcons.protein,
-                          color: AppColors.macroProtein,
-                          value: proteinText,
-                          label: tr(LocaleKeys.dashboard_protein_eaten),
-                        ),
+                        _MacroLeftRow(icon: AppIcons.protein, color: AppColors.macroProtein, value: proteinText, label: tr(LocaleKeys.dashboard_protein_eaten)),
                         const SizedBox(height: AppSpacing.s),
-                        _MacroLeftRow(
-                          icon: AppIcons.carbs,
-                          color: AppColors.macroCarbs,
-                          value: carbsText,
-                          label: tr(LocaleKeys.dashboard_carbs_eaten),
-                        ),
+                        _MacroLeftRow(icon: AppIcons.carbs, color: AppColors.macroCarbs, value: carbsText, label: tr(LocaleKeys.dashboard_carbs_eaten)),
                         const SizedBox(height: AppSpacing.s),
-                        _MacroLeftRow(
-                          icon: AppIcons.fats,
-                          color: AppColors.macroFats,
-                          value: fatText,
-                          label: tr(LocaleKeys.dashboard_fat_eaten),
-                        ),
+                        _MacroLeftRow(icon: AppIcons.fats, color: AppColors.macroFats, value: fatText, label: tr(LocaleKeys.dashboard_fat_eaten)),
                       ],
                     ),
                   ),
@@ -533,12 +432,7 @@ class _WidgetSection extends StatelessWidget {
 }
 
 class _MacroLeftRow extends StatelessWidget {
-  const _MacroLeftRow({
-    required this.icon,
-    required this.color,
-    required this.value,
-    required this.label,
-  });
+  const _MacroLeftRow({required this.icon, required this.color, required this.value, required this.label});
 
   final IconData icon;
   final Color color;
@@ -554,14 +448,8 @@ class _MacroLeftRow extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              value,
-              style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w700),
-            ),
-            Text(
-              label,
-              style: AppTextStyles.caption12.copyWith(color: AppColors.textSecondary),
-            ),
+            Text(value, style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w700)),
+            Text(label, style: AppTextStyles.caption12.copyWith(color: AppColors.textSecondary)),
           ],
         ),
       ],
@@ -570,11 +458,7 @@ class _MacroLeftRow extends StatelessWidget {
 }
 
 class _WidgetShortcutCard extends StatelessWidget {
-  const _WidgetShortcutCard({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
+  const _WidgetShortcutCard({required this.icon, required this.label, required this.onTap});
 
   final IconData icon;
   final String label;
@@ -599,10 +483,7 @@ class _WidgetShortcutCard extends StatelessWidget {
               Text(
                 label,
                 textAlign: TextAlign.center,
-                style: AppTextStyles.caption12.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textPrimary,
-                ),
+                style: AppTextStyles.caption12.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary),
               ),
             ],
           ),

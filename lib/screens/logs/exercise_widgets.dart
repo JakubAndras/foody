@@ -3,6 +3,7 @@ import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 
 class ExerciseSearchBar extends StatelessWidget {
   const ExerciseSearchBar({
@@ -180,6 +181,9 @@ class ExerciseStatCard extends StatelessWidget {
     required this.label,
     required this.value,
     required this.unit,
+    this.controller,
+    this.focusNode,
+    this.maxValue,
   });
 
   final Gradient gradient;
@@ -187,17 +191,36 @@ class ExerciseStatCard extends StatelessWidget {
   final String label;
   final String value;
   final String unit;
+  final TextEditingController? controller;
+  final FocusNode? focusNode;
+  final int? maxValue;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final editable = controller != null;
+    final Widget valueWidget = editable
+        ? Expanded(
+            child: TextField(
+              controller: controller,
+              focusNode: focusNode,
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                if (maxValue != null) _MaxValueFormatter(maxValue!),
+              ],
+              style: AppTextStyles.h3.copyWith(height: 1.5),
+              decoration: InputDecoration(isDense: true, border: InputBorder.none, contentPadding: EdgeInsets.zero, hintText: '0', hintStyle: AppTextStyles.h3.copyWith(height: 1.5, color: AppColors.black)),
+            ),
+          )
+        : Text(value, style: AppTextStyles.h3.copyWith(height: 1.5));
+
+    final card = Container(
       height: AppSizes.exerciseStatCardHeight,
       padding: const EdgeInsets.all(AppSpacing.m),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.l),
         border: Border.all(color: AppColors.outline, width: 1),
-        // boxShadow: AppShadows.control,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -216,7 +239,7 @@ class ExerciseStatCard extends StatelessWidget {
           const SizedBox(height: 4),
           Row(
             children: [
-              Text(value, style: AppTextStyles.h3.copyWith(height: 1.5)),
+              valueWidget,
               const SizedBox(width: 4),
               Text(unit, style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary)),
             ],
@@ -224,6 +247,8 @@ class ExerciseStatCard extends StatelessWidget {
         ],
       ),
     );
+    if (focusNode == null) return card;
+    return GestureDetector(behavior: HitTestBehavior.opaque, onTap: () => focusNode!.requestFocus(), child: card);
   }
 }
 
@@ -551,7 +576,7 @@ class _MetricPill extends StatelessWidget {
           height: 32,
           decoration: BoxDecoration(
             gradient: gradient,
-            borderRadius: BorderRadius.circular(AppRadii.m),
+            borderRadius: BorderRadius.circular(AppRadii.s),
           ),
           child: Icon(icon, color: AppColors.onPrimary, size: AppSizes.iconSm),
         ),
@@ -590,5 +615,19 @@ class _CalcRow extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class _MaxValueFormatter extends TextInputFormatter {
+  final int max;
+
+  _MaxValueFormatter(this.max);
+
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.text.isEmpty) return newValue;
+    final value = int.tryParse(newValue.text);
+    if (value == null || value > max) return oldValue;
+    return newValue;
   }
 }

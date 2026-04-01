@@ -97,7 +97,7 @@ void showSnackBar({
         ],
       ),
       backgroundColor: AppColors.white,
-      elevation: 2,
+      elevation: 0.5,
       behavior: SnackBarBehavior.floating,
       margin: const EdgeInsets.fromLTRB(AppSpacing.m, 0, AppSpacing.m, AppSpacing.xxs),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadii.pill)),

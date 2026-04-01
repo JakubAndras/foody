@@ -305,8 +305,8 @@ class ScanTipOverlay extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    if (child != null) ...[child!, const SizedBox(height: AppSpacing.l)],
                     Text(title, style: AppTextStyles.h4.copyWith(height: 1.4, color: AppColors.primary), textAlign: TextAlign.center),
+                    if (child != null) ...[const SizedBox(height: AppSpacing.l), child!],
                     if (body.isNotEmpty) ...[
                       const SizedBox(height: AppSpacing.s),
                       SizedBox(
@@ -432,7 +432,7 @@ class ScanInputField extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l, vertical: AppSpacing.m),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.m),
+        borderRadius: BorderRadius.circular(AppRadii.l),
         border: Border.all(color: AppColors.outline, width: 1.08),
         boxShadow: hasShadow ? AppShadows.control : null,
       ),

@@ -8,11 +8,15 @@ import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/controller/weight_entry_controller.dart';
 import 'package:diplomka/model/user_profile.dart';
 import 'package:diplomka/model/weight_entry.dart';
+import 'package:diplomka/screens/logs/weight_log_sheet.dart';
 import 'package:diplomka/screens/profile/subscreens/personal_details_diet_screen.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 import 'package:diplomka/services/session_manager.dart';
-import 'package:diplomka/widgets/foody_glass_buttons.dart';
-import 'package:diplomka/widgets/glass_popup.dart';
+import 'dart:ui';
+
+import 'package:diplomka/widgets/picker_column.dart';
+import 'package:diplomka/widgets/sheet_drag_handle.dart';
+import 'package:diplomka/widgets/sheet_top_bar.dart';
 
 class PersonalDetailsScreen extends StatelessWidget {
   const PersonalDetailsScreen({super.key});
@@ -65,15 +69,12 @@ class PersonalDetailsScreen extends StatelessWidget {
                   ),
                   _SmallGradientButton(
                     label: goalWeight == null ? tr(LocaleKeys.personal_details_set_goal) : tr(LocaleKeys.personal_details_change_goal),
-                    onPressed: () => _showNumberSheet(
+                    onPressed: () => showWeightLogSheet(
                       context,
                       title: tr(LocaleKeys.personal_details_goal_weight),
-                      unit: 'kg',
-                      initialValue: goalWeight,
-                      min: 30,
-                      max: 250,
-                      fractionDigits: 1,
-                      onSaved: (value) => SessionManager.to.setGoalWeightKg(value),
+                      initialWeight: goalWeight,
+                      showDate: false,
+                      onSave: (weight) => SessionManager.to.setGoalWeightKg(weight),
                     ),
                   ),
                 ],
@@ -89,18 +90,15 @@ class PersonalDetailsScreen extends StatelessWidget {
                   _DetailRow(
                     label: tr(LocaleKeys.personal_details_current_weight),
                     value: weightLabel,
-                    onTap: (_) => _showNumberSheet(
+                    onTap: (_) => showWeightLogSheet(
                       context,
                       title: tr(LocaleKeys.personal_details_current_weight),
-                      unit: 'kg',
-                      initialValue: currentWeight,
-                      min: 30,
-                      max: 250,
-                      fractionDigits: 1,
-                      onSaved: (value) async {
-                        await SessionManager.to.setWeightKg(value);
+                      initialWeight: currentWeight,
+                      showDate: false,
+                      onSave: (weight) async {
+                        await SessionManager.to.setWeightKg(weight);
                         await WeightEntryController.to.saveEntry(
-                          WeightEntry(date: DateTime.now(), weight: value),
+                          WeightEntry(date: DateTime.now(), weight: weight),
                         );
                       },
                     ),
@@ -108,16 +106,7 @@ class PersonalDetailsScreen extends StatelessWidget {
                   _DetailRow(
                     label: tr(LocaleKeys.personal_details_height),
                     value: heightLabel,
-                    onTap: (_) => _showNumberSheet(
-                      context,
-                      title: tr(LocaleKeys.personal_details_height),
-                      unit: 'cm',
-                      initialValue: heightCm,
-                      min: 120,
-                      max: 230,
-                      fractionDigits: 0,
-                      onSaved: (value) => SessionManager.to.setHeightCm(value),
-                    ),
+                    onTap: (_) => _showHeightSheet(context, initialHeightCm: heightCm),
                   ),
                   _DetailRow(
                     label: tr(LocaleKeys.personal_details_date_of_birth),
@@ -127,7 +116,7 @@ class PersonalDetailsScreen extends StatelessWidget {
                   _DetailRow(
                     label: tr(LocaleKeys.personal_details_gender),
                     value: sexLabel,
-                    onTap: (rowContext) => _showSexSheet(context, sex, targetContext: rowContext),
+                    onTap: (_) => _showSexSheet(context, sex),
                   ),
                   _DetailRow(
                     label: tr(LocaleKeys.personal_details_diet),
@@ -180,50 +169,50 @@ class PersonalDetailsScreen extends StatelessWidget {
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xl))),
-      clipBehavior: Clip.antiAlias,
-      showDragHandle: false,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      barrierColor: AppColors.overlayDark,
       builder: (sheetContext) {
-        return SafeArea(
-          top: false,
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.l),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(tr(LocaleKeys.personal_details_dob_label), style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700)),
-                const SizedBox(height: AppSpacing.m),
-                SizedBox(
-                  height: AppSizes.pickerHeight,
-                  child: CupertinoDatePicker(
-                    mode: CupertinoDatePickerMode.date,
-                    initialDateTime: initial,
-                    maximumDate: now,
-                    onDateTimeChanged: (value) => selected = value,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.m),
-                Row(
-                  children: [
-                    Expanded(
-                      child: FoodySecondaryButton(label: tr(LocaleKeys.common_cancel), onTap: () => Navigator.of(sheetContext).pop()),
-                    ),
-                    const SizedBox(width: AppSpacing.s),
-                    Expanded(
-                      child: FoodyPrimaryButton(
-                        label: tr(LocaleKeys.common_save),
-                        gradient: LinearGradient(colors: [AppColors.primary, AppColors.primary]),
-                        onTap: () async {
+        return Padding(
+          padding: const EdgeInsets.all(AppSpacing.xs),
+          child: ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadii.xxl), bottom: Radius.circular(AppRadii.xxl + 10)),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+              child: CustomPaint(
+                painter: const _DobGlassSheetPainter(),
+                child: SafeArea(
+                  top: false,
+                  bottom: false,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(height: AppSpacing.xxs),
+                      const SheetDragHandle(),
+                      const SizedBox(height: AppSpacing.xs),
+                      SheetTopBar(
+                        title: tr(LocaleKeys.personal_details_dob_label),
+                        onClose: () => Navigator.of(sheetContext).pop(),
+                        onConfirm: () async {
                           await SessionManager.to.setDateOfBirth(selected);
                           if (sheetContext.mounted) Navigator.of(sheetContext).pop();
                         },
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: AppSpacing.xs),
+                      SizedBox(
+                        height: AppSizes.pickerHeight,
+                        child: CupertinoDatePicker(
+                          mode: CupertinoDatePickerMode.date,
+                          initialDateTime: initial,
+                          maximumDate: now,
+                          onDateTimeChanged: (value) => selected = value,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.xxl),
+                    ],
+                  ),
                 ),
-              ],
+              ),
             ),
           ),
         );
@@ -231,20 +220,52 @@ class PersonalDetailsScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _showSexSheet(BuildContext context, ProfileSex? current, {BuildContext? targetContext}) async {
-    await showGlassPopup(
+  Future<void> _showHeightSheet(BuildContext context, {required double? initialHeightCm}) async {
+    final initial = initialHeightCm?.round() ?? 175;
+    int selectedCm = initial.clamp(140, 259);
+
+    await showModalBottomSheet<void>(
       context: context,
-      targetContext: targetContext,
-      items: ProfileSex.values.map((sex) {
-        return GlassPopupItem(
-          label: sex.label,
-          selected: sex == current,
-          onTap: () async {
-            Navigator.of(context).pop();
-            await SessionManager.to.setSex(sex);
-          },
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      barrierColor: AppColors.overlayDark,
+      builder: (sheetContext) {
+        return Padding(
+          padding: const EdgeInsets.all(AppSpacing.xs),
+          child: _HeightPickerSheet(
+            initialCm: selectedCm,
+            onSave: (cm) async {
+              await SessionManager.to.setHeightCm(cm.toDouble());
+              if (sheetContext.mounted) Navigator.of(sheetContext).pop();
+            },
+            onClose: () => Navigator.of(sheetContext).pop(),
+          ),
         );
-      }).toList(),
+      },
+    );
+  }
+
+  Future<void> _showSexSheet(BuildContext context, ProfileSex? current) async {
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      barrierColor: AppColors.overlayDark,
+      builder: (sheetContext) {
+        return Padding(
+          padding: const EdgeInsets.all(AppSpacing.xs),
+          child: _GenderPickerSheet(
+            initialSex: current,
+            onSave: (sex) async {
+              await SessionManager.to.setSex(sex);
+              if (sheetContext.mounted) Navigator.of(sheetContext).pop();
+            },
+            onClose: () => Navigator.of(sheetContext).pop(),
+          ),
+        );
+      },
     );
   }
 
@@ -265,7 +286,6 @@ class PersonalDetailsScreen extends StatelessWidget {
 
           if (selectedDiet != ProfileDietType.custom) {
             await SessionManager.to.setDietType(selectedDiet);
-            await SessionManager.to.setCustomDietPreferences(null);
             Get.back<void>();
             return;
           }
@@ -290,39 +310,10 @@ class PersonalDetailsScreen extends StatelessWidget {
       backgroundColor: AppColors.surface,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xl))),
       clipBehavior: Clip.antiAlias,
-      showDragHandle: false,
       builder: (_) => _CustomDietSheet(initialPreferences: initialPreferences),
     );
   }
 
-  Future<void> _showNumberSheet(
-    BuildContext context, {
-    required String title,
-    required String unit,
-    required double? initialValue,
-    required double min,
-    required double max,
-    required int fractionDigits,
-    required ValueChanged<double> onSaved,
-  }) {
-    return showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xl))),
-      clipBehavior: Clip.antiAlias,
-      showDragHandle: false,
-      builder: (_) => _ProfileNumberSheet(
-        title: title,
-        unit: unit,
-        initialValue: initialValue,
-        min: min,
-        max: max,
-        fractionDigits: fractionDigits,
-        onSaved: onSaved,
-      ),
-    );
-  }
 }
 
 class _SmallGradientButton extends StatelessWidget {
@@ -495,176 +486,224 @@ class _CustomDietSheetState extends State<_CustomDietSheet> {
     return SafeArea(
       top: false,
       child: Padding(
-        padding: EdgeInsets.only(left: AppSpacing.l, right: AppSpacing.l, top: AppSpacing.l, bottom: AppSpacing.l + MediaQuery.viewInsetsOf(context).bottom),
+        padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(tr(LocaleKeys.personal_details_custom_diet_title), style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700)),
-            const SizedBox(height: AppSpacing.xs),
-            Text(tr(LocaleKeys.personal_details_custom_diet_subtitle), style: AppTextStyles.body14Regular.copyWith(color: AppColors.textSecondary)),
-            const SizedBox(height: AppSpacing.m),
-            TextField(
-              controller: _controller,
-              autofocus: true,
-              textCapitalization: TextCapitalization.sentences,
-              maxLines: 4,
-              style: AppTextStyles.body16,
-              decoration: InputDecoration(
-                hintText: tr(LocaleKeys.onboarding_custom_diet_hint),
-                hintStyle: AppTextStyles.body16.copyWith(color: AppColors.textTertiary),
-                filled: true,
-                fillColor: AppColors.surfaceMuted,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadii.m), borderSide: BorderSide.none),
-                contentPadding: const EdgeInsets.all(AppSpacing.m),
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: AppSpacing.xxs),
+              const SheetDragHandle(),
+              const SizedBox(height: AppSpacing.xs),
+              ValueListenableBuilder<TextEditingValue>(
+                valueListenable: _controller,
+                builder: (context, value, _) {
+                  final hasText = value.text.trim().isNotEmpty;
+                  return SheetTopBar(
+                    title: tr(LocaleKeys.personal_details_custom_diet_title),
+                    onClose: () => Navigator.of(context).pop(),
+                    onConfirm: hasText ? () => Navigator.of(context).pop(_controller.text.trim()) : null,
+                  );
+                },
               ),
-            ),
-            const SizedBox(height: AppSpacing.m),
-            Row(
-              children: [
-                Expanded(
-                  child: FoodySecondaryButton(label: tr(LocaleKeys.common_cancel), onTap: () => Navigator.of(context).pop()),
-                ),
-                const SizedBox(width: AppSpacing.s),
-                Expanded(
-                  child: ValueListenableBuilder<TextEditingValue>(
-                    valueListenable: _controller,
-                    builder: (context, value, _) {
-                      final hasText = value.text.trim().isNotEmpty;
-                      return FoodyPrimaryButton(
-                        label: tr(LocaleKeys.common_save),
-                        gradient: LinearGradient(colors: [AppColors.primary, AppColors.primary]),
-                        onTap: hasText ? () => Navigator.of(context).pop(_controller.text.trim()) : null,
-                      );
-                    },
+              const SizedBox(height: AppSpacing.s),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+                child: Text(tr(LocaleKeys.personal_details_custom_diet_subtitle), style: AppTextStyles.body14Regular.copyWith(color: AppColors.textSecondary)),
+              ),
+              const SizedBox(height: AppSpacing.m),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+                child: TextField(
+                  controller: _controller,
+                  autofocus: true,
+                  textCapitalization: TextCapitalization.sentences,
+                  maxLines: 4,
+                  style: AppTextStyles.body16,
+                  decoration: InputDecoration(
+                    hintText: tr(LocaleKeys.onboarding_custom_diet_hint),
+                    hintStyle: AppTextStyles.body16.copyWith(color: AppColors.textTertiary),
+                    filled: true,
+                    fillColor: AppColors.surfaceMuted,
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadii.m), borderSide: BorderSide.none),
+                    contentPadding: const EdgeInsets.all(AppSpacing.m),
                   ),
                 ),
-              ],
-            ),
-          ],
+              ),
+              const SizedBox(height: AppSpacing.l),
+            ],
+          ),
         ),
-      ),
-    );
+      );
   }
 }
 
-class _ProfileNumberSheet extends StatefulWidget {
-  const _ProfileNumberSheet({
-    required this.title,
-    required this.unit,
-    required this.initialValue,
-    required this.min,
-    required this.max,
-    required this.fractionDigits,
-    required this.onSaved,
-  });
 
-  final String title;
-  final String unit;
-  final double? initialValue;
-  final double min;
-  final double max;
-  final int fractionDigits;
-  final ValueChanged<double> onSaved;
+class _HeightPickerSheet extends StatefulWidget {
+  const _HeightPickerSheet({required this.initialCm, required this.onSave, required this.onClose});
+
+  final int initialCm;
+  final ValueChanged<int> onSave;
+  final VoidCallback onClose;
 
   @override
-  State<_ProfileNumberSheet> createState() => _ProfileNumberSheetState();
+  State<_HeightPickerSheet> createState() => _HeightPickerSheetState();
 }
 
-class _ProfileNumberSheetState extends State<_ProfileNumberSheet> {
-  late final TextEditingController _controller;
-  String? _errorText;
+class _HeightPickerSheetState extends State<_HeightPickerSheet> {
+  static const int _minCm = 140;
+  static const int _maxCm = 259;
+  late final List<String> _values;
+  late int _selectedCm;
 
   @override
   void initState() {
     super.initState();
-    final initial = widget.initialValue;
-    _controller = TextEditingController(
-      text: initial == null ? '' : initial.toStringAsFixed(widget.fractionDigits),
-    );
+    _selectedCm = widget.initialCm.clamp(_minCm, _maxCm);
+    _values = List.generate(_maxCm - _minCm + 1, (i) => '${_minCm + i} cm');
   }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  double? _parseValue() {
-    final raw = _controller.text.trim().replaceAll(',', '.');
-    if (raw.isEmpty) return null;
-    final value = double.tryParse(raw);
-    if (value == null) return null;
-    if (value < widget.min || value > widget.max) return null;
-    return value;
-  }
-
-  Future<void> _handleSave() async {
-    final value = _parseValue();
-    if (value == null) {
-      setState(() => _errorText = tr(LocaleKeys.personal_details_validation_range, namedArgs: {'min': '${widget.min}', 'max': '${widget.max}'}));
-      return;
-    }
-    final normalized = double.parse(value.toStringAsFixed(widget.fractionDigits));
-    widget.onSaved(normalized);
-    if (!mounted) return;
-    Navigator.of(context).pop();
-  }
+  String _formatHeight(int cm) => '$cm';
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: Padding(
-        padding: EdgeInsets.only(left: AppSpacing.l, right: AppSpacing.l, top: AppSpacing.l, bottom: AppSpacing.l + MediaQuery.viewInsetsOf(context).bottom),
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xl), bottom: Radius.circular(AppRadii.xxl + 10)),
+      ),
+      child: SafeArea(
+        top: false,
+        bottom: false,
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(widget.title, style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700)),
-            const SizedBox(height: AppSpacing.m),
-            TextField(
-              controller: _controller,
-              autofocus: true,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              textInputAction: TextInputAction.done,
-              onSubmitted: (_) => _handleSave(),
-              decoration: InputDecoration(
-                hintText: widget.unit,
-                hintStyle: AppTextStyles.body16.copyWith(color: AppColors.textTertiary),
-                filled: true,
-                fillColor: AppColors.surfaceMuted,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadii.m), borderSide: BorderSide.none),
-                contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.m),
-                suffixText: widget.unit,
-                suffixStyle: AppTextStyles.body15.copyWith(color: AppColors.textSecondary),
-              ),
-              style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w600),
-              onChanged: (_) => setState(() => _errorText = null),
+            const SizedBox(height: AppSpacing.xxs),
+            const SheetDragHandle(),
+            const SizedBox(height: AppSpacing.xs),
+            SheetTopBar(
+              title: tr(LocaleKeys.personal_details_height),
+              onClose: widget.onClose,
+              onConfirm: () => widget.onSave(_selectedCm),
             ),
-            if (_errorText != null) ...[
-              const SizedBox(height: AppSpacing.xs),
-              Text(
-                _errorText!,
-                style: AppTextStyles.body14Regular.copyWith(color: AppColors.errorText),
-              ),
-            ],
             const SizedBox(height: AppSpacing.m),
+            Text(tr(LocaleKeys.personal_details_height).toUpperCase(), style: AppTextStyles.body15.copyWith(color: AppColors.textTertiary)),
+            const SizedBox(height: AppSpacing.xs),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
               children: [
-                Expanded(
-                  child: FoodySecondaryButton(label: tr(LocaleKeys.common_cancel), onTap: () => Navigator.of(context).pop()),
-                ),
-                const SizedBox(width: AppSpacing.s),
-                Expanded(
-                  child: FoodyPrimaryButton(label: tr(LocaleKeys.common_save), gradient: LinearGradient(colors: [AppColors.primary, AppColors.primary]), onTap: _handleSave),
-                ),
+                Text(_formatHeight(_selectedCm), style: AppTextStyles.displayXL.copyWith(fontSize: 56)),
+                const SizedBox(width: AppSpacing.xs),
+                Text('cm', style: AppTextStyles.h3),
               ],
             ),
+            const SizedBox(height: AppSpacing.l),
+            PickerColumn(
+              values: _values,
+              selectedIndex: _selectedCm - _minCm,
+              height: AppSizes.pickerHeight,
+              onSelected: (index) => setState(() => _selectedCm = _minCm + index),
+            ),
+            const SizedBox(height: AppSpacing.xxl),
           ],
         ),
       ),
     );
   }
+}
+
+class _GenderPickerSheet extends StatefulWidget {
+  const _GenderPickerSheet({required this.initialSex, required this.onSave, required this.onClose});
+
+  final ProfileSex? initialSex;
+  final ValueChanged<ProfileSex> onSave;
+  final VoidCallback onClose;
+
+  @override
+  State<_GenderPickerSheet> createState() => _GenderPickerSheetState();
+}
+
+class _GenderPickerSheetState extends State<_GenderPickerSheet> {
+  late final List<String> _labels;
+  late int _selectedIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _labels = ProfileSex.values.map((s) => s.label).toList();
+    _selectedIndex = widget.initialSex != null ? ProfileSex.values.indexOf(widget.initialSex!) : 0;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xl), bottom: Radius.circular(AppRadii.xxl + 10)),
+      ),
+      child: SafeArea(
+        top: false,
+        bottom: false,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: AppSpacing.xxs),
+            const SheetDragHandle(),
+            const SizedBox(height: AppSpacing.xs),
+            SheetTopBar(
+              title: tr(LocaleKeys.personal_details_gender),
+              onClose: widget.onClose,
+              onConfirm: () => widget.onSave(ProfileSex.values[_selectedIndex]),
+            ),
+            const SizedBox(height: AppSpacing.m),
+            PickerColumn(
+              values: _labels,
+              selectedIndex: _selectedIndex,
+              height: 140,
+              onSelected: (index) => setState(() => _selectedIndex = index),
+            ),
+            const SizedBox(height: AppSpacing.l),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _DobGlassSheetPainter extends CustomPainter {
+  const _DobGlassSheetPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rrect = RRect.fromLTRBAndCorners(
+      0, 0, size.width, size.height,
+      topLeft: Radius.circular(AppRadii.xxl),
+      topRight: Radius.circular(AppRadii.xxl),
+      bottomRight: Radius.circular(AppRadii.xxl + 10),
+      bottomLeft: Radius.circular(AppRadii.xxl + 10),
+    );
+
+    canvas.drawRRect(rrect, Paint()..color = const Color(0xFFFFFFFF));
+
+    final highlightRect = Rect.fromLTWH(size.width * 0.1, 0, size.width * 0.8, size.height * 0.12);
+    canvas.drawRRect(
+      RRect.fromRectAndCorners(highlightRect, topLeft: Radius.circular(AppRadii.xxl), topRight: Radius.circular(AppRadii.xxl)),
+      Paint()
+        ..shader = const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x30FFFFFF), Color(0x00FFFFFF)]).createShader(highlightRect)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2.0),
+    );
+
+    canvas.drawRRect(
+      rrect.deflate(0.4),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 0.8
+        ..color = AppColors.white1,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 

@@ -6,13 +6,21 @@ import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/weight_entry.dart';
 import 'package:diplomka/widgets/dashboard_calendar_sheet.dart';
-import 'package:diplomka/widgets/foody_glass_buttons.dart';
+import 'package:diplomka/widgets/sheet_drag_handle.dart';
+import 'package:diplomka/widgets/sheet_top_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
-Future<void> showWeightLogSheet(BuildContext context, {WeightEntry? entry}) async {
+Future<void> showWeightLogSheet(
+  BuildContext context, {
+  WeightEntry? entry,
+  String? title,
+  double? initialWeight,
+  bool showDate = true,
+  Future<void> Function(double weight)? onSave,
+}) async {
   await showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
@@ -21,15 +29,19 @@ Future<void> showWeightLogSheet(BuildContext context, {WeightEntry? entry}) asyn
     barrierColor: AppColors.overlayDark,
     builder: (_) => Padding(
       padding: const EdgeInsets.all(AppSpacing.xs),
-      child: WeightLogSheet(entry: entry),
+      child: WeightLogSheet(entry: entry, title: title, initialWeight: initialWeight, showDate: showDate, onSave: onSave),
     ),
   );
 }
 
 class WeightLogSheet extends StatefulWidget {
-  const WeightLogSheet({super.key, this.entry});
+  const WeightLogSheet({super.key, this.entry, this.title, this.initialWeight, this.showDate = true, this.onSave});
 
   final WeightEntry? entry;
+  final String? title;
+  final double? initialWeight;
+  final bool showDate;
+  final Future<void> Function(double weight)? onSave;
 
   @override
   State<WeightLogSheet> createState() => _WeightLogSheetState();
@@ -47,7 +59,7 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
     super.initState();
     final now = DateTime.now();
     _selectedDate = widget.entry?.date ?? DateTime(now.year, now.month, now.day);
-    _selectedWeight = widget.entry?.weight ?? _lastEntryWeight ?? 70.0;
+    _selectedWeight = widget.initialWeight ?? widget.entry?.weight ?? _lastEntryWeight ?? 70.0;
   }
 
   bool get _isEditing => widget.entry != null;
@@ -73,12 +85,15 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
     if (_isSaving) return;
     setState(() => _isSaving = true);
 
-    final baseDate = widget.entry?.date ?? DateTime.now();
-    final date = _applyDate(baseDate, _selectedDate);
-    final entry = WeightEntry(id: widget.entry?.id, date: date, weight: _selectedWeight, photoPath: widget.entry?.photoPath);
-
     try {
-      await WeightEntryController.to.saveEntry(entry);
+      if (widget.onSave != null) {
+        await widget.onSave!(_selectedWeight);
+      } else {
+        final baseDate = widget.entry?.date ?? DateTime.now();
+        final date = _applyDate(baseDate, _selectedDate);
+        final entry = WeightEntry(id: widget.entry?.id, date: date, weight: _selectedWeight, photoPath: widget.entry?.photoPath);
+        await WeightEntryController.to.saveEntry(entry);
+      }
       if (!mounted) return;
       Navigator.of(context).pop();
     } catch (_) {
@@ -130,15 +145,15 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const SizedBox(height: AppSpacing.s),
-            Container(
-              width: 36,
-              height: 5,
-              decoration: BoxDecoration(color: AppColors.textTertiary.withValues(alpha: 0.3), borderRadius: BorderRadius.circular(AppRadii.pill)),
-            ),
-            const SizedBox(height: AppSpacing.xl),
-            Text(tr(LocaleKeys.weight_log_label_weight).toUpperCase(), style: AppTextStyles.body15.copyWith(color: AppColors.textTertiary)),
+            const SizedBox(height: AppSpacing.xxs),
+            const SheetDragHandle(),
             const SizedBox(height: AppSpacing.xs),
+            SheetTopBar(
+              title: widget.title ?? tr(LocaleKeys.weight_log_label_weight),
+              onClose: () => Navigator.of(context).pop(),
+              onConfirm: _isSaving ? null : _handleSave,
+            ),
+            const SizedBox(height: AppSpacing.m),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -149,7 +164,7 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
                 Text(tr(LocaleKeys.common_kg), style: AppTextStyles.h3),
               ],
             ),
-            if (lastWeight != null) ...[
+            if (lastWeight != null && widget.showDate) ...[
               const SizedBox(height: AppSpacing.xxs),
               Text(
                 tr(LocaleKeys.weight_log_last_entry, args: [_formatWeight(lastWeight)]),
@@ -161,55 +176,48 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
               height: 60,
               child: _WeightRulerPicker(value: _selectedWeight, onChanged: (v) => setState(() => _selectedWeight = v)),
             ),
-            const SizedBox(height: AppSpacing.l),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: _openDatePicker,
-                  borderRadius: BorderRadius.circular(AppRadii.l),
-                  child: Container(
-                    height: AppSizes.buttonHeightSm,
-                    decoration: BoxDecoration(
-                      color: AppColors.surface,
-                      borderRadius: BorderRadius.circular(AppRadii.l),
-                      border: Border.all(color: AppColors.outline),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-                    child: Row(
-                      children: [
-                        Text(tr(LocaleKeys.weight_log_label_date), style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w500)),
-                        const Spacer(),
-                        Text(
-                          _formatDateLabel(_selectedDate),
-                          style: AppTextStyles.title17.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w500),
-                        ),
-                        const SizedBox(width: AppSpacing.xs),
-                        Icon(CupertinoIcons.chevron_right, size: AppSizes.iconMd, color: AppColors.textTertiary),
-                      ],
+            if (widget.showDate) ...[
+              const SizedBox(height: AppSpacing.l),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: _openDatePicker,
+                    borderRadius: BorderRadius.circular(AppRadii.l),
+                    child: Container(
+                      height: AppSizes.buttonHeightSm,
+                      decoration: BoxDecoration(
+                        color: AppColors.surface,
+                        borderRadius: BorderRadius.circular(AppRadii.l),
+                        border: Border.all(color: AppColors.outline),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+                      child: Row(
+                        children: [
+                          Text(tr(LocaleKeys.weight_log_label_date), style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w500)),
+                          const Spacer(),
+                          Text(
+                            _formatDateLabel(_selectedDate),
+                            style: AppTextStyles.title17.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w500),
+                          ),
+                          const SizedBox(width: AppSpacing.xs),
+                          Icon(CupertinoIcons.chevron_right, size: AppSizes.iconMd, color: AppColors.textTertiary),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(height: AppSpacing.l),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
-              child: Row(
-                children: [
-                  if (_isEditing) ...[
-                    Expanded(
-                      child: _DangerButton(label: tr(LocaleKeys.common_delete), onPressed: _handleDelete),
-                    ),
-                    const SizedBox(width: AppSpacing.s),
-                  ],
-                  Expanded(
-                    child: FoodyPrimaryButton(label: _isSaving ? tr(LocaleKeys.common_saving) : tr(LocaleKeys.common_save), onTap: _isSaving ? null : _handleSave),
-                  ),
-                ],
+            ],
+            if (_isEditing) ...[
+              const SizedBox(height: AppSpacing.l),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
+                child: _DangerButton(label: tr(LocaleKeys.common_delete), onPressed: _handleDelete),
               ),
-            ),
+            ],
+            const SizedBox(height: AppSpacing.s),
           ],
         ),
       ),

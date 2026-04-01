@@ -14,6 +14,7 @@ import 'package:diplomka/services/calendar_day_ring_service.dart';
 import 'package:diplomka/services/day_record_repository.dart';
 import 'package:diplomka/services/exercise_template_repository.dart';
 import 'package:diplomka/services/home_widget/widget_sync_service.dart';
+import 'package:diplomka/services/ingredient_template_repository.dart';
 import 'package:diplomka/services/meal_template_repository.dart';
 import 'package:diplomka/services/session_manager.dart';
 
@@ -49,10 +50,9 @@ class DayRecordController extends BaseController {
     final bool rolloverEnabled = SessionManager.to.rolloverCaloriesEnabled.value;
 
     // Load all 8 days in parallel (Sunday for rollover + Mon-Sun)
-    final sunday = mondayOfWeek.subtract(const Duration(days: 1));
+    final sunday = DateTime(mondayOfWeek.year, mondayOfWeek.month, mondayOfWeek.day - 1);
     final daysToLoad = [DateTime(sunday.year, sunday.month, sunday.day), ...List.generate(7, (i) {
-      final d = mondayOfWeek.add(Duration(days: i));
-      return DateTime(d.year, d.month, d.day);
+      return DateTime(mondayOfWeek.year, mondayOfWeek.month, mondayOfWeek.day + i);
     })];
     final results = await Future.wait(daysToLoad.map(getDayRecord));
     if (generation != _loadWeekGeneration) return;
@@ -118,6 +118,9 @@ class DayRecordController extends BaseController {
       await refreshDayRecords();
       if (mealToSave.name.trim().isNotEmpty) {
         unawaited(MealTemplateRepository.to.upsertFromMeal(mealToSave));
+        if (mealToSave.ingredients.isNotEmpty) {
+          unawaited(IngredientTemplateRepository.to.upsertFromIngredients(mealToSave.ingredients));
+        }
       }
       // Return the saved meal (with DB-assigned id) for undo support
       if (mealToSave.id != null) {

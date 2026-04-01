@@ -101,9 +101,6 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
     final ProfileDietType? selectedDietType = profileDietTypeFromCode(diet);
     if (selectedDietType != null) {
       unawaited(SessionManager.to.setDietType(selectedDietType));
-      if (selectedDietType != ProfileDietType.custom) {
-        unawaited(SessionManager.to.setCustomDietPreferences(null));
-      }
     }
 
     final bool shouldShowCustomDiet = diet == 'custom';

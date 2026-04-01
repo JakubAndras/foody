@@ -20,8 +20,9 @@ class MealHeroHeader extends StatelessWidget {
   final Alignment imageAlignment;
   final double? confidence;
   final VoidCallback? onTitleTap;
+  final bool showTime;
 
-  const MealHeroHeader({super.key, required this.title, required this.timeLabel, this.image, this.imageAlignment = Alignment.center, this.confidence, this.onTitleTap});
+  const MealHeroHeader({super.key, required this.title, required this.timeLabel, this.image, this.imageAlignment = Alignment.center, this.confidence, this.onTitleTap, this.showTime = true});
 
   @override
   Widget build(BuildContext context) {
@@ -43,19 +44,21 @@ class MealHeroHeader extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Icon(CupertinoIcons.time, size: AppSizes.iconSm, color: AppColors.onPrimary.withValues(alpha: 0.8)),
-                    const SizedBox(width: AppSpacing.xs),
-                    Column(
-                      children: [
-                        Text(timeLabel, style: AppTextStyles.caption12.copyWith(color: AppColors.onPrimary.withValues(alpha: 0.8))),
-                        const SizedBox(height: 0.5),
-                      ],
-                    ),
-                  ],
-                ),
-                const SizedBox(height: AppSpacing.xxs),
+                if (showTime) ...[
+                  Row(
+                    children: [
+                      Icon(CupertinoIcons.time, size: AppSizes.iconSm, color: AppColors.onPrimary.withValues(alpha: 0.8)),
+                      const SizedBox(width: AppSpacing.xs),
+                      Column(
+                        children: [
+                          Text(timeLabel, style: AppTextStyles.caption12.copyWith(color: AppColors.onPrimary.withValues(alpha: 0.8))),
+                          const SizedBox(height: 0.5),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.xxs),
+                ],
                 GestureDetector(
                   onTap: onTitleTap,
                   child: Text(

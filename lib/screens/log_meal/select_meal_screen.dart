@@ -8,6 +8,8 @@ import 'package:diplomka/model/ingredient.dart';
 import 'package:diplomka/model/meal.dart';
 import 'package:diplomka/model/meal_template.dart';
 import 'package:diplomka/services/meal_template_repository.dart';
+import 'package:diplomka/model/ingredient_template.dart';
+import 'package:diplomka/services/ingredient_template_repository.dart';
 import 'package:diplomka/screens/ingredients/edit_ingredient_screen.dart';
 import 'package:diplomka/screens/meals/edit_meal_screen.dart';
 import 'package:diplomka/screens/meals/meal_components.dart';
@@ -223,15 +225,8 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
     return FileImage(file);
   }
 
-  List<_IngredientItem> _resolveIngredients(List<MealTemplate> templates) {
-    final Map<String, _IngredientItem> unique = {};
-    for (final template in templates) {
-      if (template.ingredients.length <= 1) continue;
-      for (final ingredient in template.ingredients) {
-        unique.putIfAbsent(ingredient.name, () => _IngredientItem(ingredient: ingredient, subtitle: '${ingredient.calories.toStringAsFixed(0)} ${tr(LocaleKeys.common_kcal)}'));
-      }
-    }
-    return unique.values.toList();
+  List<_IngredientItem> _resolveIngredients() {
+    return IngredientTemplateRepository.to.allTemplates.map((t) => _IngredientItem(ingredient: t.toIngredient(), subtitle: '${t.calories.toStringAsFixed(0)} ${tr(LocaleKeys.common_kcal)}', template: t)).toList();
   }
 
   List<MealTemplate> _applyMealFilters(List<MealTemplate> templates) {
@@ -255,14 +250,13 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
     return filtered;
   }
 
-  List<_IngredientItem> _applyIngredientFilters(List<_IngredientItem> items, List<MealTemplate> favoriteTemplates) {
+  List<_IngredientItem> _applyIngredientFilters(List<_IngredientItem> items) {
     var filtered = items;
     if (_query.isNotEmpty) {
       filtered = filtered.where((item) => item.ingredient.name.toLowerCase().contains(_query.toLowerCase())).toList();
     }
     if (_tab == SelectMealTab.favorites) {
-      final favoriteIngredientNames = favoriteTemplates.expand((t) => t.ingredients).map((i) => i.name).toSet();
-      filtered = filtered.where((item) => favoriteIngredientNames.contains(item.ingredient.name)).toList();
+      filtered = filtered.where((item) => item.template?.isFavorite == true).toList();
     }
     switch (_sort) {
       case SelectMealSort.mostRecent:
@@ -424,8 +418,9 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
           child: Obx(() {
             final allTemplates = MealTemplateRepository.to.allTemplates.toList();
             final meals = _applyMealFilters(allTemplates);
-            final favoriteTemplates = allTemplates.where((t) => t.isFavorite).toList();
-            final ingredients = _applyIngredientFilters(_resolveIngredients(allTemplates), favoriteTemplates);
+            // Touch allTemplates from IngredientTemplateRepository to trigger Obx reactivity
+            IngredientTemplateRepository.to.allTemplates.length;
+            final ingredients = _applyIngredientFilters(_resolveIngredients());
             final visibleMeals = _showMealsSection ? meals : <MealTemplate>[];
             final visibleIngredients = _showIngredientsSection ? ingredients : <_IngredientItem>[];
             final isEmptyState = visibleMeals.isEmpty && visibleIngredients.isEmpty;
@@ -543,8 +538,8 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                                       onAdd: () => _addIngredientToToday(item.ingredient),
                                       onTap: () async {
                                         final result = await Get.to<EditIngredientResult>(() => EditIngredientScreen(ingredient: item.ingredient, allowDelete: false));
-                                        if (result?.ingredient != null) {
-                                          _addIngredientToToday(result!.ingredient!);
+                                        if (result?.ingredient != null && item.template != null) {
+                                          await IngredientTemplateRepository.to.upsertFromIngredient(result!.ingredient!);
                                         }
                                       },
                                     ),
@@ -571,8 +566,9 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
 class _IngredientItem {
   final Ingredient ingredient;
   final String subtitle;
+  final IngredientTemplate? template;
 
-  const _IngredientItem({required this.ingredient, required this.subtitle});
+  const _IngredientItem({required this.ingredient, required this.subtitle, this.template});
 }
 
 class _SuggestionItem {

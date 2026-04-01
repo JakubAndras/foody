@@ -62,6 +62,11 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
   bool _showValidationError = false;
   bool _isSyncing = false;
   late bool _isFavorite;
+  late String _lastCaloriesText;
+  late String _lastProteinsText;
+  late String _lastCarbsText;
+  late String _lastFatsText;
+  late String _lastAmountText;
 
   late List<_UnitOption> _unitOptions;
   late _UnitOption _selectedUnit;
@@ -94,6 +99,12 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
     _carbsController = TextEditingController(text: _carbs.toStringAsFixed(0));
     _fatsController = TextEditingController(text: _fats.toStringAsFixed(0));
 
+    _lastAmountText = _amountController.text;
+    _lastCaloriesText = _caloriesController.text;
+    _lastProteinsText = _proteinsController.text;
+    _lastCarbsText = _carbsController.text;
+    _lastFatsText = _fatsController.text;
+
     _amountController.addListener(_onAmountChanged);
     _caloriesController.addListener(_onCaloriesChanged);
     _proteinsController.addListener(_onProteinsChanged);
@@ -119,6 +130,8 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
 
   void _onCaloriesChanged() {
     if (_isSyncing) return;
+    if (_caloriesController.text == _lastCaloriesText) return;
+    _lastCaloriesText = _caloriesController.text;
     final value = double.tryParse(_caloriesController.text.replaceAll(',', '.'));
     if (value == null || value < 0) return;
     if (_autoSync && _calories > 0) {
@@ -132,6 +145,9 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
         _proteinsController.text = _proteins.toStringAsFixed(0);
         _carbsController.text = _carbs.toStringAsFixed(0);
         _fatsController.text = _fats.toStringAsFixed(0);
+        _lastProteinsText = _proteinsController.text;
+        _lastCarbsText = _carbsController.text;
+        _lastFatsText = _fatsController.text;
       });
       _isSyncing = false;
     } else {
@@ -141,6 +157,8 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
 
   void _onProteinsChanged() {
     if (_isSyncing) return;
+    if (_proteinsController.text == _lastProteinsText) return;
+    _lastProteinsText = _proteinsController.text;
     final value = double.tryParse(_proteinsController.text.replaceAll(',', '.'));
     if (value == null || value < 0) return;
     _proteins = value;
@@ -148,12 +166,15 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
       _isSyncing = true;
       _recalcCalories();
       _caloriesController.text = _calories.toStringAsFixed(0);
+      _lastCaloriesText = _caloriesController.text;
       _isSyncing = false;
     }
   }
 
   void _onCarbsChanged() {
     if (_isSyncing) return;
+    if (_carbsController.text == _lastCarbsText) return;
+    _lastCarbsText = _carbsController.text;
     final value = double.tryParse(_carbsController.text.replaceAll(',', '.'));
     if (value == null || value < 0) return;
     _carbs = value;
@@ -161,12 +182,15 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
       _isSyncing = true;
       _recalcCalories();
       _caloriesController.text = _calories.toStringAsFixed(0);
+      _lastCaloriesText = _caloriesController.text;
       _isSyncing = false;
     }
   }
 
   void _onFatsChanged() {
     if (_isSyncing) return;
+    if (_fatsController.text == _lastFatsText) return;
+    _lastFatsText = _fatsController.text;
     final value = double.tryParse(_fatsController.text.replaceAll(',', '.'));
     if (value == null || value < 0) return;
     _fats = value;
@@ -174,12 +198,15 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
       _isSyncing = true;
       _recalcCalories();
       _caloriesController.text = _calories.toStringAsFixed(0);
+      _lastCaloriesText = _caloriesController.text;
       _isSyncing = false;
     }
   }
 
   void _onAmountChanged() {
     if (_isSyncing) return;
+    if (_amountController.text == _lastAmountText) return;
+    _lastAmountText = _amountController.text;
     final value = int.tryParse(_amountController.text);
     if (value == null || value <= 0) return;
     final newWeight = value * _selectedUnit.grams;
@@ -196,6 +223,10 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
         _proteinsController.text = _proteins.toStringAsFixed(0);
         _carbsController.text = _carbs.toStringAsFixed(0);
         _fatsController.text = _fats.toStringAsFixed(0);
+        _lastCaloriesText = _caloriesController.text;
+        _lastProteinsText = _proteinsController.text;
+        _lastCarbsText = _carbsController.text;
+        _lastFatsText = _fatsController.text;
       });
       _isSyncing = false;
     } else {

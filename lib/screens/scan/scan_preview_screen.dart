@@ -25,6 +25,7 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
   bool _isAnalyzing = false;
+
   DateTime get _selectedDate => SelectedDateService.to.selectedDate.value;
 
   @override
@@ -60,47 +61,53 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
         extendBodyBehindAppBar: true,
         backgroundColor: AppColors.background,
         appBar: CustomGlassAppBar(
-          leadingIcon: CupertinoIcons.xmark,
+          leadingIconSize: AppSizes.iconLg,
+          horizontalPadding: AppSpacing.m,
           onBack: () => Get.back(),
-          titleWidget: Container(
-            height: AppSizes.scanTopButtonSize,
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(AppRadii.pill),
-              border: Border.all(color: AppColors.outline, width: 1.08),
+          actions: [
+            CustomGlassIconButtonGroup(
+              items: [(icon: CupertinoIcons.arrow_counterclockwise, onPressed: () => Get.back()), (icon: CupertinoIcons.info, onPressed: () => _showPreviewTips(context))],
             ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                GestureDetector(
-                  onTap: () => Get.back(),
-                  child: Text(tr(LocaleKeys.scan_preview_retake), style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w500)),
-                ),
-                const SizedBox(width: AppSpacing.s),
-                GestureDetector(
-                  onTap: () => _showPreviewTips(context),
-                  child: Text(tr(LocaleKeys.scan_preview_help), style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w500)),
-                ),
-              ],
-            ),
-          ),
+          ],
         ),
         body: LiquidGlassBackground(
           child: SafeArea(
-        child: Stack(
-          children: [
-            SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(AppSpacing.l, 0, AppSpacing.l, AppSpacing.s),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: AppSpacing.l),
-                  ScanPreviewImage(imagePath: widget.imagePath, hasShadow: false),
-                  const SizedBox(height: AppSpacing.l),
-                  ScanInputField(hint: tr(LocaleKeys.scan_preview_notes_hint), controller: _notesController, height: AppSizes.scanTextAreaHeight, maxLines: 3, hasShadow: false),
-                  const SizedBox(height: AppSpacing.xl),
-                  ScanPrimaryButton(
+            child: Column(
+              children: [
+                Expanded(
+                  child: Stack(
+                    children: [
+                      SingleChildScrollView(
+                        padding: const EdgeInsets.fromLTRB(AppSpacing.m, 0, AppSpacing.m, AppSpacing.s),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const SizedBox(height: AppSpacing.m),
+                            ScanPreviewImage(imagePath: widget.imagePath, hasShadow: false),
+                            const SizedBox(height: AppSpacing.m),
+                            ScanInputField(
+                              hint: tr(LocaleKeys.scan_preview_notes_hint),
+                              controller: _notesController,
+                              height: AppSizes.scanTextAreaHeight,
+                              maxLines: 3,
+                              hasShadow: false,
+                            ),
+                          ],
+                        ),
+                      ),
+                      if (_isAnalyzing)
+                        Positioned.fill(
+                          child: Container(
+                            color: AppColors.overlayDark40,
+                            child: const Center(child: CircularProgressIndicator(color: AppColors.onPrimary)),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.m),
+                  child: ScanPrimaryButton(
                     label: tr(LocaleKeys.scan_preview_analyze),
                     icon: CupertinoIcons.sparkles,
                     gradient: AppGradients.askAiPrimary,
@@ -108,18 +115,9 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
                     height: AppSizes.scanAnalyzeButtonHeight,
                     hasShadow: false,
                   ),
-                ],
-              ),
-            ),
-            if (_isAnalyzing)
-              Positioned.fill(
-                child: Container(
-                  color: AppColors.overlayDark40,
-                  child: const Center(child: CircularProgressIndicator(color: AppColors.onPrimary)),
                 ),
-              ),
-          ],
-        ),
+              ],
+            ),
           ),
         ),
       ),

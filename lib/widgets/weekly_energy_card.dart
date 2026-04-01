@@ -37,11 +37,12 @@ class _WeeklyEnergyCardState extends State<WeeklyEnergyCard> {
 
   List<String> get _labels => [tr(LocaleKeys.progress_this_wk), tr(LocaleKeys.progress_last_wk), tr(LocaleKeys.progress_two_wk_ago), tr(LocaleKeys.progress_three_wk_ago)];
 
-  DateTime _startOfWeekMonday(DateTime date) => date.subtract(Duration(days: date.weekday - 1));
+  DateTime _startOfWeekMonday(DateTime date) => DateTime(date.year, date.month, date.day - (date.weekday - 1));
 
   _WeeklyEnergyStats _calculateStats(List<DayRecord> records, int index) {
     final today = _dateOnly(DateTime.now());
-    final weekStart = _startOfWeekMonday(today).subtract(Duration(days: 7 * index));
+    final baseWeekStart = _startOfWeekMonday(today);
+    final weekStart = DateTime(baseWeekStart.year, baseWeekStart.month, baseWeekStart.day - 7 * index);
     final byDate = {for (final r in records) _dateOnly(r.date): r};
 
     double totalBurned = 0;
@@ -49,7 +50,7 @@ class _WeeklyEnergyCardState extends State<WeeklyEnergyCard> {
     final days = <_DayEnergyData>[];
 
     for (int i = 0; i < 7; i++) {
-      final date = weekStart.add(Duration(days: i));
+      final date = DateTime(weekStart.year, weekStart.month, weekStart.day + i);
       final record = byDate[date];
       final burned = record?.totalExerciseCalories ?? 0;
       final consumed = record?.totalCalories ?? 0;
@@ -95,9 +96,10 @@ class _WeeklyEnergyCardState extends State<WeeklyEnergyCard> {
       final ticks = _computeTicks(maxBar);
       final double chartMax = ticks.isNotEmpty ? ticks.first.toDouble() : 1;
 
-      final weekStart = _startOfWeekMonday(_dateOnly(DateTime.now())).subtract(Duration(days: 7 * _selectedIndex));
+      final baseStart = _startOfWeekMonday(_dateOnly(DateTime.now()));
+      final weekStart = DateTime(baseStart.year, baseStart.month, baseStart.day - 7 * _selectedIndex);
       final dayLabels = List.generate(7, (i) {
-        final date = weekStart.add(Duration(days: i));
+        final date = DateTime(weekStart.year, weekStart.month, weekStart.day + i);
         return DateFormat.E(context.locale.toString()).format(date);
       });
 

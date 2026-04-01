@@ -91,7 +91,7 @@ class ProfileTopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomGlassAppBar(title: title, onBack: onBack, actions: actions);
+    return CustomGlassAppBar(title: title, leadingIconSize: AppSizes.iconLg, onBack: onBack, actions: actions);
   }
 }
 

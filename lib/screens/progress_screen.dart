@@ -1,6 +1,7 @@
 import 'package:diplomka/app_theme.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:diplomka/controller/day_record_controller.dart';
+import 'package:diplomka/screens/main_screen.dart';
 import 'package:diplomka/controller/weight_entry_controller.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/day_record.dart';
@@ -70,8 +71,55 @@ class _DailyAverageStats {
   const _DailyAverageStats({required this.average, required this.hasMeals, required this.rangeLabel});
 }
 
-class ProgressScreen extends StatelessWidget {
+class ProgressScreen extends StatefulWidget {
   const ProgressScreen({super.key});
+
+  @override
+  State<ProgressScreen> createState() => _ProgressScreenState();
+}
+
+class _ProgressScreenState extends State<ProgressScreen> {
+  final ScrollController _scrollController = ScrollController();
+  final GlobalKey _calendarKey = GlobalKey();
+  Worker? _scrollWorker;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollWorker = ever(MainScreenController.to.scrollToEnergy, (shouldScroll) {
+      if (shouldScroll) {
+        MainScreenController.to.scrollToEnergy.value = false;
+        WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToCalendarSection());
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollWorker?.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToCalendarSection() {
+    final keyContext = _calendarKey.currentContext;
+    if (keyContext != null) {
+      final box = keyContext.findRenderObject() as RenderBox?;
+      if (box != null && box.attached) {
+        final scrollableState = Scrollable.maybeOf(keyContext);
+        if (scrollableState != null) {
+          final position = scrollableState.position;
+          final target = position.pixels + box.localToGlobal(Offset.zero, ancestor: null).dy - MediaQuery.of(context).padding.top - 16;
+          _scrollController.animateTo(target.clamp(0.0, _scrollController.position.maxScrollExtent), duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
+          return;
+        }
+      }
+    }
+    // Fallback: scroll to roughly the middle
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(_scrollController.position.maxScrollExtent * 0.45, duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +129,7 @@ class ProgressScreen extends StatelessWidget {
         top: false,
         bottom: false,
         child: VariableBlurScrollView(
+          controller: _scrollController,
           topBlurSigma: 52,
           topFadeHeight: 40,
           backgroundColor: Colors.transparent,
@@ -126,7 +175,7 @@ class ProgressScreen extends StatelessWidget {
                 return WeightProgressCard(entries: entries.toList(growable: false));
               }),
               const SizedBox(height: AppSpacing.m),
-              const MonthlyCalendarCard(),
+              KeyedSubtree(key: _calendarKey, child: const MonthlyCalendarCard()),
               const SizedBox(height: AppSpacing.m),
               const WeeklyEnergyCard(),
               const SizedBox(height: AppSpacing.m),
@@ -171,12 +220,13 @@ class _DailyAverageCardState extends State<_DailyAverageCard> {
 
   List<String> get _labels => [tr(LocaleKeys.progress_this_wk), tr(LocaleKeys.progress_last_wk), tr(LocaleKeys.progress_two_wk_ago), tr(LocaleKeys.progress_three_wk_ago)];
 
-  DateTime _startOfWeek(DateTime date) => date.subtract(Duration(days: date.weekday - 1));
+  DateTime _startOfWeek(DateTime date) => DateTime(date.year, date.month, date.day - (date.weekday - 1));
 
   _DailyAverageStats _calculateStats(List<DayRecord> records, int index) {
     final DateTime today = _dateOnly(DateTime.now());
-    final DateTime weekStart = _startOfWeek(today).subtract(Duration(days: 7 * index));
-    final DateTime weekEnd = weekStart.add(const Duration(days: 6));
+    final DateTime baseWeekStart = _startOfWeek(today);
+    final DateTime weekStart = DateTime(baseWeekStart.year, baseWeekStart.month, baseWeekStart.day - 7 * index);
+    final DateTime weekEnd = DateTime(weekStart.year, weekStart.month, weekStart.day + 6);
 
     final Map<DateTime, DayRecord> byDate = {for (final record in records) _dateOnly(record.date): record};
 
@@ -184,7 +234,7 @@ class _DailyAverageCardState extends State<_DailyAverageCard> {
     bool hasMeals = false;
 
     for (int i = 0; i < 7; i++) {
-      final date = weekStart.add(Duration(days: i));
+      final date = DateTime(weekStart.year, weekStart.month, weekStart.day + i);
       final record = byDate[date];
       if (record != null && record.meals.isNotEmpty) {
         hasMeals = true;

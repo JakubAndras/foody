@@ -616,7 +616,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
               child: GlassStrokeIcon.close(),
             ),
             ScanCircleButton(
-              icon: CupertinoIcons.question_circle,
+              icon: CupertinoIcons.info,
               onPressed: () {
                 setState(() {
                   _showTip = !_showTip;

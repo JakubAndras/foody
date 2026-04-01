@@ -88,13 +88,15 @@ class _$AppDatabase extends AppDatabase {
 
   ExerciseTemplateDao? _exerciseTemplateDaoInstance;
 
+  IngredientTemplateDao? _ingredientTemplateDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 13,
+      version: 14,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -126,11 +128,15 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `ExerciseTemplate` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `normalizedName` TEXT NOT NULL, `durationMinutes` INTEGER, `caloriesBurned` REAL NOT NULL, `isFavorite` INTEGER NOT NULL, `lastUsedAt` INTEGER NOT NULL, `usageCount` INTEGER NOT NULL)');
         await database.execute(
+            'CREATE TABLE IF NOT EXISTS `IngredientTemplate` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `normalizedName` TEXT NOT NULL, `weight` REAL NOT NULL, `amount` REAL NOT NULL, `calories` REAL NOT NULL, `proteins` REAL NOT NULL, `carbs` REAL NOT NULL, `fats` REAL NOT NULL, `isFavorite` INTEGER NOT NULL, `lastUsedAt` INTEGER NOT NULL, `usageCount` INTEGER NOT NULL)');
+        await database.execute(
             'CREATE UNIQUE INDEX `index_DayRecord_date` ON `DayRecord` (`date`)');
         await database.execute(
             'CREATE UNIQUE INDEX `index_MealTemplate_normalizedName` ON `MealTemplate` (`normalizedName`)');
         await database.execute(
             'CREATE UNIQUE INDEX `index_ExerciseTemplate_normalizedName` ON `ExerciseTemplate` (`normalizedName`)');
+        await database.execute(
+            'CREATE UNIQUE INDEX `index_IngredientTemplate_normalizedName` ON `IngredientTemplate` (`normalizedName`)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -180,6 +186,12 @@ class _$AppDatabase extends AppDatabase {
   ExerciseTemplateDao get exerciseTemplateDao {
     return _exerciseTemplateDaoInstance ??=
         _$ExerciseTemplateDao(database, changeListener);
+  }
+
+  @override
+  IngredientTemplateDao get ingredientTemplateDao {
+    return _ingredientTemplateDaoInstance ??=
+        _$IngredientTemplateDao(database, changeListener);
   }
 }
 
@@ -1035,6 +1047,138 @@ class _$ExerciseTemplateDao extends ExerciseTemplateDao {
   @override
   Future<void> updateTemplate(ExerciseTemplateEntity template) async {
     await _exerciseTemplateEntityUpdateAdapter.update(
+        template, OnConflictStrategy.abort);
+  }
+}
+
+class _$IngredientTemplateDao extends IngredientTemplateDao {
+  _$IngredientTemplateDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _ingredientTemplateEntityInsertionAdapter = InsertionAdapter(
+            database,
+            'IngredientTemplate',
+            (IngredientTemplateEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'normalizedName': item.normalizedName,
+                  'weight': item.weight,
+                  'amount': item.amount,
+                  'calories': item.calories,
+                  'proteins': item.proteins,
+                  'carbs': item.carbs,
+                  'fats': item.fats,
+                  'isFavorite': item.isFavorite ? 1 : 0,
+                  'lastUsedAt': _dateTimeConverter.encode(item.lastUsedAt),
+                  'usageCount': item.usageCount
+                }),
+        _ingredientTemplateEntityUpdateAdapter = UpdateAdapter(
+            database,
+            'IngredientTemplate',
+            ['id'],
+            (IngredientTemplateEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'normalizedName': item.normalizedName,
+                  'weight': item.weight,
+                  'amount': item.amount,
+                  'calories': item.calories,
+                  'proteins': item.proteins,
+                  'carbs': item.carbs,
+                  'fats': item.fats,
+                  'isFavorite': item.isFavorite ? 1 : 0,
+                  'lastUsedAt': _dateTimeConverter.encode(item.lastUsedAt),
+                  'usageCount': item.usageCount
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<IngredientTemplateEntity>
+      _ingredientTemplateEntityInsertionAdapter;
+
+  final UpdateAdapter<IngredientTemplateEntity>
+      _ingredientTemplateEntityUpdateAdapter;
+
+  @override
+  Future<List<IngredientTemplateEntity>> getAllTemplates() async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM IngredientTemplate ORDER BY lastUsedAt DESC',
+        mapper: (Map<String, Object?> row) => IngredientTemplateEntity(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            normalizedName: row['normalizedName'] as String,
+            weight: row['weight'] as double,
+            amount: row['amount'] as double,
+            calories: row['calories'] as double,
+            proteins: row['proteins'] as double,
+            carbs: row['carbs'] as double,
+            fats: row['fats'] as double,
+            isFavorite: (row['isFavorite'] as int) != 0,
+            lastUsedAt: _dateTimeConverter.decode(row['lastUsedAt'] as int),
+            usageCount: row['usageCount'] as int));
+  }
+
+  @override
+  Future<IngredientTemplateEntity?> findByNormalizedName(
+      String normalizedName) async {
+    return _queryAdapter.query(
+        'SELECT * FROM IngredientTemplate WHERE normalizedName = ?1 LIMIT 1',
+        mapper: (Map<String, Object?> row) => IngredientTemplateEntity(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            normalizedName: row['normalizedName'] as String,
+            weight: row['weight'] as double,
+            amount: row['amount'] as double,
+            calories: row['calories'] as double,
+            proteins: row['proteins'] as double,
+            carbs: row['carbs'] as double,
+            fats: row['fats'] as double,
+            isFavorite: (row['isFavorite'] as int) != 0,
+            lastUsedAt: _dateTimeConverter.decode(row['lastUsedAt'] as int),
+            usageCount: row['usageCount'] as int),
+        arguments: [normalizedName]);
+  }
+
+  @override
+  Future<List<IngredientTemplateEntity>> getFavoriteTemplates() async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM IngredientTemplate WHERE isFavorite = 1 ORDER BY lastUsedAt DESC',
+        mapper: (Map<String, Object?> row) => IngredientTemplateEntity(
+            id: row['id'] as int?,
+            name: row['name'] as String,
+            normalizedName: row['normalizedName'] as String,
+            weight: row['weight'] as double,
+            amount: row['amount'] as double,
+            calories: row['calories'] as double,
+            proteins: row['proteins'] as double,
+            carbs: row['carbs'] as double,
+            fats: row['fats'] as double,
+            isFavorite: (row['isFavorite'] as int) != 0,
+            lastUsedAt: _dateTimeConverter.decode(row['lastUsedAt'] as int),
+            usageCount: row['usageCount'] as int));
+  }
+
+  @override
+  Future<void> deleteTemplateById(int id) async {
+    await _queryAdapter.queryNoReturn(
+        'DELETE FROM IngredientTemplate WHERE id = ?1',
+        arguments: [id]);
+  }
+
+  @override
+  Future<int> insertTemplate(IngredientTemplateEntity template) {
+    return _ingredientTemplateEntityInsertionAdapter.insertAndReturnId(
+        template, OnConflictStrategy.ignore);
+  }
+
+  @override
+  Future<void> updateTemplate(IngredientTemplateEntity template) async {
+    await _ingredientTemplateEntityUpdateAdapter.update(
         template, OnConflictStrategy.abort);
   }
 }

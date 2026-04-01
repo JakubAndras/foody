@@ -117,6 +117,26 @@ final Migration migration12to13 = Migration(12, 13, (database) async {
   } catch (_) {}
 });
 
+final Migration migration13to14 = Migration(13, 14, (database) async {
+  await database.execute('''
+    CREATE TABLE IF NOT EXISTS `IngredientTemplate` (
+      `id` INTEGER PRIMARY KEY AUTOINCREMENT,
+      `name` TEXT NOT NULL,
+      `normalizedName` TEXT NOT NULL,
+      `weight` REAL NOT NULL,
+      `amount` REAL NOT NULL DEFAULT 1.0,
+      `calories` REAL NOT NULL,
+      `proteins` REAL NOT NULL,
+      `carbs` REAL NOT NULL,
+      `fats` REAL NOT NULL,
+      `isFavorite` INTEGER NOT NULL DEFAULT 0,
+      `lastUsedAt` INTEGER NOT NULL,
+      `usageCount` INTEGER NOT NULL DEFAULT 1
+    )
+  ''');
+  await database.execute('CREATE UNIQUE INDEX IF NOT EXISTS `index_IngredientTemplate_normalizedName` ON `IngredientTemplate` (`normalizedName`)');
+});
+
 final Migration migration9to10 = Migration(9, 10, (database) async {
   await database.execute('''
     CREATE TABLE IF NOT EXISTS `MealTemplate` (

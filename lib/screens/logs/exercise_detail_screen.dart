@@ -7,7 +7,8 @@ import 'package:diplomka/services/exercise_template_repository.dart';
 import 'package:diplomka/screens/logs/exercise_widgets.dart';
 import 'package:diplomka/widgets/confirm_delete_dialog.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
-import 'package:diplomka/widgets/logged_snackbar.dart';
+import 'package:diplomka/utils/app_limits.dart';
+import 'package:diplomka/widgets/duration_picker_sheet.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -27,11 +28,52 @@ class ExerciseDetailScreen extends StatefulWidget {
 
 class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
   late Exercise _exercise;
+  late final TextEditingController _nameController;
+  late final TextEditingController _caloriesController;
+  late int _durationMinutes;
 
   @override
   void initState() {
     super.initState();
     _exercise = widget.exercise;
+    _nameController = TextEditingController(text: _exercise.name);
+    _caloriesController = TextEditingController(text: '${_exercise.caloriesBurned.round()}');
+    _durationMinutes = _exercise.durationMinutes ?? 0;
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _caloriesController.dispose();
+    super.dispose();
+  }
+
+  Exercise _buildExercise() {
+    return _exercise.copyWith(
+      name: _nameController.text.trim().isNotEmpty ? _nameController.text.trim() : _exercise.name,
+      caloriesBurned: double.tryParse(_caloriesController.text) ?? _exercise.caloriesBurned,
+      durationMinutes: _durationMinutes,
+    );
+  }
+
+  void _handleDone() {
+    Navigator.of(context).pop(_buildExercise());
+  }
+
+  String _formatDuration(int minutes) {
+    final h = minutes ~/ 60;
+    final m = minutes % 60;
+    if (h > 0) return '${h}h ${m}min';
+    return '${m}min';
+  }
+
+  Future<void> _openDurationPicker() async {
+    await showDurationPickerSheet(
+      context: context,
+      title: tr(LocaleKeys.common_duration),
+      initialMinutes: _durationMinutes,
+      onChanged: (minutes) => setState(() => _durationMinutes = minutes),
+    );
   }
 
   Future<void> _toggleFavorite() async {
@@ -55,41 +97,19 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     return ProfileGradientScaffold(
       scroll: true,
       padding: const EdgeInsets.fromLTRB(AppSpacing.screen, 0, AppSpacing.screen, AppSpacing.xl),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: SizedBox(
-        width: MediaQuery.of(context).size.width - (AppSpacing.screen * 2),
-        child: Row(
-          children: [
-            Expanded(
-              child: ProfilePrimaryButton(
-                label: tr(LocaleKeys.exercise_log_btn),
-                height: AppSizes.buttonHeight,
-                onPressed: () => _showSnack(context, tr(LocaleKeys.exercise_log_btn)),
-              ),
-            ),
-            const SizedBox(width: AppSpacing.m),
-            Expanded(
-              child: ProfileOutlineButton(
-                label: tr(LocaleKeys.exercise_save_log),
-                height: AppSizes.buttonHeight,
-                onPressed: () => _showSnack(context, tr(LocaleKeys.exercise_save_log)),
-              ),
-            ),
-          ],
-        ),
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CustomGlassAppBar(
-            title: tr(LocaleKeys.exercise_detail_title),
+            title: '',
             leadingIconSize: AppSizes.iconLg,
             onBack: () => Navigator.of(context).maybePop(),
             actions: [
               CustomGlassIconButtonGroup(
                 iconSize: AppSizes.iconLg,
                 items: [
-                  (icon: _exercise.isFavorite ? Icons.bookmark : CupertinoIcons.bookmark, onPressed: _toggleFavorite),
+                  (icon: CupertinoIcons.checkmark, onPressed: _handleDone),
+                  (icon: _exercise.isFavorite ? CupertinoIcons.bookmark_fill : CupertinoIcons.bookmark, onPressed: _toggleFavorite),
                   (icon: CupertinoIcons.trash, onPressed: _handleDeleteExercise),
                 ],
               ),
@@ -98,15 +118,26 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
           const SizedBox(height: AppSpacing.l),
           Container(
             width: double.infinity,
-            height: 118,
             padding: const EdgeInsets.all(AppSpacing.l),
             decoration: BoxDecoration(gradient: AppGradients.primary, borderRadius: BorderRadius.circular(AppRadii.l)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(tr(LocaleKeys.exercise_activity), style: AppTextStyles.body14.copyWith(color: AppColors.onPrimary.withValues(alpha: 0.6))),
+                Text(tr(LocaleKeys.common_exercise), style: AppTextStyles.body14.copyWith(color: AppColors.onPrimary.withValues(alpha: 0.6))),
                 const SizedBox(height: AppSpacing.xs),
-                Text(_exercise.name, style: AppTextStyles.h2.copyWith(color: AppColors.onPrimary)),
+                TextField(
+                  controller: _nameController,
+                  textCapitalization: TextCapitalization.sentences,
+                  cursorColor: AppColors.onPrimary,
+                  style: AppTextStyles.h2.copyWith(color: AppColors.onPrimary),
+                  decoration: InputDecoration(
+                    hintText: tr(LocaleKeys.common_name),
+                    hintStyle: AppTextStyles.h2.copyWith(color: AppColors.onPrimary.withValues(alpha: 0.6)),
+                    border: InputBorder.none,
+                    isDense: true,
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                ),
               ],
             ),
           ),
@@ -120,16 +151,21 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                   label: tr(LocaleKeys.exercise_total_calories),
                   value: '${_exercise.caloriesBurned.round()}',
                   unit: tr(LocaleKeys.common_kcal),
+                  controller: _caloriesController,
+                  maxValue: AppLimits.exerciseMaxCalories,
                 ),
               ),
               const SizedBox(width: AppSpacing.m),
               Expanded(
-                child: ExerciseStatCard(
-                  gradient: AppGradients.exerciseDuration,
-                  icon: CupertinoIcons.clock,
-                  label: tr(LocaleKeys.common_duration),
-                  value: '${_exercise.durationMinutes ?? 0}',
-                  unit: tr(LocaleKeys.common_min),
+                child: GestureDetector(
+                  onTap: _openDurationPicker,
+                  child: ExerciseStatCard(
+                    gradient: AppGradients.exerciseDuration,
+                    icon: CupertinoIcons.clock,
+                    label: tr(LocaleKeys.common_duration),
+                    value: _formatDuration(_durationMinutes),
+                    unit: '',
+                  ),
                 ),
               ),
             ],
@@ -163,9 +199,5 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     }
     if (!mounted) return;
     Get.back(result: true);
-  }
-
-  void _showSnack(BuildContext context, String message) {
-    showSnackBar(context: context, message: message, type: SnackBarType.info);
   }
 }

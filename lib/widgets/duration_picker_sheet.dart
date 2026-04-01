@@ -6,23 +6,24 @@ import 'package:diplomka/widgets/sheet_top_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class TimePickerSheet extends StatefulWidget {
-  const TimePickerSheet({super.key, required this.title, required this.initialTime});
+class DurationPickerSheet extends StatefulWidget {
+  const DurationPickerSheet({super.key, required this.title, required this.initialMinutes, this.onChanged});
 
   final String title;
-  final TimeOfDay initialTime;
+  final int initialMinutes;
+  final ValueChanged<int>? onChanged;
 
   @override
-  State<TimePickerSheet> createState() => _TimePickerSheetState();
+  State<DurationPickerSheet> createState() => _DurationPickerSheetState();
 }
 
-class _TimePickerSheetState extends State<TimePickerSheet> {
-  late DateTime _selectedTime;
+class _DurationPickerSheetState extends State<DurationPickerSheet> {
+  late Duration _selectedDuration;
 
   @override
   void initState() {
     super.initState();
-    _selectedTime = DateTime(2000, 1, 1, widget.initialTime.hour, widget.initialTime.minute);
+    _selectedDuration = Duration(minutes: widget.initialMinutes);
   }
 
   @override
@@ -44,26 +45,22 @@ class _TimePickerSheetState extends State<TimePickerSheet> {
                   const SizedBox(height: AppSpacing.xs),
                   const SheetDragHandle(),
                   const SizedBox(height: AppSpacing.s),
-                  SheetTopBar(
-                    title: widget.title,
-                    onClose: () => Navigator.of(context).pop(),
-                    onConfirm: () => Navigator.of(context).pop(TimeOfDay(hour: _selectedTime.hour, minute: _selectedTime.minute)),
-                  ),
+                  SheetTopBar(title: widget.title, onClose: () => Navigator.of(context).pop()),
                   SizedBox(
                     height: 200,
                     child: CupertinoTheme(
                       data: CupertinoThemeData(
                         textTheme: CupertinoTextThemeData(
-                          dateTimePickerTextStyle: AppTextStyles.h4.copyWith(color: AppColors.black, fontWeight: FontWeight.w400, fontSize: 20),
+                          pickerTextStyle: AppTextStyles.h4.copyWith(color: AppColors.black, fontWeight: FontWeight.w400, fontSize: 20),
                         ),
                       ),
-                      child: CupertinoDatePicker(
-                        mode: CupertinoDatePickerMode.time,
-                        initialDateTime: _selectedTime,
-                        use24hFormat: MediaQuery.of(context).alwaysUse24HourFormat,
+                      child: CupertinoTimerPicker(
+                        mode: CupertinoTimerPickerMode.hm,
+                        initialTimerDuration: _selectedDuration,
                         backgroundColor: Colors.transparent,
-                        onDateTimeChanged: (DateTime date) {
-                          _selectedTime = date;
+                        onTimerDurationChanged: (Duration duration) {
+                          _selectedDuration = duration;
+                          widget.onChanged?.call(duration.inMinutes);
                         },
                       ),
                     ),
@@ -79,14 +76,14 @@ class _TimePickerSheetState extends State<TimePickerSheet> {
   }
 }
 
-Future<TimeOfDay?> showTimePickerSheet({required BuildContext context, required String title, required TimeOfDay initialTime}) {
-  return showModalBottomSheet<TimeOfDay>(
+Future<void> showDurationPickerSheet({required BuildContext context, required String title, required int initialMinutes, required ValueChanged<int> onChanged}) {
+  return showModalBottomSheet<void>(
     context: context,
     backgroundColor: Colors.transparent,
     elevation: 0,
     barrierColor: AppColors.overlayDark,
     isScrollControlled: true,
-    builder: (_) => TimePickerSheet(title: title, initialTime: initialTime),
+    builder: (_) => DurationPickerSheet(title: title, initialMinutes: initialMinutes, onChanged: onChanged),
   );
 }
 
