@@ -1,4 +1,6 @@
+import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:diplomka/widgets/logged_snackbar.dart';
+import 'package:diplomka/widgets/sheet_drag_handle.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -52,8 +54,76 @@ class _AskAiScreenState extends State<AskAiScreen> {
   }
 
   void _handleExampleTap(String question) {
+    Navigator.of(context).pop();
     _textController.text = question;
     _handleAsk();
+  }
+
+  void _showExampleQuestionsSheet() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      barrierColor: AppColors.overlayDark,
+      isScrollControlled: true,
+      builder: (_) => Padding(
+        padding: const EdgeInsets.all(AppSpacing.xs),
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(AppRadii.xxl),
+              topRight: Radius.circular(AppRadii.xxl),
+              bottomLeft: Radius.circular(AppRadii.xxl + 10),
+              bottomRight: Radius.circular(AppRadii.xxl + 10),
+            ),
+          ),
+          padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.xxs, AppSpacing.l, AppSpacing.xl),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SheetDragHandle(color: AppColors.textTertiary.withValues(alpha: 0.3)),
+              const SizedBox(height: AppSpacing.l),
+              AskAiSectionHeader(
+                title: tr(LocaleKeys.ask_ai_example_questions),
+                icon: CupertinoIcons.question,
+                iconGradient: AppGradients.askAiExample,
+                iconRadius: AppRadii.xs,
+                iconSize: 28,
+              ),
+              const SizedBox(height: AppSpacing.m),
+              AskAiExampleQuestionCard(
+                label: tr(LocaleKeys.ask_ai_example_1),
+                height: 68,
+                onTap: () => _handleExampleTap(tr(LocaleKeys.ask_ai_example_1)),
+              ),
+              const SizedBox(height: AppSpacing.s),
+              AskAiExampleQuestionCard(
+                label: tr(LocaleKeys.ask_ai_example_2),
+                height: 68,
+                onTap: () => _handleExampleTap(tr(LocaleKeys.ask_ai_example_2)),
+              ),
+              const SizedBox(height: AppSpacing.s),
+              AskAiExampleQuestionCard(
+                label: tr(LocaleKeys.ask_ai_example_3),
+                onTap: () => _handleExampleTap(tr(LocaleKeys.ask_ai_example_3)),
+              ),
+              const SizedBox(height: AppSpacing.s),
+              AskAiExampleQuestionCard(
+                label: tr(LocaleKeys.ask_ai_example_4),
+                onTap: () => _handleExampleTap(tr(LocaleKeys.ask_ai_example_4)),
+              ),
+              const SizedBox(height: AppSpacing.s),
+              AskAiExampleQuestionCard(
+                label: tr(LocaleKeys.ask_ai_example_5),
+                onTap: () => _handleExampleTap(tr(LocaleKeys.ask_ai_example_5)),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -64,7 +134,16 @@ class _AskAiScreenState extends State<AskAiScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ProfileTopBar(title: tr(LocaleKeys.ask_ai_title), onBack: () => Get.back()),
+          ProfileTopBar(
+            title: tr(LocaleKeys.ask_ai_title),
+            onBack: () => Get.back(),
+            actions: [
+              CustomGlassIconButton(
+                icon: CupertinoIcons.info_circle,
+                onPressed: _showExampleQuestionsSheet,
+              ),
+            ],
+          ),
           Expanded(
             child: SingleChildScrollView(
               child: Obx(() {
@@ -78,57 +157,6 @@ class _AskAiScreenState extends State<AskAiScreen> {
                       isLoading: loading,
                       onAsk: _handleAsk,
                       onClear: () => _textController.clear(),
-                    ),
-                    const SizedBox(height: AppSpacing.m),
-                    IgnorePointer(
-                      ignoring: loading,
-                      child: Opacity(
-                        opacity: loading ? 0.5 : 1.0,
-                        child: ProfileCard(
-                          radius: AppRadii.l,
-                          shadow: AppShadows.screenCard,
-                          padding: const EdgeInsets.all(AppSpacing.m),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              AskAiSectionHeader(
-                                title: tr(LocaleKeys.ask_ai_example_questions),
-                                icon: CupertinoIcons.question,
-                                iconGradient: AppGradients.askAiExample,
-                                iconRadius: AppRadii.xs,
-                                iconSize: 28,
-                              ),
-                              const SizedBox(height: AppSpacing.m),
-                              AskAiExampleQuestionCard(
-                                label: tr(LocaleKeys.ask_ai_example_1),
-                                height: 68,
-                                onTap: () => _handleExampleTap(tr(LocaleKeys.ask_ai_example_1)),
-                              ),
-                              const SizedBox(height: AppSpacing.s),
-                              AskAiExampleQuestionCard(
-                                label: tr(LocaleKeys.ask_ai_example_2),
-                                height: 68,
-                                onTap: () => _handleExampleTap(tr(LocaleKeys.ask_ai_example_2)),
-                              ),
-                              const SizedBox(height: AppSpacing.s),
-                              AskAiExampleQuestionCard(
-                                label: tr(LocaleKeys.ask_ai_example_3),
-                                onTap: () => _handleExampleTap(tr(LocaleKeys.ask_ai_example_3)),
-                              ),
-                              const SizedBox(height: AppSpacing.s),
-                              AskAiExampleQuestionCard(
-                                label: tr(LocaleKeys.ask_ai_example_4),
-                                onTap: () => _handleExampleTap(tr(LocaleKeys.ask_ai_example_4)),
-                              ),
-                              const SizedBox(height: AppSpacing.s),
-                              AskAiExampleQuestionCard(
-                                label: tr(LocaleKeys.ask_ai_example_5),
-                                onTap: () => _handleExampleTap(tr(LocaleKeys.ask_ai_example_5)),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
                     ),
                   ],
                 );

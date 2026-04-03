@@ -6,6 +6,7 @@ import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/model/user_profile.dart';
 import 'package:diplomka/network/openai_rest_client.dart';
 import 'package:diplomka/utils/error.dart' as app_error;
+import 'package:diplomka/utils/prompt_sanitizer.dart';
 import 'package:diplomka/services/day_record_repository.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -22,8 +23,11 @@ class AskAiController extends GetxController {
   static const int _detailThresholdDays = 14;
 
   Future<AskAiQueryResponse?> submitQuery(String query) async {
-    final trimmed = query.trim();
+    final trimmed = PromptSanitizer.sanitize(query, maxLength: PromptSanitizer.maxQueryLength);
     if (trimmed.isEmpty) return null;
+    if (PromptSanitizer.containsSuspiciousPatterns(trimmed)) {
+      print('[AskAi] INJECTION DETECTED in query: "${trimmed.substring(0, trimmed.length.clamp(0, 80))}..."');
+    }
 
     isLoading.value = true;
     errorMessage.value = null;
@@ -74,7 +78,7 @@ class AskAiController extends GetxController {
       response.value = parsed;
       return parsed;
     } on app_error.Error catch (e) {
-      debugPrint('AskAiController.submitQuery error: $e');
+      print('AskAiController.submitQuery error: $e');
       if (e.errorType == app_error.ErrorType.noInternetConnection) {
         errorMessage.value = tr(LocaleKeys.error_no_internet);
       } else if (e.errorType == app_error.ErrorType.timeout) {
@@ -84,7 +88,7 @@ class AskAiController extends GetxController {
       }
       return null;
     } catch (e) {
-      debugPrint('AskAiController.submitQuery error: $e');
+      print('AskAiController.submitQuery error: $e');
       errorMessage.value = tr(LocaleKeys.ask_ai_fetch_error);
       return null;
     } finally {
@@ -124,7 +128,7 @@ class AskAiController extends GetxController {
         }
       }
     } catch (e) {
-      debugPrint('AskAiController._estimateScope fallback: $e');
+      print('AskAiController._estimateScope fallback: $e');
     }
     // Fallback: last 30 days
     final fallbackFrom = todayDt.subtract(const Duration(days: 30));
@@ -141,7 +145,7 @@ class AskAiController extends GetxController {
       if (decoded is! Map<String, dynamic>) return null;
       return AskAiQueryResponse.fromJson(decoded);
     } catch (e) {
-      debugPrint('AskAiController._parseQueryResponse error: $e');
+      print('AskAiController._parseQueryResponse error: $e');
       return null;
     }
   }

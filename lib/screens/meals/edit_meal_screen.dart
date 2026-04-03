@@ -47,6 +47,10 @@ class EditMealScreen extends StatefulWidget {
   final MatchBadgeVariant matchBadgeVariant;
   final bool showSyncCards;
 
+  /// When true, the screen is fully read-only: no editing, no deleting, no mode toggle.
+  /// Used when previewing meals from Ask AI or calendar overview.
+  final bool isPreview;
+
   const EditMealScreen({
     super.key,
     required this.meal,
@@ -59,6 +63,7 @@ class EditMealScreen extends StatefulWidget {
     this.caloriesDelta = '+125',
     this.matchBadgeVariant = MatchBadgeVariant.good,
     this.showSyncCards = false,
+    this.isPreview = false,
   });
 
   @override
@@ -140,6 +145,8 @@ class _EditMealScreenState extends State<EditMealScreen> {
   bool get _isValid => _ingredients.isNotEmpty && _totalCalories > 0;
 
   bool get _isBusy => _isSaving || _isDeleting;
+
+  bool get _isInteractionDisabled => _isBusy || widget.isPreview;
 
   bool get _canEditNutrients => SessionManager.to.editableNutrientsEnabled1.value;
 
@@ -278,6 +285,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
   }
 
   void _ensureEditMode() {
+    if (widget.isPreview) return;
     if (_isEditMode) return;
     setState(() => _mode = MealScreenMode.edit);
   }
@@ -310,7 +318,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
   }
 
   void _openCopyToSheet() {
-    if (_isBusy) return;
+    if (_isBusy || widget.isPreview) return;
     MealCopyToSheet.show(context, currentDate: _selectedDate, onDatesSelected: (dates) => _handleCopyToMultipleDates(dates));
   }
 
@@ -391,6 +399,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
   }
 
   Future<void> _handlePrimaryAction() async {
+    if (widget.isPreview) return;
     if (_isEditMode) {
       if (widget.openedFromLogScreen) {
         await _handleSaveInViewMode();
@@ -409,6 +418,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
   }
 
   Future<void> _toggleFavorite() async {
+    if (widget.isPreview) return;
     final next = !_meal.isFavorite;
     setState(() => _meal = _meal.copyWith(isFavorite: next));
 
@@ -425,7 +435,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
   }
 
   Future<void> _handleDeleteMeal() async {
-    if (_isDeleting) return;
+    if (_isDeleting || widget.isPreview) return;
     if (_meal.id == null) {
       showSnackBar(context: context, message: tr(LocaleKeys.meal_delete_title), subtitle: tr(LocaleKeys.meal_delete_message), type: SnackBarType.warning);
       return;
@@ -504,6 +514,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
   }
 
   void _openActionSheet() {
+    if (widget.isPreview) return;
     showGlassPopup(
       context: context,
       items: [
@@ -568,7 +579,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
   }
 
   void _openPortionPicker() {
-    if (_isBusy) return;
+    if (_isBusy || widget.isPreview) return;
     _ensureEditMode();
     AmountPickerSheet.show(
       context,
@@ -588,7 +599,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
   }
 
   Future<void> _openNutrientEditor({required String label, required double currentValue, required void Function(double) onSave}) async {
-    if (_isBusy) return;
+    if (_isBusy || widget.isPreview) return;
     _ensureEditMode();
     final result = await showModalBottomSheet<double>(
       context: context,
@@ -666,7 +677,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
   );
 
   Future<void> _openMealNameEditor() async {
-    if (_isBusy) return;
+    if (_isBusy || widget.isPreview) return;
     _ensureEditMode();
     final updatedName = await showModalBottomSheet<String>(
       context: context,
@@ -687,7 +698,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
   }
 
   void _openMealtimePicker() {
-    if (_isBusy) return;
+    if (_isBusy || widget.isPreview) return;
     _ensureEditMode();
     MealtimePickerSheet.show(
       context,
@@ -700,7 +711,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
   }
 
   void _openDatePicker() {
-    if (_isBusy) return;
+    if (_isBusy || widget.isPreview) return;
     _ensureEditMode();
     MealDatePickerSheet.show(
       context,
@@ -755,6 +766,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
   }
 
   VoidCallback? get _onPrimaryTap {
+    if (widget.isPreview) return null;
     if (_isBusy) return null;
     if (_isEditMode && !_isValid) return null;
     return () => _handlePrimaryAction();
@@ -816,7 +828,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                     height: AppSizes.mealHeroHeight + AppSizes.alertCardHeight - heroOverlap,
                                     child: Stack(
                                       children: [
-                                        MealHeroHeader(title: _mealTitle, timeLabel: _formatTime(_meal.timestamp), showTime: !widget.openedFromLogScreen, onTitleTap: _isBusy ? null : _openMealNameEditor),
+                                        MealHeroHeader(title: _mealTitle, timeLabel: _formatTime(_meal.timestamp), showTime: !widget.openedFromLogScreen, onTitleTap: _isInteractionDisabled ? null : _openMealNameEditor),
                                         Positioned(
                                           left: AppSpacing.edge,
                                           right: AppSpacing.edge,
@@ -847,13 +859,13 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                 height: AppSizes.mealHeroHeight + AppSizes.caloriesCardHeight - heroOverlap,
                                 child: Stack(
                                   children: [
-                                    MealHeroHeader(title: _mealTitle, timeLabel: _formatTime(_meal.timestamp), showTime: !widget.openedFromLogScreen, onTitleTap: _isBusy ? null : _openMealNameEditor),
+                                    MealHeroHeader(title: _mealTitle, timeLabel: _formatTime(_meal.timestamp), showTime: !widget.openedFromLogScreen, onTitleTap: _isInteractionDisabled ? null : _openMealNameEditor),
                                     Positioned(
                                       left: AppSpacing.edge,
                                       right: AppSpacing.edge,
                                       top: AppSizes.mealHeroHeight - heroOverlap,
                                       child: GestureDetector(
-                                        onTap: _isBusy || !_canEditNutrients ? null : _openCaloriesEditor,
+                                        onTap: _isInteractionDisabled || !_canEditNutrients ? null : _openCaloriesEditor,
                                         child: CaloriesSummaryCard(
                                           label: tr(LocaleKeys.common_calories),
                                           value: _totalCalories.toStringAsFixed(0),
@@ -873,7 +885,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                 children: [
                                   Expanded(
                                     child: GestureDetector(
-                                      onTap: _isBusy || !_canEditNutrients ? null : _openProteinEditor,
+                                      onTap: _isInteractionDisabled || !_canEditNutrients ? null : _openProteinEditor,
                                       child: MacroStatCard(
                                         label: tr(LocaleKeys.common_protein),
                                         value: '${_totalProteins.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
@@ -885,7 +897,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                   const SizedBox(width: AppSpacing.s),
                                   Expanded(
                                     child: GestureDetector(
-                                      onTap: _isBusy || !_canEditNutrients ? null : _openCarbsEditor,
+                                      onTap: _isInteractionDisabled || !_canEditNutrients ? null : _openCarbsEditor,
                                       child: MacroStatCard(
                                         label: tr(LocaleKeys.common_carbs),
                                         value: '${_totalCarbs.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
@@ -897,7 +909,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                   const SizedBox(width: AppSpacing.s),
                                   Expanded(
                                     child: GestureDetector(
-                                      onTap: _isBusy || !_canEditNutrients ? null : _openFatsEditor,
+                                      onTap: _isInteractionDisabled || !_canEditNutrients ? null : _openFatsEditor,
                                       child: MacroStatCard(
                                         label: tr(LocaleKeys.common_fats),
                                         value: '${_totalFats.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
@@ -914,9 +926,9 @@ class _EditMealScreenState extends State<EditMealScreen> {
                               amount: _amountLabel,
                               mealtime: _mealtimeDisplay,
                               date: _formatDate(_selectedDate),
-                              onAmountTap: _isBusy ? null : _openPortionPicker,
-                              onMealtimeTap: _isBusy ? null : _openMealtimePicker,
-                              onDateTap: _isBusy ? null : _openDatePicker,
+                              onAmountTap: _isInteractionDisabled ? null : _openPortionPicker,
+                              onMealtimeTap: _isInteractionDisabled ? null : _openMealtimePicker,
+                              onDateTap: _isInteractionDisabled ? null : _openDatePicker,
                               margin: const EdgeInsets.symmetric(horizontal: AppSpacing.edge),
                             ),
                             if (_ingredients.length > 1) ...[
@@ -928,7 +940,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                   children: [
                                     Text(tr(LocaleKeys.meal_ingredients_title), style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600, letterSpacing: -0.3125)),
                                     InkWell(
-                                      onTap: _isBusy
+                                      onTap: _isInteractionDisabled
                                           ? null
                                           : () {
                                               _ensureEditMode();
@@ -970,20 +982,20 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                         padding: const EdgeInsets.only(bottom: AppSpacing.s),
                                         child: IngredientRow(
                                           ingredient: ingredient,
-                                          onTap: _isBusy
+                                          onTap: _isInteractionDisabled
                                               ? null
                                               : () {
                                                   _ensureEditMode();
                                                   _editIngredient(index);
                                                 },
-                                          onFavorite: _isBusy ? null : () => _toggleIngredientFavorite(index),
-                                          onEdit: _isBusy
+                                          onFavorite: _isInteractionDisabled ? null : () => _toggleIngredientFavorite(index),
+                                          onEdit: _isInteractionDisabled
                                               ? null
                                               : () {
                                                   _ensureEditMode();
                                                   _editIngredient(index);
                                                 },
-                                          onDelete: _isBusy ? null : () => _confirmDeleteIngredient(index),
+                                          onDelete: _isInteractionDisabled ? null : () => _confirmDeleteIngredient(index),
                                         ),
                                       );
                                     }
@@ -991,10 +1003,10 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                       padding: const EdgeInsets.only(bottom: AppSpacing.s),
                                       child: EditIngredientRow(
                                         ingredient: ingredient,
-                                        onTap: _isBusy ? null : () => _editIngredient(index),
-                                        onFavorite: _isBusy ? null : () => _toggleIngredientFavorite(index),
-                                        onEdit: _isBusy ? null : () => _editIngredient(index),
-                                        onDelete: _isBusy ? null : () => _confirmDeleteIngredient(index),
+                                        onTap: _isInteractionDisabled ? null : () => _editIngredient(index),
+                                        onFavorite: _isInteractionDisabled ? null : () => _toggleIngredientFavorite(index),
+                                        onEdit: _isInteractionDisabled ? null : () => _editIngredient(index),
+                                        onDelete: _isInteractionDisabled ? null : () => _confirmDeleteIngredient(index),
                                       ),
                                     );
                                   }),
@@ -1032,7 +1044,9 @@ class _EditMealScreenState extends State<EditMealScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
-                    child: _EditMealTopBar(onBack: _handleBack, onDone: _onPrimaryTap, isFavorite: _meal.isFavorite, onBookmark: _toggleFavorite, onMenu: _openActionSheet),
+                    child: widget.isPreview
+                        ? _EditMealTopBar(onBack: _handleBack, onDone: null, isFavorite: _meal.isFavorite, onBookmark: null, onMenu: null)
+                        : _EditMealTopBar(onBack: _handleBack, onDone: _onPrimaryTap, isFavorite: _meal.isFavorite, onBookmark: _toggleFavorite, onMenu: _openActionSheet),
                   ),
                   if (_isBusy)
                     Positioned.fill(
@@ -1236,27 +1250,29 @@ class _NutrientEditorSheetState extends State<_NutrientEditorSheet> {
 class _EditMealTopBar extends StatelessWidget {
   final VoidCallback onBack;
   final VoidCallback? onDone;
-  final VoidCallback onBookmark;
-  final VoidCallback onMenu;
+  final VoidCallback? onBookmark;
+  final VoidCallback? onMenu;
   final bool isFavorite;
 
-  const _EditMealTopBar({required this.onBack, this.onDone, required this.onBookmark, required this.onMenu, required this.isFavorite});
+  const _EditMealTopBar({required this.onBack, this.onDone, this.onBookmark, this.onMenu, required this.isFavorite});
 
   @override
   Widget build(BuildContext context) {
+    final hasActions = onDone != null || onBookmark != null || onMenu != null;
     return CustomGlassAppBar(
       //leadingIcon: CupertinoIcons.xmark,
       leadingIconSize: AppSizes.iconLg,
       onBack: onBack,
       actions: [
-        CustomGlassIconButtonGroup(
-          iconSize: AppSizes.iconLg,
-          items: [
-            (icon: CupertinoIcons.checkmark, onPressed: onDone ?? () {}),
-            (icon: isFavorite ? CupertinoIcons.bookmark_fill : CupertinoIcons.bookmark, onPressed: onBookmark),
-            (icon: CupertinoIcons.ellipsis, onPressed: onMenu),
-          ],
-        ),
+        if (hasActions)
+          CustomGlassIconButtonGroup(
+            iconSize: AppSizes.iconLg,
+            items: [
+              if (onDone != null) (icon: CupertinoIcons.checkmark, onPressed: onDone!),
+              if (onBookmark != null) (icon: isFavorite ? CupertinoIcons.bookmark_fill : CupertinoIcons.bookmark, onPressed: onBookmark!),
+              if (onMenu != null) (icon: CupertinoIcons.ellipsis, onPressed: onMenu!),
+            ],
+          ),
       ],
     );
   }

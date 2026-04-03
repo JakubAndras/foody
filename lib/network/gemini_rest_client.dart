@@ -5,13 +5,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:diplomka/utils/error.dart';
+import 'package:diplomka/utils/prompt_sanitizer.dart';
 
 class GeminiRestClient {
   final Dio _dio = Dio();
   final String apiUrl = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"; // TODO: Check if this is the correct endpoint for Gemini
   String? geminiApiKey = dotenv.env['GEMINI_API_KEY'];
 
-  final String context = 'You are an AI food analyzer. Always respond in JSON format.';
+  final String context = 'You are an AI food analyzer. Always respond in JSON format. ${PromptSanitizer.antiInjectionDirective}';
 
   Future<Map<String, dynamic>> generateResponse({
     List<File>? imageFiles,
@@ -30,7 +31,7 @@ class GeminiRestClient {
     String prompt =
         "Recognize the food/ingredients in the input photo and give me their names and nutritional values, both for the whole meal and for the individual ingredients. The output must be a text representation in JSON format.";
     if (textPrompt != null && textPrompt.trim().isNotEmpty) {
-      prompt = '$prompt\\nUser description: ${textPrompt.trim()}';
+      prompt = '$prompt\\nUser description: ${PromptSanitizer.wrapUserInput(textPrompt.trim())}';
     }
     if (mealUserAttributes != null && mealUserAttributes.isNotEmpty) {
       prompt = '$prompt\\nUser dietary context: ${jsonEncode(mealUserAttributes)}';
@@ -71,7 +72,7 @@ class GeminiRestClient {
       );
 
       if (response.statusCode == 200) {
-        debugPrint(response.data.toString());
+        print(response.data.toString());
         return response.data;
       } else {
         throw Error.generic();

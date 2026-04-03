@@ -90,6 +90,7 @@ class _PersonalDetailsCustomDietScreenState extends State<PersonalDetailsCustomD
             child: TextField(
               controller: _controller,
               maxLines: null,
+              maxLength: 300,
               style: textTheme.titleMedium,
               decoration: InputDecoration.collapsed(
                 hintText: tr(LocaleKeys.onboarding_custom_diet_hint),

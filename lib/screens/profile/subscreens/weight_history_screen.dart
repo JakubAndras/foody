@@ -53,13 +53,13 @@ class WeightHistoryScreen extends StatelessWidget {
                             entries: entries,
                             onEntryTap: (entry) => showWeightLogSheet(context, entry: entry),
                             onPhotoAction: (entry, photoPath) async {
-                              debugPrint('[WeightHistory] onPhotoAction: entryId=${entry.id}, photoPath=$photoPath');
+                              print('[WeightHistory] onPhotoAction: entryId=${entry.id}, photoPath=$photoPath');
                               final updated = entry.copyWith(photoPath: photoPath, clearPhotoPath: photoPath == null);
-                              debugPrint('[WeightHistory] updated entry photoPath: ${updated.photoPath}');
+                              print('[WeightHistory] updated entry photoPath: ${updated.photoPath}');
                               await WeightEntryController.to.saveEntry(updated);
-                              debugPrint('[WeightHistory] saveEntry done, entries count: ${WeightEntryController.to.entries.length}');
+                              print('[WeightHistory] saveEntry done, entries count: ${WeightEntryController.to.entries.length}');
                               final saved = WeightEntryController.to.entries.firstWhereOrNull((e) => e.id == entry.id);
-                              debugPrint('[WeightHistory] saved entry photoPath from DB: ${saved?.photoPath}');
+                              print('[WeightHistory] saved entry photoPath from DB: ${saved?.photoPath}');
                             },
                           ),
                         const SizedBox(height: AppSpacing.huge),

@@ -53,11 +53,11 @@ Future<void> showPhotoActionPopup({
 Future<void> _pickPhoto(BuildContext context, ImageSource source, PhotoActionCallback onResult) async {
   final picker = ImagePicker();
   final image = await picker.pickImage(source: source);
-  debugPrint('[PhotoPopup] pickImage result: ${image?.path}');
+  print('[PhotoPopup] pickImage result: ${image?.path}');
   if (image == null) return;
   final storedPath = await MediaStorage.persistMealPhoto(image.path);
-  debugPrint('[PhotoPopup] persistMealPhoto result: $storedPath');
+  print('[PhotoPopup] persistMealPhoto result: $storedPath');
   if (storedPath == null) return;
-  debugPrint('[PhotoPopup] calling onResult with: $storedPath');
+  print('[PhotoPopup] calling onResult with: $storedPath');
   onResult(storedPath);
 }

@@ -40,6 +40,8 @@ class Meal {
 
   // Factory constructor for creating a new Meal instance from an Answer object.
   factory Meal.fromAnswer(Answer answer) {
+    final snappedAmount = _snapToFraction(answer.amount.clamp(0.0, 42.875));
+
     List<Ingredient> ingredients = answer.ingredients.map((ingResponse) {
       double weight = 0.0;
       // Attempt to parse weight from quantity string
@@ -52,6 +54,7 @@ class Meal {
       return Ingredient(
         name: ingResponse.name,
         weight: weight,
+        amount: snappedAmount,
         calories: ingResponse.nutritionalValues.calories.toDouble(),
         proteins: ingResponse.nutritionalValues.proteins,
         carbs: ingResponse.nutritionalValues.carbs,
@@ -66,6 +69,26 @@ class Meal {
       timestamp: DateTime.now(),
       confidence: answer.confidence,
     );
+  }
+
+  /// Snaps a double to the nearest supported whole + fraction value.
+  /// Supported fractions: 0, ⅛(0.125), ¼(0.25), ⅓(0.333), ⅜(0.375), ½(0.5), ⅔(0.667), ⅝(0.625), ¾(0.75), ⅞(0.875).
+  static double _snapToFraction(double value) {
+    if (value <= 0) return 0.125; // minimum allowed amount
+    const fractions = [0.0, 0.125, 0.25, 1 / 3, 0.375, 0.5, 2 / 3, 0.625, 0.75, 0.875];
+    final whole = value.truncate();
+    final frac = value - whole;
+    double bestFrac = 0;
+    double bestDiff = double.infinity;
+    for (final f in fractions) {
+      final diff = (frac - f).abs();
+      if (diff < bestDiff) {
+        bestDiff = diff;
+        bestFrac = f;
+      }
+    }
+    final result = whole + bestFrac;
+    return result <= 0 ? 0.125 : result;
   }
 
   // Method for converting a Meal instance to a map.

@@ -518,6 +518,7 @@ class _CustomDietSheetState extends State<_CustomDietSheet> {
                   autofocus: true,
                   textCapitalization: TextCapitalization.sentences,
                   maxLines: 4,
+                  maxLength: 300,
                   style: AppTextStyles.body16,
                   decoration: InputDecoration(
                     hintText: tr(LocaleKeys.onboarding_custom_diet_hint),

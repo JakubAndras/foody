@@ -353,6 +353,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                                         focusNode: _searchFocusNode,
                                         onChanged: _onSearchChanged,
                                         autofocus: true,
+                                        maxLength: 200,
                                         style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary),
                                         decoration: InputDecoration(
                                           hintText: tr(LocaleKeys.meal_search_food),
@@ -360,6 +361,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                                           border: InputBorder.none,
                                           isDense: true,
                                           contentPadding: EdgeInsets.zero,
+                                          counterText: '',
                                         ),
                                       ),
                                     ),

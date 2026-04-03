@@ -76,7 +76,7 @@ class HealthIntegrationService extends GetxService {
       hasPermission.value = authorized;
       return authorized;
     } catch (e) {
-      debugPrint('HealthIntegrationService.requestPermission error: $e');
+      print('HealthIntegrationService.requestPermission error: $e');
       hasPermission.value = false;
       return false;
     }
@@ -149,7 +149,7 @@ class HealthIntegrationService extends GetxService {
       lastSyncTime.value = DateTime.now();
       await _persistSettings();
     } catch (e) {
-      debugPrint('HealthIntegrationService.syncBurnedCalories error: $e');
+      print('HealthIntegrationService.syncBurnedCalories error: $e');
     }
   }
 
@@ -182,7 +182,7 @@ class HealthIntegrationService extends GetxService {
 
       return total > 0 ? total : null;
     } catch (e) {
-      debugPrint('HealthIntegrationService.getActiveEnergyBurned error: $e');
+      print('HealthIntegrationService.getActiveEnergyBurned error: $e');
       return null;
     }
   }

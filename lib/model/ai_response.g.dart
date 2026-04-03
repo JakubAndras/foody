@@ -20,6 +20,7 @@ Map<String, dynamic> _$AiResponseToJson(AiResponse instance) =>
 Answer _$AnswerFromJson(Map<String, dynamic> json) => Answer(
       name: json['name'] as String,
       confidence: (json['confidence'] as num).toDouble(),
+      amount: (json['amount'] as num?)?.toDouble() ?? 1.0,
       nutritionalValues: NutritionalValues.fromJson(
           json['nutritional_values'] as Map<String, dynamic>),
       ingredients: (json['ingredients'] as List<dynamic>)
@@ -30,6 +31,7 @@ Answer _$AnswerFromJson(Map<String, dynamic> json) => Answer(
 Map<String, dynamic> _$AnswerToJson(Answer instance) => <String, dynamic>{
       'name': instance.name,
       'confidence': instance.confidence,
+      'amount': instance.amount,
       'nutritional_values': instance.nutritionalValues,
       'ingredients': instance.ingredients,
     };

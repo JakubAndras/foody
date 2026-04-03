@@ -11,6 +11,7 @@ class MealDetailScreen extends StatelessWidget {
   final MatchBadgeVariant matchBadgeVariant;
   final bool openedFromLogScreen;
   final DateTime? selectedDate;
+  final bool isPreview;
 
   const MealDetailScreen({
     super.key,
@@ -20,6 +21,7 @@ class MealDetailScreen extends StatelessWidget {
     this.matchBadgeVariant = MatchBadgeVariant.good,
     this.openedFromLogScreen = false,
     this.selectedDate,
+    this.isPreview = false,
   });
 
   @override
@@ -32,6 +34,7 @@ class MealDetailScreen extends StatelessWidget {
       showAllergyAlert: showAllergyAlert,
       showCaloriesDelta: showCaloriesDelta,
       matchBadgeVariant: matchBadgeVariant,
+      isPreview: isPreview,
     );
   }
 }

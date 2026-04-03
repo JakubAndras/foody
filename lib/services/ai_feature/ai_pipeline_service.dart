@@ -11,7 +11,9 @@ import 'package:diplomka/services/ai_feature/ai_service.dart';
 import 'package:diplomka/services/ai_feature/openai_service.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/utils/app_limits.dart';
+import 'package:diplomka/utils/prompt_sanitizer.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 class AiPipelineService extends GetxService {
@@ -25,11 +27,15 @@ class AiPipelineService extends GetxService {
     String? description,
   }) async {
     try {
+      final sanitizedDescription = description != null ? PromptSanitizer.sanitize(description, maxLength: PromptSanitizer.maxDescriptionLength) : null;
+      if (sanitizedDescription != null && PromptSanitizer.containsSuspiciousPatterns(sanitizedDescription)) {
+        print('[AiPipeline] INJECTION DETECTED in meal description: "${sanitizedDescription.substring(0, sanitizedDescription.length.clamp(0, 80))}..."');
+      }
       final AiService service = Get.isRegistered<AiService>() ? Get.find<AiService>() : OpenAiService();
       final mealUserAttributes = _buildMealUserAttributes();
       final response = await service.generateResponse(
         imageFiles: imageFiles,
-        textPrompt: description,
+        textPrompt: sanitizedDescription,
         mealUserAttributes: mealUserAttributes,
       );
 
@@ -56,7 +62,10 @@ class AiPipelineService extends GetxService {
   Future<AiExerciseAnalysisResult> analyzeExercise({
     required String description,
   }) async {
-    final trimmedDescription = description.trim();
+    final trimmedDescription = PromptSanitizer.sanitize(description, maxLength: PromptSanitizer.maxDescriptionLength);
+    if (PromptSanitizer.containsSuspiciousPatterns(trimmedDescription)) {
+      print('[AiPipeline] INJECTION DETECTED in exercise description: "${trimmedDescription.substring(0, trimmedDescription.length.clamp(0, 80))}..."');
+    }
     if (trimmedDescription.isEmpty) {
       return AiExerciseAnalysisResult.failure(
         message: tr(LocaleKeys.error_ai_exercise_empty),
@@ -145,7 +154,15 @@ class AiPipelineService extends GetxService {
     final goalWeightKg = session.goalWeightKg.value;
     final goal = session.goal.value?.code;
     final dietType = (session.dietType.value ?? ProfileDietType.classic).code;
-    final customDietPreferences = session.customDietPreferences.value?.trim();
+    final rawDietPreferences = session.customDietPreferences.value?.trim();
+    String? customDietPreferences;
+    if (rawDietPreferences != null && rawDietPreferences.isNotEmpty) {
+      customDietPreferences = PromptSanitizer.sanitize(rawDietPreferences, maxLength: PromptSanitizer.maxDietPreferencesLength);
+      if (PromptSanitizer.containsSuspiciousPatterns(customDietPreferences)) {
+        print('[AiPipeline] INJECTION DETECTED in goals diet preferences: "${customDietPreferences.substring(0, customDietPreferences.length.clamp(0, 80))}..."');
+      }
+      customDietPreferences = PromptSanitizer.wrapUserInput(customDietPreferences);
+    }
     final weightChangeRate = session.weightChangeRateKgPerWeek.value;
 
     return <String, dynamic>{
@@ -215,7 +232,15 @@ class AiPipelineService extends GetxService {
 
     final session = SessionManager.to;
     final dietType = session.dietType.value ?? ProfileDietType.classic;
-    final customPreferences = session.customDietPreferences.value?.trim();
+    final rawPreferences = session.customDietPreferences.value?.trim();
+    String? customPreferences;
+    if (rawPreferences != null && rawPreferences.isNotEmpty) {
+      customPreferences = PromptSanitizer.sanitize(rawPreferences, maxLength: PromptSanitizer.maxDietPreferencesLength);
+      if (PromptSanitizer.containsSuspiciousPatterns(customPreferences)) {
+        print('[AiPipeline] INJECTION DETECTED in meal diet preferences: "${customPreferences.substring(0, customPreferences.length.clamp(0, 80))}..."');
+      }
+      customPreferences = PromptSanitizer.wrapUserInput(customPreferences);
+    }
 
     return <String, dynamic>{
       'diet_type': dietType.code,

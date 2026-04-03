@@ -23,7 +23,7 @@ class GeminiService implements AiService {
       );
       return responseContentParser(data);
     } catch (e) {
-      debugPrint(e.toString());
+      print(e.toString());
     }
     return null;
   }
@@ -49,7 +49,7 @@ class GeminiService implements AiService {
       }
       return null;
     } catch (e) {
-      debugPrint('Error parsing Gemini response: $e');
+      print('Error parsing Gemini response: $e');
       return null;
     }
   }

@@ -30,7 +30,7 @@ class StreakController extends BaseController {
       return _streakService.calculateStreakInfo(allRecordsRaw);
     } catch (e) {
       // Log the error and return initial/empty state or rethrow a custom exception
-      debugPrint('Error calculating streak info: $e');
+      print('Error calculating streak info: $e');
       // Consider returning StreakInfo.initial() or a specific error state
       // depending on how you want the UI to react.
       return StreakInfo.initial(); // Fallback to initial state on error

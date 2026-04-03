@@ -56,7 +56,7 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
   }
 
   void _skipOnboarding()  {
-    debugPrint('[SKIP] _skipOnboarding called');
+    print('[SKIP] _skipOnboarding called');
     try {
       if (SessionManager.to.dietType.value == null) {
         unawaited(SessionManager.to.setDietType(ProfileDietType.classic));
@@ -64,7 +64,7 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
       unawaited(SessionManager.to.setOnboardingComplete(true));
       Get.to(() => const MainScreen());
     } catch (e, st) {
-      debugPrint('[SKIP] ERROR: $e\n$st');
+      print('[SKIP] ERROR: $e\n$st');
     }
   }
 

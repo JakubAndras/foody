@@ -188,7 +188,7 @@ class DashboardController extends BaseController {
         message = source == ImageSource.camera ? tr(LocaleKeys.error_camera_denied) : tr(LocaleKeys.error_gallery_denied);
         showSnackBar(message: tr(LocaleKeys.error_permission_denied), subtitle: message, type: SnackBarType.error, duration: const Duration(seconds: 3));
       }
-      debugPrint(message);
+      print(message);
       return;
     }
 
@@ -197,7 +197,7 @@ class DashboardController extends BaseController {
 
     if (imageFile == null) {
       showSnackBar(message: tr(LocaleKeys.error_image_picker_title), subtitle: tr(LocaleKeys.error_no_image_selected), type: SnackBarType.info, duration: const Duration(seconds: 2));
-      debugPrint('No image selected.');
+      print('No image selected.');
       return;
     }
 
@@ -213,7 +213,7 @@ class DashboardController extends BaseController {
         type: SnackBarType.error,
         duration: const Duration(seconds: 3),
       );
-      debugPrint('Error calling AI Service: $e');
+      print('Error calling AI Service: $e');
     }
   }
 
@@ -278,7 +278,7 @@ class DashboardController extends BaseController {
         );
       }
       if (rawImagePath != null && storedPhotoRef == null) {
-        debugPrint('Meal photo could not be persisted. sourcePath=$rawImagePath');
+        print('Meal photo could not be persisted. sourcePath=$rawImagePath');
       }
 
       if (storedPhotoRef != null && SessionManager.to.savePhotosToGallery.value) {
@@ -303,7 +303,7 @@ class DashboardController extends BaseController {
         type: SnackBarType.error,
         duration: const Duration(seconds: 3),
       );
-      debugPrint('Error calling AI Service: $e');
+      print('Error calling AI Service: $e');
       return MealAnalysisFlowResult.failure(message: e.toString());
     } finally {
       await _endMealAnalysis();
@@ -357,7 +357,7 @@ class DashboardController extends BaseController {
         type: SnackBarType.error,
         duration: const Duration(seconds: 3),
       );
-      debugPrint('Error calling barcode analysis flow: $e');
+      print('Error calling barcode analysis flow: $e');
     } finally {
       await _endMealAnalysis();
     }
@@ -429,7 +429,7 @@ class DashboardController extends BaseController {
         subtitle: tr(LocaleKeys.error_exercise_create_failed),
         type: SnackBarType.error,
       );
-      debugPrint('Error in exercise voice analysis flow: $e');
+      print('Error in exercise voice analysis flow: $e');
     } finally {
       await _endExerciseAnalysis();
     }

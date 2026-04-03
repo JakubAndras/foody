@@ -23,7 +23,7 @@ class OpenAiService implements AiService {
       );
       return responseContentParser(data);
     } catch (e) {
-      debugPrint(e.toString());
+      print(e.toString());
     }
     return null;
   }
