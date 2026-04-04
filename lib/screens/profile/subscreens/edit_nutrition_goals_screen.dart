@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/nutrition_goals.dart';
+import 'package:diplomka/model/user_profile.dart';
 import 'package:diplomka/services/nutrition_goals_service.dart';
 import 'package:diplomka/services/selected_date_service.dart';
+import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/widgets/confirm_delete_dialog.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:diplomka/widgets/glass_popup.dart';
@@ -128,17 +130,48 @@ class _EditNutritionGoalsScreenState extends State<EditNutritionGoalsScreen> {
           },
         ),
         GlassPopupItem(
-          label: tr(LocaleKeys.nutrition_goals_revert),
-          icon: CupertinoIcons.arrow_counterclockwise,
-          onTap: _isDirty
-              ? () {
-                  Navigator.of(context).pop();
-                  _revertGoals();
-                }
-              : null,
+          label: tr(LocaleKeys.nutrition_goals_calculate_profile),
+          icon: CupertinoIcons.function,
+          onTap: () {
+            Navigator.of(context).pop();
+            _showCalculateFromProfileDialog();
+          },
         ),
       ],
     );
+  }
+
+  Future<void> _showCalculateFromProfileDialog() async {
+    final confirmed = await showConfirmationDialog(
+      context: context,
+      title: tr(LocaleKeys.nutrition_goals_calculate_title),
+      subtitle: tr(LocaleKeys.nutrition_goals_calculate_body),
+      primaryLabel: tr(LocaleKeys.nutrition_goals_calculate_btn),
+      secondaryLabel: tr(LocaleKeys.common_cancel),
+    );
+    if (confirmed != true || !mounted) return;
+
+    final sm = SessionManager.to;
+    final double? weightKg = sm.weightKg.value;
+    final double? heightCm = sm.heightCm.value;
+    final DateTime? dob = sm.dateOfBirth.value;
+    final ProfileSex? sex = sm.sex.value;
+    final ProfileGoal? goal = sm.goal.value;
+
+    if (weightKg == null || heightCm == null || dob == null || sex == null || goal == null) {
+      showSnackBar(context: context, message: tr(LocaleKeys.nutrition_goals_invalid_values), type: SnackBarType.warning);
+      return;
+    }
+
+    final goals = NutritionGoals.fromProfile(
+      weightKg: weightKg,
+      heightCm: heightCm,
+      dateOfBirth: dob,
+      sex: sex,
+      goal: goal,
+      workoutsPerWeek: sm.workoutsPerWeek.value ?? '2-3',
+    );
+    _setControllersFromGoals(goals);
   }
 
   Future<void> _generateWithAi() async {
@@ -154,10 +187,6 @@ class _EditNutritionGoalsScreenState extends State<EditNutritionGoalsScreen> {
     } finally {
       if (mounted) setState(() => _isGenerating = false);
     }
-  }
-
-  void _revertGoals() {
-    _setControllersFromGoals(_originalGoals);
   }
 
   Future<void> _handleBack() async {

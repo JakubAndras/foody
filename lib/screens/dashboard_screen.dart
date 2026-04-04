@@ -9,6 +9,7 @@ import 'package:diplomka/widgets/calories_card.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:flutter/material.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:get/get.dart';
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/model/day_record.dart';
@@ -220,80 +221,82 @@ class _DashboardPreviewScreenState extends State<DashboardPreviewScreen> {
     final recordToShow = nutritionGoals.applyToDayRecord(dayRecord);
     final dateLabel = DateFormat.yMMMd().format(widget.date);
 
-    return Scaffold(
-      backgroundColor: AppColors.meshBase,
-      body: SafeArea(
-        top: false,
-        bottom: false,
-        child: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : Stack(
-                children: [
-                  VariableBlurScrollView(
-                    topBlurSigma: 52,
-                    topBlurHeight: 0.16,
-                    edgeIntensity: 0.075,
-                    topFadeHeight: 40,
-                    bottomFadeHeight: 0,
-                    backgroundColor: Colors.transparent,
-                    fadeColor: AppColors.meshBase,
-                    backgroundWidget: const MeshGradientBackground(),
-                    padding: const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.huge + 4, AppSpacing.m, AppSpacing.l),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: AppSizes.topBarHeight),
-                        const SizedBox(height: AppSpacing.m),
-                        _buildCaloriesTracker(recordToShow),
-                        const SizedBox(height: AppSpacing.m),
-                        RecentlyUploadedCard(
-                          meals: recordToShow.meals,
-                          exercises: recordToShow.exercises,
-                          selectedDate: widget.date,
-                          onMealTap: (meal) => Get.to(() => MealDetailScreen(meal: meal, isPreview: true)),
-                        ),
-                        const SizedBox(height: AppSpacing.huge),
-                      ],
+    return LiquidGlassScope(
+      child: Scaffold(
+        backgroundColor: AppColors.meshBase,
+        body: SafeArea(
+          top: false,
+          bottom: false,
+          child: _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : Stack(
+                  children: [
+                    VariableBlurScrollView(
+                      topBlurSigma: 52,
+                      topBlurHeight: 0.16,
+                      edgeIntensity: 0.075,
+                      topFadeHeight: 40,
+                      bottomFadeHeight: 0,
+                      backgroundColor: Colors.transparent,
+                      fadeColor: AppColors.meshBase,
+                      backgroundWidget: const MeshGradientBackground(),
+                      padding: const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.huge + 4, AppSpacing.m, AppSpacing.l),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: AppSizes.topBarHeight),
+                          const SizedBox(height: AppSpacing.m),
+                          _buildCaloriesTracker(recordToShow),
+                          const SizedBox(height: AppSpacing.m),
+                          RecentlyUploadedCard(
+                            meals: recordToShow.meals,
+                            exercises: recordToShow.exercises,
+                            selectedDate: widget.date,
+                            onMealTap: (meal) => Get.to(() => MealDetailScreen(meal: meal, isPreview: true)),
+                          ),
+                          const SizedBox(height: AppSpacing.huge),
+                        ],
+                      ),
                     ),
-                  ),
-                  // Custom linear bottom fade
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: IgnorePointer(
-                      child: Container(
-                        height: 44,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter,
-                            colors: [
-                              AppColors.meshBase.withValues(alpha: 0.6),
-                              AppColors.meshBase.withValues(alpha: 0.3),
-                              AppColors.meshBase.withValues(alpha: 0.1),
-                              AppColors.meshBase.withValues(alpha: 0),
-                            ],
-                            stops: const [0.0, 0.35, 0.7, 1.0],
+                    // Custom linear bottom fade
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: IgnorePointer(
+                        child: Container(
+                          height: 44,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter,
+                              colors: [
+                                AppColors.meshBase.withValues(alpha: 0.6),
+                                AppColors.meshBase.withValues(alpha: 0.3),
+                                AppColors.meshBase.withValues(alpha: 0.1),
+                                AppColors.meshBase.withValues(alpha: 0),
+                              ],
+                              stops: const [0.0, 0.35, 0.7, 1.0],
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  Positioned(
-                    top: 0,
-                    left: AppSpacing.l,
-                    right: AppSpacing.l,
-                    child: SafeArea(
-                      bottom: false,
-                      child: CustomGlassAppBar(
-                        title: dateLabel,
-                        onBack: () => Get.back(),
+                    Positioned(
+                      top: 0,
+                      left: AppSpacing.m + 1,
+                      right: AppSpacing.m + 1,
+                      child: SafeArea(
+                        bottom: false,
+                        child: CustomGlassAppBar(
+                          title: dateLabel,
+                          onBack: () => Get.back(),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
+        ),
       ),
     );
   }

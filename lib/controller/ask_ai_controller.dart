@@ -19,6 +19,12 @@ class AskAiController extends GetxController {
   final RxBool isLoading = false.obs;
   final Rxn<AskAiQueryResponse> response = Rxn<AskAiQueryResponse>();
   final RxnString errorMessage = RxnString();
+  final RxnString lastQuery = RxnString();
+
+  void clearResponse() {
+    response.value = null;
+    lastQuery.value = null;
+  }
 
   static const int _detailThresholdDays = 14;
 
@@ -76,6 +82,7 @@ class AskAiController extends GetxController {
       }
 
       response.value = parsed;
+      lastQuery.value = trimmed;
       return parsed;
     } on app_error.Error catch (e) {
       print('AskAiController.submitQuery error: $e');

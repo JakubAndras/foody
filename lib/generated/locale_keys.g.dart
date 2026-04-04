@@ -283,6 +283,14 @@ abstract class  LocaleKeys {
   static const personal_details_diet_title = 'personal_details_diet_title';
   static const personal_details_custom_diet_title = 'personal_details_custom_diet_title';
   static const personal_details_custom_diet_subtitle = 'personal_details_custom_diet_subtitle';
+  static const personal_details_activity_level = 'personal_details_activity_level';
+  static const personal_details_activity_workouts_week = 'personal_details_activity_workouts_week';
+  static const personal_details_activity_info_title = 'personal_details_activity_info_title';
+  static const personal_details_activity_info_body = 'personal_details_activity_info_body';
+  static const personal_details_bmr = 'personal_details_bmr';
+  static const personal_details_bmr_short = 'personal_details_bmr_short';
+  static const personal_details_bmr_info_title = 'personal_details_bmr_info_title';
+  static const personal_details_bmr_info_body = 'personal_details_bmr_info_body';
   static const preferences_title = 'preferences_title';
   static const preferences_appearance = 'preferences_appearance';
   static const preferences_appearance_hint = 'preferences_appearance_hint';
@@ -311,6 +319,10 @@ abstract class  LocaleKeys {
   static const nutrition_goals_generate_ai_long = 'nutrition_goals_generate_ai_long';
   static const nutrition_goals_ai_failed = 'nutrition_goals_ai_failed';
   static const nutrition_goals_revert = 'nutrition_goals_revert';
+  static const nutrition_goals_calculate_profile = 'nutrition_goals_calculate_profile';
+  static const nutrition_goals_calculate_title = 'nutrition_goals_calculate_title';
+  static const nutrition_goals_calculate_body = 'nutrition_goals_calculate_body';
+  static const nutrition_goals_calculate_btn = 'nutrition_goals_calculate_btn';
   static const weight_log_title_log = 'weight_log_title_log';
   static const weight_log_title_edit = 'weight_log_title_edit';
   static const weight_log_label_weight = 'weight_log_label_weight';

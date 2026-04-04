@@ -9,9 +9,11 @@ import 'package:get/get.dart';
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/controller/ask_ai_controller.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
-import 'package:diplomka/screens/profile/ask_ai/ask_ai_response_screen.dart';
+import 'package:diplomka/model/ask_ai_query_response.dart';
+import 'package:diplomka/screens/dashboard_screen.dart';
 import 'package:diplomka/screens/profile/ask_ai/ask_ai_widgets.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
+import 'package:diplomka/services/share/app_share_service.dart';
 
 class AskAiScreen extends StatefulWidget {
   const AskAiScreen({super.key});
@@ -41,13 +43,50 @@ class _AskAiScreenState extends State<AskAiScreen> {
     if (query.isEmpty) return;
 
     final result = await _controller.submitQuery(query);
-    if (result != null) {
-      Get.to(() => AskAiResponseScreen(response: result, query: query));
-    } else if (_controller.errorMessage.value != null) {
+    if (result == null && _controller.errorMessage.value != null) {
       showSnackBar(
         context: context,
         message: tr(LocaleKeys.ask_ai_title),
         subtitle: _controller.errorMessage.value!,
+        type: SnackBarType.error,
+      );
+    }
+  }
+
+  void _clearResponse() {
+    _controller.clearResponse();
+    _textController.clear();
+  }
+
+  Future<void> _handleShare() async {
+    final response = _controller.response.value;
+    final query = _controller.lastQuery.value;
+    if (response == null) return;
+
+    final text = [
+      tr(LocaleKeys.ask_ai_title),
+      '',
+      '${tr(LocaleKeys.ask_ai_question_label)}: $query',
+      '',
+      '${tr(LocaleKeys.ask_ai_summary_label)}: ${response.summaryValue} ${response.summaryLabel}',
+      '${tr(LocaleKeys.ask_ai_period_label)}: ${response.periodLabel}',
+      if (response.primaryMonthDays.isNotEmpty) '${tr(LocaleKeys.ask_ai_affected_days_label)}: ${response.primaryMonthDays.join(', ')}',
+      '',
+      response.responseText,
+    ].join('\n');
+
+    try {
+      await AppShareService.shareText(
+        text: text,
+        title: tr(LocaleKeys.ask_ai_title),
+        subject: tr(LocaleKeys.ask_ai_share_subject),
+        context: context,
+      );
+    } catch (_) {
+      showSnackBar(
+        context: context,
+        message: tr(LocaleKeys.ask_ai_share_unavailable),
+        subtitle: tr(LocaleKeys.ask_ai_share_error),
         type: SnackBarType.error,
       );
     }
@@ -134,20 +173,38 @@ class _AskAiScreenState extends State<AskAiScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ProfileTopBar(
-            title: tr(LocaleKeys.ask_ai_title),
-            onBack: () => Get.back(),
-            actions: [
-              CustomGlassIconButton(
-                icon: CupertinoIcons.info_circle,
-                onPressed: _showExampleQuestionsSheet,
-              ),
-            ],
-          ),
+          Obx(() {
+            final hasResponse = _controller.response.value != null;
+            return ProfileTopBar(
+              title: tr(LocaleKeys.ask_ai_title),
+              onBack: () => Get.back(),
+              actions: [
+                if (hasResponse)
+                  CustomGlassIconButtonGroup(
+                    items: [
+                      (icon: CupertinoIcons.arrow_counterclockwise, onPressed: _clearResponse),
+                      (icon: CupertinoIcons.info_circle, onPressed: _showExampleQuestionsSheet),
+                    ],
+                  )
+                else
+                  CustomGlassIconButton(
+                    icon: CupertinoIcons.info_circle,
+                    onPressed: _showExampleQuestionsSheet,
+                  ),
+              ],
+            );
+          }),
           Expanded(
             child: SingleChildScrollView(
+              padding: const EdgeInsets.only(bottom: AppSpacing.xl),
               child: Obx(() {
+                final response = _controller.response.value;
                 final loading = _controller.isLoading.value;
+
+                if (response != null) {
+                  return _buildResponseContent(response);
+                }
+
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -158,6 +215,10 @@ class _AskAiScreenState extends State<AskAiScreen> {
                       onAsk: _handleAsk,
                       onClear: () => _textController.clear(),
                     ),
+                    if (loading) ...[
+                      const SizedBox(height: AppSpacing.m),
+                      const AskAiLoadingSkeleton(),
+                    ],
                   ],
                 );
               }),
@@ -165,6 +226,45 @@ class _AskAiScreenState extends State<AskAiScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildResponseContent(AskAiQueryResponse response) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: AppSpacing.m),
+        AskAiResponseCard(text: response.responseText),
+        const SizedBox(height: AppSpacing.m),
+        AskAiSummaryCard(
+          value: response.summaryValue,
+          label: response.summaryLabel,
+          icon: response.summaryIcon,
+          iconGradient: response.summaryGradient,
+          panelGradient: response.summarySurfaceGradient,
+          valueGradient: response.summaryGradient,
+        ),
+        if (response.affectedDays.isNotEmpty) ...[
+          const SizedBox(height: AppSpacing.m),
+          AskAiCalendarCard(
+            allAffectedDays: response.affectedDays,
+            affectedGradient: response.summaryGradient,
+            initialYear: response.primaryYear,
+            initialMonth: response.primaryMonth,
+            onDayTap: (date) => Get.to(() => DashboardPreviewScreen(date: date)),
+          ),
+        ],
+        const SizedBox(height: AppSpacing.m),
+        SizedBox(
+          width: double.infinity,
+          child: AskAiPrimaryButton(
+            label: tr(LocaleKeys.common_share),
+            leading: const Icon(CupertinoIcons.share, size: AppSizes.iconMd, color: AppColors.onPrimary),
+            gradient: AppGradients.primary,
+            onPressed: _handleShare,
+          ),
+        ),
+      ],
     );
   }
 }

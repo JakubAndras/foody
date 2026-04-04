@@ -75,6 +75,8 @@ class AskAiPromptCard extends StatelessWidget {
     this.isLoading = false,
   });
 
+  static const int _maxLength = 500;
+
   final TextEditingController? controller;
   final VoidCallback? onAsk;
   final VoidCallback? onClear;
@@ -96,43 +98,60 @@ class AskAiPromptCard extends StatelessWidget {
               color: AppColors.surfaceMuted,
               borderRadius: BorderRadius.circular(AppRadii.m),
             ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Column(
               children: [
-                const Padding(
-                  padding: EdgeInsets.only(top: 2),
-                  child: Icon(CupertinoIcons.search, size: AppSizes.iconMd, color: AppColors.violet),
-                ),
-                const SizedBox(width: AppSpacing.s),
                 Expanded(
-                  child: TextField(
-                    controller: controller,
-                    readOnly: readOnly,
-                    maxLines: null,
-                    maxLength: 500,
-                    expands: true,
-                    textAlignVertical: TextAlignVertical.top,
-                    style: AppTextStyles.body14.copyWith(
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.textMuted,
-                    ),
-                    decoration: InputDecoration(
-                      hintText: tr(LocaleKeys.ask_ai_hint),
-                      hintStyle: AppTextStyles.body14.copyWith(
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.textTertiary,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(top: 2),
+                        child: Icon(CupertinoIcons.search, size: AppSizes.iconMd, color: AppColors.violet),
                       ),
-                      border: InputBorder.none,
-                      counterText: '',
-                      isDense: true,
-                      contentPadding: EdgeInsets.zero,
-                    ),
+                      const SizedBox(width: AppSpacing.s),
+                      Expanded(
+                        child: TextField(
+                          controller: controller,
+                          readOnly: readOnly || isLoading,
+                          maxLines: null,
+                          maxLength: _maxLength,
+                          expands: true,
+                          textAlignVertical: TextAlignVertical.top,
+                          style: AppTextStyles.body14.copyWith(
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.textMuted,
+                          ),
+                          decoration: InputDecoration(
+                            hintText: tr(LocaleKeys.ask_ai_hint),
+                            hintStyle: AppTextStyles.body14.copyWith(
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.textTertiary,
+                            ),
+                            border: InputBorder.none,
+                            counterText: '',
+                            isDense: true,
+                            contentPadding: EdgeInsets.zero,
+                          ),
+                        ),
+                      ),
+                      if (!readOnly)
+                        InkWell(
+                          onTap: isLoading ? null : onClear,
+                          child: Icon(CupertinoIcons.xmark, size: AppSizes.iconMd, color: isLoading ? AppColors.textTertiary : AppColors.textSecondary),
+                        ),
+                    ],
                   ),
                 ),
-                if (!readOnly)
-                  InkWell(
-                    onTap: onClear,
-                    child: const Icon(CupertinoIcons.xmark, size: AppSizes.iconMd, color: AppColors.textSecondary),
+                if (!readOnly && controller != null)
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: ValueListenableBuilder<TextEditingValue>(
+                      valueListenable: controller!,
+                      builder: (_, value, __) => Text(
+                        '${value.text.length}/$_maxLength',
+                        style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary),
+                      ),
+                    ),
                   ),
               ],
             ),
@@ -739,6 +758,140 @@ class _LegendItem extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class AskAiLoadingSkeleton extends StatefulWidget {
+  const AskAiLoadingSkeleton({super.key});
+
+  @override
+  State<AskAiLoadingSkeleton> createState() => _AskAiLoadingSkeletonState();
+}
+
+class _AskAiLoadingSkeletonState extends State<AskAiLoadingSkeleton> with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 1500))..repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, _) {
+        return Column(
+          children: [
+            // Response card skeleton
+            _SkeletonCard(
+              progress: _controller.value,
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.screen),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _SkeletonLine(width: 140, height: 20, progress: _controller.value),
+                    const SizedBox(height: AppSpacing.m),
+                    _SkeletonLine(width: double.infinity, height: 12, progress: _controller.value),
+                    const SizedBox(height: AppSpacing.s),
+                    _SkeletonLine(width: double.infinity, height: 12, progress: _controller.value),
+                    const SizedBox(height: AppSpacing.s),
+                    _SkeletonLine(width: 200, height: 12, progress: _controller.value),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.m),
+            // Summary card skeleton
+            _SkeletonCard(
+              progress: _controller.value,
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.screen),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _SkeletonLine(width: 120, height: 20, progress: _controller.value),
+                    const SizedBox(height: AppSpacing.m),
+                    Container(
+                      width: double.infinity,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: AppColors.surfaceMuted,
+                        borderRadius: BorderRadius.circular(AppRadii.m),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _SkeletonLine(width: 80, height: 36, progress: _controller.value),
+                          const SizedBox(height: AppSpacing.xs),
+                          _SkeletonLine(width: 60, height: 12, progress: _controller.value),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _SkeletonCard extends StatelessWidget {
+  const _SkeletonCard({required this.progress, required this.child});
+
+  final double progress;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadii.l),
+        boxShadow: AppShadows.screenCard,
+      ),
+      child: child,
+    );
+  }
+}
+
+class _SkeletonLine extends StatelessWidget {
+  const _SkeletonLine({required this.width, required this.height, required this.progress});
+
+  final double width;
+  final double height;
+  final double progress;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(height / 2),
+        gradient: LinearGradient(
+          begin: Alignment(-1.0 + 3.0 * progress, 0),
+          end: Alignment(1.0 + 3.0 * progress, 0),
+          colors: [
+            AppColors.surfaceMuted,
+            AppColors.violet.withValues(alpha: 0.12),
+            AppColors.surfaceMuted,
+          ],
+          stops: const [0.0, 0.5, 1.0],
+        ),
+      ),
     );
   }
 }

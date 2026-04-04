@@ -37,14 +37,15 @@ class MainScreen extends GetView<MainScreenController> {
           child: Obx(() {
             final selectedIndex = controller._selectedIndex.value;
             final activeBody = controller.widgetOptions.elementAt(selectedIndex);
-            final bool isDashboard = selectedIndex == 0;
+            final isDashboard = selectedIndex == 0;
+            final appBarSpacing = AppSpacing.m + 1;
 
             return Stack(
               children: [
                 activeBody,
                 if (isDashboard) ...[
-                  Positioned(left: AppSpacing.l, top: AppSpacing.safeAreaTop, child: const _DashboardStreakPill()),
-                  Positioned(right: AppSpacing.l, top: AppSpacing.safeAreaTop, child: const _DashboardCalendarPill()),
+                  Positioned(left: appBarSpacing, top: AppSpacing.safeAreaTop, child: const _DashboardStreakPill()),
+                  Positioned(right: appBarSpacing, top: AppSpacing.safeAreaTop, child: const _DashboardCalendarPill()),
                 ],
               ],
             );

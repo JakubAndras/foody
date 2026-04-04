@@ -159,7 +159,7 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
               crossAxisAlignment: CrossAxisAlignment.baseline,
               textBaseline: TextBaseline.alphabetic,
               children: [
-                Text(_formatWeight(_selectedWeight), style: AppTextStyles.displayXL.copyWith(fontSize: 56)),
+                Text(_formatWeight(_selectedWeight), style: AppTextStyles.displayL),
                 const SizedBox(width: AppSpacing.xs),
                 Text(tr(LocaleKeys.common_kg), style: AppTextStyles.h3),
               ],

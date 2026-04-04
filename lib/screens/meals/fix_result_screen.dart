@@ -96,6 +96,7 @@ class _FixResultScreenState extends State<FixResultScreen> {
                 gradient: AppGradients.askAiPrimary,
                 onTap: _isSubmitting ? null : _handleUpdate,
               ),
+              SizedBox(height: AppSpacing.s),
             ],
           ),
         ),
