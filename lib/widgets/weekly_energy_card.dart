@@ -4,6 +4,7 @@ import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/controller/day_record_controller.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/day_record.dart';
+import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/widgets/liquid_glass/glass_segmented_tabs.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -11,10 +12,15 @@ import 'package:get/get.dart';
 
 DateTime _dateOnly(DateTime date) => DateTime(date.year, date.month, date.day);
 
+/// Color used for BMR segments in the stacked goal bar.
+const _bmrColor = Color(0xFF6B9FFF);
+
 class _DayEnergyData {
   final double burned;
   final double consumed;
-  const _DayEnergyData({required this.burned, required this.consumed});
+  final double goal; // BMR + exercise burned that day
+  final bool isPastOrToday; // true for days <= today
+  const _DayEnergyData({required this.burned, required this.consumed, required this.goal, required this.isPastOrToday});
 }
 
 class _WeeklyEnergyStats {
@@ -22,7 +28,9 @@ class _WeeklyEnergyStats {
   final double totalBurned;
   final double totalConsumed;
   final double totalEnergy;
-  const _WeeklyEnergyStats({required this.days, required this.totalBurned, required this.totalConsumed, required this.totalEnergy});
+  final double avgDailyGoal;
+  final double? bmr;
+  const _WeeklyEnergyStats({required this.days, required this.totalBurned, required this.totalConsumed, required this.totalEnergy, required this.avgDailyGoal, required this.bmr});
 }
 
 class WeeklyEnergyCard extends StatefulWidget {
@@ -39,7 +47,7 @@ class _WeeklyEnergyCardState extends State<WeeklyEnergyCard> {
 
   DateTime _startOfWeekMonday(DateTime date) => DateTime(date.year, date.month, date.day - (date.weekday - 1));
 
-  _WeeklyEnergyStats _calculateStats(List<DayRecord> records, int index) {
+  _WeeklyEnergyStats _calculateStats(List<DayRecord> records, int index, double? bmr) {
     final today = _dateOnly(DateTime.now());
     final baseWeekStart = _startOfWeekMonday(today);
     final weekStart = DateTime(baseWeekStart.year, baseWeekStart.month, baseWeekStart.day - 7 * index);
@@ -47,6 +55,7 @@ class _WeeklyEnergyCardState extends State<WeeklyEnergyCard> {
 
     double totalBurned = 0;
     double totalConsumed = 0;
+    double totalGoal = 0;
     final days = <_DayEnergyData>[];
 
     for (int i = 0; i < 7; i++) {
@@ -54,12 +63,15 @@ class _WeeklyEnergyCardState extends State<WeeklyEnergyCard> {
       final record = byDate[date];
       final burned = record?.totalExerciseCalories ?? 0;
       final consumed = record?.totalCalories ?? 0;
+      final isPastOrToday = !date.isAfter(today);
+      final dayGoal = (bmr ?? 0) + burned;
       totalBurned += burned;
       totalConsumed += consumed;
-      days.add(_DayEnergyData(burned: burned, consumed: consumed));
+      totalGoal += dayGoal;
+      days.add(_DayEnergyData(burned: burned, consumed: consumed, goal: dayGoal, isPastOrToday: isPastOrToday));
     }
 
-    return _WeeklyEnergyStats(days: days, totalBurned: totalBurned, totalConsumed: totalConsumed, totalEnergy: totalConsumed - totalBurned);
+    return _WeeklyEnergyStats(days: days, totalBurned: totalBurned, totalConsumed: totalConsumed, totalEnergy: totalConsumed - totalBurned, avgDailyGoal: totalGoal / 7, bmr: bmr);
   }
 
   String _formatCalories(double value) {
@@ -86,12 +98,14 @@ class _WeeklyEnergyCardState extends State<WeeklyEnergyCard> {
   Widget build(BuildContext context) {
     return Obx(() {
       final records = DayRecordController.to.dayRecords.toList(growable: false);
-      final stats = _calculateStats(records, _selectedIndex);
+      final bmr = SessionManager.to.bmr.value;
+      final stats = _calculateStats(records, _selectedIndex, bmr);
       final calUnit = tr(LocaleKeys.common_kcal);
 
       double maxBar = 0;
       for (final d in stats.days) {
-        maxBar = math.max(maxBar, math.max(d.burned, d.consumed));
+        final goalIfVisible = d.isPastOrToday ? d.goal : 0.0;
+        maxBar = math.max(maxBar, math.max(d.consumed, goalIfVisible));
       }
       final ticks = _computeTicks(maxBar);
       final double chartMax = ticks.isNotEmpty ? ticks.first.toDouble() : 1;
@@ -123,20 +137,34 @@ class _WeeklyEnergyCardState extends State<WeeklyEnergyCard> {
                 children: [
                   Row(
                     children: [
+                      if (bmr != null) Expanded(child: _EnergyStat(label: 'BMR', value: _formatCalories(stats.avgDailyGoal), unit: calUnit, valueColor: _bmrColor)),
                       Expanded(child: _EnergyStat(label: tr(LocaleKeys.progress_burned), value: _formatCalories(stats.totalBurned), unit: calUnit, valueColor: AppColors.exerciseOrange)),
-                      Expanded(child: _EnergyStat(label: tr(LocaleKeys.progress_consumed), value: _formatCalories(stats.totalConsumed), unit: calUnit, valueColor: AppColors.greenStrong)),
+                      Expanded(child: _EnergyStat(label: tr(LocaleKeys.progress_consumed), value: _formatCalories(stats.totalConsumed), unit: calUnit, valueColor: AppColors.black)),
                       Expanded(
                         child: _EnergyStat(
                           label: tr(LocaleKeys.progress_energy),
                           value: stats.totalEnergy > 0 ? '+${_formatCalories(stats.totalEnergy)}' : _formatCalories(stats.totalEnergy),
                           unit: calUnit,
-                          valueColor: AppColors.black,
+                          valueColor: AppColors.greenStrong,
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: AppSpacing.l),
-                  _WeeklyEnergyChart(days: stats.days, ticks: ticks, chartMax: chartMax, dayLabels: dayLabels),
+                  _WeeklyEnergyChart(days: stats.days, ticks: ticks, chartMax: chartMax, dayLabels: dayLabels, bmr: bmr),
+                  if (bmr != null) ...[
+                    const SizedBox(height: AppSpacing.m),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _LegendItem(label: tr(LocaleKeys.personal_details_bmr), color: _bmrColor),
+                        const SizedBox(width: AppSpacing.m),
+                        _LegendItem(label: tr(LocaleKeys.common_exercise), color: AppColors.exerciseOrange),
+                        const SizedBox(width: AppSpacing.m),
+                        _LegendItem(label: tr(LocaleKeys.progress_consumed), color: AppColors.black),
+                      ],
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -162,13 +190,13 @@ class _EnergyStat extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary)),
+        Text(label, style: AppTextStyles.caption12.copyWith(color: AppColors.textTertiary)),
         const SizedBox(height: AppSpacing.xxs),
         RichText(
           text: TextSpan(
             children: [
-              TextSpan(text: value, style: AppTextStyles.h3.copyWith(color: valueColor, fontWeight: FontWeight.w800)),
-              TextSpan(text: ' $unit', style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary)),
+              TextSpan(text: value, style: AppTextStyles.title17.copyWith(color: valueColor, fontWeight: FontWeight.w800)),
+              TextSpan(text: ' $unit', style: AppTextStyles.caption12.copyWith(color: AppColors.textTertiary)),
             ],
           ),
         ),
@@ -178,12 +206,13 @@ class _EnergyStat extends StatelessWidget {
 }
 
 class _WeeklyEnergyChart extends StatelessWidget {
-  const _WeeklyEnergyChart({required this.days, required this.ticks, required this.chartMax, required this.dayLabels});
+  const _WeeklyEnergyChart({required this.days, required this.ticks, required this.chartMax, required this.dayLabels, required this.bmr});
 
   final List<_DayEnergyData> days;
   final List<int> ticks;
   final double chartMax;
   final List<String> dayLabels;
+  final double? bmr;
 
   static const double _chartHeight = 200;
 
@@ -222,7 +251,7 @@ class _WeeklyEnergyChart extends StatelessWidget {
               Expanded(
                 child: SizedBox(
                   height: _chartHeight,
-                  child: CustomPaint(size: Size.infinite, painter: _WeeklyEnergyBarPainter(days: days, chartMax: chartMax, gridLineCount: ticks.length)),
+                  child: CustomPaint(size: Size.infinite, painter: _WeeklyEnergyBarPainter(days: days, chartMax: chartMax, gridLineCount: ticks.length, bmr: bmr)),
                 ),
               ),
             ],
@@ -241,11 +270,12 @@ class _WeeklyEnergyChart extends StatelessWidget {
 }
 
 class _WeeklyEnergyBarPainter extends CustomPainter {
-  _WeeklyEnergyBarPainter({required this.days, required this.chartMax, required this.gridLineCount});
+  _WeeklyEnergyBarPainter({required this.days, required this.chartMax, required this.gridLineCount, required this.bmr});
 
   final List<_DayEnergyData> days;
   final double chartMax;
   final int gridLineCount;
+  final double? bmr;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -262,27 +292,50 @@ class _WeeklyEnergyBarPainter extends CustomPainter {
 
     if (chartMax <= 0) return;
 
+    final bmrPaint = Paint()..color = _bmrColor;
     final burnedPaint = Paint()..color = AppColors.exerciseOrange;
-    final consumedPaint = Paint()..color = AppColors.greenStrong;
+    final consumedPaint = Paint()..color = AppColors.black;
+    const radius = Radius.circular(3);
 
     final slotWidth = size.width / 7;
     final barWidth = slotWidth * 0.25;
     final gap = slotWidth * 0.04;
+    final effectiveBmr = bmr ?? 0.0;
 
     for (int i = 0; i < 7; i++) {
-      final day = i < days.length ? days[i] : const _DayEnergyData(burned: 0, consumed: 0);
+      final day = i < days.length ? days[i] : const _DayEnergyData(burned: 0, consumed: 0, goal: 0, isPastOrToday: false);
       final slotCenter = slotWidth * (i + 0.5);
+      final leftBarLeft = slotCenter - barWidth - gap / 2;
 
-      if (day.burned > 0) {
+      // Left bar: stacked BMR (bottom) + Exercise (top) — for past and today
+      if (day.isPastOrToday && effectiveBmr > 0 && day.goal > 0) {
+        final totalGoalHeight = (day.goal / chartMax) * size.height;
+        final bmrHeight = (effectiveBmr / chartMax) * size.height;
+        final exerciseHeight = totalGoalHeight - bmrHeight;
+
+        if (exerciseHeight > 0) {
+          // BMR bottom segment — rounded bottom only
+          final bmrRect = Rect.fromLTWH(leftBarLeft, size.height - bmrHeight, barWidth, bmrHeight);
+          canvas.drawRRect(RRect.fromRectAndCorners(bmrRect, bottomLeft: radius, bottomRight: radius), bmrPaint);
+          // Exercise top segment — rounded top only
+          final exRect = Rect.fromLTWH(leftBarLeft, size.height - totalGoalHeight, barWidth, exerciseHeight);
+          canvas.drawRRect(RRect.fromRectAndCorners(exRect, topLeft: radius, topRight: radius), burnedPaint);
+        } else {
+          // BMR only, no exercise — fully rounded
+          final bmrRect = Rect.fromLTWH(leftBarLeft, size.height - bmrHeight, barWidth, bmrHeight);
+          canvas.drawRRect(RRect.fromRectAndRadius(bmrRect, radius), bmrPaint);
+        }
+      } else if (day.burned > 0) {
+        // No BMR available — fallback: show exercise bar alone
         final barHeight = (day.burned / chartMax) * size.height;
-        final left = slotCenter - barWidth - gap / 2;
-        canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(left, size.height - barHeight, barWidth, barHeight), const Radius.circular(3)), burnedPaint);
+        canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(leftBarLeft, size.height - barHeight, barWidth, barHeight), radius), burnedPaint);
       }
 
+      // Right bar: Consumed
       if (day.consumed > 0) {
         final barHeight = (day.consumed / chartMax) * size.height;
         final left = slotCenter + gap / 2;
-        canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(left, size.height - barHeight, barWidth, barHeight), const Radius.circular(3)), consumedPaint);
+        canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(left, size.height - barHeight, barWidth, barHeight), radius), consumedPaint);
       }
     }
   }
@@ -303,7 +356,7 @@ class _WeeklyEnergyBarPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _WeeklyEnergyBarPainter oldDelegate) {
-    return oldDelegate.days != days || oldDelegate.chartMax != chartMax || oldDelegate.gridLineCount != gridLineCount;
+    return oldDelegate.days != days || oldDelegate.chartMax != chartMax || oldDelegate.gridLineCount != gridLineCount || oldDelegate.bmr != bmr;
   }
 }
 

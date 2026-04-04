@@ -24,6 +24,7 @@ abstract class  LocaleKeys {
   static const common_error = 'common_error';
   static const common_calories = 'common_calories';
   static const common_kcal = 'common_kcal';
+  static const common_day = 'common_day';
   static const common_protein = 'common_protein';
   static const common_carbs = 'common_carbs';
   static const common_fats = 'common_fats';
@@ -161,6 +162,7 @@ abstract class  LocaleKeys {
   static const progress_burned = 'progress_burned';
   static const progress_consumed = 'progress_consumed';
   static const progress_energy = 'progress_energy';
+  static const progress_goal = 'progress_goal';
   static const progress_insights_actions = 'progress_insights_actions';
   static const progress_export_summary = 'progress_export_summary';
   static const progress_ask_ai = 'progress_ask_ai';

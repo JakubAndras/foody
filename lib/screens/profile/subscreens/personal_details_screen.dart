@@ -22,14 +22,6 @@ import 'package:diplomka/widgets/sheet_top_bar.dart';
 class PersonalDetailsScreen extends StatelessWidget {
   const PersonalDetailsScreen({super.key});
 
-  int _computeBmr({required double weightKg, required double heightCm, required DateTime dob, required ProfileSex sex}) {
-    final int age = DateTime.now().difference(dob).inDays ~/ 365;
-    if (sex == ProfileSex.male) {
-      return (10 * weightKg + 6.25 * heightCm - 5 * age + 5).round();
-    }
-    return (10 * weightKg + 6.25 * heightCm - 5 * age - 161).round();
-  }
-
   String _workoutsLabel(String? code) {
     return switch (code) {
       '0-1' => '0–1',
@@ -68,8 +60,8 @@ class PersonalDetailsScreen extends StatelessWidget {
         final String? dietSubtitle = dietType == ProfileDietType.custom && (customDietPreferences?.trim().isNotEmpty ?? false) ? customDietPreferences!.trim() : null;
         final String workoutsLabel = '${_workoutsLabel(workoutsPerWeek)} ${tr(LocaleKeys.personal_details_activity_workouts_week)}';
 
-        final bool canComputeBmr = currentWeight != null && heightCm != null && dob != null && sex != null;
-        final String bmrLabel = canComputeBmr ? '${_computeBmr(weightKg: currentWeight, heightCm: heightCm, dob: dob, sex: sex)} kcal' : '—';
+        final double? bmrValue = SessionManager.to.bmr.value;
+        final String bmrLabel = bmrValue != null ? '${bmrValue.round()} kcal' : '—';
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,

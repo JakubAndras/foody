@@ -39,6 +39,20 @@ class SessionManager extends GetxService {
   final RxBool editableNutrientsEnabled1 = false.obs;
   final RxBool sectionHeaderPaddingEnabled = true.obs;
   final RxnString workoutsPerWeek = RxnString();
+  final RxnDouble bmr = RxnDouble();
+
+  void _recalculateBmr() {
+    final w = weightKg.value;
+    final h = heightCm.value;
+    final dob = dateOfBirth.value;
+    final s = sex.value;
+    if (w == null || h == null || dob == null || s == null) {
+      bmr.value = null;
+      return;
+    }
+    final age = DateTime.now().difference(dob).inDays ~/ 365;
+    bmr.value = s == ProfileSex.male ? 10 * w + 6.25 * h - 5 * age + 5 : 10 * w + 6.25 * h - 5 * age - 161;
+  }
 
   Future<void> onAppInit() async {
     themeModeIndex.value = ThemeMode.values[await SharedPreferencesService.to.getInt(key: themeModeKey) ?? 0];
@@ -63,6 +77,7 @@ class SessionManager extends GetxService {
     rolloverCaloriesEnabled.value = await SharedPreferencesService.to.getBool(key: rolloverCaloriesEnabledKey) ?? false;
     autoAdjustMacrosEnabled.value = await SharedPreferencesService.to.getBool(key: autoAdjustMacrosEnabledKey) ?? true;
     workoutsPerWeek.value = await SharedPreferencesService.to.getString(key: profileWorkoutsPerWeekKey);
+    _recalculateBmr();
   }
 
   Future<void> setOnboardingComplete(bool value) async {
@@ -78,11 +93,13 @@ class SessionManager extends GetxService {
   Future<void> setHeightCm(double? value) async {
     heightCm.value = value;
     await SharedPreferencesService.to.setDouble(key: profileHeightCmKey, value: value);
+    _recalculateBmr();
   }
 
   Future<void> setWeightKg(double? value) async {
     weightKg.value = value;
     await SharedPreferencesService.to.setDouble(key: profileWeightKgKey, value: value);
+    _recalculateBmr();
   }
 
   Future<void> setGoalWeightKg(double? value) async {
@@ -96,6 +113,7 @@ class SessionManager extends GetxService {
       key: profileSexKey,
       value: value?.code,
     );
+    _recalculateBmr();
   }
 
   Future<void> setGoal(ProfileGoal? value) async {
@@ -138,6 +156,7 @@ class SessionManager extends GetxService {
       key: profileDobKey,
       value: normalized?.millisecondsSinceEpoch,
     );
+    _recalculateBmr();
   }
 
   Future<void> setWeightChangeRateKgPerWeek(double? value) async {
