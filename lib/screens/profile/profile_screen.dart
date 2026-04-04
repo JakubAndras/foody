@@ -131,27 +131,28 @@ class ProfileScreen extends StatelessWidget {
                   _ProfileActionRow(title: 'Test Onboarding', icon: CupertinoIcons.play_circle, showDivider: false, onTap: () => Get.to(() => const OnboardingFlowScreen())),
                 ],
               ),
-              const SizedBox(height: AppSpacing.l),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
-                child: ProfileSectionHeader(title: tr(LocaleKeys.profile_account_actions)),
-              ),
-              const SizedBox(height: AppSpacing.s),
-              _ProfileGroupCard(
-                children: [
-                  _ProfileActionRow(
-                    title: tr(LocaleKeys.profile_logout),
-                    icon: CupertinoIcons.square_arrow_right,
-                    onTap: () => showSnackBar(message: tr(LocaleKeys.profile_logout), subtitle: tr(LocaleKeys.profile_logout_stub), type: SnackBarType.info),
-                  ),
-                  _ProfileActionRow(
-                    title: tr(LocaleKeys.profile_delete_account),
-                    icon: CupertinoIcons.person_badge_minus,
-                    showDivider: false,
-                    onTap: () => showSnackBar(message: tr(LocaleKeys.profile_delete_account), subtitle: tr(LocaleKeys.profile_delete_account_stub), type: SnackBarType.info),
-                  ),
-                ],
-              ),
+              // TODO: Account Actions section — hidden for now, will be needed later
+              // const SizedBox(height: AppSpacing.l),
+              // Padding(
+              //   padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
+              //   child: ProfileSectionHeader(title: tr(LocaleKeys.profile_account_actions)),
+              // ),
+              // const SizedBox(height: AppSpacing.s),
+              // _ProfileGroupCard(
+              //   children: [
+              //     _ProfileActionRow(
+              //       title: tr(LocaleKeys.profile_logout),
+              //       icon: CupertinoIcons.square_arrow_right,
+              //       onTap: () => showSnackBar(message: tr(LocaleKeys.profile_logout), subtitle: tr(LocaleKeys.profile_logout_stub), type: SnackBarType.info),
+              //     ),
+              //     _ProfileActionRow(
+              //       title: tr(LocaleKeys.profile_delete_account),
+              //       icon: CupertinoIcons.person_badge_minus,
+              //       showDivider: false,
+              //       onTap: () => showSnackBar(message: tr(LocaleKeys.profile_delete_account), subtitle: tr(LocaleKeys.profile_delete_account_stub), type: SnackBarType.info),
+              //     ),
+              //   ],
+              // ),
               const SizedBox(height: AppSpacing.s),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),

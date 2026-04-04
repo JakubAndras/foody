@@ -14,6 +14,7 @@ class OnboardingGoalScreen extends StatefulWidget {
     required this.step,
     required this.totalSteps,
     this.onCanProceedChanged,
+    this.onGoalChanged,
   });
 
   final VoidCallback onNext;
@@ -21,6 +22,7 @@ class OnboardingGoalScreen extends StatefulWidget {
   final int step;
   final int totalSteps;
   final ValueChanged<bool>? onCanProceedChanged;
+  final ValueChanged<ProfileGoal?>? onGoalChanged;
 
   @override
   State<OnboardingGoalScreen> createState() => _OnboardingGoalScreenState();
@@ -36,7 +38,7 @@ class _OnboardingGoalScreenState extends State<OnboardingGoalScreen>
   @override
   void initState() {
     super.initState();
-    _selected = SessionManager.to.goal.value;
+    _selected = null;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       widget.onCanProceedChanged?.call(_selected != null);
     });
@@ -76,6 +78,7 @@ class _OnboardingGoalScreenState extends State<OnboardingGoalScreen>
             onTap: () {
               setState(() => _selected = ProfileGoal.lose);
               widget.onCanProceedChanged?.call(true);
+              widget.onGoalChanged?.call(ProfileGoal.lose);
             },
           ),
           const SizedBox(height: AppSpacing.s),
@@ -85,6 +88,7 @@ class _OnboardingGoalScreenState extends State<OnboardingGoalScreen>
             onTap: () {
               setState(() => _selected = ProfileGoal.maintain);
               widget.onCanProceedChanged?.call(true);
+              widget.onGoalChanged?.call(ProfileGoal.maintain);
             },
           ),
           const SizedBox(height: AppSpacing.s),
@@ -94,6 +98,7 @@ class _OnboardingGoalScreenState extends State<OnboardingGoalScreen>
             onTap: () {
               setState(() => _selected = ProfileGoal.gain);
               widget.onCanProceedChanged?.call(true);
+              widget.onGoalChanged?.call(ProfileGoal.gain);
             },
           ),
         ],

@@ -10,13 +10,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingHeightWeightScreen extends StatefulWidget {
-  const OnboardingHeightWeightScreen({
-    super.key,
-    required this.onNext,
-    required this.onBack,
-    required this.step,
-    required this.totalSteps,
-  });
+  const OnboardingHeightWeightScreen({super.key, required this.onNext, required this.onBack, required this.step, required this.totalSteps});
 
   final VoidCallback onNext;
   final VoidCallback onBack;
@@ -24,12 +18,10 @@ class OnboardingHeightWeightScreen extends StatefulWidget {
   final int totalSteps;
 
   @override
-  State<OnboardingHeightWeightScreen> createState() =>
-      _OnboardingHeightWeightScreenState();
+  State<OnboardingHeightWeightScreen> createState() => _OnboardingHeightWeightScreenState();
 }
 
-class _OnboardingHeightWeightScreenState
-    extends State<OnboardingHeightWeightScreen> {
+class _OnboardingHeightWeightScreenState extends State<OnboardingHeightWeightScreen> {
   bool _metric = true;
   late final List<int> _heightCmValues;
   late final List<int> _weightKgValues;
@@ -49,18 +41,8 @@ class _OnboardingHeightWeightScreenState
     _metric = SessionManager.to.prefersMetric.value;
     _heightCmValues = List.generate(120, (index) => 140 + index);
     _weightKgValues = List.generate(140, (index) => 40 + index);
-    _heightInchValues = List.generate(
-      _cmToInches(_heightCmValues.last) -
-          _cmToInches(_heightCmValues.first) +
-          1,
-      (index) => _cmToInches(_heightCmValues.first) + index,
-    );
-    _weightLbValues = List.generate(
-      _kgToPounds(_weightKgValues.last) -
-          _kgToPounds(_weightKgValues.first) +
-          1,
-      (index) => _kgToPounds(_weightKgValues.first) + index,
-    );
+    _heightInchValues = List.generate(_cmToInches(_heightCmValues.last) - _cmToInches(_heightCmValues.first) + 1, (index) => _cmToInches(_heightCmValues.first) + index);
+    _weightLbValues = List.generate(_kgToPounds(_weightKgValues.last) - _kgToPounds(_weightKgValues.first) + 1, (index) => _kgToPounds(_weightKgValues.first) + index);
 
     final double? storedHeight = SessionManager.to.heightCm.value;
     final double? storedWeight = SessionManager.to.weightKg.value;
@@ -85,10 +67,8 @@ class _OnboardingHeightWeightScreenState
       }
     }
 
-    _selectedHeightCm =
-        _selectedHeightCm.clamp(_heightCmValues.first, _heightCmValues.last);
-    _selectedWeightKg =
-        _selectedWeightKg.clamp(_weightKgValues.first, _weightKgValues.last);
+    _selectedHeightCm = _selectedHeightCm.clamp(_heightCmValues.first, _heightCmValues.last);
+    _selectedWeightKg = _selectedWeightKg.clamp(_weightKgValues.first, _weightKgValues.last);
   }
 
   int _cmToInches(int cm) => (cm / 2.54).round();
@@ -107,22 +87,18 @@ class _OnboardingHeightWeightScreenState
 
   int get _heightSelectedIndex {
     if (_metric) {
-      return (_selectedHeightCm - _heightCmValues.first)
-          .clamp(0, _heightCmValues.length - 1);
+      return (_selectedHeightCm - _heightCmValues.first).clamp(0, _heightCmValues.length - 1);
     }
     final int selectedInches = _cmToInches(_selectedHeightCm);
-    return (selectedInches - _heightInchValues.first)
-        .clamp(0, _heightInchValues.length - 1);
+    return (selectedInches - _heightInchValues.first).clamp(0, _heightInchValues.length - 1);
   }
 
   int get _weightSelectedIndex {
     if (_metric) {
-      return (_selectedWeightKg - _weightKgValues.first)
-          .clamp(0, _weightKgValues.length - 1);
+      return (_selectedWeightKg - _weightKgValues.first).clamp(0, _weightKgValues.length - 1);
     }
     final int selectedPounds = _kgToPounds(_selectedWeightKg);
-    return (selectedPounds - _weightLbValues.first)
-        .clamp(0, _weightLbValues.length - 1);
+    return (selectedPounds - _weightLbValues.first).clamp(0, _weightLbValues.length - 1);
   }
 
   List<String> get _heightDisplayValues {
@@ -161,17 +137,10 @@ class _OnboardingHeightWeightScreenState
         children: [
           Text(tr(LocaleKeys.onboarding_height_weight_title), style: textTheme.headlineLarge),
           const SizedBox(height: AppSpacing.s),
-          Text(
-            'This will be used to calibrate your custom plan.',
-            style:
-                textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
-          ),
-          const SizedBox(height: AppSpacing.xl),
+          Text(tr(LocaleKeys.onboarding_gender_subtitle), style: textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary)),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.1),
           Center(
-            child: _UnitToggle(
-              metric: _metric,
-              onChanged: (value) => setState(() => _metric = value),
-            ),
+            child: _UnitToggle(metric: _metric, onChanged: (value) => setState(() => _metric = value)),
           ),
           const SizedBox(height: AppSpacing.xl),
           Row(
@@ -241,12 +210,7 @@ class _UnitToggle extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
-          'Imperial',
-          style: textTheme.titleSmall?.copyWith(
-            color: metric ? AppColors.textTertiary : AppColors.textPrimary,
-          ),
-        ),
+        Text(tr(LocaleKeys.common_imperial), style: textTheme.titleSmall?.copyWith(color: metric ? AppColors.textTertiary : AppColors.textPrimary)),
         const SizedBox(width: AppSpacing.s),
         GestureDetector(
           onTap: () => onChanged(!metric),
@@ -254,33 +218,21 @@ class _UnitToggle extends StatelessWidget {
             width: AppSizes.toggleWidth,
             height: AppSizes.toggleHeight,
             padding: const EdgeInsets.all(AppSpacing.xxs),
-            decoration: BoxDecoration(
-              gradient: AppGradients.primary,
-              borderRadius: BorderRadius.circular(AppRadii.pill),
-            ),
+            decoration: BoxDecoration(gradient: AppGradients.primary, borderRadius: BorderRadius.circular(AppRadii.pill)),
             child: AnimatedAlign(
               alignment: metric ? Alignment.centerRight : Alignment.centerLeft,
               duration: const Duration(milliseconds: 200),
               child: Container(
                 width: AppSizes.toggleHeight - AppSpacing.xs,
                 height: AppSizes.toggleHeight - AppSpacing.xs,
-                decoration: const BoxDecoration(
-                  color: AppColors.surface,
-                  shape: BoxShape.circle,
-                ),
+                decoration: const BoxDecoration(color: AppColors.surface, shape: BoxShape.circle),
               ),
             ),
           ),
         ),
         const SizedBox(width: AppSpacing.s),
-        Text(
-          'Metric',
-          style: textTheme.titleSmall?.copyWith(
-            color: metric ? AppColors.textPrimary : AppColors.textTertiary,
-          ),
-        ),
+        Text(tr(LocaleKeys.common_metric), style: textTheme.titleSmall?.copyWith(color: metric ? AppColors.textPrimary : AppColors.textTertiary)),
       ],
     );
   }
 }
-

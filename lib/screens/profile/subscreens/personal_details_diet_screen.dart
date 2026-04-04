@@ -62,8 +62,19 @@ class _PersonalDetailsDietScreenState extends State<PersonalDetailsDietScreen> w
     super.build(context);
     final TextTheme textTheme = Theme.of(context).textTheme;
 
+    final bool isOnboarding = widget.onCanProceedChanged != null;
+
     return ProfileGradientScaffold(
       padding: const EdgeInsets.fromLTRB(AppSpacing.screen, 0, AppSpacing.screen, AppSpacing.xl),
+      floatingActionButton: isOnboarding
+          ? SafeArea(
+              top: false,
+              bottom: false,
+              minimum: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+              child: SizedBox(width: double.infinity, child: OnboardingPrimaryButton(label: tr(LocaleKeys.common_continue_btn), isEnabled: _selected != null, onPressed: _selected != null ? widget.onNext : null)),
+            )
+          : null,
+      floatingActionButtonLocation: isOnboarding ? FloatingActionButtonLocation.centerFloat : null,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

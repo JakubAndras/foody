@@ -35,6 +35,7 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
   final PageController _controller = PageController();
   int _index = 0;
   bool _showCustomDiet = false;
+  bool _isGoalMaintain = false;
   bool _canSwipeForward = true;
   final Map<int, bool> _pageCanProceed = {};
   bool _isReverting = false;
@@ -47,8 +48,10 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
         unawaited(SessionManager.to.setDietType(ProfileDietType.classic));
       }
       unawaited(SessionManager.to.setOnboardingComplete(true));
+      Get.offAll(() => const MainScreen());
       return;
     }
+    setState(() => _canSwipeForward = true);
     _controller.nextPage(
       duration: const Duration(milliseconds: 350),
       curve: Curves.easeOutCubic,
@@ -83,7 +86,11 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
   }
 
   bool _isGateRequired(int index) {
-    return index == 1 || index == 2 || index == 5 || index == 8;
+    // Gender is always index 1, Workouts always index 2, Goal always index 5
+    if (index == 1 || index == 2 || index == 5) return true;
+    // Diet screen index shifts depending on whether weight screens are shown
+    final int dietIndex = _isGoalMaintain ? 6 : 8;
+    return index == dietIndex;
   }
 
   bool _defaultCanProceed(int index) {
@@ -95,6 +102,13 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
     if (_index == index && _canSwipeForward != canProceed) {
       setState(() => _canSwipeForward = canProceed);
     }
+  }
+
+  void _handleGoalChanged(ProfileGoal? goal) {
+    final bool maintain = goal == ProfileGoal.maintain;
+    if (_isGoalMaintain == maintain) return;
+    _pageCanProceed.clear();
+    setState(() => _isGoalMaintain = maintain);
   }
 
   void _handleDietChanged(String diet) {
@@ -109,13 +123,10 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
   }
 
   List<Widget> get _screens {
-    final int totalSteps = _showCustomDiet ? 14 : 13;
-    final int customStep = 9;
-    final int calorieBurnStep = _showCustomDiet ? 10 : 9;
-    final int rolloverStep = _showCustomDiet ? 11 : 10;
-    final int loadingStep = _showCustomDiet ? 12 : 11;
-    final int planReadyStep = _showCustomDiet ? 13 : 12;
-    final int saveProgressStep = _showCustomDiet ? 14 : 13;
+    final int wOffset = _isGoalMaintain ? 0 : 2;
+    final int dOffset = _showCustomDiet ? 1 : 0;
+    final int totalSteps = 8 + wOffset + dOffset;
+    final int postDiet = 7 + wOffset + dOffset;
 
     return [
       OnboardingWelcomeScreen(onNext: _next, onSkip: _skipOnboarding),
@@ -123,14 +134,14 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
       OnboardingWorkoutsScreen(onNext: _next, onBack: _previous, step: 2, totalSteps: totalSteps, onCanProceedChanged: (canProceed) => _setCanProceed(2, canProceed)),
       OnboardingHeightWeightScreen(onNext: _next, onBack: _previous, step: 3, totalSteps: totalSteps),
       OnboardingDobScreen(onNext: _next, onBack: _previous, step: 4, totalSteps: totalSteps),
-      OnboardingGoalScreen(onNext: _next, onBack: _previous, step: 5, totalSteps: totalSteps, onCanProceedChanged: (canProceed) => _setCanProceed(5, canProceed)),
-      OnboardingDesiredWeightScreen(onNext: _next, onBack: _previous, step: 6, totalSteps: totalSteps),
-      OnboardingWeightLossSpeedScreen(onNext: _next, onBack: _previous, step: 7, totalSteps: totalSteps),
+      OnboardingGoalScreen(onNext: _next, onBack: _previous, step: 5, totalSteps: totalSteps, onCanProceedChanged: (canProceed) => _setCanProceed(5, canProceed), onGoalChanged: _handleGoalChanged),
+      if (!_isGoalMaintain) OnboardingDesiredWeightScreen(onNext: _next, onBack: _previous, step: 6, totalSteps: totalSteps),
+      if (!_isGoalMaintain) OnboardingWeightLossSpeedScreen(onNext: _next, onBack: _previous, step: 7, totalSteps: totalSteps),
       PersonalDetailsDietScreen(
         onNext: _next,
         onBack: _previous,
         keepAlive: true,
-        onCanProceedChanged: (canProceed) => _setCanProceed(8, canProceed),
+        onCanProceedChanged: (canProceed) => _setCanProceed(_isGoalMaintain ? 6 : 8, canProceed),
         onDietChanged: _handleDietChanged,
       ),
       if (_showCustomDiet)
@@ -141,11 +152,11 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
           initialPreferences: SessionManager.to.customDietPreferences.value,
           onPreferencesSaved: (value) => unawaited(SessionManager.to.setCustomDietPreferences(value)),
         ),
-      OnboardingCalorieBurnScreen(onNext: _next, onBack: _previous, step: calorieBurnStep, totalSteps: totalSteps),
-      OnboardingRolloverScreen(onNext: _next, onBack: _previous, step: rolloverStep, totalSteps: totalSteps),
-      OnboardingLoadingPlanScreen(onNext: _next, step: loadingStep, totalSteps: totalSteps),
-      OnboardingPlanReadyScreen(onNext: _next, onBack: _previous, step: planReadyStep, totalSteps: totalSteps),
-      OnboardingSaveProgressScreen(onNext: _next, onBack: _previous, step: saveProgressStep, totalSteps: totalSteps),
+      // OnboardingCalorieBurnScreen(onNext: _next, onBack: _previous, step: postDiet, totalSteps: totalSteps),
+      // OnboardingRolloverScreen(onNext: _next, onBack: _previous, step: postDiet + 1, totalSteps: totalSteps),
+      OnboardingLoadingPlanScreen(onNext: _next, step: postDiet, totalSteps: totalSteps),
+      OnboardingPlanReadyScreen(onNext: _next, onBack: _previous, step: postDiet + 1, totalSteps: totalSteps),
+      // OnboardingSaveProgressScreen(onNext: _next, onBack: _previous, step: postDiet + 2, totalSteps: totalSteps),
     ];
   }
 

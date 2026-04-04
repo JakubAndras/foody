@@ -1,19 +1,15 @@
 import 'dart:ui';
 
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/widgets/custom_glass_app_bar.dart';
+import 'package:diplomka/widgets/foody_glass_buttons.dart';
+import 'package:diplomka/widgets/mesh_gradient_background.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 class OnboardingPage extends StatelessWidget {
-  const OnboardingPage({
-    super.key,
-    required this.child,
-    this.bottom,
-    this.progress,
-    this.showBack = true,
-    this.onBack,
-    this.padding,
-  });
+  const OnboardingPage({super.key, required this.child, this.bottom, this.progress, this.showBack = true, this.onBack, this.padding});
 
   final Widget child;
   final Widget? bottom;
@@ -24,11 +20,7 @@ class OnboardingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final EdgeInsetsGeometry resolvedPadding = padding ??
-        const EdgeInsets.symmetric(
-          horizontal: AppSpacing.m,
-          vertical: AppSpacing.l,
-        );
+    final EdgeInsetsGeometry resolvedPadding = padding ?? const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.l);
     final bool hasTopChrome = progress != null || showBack;
     final double contentTopInset = hasTopChrome ? AppSizes.topBarHeight : 0;
 
@@ -42,52 +34,49 @@ class OnboardingPage extends StatelessWidget {
             top: false,
             bottom: false,
             minimum: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-            child: SizedBox(
-              width: double.infinity,
-              child: bottom,
-            ),
+            child: SizedBox(width: double.infinity, child: bottom),
           );
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      floatingActionButton: floatingActionButton,
-      floatingActionButtonLocation: bottom == null ? null : FloatingActionButtonLocation.centerFloat,
-      body: Stack(
-        children: [
-          SafeArea(
-            bottom: false,
-            child: Padding(
-              padding: EdgeInsets.only(top: contentTopInset),
-              child: SingleChildScrollView(
-                padding: EdgeInsets.only(
-                  bottom: AppSpacing.xl + bottomBarHeight,
-                ),
+    return LiquidGlassScope(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        floatingActionButton: floatingActionButton,
+        floatingActionButtonLocation: bottom == null ? null : FloatingActionButtonLocation.centerFloat,
+        body: LiquidGlassBackground(
+          child: Stack(
+            children: [
+              const MeshGradientBackground(),
+              SafeArea(
+                bottom: false,
                 child: Padding(
-                  padding: resolvedPadding,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      child,
-                    ],
+                  padding: EdgeInsets.only(top: contentTopInset),
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.only(bottom: AppSpacing.xl + bottomBarHeight),
+                    child: Padding(
+                      padding: resolvedPadding,
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [child]),
+                    ),
                   ),
                 ),
               ),
-            ),
+              if (progress != null)
+                Positioned(
+                  left: AppSpacing.xl + 32,
+                  right: AppSpacing.m,
+                  top: topInset + AppSpacing.m + 2,
+                  child: OnboardingProgressBar(value: progress!),
+                ),
+              if (showBack)
+                Positioned(
+                  left: AppSpacing.m,
+                  top: topInset,
+                  width: AppSizes.backButtonSize,
+                  height: AppSizes.backButtonSize,
+                  child: OnboardingBackButton(onPressed: onBack),
+                ),
+            ],
           ),
-          if (progress != null)
-            Positioned(
-              left: AppSpacing.xl + 32,
-              right: AppSpacing.m,
-              top: topInset + AppSpacing.m + 2,
-              child: OnboardingProgressBar(value: progress!),
-            ),
-          if (showBack)
-            Positioned(
-              left: AppSpacing.m,
-              top: topInset,
-              child: OnboardingBackButton(onPressed: onBack),
-            ),
-        ],
+        ),
       ),
     );
   }
@@ -100,27 +89,7 @@ class OnboardingBackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: AppSizes.backButtonSize,
-      height: AppSizes.backButtonSize,
-      child: Material(
-        color: AppColors.surface,
-        shape: const CircleBorder(
-          side: BorderSide(color: AppColors.outline, width: 1),
-        ),
-        child: InkWell(
-          customBorder: const CircleBorder(),
-          onTap: onPressed,
-          child: const Center(
-            child: Icon(
-              CupertinoIcons.chevron_left,
-              size: AppSizes.iconMd,
-              color: AppColors.textPrimary,
-            ),
-          ),
-        ),
-      ),
-    );
+    return CustomGlassIconButton(icon: CupertinoIcons.chevron_left, onPressed: onPressed, size: AppSizes.backButtonSize);
   }
 }
 
@@ -151,13 +120,7 @@ class OnboardingProgressBar extends StatelessWidget {
 }
 
 class OnboardingPrimaryButton extends StatelessWidget {
-  const OnboardingPrimaryButton({
-    super.key,
-    required this.label,
-    this.onPressed,
-    this.isEnabled = true,
-    this.leading,
-  });
+  const OnboardingPrimaryButton({super.key, required this.label, this.onPressed, this.isEnabled = true, this.leading});
 
   final String label;
   final VoidCallback? onPressed;
@@ -166,59 +129,12 @@ class OnboardingPrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextStyle? labelStyle = Theme.of(context).textTheme.labelLarge?.copyWith(
-          color: AppColors.onPrimary,
-          fontWeight: FontWeight.w600,
-        );
-
-    final List<Color> colors =
-        isEnabled ? AppGradients.primary.colors : AppGradients.primary.colors.map((color) => color.withValues(alpha: 0.5)).toList();
-
-    return SizedBox(
-      height: AppSizes.buttonHeight,
-      width: double.infinity,
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: isEnabled ? onPressed : null,
-          borderRadius: BorderRadius.circular(AppRadii.pill),
-          child: Ink(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: AppGradients.primary.begin,
-                end: AppGradients.primary.end,
-                colors: colors,
-              ),
-              borderRadius: BorderRadius.circular(AppRadii.pill),
-            ),
-            child: Center(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (leading != null) ...[
-                    leading!,
-                    const SizedBox(width: AppSpacing.s),
-                  ],
-                  Text(label, style: labelStyle),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
+    return FoodyPrimaryButton(label: label, onTap: isEnabled ? onPressed : null, leading: leading);
   }
 }
 
 class OnboardingSolidButton extends StatelessWidget {
-  const OnboardingSolidButton({
-    super.key,
-    required this.label,
-    this.onPressed,
-    this.leading,
-    this.backgroundColor = AppColors.primary,
-    this.textColor = AppColors.onPrimary,
-  });
+  const OnboardingSolidButton({super.key, required this.label, this.onPressed, this.leading, this.backgroundColor = AppColors.primary, this.textColor = AppColors.onPrimary});
 
   final String label;
   final VoidCallback? onPressed;
@@ -228,45 +144,12 @@ class OnboardingSolidButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextStyle? labelStyle = Theme.of(context).textTheme.labelLarge?.copyWith(
-          color: textColor,
-          fontWeight: FontWeight.w600,
-        );
-
-    return SizedBox(
-      height: AppSizes.buttonHeight,
-      width: double.infinity,
-      child: Material(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(AppRadii.pill),
-        child: InkWell(
-          onTap: onPressed,
-          borderRadius: BorderRadius.circular(AppRadii.pill),
-          child: Center(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (leading != null) ...[
-                  leading!,
-                  const SizedBox(width: AppSpacing.s),
-                ],
-                Text(label, style: labelStyle),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+    return FoodyPrimaryButton(label: label, onTap: onPressed, leading: leading);
   }
 }
 
 class OnboardingOutlinedButton extends StatelessWidget {
-  const OnboardingOutlinedButton({
-    super.key,
-    required this.label,
-    this.onPressed,
-    this.leading,
-  });
+  const OnboardingOutlinedButton({super.key, required this.label, this.onPressed, this.leading});
 
   final String label;
   final VoidCallback? onPressed;
@@ -274,38 +157,7 @@ class OnboardingOutlinedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextStyle? labelStyle = Theme.of(context).textTheme.labelLarge?.copyWith(
-          color: AppColors.textPrimary,
-          fontWeight: FontWeight.w600,
-        );
-
-    return SizedBox(
-      height: AppSizes.buttonHeight,
-      width: double.infinity,
-      child: Material(
-        color: AppColors.surface,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadii.pill),
-          side: const BorderSide(color: AppColors.outline),
-        ),
-        child: InkWell(
-          onTap: onPressed,
-          borderRadius: BorderRadius.circular(AppRadii.pill),
-          child: Center(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (leading != null) ...[
-                  leading!,
-                  const SizedBox(width: AppSpacing.s),
-                ],
-                Text(label, style: labelStyle),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+    return FoodySecondaryButton(label: label, onTap: onPressed, leading: leading);
   }
 }
 
@@ -317,11 +169,7 @@ class OnboardingTextLink extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextStyle? style = Theme.of(context).textTheme.bodyLarge?.copyWith(
-          color: AppColors.textMuted,
-          decoration: TextDecoration.underline,
-          fontWeight: FontWeight.w500,
-        );
+    final TextStyle? style = Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.textMuted, decoration: TextDecoration.underline, fontWeight: FontWeight.w500);
 
     return GestureDetector(
       onTap: onPressed,
@@ -337,24 +185,15 @@ class OnboardingLanguageChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextStyle? textStyle = Theme.of(context).textTheme.titleSmall?.copyWith(
-          color: AppColors.textPrimary,
-          fontWeight: FontWeight.w600,
-        );
+    final TextStyle? textStyle = Theme.of(context).textTheme.titleSmall?.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w600);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(AppRadii.pill),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
         child: Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.s,
-            vertical: AppSpacing.xs,
-          ),
-          decoration: BoxDecoration(
-            color: AppColors.glassLight,
-            borderRadius: BorderRadius.circular(AppRadii.pill),
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s, vertical: AppSpacing.xs),
+          decoration: BoxDecoration(color: AppColors.glassLight, borderRadius: BorderRadius.circular(AppRadii.pill)),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -370,15 +209,7 @@ class OnboardingLanguageChip extends StatelessWidget {
 }
 
 class OnboardingOptionCard extends StatelessWidget {
-  const OnboardingOptionCard({
-    super.key,
-    required this.title,
-    this.subtitle,
-    this.leading,
-    this.selected = false,
-    this.onTap,
-    this.height = AppSizes.buttonHeight,
-  });
+  const OnboardingOptionCard({super.key, required this.title, this.subtitle, this.leading, this.selected = false, this.onTap, this.height = AppSizes.buttonHeight});
 
   final String title;
   final String? subtitle;
@@ -407,10 +238,7 @@ class OnboardingOptionCard extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
             child: Row(
               children: [
-                if (leading != null) ...[
-                  leading!,
-                  const SizedBox(width: AppSpacing.m),
-                ],
+                if (leading != null) ...[leading!, const SizedBox(width: AppSpacing.m)],
                 Expanded(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -418,19 +246,13 @@ class OnboardingOptionCard extends StatelessWidget {
                     children: [
                       Text(
                         title,
-                        style: textTheme.titleMedium?.copyWith(
-                          color: titleColor,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: textTheme.titleMedium?.copyWith(color: titleColor, fontWeight: FontWeight.w600),
                       ),
                       if (subtitle != null) ...[
                         const SizedBox(height: AppSpacing.xxs),
                         Text(
                           subtitle!,
-                          style: textTheme.bodyLarge?.copyWith(
-                            color: subtitleColor,
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: textTheme.bodyLarge?.copyWith(color: subtitleColor, fontWeight: FontWeight.w500),
                         ),
                       ],
                     ],
@@ -446,13 +268,7 @@ class OnboardingOptionCard extends StatelessWidget {
 }
 
 class OnboardingPillChipSmall extends StatelessWidget {
-  const OnboardingPillChipSmall({
-    super.key,
-    required this.label,
-    this.textColor,
-    this.backgroundColor,
-    this.leading,
-  });
+  const OnboardingPillChipSmall({super.key, required this.label, this.textColor, this.backgroundColor, this.leading});
 
   final String label;
   final Color? textColor;
@@ -461,22 +277,14 @@ class OnboardingPillChipSmall extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextStyle? style = Theme.of(context).textTheme.bodyLarge?.copyWith(
-          color: textColor ?? AppColors.textPrimary,
-        );
+    final TextStyle? style = Theme.of(context).textTheme.bodyLarge?.copyWith(color: textColor ?? AppColors.textPrimary);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.xxs),
-      decoration: BoxDecoration(
-        color: backgroundColor ?? AppColors.surfaceChip,
-        borderRadius: BorderRadius.circular(AppRadii.l),
-      ),
+      decoration: BoxDecoration(color: backgroundColor ?? AppColors.surfaceChip, borderRadius: BorderRadius.circular(AppRadii.l)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (leading != null) ...[
-            leading!,
-            const SizedBox(width: AppSpacing.xxs),
-          ],
+          if (leading != null) ...[leading!, const SizedBox(width: AppSpacing.xxs)],
           Text(label, style: style),
         ],
       ),
@@ -485,13 +293,7 @@ class OnboardingPillChipSmall extends StatelessWidget {
 }
 
 class OnboardingPillChipBig extends StatelessWidget {
-  const OnboardingPillChipBig({
-    super.key,
-    required this.label,
-    this.textColor,
-    this.backgroundColor,
-    this.leading,
-  });
+  const OnboardingPillChipBig({super.key, required this.label, this.textColor, this.backgroundColor, this.leading});
 
   final String label;
   final Color? textColor;
@@ -500,22 +302,14 @@ class OnboardingPillChipBig extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextStyle? style = Theme.of(context).textTheme.titleLarge?.copyWith(
-          color: textColor ?? AppColors.textPrimary,
-        );
+    final TextStyle? style = Theme.of(context).textTheme.titleLarge?.copyWith(color: textColor ?? AppColors.textPrimary);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.xs),
-      decoration: BoxDecoration(
-        color: backgroundColor ?? AppColors.surfaceChip,
-        borderRadius: BorderRadius.circular(AppRadii.l),
-      ),
+      decoration: BoxDecoration(color: backgroundColor ?? AppColors.surfaceChip, borderRadius: BorderRadius.circular(AppRadii.l)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (leading != null) ...[
-            leading!,
-            const SizedBox(width: AppSpacing.xxs),
-          ],
+          if (leading != null) ...[leading!, const SizedBox(width: AppSpacing.xxs)],
           Text(label, style: style),
         ],
       ),
@@ -524,12 +318,7 @@ class OnboardingPillChipBig extends StatelessWidget {
 }
 
 class OnboardingSurfaceCard extends StatelessWidget {
-  const OnboardingSurfaceCard({
-    super.key,
-    required this.child,
-    this.padding = const EdgeInsets.all(AppSpacing.m),
-    this.radius = AppRadii.l,
-  });
+  const OnboardingSurfaceCard({super.key, required this.child, this.padding = const EdgeInsets.all(AppSpacing.m), this.radius = AppRadii.l});
 
   final Widget child;
   final EdgeInsetsGeometry padding;
@@ -539,24 +328,14 @@ class OnboardingSurfaceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: padding,
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(radius),
-        boxShadow: AppShadows.card,
-      ),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(radius), border: AppBorders.screenCard, boxShadow: AppShadows.card),
       child: child,
     );
   }
 }
 
 class OnboardingSlider extends StatelessWidget {
-  const OnboardingSlider({
-    super.key,
-    required this.value,
-    required this.onChanged,
-    this.min = 0,
-    this.max = 1,
-  });
+  const OnboardingSlider({super.key, required this.value, required this.onChanged, this.min = 0, this.max = 1});
 
   final double value;
   final ValueChanged<double> onChanged;
@@ -574,12 +353,7 @@ class OnboardingSlider extends StatelessWidget {
         overlayColor: AppColors.primary.withValues(alpha: 0.08),
         thumbShape: const RoundSliderThumbShape(enabledThumbRadius: AppSizes.sliderThumbRadius),
       ),
-      child: Slider(
-        value: value,
-        min: min,
-        max: max,
-        onChanged: onChanged,
-      ),
+      child: Slider(value: value, min: min, max: max, onChanged: onChanged),
     );
   }
 }
@@ -598,10 +372,7 @@ class OnboardingSliderTicks extends StatelessWidget {
         (index) => Container(
           width: AppSizes.sliderTickSize,
           height: AppSizes.sliderTickSize,
-          decoration: BoxDecoration(
-            color: AppColors.textMuted.withValues(alpha: 0.3),
-            shape: BoxShape.circle,
-          ),
+          decoration: BoxDecoration(color: AppColors.textMuted.withValues(alpha: 0.3), shape: BoxShape.circle),
         ),
       ),
     );
@@ -638,14 +409,10 @@ class OnboardingRingChart extends StatelessWidget {
           width: size,
           height: size,
           child: CustomPaint(
-            painter: _RingPainter(
-              progress: value,
-              color: color,
-              background: AppColors.surfacePill,
-              strokeWidth: strokeWidth,
-            ),
+            painter: _RingPainter(progress: value, color: color, background: AppColors.surfacePill, strokeWidth: strokeWidth),
             child: Center(
-              child: centerChild ??
+              child:
+                  centerChild ??
                   RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(
@@ -670,12 +437,7 @@ class OnboardingRingChart extends StatelessWidget {
 }
 
 class _RingPainter extends CustomPainter {
-  _RingPainter({
-    required this.progress,
-    required this.color,
-    required this.background,
-    required this.strokeWidth,
-  });
+  _RingPainter({required this.progress, required this.color, required this.background, required this.strokeWidth});
 
   final double progress;
   final Color color;
@@ -719,9 +481,7 @@ class OnboardingRuler extends StatelessWidget {
     return SizedBox(
       height: AppSizes.rulerHeight,
       width: double.infinity,
-      child: CustomPaint(
-        painter: _RulerPainter(),
-      ),
+      child: CustomPaint(painter: _RulerPainter()),
     );
   }
 }
@@ -740,22 +500,11 @@ class _RulerPainter extends CustomPainter {
     final Paint highlightPaint = Paint()..color = AppColors.outline;
 
     final double centerX = size.width / 2;
-    final Rect highlightRect = Rect.fromCenter(
-      center: Offset(centerX, size.height * 0.4),
-      width: AppSizes.rulerHighlightWidth,
-      height: AppSizes.rulerHighlightHeight,
-    );
+    final Rect highlightRect = Rect.fromCenter(center: Offset(centerX, size.height * 0.4), width: AppSizes.rulerHighlightWidth, height: AppSizes.rulerHighlightHeight);
 
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(highlightRect, const Radius.circular(AppRadii.s)),
-      highlightPaint,
-    );
+    canvas.drawRRect(RRect.fromRectAndRadius(highlightRect, const Radius.circular(AppRadii.s)), highlightPaint);
 
-    canvas.drawLine(
-      Offset(0, size.height * 0.75),
-      Offset(size.width, size.height * 0.75),
-      basePaint,
-    );
+    canvas.drawLine(Offset(0, size.height * 0.75), Offset(size.width, size.height * 0.75), basePaint);
 
     final int ticks = (size.width / AppSizes.rulerTickSpacing).floor();
     for (int i = 0; i <= ticks; i++) {
@@ -763,20 +512,12 @@ class _RulerPainter extends CustomPainter {
       final double tickHeight = i % 10 == 0
           ? AppSizes.rulerMajorTick
           : i % 5 == 0
-              ? AppSizes.rulerMidTick
-              : AppSizes.rulerMinorTick;
-      canvas.drawLine(
-        Offset(x, size.height * 0.75),
-        Offset(x, size.height * 0.75 - tickHeight),
-        linePaint,
-      );
+          ? AppSizes.rulerMidTick
+          : AppSizes.rulerMinorTick;
+      canvas.drawLine(Offset(x, size.height * 0.75), Offset(x, size.height * 0.75 - tickHeight), linePaint);
     }
 
-    canvas.drawLine(
-      Offset(centerX, size.height * 0.2),
-      Offset(centerX, size.height * 0.75),
-      basePaint,
-    );
+    canvas.drawLine(Offset(centerX, size.height * 0.2), Offset(centerX, size.height * 0.75), basePaint);
   }
 
   @override
@@ -793,16 +534,9 @@ class OnboardingPlaceholderImage extends StatelessWidget {
     return Container(
       height: height,
       width: double.infinity,
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.l),
-      ),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l)),
       child: const Center(
-        child: Icon(
-          CupertinoIcons.photo,
-          size: AppSizes.iconXl,
-          color: AppColors.textTertiary,
-        ),
+        child: Icon(CupertinoIcons.photo, size: AppSizes.iconXl, color: AppColors.textTertiary),
       ),
     );
   }
@@ -841,14 +575,8 @@ class OnboardingSmallBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s, vertical: AppSpacing.xxs),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.m),
-      ),
-      child: Text(
-        label,
-        style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
-      ),
+      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.m)),
+      child: Text(label, style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500)),
     );
   }
 }

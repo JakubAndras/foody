@@ -1,15 +1,19 @@
+import 'dart:async';
+
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
+import 'package:diplomka/model/nutrition_goals.dart';
+import 'package:diplomka/model/user_profile.dart';
+import 'package:diplomka/services/nutrition_goals_service.dart';
+import 'package:diplomka/services/session_manager.dart';
+import 'package:diplomka/widgets/mesh_gradient_background.dart';
+import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 class OnboardingLoadingPlanScreen extends StatefulWidget {
-  const OnboardingLoadingPlanScreen({
-    super.key,
-    required this.onNext,
-    required this.step,
-    required this.totalSteps,
-  });
+  const OnboardingLoadingPlanScreen({super.key, required this.onNext, required this.step, required this.totalSteps});
 
   final VoidCallback onNext;
   final int step;
@@ -21,29 +25,41 @@ class OnboardingLoadingPlanScreen extends StatefulWidget {
 
 class _OnboardingLoadingPlanScreenState extends State<OnboardingLoadingPlanScreen> with SingleTickerProviderStateMixin {
   late final AnimationController _progressController;
-  bool _didMoveNext = false;
+  bool _isComplete = false;
 
   @override
   void initState() {
     super.initState();
-    _progressController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 2),
-    )
+    unawaited(_computeAndSaveGoals());
+    _progressController = AnimationController(vsync: this, duration: const Duration(seconds: 2))
       ..addStatusListener((AnimationStatus status) {
         if (status == AnimationStatus.completed) {
-          _moveNextOnce();
+          setState(() => _isComplete = true);
         }
       })
       ..forward();
   }
 
-  void _moveNextOnce() {
-    if (_didMoveNext) {
-      return;
-    }
-    _didMoveNext = true;
-    widget.onNext();
+  Future<void> _computeAndSaveGoals() async {
+    final sm = SessionManager.to;
+    final double? weightKg = sm.weightKg.value;
+    final double? heightCm = sm.heightCm.value;
+    final DateTime? dob = sm.dateOfBirth.value;
+    final ProfileSex? sex = sm.sex.value;
+    final ProfileGoal? goal = sm.goal.value;
+
+    if (weightKg == null || heightCm == null || dob == null || sex == null || goal == null) return;
+
+    final goals = NutritionGoals.fromProfile(
+      weightKg: weightKg,
+      heightCm: heightCm,
+      dateOfBirth: dob,
+      sex: sex,
+      goal: goal,
+      workoutsPerWeek: sm.workoutsPerWeek.value ?? '2-3',
+    );
+
+    await NutritionGoalsService.to.saveGoalsEffectiveFromDate(effectiveDate: DateTime.now(), goals: goals);
   }
 
   @override
@@ -56,74 +72,77 @@ class _OnboardingLoadingPlanScreenState extends State<OnboardingLoadingPlanScree
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: AnimatedBuilder(
-          animation: _progressController,
-          builder: (context, _) {
-            final double progress = _progressController.value.clamp(0, 1);
-            final int percent = (progress * 100).round();
+    return LiquidGlassScope(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: LiquidGlassBackground(
+          child: Stack(
+            children: [
+              const MeshGradientBackground(),
+              SafeArea(
+                child: AnimatedBuilder(
+                  animation: _progressController,
+                  builder: (context, _) {
+                    final double progress = _progressController.value.clamp(0, 1);
+                    final int percent = (progress * 100).round();
 
-            return GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              onTap: _moveNextOnce,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: AppSpacing.xxl),
-                    Center(
-                      child: Text('$percent%', style: textTheme.displayLarge?.copyWith(fontWeight: FontWeight.w700)),
-                    ),
-                    const SizedBox(height: AppSpacing.m),
-                    Center(
-                      child: Text(
-                        tr(LocaleKeys.onboarding_loading_title),
-                        textAlign: TextAlign.center,
-                        style: textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.l),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(AppRadii.pill),
-                      child: Container(
-                        height: AppSizes.progressBarHeight,
-                        color: AppColors.outline,
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: FractionallySizedBox(
-                            widthFactor: progress,
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: AppSpacing.xxl),
+                          Center(
+                            child: Text('$percent%', style: textTheme.displayLarge?.copyWith(fontWeight: FontWeight.w700)),
+                          ),
+                          const SizedBox(height: AppSpacing.m),
+                          Center(
+                            child: Text(
+                              tr(LocaleKeys.onboarding_loading_title),
+                              textAlign: TextAlign.center,
+                              style: textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
+                            ),
+                          ),
+                          const SizedBox(height: AppSpacing.l),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(AppRadii.pill),
                             child: Container(
-                              decoration: const BoxDecoration(
-                                gradient: AppGradients.loading,
+                              height: AppSizes.progressBarHeight,
+                              color: AppColors.outline,
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: FractionallySizedBox(
+                                  widthFactor: progress,
+                                  child: Container(decoration: const BoxDecoration(gradient: AppGradients.loading)),
+                                ),
                               ),
                             ),
                           ),
-                        ),
+                          const SizedBox(height: AppSpacing.s),
+                          Center(
+                            child: Text(tr(LocaleKeys.onboarding_loading_subtitle), style: textTheme.bodyLarge?.copyWith(color: AppColors.textMuted)),
+                          ),
+                          const SizedBox(height: AppSpacing.xl),
+                          Text(tr(LocaleKeys.onboarding_daily_recommendation_for), style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+                          const SizedBox(height: AppSpacing.s),
+                          _Bullet(text: tr(LocaleKeys.common_calories)),
+                          _Bullet(text: tr(LocaleKeys.common_carbs)),
+                          _Bullet(text: tr(LocaleKeys.common_protein)),
+                          _Bullet(text: tr(LocaleKeys.common_fats)),
+                          const Spacer(),
+                          if (_isComplete)
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: AppSpacing.bottom),
+                              child: OnboardingPrimaryButton(label: tr(LocaleKeys.common_continue_btn), onPressed: widget.onNext),
+                            ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(height: AppSpacing.s),
-                    Center(
-                      child: Text(
-                        tr(LocaleKeys.onboarding_loading_subtitle),
-                        style: textTheme.bodyLarge?.copyWith(color: AppColors.textMuted),
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.xl),
-                    Text(tr(LocaleKeys.onboarding_daily_recommendation_for), style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
-                    const SizedBox(height: AppSpacing.s),
-                    _Bullet(text: tr(LocaleKeys.common_calories)),
-                    _Bullet(text: tr(LocaleKeys.common_carbs)),
-                    _Bullet(text: tr(LocaleKeys.common_protein)),
-                    _Bullet(text: tr(LocaleKeys.common_fats)),
-                    const Spacer(),
-                  ],
+                    );
+                  },
                 ),
               ),
-            );
-          },
+            ],
+          ),
         ),
       ),
     );

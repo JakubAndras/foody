@@ -30,6 +30,8 @@ abstract class  LocaleKeys {
   static const common_exercise = 'common_exercise';
   static const common_weight = 'common_weight';
   static const common_kg = 'common_kg';
+  static const common_metric = 'common_metric';
+  static const common_imperial = 'common_imperial';
   static const common_g = 'common_g';
   static const common_min = 'common_min';
   static const common_duration = 'common_duration';
@@ -195,10 +197,13 @@ abstract class  LocaleKeys {
   static const onboarding_custom = 'onboarding_custom';
   static const onboarding_custom_diet_title = 'onboarding_custom_diet_title';
   static const onboarding_custom_diet_hint = 'onboarding_custom_diet_hint';
-  static const onboarding_workouts_0_2 = 'onboarding_workouts_0_2';
-  static const onboarding_workouts_0_2_desc = 'onboarding_workouts_0_2_desc';
-  static const onboarding_workouts_3_5 = 'onboarding_workouts_3_5';
-  static const onboarding_workouts_3_5_desc = 'onboarding_workouts_3_5_desc';
+  static const onboarding_workouts_title = 'onboarding_workouts_title';
+  static const onboarding_workouts_0_1 = 'onboarding_workouts_0_1';
+  static const onboarding_workouts_0_1_desc = 'onboarding_workouts_0_1_desc';
+  static const onboarding_workouts_2_3 = 'onboarding_workouts_2_3';
+  static const onboarding_workouts_2_3_desc = 'onboarding_workouts_2_3_desc';
+  static const onboarding_workouts_4_5 = 'onboarding_workouts_4_5';
+  static const onboarding_workouts_4_5_desc = 'onboarding_workouts_4_5_desc';
   static const onboarding_workouts_6_plus = 'onboarding_workouts_6_plus';
   static const onboarding_workouts_6_plus_desc = 'onboarding_workouts_6_plus_desc';
   static const onboarding_calorie_burn_title = 'onboarding_calorie_burn_title';
@@ -212,6 +217,9 @@ abstract class  LocaleKeys {
   static const onboarding_yesterday = 'onboarding_yesterday';
   static const onboarding_cals_left = 'onboarding_cals_left';
   static const onboarding_weight_loss_speed_title = 'onboarding_weight_loss_speed_title';
+  static const onboarding_weight_loss_goal_title = 'onboarding_weight_loss_goal_title';
+  static const onboarding_weight_loss_speed_per_week = 'onboarding_weight_loss_speed_per_week';
+  static const onboarding_recommended = 'onboarding_recommended';
   static const onboarding_kg_per_week = 'onboarding_kg_per_week';
   static const onboarding_loading_title = 'onboarding_loading_title';
   static const onboarding_loading_subtitle = 'onboarding_loading_subtitle';

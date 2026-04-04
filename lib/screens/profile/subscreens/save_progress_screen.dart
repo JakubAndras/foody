@@ -44,7 +44,7 @@ class SaveProgressScreen extends StatelessWidget {
           const SizedBox(height: AppSpacing.xl),
           ProfilePrimaryButton(
             label: tr(LocaleKeys.onboarding_sign_in_apple),
-            leading: const Icon(CupertinoIcons.app, color: AppColors.onPrimary, size: AppSizes.iconMd),
+            leading: const Icon(Icons.apple, color: AppColors.onPrimary, size: AppSizes.iconMd),
             height: AppSizes.buttonHeight,
           ),
           const SizedBox(height: AppSpacing.m),

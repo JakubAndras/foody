@@ -27,6 +27,7 @@ class PersonalDetailsCustomDietScreen extends StatefulWidget {
 
 class _PersonalDetailsCustomDietScreenState extends State<PersonalDetailsCustomDietScreen> with AutomaticKeepAliveClientMixin {
   final TextEditingController _controller = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
 
   @override
   bool get wantKeepAlive => widget.keepAlive;
@@ -40,6 +41,7 @@ class _PersonalDetailsCustomDietScreenState extends State<PersonalDetailsCustomD
   @override
   void dispose() {
     _controller.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -80,23 +82,45 @@ class _PersonalDetailsCustomDietScreenState extends State<PersonalDetailsCustomD
             style: textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
           ),
           const SizedBox(height: AppSpacing.l),
-          Container(
-            height: AppSizes.customDietFieldHeight,
-            padding: const EdgeInsets.all(AppSpacing.m),
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(AppRadii.m),
-            ),
-            child: TextField(
-              controller: _controller,
-              maxLines: null,
-              maxLength: 300,
-              style: textTheme.titleMedium,
-              decoration: InputDecoration.collapsed(
-                hintText: tr(LocaleKeys.onboarding_custom_diet_hint),
-                hintStyle: textTheme.titleMedium?.copyWith(color: AppColors.textTertiary),
+          GestureDetector(
+            onTap: () => _focusNode.requestFocus(),
+            child: Container(
+              height: AppSizes.customDietFieldHeight,
+              padding: const EdgeInsets.all(AppSpacing.m),
+              decoration: BoxDecoration(
+                color: AppColors.surface,
+                borderRadius: BorderRadius.circular(AppRadii.m),
               ),
+              child: Stack(
+                children: [
+                  TextField(
+                    controller: _controller,
+                    focusNode: _focusNode,
+                    maxLines: null,
+                    expands: true,
+                    maxLength: 300,
+                    textAlignVertical: TextAlignVertical.top,
+                    style: textTheme.titleMedium,
+                    buildCounter: (context, {required currentLength, required isFocused, required maxLength}) => const SizedBox.shrink(),
+                    decoration: InputDecoration.collapsed(
+                      hintText: tr(LocaleKeys.onboarding_custom_diet_hint),
+                      hintStyle: textTheme.titleMedium?.copyWith(color: AppColors.textTertiary),
+                    ),
+                  ),
+                Positioned(
+                  right: 0,
+                  bottom: 0,
+                  child: ValueListenableBuilder<TextEditingValue>(
+                    valueListenable: _controller,
+                    builder: (context, value, _) => Text(
+                      '${value.text.length}/300',
+                      style: textTheme.bodySmall?.copyWith(color: AppColors.textTertiary),
+                    ),
+                  ),
+                ),
+              ],
             ),
+          ),
           ),
           const SizedBox(height: AppSizes.buttonHeight + AppSpacing.xl),
         ],

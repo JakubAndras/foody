@@ -1,19 +1,13 @@
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
+import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 class OnboardingWorkoutsScreen extends StatefulWidget {
-  const OnboardingWorkoutsScreen({
-    super.key,
-    required this.onNext,
-    required this.onBack,
-    required this.step,
-    required this.totalSteps,
-    this.onCanProceedChanged,
-  });
+  const OnboardingWorkoutsScreen({super.key, required this.onNext, required this.onBack, required this.step, required this.totalSteps, this.onCanProceedChanged});
 
   final VoidCallback onNext;
   final VoidCallback onBack;
@@ -50,41 +44,52 @@ class _OnboardingWorkoutsScreenState extends State<OnboardingWorkoutsScreen> wit
       bottom: OnboardingPrimaryButton(
         label: tr(LocaleKeys.common_continue_btn),
         isEnabled: _selected != null,
-        onPressed: _selected != null ? widget.onNext : null,
+        onPressed: _selected != null
+            ? () async {
+                await SessionManager.to.setWorkoutsPerWeek(_selected);
+                widget.onNext();
+              }
+            : null,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'How many workouts\ndo you do per week?',
-            style: textTheme.headlineLarge?.copyWith(height: 1.25),
-          ),
+          Text(tr(LocaleKeys.onboarding_workouts_title), style: textTheme.headlineLarge?.copyWith(height: 1.25)),
           const SizedBox(height: AppSpacing.s),
-          Text(
-            'This will be used to calibrate your custom plan.',
-            style: textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
-          ),
+          Text(tr(LocaleKeys.onboarding_gender_subtitle), style: textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary)),
           const SizedBox(height: AppSpacing.xl),
           OnboardingOptionCard(
-            title: tr(LocaleKeys.onboarding_workouts_0_2),
-            subtitle: tr(LocaleKeys.onboarding_workouts_0_2_desc),
-            selected: _selected == '0-2',
+            title: tr(LocaleKeys.onboarding_workouts_0_1),
+            subtitle: tr(LocaleKeys.onboarding_workouts_0_1_desc),
+            selected: _selected == '0-1',
             height: AppSizes.workoutCardHeight,
-            leading: _WorkoutIcon(selected: _selected == '0-2', icon: CupertinoIcons.circle),
+            leading: _WorkoutIcon(selected: _selected == '0-1', icon: CupertinoIcons.moon_zzz),
             onTap: () {
-              setState(() => _selected = '0-2');
+              setState(() => _selected = '0-1');
               widget.onCanProceedChanged?.call(true);
             },
           ),
           const SizedBox(height: AppSpacing.s),
           OnboardingOptionCard(
-            title: tr(LocaleKeys.onboarding_workouts_3_5),
-            subtitle: tr(LocaleKeys.onboarding_workouts_3_5_desc),
-            selected: _selected == '3-5',
+            title: tr(LocaleKeys.onboarding_workouts_2_3),
+            subtitle: tr(LocaleKeys.onboarding_workouts_2_3_desc),
+            selected: _selected == '2-3',
             height: AppSizes.workoutCardHeight,
-            leading: _WorkoutIcon(selected: _selected == '3-5', icon: CupertinoIcons.ellipsis),
+            leading: _WorkoutIcon(selected: _selected == '2-3', icon: CupertinoIcons.person),
             onTap: () {
-              setState(() => _selected = '3-5');
+              setState(() => _selected = '2-3');
+              widget.onCanProceedChanged?.call(true);
+            },
+          ),
+          const SizedBox(height: AppSpacing.s),
+          OnboardingOptionCard(
+            title: tr(LocaleKeys.onboarding_workouts_4_5),
+            subtitle: tr(LocaleKeys.onboarding_workouts_4_5_desc),
+            selected: _selected == '4-5',
+            height: AppSizes.workoutCardHeight,
+            leading: _WorkoutIcon(selected: _selected == '4-5', icon: CupertinoIcons.bolt),
+            onTap: () {
+              setState(() => _selected = '4-5');
               widget.onCanProceedChanged?.call(true);
             },
           ),
@@ -94,7 +99,7 @@ class _OnboardingWorkoutsScreenState extends State<OnboardingWorkoutsScreen> wit
             subtitle: tr(LocaleKeys.onboarding_workouts_6_plus_desc),
             selected: _selected == '6+',
             height: AppSizes.workoutCardHeight,
-            leading: _WorkoutIcon(selected: _selected == '6+', icon: CupertinoIcons.square_grid_2x2),
+            leading: _WorkoutIcon(selected: _selected == '6+', icon: CupertinoIcons.flame),
             onTap: () {
               setState(() => _selected = '6+');
               widget.onCanProceedChanged?.call(true);
@@ -117,15 +122,8 @@ class _WorkoutIcon extends StatelessWidget {
     return Container(
       width: AppSizes.iconXl,
       height: AppSizes.iconXl,
-      decoration: BoxDecoration(
-        color: selected ? AppColors.onPrimary.withValues(alpha: 0.2) : AppColors.primary.withValues(alpha: 0.1),
-        shape: BoxShape.circle,
-      ),
-      child: Icon(
-        icon,
-        color: selected ? AppColors.onPrimary : AppColors.textPrimary,
-        size: AppSizes.iconLg,
-      ),
+      decoration: BoxDecoration(color: selected ? AppColors.onPrimary.withValues(alpha: 0.2) : AppColors.primary.withValues(alpha: 0.1), shape: BoxShape.circle),
+      child: Icon(icon, color: selected ? AppColors.onPrimary : AppColors.textPrimary, size: AppSizes.iconLg),
     );
   }
 }

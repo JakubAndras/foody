@@ -38,6 +38,7 @@ class SessionManager extends GetxService {
   final RxBool autoAdjustMacrosEnabled = true.obs;
   final RxBool editableNutrientsEnabled1 = false.obs;
   final RxBool sectionHeaderPaddingEnabled = true.obs;
+  final RxnString workoutsPerWeek = RxnString();
 
   Future<void> onAppInit() async {
     themeModeIndex.value = ThemeMode.values[await SharedPreferencesService.to.getInt(key: themeModeKey) ?? 0];
@@ -61,6 +62,7 @@ class SessionManager extends GetxService {
     burnedCaloriesEnabled.value = await SharedPreferencesService.to.getBool(key: burnedCaloriesEnabledKey) ?? true;
     rolloverCaloriesEnabled.value = await SharedPreferencesService.to.getBool(key: rolloverCaloriesEnabledKey) ?? false;
     autoAdjustMacrosEnabled.value = await SharedPreferencesService.to.getBool(key: autoAdjustMacrosEnabledKey) ?? true;
+    workoutsPerWeek.value = await SharedPreferencesService.to.getString(key: profileWorkoutsPerWeekKey);
   }
 
   Future<void> setOnboardingComplete(bool value) async {
@@ -164,6 +166,11 @@ class SessionManager extends GetxService {
   Future<void> setAutoAdjustMacrosEnabled(bool value) async {
     autoAdjustMacrosEnabled.value = value;
     await SharedPreferencesService.to.setBool(key: autoAdjustMacrosEnabledKey, value: value);
+  }
+
+  Future<void> setWorkoutsPerWeek(String? value) async {
+    workoutsPerWeek.value = value;
+    await SharedPreferencesService.to.setString(key: profileWorkoutsPerWeekKey, value: value);
   }
 
   void setSectionHeaderPaddingEnabled(bool value) {

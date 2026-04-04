@@ -35,7 +35,7 @@ class _OnboardingGenderScreenState extends State<OnboardingGenderScreen> with Au
   @override
   void initState() {
     super.initState();
-    _selected = SessionManager.to.sex.value;
+    _selected = null;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       widget.onCanProceedChanged?.call(_selected != null);
     });

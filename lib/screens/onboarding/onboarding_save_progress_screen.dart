@@ -64,7 +64,7 @@ class OnboardingSaveProgressScreen extends StatelessWidget {
                   children: [
                     OnboardingSolidButton(
                       label: tr(LocaleKeys.onboarding_sign_in_apple),
-                      leading: const Icon(CupertinoIcons.app, color: AppColors.onPrimary, size: AppSizes.iconLg),
+                      leading: const Icon(Icons.apple, color: AppColors.onPrimary, size: AppSizes.iconLg),
                       onPressed: onNext,
                     ),
                     const SizedBox(height: AppSpacing.m),

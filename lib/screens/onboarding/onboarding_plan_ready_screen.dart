@@ -1,5 +1,7 @@
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
+import 'package:diplomka/model/nutrition_goals.dart';
+import 'package:diplomka/services/nutrition_goals_service.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -7,13 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 class OnboardingPlanReadyScreen extends StatelessWidget {
-  const OnboardingPlanReadyScreen({
-    super.key,
-    required this.onNext,
-    required this.onBack,
-    required this.step,
-    required this.totalSteps,
-  });
+  const OnboardingPlanReadyScreen({super.key, required this.onNext, required this.onBack, required this.step, required this.totalSteps});
 
   final VoidCallback onNext;
   final VoidCallback onBack;
@@ -68,6 +64,7 @@ class OnboardingPlanReadyScreen extends StatelessWidget {
     final TextTheme textTheme = Theme.of(context).textTheme;
     final String goalSummaryLabel = _buildGoalSummaryLabel();
     final String goalHeading = _buildGoalHeading();
+    final NutritionGoals goals = NutritionGoalsService.to.goalsForDate(DateTime.now());
 
     return OnboardingPage(
       progress: step / totalSteps,
@@ -85,10 +82,7 @@ class OnboardingPlanReadyScreen extends StatelessWidget {
           const SizedBox(height: AppSpacing.l),
           Text(goalHeading, style: textTheme.bodyLarge),
           const SizedBox(height: AppSpacing.xs),
-          OnboardingPillChipBig(
-            label: goalSummaryLabel,
-            backgroundColor: AppColors.surfacePill,
-          ),
+          OnboardingPillChipBig(label: goalSummaryLabel, backgroundColor: AppColors.surfacePill),
           const SizedBox(height: AppSpacing.xl),
           Align(
             alignment: Alignment.centerLeft,
@@ -97,10 +91,7 @@ class OnboardingPlanReadyScreen extends StatelessWidget {
           const SizedBox(height: AppSpacing.xxs),
           Align(
             alignment: Alignment.centerLeft,
-            child: Text(
-              tr(LocaleKeys.onboarding_edit_plan_hint),
-              style: textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
-            ),
+            child: Text(tr(LocaleKeys.onboarding_edit_plan_hint), style: textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary)),
           ),
           const SizedBox(height: AppSpacing.xl),
           GridView.count(
@@ -111,32 +102,26 @@ class OnboardingPlanReadyScreen extends StatelessWidget {
             crossAxisSpacing: AppSpacing.xs,
             childAspectRatio: 0.9,
             children: [
-              _MacroTile(
-                icon: CupertinoIcons.flame,
-                label: tr(LocaleKeys.common_calories),
-                value: '2086',
-                unit: '',
-                color: AppColors.primaryDark,
-              ),
+              _MacroTile(icon: CupertinoIcons.flame, label: tr(LocaleKeys.common_calories), value: goals.calorieGoal.round().toString(), unit: '', color: AppColors.primaryDark),
               _MacroTile(
                 icon: AppIcons.carbs,
                 label: tr(LocaleKeys.common_carbs),
-                value: '203',
-                unit: 'g',
+                value: goals.carbsGoal.round().toString(),
+                unit: tr(LocaleKeys.common_g),
                 color: AppColors.macroCarbs,
               ),
               _MacroTile(
                 icon: AppIcons.protein,
                 label: tr(LocaleKeys.common_protein),
-                value: '188',
-                unit: 'g',
+                value: goals.proteinGoal.round().toString(),
+                unit: tr(LocaleKeys.common_g),
                 color: AppColors.macroProtein,
               ),
               _MacroTile(
                 icon: AppIcons.fats,
                 label: tr(LocaleKeys.common_fats),
-                value: '57',
-                unit: 'g',
+                value: goals.fatGoal.round().toString(),
+                unit: tr(LocaleKeys.common_g),
                 color: AppColors.macroFats,
               ),
             ],
@@ -148,13 +133,7 @@ class OnboardingPlanReadyScreen extends StatelessWidget {
 }
 
 class _MacroTile extends StatelessWidget {
-  const _MacroTile({
-    required this.icon,
-    required this.label,
-    required this.value,
-    required this.unit,
-    required this.color,
-  });
+  const _MacroTile({required this.icon, required this.label, required this.value, required this.unit, required this.color});
 
   final IconData icon;
   final String label;
@@ -182,13 +161,7 @@ class _MacroTile extends StatelessWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.s),
-        OnboardingRingChart(
-          value: 0.75,
-          color: color,
-          label: value,
-          unit: unit,
-          size: AppSizes.widgetRingSize,
-        ),
+        OnboardingRingChart(value: 1.0, color: color, label: value, unit: unit, size: AppSizes.widgetRingSize, strokeWidth: 10),
       ],
     );
   }

@@ -3,6 +3,7 @@ import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/user_profile.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
+import 'package:diplomka/widgets/picker_column.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -25,66 +26,54 @@ class OnboardingDesiredWeightScreen extends StatefulWidget {
 }
 
 class _OnboardingDesiredWeightScreenState extends State<OnboardingDesiredWeightScreen> {
-  static const double _minKg = 40;
-  static const double _maxKg = 120;
-  static const double _goalDeltaKg = 5;
+  static const int _absoluteMinKg = 40;
+  static const int _absoluteMaxKg = 179;
 
-  double _valueKg = 82.5;
+  late final List<int> _weightKgValues;
+  late final List<int> _weightLbValues;
+  int _selectedWeightKg = 75;
   bool _metric = true;
 
-  double _kgToPounds(double kg) => kg * 2.20462262185;
+  int _kgToPounds(int kg) => (kg * 2.20462262185).round();
 
-  double _poundsToKg(double pounds) => pounds / 2.20462262185;
-
-  double get _minDisplayValue => _metric ? _minKg : _kgToPounds(_minKg).roundToDouble();
-
-  double get _maxDisplayValue => _metric ? _maxKg : _kgToPounds(_maxKg).roundToDouble();
-
-  double get _displayValue {
-    final converted = _metric ? _valueKg : _kgToPounds(_valueKg);
-    return converted.clamp(_minDisplayValue, _maxDisplayValue);
-  }
-
-  String get _displayWeightText {
-    final int roundedValue = _displayValue.round();
-    final String unit = _metric ? 'kg' : 'lb';
-    return '$roundedValue $unit';
-  }
+  int _poundsToKg(int pounds) => (pounds / 2.20462262185).round();
 
   @override
   void initState() {
     super.initState();
     _metric = SessionManager.to.prefersMetric.value;
+    final ProfileGoal? goal = SessionManager.to.goal.value;
+    final int currentKg = (SessionManager.to.weightKg.value ?? 80).round().clamp(_absoluteMinKg, _absoluteMaxKg);
 
-    final double? existingGoalWeight = SessionManager.to.goalWeightKg.value;
-    if (existingGoalWeight != null) {
-      _valueKg = existingGoalWeight;
-    } else {
-      final double? currentWeightKg = SessionManager.to.weightKg.value;
-      final ProfileGoal? goal = SessionManager.to.goal.value;
-      if (currentWeightKg != null) {
-        switch (goal) {
-          case ProfileGoal.lose:
-            _valueKg = currentWeightKg - _goalDeltaKg;
-            break;
-          case ProfileGoal.gain:
-            _valueKg = currentWeightKg + _goalDeltaKg;
-            break;
-          case ProfileGoal.maintain:
-          case null:
-            _valueKg = currentWeightKg;
-            break;
-        }
-      }
+    // Lose → values below current weight; Gain → values above current weight
+    final int minKg = goal == ProfileGoal.gain ? currentKg : _absoluteMinKg;
+    final int maxKg = goal == ProfileGoal.lose ? currentKg : _absoluteMaxKg;
+
+    _weightKgValues = List.generate(maxKg - minKg + 1, (index) => minKg + index);
+    _weightLbValues = List.generate(_kgToPounds(_weightKgValues.last) - _kgToPounds(_weightKgValues.first) + 1, (index) => _kgToPounds(_weightKgValues.first) + index);
+
+    // Start picker at current weight
+    _selectedWeightKg = currentKg;
+  }
+
+  int get _weightSelectedIndex {
+    if (_metric) {
+      return (_selectedWeightKg - _weightKgValues.first).clamp(0, _weightKgValues.length - 1);
     }
+    final int selectedPounds = _kgToPounds(_selectedWeightKg);
+    return (selectedPounds - _weightLbValues.first).clamp(0, _weightLbValues.length - 1);
+  }
 
-    _valueKg = _valueKg.clamp(_minKg, _maxKg);
+  List<String> get _weightDisplayValues {
+    if (_metric) {
+      return _weightKgValues.map((value) => '$value kg').toList();
+    }
+    return _weightLbValues.map((value) => '$value lb').toList();
   }
 
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
-    final double sliderHostHeight = (MediaQuery.of(context).size.height * 0.4).clamp(180.0, 320.0).toDouble();
 
     return OnboardingPage(
       progress: widget.step / widget.totalSteps,
@@ -92,7 +81,7 @@ class _OnboardingDesiredWeightScreenState extends State<OnboardingDesiredWeightS
       bottom: OnboardingPrimaryButton(
         label: tr(LocaleKeys.common_continue_btn),
         onPressed: () async {
-          await SessionManager.to.setGoalWeightKg(_valueKg);
+          await SessionManager.to.setGoalWeightKg(_selectedWeightKg.toDouble());
           widget.onNext();
         },
       ),
@@ -100,36 +89,23 @@ class _OnboardingDesiredWeightScreenState extends State<OnboardingDesiredWeightS
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(tr(LocaleKeys.onboarding_desired_weight_title), style: textTheme.headlineLarge),
-          const SizedBox(height: AppSpacing.l),
-          SizedBox(
-            height: sliderHostHeight,
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 420),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      _displayWeightText,
-                      style: textTheme.displayMedium?.copyWith(fontWeight: FontWeight.w700),
-                    ),
-                    const SizedBox(height: AppSpacing.l),
-                    OnboardingSlider(
-                      value: _displayValue,
-                      min: _minDisplayValue,
-                      max: _maxDisplayValue,
-                      onChanged: (value) => setState(() {
-                        if (_metric) {
-                          _valueKg = value;
-                        } else {
-                          _valueKg = _poundsToKg(value);
-                        }
-                        _valueKg = _valueKg.clamp(_minKg, _maxKg);
-                      }),
-                    ),
-                  ],
-                ),
-              ),
+          const SizedBox(height: AppSpacing.s),
+          Text(tr(LocaleKeys.onboarding_gender_subtitle), style: textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary)),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.18),
+          Center(
+            child: PickerColumn(
+              key: ValueKey('goal-weight-${_metric ? 'metric' : 'imperial'}'),
+              values: _weightDisplayValues,
+              selectedIndex: _weightSelectedIndex,
+              height: AppSizes.pickerHeight,
+              onSelected: (index) {
+                if (_metric) {
+                  _selectedWeightKg = _weightKgValues[index];
+                } else {
+                  _selectedWeightKg = _poundsToKg(_weightLbValues[index]);
+                }
+                _selectedWeightKg = _selectedWeightKg.clamp(_weightKgValues.first, _weightKgValues.last);
+              },
             ),
           ),
         ],
