@@ -169,7 +169,7 @@ class _WeeklyEnergyCardState extends State<WeeklyEnergyCard> {
               ),
             ),
             const SizedBox(height: AppSpacing.m),
-            GlassSegmentedTabs(labels: _labels, activeIndex: _selectedIndex, onTap: (i) => setState(() => _selectedIndex = i)),
+            GlassSegmentedTabs(labels: _labels, activeIndex: _selectedIndex, onTap: (i) => setState(() => _selectedIndex = i), embedded: true),
           ],
         ),
       );

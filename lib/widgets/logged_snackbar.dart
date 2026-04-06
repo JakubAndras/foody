@@ -1,6 +1,7 @@
 import 'package:diplomka/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 enum SnackBarType { success, error, info, warning }
@@ -16,9 +17,10 @@ void showSnackBar({
   VoidCallback? onPrimary,
   String? secondaryLabel,
   VoidCallback? onSecondary,
-  Duration duration = const Duration(seconds: 3),
+  Duration duration = const Duration(seconds: 2),
 }) {
   final ctx = context ?? Get.context!;
+  final isDark = Theme.of(ctx).brightness == Brightness.dark;
 
   final IconData resolvedIcon;
   final Color resolvedColor;
@@ -42,7 +44,7 @@ void showSnackBar({
     SnackBar(
       content: Row(
         children: [
-          Icon(resolvedIcon, color: resolvedColor, size: 28),
+          Icon(resolvedIcon, color: resolvedColor, size: 32),
           const SizedBox(width: AppSpacing.s),
           Expanded(
             child: Column(
@@ -64,18 +66,19 @@ void showSnackBar({
           if (onPrimary != null)
             GestureDetector(
               onTap: () {
+                HapticFeedback.mediumImpact();
                 ScaffoldMessenger.of(ctx).hideCurrentSnackBar();
                 onPrimary();
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.xs),
                 decoration: BoxDecoration(
-                  color: AppColors.black,
+                  color: isDark ? Colors.white : AppColors.black,
                   borderRadius: BorderRadius.circular(AppRadii.pill),
                 ),
                 child: Text(
                   primaryLabel ?? '',
-                  style: AppTextStyles.body14.copyWith(color: AppColors.white, fontWeight: FontWeight.w600),
+                  style: AppTextStyles.body14.copyWith(color: isDark ? AppColors.black : AppColors.white, fontWeight: FontWeight.w600),
                 ),
               ),
             ),
@@ -83,6 +86,7 @@ void showSnackBar({
           if (onSecondary != null)
             GestureDetector(
               onTap: () {
+                HapticFeedback.mediumImpact();
                 ScaffoldMessenger.of(ctx).hideCurrentSnackBar();
                 onSecondary();
               },
@@ -96,11 +100,11 @@ void showSnackBar({
             ),
         ],
       ),
-      backgroundColor: AppColors.white,
+      backgroundColor: isDark ? const Color(0xFF2C2C2E) : AppColors.white,
       elevation: 0.5,
       behavior: SnackBarBehavior.floating,
       margin: const EdgeInsets.fromLTRB(AppSpacing.m, 0, AppSpacing.m, AppSpacing.xxs),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadii.pill)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadii.l)),
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.m),
       duration: duration,
     ),

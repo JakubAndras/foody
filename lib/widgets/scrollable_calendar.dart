@@ -20,15 +20,7 @@ const double _monthBottomPadding = 4.0;
 ///
 /// Use [ScrollableCalendar.show] to present as a modal bottom sheet.
 class ScrollableCalendar extends StatefulWidget {
-  const ScrollableCalendar({
-    super.key,
-    required this.selectedDate,
-    required this.onDateSelected,
-    this.onClose,
-    this.dayDecorationBuilder,
-    this.minDate,
-    this.maxDate,
-  });
+  const ScrollableCalendar({super.key, required this.selectedDate, required this.onDateSelected, this.onClose, this.dayDecorationBuilder, this.minDate, this.maxDate});
 
   /// The currently highlighted date.
   final DateTime selectedDate;
@@ -63,13 +55,8 @@ class ScrollableCalendar extends StatefulWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      barrierColor: AppColors.overlayDark60,
-      builder: (_) => _ScrollableCalendarSheet(
-        selectedDate: selectedDate,
-        dayDecorationBuilder: dayDecorationBuilder,
-        minDate: minDate,
-        maxDate: maxDate,
-      ),
+      barrierColor: AppColors.overlayDark40,
+      builder: (_) => _ScrollableCalendarSheet(selectedDate: selectedDate, dayDecorationBuilder: dayDecorationBuilder, minDate: minDate, maxDate: maxDate),
     );
   }
 
@@ -79,12 +66,7 @@ class ScrollableCalendar extends StatefulWidget {
 
 /// Wrapper that sizes the bottom sheet and provides close/select behaviour.
 class _ScrollableCalendarSheet extends StatelessWidget {
-  const _ScrollableCalendarSheet({
-    required this.selectedDate,
-    this.dayDecorationBuilder,
-    this.minDate,
-    this.maxDate,
-  });
+  const _ScrollableCalendarSheet({required this.selectedDate, this.dayDecorationBuilder, this.minDate, this.maxDate});
 
   final DateTime selectedDate;
   final Widget Function(DateTime date)? dayDecorationBuilder;
@@ -198,11 +180,7 @@ class _ScrollableCalendarState extends State<ScrollableCalendar> {
     final idx = _todayMonthIndex;
     if (idx < 0) return;
     final offset = _cumulativeOffset(idx);
-    _scrollController.animateTo(
-      offset.clamp(0, _scrollController.position.maxScrollExtent),
-      duration: const Duration(milliseconds: 350),
-      curve: Curves.easeOut,
-    );
+    _scrollController.animateTo(offset.clamp(0, _scrollController.position.maxScrollExtent), duration: const Duration(milliseconds: 350), curve: Curves.easeOut);
   }
 
   void _onScroll() {
@@ -258,20 +236,14 @@ class _ScrollableCalendarState extends State<ScrollableCalendar> {
             child: Container(
               width: AppSizes.minTap,
               height: AppSizes.minTap,
-              decoration: BoxDecoration(
-                color: AppColors.calendarDarkSurface,
-                borderRadius: BorderRadius.circular(AppRadii.pill),
-              ),
-              child: const Icon(CupertinoIcons.xmark, color: AppColors.black, size: AppSizes.iconLg),
+              decoration: BoxDecoration(color: AppColors.calendarDarkSurface, borderRadius: BorderRadius.circular(AppRadii.pill)),
+              child: const Icon(CupertinoIcons.xmark, color: AppColors.white, size: AppSizes.iconLg),
             ),
           ),
           // Year label
           Expanded(
             child: Center(
-              child: Text(
-                '$_currentVisibleYear',
-                style: AppTextStyles.h4.copyWith(color: AppColors.black),
-              ),
+              child: Text('$_currentVisibleYear', style: AppTextStyles.h4.copyWith(color: AppColors.white)),
             ),
           ),
           // Today button
@@ -280,14 +252,11 @@ class _ScrollableCalendarState extends State<ScrollableCalendar> {
             child: Container(
               height: AppSizes.minTap,
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-              decoration: BoxDecoration(
-                color: AppColors.calendarDarkSurface,
-                borderRadius: BorderRadius.circular(AppRadii.pill),
-              ),
+              decoration: BoxDecoration(color: AppColors.calendarDarkSurface, borderRadius: BorderRadius.circular(AppRadii.pill)),
               alignment: Alignment.center,
               child: Text(
                 tr(LocaleKeys.common_today),
-                style: AppTextStyles.body16.copyWith(color: AppColors.black, fontWeight: FontWeight.w600),
+                style: AppTextStyles.body16.copyWith(color: AppColors.white, fontWeight: FontWeight.w600),
               ),
             ),
           ),
@@ -301,14 +270,16 @@ class _ScrollableCalendarState extends State<ScrollableCalendar> {
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
       child: Row(
         children: _weekdayKeys
-            .map((key) => Expanded(
-                  child: Center(
-                    child: Text(
-                      tr(key),
-                      style: AppTextStyles.body14.copyWith(color: AppColors.calendarDarkMuted, fontWeight: FontWeight.w600),
-                    ),
+            .map(
+              (key) => Expanded(
+                child: Center(
+                  child: Text(
+                    tr(key),
+                    style: AppTextStyles.body14.copyWith(color: AppColors.calendarDarkMuted, fontWeight: FontWeight.w600),
                   ),
-                ))
+                ),
+              ),
+            )
             .toList(),
       ),
     );
@@ -326,10 +297,7 @@ class _ScrollableCalendarState extends State<ScrollableCalendar> {
           padding: const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.s, AppSpacing.m, AppSpacing.xxs),
           child: Text(
             _monthFmt.format(month),
-            style: AppTextStyles.h4.copyWith(
-              color: month.year == _today.year && month.month == _today.month ? AppColors.info : AppColors.black,
-              fontWeight: FontWeight.w700,
-            ),
+            style: AppTextStyles.h4.copyWith(color: month.year == _today.year && month.month == _today.month ? AppColors.info : AppColors.white, fontWeight: FontWeight.w700),
           ),
         ),
         // Day grid
@@ -361,7 +329,12 @@ class _ScrollableCalendarState extends State<ScrollableCalendar> {
           dayCounter++;
         }
       }
-      rows.add(SizedBox(height: _cellSize, child: Row(children: cells)));
+      rows.add(
+        SizedBox(
+          height: _cellSize,
+          child: Row(children: cells),
+        ),
+      );
     }
 
     return Column(children: rows);
@@ -378,26 +351,17 @@ class _ScrollableCalendarState extends State<ScrollableCalendar> {
     } else if (isWeekend) {
       textColor = AppColors.calendarDarkWeekend;
     } else {
-      textColor = AppColors.black;
+      textColor = AppColors.white;
     }
 
     final dayText = Text(
       '${date.day}',
-      style: AppTextStyles.body16.copyWith(
-        fontWeight: isToday ? FontWeight.w700 : FontWeight.w500,
-        color: textColor,
-      ),
+      style: AppTextStyles.body16.copyWith(fontWeight: isToday ? FontWeight.w700 : FontWeight.w500, color: textColor),
     );
 
     Widget content;
     if (widget.dayDecorationBuilder != null) {
-      content = Stack(
-        alignment: Alignment.center,
-        children: [
-          widget.dayDecorationBuilder!(date),
-          dayText,
-        ],
-      );
+      content = Stack(alignment: Alignment.center, children: [widget.dayDecorationBuilder!(date), dayText]);
     } else {
       content = dayText;
     }
@@ -411,10 +375,7 @@ class _ScrollableCalendarState extends State<ScrollableCalendar> {
           child: Container(
             width: AppSizes.dateCircleSize,
             height: AppSizes.dateCircleSize,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: isToday ? AppColors.info : (isSelected ? AppColors.calendarDarkSurface : Colors.transparent),
-            ),
+            decoration: BoxDecoration(shape: BoxShape.circle, color: isToday ? AppColors.info : (isSelected ? AppColors.calendarDarkSurface : Colors.transparent)),
             alignment: Alignment.center,
             child: content,
           ),

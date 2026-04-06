@@ -17,6 +17,7 @@ import 'package:diplomka/screens/meals/meal_detail_screen.dart';
 import 'package:diplomka/screens/log_meal/select_meal_widgets.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/utils/media_storage.dart';
+import 'package:diplomka/screens/main_screen.dart';
 import 'package:diplomka/services/language_settings_service.dart';
 import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/services/voice/voice_transcription_service.dart';
@@ -281,7 +282,11 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
       context: context,
       message: tr(LocaleKeys.common_food_logged),
       primaryLabel: tr(LocaleKeys.common_view),
-      onPrimary: () => Get.back(),
+      onPrimary: () {
+        SelectedDateService.to.selectedDate.value = selectedDate;
+        MainScreenController.to.showDashboardTab();
+        Get.back();
+      },
       secondaryLabel: tr(LocaleKeys.common_undo),
       onSecondary: () async {
         if (savedMeal != null) {
@@ -302,7 +307,11 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
       context: context,
       message: tr(LocaleKeys.common_food_logged),
       primaryLabel: tr(LocaleKeys.common_view),
-      onPrimary: () => Get.back(),
+      onPrimary: () {
+        SelectedDateService.to.selectedDate.value = selectedDate;
+        MainScreenController.to.showDashboardTab();
+        Get.back();
+      },
       secondaryLabel: tr(LocaleKeys.common_undo),
       onSecondary: () async {
         if (savedMeal != null) {

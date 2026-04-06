@@ -1,10 +1,7 @@
-import 'dart:ui';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:get/get.dart';
 
 import 'package:diplomka/app_theme.dart';
-import 'package:diplomka/widgets/liquid_glass/liquid_glass_tap_effect.dart' show LiquidGlassTapEffect;
 import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/screens/dashboard_screen.dart';
@@ -112,7 +109,7 @@ class MainScreenController extends BaseController {
       context: context,
       backgroundColor: Colors.transparent,
       elevation: 0,
-      barrierColor: AppColors.overlayDark,
+      barrierColor: AppColors.overlayDark40,
       isScrollControlled: false,
       builder: (_) => QuickActionSheet(
         onLogMeal: () {
@@ -173,7 +170,7 @@ class _DashboardStreakPill extends StatelessWidget {
 
       Widget content;
       if (dc.streakError.isNotEmpty) {
-        content = const Icon(CupertinoIcons.exclamationmark_circle, color: AppColors.error, size: AppSizes.iconSm);
+        content = Icon(CupertinoIcons.exclamationmark_circle, color: AppColors.error, size: AppSizes.iconSm);
       } else {
         final streak = dc.streakInfo.value?.currentStreak ?? 0;
         content = Row(
@@ -189,26 +186,16 @@ class _DashboardStreakPill extends StatelessWidget {
         );
       }
 
-      return LiquidGlassTapEffect(
-        onTap: () {
-          StreakSheet.show(context);
-        },
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(AppRadii.pill),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 2.5, sigmaY: 2.5),
-            child: Container(
-              width: AppSizes.streakPillMinWidthTripleDigit,
-              height: AppSizes.streakPillHeight,
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.25),
-                borderRadius: BorderRadius.circular(AppRadii.pill),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.8), width: 0.5),
-              ),
-              child: Center(child: content),
-            ),
-          ),
-        ),
+      return GlassButton.custom(
+        onTap: () => StreakSheet.show(context),
+        width: AppSizes.streakPillMinWidthTripleDigit,
+        height: AppSizes.streakPillHeight,
+        shape: const LiquidRoundedRectangle(borderRadius: AppRadii.pill),
+        useOwnLayer: true,
+        settings: AppGlass.standard,
+        quality: GlassQuality.premium,
+        interactionScale: 0.95,
+        child: Center(child: content),
       );
     });
   }
@@ -228,36 +215,28 @@ class _DashboardCalendarPill extends StatelessWidget {
       final label = showYear ? '$dayStr. $monthStr. ${date.year}' : '$dayStr. $monthStr';
       final pillWidth = showYear ? 140.0 : 100.0;
 
-      return LiquidGlassTapEffect(
+      return GlassButton.custom(
         onTap: () {
           DashboardCalendarSheet.show(context, selectedDate: dc.selectedDate.value, onDateSelected: (date) => DashboardController.to.updateDate(date));
         },
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(AppRadii.pill),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 2.5, sigmaY: 2.5),
-            child: Container(
-              width: pillWidth,
-              height: AppSizes.streakPillHeight,
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.25),
-                borderRadius: BorderRadius.circular(AppRadii.pill),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.8), width: 0.5),
+        width: pillWidth,
+        height: AppSizes.streakPillHeight,
+        shape: const LiquidRoundedRectangle(borderRadius: AppRadii.pill),
+        useOwnLayer: true,
+        settings: AppGlass.standard,
+        quality: GlassQuality.premium,
+        interactionScale: 0.95,
+        child: Center(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(CupertinoIcons.calendar, color: AppColors.textPrimary, size: 18),
+              const SizedBox(width: AppSpacing.xs),
+              Text(
+                label,
+                style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w700),
               ),
-              child: Center(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(CupertinoIcons.calendar, color: AppColors.textPrimary, size: 18),
-                    const SizedBox(width: AppSpacing.xs),
-                    Text(
-                      label,
-                      style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w700),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            ],
           ),
         ),
       );

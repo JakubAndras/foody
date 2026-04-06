@@ -14,6 +14,9 @@ import 'package:diplomka/screens/dashboard_screen.dart';
 import 'package:diplomka/screens/profile/ask_ai/ask_ai_widgets.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 import 'package:diplomka/services/share/app_share_service.dart';
+import 'package:diplomka/widgets/variable_blur_scroll_view.dart';
+import 'package:diplomka/widgets/mesh_gradient_background.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 class AskAiScreen extends StatefulWidget {
   const AskAiScreen({super.key});
@@ -103,7 +106,7 @@ class _AskAiScreenState extends State<AskAiScreen> {
       context: context,
       backgroundColor: Colors.transparent,
       elevation: 0,
-      barrierColor: AppColors.overlayDark,
+      barrierColor: AppColors.overlayDark40,
       isScrollControlled: true,
       builder: (_) => Padding(
         padding: const EdgeInsets.all(AppSpacing.xs),
@@ -167,36 +170,19 @@ class _AskAiScreenState extends State<AskAiScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ProfileGradientScaffold(
-      scroll: false,
-      padding: const EdgeInsets.only(left: AppSpacing.m, right: AppSpacing.m),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Obx(() {
-            final hasResponse = _controller.response.value != null;
-            return ProfileTopBar(
-              title: tr(LocaleKeys.ask_ai_title),
-              onBack: () => Get.back(),
-              actions: [
-                if (hasResponse)
-                  CustomGlassIconButtonGroup(
-                    items: [
-                      (icon: CupertinoIcons.arrow_counterclockwise, onPressed: _clearResponse),
-                      (icon: CupertinoIcons.info_circle, onPressed: _showExampleQuestionsSheet),
-                    ],
-                  )
-                else
-                  CustomGlassIconButton(
-                    icon: CupertinoIcons.info_circle,
-                    onPressed: _showExampleQuestionsSheet,
-                  ),
-              ],
-            );
-          }),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.only(bottom: AppSpacing.xl),
+    return LiquidGlassScope(
+      child: Scaffold(
+        backgroundColor: AppColors.meshBase,
+        body: Stack(
+          children: [
+            VariableBlurScrollView(
+              topBlurSigma: 52,
+              topFadeHeight: 40,
+              bottomFadeHeight: 0,
+              backgroundColor: Colors.transparent,
+              fadeColor: AppColors.meshBase,
+              backgroundWidget: const MeshGradientBackground(),
+              padding: EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.mega + AppSpacing.s, AppSpacing.m, AppSpacing.xl),
               child: Obx(() {
                 final response = _controller.response.value;
                 final loading = _controller.isLoading.value;
@@ -223,8 +209,34 @@ class _AskAiScreenState extends State<AskAiScreen> {
                 );
               }),
             ),
-          ),
-        ],
+            Positioned(
+              top: 0,
+              left: AppSpacing.m,
+              right: AppSpacing.m,
+              child: Obx(() {
+                final hasResponse = _controller.response.value != null;
+                return ProfileTopBar(
+                  title: tr(LocaleKeys.ask_ai_title),
+                  onBack: () => Get.back(),
+                  actions: [
+                    if (hasResponse)
+                      CustomGlassIconButtonGroup(
+                        items: [
+                          (icon: CupertinoIcons.arrow_counterclockwise, onPressed: _clearResponse),
+                          (icon: CupertinoIcons.info_circle, onPressed: _showExampleQuestionsSheet),
+                        ],
+                      )
+                    else
+                      CustomGlassIconButton(
+                        icon: CupertinoIcons.info_circle,
+                        onPressed: _showExampleQuestionsSheet,
+                      ),
+                  ],
+                );
+              }),
+            ),
+          ],
+        ),
       ),
     );
   }

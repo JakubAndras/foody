@@ -122,7 +122,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
       context: context,
       barrierDismissible: true,
       barrierLabel: 'Voice permission dialog',
-      barrierColor: Colors.black.withValues(alpha: 0.35),
+      barrierColor: AppColors.overlayDark40,
       transitionDuration: const Duration(milliseconds: 180),
       pageBuilder: (context, _, __) {
         return Center(
@@ -431,7 +431,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
       context: context,
       backgroundColor: Colors.transparent,
       elevation: 0,
-      barrierColor: AppColors.overlayDark,
+      barrierColor: AppColors.overlayDark40,
       builder: (sheetContext) {
         return Padding(
           padding: const EdgeInsets.all(AppSpacing.xs),
@@ -515,7 +515,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
       context: context,
       backgroundColor: Colors.transparent,
       elevation: 0,
-      barrierColor: AppColors.overlayDark,
+      barrierColor: AppColors.overlayDark40,
       isScrollControlled: true,
       builder: (_) => Padding(
         padding: const EdgeInsets.all(AppSpacing.xs),

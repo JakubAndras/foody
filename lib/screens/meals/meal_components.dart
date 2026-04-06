@@ -7,7 +7,9 @@ import 'package:diplomka/widgets/foody_glass_buttons.dart';
 import 'package:diplomka/widgets/glass_popup.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:diplomka/widgets/animated_add_button.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 
 enum MatchBadgeVariant { good, medium, low }
 
@@ -21,8 +23,10 @@ class MealHeroHeader extends StatelessWidget {
   final double? confidence;
   final VoidCallback? onTitleTap;
   final bool showTime;
+  final TextEditingController? titleController;
+  final FocusNode? titleFocusNode;
 
-  const MealHeroHeader({super.key, required this.title, required this.timeLabel, this.image, this.imageAlignment = Alignment.center, this.confidence, this.onTitleTap, this.showTime = true});
+  const MealHeroHeader({super.key, required this.title, required this.timeLabel, this.image, this.imageAlignment = Alignment.center, this.confidence, this.onTitleTap, this.showTime = true, this.titleController, this.titleFocusNode});
 
   @override
   Widget build(BuildContext context) {
@@ -47,11 +51,11 @@ class MealHeroHeader extends StatelessWidget {
                 if (showTime) ...[
                   Row(
                     children: [
-                      Icon(CupertinoIcons.time, size: AppSizes.iconSm, color: AppColors.onPrimary.withValues(alpha: 0.8)),
+                      Icon(CupertinoIcons.time, size: AppSizes.iconSm, color: Colors.white.withValues(alpha: 0.8)),
                       const SizedBox(width: AppSpacing.xs),
                       Column(
                         children: [
-                          Text(timeLabel, style: AppTextStyles.caption12.copyWith(color: AppColors.onPrimary.withValues(alpha: 0.8))),
+                          Text(timeLabel, style: AppTextStyles.caption12.copyWith(color: Colors.white.withValues(alpha: 0.8))),
                           const SizedBox(height: 0.5),
                         ],
                       ),
@@ -59,15 +63,31 @@ class MealHeroHeader extends StatelessWidget {
                   ),
                   const SizedBox(height: AppSpacing.xxs),
                 ],
-                GestureDetector(
-                  onTap: onTitleTap,
-                  child: Text(
-                    title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.h3.copyWith(height: 1.5, color: AppColors.onPrimary),
-                  ),
-                ),
+                titleController != null
+                    ? TextField(
+                        controller: titleController,
+                        focusNode: titleFocusNode,
+                        maxLines: 1,
+                        maxLength: 50,
+                        style: AppTextStyles.h3.copyWith(height: 1.5, color: Colors.white),
+                        decoration: InputDecoration(
+                          isDense: true,
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.zero,
+                          counterText: '',
+                          hintText: tr(LocaleKeys.meal_untitled),
+                          hintStyle: AppTextStyles.h3.copyWith(height: 1.5, color: Colors.white.withValues(alpha: 0.4)),
+                        ),
+                      )
+                    : GestureDetector(
+                        onTap: onTitleTap,
+                        child: Text(
+                          title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTextStyles.h3.copyWith(height: 1.5, color: Colors.white),
+                        ),
+                      ),
                 const SizedBox(height: AppSpacing.xxs),
               ],
             ),
@@ -147,8 +167,9 @@ class CaloriesSummaryCard extends StatelessWidget {
   final double? height;
   final TextEditingController? controller;
   final FocusNode? focusNode;
+  final int? maxLength;
 
-  const CaloriesSummaryCard({super.key, required this.label, required this.value, this.delta, this.badge, this.margin, this.padding, this.height, this.controller, this.focusNode});
+  const CaloriesSummaryCard({super.key, required this.label, required this.value, this.delta, this.badge, this.margin, this.padding, this.height, this.controller, this.focusNode, this.maxLength});
 
   @override
   Widget build(BuildContext context) {
@@ -159,9 +180,10 @@ class CaloriesSummaryCard extends StatelessWidget {
             child: TextField(
               controller: controller,
               focusNode: focusNode,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(decimal: false),
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly, if (maxLength != null) LengthLimitingTextInputFormatter(maxLength)],
               style: AppTextStyles.h1.copyWith(height: 1, color: AppColors.primary),
-              decoration: const InputDecoration(isDense: true, border: InputBorder.none, contentPadding: EdgeInsets.zero),
+              decoration: InputDecoration(isDense: true, border: InputBorder.none, contentPadding: EdgeInsets.zero, counterText: '', hintText: '0', hintStyle: AppTextStyles.h1.copyWith(height: 1, color: AppColors.primary.withValues(alpha: 0.3))),
             ),
           )
         : Text(value, style: AppTextStyles.h1.copyWith(height: 1, color: AppColors.primary));
@@ -222,8 +244,9 @@ class MacroStatCard extends StatelessWidget {
   final double? height;
   final TextEditingController? controller;
   final FocusNode? focusNode;
+  final int? maxLength;
 
-  const MacroStatCard({super.key, required this.label, required this.value, required this.icon, required this.iconColor, this.height, this.controller, this.focusNode});
+  const MacroStatCard({super.key, required this.label, required this.value, required this.icon, required this.iconColor, this.height, this.controller, this.focusNode, this.maxLength});
 
   @override
   Widget build(BuildContext context) {
@@ -233,9 +256,10 @@ class MacroStatCard extends StatelessWidget {
             child: TextField(
               controller: controller,
               focusNode: focusNode,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(decimal: false),
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly, if (maxLength != null) LengthLimitingTextInputFormatter(maxLength)],
               style: AppTextStyles.title.copyWith(height: 1),
-              decoration: const InputDecoration(isDense: true, border: InputBorder.none, contentPadding: EdgeInsets.zero),
+              decoration: InputDecoration(isDense: true, border: InputBorder.none, contentPadding: EdgeInsets.zero, counterText: '', hintText: '0', hintStyle: AppTextStyles.title.copyWith(height: 1, color: AppColors.textTertiary)),
             ),
           )
         : Text(value, style: AppTextStyles.title);
@@ -297,7 +321,7 @@ class MealRecordCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.l),
-        border: AppBorders.screenCard ?? Border.all(color: AppColors.separator),
+        border: AppBorders.screenCard,
         boxShadow: AppShadows.screenCard,
       ),
       child: Column(
@@ -372,7 +396,7 @@ class IngredientRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final background = highlighted ? AppColors.warningSurface : AppColors.surface;
-    final border = highlighted ? AppColors.warningStrong : AppColors.outline;
+    final border = highlighted ? Border.all(color: AppColors.warningStrong, width: 1) : AppBorders.screenCard;
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(AppRadii.l),
@@ -382,7 +406,7 @@ class IngredientRow extends StatelessWidget {
         decoration: BoxDecoration(
           color: background,
           borderRadius: BorderRadius.circular(AppRadii.l),
-          border: Border.all(color: border, width: 1),
+          border: border,
         ),
         child: Row(
           children: [
@@ -417,15 +441,7 @@ class IngredientRow extends StatelessWidget {
             ),
             const SizedBox(width: AppSpacing.xs),
             if (onAdd != null)
-              GestureDetector(
-                onTap: onAdd,
-                child: Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
-                  child: Icon(CupertinoIcons.add, color: AppColors.onPrimary, size: AppSizes.iconMd),
-                ),
-              )
+              AnimatedAddButton(itemKey: ingredient.name, onAdd: onAdd!)
             else
               _IngredientPopupButton(onFavorite: onFavorite, onEdit: onEdit, onDelete: onDelete, isFavorite: ingredient.isFavorite),
           ],

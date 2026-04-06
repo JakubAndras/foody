@@ -26,7 +26,7 @@ Future<void> showWeightLogSheet(
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     elevation: 0,
-    barrierColor: AppColors.overlayDark,
+    barrierColor: AppColors.overlayDark40,
     builder: (_) => Padding(
       padding: const EdgeInsets.all(AppSpacing.xs),
       child: WeightLogSheet(entry: entry, title: title, initialWeight: initialWeight, showDate: showDate, onSave: onSave),
@@ -117,7 +117,7 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
       context: context,
       backgroundColor: Colors.transparent,
       elevation: 0,
-      barrierColor: AppColors.overlayDark,
+      barrierColor: AppColors.overlayDark40,
       isScrollControlled: true,
       builder: (_) => DashboardCalendarSheet(
         selectedDate: _selectedDate,
@@ -148,11 +148,7 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
             const SizedBox(height: AppSpacing.xxs),
             const SheetDragHandle(),
             const SizedBox(height: AppSpacing.xs),
-            SheetTopBar(
-              title: widget.title ?? tr(LocaleKeys.weight_log_label_weight),
-              onClose: () => Navigator.of(context).pop(),
-              onConfirm: _isSaving ? null : _handleSave,
-            ),
+            SheetTopBar(title: widget.title ?? tr(LocaleKeys.weight_log_label_weight), onClose: () => Navigator.of(context).pop(), onConfirm: _isSaving ? null : _handleSave),
             const SizedBox(height: AppSpacing.m),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -187,11 +183,7 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
                     borderRadius: BorderRadius.circular(AppRadii.l),
                     child: Container(
                       height: AppSizes.buttonHeightSm,
-                      decoration: BoxDecoration(
-                        color: AppColors.surface,
-                        borderRadius: BorderRadius.circular(AppRadii.l),
-                        border: AppBorders.screenCard,
-                      ),
+                      decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l), border: AppBorders.screenCard),
                       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
                       child: Row(
                         children: [

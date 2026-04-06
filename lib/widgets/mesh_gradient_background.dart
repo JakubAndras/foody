@@ -49,6 +49,37 @@ class MeshGradientBackground extends StatelessWidget {
     MeshBlob(color: AppColors.meshMint, alignment: Alignment(0.7, 0.55), radius: 0.3),
   ];
 
+  // ── Dark mesh presets ──
+
+  /// Version 1: Warm amber — single warm glow top-right (like the Cal AI screenshot)
+  static const List<MeshBlob> darkWarmAmber = [
+    MeshBlob(color: Color(0x28C8875A), alignment: Alignment(0.8, -0.7), radius: 0.5),
+    MeshBlob(color: Color(0x14A0644A), alignment: Alignment(0.2, -0.4), radius: 0.35),
+  ];
+
+  /// Version 2: Cool blue-purple — subtle blue top-left, muted purple bottom-right
+  static const List<MeshBlob> darkCoolNight = [
+    MeshBlob(color: Color(0x224A6FA5), alignment: Alignment(-0.7, -0.6), radius: 0.45),
+    MeshBlob(color: Color(0x187A5AA0), alignment: Alignment(0.6, 0.4), radius: 0.4),
+  ];
+
+  /// Version 3: Dual warm — amber top-right + deep rose bottom-left
+  static const List<MeshBlob> darkDualWarm = [
+    MeshBlob(color: Color(0x24C8875A), alignment: Alignment(0.8, -0.65), radius: 0.45),
+    MeshBlob(color: Color(0x18A05A6E), alignment: Alignment(-0.7, 0.5), radius: 0.4),
+  ];
+
+  /// Version 4: Emerald accent — green-teal top-right, subtle warm bottom-left
+  static const List<MeshBlob> darkEmerald = [
+    MeshBlob(color: Color(0x225A9A7A), alignment: Alignment(0.7, -0.6), radius: 0.45),
+    MeshBlob(color: Color(0x14A08A5A), alignment: Alignment(-0.6, 0.5), radius: 0.35),
+  ];
+
+  /// Version 5: Monochrome warm — larger, softer single amber (most minimal)
+  static const List<MeshBlob> darkSubtleGlow = [
+    MeshBlob(color: Color(0x1EB09070), alignment: Alignment(0.5, -0.5), radius: 0.6),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return RepaintBoundary(

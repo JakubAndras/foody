@@ -13,8 +13,6 @@ import 'package:diplomka/screens/profile/subscreens/personal_details_diet_screen
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/widgets/info_dialog.dart';
-import 'dart:ui';
-
 import 'package:diplomka/widgets/picker_column.dart';
 import 'package:diplomka/widgets/sheet_drag_handle.dart';
 import 'package:diplomka/widgets/sheet_top_bar.dart';
@@ -187,43 +185,37 @@ class PersonalDetailsScreen extends StatelessWidget {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       elevation: 0,
-      barrierColor: AppColors.overlayDark,
+      barrierColor: AppColors.overlayDark40,
       builder: (sheetContext) {
-        return Padding(
-          padding: const EdgeInsets.all(AppSpacing.xs),
-          child: ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadii.xxl), bottom: Radius.circular(AppRadii.xxl + 10)),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-              child: CustomPaint(
-                painter: const _DobGlassSheetPainter(),
-                child: SafeArea(
-                  top: false,
-                  bottom: false,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const SizedBox(height: AppSpacing.xxs),
-                      const SheetDragHandle(),
-                      const SizedBox(height: AppSpacing.xs),
-                      SheetTopBar(
-                        title: tr(LocaleKeys.personal_details_dob_label),
-                        onClose: () => Navigator.of(sheetContext).pop(),
-                        onConfirm: () async {
-                          await SessionManager.to.setDateOfBirth(selected);
-                          if (sheetContext.mounted) Navigator.of(sheetContext).pop();
-                        },
-                      ),
-                      const SizedBox(height: AppSpacing.xs),
-                      SizedBox(
-                        height: AppSizes.pickerHeight,
-                        child: CupertinoDatePicker(mode: CupertinoDatePickerMode.date, initialDateTime: initial, maximumDate: now, onDateTimeChanged: (value) => selected = value),
-                      ),
-                      const SizedBox(height: AppSpacing.xxl),
-                    ],
-                  ),
+        return Container(
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xl), bottom: Radius.circular(AppRadii.xxl + 10)),
+          ),
+          child: SafeArea(
+            top: false,
+            bottom: false,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: AppSpacing.xxs),
+                const SheetDragHandle(),
+                const SizedBox(height: AppSpacing.xs),
+                SheetTopBar(
+                  title: tr(LocaleKeys.personal_details_dob_label),
+                  onClose: () => Navigator.of(sheetContext).pop(),
+                  onConfirm: () async {
+                    await SessionManager.to.setDateOfBirth(selected);
+                    if (sheetContext.mounted) Navigator.of(sheetContext).pop();
+                  },
                 ),
-              ),
+                const SizedBox(height: AppSpacing.xs),
+                SizedBox(
+                  height: AppSizes.pickerHeight,
+                  child: CupertinoDatePicker(mode: CupertinoDatePickerMode.date, initialDateTime: initial, maximumDate: now, onDateTimeChanged: (value) => selected = value),
+                ),
+                const SizedBox(height: AppSpacing.xxl),
+              ],
             ),
           ),
         );
@@ -240,7 +232,7 @@ class PersonalDetailsScreen extends StatelessWidget {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       elevation: 0,
-      barrierColor: AppColors.overlayDark,
+      barrierColor: AppColors.overlayDark40,
       builder: (sheetContext) {
         return Padding(
           padding: const EdgeInsets.all(AppSpacing.xs),
@@ -263,7 +255,7 @@ class PersonalDetailsScreen extends StatelessWidget {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       elevation: 0,
-      barrierColor: AppColors.overlayDark,
+      barrierColor: AppColors.overlayDark40,
       builder: (sheetContext) {
         return Padding(
           padding: const EdgeInsets.all(AppSpacing.xs),
@@ -327,7 +319,7 @@ class PersonalDetailsScreen extends StatelessWidget {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       elevation: 0,
-      barrierColor: AppColors.overlayDark,
+      barrierColor: AppColors.overlayDark40,
       builder: (sheetContext) {
         return Padding(
           padding: const EdgeInsets.all(AppSpacing.xs),
@@ -694,8 +686,12 @@ class _InfoDetailRow extends StatelessWidget {
                       Text(label, style: AppTextStyles.body15.copyWith(fontWeight: FontWeight.w500)),
                       const SizedBox(width: AppSpacing.xs),
                       GestureDetector(
+                        behavior: HitTestBehavior.opaque,
                         onTap: onInfoTap,
-                        child: Icon(CupertinoIcons.info_circle, size: AppSizes.iconSm, color: AppColors.textSecondary),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxs, vertical: AppSpacing.xxs),
+                          child: Icon(CupertinoIcons.info_circle, size: AppSizes.iconSm, color: AppColors.textSecondary),
+                        ),
                       ),
                     ],
                   ),
@@ -730,8 +726,12 @@ class _BmrRow extends StatelessWidget {
                 Text(label, style: AppTextStyles.body15.copyWith(fontWeight: FontWeight.w500)),
                 const SizedBox(width: AppSpacing.xs),
                 GestureDetector(
+                  behavior: HitTestBehavior.opaque,
                   onTap: onInfoTap,
-                  child: Icon(CupertinoIcons.info_circle, size: AppSizes.iconSm, color: AppColors.textSecondary),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxs, vertical: AppSpacing.xxs),
+                    child: Icon(CupertinoIcons.info_circle, size: AppSizes.iconSm, color: AppColors.textSecondary),
+                  ),
                 ),
               ],
             ),
@@ -870,41 +870,3 @@ class _WorkoutsPickerSheetState extends State<_WorkoutsPickerSheet> {
   }
 }
 
-class _DobGlassSheetPainter extends CustomPainter {
-  const _DobGlassSheetPainter();
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final rrect = RRect.fromLTRBAndCorners(
-      0,
-      0,
-      size.width,
-      size.height,
-      topLeft: Radius.circular(AppRadii.xxl),
-      topRight: Radius.circular(AppRadii.xxl),
-      bottomRight: Radius.circular(AppRadii.xxl + 10),
-      bottomLeft: Radius.circular(AppRadii.xxl + 10),
-    );
-
-    canvas.drawRRect(rrect, Paint()..color = AppColors.pickerGlassSolid);
-
-    final highlightRect = Rect.fromLTWH(size.width * 0.1, 0, size.width * 0.8, size.height * 0.12);
-    canvas.drawRRect(
-      RRect.fromRectAndCorners(highlightRect, topLeft: Radius.circular(AppRadii.xxl), topRight: Radius.circular(AppRadii.xxl)),
-      Paint()
-        ..shader = const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x30FFFFFF), Color(0x00FFFFFF)]).createShader(highlightRect)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2.0),
-    );
-
-    canvas.drawRRect(
-      rrect.deflate(0.4),
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 0.8
-        ..color = AppColors.white1,
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}

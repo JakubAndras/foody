@@ -19,7 +19,7 @@ class StreakSheet extends StatelessWidget {
       context: context,
       backgroundColor: Colors.transparent,
       elevation: 0,
-      barrierColor: AppColors.overlayDark,
+      barrierColor: AppColors.overlayDark40,
       isScrollControlled: true,
       builder: (_) => const StreakSheet(),
     );
@@ -94,10 +94,7 @@ class StreakSheet extends StatelessWidget {
                         child: Container(
                           width: double.infinity,
                           padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(AppRadii.l),
-                          ),
+                          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(AppRadii.l)),
                           child: Column(
                             children: [
                               const Icon(CupertinoIcons.flame, size: 56, color: Colors.orange),
@@ -150,10 +147,7 @@ class StreakSheet extends StatelessWidget {
                         child: Container(
                           width: double.infinity,
                           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.m),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(AppRadii.l),
-                          ),
+                          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(AppRadii.l)),
                           child: Row(
                             children: [
                               Icon(CupertinoIcons.star_circle, size: 24, color: isNewRecord ? Colors.orange : AppColors.calendarDarkMuted),
@@ -162,10 +156,7 @@ class StreakSheet extends StatelessWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      tr(LocaleKeys.streak_your_record),
-                                      style: AppTextStyles.body13.copyWith(color: AppColors.calendarDarkMuted),
-                                    ),
+                                    Text(tr(LocaleKeys.streak_your_record), style: AppTextStyles.body13.copyWith(color: AppColors.calendarDarkMuted)),
                                     Text(
                                       tr(LocaleKeys.streak_days, namedArgs: {'count': info.longestStreak.toString()}),
                                       style: AppTextStyles.body16.copyWith(color: AppColors.black, fontWeight: FontWeight.w700),
@@ -176,10 +167,7 @@ class StreakSheet extends StatelessWidget {
                               if (isNewRecord)
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s, vertical: AppSpacing.xxs),
-                                  decoration: BoxDecoration(
-                                    color: Colors.orange.withValues(alpha: 0.15),
-                                    borderRadius: BorderRadius.circular(AppRadii.pill),
-                                  ),
+                                  decoration: BoxDecoration(color: Colors.orange.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(AppRadii.pill)),
                                   child: Text(
                                     tr(LocaleKeys.streak_new_record),
                                     style: AppTextStyles.body13.copyWith(color: Colors.orange, fontWeight: FontWeight.w600),
@@ -243,7 +231,7 @@ class _GlassSheetPainter extends CustomPainter {
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 0.8
-        ..color = AppColors.white1,
+        ..color = AppColors.glassBorder,
     );
   }
 

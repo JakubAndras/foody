@@ -51,7 +51,7 @@ class _DurationPickerSheetState extends State<DurationPickerSheet> {
                     child: CupertinoTheme(
                       data: CupertinoThemeData(
                         textTheme: CupertinoTextThemeData(
-                          pickerTextStyle: AppTextStyles.h4.copyWith(color: AppColors.black, fontWeight: FontWeight.w400, fontSize: 20),
+                          pickerTextStyle: AppTextStyles.h4.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w400, fontSize: 20),
                         ),
                       ),
                       child: CupertinoTimerPicker(
@@ -81,7 +81,7 @@ Future<void> showDurationPickerSheet({required BuildContext context, required St
     context: context,
     backgroundColor: Colors.transparent,
     elevation: 0,
-    barrierColor: AppColors.overlayDark,
+    barrierColor: AppColors.overlayDark40,
     isScrollControlled: true,
     builder: (_) => DurationPickerSheet(title: title, initialMinutes: initialMinutes, onChanged: onChanged),
   );
@@ -118,7 +118,7 @@ class _GlassSheetPainter extends CustomPainter {
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 0.8
-        ..color = AppColors.white1,
+        ..color = AppColors.glassBorder,
     );
   }
 

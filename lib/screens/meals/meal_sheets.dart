@@ -210,7 +210,7 @@ class AmountPickerSheet extends StatefulWidget {
       context: context,
       backgroundColor: Colors.transparent,
       elevation: 0,
-      barrierColor: AppColors.overlayDark,
+      barrierColor: AppColors.overlayDark40,
       isScrollControlled: true,
       builder: (_) => AmountPickerSheet(title: title, initialValue: initialValue, onChanged: onChanged),
     );
@@ -268,7 +268,12 @@ class _AmountPickerSheetState extends State<AmountPickerSheet> {
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.xs),
       child: ClipRRect(
-        borderRadius: const BorderRadius.only(topLeft: Radius.circular(AppRadii.xxl), topRight: Radius.circular(AppRadii.xxl), bottomLeft: Radius.circular(AppRadii.xxl + 10), bottomRight: Radius.circular(AppRadii.xxl + 10)),
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(AppRadii.xxl),
+          topRight: Radius.circular(AppRadii.xxl),
+          bottomLeft: Radius.circular(AppRadii.xxl + 10),
+          bottomRight: Radius.circular(AppRadii.xxl + 10),
+        ),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
           child: CustomPaint(
@@ -358,7 +363,7 @@ class MealtimePickerSheet extends StatefulWidget {
       context: context,
       backgroundColor: Colors.transparent,
       elevation: 0,
-      barrierColor: AppColors.overlayDark,
+      barrierColor: AppColors.overlayDark40,
       isScrollControlled: true,
       builder: (_) => MealtimePickerSheet(title: title, options: options, initialIndex: initialIndex, onChanged: onChanged),
     );
@@ -382,7 +387,12 @@ class _MealtimePickerSheetState extends State<MealtimePickerSheet> {
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.xs),
       child: ClipRRect(
-        borderRadius: const BorderRadius.only(topLeft: Radius.circular(AppRadii.xxl), topRight: Radius.circular(AppRadii.xxl), bottomLeft: Radius.circular(AppRadii.xxl + 10), bottomRight: Radius.circular(AppRadii.xxl + 10)),
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(AppRadii.xxl),
+          topRight: Radius.circular(AppRadii.xxl),
+          bottomLeft: Radius.circular(AppRadii.xxl + 10),
+          bottomRight: Radius.circular(AppRadii.xxl + 10),
+        ),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
           child: CustomPaint(
@@ -430,7 +440,10 @@ class _GlassPickerSheetPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final rrect = RRect.fromLTRBAndCorners(
-      0, 0, size.width, size.height,
+      0,
+      0,
+      size.width,
+      size.height,
       topLeft: Radius.circular(AppRadii.xxl),
       topRight: Radius.circular(AppRadii.xxl),
       bottomLeft: Radius.circular(AppRadii.xxl + 10),
@@ -439,20 +452,12 @@ class _GlassPickerSheetPainter extends CustomPainter {
 
     canvas.drawRRect(rrect, Paint()..color = AppColors.pickerGlassSolid);
 
-    final highlightRect = Rect.fromLTWH(size.width * 0.1, 0, size.width * 0.8, size.height * 0.12);
-    canvas.drawRRect(
-      RRect.fromRectAndCorners(highlightRect, topLeft: Radius.circular(AppRadii.xxl), topRight: Radius.circular(AppRadii.xxl)),
-      Paint()
-        ..shader = const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x30FFFFFF), Color(0x00FFFFFF)]).createShader(highlightRect)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2.0),
-    );
-
     canvas.drawRRect(
       rrect.deflate(0.4),
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 0.8
-        ..color = AppColors.white1,
+        ..color = AppColors.glassBorder,
     );
   }
 
@@ -478,20 +483,12 @@ class _AmountSheetPainter extends CustomPainter {
 
     canvas.drawRRect(rrect, Paint()..color = AppColors.pickerGlassSolid);
 
-    final highlightRect = Rect.fromLTWH(size.width * 0.1, 0, size.width * 0.8, size.height * 0.12);
-    canvas.drawRRect(
-      RRect.fromRectAndCorners(highlightRect, topLeft: Radius.circular(AppRadii.xxl), topRight: Radius.circular(AppRadii.xxl)),
-      Paint()
-        ..shader = const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x30FFFFFF), Color(0x00FFFFFF)]).createShader(highlightRect)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2.0),
-    );
-
     canvas.drawRRect(
       rrect.deflate(0.4),
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 0.8
-        ..color = AppColors.white1,
+        ..color = AppColors.glassBorder,
     );
   }
 

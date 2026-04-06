@@ -20,7 +20,7 @@ class MealDatePickerSheet extends StatefulWidget {
       context: context,
       backgroundColor: Colors.transparent,
       elevation: 0,
-      barrierColor: AppColors.overlayDark,
+      barrierColor: AppColors.overlayDark40,
       isScrollControlled: true,
       builder: (_) => MealDatePickerSheet(selectedDate: selectedDate, onDateSelected: onDateSelected),
     );
@@ -146,7 +146,7 @@ class _MealDatePickerSheetState extends State<MealDatePickerSheet> {
                           },
                           child: Text(
                             tr(LocaleKeys.common_back_to_original_date),
-                            style: AppTextStyles.body14.copyWith(color: AppColors.black, fontWeight: FontWeight.w600),
+                            style: AppTextStyles.body14.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w600),
                           ),
                         ),
                       ),
@@ -177,11 +177,7 @@ class _MealDatePickerSheetState extends State<MealDatePickerSheet> {
   }
 
   Widget _buildTopBar() {
-    return SheetTopBar(
-      title: tr(LocaleKeys.meal_date),
-      onClose: () => Navigator.of(context).pop(),
-      onConfirm: _handleConfirm,
-    );
+    return SheetTopBar(title: tr(LocaleKeys.meal_date), onClose: () => Navigator.of(context).pop(), onConfirm: _handleConfirm);
   }
 
   Widget _buildHeader() {
@@ -199,10 +195,10 @@ class _MealDatePickerSheetState extends State<MealDatePickerSheet> {
                 children: [
                   Text(
                     _monthYearLabel(),
-                    style: AppTextStyles.title17.copyWith(color: AppColors.black, fontWeight: FontWeight.w700),
+                    style: AppTextStyles.title17.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(width: AppSpacing.xxs),
-                  Icon(_showMonthYearPicker ? CupertinoIcons.chevron_down : CupertinoIcons.chevron_right, color: AppColors.black, size: AppSizes.iconLg),
+                  Icon(_showMonthYearPicker ? CupertinoIcons.chevron_down : CupertinoIcons.chevron_right, color: AppColors.textPrimary, size: AppSizes.iconLg),
                 ],
               ),
             ),
@@ -212,18 +208,18 @@ class _MealDatePickerSheetState extends State<MealDatePickerSheet> {
             GestureDetector(
               onTap: _goToPreviousMonth,
               behavior: HitTestBehavior.opaque,
-              child: const Padding(
-                padding: EdgeInsets.all(AppSpacing.xs),
-                child: Icon(CupertinoIcons.chevron_left, color: AppColors.black, size: AppSizes.iconMd),
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.xs),
+                child: Icon(CupertinoIcons.chevron_left, color: AppColors.textPrimary, size: AppSizes.iconMd),
               ),
             ),
             const SizedBox(width: AppSpacing.xxs),
             GestureDetector(
               onTap: _goToNextMonth,
               behavior: HitTestBehavior.opaque,
-              child: const Padding(
-                padding: EdgeInsets.only(left: AppSpacing.xs),
-                child: Icon(CupertinoIcons.chevron_right, color: AppColors.black, size: AppSizes.iconMd),
+              child: Padding(
+                padding: const EdgeInsets.only(left: AppSpacing.xs),
+                child: Icon(CupertinoIcons.chevron_right, color: AppColors.textPrimary, size: AppSizes.iconMd),
               ),
             ),
           ],
@@ -275,10 +271,23 @@ class _MealDatePickerSheetState extends State<MealDatePickerSheet> {
   }
 
   Widget _buildDayCell(DateTime date) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final isOriginalDate = date.year == _originalDate.year && date.month == _originalDate.month && date.day == _originalDate.day;
     final isSelected = date.year == _selectedDate.year && date.month == _selectedDate.month && date.day == _selectedDate.day;
 
-    Color textColor = isSelected ? AppColors.white1 : AppColors.black;
+    Color bgColor;
+    Color textColor;
+
+    if (isSelected) {
+      bgColor = isDark ? Colors.white : AppColors.calendarDarkSurface;
+      textColor = isDark ? AppColors.black : Colors.white;
+    } else if (isOriginalDate) {
+      bgColor = isDark ? Colors.white.withValues(alpha: 0.2) : AppColors.calendarDarkMuted.withValues(alpha: 0.3);
+      textColor = isDark ? Colors.white : AppColors.black;
+    } else {
+      bgColor = Colors.transparent;
+      textColor = isDark ? Colors.white : AppColors.black;
+    }
 
     return GestureDetector(
       onTap: () => setState(() => _selectedDate = date),
@@ -287,14 +296,7 @@ class _MealDatePickerSheetState extends State<MealDatePickerSheet> {
         child: Container(
           width: 38,
           height: 38,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: isSelected
-                ? AppColors.calendarDarkSurface
-                : isOriginalDate
-                    ? AppColors.calendarDarkMuted.withValues(alpha: 0.3)
-                    : Colors.transparent,
-          ),
+          decoration: BoxDecoration(shape: BoxShape.circle, color: bgColor),
           alignment: Alignment.center,
           child: Text(
             '${date.day}',
@@ -313,7 +315,7 @@ class _MealDatePickerSheetState extends State<MealDatePickerSheet> {
         child: CupertinoTheme(
           data: CupertinoThemeData(
             textTheme: CupertinoTextThemeData(
-              dateTimePickerTextStyle: AppTextStyles.h4.copyWith(color: AppColors.black, fontWeight: FontWeight.w400, fontSize: 20),
+              dateTimePickerTextStyle: AppTextStyles.h4.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w400, fontSize: 20),
             ),
           ),
           child: CupertinoDatePicker(
@@ -354,20 +356,12 @@ class _MealDateGlassSheetPainter extends CustomPainter {
 
     canvas.drawRRect(rrect, Paint()..color = AppColors.pickerGlassSolid);
 
-    final highlightRect = Rect.fromLTWH(size.width * 0.1, 0, size.width * 0.8, size.height * 0.12);
-    canvas.drawRRect(
-      RRect.fromRectAndCorners(highlightRect, topLeft: Radius.circular(AppRadii.xxl), topRight: Radius.circular(AppRadii.xxl)),
-      Paint()
-        ..shader = const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x30FFFFFF), Color(0x00FFFFFF)]).createShader(highlightRect)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2.0),
-    );
-
     canvas.drawRRect(
       rrect.deflate(0.4),
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 0.8
-        ..color = AppColors.white1,
+        ..color = AppColors.glassBorder,
     );
   }
 

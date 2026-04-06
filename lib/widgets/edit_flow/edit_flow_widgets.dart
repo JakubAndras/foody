@@ -120,7 +120,7 @@ class EditIngredientRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final background = highlighted ? AppColors.warningSurface : AppColors.surface;
-    final border = highlighted ? AppColors.warningStrong : AppColors.outline;
+    final border = highlighted ? Border.all(color: AppColors.warningStrong, width: AppSizes.dividerThin) : AppBorders.screenCard;
 
     return InkWell(
       onTap: onTap,
@@ -131,7 +131,7 @@ class EditIngredientRow extends StatelessWidget {
         decoration: BoxDecoration(
           color: background,
           borderRadius: BorderRadius.circular(AppRadii.l),
-          border: Border.all(color: border, width: AppSizes.dividerThin),
+          border: border,
         ),
         child: Row(
           children: [
@@ -199,7 +199,6 @@ class _MacroDotsRowWithCalories extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final showAmount = (ingredient.amount - 1.0).abs() > 0.001;
     return Row(
       children: [
         // if (showAmount) ...[

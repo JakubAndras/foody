@@ -19,7 +19,7 @@ class MealCopyToSheet extends StatefulWidget {
       context: context,
       backgroundColor: Colors.transparent,
       elevation: 0,
-      barrierColor: AppColors.overlayDark,
+      barrierColor: AppColors.overlayDark40,
       isScrollControlled: true,
       builder: (_) => MealCopyToSheet(currentDate: currentDate, onDatesSelected: onDatesSelected),
     );
@@ -146,11 +146,7 @@ class _MealCopyToSheetState extends State<MealCopyToSheet> {
                   const SizedBox(height: AppSpacing.xxs),
                   const SheetDragHandle(),
                   const SizedBox(height: AppSpacing.xs),
-                  SheetTopBar(
-                    title: tr(LocaleKeys.meal_copy_to_dates),
-                    onClose: () => Navigator.of(context).pop(),
-                    onConfirm: _selectedDates.isNotEmpty ? _handleConfirm : null,
-                  ),
+                  SheetTopBar(title: tr(LocaleKeys.meal_copy_to_dates), onClose: () => Navigator.of(context).pop(), onConfirm: _selectedDates.isNotEmpty ? _handleConfirm : null),
                   const SizedBox(height: AppSpacing.xs),
                   _buildHeader(),
                   const SizedBox(height: AppSpacing.xs),
@@ -164,7 +160,7 @@ class _MealCopyToSheetState extends State<MealCopyToSheet> {
                       child: Center(
                         child: Text(
                           tr(LocaleKeys.meal_copied_to_dates, namedArgs: {'count': '${_selectedDates.length}'}),
-                          style: AppTextStyles.body14.copyWith(color: AppColors.black, fontWeight: FontWeight.w600),
+                          style: AppTextStyles.body14.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w600),
                         ),
                       ),
                     ),
@@ -193,10 +189,10 @@ class _MealCopyToSheetState extends State<MealCopyToSheet> {
                 children: [
                   Text(
                     _monthYearLabel(),
-                    style: AppTextStyles.title17.copyWith(color: AppColors.black, fontWeight: FontWeight.w700),
+                    style: AppTextStyles.title17.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(width: AppSpacing.xxs),
-                  Icon(_showMonthYearPicker ? CupertinoIcons.chevron_down : CupertinoIcons.chevron_right, color: AppColors.black, size: AppSizes.iconLg),
+                  Icon(_showMonthYearPicker ? CupertinoIcons.chevron_down : CupertinoIcons.chevron_right, color: AppColors.textPrimary, size: AppSizes.iconLg),
                 ],
               ),
             ),
@@ -206,18 +202,18 @@ class _MealCopyToSheetState extends State<MealCopyToSheet> {
             GestureDetector(
               onTap: _goToPreviousMonth,
               behavior: HitTestBehavior.opaque,
-              child: const Padding(
-                padding: EdgeInsets.all(AppSpacing.xs),
-                child: Icon(CupertinoIcons.chevron_left, color: AppColors.black, size: AppSizes.iconMd),
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.xs),
+                child: Icon(CupertinoIcons.chevron_left, color: AppColors.textPrimary, size: AppSizes.iconMd),
               ),
             ),
             const SizedBox(width: AppSpacing.xxs),
             GestureDetector(
               onTap: _goToNextMonth,
               behavior: HitTestBehavior.opaque,
-              child: const Padding(
-                padding: EdgeInsets.only(left: AppSpacing.xs),
-                child: Icon(CupertinoIcons.chevron_right, color: AppColors.black, size: AppSizes.iconMd),
+              child: Padding(
+                padding: const EdgeInsets.only(left: AppSpacing.xs),
+                child: Icon(CupertinoIcons.chevron_right, color: AppColors.textPrimary, size: AppSizes.iconMd),
               ),
             ),
           ],
@@ -293,8 +289,8 @@ class _MealCopyToSheetState extends State<MealCopyToSheet> {
             color: isSelected
                 ? AppColors.calendarDarkSurface
                 : isCurrent
-                    ? AppColors.calendarDarkMuted.withValues(alpha: 0.15)
-                    : Colors.transparent,
+                ? AppColors.calendarDarkMuted.withValues(alpha: 0.15)
+                : Colors.transparent,
           ),
           alignment: Alignment.center,
           child: Text(
@@ -314,7 +310,7 @@ class _MealCopyToSheetState extends State<MealCopyToSheet> {
         child: CupertinoTheme(
           data: CupertinoThemeData(
             textTheme: CupertinoTextThemeData(
-              dateTimePickerTextStyle: AppTextStyles.h4.copyWith(color: AppColors.black, fontWeight: FontWeight.w400, fontSize: 20),
+              dateTimePickerTextStyle: AppTextStyles.h4.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w400, fontSize: 20),
             ),
           ),
           child: CupertinoDatePicker(
@@ -368,7 +364,7 @@ class _CopyToGlassSheetPainter extends CustomPainter {
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 0.8
-        ..color = AppColors.white1,
+        ..color = AppColors.glassBorder,
     );
   }
 

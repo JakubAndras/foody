@@ -21,7 +21,7 @@ class DashboardCalendarSheet extends StatefulWidget {
       context: context,
       backgroundColor: Colors.transparent,
       elevation: 0,
-      barrierColor: AppColors.overlayDark,
+      barrierColor: AppColors.overlayDark40,
       isScrollControlled: true,
       builder: (sheetContext) => DashboardCalendarSheet(selectedDate: selectedDate, onDateSelected: onDateSelected),
     ).whenComplete(() {
@@ -125,7 +125,7 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
                 children: [
                   const SizedBox(height: AppSpacing.xxs),
                   const SheetDragHandle(),
-                  const SizedBox(height: AppSpacing.xl),
+                  const SizedBox(height: AppSpacing.l),
                   _buildHeader(),
                   const SizedBox(height: AppSpacing.xs),
                   SizedBox(
@@ -149,7 +149,7 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
                           },
                           child: Text(
                             tr(LocaleKeys.common_back_to_today),
-                            style: AppTextStyles.body14.copyWith(color: AppColors.black, fontWeight: FontWeight.w600),
+                            style: AppTextStyles.body14.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w600),
                           ),
                         ),
                       ),
@@ -179,10 +179,10 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
                 children: [
                   Text(
                     _monthYearLabel(),
-                    style: AppTextStyles.title17.copyWith(color: AppColors.black, fontWeight: FontWeight.w700),
+                    style: AppTextStyles.title17.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(width: AppSpacing.xxs),
-                  Icon(_showMonthYearPicker ? CupertinoIcons.chevron_down : CupertinoIcons.chevron_right, color: AppColors.black, size: AppSizes.iconLg),
+                  Icon(_showMonthYearPicker ? CupertinoIcons.chevron_down : CupertinoIcons.chevron_right, color: AppColors.textPrimary, size: AppSizes.iconLg),
                 ],
               ),
             ),
@@ -192,18 +192,18 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
             GestureDetector(
               onTap: _goToPreviousMonth,
               behavior: HitTestBehavior.opaque,
-              child: const Padding(
-                padding: EdgeInsets.all(AppSpacing.xs),
-                child: Icon(CupertinoIcons.chevron_left, color: AppColors.black, size: AppSizes.iconMd),
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.xs),
+                child: Icon(CupertinoIcons.chevron_left, color: AppColors.textPrimary, size: AppSizes.iconMd),
               ),
             ),
             const SizedBox(width: AppSpacing.xxs),
             GestureDetector(
               onTap: _goToNextMonth,
               behavior: HitTestBehavior.opaque,
-              child: const Padding(
-                padding: EdgeInsets.only(left: AppSpacing.xs),
-                child: Icon(CupertinoIcons.chevron_right, color: AppColors.black, size: AppSizes.iconMd),
+              child: Padding(
+                padding: const EdgeInsets.only(left: AppSpacing.xs),
+                child: Icon(CupertinoIcons.chevron_right, color: AppColors.textPrimary, size: AppSizes.iconMd),
               ),
             ),
           ],
@@ -299,7 +299,7 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
             textTheme: CupertinoTextThemeData(
               // Base font is scaled up ~1.12x by CupertinoPicker magnification for the selected row.
               // Use a smaller base so the magnified size matches the non-selected rows visually.
-              dateTimePickerTextStyle: AppTextStyles.h4.copyWith(color: AppColors.black, fontWeight: FontWeight.w400, fontSize: 20),
+              dateTimePickerTextStyle: AppTextStyles.h4.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w400, fontSize: 20),
             ),
           ),
           child: CupertinoDatePicker(
@@ -345,22 +345,13 @@ class _GlassSheetPainter extends CustomPainter {
     // Glass fill
     canvas.drawRRect(rrect, Paint()..color = AppColors.pickerGlassBase);
 
-    //Specular highlight at the top
-    final highlightRect = Rect.fromLTWH(size.width * 0.1, 0, size.width * 0.8, size.height * 0.12);
-    canvas.drawRRect(
-      RRect.fromRectAndCorners(highlightRect, topLeft: Radius.circular(AppRadii.xxl), topRight: Radius.circular(AppRadii.xxl)),
-      Paint()
-        ..shader = const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x30FFFFFF), Color(0x00FFFFFF)]).createShader(highlightRect)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2.0),
-    );
-
     // Border
     canvas.drawRRect(
       rrect.deflate(0.4),
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 0.8
-        ..color = AppColors.white1,
+        ..color = AppColors.glassBorder,
     );
   }
 

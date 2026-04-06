@@ -373,6 +373,6 @@ class _SegmentedControl extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GlassSegmentedTabs(labels: labels, activeIndex: selectedIndex, onTap: onTap);
+    return GlassSegmentedTabs(labels: labels, activeIndex: selectedIndex, onTap: onTap, embedded: true);
   }
 }

@@ -40,7 +40,6 @@ class IngredientTemplateRepository extends GetxService {
         proteins: ingredient.proteins,
         carbs: ingredient.carbs,
         fats: ingredient.fats,
-        lastUsedAt: DateTime.now(),
         usageCount: existing.usageCount + 1,
       ));
     } else {

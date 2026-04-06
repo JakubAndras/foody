@@ -52,9 +52,9 @@ class QuickActionSheet extends StatelessWidget {
         child: _buildContent(
           _v2TileDecoration,
           _v2RowDecoration,
-          AppColors.black,
-          AppTextStyles.body14.copyWith(color: AppColors.black),
-          AppTextStyles.body14.copyWith(color: AppColors.black),
+          AppColors.textPrimary,
+          AppTextStyles.body14.copyWith(color: AppColors.textPrimary),
+          AppTextStyles.body14.copyWith(color: AppColors.textPrimary),
         ),
       ),
     );
@@ -124,16 +124,8 @@ class QuickActionSheet extends StatelessWidget {
     );
   }
 
-  static BoxDecoration get _v1TileDecoration => BoxDecoration(
-    color: AppColors.surface,
-    borderRadius: BorderRadius.circular(AppRadii.l),
-    border: AppBorders.screenCard,
-  );
-  static BoxDecoration get _v1RowDecoration => BoxDecoration(
-    color: AppColors.surface,
-    borderRadius: BorderRadius.circular(AppRadii.l),
-    border: AppBorders.screenCard,
-  );
+  static BoxDecoration get _v1TileDecoration => BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l), border: AppBorders.screenCard);
+  static BoxDecoration get _v1RowDecoration => BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l), border: AppBorders.screenCard);
 
   static BoxDecoration get _v2TileDecoration => BoxDecoration(
     color: const Color(0x40FFFFFF),
@@ -274,7 +266,7 @@ class _GlassSheetPainter extends CustomPainter {
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 0.8
-        ..color = AppColors.white1,
+        ..color = AppColors.glassBorder,
     );
   }
 

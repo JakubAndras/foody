@@ -54,7 +54,7 @@ class _TimePickerSheetState extends State<TimePickerSheet> {
                     child: CupertinoTheme(
                       data: CupertinoThemeData(
                         textTheme: CupertinoTextThemeData(
-                          dateTimePickerTextStyle: AppTextStyles.h4.copyWith(color: AppColors.black, fontWeight: FontWeight.w400, fontSize: 20),
+                          dateTimePickerTextStyle: AppTextStyles.h4.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w400, fontSize: 20),
                         ),
                       ),
                       child: CupertinoDatePicker(
@@ -84,7 +84,7 @@ Future<TimeOfDay?> showTimePickerSheet({required BuildContext context, required 
     context: context,
     backgroundColor: Colors.transparent,
     elevation: 0,
-    barrierColor: AppColors.overlayDark,
+    barrierColor: AppColors.overlayDark40,
     isScrollControlled: true,
     builder: (_) => TimePickerSheet(title: title, initialTime: initialTime),
   );
@@ -121,7 +121,7 @@ class _GlassSheetPainter extends CustomPainter {
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 0.8
-        ..color = AppColors.white1,
+        ..color = AppColors.glassBorder,
     );
   }
 

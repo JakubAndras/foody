@@ -433,12 +433,14 @@ class AppOpacities {
 }
 
 class AppGradients {
-  static LinearGradient get primary => AppColors.isDarkTheme ? const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFFFFFFFF), Color(0xFFE8E8EA)]) : darkDiagonal;
+  static LinearGradient get primary =>
+      AppColors.isDarkTheme ? const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFFFFFFFF), Color(0xFFE8E8EA)]) : darkDiagonal;
   static LinearGradient get justBlack => LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [AppColors.primary, AppColors.primary]);
   static LinearGradient get darkLinear => LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [AppColors.primary, AppColors.primaryMuted]);
   static const LinearGradient darkDiagonal = LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFF0D0D0D), Color(0xFF1D1D1D)], stops: [0, 1.0]);
 
-  static LinearGradient get askAiPrimary => AppColors.isDarkTheme ? const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFFFFFFFF), Color(0xFFE8E8EA)]) : darkAI5;
+  static LinearGradient get askAiPrimary =>
+      AppColors.isDarkTheme ? const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFFFFFFFF), Color(0xFFE8E8EA)]) : darkAI5;
   static const LinearGradient purpleAI = LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [AppColors.violet, AppColors.violetDark]);
   static const LinearGradient darkAI5 = LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF1C1C1E), Color(0xFF000000)]);
 
@@ -520,6 +522,15 @@ class AppQuickAction {
 class AppBorders {
   /// Card borders are shown only in light theme; dark theme uses null (no border).
   static BoxBorder? get screenCard => AppColors.isDarkTheme ? null : Border.all(color: AppColors.outline);
+
+  /// Plain bottom sheets keep their original light appearance and gain an outline only in dark theme.
+  static BoxBorder? get bottomSheet => AppColors.isDarkTheme ? Border.all(color: AppColors.outline) : null;
+
+  /// Standard modal sheet shape with a visible outline only in dark theme.
+  static RoundedRectangleBorder get bottomSheetShape => RoundedRectangleBorder(
+    borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadii.xl)),
+    side: AppColors.isDarkTheme ? BorderSide(color: AppColors.outline) : BorderSide.none,
+  );
 }
 
 class AppShadows {

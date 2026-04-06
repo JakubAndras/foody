@@ -16,6 +16,8 @@ class SheetTopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
       child: SizedBox(
@@ -23,13 +25,23 @@ class SheetTopBar extends StatelessWidget {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            Center(child: Text(title, style: AppTextStyles.title17.copyWith(color: AppColors.black, fontWeight: FontWeight.w600))),
+            Center(
+              child: Text(
+                title,
+                style: AppTextStyles.title17.copyWith(color: isDark ? Colors.white : AppColors.black, fontWeight: FontWeight.w600),
+              ),
+            ),
             Row(
               children: [
                 SheetCircleButton(icon: CupertinoIcons.xmark, onTap: onClose),
                 const Spacer(),
                 if (onConfirm != null)
-                  SheetCircleButton(icon: CupertinoIcons.checkmark, backgroundColor: AppColors.primary, iconColor: AppColors.white1, onTap: onConfirm!),
+                  SheetCircleButton(
+                    icon: CupertinoIcons.checkmark,
+                    backgroundColor: isDark ? Colors.white : AppColors.black,
+                    iconColor: isDark ? AppColors.black : Colors.white,
+                    onTap: onConfirm!,
+                  ),
               ],
             ),
           ],

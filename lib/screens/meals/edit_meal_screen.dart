@@ -7,7 +7,6 @@ import 'package:diplomka/model/meal.dart';
 import 'package:diplomka/screens/ingredients/edit_ingredient_screen.dart';
 import 'package:diplomka/screens/log_meal/select_meal_screen.dart';
 import 'package:diplomka/screens/meals/fix_result_screen.dart';
-import 'package:diplomka/screens/meals/report_meal_screen.dart';
 import 'package:diplomka/screens/meals/meal_components.dart';
 import 'package:diplomka/screens/meals/meal_copy_to_sheet.dart';
 import 'package:diplomka/screens/meals/meal_date_picker_sheet.dart';
@@ -28,7 +27,6 @@ import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -88,6 +86,18 @@ class _EditMealScreenState extends State<EditMealScreen> {
   bool _isSaving = false;
   bool _isDeleting = false;
 
+  // Inline editing for isNewMeal
+  late final TextEditingController _nameController;
+  late final FocusNode _nameFocus;
+  late final TextEditingController _caloriesController;
+  late final TextEditingController _proteinController;
+  late final TextEditingController _carbsController;
+  late final TextEditingController _fatsController;
+  late final FocusNode _caloriesFocus;
+  late final FocusNode _proteinFocus;
+  late final FocusNode _carbsFocus;
+  late final FocusNode _fatsFocus;
+
   static const List<String> _mealtimeKeys = ['Breakfast', 'Morning snack', 'Lunch', 'Afternoon snack', 'Dinner', 'Second dinner'];
 
   List<String> get _mealtimeDisplayOptions => [
@@ -123,12 +133,40 @@ class _EditMealScreenState extends State<EditMealScreen> {
     _initialAmount = _amountValue;
     _heroImage = _resolveHeroImage(_meal.photoPath);
     _scrollController.addListener(_handleScroll);
+
+    _nameController = TextEditingController(text: _meal.name);
+    _nameFocus = FocusNode();
+    _caloriesController = TextEditingController(text: _totalCalories > 0 ? _totalCalories.toStringAsFixed(0) : '');
+    _proteinController = TextEditingController(text: _totalProteins > 0 ? _totalProteins.toStringAsFixed(0) : '');
+    _carbsController = TextEditingController(text: _totalCarbs > 0 ? _totalCarbs.toStringAsFixed(0) : '');
+    _fatsController = TextEditingController(text: _totalFats > 0 ? _totalFats.toStringAsFixed(0) : '');
+    _caloriesFocus = FocusNode();
+    _proteinFocus = FocusNode();
+    _carbsFocus = FocusNode();
+    _fatsFocus = FocusNode();
+    if (widget.isNewMeal) {
+      _nameController.addListener(_onInlineNameChanged);
+      _caloriesController.addListener(_onInlineNutrientChanged);
+      _proteinController.addListener(_onInlineNutrientChanged);
+      _carbsController.addListener(_onInlineNutrientChanged);
+      _fatsController.addListener(_onInlineNutrientChanged);
+    }
   }
 
   @override
   void dispose() {
     _scrollController.removeListener(_handleScroll);
     _scrollController.dispose();
+    _nameController.dispose();
+    _nameFocus.dispose();
+    _caloriesController.dispose();
+    _proteinController.dispose();
+    _carbsController.dispose();
+    _fatsController.dispose();
+    _caloriesFocus.dispose();
+    _proteinFocus.dispose();
+    _carbsFocus.dispose();
+    _fatsFocus.dispose();
     super.dispose();
   }
 
@@ -142,13 +180,36 @@ class _EditMealScreenState extends State<EditMealScreen> {
 
   bool get _isEditMode => _mode == MealScreenMode.edit;
 
-  bool get _isValid => _ingredients.isNotEmpty && _totalCalories > 0;
+  bool get _isValid => (_ingredients.isNotEmpty && _totalCalories > 0) || (widget.isNewMeal && (double.tryParse(_caloriesController.text) ?? 0) > 0);
 
   bool get _isBusy => _isSaving || _isDeleting;
 
   bool get _isInteractionDisabled => _isBusy || widget.isPreview;
 
-  bool get _canEditNutrients => SessionManager.to.editableNutrientsEnabled1.value;
+  bool get _canEditNutrients => widget.isNewMeal || SessionManager.to.editableNutrientsEnabled1.value;
+
+  bool get _useInlineEditing => widget.isNewMeal;
+
+  void _onInlineNameChanged() {
+    setState(() {
+      _meal = _meal.copyWith(name: _nameController.text);
+    });
+  }
+
+  void _onInlineNutrientChanged() {
+    final cal = double.tryParse(_caloriesController.text) ?? 0;
+    final pro = double.tryParse(_proteinController.text) ?? 0;
+    final carb = double.tryParse(_carbsController.text) ?? 0;
+    final fat = double.tryParse(_fatsController.text) ?? 0;
+
+    setState(() {
+      if (_ingredients.isEmpty) {
+        _ingredients.add(Ingredient(name: _meal.name.isEmpty ? 'Manual' : _meal.name, weight: 0, calories: cal, proteins: pro, carbs: carb, fats: fat));
+      } else {
+        _ingredients[0] = _ingredients[0].copyWith(calories: cal, proteins: pro, carbs: carb, fats: fat);
+      }
+    });
+  }
 
   String get _mealTitle => _meal.name.trim().isEmpty ? tr(LocaleKeys.meal_untitled) : _meal.name.trim();
 
@@ -215,7 +276,22 @@ class _EditMealScreenState extends State<EditMealScreen> {
   }
 
   Widget _buildHeroBackdrop() {
-    if (_heroImage == null) return const SizedBox.shrink();
+    if (_heroImage == null) {
+      return Positioned(
+        top: 0,
+        left: 0,
+        right: 0,
+        height: AppSizes.mealHeroHeight + _topPullExtent,
+        child: IgnorePointer(
+          child: Container(
+            color: AppColors.surfaceMuted,
+            child: Center(
+              child: Icon(CupertinoIcons.photo, size: 48, color: AppColors.textTertiary),
+            ),
+          ),
+        ),
+      );
+    }
 
     return Positioned(
       top: 0,
@@ -473,6 +549,42 @@ class _EditMealScreenState extends State<EditMealScreen> {
 
   void _openPhotoSheet() {
     final bool hasPhoto = _meal.photoPath != null && _meal.photoPath!.isNotEmpty;
+
+    if (widget.isNewMeal) {
+      showGlassPopup(
+        context: context,
+        items: [
+          GlassPopupItem(
+            label: tr(LocaleKeys.meal_take_photo),
+            icon: CupertinoIcons.camera,
+            onTap: () {
+              Navigator.of(context).pop();
+              _handleTakePhoto();
+            },
+          ),
+          GlassPopupItem(
+            label: tr(LocaleKeys.meal_upload_photo),
+            icon: CupertinoIcons.photo_on_rectangle,
+            onTap: () {
+              Navigator.of(context).pop();
+              _handleUploadPhoto();
+            },
+          ),
+          if (hasPhoto)
+            GlassPopupItem(
+              label: tr(LocaleKeys.meal_remove_photo),
+              icon: CupertinoIcons.trash,
+              color: AppColors.error,
+              onTap: () {
+                Navigator.of(context).pop();
+                _handleRemovePhoto();
+              },
+            ),
+        ],
+      );
+      return;
+    }
+
     showGlassPopup(
       context: context,
       items: [
@@ -485,6 +597,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
         GlassPopupItem(
           showDividerAbove: true,
           label: tr(LocaleKeys.meal_take_photo),
+          icon: CupertinoIcons.camera,
           onTap: () {
             Navigator.of(context).pop();
             Navigator.of(context).pop();
@@ -493,6 +606,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
         ),
         GlassPopupItem(
           label: tr(LocaleKeys.meal_upload_photo),
+          icon: CupertinoIcons.photo_on_rectangle,
           onTap: () {
             Navigator.of(context).pop();
             Navigator.of(context).pop();
@@ -502,6 +616,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
         if (hasPhoto)
           GlassPopupItem(
             label: tr(LocaleKeys.meal_remove_photo),
+            icon: CupertinoIcons.trash,
             color: AppColors.error,
             onTap: () {
               Navigator.of(context).pop();
@@ -604,7 +719,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
     final result = await showModalBottomSheet<double>(
       context: context,
       backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xl))),
+      shape: AppBorders.bottomSheetShape,
       clipBehavior: Clip.antiAlias,
       showDragHandle: false,
       isScrollControlled: true,
@@ -682,7 +797,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
     final updatedName = await showModalBottomSheet<String>(
       context: context,
       backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xl))),
+      shape: AppBorders.bottomSheetShape,
       clipBehavior: Clip.antiAlias,
       showDragHandle: false,
       isScrollControlled: true,
@@ -791,9 +906,9 @@ class _EditMealScreenState extends State<EditMealScreen> {
       },
       child: Theme(
         data: screenTheme,
-        child: LiquidGlassScope(
+          child: LiquidGlassScope(
           child: Scaffold(
-            backgroundColor: AppColors.surface,
+            backgroundColor: AppColors.background,
             extendBodyBehindAppBar: true,
             body: LiquidGlassBackground(
               child: Stack(
@@ -811,7 +926,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                               SizedBox(height: AppSizes.mealHeroHeight - heroOverlap),
                               Expanded(
                                 child: DecoratedBox(
-                                  decoration: BoxDecoration(color: AppColors.surface),
+                                  decoration: BoxDecoration(color: AppColors.background),
                                   child: const SizedBox.expand(),
                                 ),
                               ),
@@ -828,7 +943,14 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                     height: AppSizes.mealHeroHeight + AppSizes.alertCardHeight - heroOverlap,
                                     child: Stack(
                                       children: [
-                                        MealHeroHeader(title: _mealTitle, timeLabel: _formatTime(_meal.timestamp), showTime: !widget.openedFromLogScreen, onTitleTap: _isInteractionDisabled ? null : _openMealNameEditor),
+                                        MealHeroHeader(
+                                          title: _mealTitle,
+                                          timeLabel: _formatTime(_meal.timestamp),
+                                          showTime: !widget.openedFromLogScreen,
+                                          onTitleTap: _isInteractionDisabled || _useInlineEditing ? null : _openMealNameEditor,
+                                          titleController: _useInlineEditing ? _nameController : null,
+                                          titleFocusNode: _useInlineEditing ? _nameFocus : null,
+                                        ),
                                         Positioned(
                                           left: AppSpacing.edge,
                                           right: AppSpacing.edge,
@@ -850,6 +972,9 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                       delta: widget.showCaloriesDelta ? widget.caloriesDelta : null,
                                       height: AppSizes.caloriesCardHeight,
                                       badge: _meal.confidence != null ? MatchBadge(text: _confidenceText, variant: _confidenceVariant) : null,
+                                      controller: _useInlineEditing ? _caloriesController : null,
+                                      focusNode: _useInlineEditing ? _caloriesFocus : null,
+                                      maxLength: _useInlineEditing ? 5 : null,
                                     ),
                                   ),
                                 ],
@@ -859,21 +984,39 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                 height: AppSizes.mealHeroHeight + AppSizes.caloriesCardHeight - heroOverlap,
                                 child: Stack(
                                   children: [
-                                    MealHeroHeader(title: _mealTitle, timeLabel: _formatTime(_meal.timestamp), showTime: !widget.openedFromLogScreen, onTitleTap: _isInteractionDisabled ? null : _openMealNameEditor),
+                                    MealHeroHeader(
+                                      title: _mealTitle,
+                                      timeLabel: _formatTime(_meal.timestamp),
+                                      showTime: !widget.openedFromLogScreen,
+                                      onTitleTap: _isInteractionDisabled || _useInlineEditing ? null : _openMealNameEditor,
+                                      titleController: _useInlineEditing ? _nameController : null,
+                                      titleFocusNode: _useInlineEditing ? _nameFocus : null,
+                                    ),
                                     Positioned(
                                       left: AppSpacing.edge,
                                       right: AppSpacing.edge,
                                       top: AppSizes.mealHeroHeight - heroOverlap,
-                                      child: GestureDetector(
-                                        onTap: _isInteractionDisabled || !_canEditNutrients ? null : _openCaloriesEditor,
-                                        child: CaloriesSummaryCard(
-                                          label: tr(LocaleKeys.common_calories),
-                                          value: _totalCalories.toStringAsFixed(0),
-                                          delta: widget.showCaloriesDelta ? widget.caloriesDelta : null,
-                                          height: AppSizes.caloriesCardHeight,
-                                          badge: _meal.confidence != null ? MatchBadge(text: _confidenceText, variant: _confidenceVariant) : null,
-                                        ),
-                                      ),
+                                      child: _useInlineEditing
+                                          ? CaloriesSummaryCard(
+                                              label: tr(LocaleKeys.common_calories),
+                                              value: _totalCalories.toStringAsFixed(0),
+                                              delta: widget.showCaloriesDelta ? widget.caloriesDelta : null,
+                                              height: AppSizes.caloriesCardHeight,
+                                              badge: _meal.confidence != null ? MatchBadge(text: _confidenceText, variant: _confidenceVariant) : null,
+                                              controller: _caloriesController,
+                                              focusNode: _caloriesFocus,
+                                              maxLength: 5,
+                                            )
+                                          : GestureDetector(
+                                              onTap: _isInteractionDisabled || !_canEditNutrients ? null : _openCaloriesEditor,
+                                              child: CaloriesSummaryCard(
+                                                label: tr(LocaleKeys.common_calories),
+                                                value: _totalCalories.toStringAsFixed(0),
+                                                delta: widget.showCaloriesDelta ? widget.caloriesDelta : null,
+                                                height: AppSizes.caloriesCardHeight,
+                                                badge: _meal.confidence != null ? MatchBadge(text: _confidenceText, variant: _confidenceVariant) : null,
+                                              ),
+                                            ),
                                     ),
                                   ],
                                 ),
@@ -884,39 +1027,69 @@ class _EditMealScreenState extends State<EditMealScreen> {
                               child: Row(
                                 children: [
                                   Expanded(
-                                    child: GestureDetector(
-                                      onTap: _isInteractionDisabled || !_canEditNutrients ? null : _openProteinEditor,
-                                      child: MacroStatCard(
-                                        label: tr(LocaleKeys.common_protein),
-                                        value: '${_totalProteins.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
-                                        icon: AppIcons.protein,
-                                        iconColor: AppColors.macroProtein,
-                                      ),
-                                    ),
+                                    child: _useInlineEditing
+                                        ? MacroStatCard(
+                                            label: tr(LocaleKeys.common_protein),
+                                            value: '${_totalProteins.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
+                                            icon: AppIcons.protein,
+                                            iconColor: AppColors.macroProtein,
+                                            controller: _proteinController,
+                                            focusNode: _proteinFocus,
+                                            maxLength: 4,
+                                          )
+                                        : GestureDetector(
+                                            onTap: _isInteractionDisabled || !_canEditNutrients ? null : _openProteinEditor,
+                                            child: MacroStatCard(
+                                              label: tr(LocaleKeys.common_protein),
+                                              value: '${_totalProteins.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
+                                              icon: AppIcons.protein,
+                                              iconColor: AppColors.macroProtein,
+                                            ),
+                                          ),
                                   ),
                                   const SizedBox(width: AppSpacing.s),
                                   Expanded(
-                                    child: GestureDetector(
-                                      onTap: _isInteractionDisabled || !_canEditNutrients ? null : _openCarbsEditor,
-                                      child: MacroStatCard(
-                                        label: tr(LocaleKeys.common_carbs),
-                                        value: '${_totalCarbs.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
-                                        icon: AppIcons.carbs,
-                                        iconColor: AppColors.warningStrong,
-                                      ),
-                                    ),
+                                    child: _useInlineEditing
+                                        ? MacroStatCard(
+                                            label: tr(LocaleKeys.common_carbs),
+                                            value: '${_totalCarbs.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
+                                            icon: AppIcons.carbs,
+                                            iconColor: AppColors.warningStrong,
+                                            controller: _carbsController,
+                                            focusNode: _carbsFocus,
+                                            maxLength: 4,
+                                          )
+                                        : GestureDetector(
+                                            onTap: _isInteractionDisabled || !_canEditNutrients ? null : _openCarbsEditor,
+                                            child: MacroStatCard(
+                                              label: tr(LocaleKeys.common_carbs),
+                                              value: '${_totalCarbs.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
+                                              icon: AppIcons.carbs,
+                                              iconColor: AppColors.warningStrong,
+                                            ),
+                                          ),
                                   ),
                                   const SizedBox(width: AppSpacing.s),
                                   Expanded(
-                                    child: GestureDetector(
-                                      onTap: _isInteractionDisabled || !_canEditNutrients ? null : _openFatsEditor,
-                                      child: MacroStatCard(
-                                        label: tr(LocaleKeys.common_fats),
-                                        value: '${_totalFats.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
-                                        icon: AppIcons.fats,
-                                        iconColor: AppColors.macroFats,
-                                      ),
-                                    ),
+                                    child: _useInlineEditing
+                                        ? MacroStatCard(
+                                            label: tr(LocaleKeys.common_fats),
+                                            value: '${_totalFats.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
+                                            icon: AppIcons.fats,
+                                            iconColor: AppColors.macroFats,
+                                            controller: _fatsController,
+                                            focusNode: _fatsFocus,
+                                            maxLength: 4,
+                                          )
+                                        : GestureDetector(
+                                            onTap: _isInteractionDisabled || !_canEditNutrients ? null : _openFatsEditor,
+                                            child: MacroStatCard(
+                                              label: tr(LocaleKeys.common_fats),
+                                              value: '${_totalFats.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
+                                              icon: AppIcons.fats,
+                                              iconColor: AppColors.macroFats,
+                                            ),
+                                          ),
                                   ),
                                 ],
                               ),
@@ -1046,7 +1219,14 @@ class _EditMealScreenState extends State<EditMealScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
                     child: widget.isPreview
                         ? _EditMealTopBar(onBack: _handleBack, onDone: null, isFavorite: _meal.isFavorite, onBookmark: null, onMenu: null)
-                        : _EditMealTopBar(onBack: _handleBack, onDone: _onPrimaryTap, isFavorite: _meal.isFavorite, onBookmark: _toggleFavorite, onMenu: _openActionSheet),
+                        : _EditMealTopBar(
+                            onBack: _handleBack,
+                            onDone: widget.isNewMeal ? () { if (_isValid) _handlePrimaryAction(); } : _onPrimaryTap,
+                            isFavorite: _meal.isFavorite,
+                            onBookmark: _toggleFavorite,
+                            onPhoto: widget.isNewMeal ? _openPhotoSheet : null,
+                            onMenu: widget.isNewMeal ? null : _openActionSheet,
+                          ),
                   ),
                   if (_isBusy)
                     Positioned.fill(
@@ -1252,13 +1432,14 @@ class _EditMealTopBar extends StatelessWidget {
   final VoidCallback? onDone;
   final VoidCallback? onBookmark;
   final VoidCallback? onMenu;
+  final VoidCallback? onPhoto;
   final bool isFavorite;
 
-  const _EditMealTopBar({required this.onBack, this.onDone, this.onBookmark, this.onMenu, required this.isFavorite});
+  const _EditMealTopBar({required this.onBack, this.onDone, this.onBookmark, this.onMenu, this.onPhoto, required this.isFavorite});
 
   @override
   Widget build(BuildContext context) {
-    final hasActions = onDone != null || onBookmark != null || onMenu != null;
+    final hasActions = onDone != null || onBookmark != null || onMenu != null || onPhoto != null;
     return CustomGlassAppBar(
       //leadingIcon: CupertinoIcons.xmark,
       leadingIconSize: AppSizes.iconLg,
@@ -1270,6 +1451,7 @@ class _EditMealTopBar extends StatelessWidget {
             items: [
               if (onDone != null) (icon: CupertinoIcons.checkmark, onPressed: onDone!),
               if (onBookmark != null) (icon: isFavorite ? CupertinoIcons.bookmark_fill : CupertinoIcons.bookmark, onPressed: onBookmark!),
+              if (onPhoto != null) (icon: CupertinoIcons.camera, onPressed: onPhoto!),
               if (onMenu != null) (icon: CupertinoIcons.ellipsis, onPressed: onMenu!),
             ],
           ),

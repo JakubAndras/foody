@@ -96,7 +96,7 @@ Future<void> showGlassPopup({required BuildContext context, required List<GlassP
     context: context,
     barrierDismissible: true,
     barrierLabel: 'Glass popup',
-    barrierColor: AppColors.overlayDark40.withValues(alpha: 0.2),
+    barrierColor: AppColors.overlayDark40,
     transitionDuration: AppTheme.transitionDuration,
     pageBuilder: (dialogContext, _, _) {
       final mediaQuery = MediaQuery.of(dialogContext);

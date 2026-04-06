@@ -38,7 +38,6 @@ class MealTemplateRepository extends GetxService {
 
     if (existing != null) {
       await _templateDao.updateTemplate(existing.copyWith(
-        lastUsedAt: meal.timestamp,
         usageCount: existing.usageCount + 1,
         photoPath: meal.photoPath ?? existing.photoPath,
       ));

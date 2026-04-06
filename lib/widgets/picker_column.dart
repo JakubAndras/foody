@@ -117,10 +117,10 @@ class _PickerColumnState extends State<PickerColumn> {
             final bool isSelected = index == _selectedIndex;
 
             final TextStyle baseStyle = widget.textStyle ??
-                const TextStyle(
+                TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w400,
-                  color: CupertinoColors.black,
+                  color: AppColors.textPrimary,
                   letterSpacing: -0.3,
                 );
 
@@ -132,7 +132,7 @@ class _PickerColumnState extends State<PickerColumn> {
             } else if (widget.useDistanceOpacity) {
               final double opacity = _opacityForDistance(distance);
               style = baseStyle.copyWith(
-                color: (baseStyle.color ?? CupertinoColors.black).withValues(alpha: opacity),
+                color: (baseStyle.color ?? AppColors.textPrimary).withValues(alpha: opacity),
               );
             } else {
               style = baseStyle;

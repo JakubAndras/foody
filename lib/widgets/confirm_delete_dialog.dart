@@ -53,6 +53,8 @@ class _ConfirmationDialogContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     // Secondary (left) button styles
     final secondaryBg = isDestructive ? AppColors.primary : AppColors.surface;
     final secondaryText = isDestructive ? Colors.white : AppColors.textPrimary;
@@ -60,7 +62,7 @@ class _ConfirmationDialogContent extends StatelessWidget {
 
     // Primary (right) button styles
     final primaryBg = isDestructive ? AppColors.surface : AppColors.primary;
-    final primaryText = isDestructive ? AppColors.error : Colors.white;
+    final primaryText = isDestructive ? AppColors.error : (isDark ? AppColors.black : Colors.white);
     final primaryBorder = isDestructive ? Border.all(color: AppColors.textSecondary.withValues(alpha: 0.3)) : null;
 
     return GestureDetector(

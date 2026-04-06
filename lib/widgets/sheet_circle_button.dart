@@ -13,18 +13,19 @@ class SheetCircleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final resolvedBackground = backgroundColor ?? AppColors.calendarDarkMuted.withValues(alpha: 0.3);
+    final resolvedIconColor = iconColor ?? (isDark ? AppColors.white : AppColors.black);
+
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: Container(
         width: size,
         height: size,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: backgroundColor ?? AppColors.calendarDarkMuted.withValues(alpha: 0.3),
-        ),
+        decoration: BoxDecoration(shape: BoxShape.circle, color: resolvedBackground),
         alignment: Alignment.center,
-        child: Icon(icon, size: iconSize ?? AppSizes.iconLiOS, color: iconColor ?? AppColors.black),
+        child: Icon(icon, size: iconSize ?? AppSizes.iconLiOS, color: resolvedIconColor),
       ),
     );
   }
