@@ -811,7 +811,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                               SizedBox(height: AppSizes.mealHeroHeight - heroOverlap),
                               Expanded(
                                 child: DecoratedBox(
-                                  decoration: const BoxDecoration(color: AppColors.surface),
+                                  decoration: BoxDecoration(color: AppColors.surface),
                                   child: const SizedBox.expand(),
                                 ),
                               ),
@@ -949,7 +949,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                       borderRadius: BorderRadius.circular(AppRadii.s),
                                       child: Row(
                                         children: [
-                                          const Icon(CupertinoIcons.add, size: AppSizes.iconSm, color: AppColors.textTertiary),
+                                          Icon(CupertinoIcons.add, size: AppSizes.iconSm, color: AppColors.textTertiary),
                                           const SizedBox(width: AppSpacing.xxs),
                                           Text(
                                             tr(LocaleKeys.common_add),
@@ -1052,7 +1052,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                     Positioned.fill(
                       child: ColoredBox(
                         color: AppColors.overlayDark40,
-                        child: const Center(child: CircularProgressIndicator(color: AppColors.onPrimary)),
+                        child: Center(child: CircularProgressIndicator(color: AppColors.onPrimary)),
                       ),
                     ),
                 ],

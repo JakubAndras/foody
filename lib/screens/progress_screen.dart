@@ -257,7 +257,7 @@ class _DailyAverageCardState extends State<_DailyAverageCard> {
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(AppRadii.l),
-          border: Border.all(color: AppColors.outline),
+          border: AppBorders.screenCard,
           boxShadow: AppShadows.cardSoft,
         ),
         padding: const EdgeInsets.all(AppSpacing.m),
@@ -273,7 +273,7 @@ class _DailyAverageCardState extends State<_DailyAverageCard> {
                     width: AppSizes.cardIconLg,
                     height: AppSizes.cardIconLg,
                     decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.m)),
-                    child: const Icon(CupertinoIcons.chart_bar, color: AppColors.textTertiary),
+                    child: Icon(CupertinoIcons.chart_bar, color: AppColors.textTertiary),
                   ),
                   const SizedBox(height: AppSpacing.m),
                   if (stats.hasMeals)

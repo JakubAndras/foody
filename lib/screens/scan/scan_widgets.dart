@@ -77,18 +77,20 @@ class ScanBulletRow extends StatelessWidget {
 }
 
 class ScanCircleButton extends StatelessWidget {
-  const ScanCircleButton({
+  ScanCircleButton({
     super.key,
     required this.icon,
     this.onPressed,
-    this.backgroundColor = AppColors.surface,
-    this.iconColor = AppColors.primary,
+    Color? backgroundColor,
+    Color? iconColor,
     this.size = AppSizes.scanTopButtonSize,
     this.iconSize = AppSizes.scanIconSize,
-    this.shadow = AppShadows.calendarDay,
+    List<BoxShadow>? shadow,
     this.border,
     this.child,
-  });
+  })  : backgroundColor = backgroundColor ?? AppColors.surface,
+        iconColor = iconColor ?? AppColors.primary,
+        shadow = shadow ?? AppShadows.calendarDay;
 
   final IconData icon;
   final VoidCallback? onPressed;

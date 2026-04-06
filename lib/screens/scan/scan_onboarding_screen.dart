@@ -174,7 +174,7 @@ class _ScanOnboardingPage extends StatelessWidget {
       child: Container(
         height: imageHeight,
         width: double.infinity,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: AppGradients.scanPlaceholder,
         ),
         child: Center(

@@ -132,7 +132,7 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
                   decoration: BoxDecoration(
                     color: AppColors.surface,
                     borderRadius: BorderRadius.circular(AppRadii.pill),
-                    border: Border.all(color: AppColors.surfaceMuted),
+                    border: AppBorders.screenCard,
                   ),
                   child: Row(
                     children: [

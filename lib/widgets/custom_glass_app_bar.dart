@@ -36,7 +36,7 @@ class CustomGlassIconButton extends StatelessWidget {
             child ??
             Padding(
               padding: icon == CupertinoIcons.chevron_left ? const EdgeInsets.only(right: 1.5) : EdgeInsets.zero,
-              child: Icon(icon, size: effectiveIconSize, color: AppColors.black),
+              child: Icon(icon, size: effectiveIconSize, color: AppColors.textPrimary),
             ),
       ),
     );
@@ -64,7 +64,7 @@ const _kStrokeWidth = 2.0;
 const _kInsetFraction = 0.19;
 
 Paint _glassStrokePaint() => Paint()
-  ..color = AppColors.black
+  ..color = AppColors.textPrimary
   ..strokeWidth = _kStrokeWidth
   ..strokeCap = StrokeCap.round
   ..style = PaintingStyle.stroke;
@@ -110,7 +110,7 @@ class CustomGlassIconButtonGroup extends StatelessWidget {
                 width: height,
                 height: height,
                 child: Center(
-                  child: Icon(item.icon, size: effectiveIconSize, color: AppColors.black),
+                  child: Icon(item.icon, size: effectiveIconSize, color: AppColors.textPrimary),
                 ),
               ),
             ),
@@ -135,6 +135,7 @@ class CustomGlassAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.onBack,
     this.showLeading = true,
     this.horizontalPadding,
+    this.useSafeArea = true,
   });
 
   final String? title;
@@ -146,6 +147,7 @@ class CustomGlassAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onBack;
   final bool showLeading;
   final double? horizontalPadding;
+  final bool useSafeArea;
 
   @override
   Size get preferredSize => const Size.fromHeight(AppSizes.topBarHeight);
@@ -159,30 +161,29 @@ class CustomGlassAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     final titleContent = titleWidget ?? (title != null ? Text(title!, style: AppTextStyles.title18) : null);
 
-    return SafeArea(
-      bottom: false,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: horizontalPadding ?? 0),
-        child: SizedBox(
-          height: preferredSize.height,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              if (titleContent != null) Center(child: titleContent),
-              Row(
-                children: [
-                  leadingWidget,
-                  const Spacer(),
-                  if (actions != null && actions!.isNotEmpty)
-                    Row(mainAxisSize: MainAxisSize.min, spacing: AppSpacing.s, children: actions!)
-                  else
-                    SizedBox(width: AppSizes.backButtonSize),
-                ],
-              ),
-            ],
-          ),
+    final bar = Padding(
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding ?? 0),
+      child: SizedBox(
+        height: preferredSize.height,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            if (titleContent != null) Center(child: titleContent),
+            Row(
+              children: [
+                leadingWidget,
+                const Spacer(),
+                if (actions != null && actions!.isNotEmpty)
+                  Row(mainAxisSize: MainAxisSize.min, spacing: AppSpacing.s, children: actions!)
+                else
+                  SizedBox(width: AppSizes.backButtonSize),
+              ],
+            ),
+          ],
         ),
       ),
     );
+
+    return useSafeArea ? SafeArea(bottom: false, child: bar) : bar;
   }
 }

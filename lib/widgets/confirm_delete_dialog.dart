@@ -77,7 +77,7 @@ class _ConfirmationDialogContent extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.l, AppSpacing.m, AppSpacing.m),
                 decoration: BoxDecoration(
-                  color: const Color(0xE8EDEEF0).withValues(alpha: 0.75),
+                  color: AppColors.dialogSurface.withValues(alpha: 0.75),
                   borderRadius: BorderRadius.circular(AppRadii.xl),
                 ),
                 child: Column(

@@ -468,7 +468,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        const Icon(CupertinoIcons.slider_horizontal_3, color: AppColors.textSecondary, size: AppSizes.iconSm),
+                                        Icon(CupertinoIcons.slider_horizontal_3, color: AppColors.textSecondary, size: AppSizes.iconSm),
                                         const SizedBox(width: 6),
                                         Text(
                                           _sortLabel(_sort),
@@ -515,7 +515,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                                           child: Row(
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
-                                              const Icon(CupertinoIcons.slider_horizontal_3, color: AppColors.textSecondary, size: AppSizes.iconSm),
+                                              Icon(CupertinoIcons.slider_horizontal_3, color: AppColors.textSecondary, size: AppSizes.iconSm),
                                               const SizedBox(width: 6),
                                               Text(
                                                 _sortLabel(_sort),

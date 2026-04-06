@@ -28,7 +28,7 @@ class ExerciseSearchBar extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(CupertinoIcons.search, color: AppColors.textTertiary, size: AppSizes.iconMd),
+          Icon(CupertinoIcons.search, color: AppColors.textTertiary, size: AppSizes.iconMd),
           const SizedBox(width: AppSpacing.s),
           Expanded(
             child: TextField(
@@ -158,12 +158,12 @@ class ExerciseListCard extends StatelessWidget {
               child: Container(
                 width: 48,
                 height: 48,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: AppColors.primary,
                   shape: BoxShape.circle,
                   // boxShadow: AppShadows.control,
                 ),
-                child: const Icon(CupertinoIcons.add, color: AppColors.onPrimary, size: AppSizes.iconMd),
+                child: Icon(CupertinoIcons.add, color: AppColors.onPrimary, size: AppSizes.iconMd),
               ),
             ),
           ],
@@ -337,8 +337,8 @@ class ExerciseCalculationCard extends StatelessWidget {
           const SizedBox(height: AppSpacing.s),
           _CalcRow(label: tr(LocaleKeys.exercise_rate), value: rate),
           _CalcRow(label: tr(LocaleKeys.common_duration), value: duration),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: AppSpacing.s),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
             child: Divider(color: AppColors.outline, height: 1),
           ),
           _CalcRow(label: tr(LocaleKeys.exercise_total_calories), value: total, emphasize: true),

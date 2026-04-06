@@ -251,8 +251,8 @@ class _LanguageRow extends StatelessWidget {
               Container(
                 width: AppSizes.iconMd + 4,
                 height: AppSizes.iconMd + 4,
-                decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
-                child: const Icon(CupertinoIcons.checkmark, size: AppSizes.iconSm, color: AppColors.onPrimary),
+                decoration: BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
+                child: Icon(CupertinoIcons.checkmark, size: AppSizes.iconSm, color: AppColors.onPrimary),
               ),
           ],
         ),
@@ -277,7 +277,7 @@ class _ProfileHeaderCard extends StatelessWidget {
             Container(
               width: AppSizes.avatarSize,
               height: AppSizes.avatarSize,
-              decoration: const BoxDecoration(gradient: AppGradients.primary, shape: BoxShape.circle),
+              decoration: BoxDecoration(gradient: AppGradients.primary, shape: BoxShape.circle),
               child: Center(
                 child: Text('E', style: AppTextStyles.h3.copyWith(color: AppColors.onPrimary)),
               ),
@@ -294,7 +294,7 @@ class _ProfileHeaderCard extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(CupertinoIcons.chevron_right, color: AppColors.textTertiary, size: AppSizes.iconSm),
+            Icon(CupertinoIcons.chevron_right, color: AppColors.textTertiary, size: AppSizes.iconSm),
           ],
         ),
       ),

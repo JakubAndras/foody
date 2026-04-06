@@ -343,7 +343,7 @@ class _GlassSheetPainter extends CustomPainter {
     );
 
     // Glass fill
-    canvas.drawRRect(rrect, Paint()..color = const Color(0xB0FFFFFF));
+    canvas.drawRRect(rrect, Paint()..color = AppColors.pickerGlassBase);
 
     //Specular highlight at the top
     final highlightRect = Rect.fromLTWH(size.width * 0.1, 0, size.width * 0.8, size.height * 0.12);

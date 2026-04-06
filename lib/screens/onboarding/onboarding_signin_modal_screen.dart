@@ -47,7 +47,7 @@ class OnboardingSignInSheetContent extends StatelessWidget {
         AppSpacing.l,
         AppSpacing.xl + bottomInset,
       ),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(AppRadii.xl),
@@ -73,7 +73,7 @@ class OnboardingSignInSheetContent extends StatelessWidget {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(AppRadii.pill),
                     onTap: onClose,
-                    child: const Icon(
+                    child: Icon(
                       CupertinoIcons.xmark,
                       size: AppSizes.iconMd,
                       color: AppColors.textPrimary,
@@ -101,7 +101,7 @@ class OnboardingSignInSheetContent extends StatelessWidget {
           const SizedBox(height: AppSpacing.s),
           OnboardingOutlinedButton(
             label: tr(LocaleKeys.onboarding_continue_email),
-            leading: const Icon(CupertinoIcons.mail_solid, color: AppColors.textPrimary, size: AppSizes.iconMd),
+            leading: Icon(CupertinoIcons.mail_solid, color: AppColors.textPrimary, size: AppSizes.iconMd),
             onPressed: onContinue,
           ),
           const SizedBox(height: AppSpacing.l),

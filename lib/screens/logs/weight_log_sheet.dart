@@ -190,7 +190,7 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
                       decoration: BoxDecoration(
                         color: AppColors.surface,
                         borderRadius: BorderRadius.circular(AppRadii.l),
-                        border: Border.all(color: AppColors.outline),
+                        border: AppBorders.screenCard,
                       ),
                       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
                       child: Row(

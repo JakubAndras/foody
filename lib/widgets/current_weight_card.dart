@@ -83,7 +83,7 @@ class CurrentWeightCard extends StatelessWidget {
                       gradient: isLogToday ? AppGradients.primary : null,
                       color: isLogToday ? null : AppColors.surface,
                       borderRadius: BorderRadius.circular(AppRadii.pill),
-                      border: isLogToday ? null : Border.all(color: AppColors.surfaceMuted),
+                      border: isLogToday ? null : AppBorders.screenCard,
                     ),
                     child: Center(
                       child: Text(

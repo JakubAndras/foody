@@ -259,7 +259,7 @@ class _AskAiScreenState extends State<AskAiScreen> {
           width: double.infinity,
           child: AskAiPrimaryButton(
             label: tr(LocaleKeys.common_share),
-            leading: const Icon(CupertinoIcons.share, size: AppSizes.iconMd, color: AppColors.onPrimary),
+            leading: Icon(CupertinoIcons.share, size: AppSizes.iconMd, color: AppColors.onPrimary),
             gradient: AppGradients.primary,
             onPressed: _handleShare,
           ),

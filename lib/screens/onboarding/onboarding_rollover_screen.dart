@@ -146,7 +146,7 @@ class _RolloverCard extends StatelessWidget {
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  const Align(
+                  Align(
                     alignment: Alignment.centerLeft,
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -203,7 +203,7 @@ class _RolloverCard extends StatelessWidget {
                   unit: '',
                   size: AppSizes.ringSizeSmall,
                   strokeWidth: AppSizes.ringStroke,
-                  centerChild: const Icon(
+                  centerChild: Icon(
                     CupertinoIcons.flame,
                     size: AppSizes.iconLg,
                     color: AppColors.primaryDark,

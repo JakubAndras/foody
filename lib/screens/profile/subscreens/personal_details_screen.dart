@@ -695,7 +695,7 @@ class _InfoDetailRow extends StatelessWidget {
                       const SizedBox(width: AppSpacing.xs),
                       GestureDetector(
                         onTap: onInfoTap,
-                        child: const Icon(CupertinoIcons.info_circle, size: AppSizes.iconSm, color: AppColors.textSecondary),
+                        child: Icon(CupertinoIcons.info_circle, size: AppSizes.iconSm, color: AppColors.textSecondary),
                       ),
                     ],
                   ),
@@ -731,7 +731,7 @@ class _BmrRow extends StatelessWidget {
                 const SizedBox(width: AppSpacing.xs),
                 GestureDetector(
                   onTap: onInfoTap,
-                  child: const Icon(CupertinoIcons.info_circle, size: AppSizes.iconSm, color: AppColors.textSecondary),
+                  child: Icon(CupertinoIcons.info_circle, size: AppSizes.iconSm, color: AppColors.textSecondary),
                 ),
               ],
             ),
@@ -886,7 +886,7 @@ class _DobGlassSheetPainter extends CustomPainter {
       bottomLeft: Radius.circular(AppRadii.xxl + 10),
     );
 
-    canvas.drawRRect(rrect, Paint()..color = const Color(0xFFFFFFFF));
+    canvas.drawRRect(rrect, Paint()..color = AppColors.pickerGlassSolid);
 
     final highlightRect = Rect.fromLTWH(size.width * 0.1, 0, size.width * 0.8, size.height * 0.12);
     canvas.drawRRect(

@@ -83,15 +83,16 @@ class ProfileBackButton extends StatelessWidget {
 }
 
 class ProfileTopBar extends StatelessWidget {
-  const ProfileTopBar({super.key, required this.title, this.onBack, this.actions});
+  const ProfileTopBar({super.key, required this.title, this.onBack, this.actions, this.useSafeArea = true});
 
   final String title;
   final VoidCallback? onBack;
   final List<Widget>? actions;
+  final bool useSafeArea;
 
   @override
   Widget build(BuildContext context) {
-    return CustomGlassAppBar(title: title, leadingIconSize: AppSizes.iconLg, onBack: onBack, actions: actions);
+    return CustomGlassAppBar(title: title, leadingIconSize: AppSizes.iconLg, onBack: onBack, actions: actions, useSafeArea: useSafeArea);
   }
 }
 
@@ -100,7 +101,7 @@ class ProfileCard extends StatelessWidget {
     super.key,
     required this.child,
     this.padding = const EdgeInsets.all(AppSpacing.screen),
-    this.color = AppColors.surface,
+    this.color,
     this.radius = AppRadii.l,
     this.shadow,
     this.border,
@@ -108,7 +109,7 @@ class ProfileCard extends StatelessWidget {
 
   final Widget child;
   final EdgeInsets padding;
-  final Color color;
+  final Color? color;
   final double radius;
   final List<BoxShadow>? shadow;
   final BoxBorder? border;
@@ -116,7 +117,7 @@ class ProfileCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(radius), boxShadow: shadow, border: border),
+      decoration: BoxDecoration(color: color ?? AppColors.surface, borderRadius: BorderRadius.circular(radius), boxShadow: shadow, border: border),
       padding: padding,
       child: child,
     );
@@ -202,7 +203,7 @@ class ProfileSettingsRow extends StatelessWidget {
               ],
             ),
           ),
-          trailing ?? const Icon(CupertinoIcons.chevron_right, size: AppSizes.iconMd, color: AppColors.textTertiary),
+          trailing ?? Icon(CupertinoIcons.chevron_right, size: AppSizes.iconMd, color: AppColors.textTertiary),
         ],
       ),
     );

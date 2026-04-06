@@ -43,7 +43,7 @@ class _ReportMealScreenState extends State<ReportMealScreen> {
                   const SizedBox(height: AppSpacing.l),
                   Row(
                     children: [
-                      const Icon(CupertinoIcons.flag, size: AppSizes.iconMd, color: AppColors.textPrimary),
+                      Icon(CupertinoIcons.flag, size: AppSizes.iconMd, color: AppColors.textPrimary),
                       const SizedBox(width: AppSpacing.s),
                       Text(tr(LocaleKeys.report_meal_title), style: AppTextStyles.h1.copyWith(fontSize: 32)),
                     ],

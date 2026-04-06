@@ -69,7 +69,7 @@ class FoodySecondaryButton extends StatelessWidget {
           decoration: BoxDecoration(
             color: AppColors.surface,
             borderRadius: BorderRadius.circular(AppRadii.pill),
-            border: Border.all(color: AppColors.outline),
+            border: AppBorders.screenCard,
           ),
           child: Center(
             child: Row(

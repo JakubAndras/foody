@@ -36,7 +36,7 @@ class PickerSheet extends StatelessWidget {
                   children: [
                     SizedBox(
                       width: AppSizes.iconLg,
-                      child: isSelected ? const Icon(CupertinoIcons.checkmark, color: AppColors.textPrimary, size: AppSizes.iconMd) : const SizedBox(width: AppSizes.iconMd),
+                      child: isSelected ? Icon(CupertinoIcons.checkmark, color: AppColors.textPrimary, size: AppSizes.iconMd) : SizedBox(width: AppSizes.iconMd),
                     ),
                     const SizedBox(width: AppSpacing.xs),
                     Expanded(
@@ -280,7 +280,7 @@ class _AmountPickerSheetState extends State<AmountPickerSheet> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const SizedBox(height: AppSpacing.xxs),
-                  const SheetDragHandle(color: AppColors.greyLight3),
+                  SheetDragHandle(color: AppColors.greyLight3),
                   const SizedBox(height: AppSpacing.s),
                   SheetTopBar(title: tr(LocaleKeys.ingredient_amount), onClose: () => Navigator.of(context).pop()),
                   Padding(
@@ -394,7 +394,7 @@ class _MealtimePickerSheetState extends State<MealtimePickerSheet> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const SizedBox(height: AppSpacing.xxs),
-                  const SheetDragHandle(color: AppColors.greyLight3),
+                  SheetDragHandle(color: AppColors.greyLight3),
                   const SizedBox(height: AppSpacing.s),
                   SheetTopBar(title: widget.title ?? tr(LocaleKeys.meal_mealtime), onClose: () => Navigator.of(context).pop()),
                   Padding(
@@ -437,7 +437,7 @@ class _GlassPickerSheetPainter extends CustomPainter {
       bottomRight: Radius.circular(AppRadii.xxl + 10),
     );
 
-    canvas.drawRRect(rrect, Paint()..color = const Color(0xFFFFFFFF));
+    canvas.drawRRect(rrect, Paint()..color = AppColors.pickerGlassSolid);
 
     final highlightRect = Rect.fromLTWH(size.width * 0.1, 0, size.width * 0.8, size.height * 0.12);
     canvas.drawRRect(
@@ -476,7 +476,7 @@ class _AmountSheetPainter extends CustomPainter {
       bottomLeft: Radius.circular(AppRadii.xxl + 10),
     );
 
-    canvas.drawRRect(rrect, Paint()..color = const Color(0xFFFFFFFF)); // 0xB0FFFFFF
+    canvas.drawRRect(rrect, Paint()..color = AppColors.pickerGlassSolid);
 
     final highlightRect = Rect.fromLTWH(size.width * 0.1, 0, size.width * 0.8, size.height * 0.12);
     canvas.drawRRect(

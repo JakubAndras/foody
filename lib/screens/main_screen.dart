@@ -179,7 +179,7 @@ class _DashboardStreakPill extends StatelessWidget {
         content = Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(CupertinoIcons.star, color: AppColors.textPrimary, size: 18),
+            Icon(CupertinoIcons.star, color: AppColors.textPrimary, size: 18),
             const SizedBox(width: AppSpacing.xs),
             Text(
               '$streak',
@@ -248,7 +248,7 @@ class _DashboardCalendarPill extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(CupertinoIcons.calendar, color: AppColors.textPrimary, size: 18),
+                    Icon(CupertinoIcons.calendar, color: AppColors.textPrimary, size: 18),
                     const SizedBox(width: AppSpacing.xs),
                     Text(
                       label,

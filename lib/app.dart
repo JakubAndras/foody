@@ -38,25 +38,28 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
       },
-      child: GetMaterialApp(
-        localizationsDelegates: [
-          ...context.localizationDelegates,
-          const LocaleNamesLocalizationsDelegate(),
-        ],
-        supportedLocales: context.supportedLocales,
-        locale: context.locale,
-        title: 'Foody',
-        //themeMode: SessionManager.to.themeModeIndex.value,
-        theme: appThemeData.themeData,
-        //darkTheme: appThemeData.darkThemeData,
-        builder: (context, child) => DefaultTextStyle(style: DefaultTextStyle.of(context).style.copyWith(decoration: TextDecoration.none), child: child!),
-        home: Obx(() {
-          if (SessionManager.to.onboardingComplete.value) {
-            return const MainScreen();
-          }
-          return const OnboardingFlowScreen();
-        }),
-      ),
+      child: Obx(() {
+        final themeMode = SessionManager.to.themeModeIndex.value;
+        return GetMaterialApp(
+          localizationsDelegates: [...context.localizationDelegates, const LocaleNamesLocalizationsDelegate()],
+          supportedLocales: context.supportedLocales,
+          locale: context.locale,
+          title: 'Foody',
+          themeMode: themeMode,
+          theme: appThemeData.themeData,
+          darkTheme: appThemeData.darkThemeData,
+          builder: (context, child) => DefaultTextStyle(
+            style: DefaultTextStyle.of(context).style.copyWith(decoration: TextDecoration.none),
+            child: child!,
+          ),
+          home: Obx(() {
+            if (SessionManager.to.onboardingComplete.value) {
+              return const MainScreen();
+            }
+            return const OnboardingFlowScreen();
+          }),
+        );
+      }),
     );
   }
 

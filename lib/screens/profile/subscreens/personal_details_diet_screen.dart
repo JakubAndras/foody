@@ -143,7 +143,7 @@ class _DietIcon extends StatelessWidget {
     return Container(
       width: AppSizes.iconXl,
       height: AppSizes.iconXl,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppColors.primary,
         shape: BoxShape.circle,
       ),

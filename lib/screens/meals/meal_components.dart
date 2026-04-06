@@ -34,7 +34,7 @@ class MealHeroHeader extends StatelessWidget {
         children: [
           DecoratedBox(
             decoration: const BoxDecoration(
-              gradient: LinearGradient(begin: Alignment.bottomCenter, end: Alignment.topCenter, colors: [AppColors.overlayDark60, Color(0x00000000)]),
+              gradient: LinearGradient(begin: Alignment.bottomCenter, end: Alignment.topCenter, colors: [AppColors.overlayDark60, Colors.transparent]),
             ),
           ),
           Positioned(
@@ -303,9 +303,9 @@ class MealRecordCard extends StatelessWidget {
       child: Column(
         children: [
           _RecordRow(label: tr(LocaleKeys.ingredient_amount), value: amount, onTap: onAmountTap, showChevron: true),
-          const Divider(color: AppColors.separator, height: AppSpacing.m, thickness: AppSizes.dividerThin),
+          Divider(color: AppColors.separator, height: AppSpacing.m, thickness: AppSizes.dividerThin),
           _RecordRow(label: tr(LocaleKeys.meal_mealtime), value: mealtime, onTap: onMealtimeTap, showChevron: true),
-          const Divider(color: AppColors.separator, height: AppSpacing.m, thickness: AppSizes.dividerThin),
+          Divider(color: AppColors.separator, height: AppSpacing.m, thickness: AppSizes.dividerThin),
           _RecordRow(label: tr(LocaleKeys.meal_date), value: date, onTap: onDateTap, valueAsChip: true),
         ],
       ),
@@ -336,7 +336,7 @@ class _RecordRow extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(value, style: AppTextStyles.body16.copyWith(letterSpacing: -0.3125)),
-              if (showChevron) ...[const SizedBox(width: AppSpacing.xs), const Icon(CupertinoIcons.chevron_down, size: AppSizes.iconSm, color: AppColors.textSecondary)],
+              if (showChevron) ...[const SizedBox(width: AppSpacing.xs), Icon(CupertinoIcons.chevron_down, size: AppSizes.iconSm, color: AppColors.textSecondary)],
             ],
           );
 
@@ -422,8 +422,8 @@ class IngredientRow extends StatelessWidget {
                 child: Container(
                   width: 32,
                   height: 32,
-                  decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
-                  child: const Icon(CupertinoIcons.add, color: AppColors.onPrimary, size: AppSizes.iconMd),
+                  decoration: BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
+                  child: Icon(CupertinoIcons.add, color: AppColors.onPrimary, size: AppSizes.iconMd),
                 ),
               )
             else
@@ -661,11 +661,11 @@ class AmountInputField extends StatelessWidget {
           fillColor: AppColors.surface,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(AppRadii.m),
-            borderSide: const BorderSide(color: AppColors.surfaceMuted),
+            borderSide: BorderSide(color: AppColors.surfaceMuted),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(AppRadii.m),
-            borderSide: const BorderSide(color: AppColors.primary),
+            borderSide: BorderSide(color: AppColors.primary),
           ),
         ),
       ),
@@ -749,7 +749,7 @@ class SyncCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(CupertinoIcons.arrow_2_circlepath, size: AppSizes.iconMd, color: AppColors.textPrimary),
+              Icon(CupertinoIcons.arrow_2_circlepath, size: AppSizes.iconMd, color: AppColors.textPrimary),
               const SizedBox(width: AppSpacing.s),
               Expanded(
                 child: Text(title, style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w500)),

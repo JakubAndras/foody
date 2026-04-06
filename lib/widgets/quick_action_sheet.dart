@@ -34,7 +34,7 @@ class QuickActionSheet extends StatelessWidget {
             child: SafeArea(
               top: false,
               bottom: false,
-              child: _buildContent(_v1TileDecoration, _v1RowDecoration, AppColors.textEmphasis, AppTextStyles.body14, AppTextStyles.body14),
+              child: _buildContent(_v1TileDecoration, _v1RowDecoration, AppColors.textPrimary, AppTextStyles.body14, AppTextStyles.body14),
             ),
           ),
         ),
@@ -124,15 +124,15 @@ class QuickActionSheet extends StatelessWidget {
     );
   }
 
-  static final _v1TileDecoration = BoxDecoration(
-    color: AppColors.white,
+  static BoxDecoration get _v1TileDecoration => BoxDecoration(
+    color: AppColors.surface,
     borderRadius: BorderRadius.circular(AppRadii.l),
-    border: Border.all(color: AppColors.outline),
+    border: AppBorders.screenCard,
   );
-  static final _v1RowDecoration = BoxDecoration(
-    color: AppColors.white,
+  static BoxDecoration get _v1RowDecoration => BoxDecoration(
+    color: AppColors.surface,
     borderRadius: BorderRadius.circular(AppRadii.l),
-    border: Border.all(color: AppColors.outline),
+    border: AppBorders.screenCard,
   );
 
   static BoxDecoration get _v2TileDecoration => BoxDecoration(
@@ -257,7 +257,7 @@ class _GlassSheetPainter extends CustomPainter {
     );
 
     // Glass fill
-    canvas.drawRRect(rrect, Paint()..color = const Color(0xB0FFFFFF));
+    canvas.drawRRect(rrect, Paint()..color = AppColors.pickerGlassBase);
 
     // Specular highlight at the top
     final highlightRect = Rect.fromLTWH(size.width * 0.1, 0, size.width * 0.8, size.height * 0.12);

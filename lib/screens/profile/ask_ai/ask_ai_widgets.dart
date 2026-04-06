@@ -15,7 +15,7 @@ class AskAiPrimaryButton extends StatelessWidget {
     this.leading,
     this.height = AppSizes.askAiActionHeight,
     this.radius = AppRadii.m,
-    this.gradient = AppGradients.askAiPrimary,
+    this.gradient,
   });
 
   final String label;
@@ -23,7 +23,7 @@ class AskAiPrimaryButton extends StatelessWidget {
   final Widget? leading;
   final double height;
   final double radius;
-  final LinearGradient gradient;
+  final LinearGradient? gradient;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class AskAiPrimaryButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(radius),
           child: Ink(
             decoration: BoxDecoration(
-              gradient: gradient,
+              gradient: gradient ?? AppGradients.askAiPrimary,
               borderRadius: BorderRadius.circular(radius),
             ),
             child: Center(
@@ -161,8 +161,8 @@ class AskAiPromptCard extends StatelessWidget {
             AskAiPrimaryButton(
               label: isLoading ? tr(LocaleKeys.voice_analyzing) : tr(LocaleKeys.ask_ai_title),
               leading: isLoading
-                  ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.onPrimary))
-                  : const Icon(CupertinoIcons.sparkles, size: AppSizes.iconMd, color: AppColors.onPrimary),
+                  ? SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.onPrimary))
+                  : Icon(CupertinoIcons.sparkles, size: AppSizes.iconMd, color: AppColors.onPrimary),
               onPressed: isLoading ? null : onAsk,
             ),
           ],
@@ -745,7 +745,7 @@ class _LegendItem extends StatelessWidget {
             gradient: gradient,
             color: gradient == null ? AppColors.surfaceMuted : null,
             borderRadius: BorderRadius.circular(6),
-            border: gradient == null ? Border.all(color: AppColors.outline) : null,
+            border: gradient == null ? AppBorders.screenCard : null,
             boxShadow: useShadow ? AppShadows.control : null,
           ),
         ),

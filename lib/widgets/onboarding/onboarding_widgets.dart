@@ -134,13 +134,13 @@ class OnboardingPrimaryButton extends StatelessWidget {
 }
 
 class OnboardingSolidButton extends StatelessWidget {
-  const OnboardingSolidButton({super.key, required this.label, this.onPressed, this.leading, this.backgroundColor = AppColors.primary, this.textColor = AppColors.onPrimary});
+  const OnboardingSolidButton({super.key, required this.label, this.onPressed, this.leading, this.backgroundColor, this.textColor});
 
   final String label;
   final VoidCallback? onPressed;
   final Widget? leading;
-  final Color backgroundColor;
-  final Color textColor;
+  final Color? backgroundColor;
+  final Color? textColor;
 
   @override
   Widget build(BuildContext context) {
@@ -535,7 +535,7 @@ class OnboardingPlaceholderImage extends StatelessWidget {
       height: height,
       width: double.infinity,
       decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l)),
-      child: const Center(
+      child: Center(
         child: Icon(CupertinoIcons.photo, size: AppSizes.iconXl, color: AppColors.textTertiary),
       ),
     );
@@ -557,7 +557,7 @@ class OnboardingGlassCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: AppColors.glassMuted,
             borderRadius: BorderRadius.circular(AppRadii.l),
-            border: Border.all(color: AppColors.outline.withValues(alpha: 0.4)),
+            border: AppBorders.screenCard,
           ),
           child: child,
         ),

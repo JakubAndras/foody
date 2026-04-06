@@ -225,7 +225,7 @@ class _UnitToggle extends StatelessWidget {
               child: Container(
                 width: AppSizes.toggleHeight - AppSpacing.xs,
                 height: AppSizes.toggleHeight - AppSpacing.xs,
-                decoration: const BoxDecoration(color: AppColors.surface, shape: BoxShape.circle),
+                decoration: BoxDecoration(color: AppColors.surface, shape: BoxShape.circle),
               ),
             ),
           ),

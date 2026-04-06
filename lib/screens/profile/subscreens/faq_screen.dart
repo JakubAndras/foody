@@ -96,7 +96,7 @@ class _ExpandableFaqItem extends StatelessWidget {
                 AnimatedRotation(
                   turns: isExpanded ? 0.25 : 0,
                   duration: AppTheme.transitionDuration,
-                  child: const Icon(CupertinoIcons.chevron_right, size: AppSizes.iconMd, color: AppColors.textSecondary),
+                  child: Icon(CupertinoIcons.chevron_right, size: AppSizes.iconMd, color: AppColors.textSecondary),
                 ),
               ],
             ),

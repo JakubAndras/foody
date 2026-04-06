@@ -462,7 +462,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
                               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(AppRadii.pill),
-                                border: Border.all(color: AppColors.outline),
+                                border: AppBorders.screenCard,
                                 color: AppColors.surface,
                               ),
                               child: Center(
@@ -491,14 +491,14 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
                               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(AppRadii.pill),
-                                border: Border.all(color: AppColors.outline),
+                                border: AppBorders.screenCard,
                                 color: AppColors.surface,
                               ),
                               child: Row(
                                 children: [
                                   Text(_selectedUnit.label, style: AppTextStyles.body16),
                                   const Spacer(),
-                                  const Icon(CupertinoIcons.chevron_down, size: AppSizes.iconSm, color: AppColors.textTertiary),
+                                  Icon(CupertinoIcons.chevron_down, size: AppSizes.iconSm, color: AppColors.textTertiary),
                                 ],
                               ),
                             ),

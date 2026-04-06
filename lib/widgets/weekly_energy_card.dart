@@ -139,7 +139,7 @@ class _WeeklyEnergyCardState extends State<WeeklyEnergyCard> {
                     children: [
                       if (bmr != null) Expanded(child: _EnergyStat(label: 'BMR', value: _formatCalories(stats.avgDailyGoal), unit: calUnit, valueColor: _bmrColor)),
                       Expanded(child: _EnergyStat(label: tr(LocaleKeys.progress_burned), value: _formatCalories(stats.totalBurned), unit: calUnit, valueColor: AppColors.exerciseOrange)),
-                      Expanded(child: _EnergyStat(label: tr(LocaleKeys.progress_consumed), value: _formatCalories(stats.totalConsumed), unit: calUnit, valueColor: AppColors.black)),
+                      Expanded(child: _EnergyStat(label: tr(LocaleKeys.progress_consumed), value: _formatCalories(stats.totalConsumed), unit: calUnit, valueColor: AppColors.textPrimary)),
                       Expanded(
                         child: _EnergyStat(
                           label: tr(LocaleKeys.progress_energy),
@@ -161,7 +161,7 @@ class _WeeklyEnergyCardState extends State<WeeklyEnergyCard> {
                         const SizedBox(width: AppSpacing.m),
                         _LegendItem(label: tr(LocaleKeys.common_exercise), color: AppColors.exerciseOrange),
                         const SizedBox(width: AppSpacing.m),
-                        _LegendItem(label: tr(LocaleKeys.progress_consumed), color: AppColors.black),
+                        _LegendItem(label: tr(LocaleKeys.progress_consumed), color: AppColors.textPrimary),
                       ],
                     ),
                   ],
@@ -294,7 +294,7 @@ class _WeeklyEnergyBarPainter extends CustomPainter {
 
     final bmrPaint = Paint()..color = _bmrColor;
     final burnedPaint = Paint()..color = AppColors.exerciseOrange;
-    final consumedPaint = Paint()..color = AppColors.black;
+    final consumedPaint = Paint()..color = AppColors.textPrimary;
     const radius = Radius.circular(3);
 
     final slotWidth = size.width / 7;

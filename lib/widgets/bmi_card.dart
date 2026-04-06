@@ -59,7 +59,7 @@ class BmiCard extends StatelessWidget {
               Text(tr(LocaleKeys.progress_your_bmi), style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700)),
               GestureDetector(
                 onTap: () => showInfoDialog(context, title: tr(LocaleKeys.progress_bmi_info_title), body: tr(LocaleKeys.progress_bmi_info_body)),
-                child: const Icon(CupertinoIcons.info, size: AppSizes.iconMd, color: AppColors.textTertiary),
+                child: Icon(CupertinoIcons.info, size: AppSizes.iconMd, color: AppColors.textTertiary),
               ),
             ],
           ),

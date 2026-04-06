@@ -462,8 +462,8 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
                           child: Container(
                             width: AppSizes.iconButtonSm,
                             height: AppSizes.iconButtonSm,
-                            decoration: const BoxDecoration(color: AppColors.surfaceMuted, shape: BoxShape.circle),
-                            child: const Icon(CupertinoIcons.xmark, size: AppSizes.iconSm, color: AppColors.textPrimary),
+                            decoration: BoxDecoration(color: AppColors.surfaceMuted, shape: BoxShape.circle),
+                            child: Icon(CupertinoIcons.xmark, size: AppSizes.iconSm, color: AppColors.textPrimary),
                           ),
                         ),
                       ],
@@ -721,8 +721,8 @@ class _VoiceLanguageRow extends StatelessWidget {
               Container(
                 width: AppSizes.iconMd + 4,
                 height: AppSizes.iconMd + 4,
-                decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
-                child: const Icon(CupertinoIcons.checkmark, size: AppSizes.iconSm, color: AppColors.onPrimary),
+                decoration: BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
+                child: Icon(CupertinoIcons.checkmark, size: AppSizes.iconSm, color: AppColors.onPrimary),
               ),
           ],
         ),

@@ -99,7 +99,7 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
                         Positioned.fill(
                           child: Container(
                             color: AppColors.overlayDark40,
-                            child: const Center(child: CircularProgressIndicator(color: AppColors.onPrimary)),
+                            child: Center(child: CircularProgressIndicator(color: AppColors.onPrimary)),
                           ),
                         ),
                     ],
@@ -130,7 +130,7 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (_) => Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.l)),
         ),
@@ -139,7 +139,7 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SheetDragHandle(color: AppColors.outline),
+            SheetDragHandle(color: AppColors.outline),
             const SizedBox(height: AppSpacing.l),
             Text(tr(LocaleKeys.scan_preview_tips_title), style: AppTextStyles.title18.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: AppSpacing.m),

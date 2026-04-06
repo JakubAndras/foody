@@ -80,7 +80,7 @@ class ExportPdfDateRangeScreen extends GetView<ExportController> {
                           child: OutlinedButton(
                             onPressed: controller.isExporting.value ? null : controller.exportCsv,
                             style: OutlinedButton.styleFrom(
-                              side: const BorderSide(color: AppColors.textSecondary),
+                              side: BorderSide(color: AppColors.textSecondary),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadii.pill)),
                             ),
                             child: Text(tr(LocaleKeys.export_csv), style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
@@ -154,8 +154,8 @@ class _CalendarRangeSheetState extends State<_CalendarRangeSheet> {
   List<String> get _weekdays => [tr(LocaleKeys.day_mon), tr(LocaleKeys.day_tue), tr(LocaleKeys.day_wed), tr(LocaleKeys.day_thu), tr(LocaleKeys.day_fri), tr(LocaleKeys.day_sat), tr(LocaleKeys.day_sun)];
   static final _monthFmt = DateFormat('MMMM yyyy');
   static const _cellSize = 48.0;
-  static const _rangeBg = Color(0xFFEEEFF3);
-  static const _edgeBorderColor = AppColors.textSecondary;
+  static final _rangeBg = AppColors.rangeBg;
+  static final _edgeBorderColor = AppColors.textSecondary;
 
   @override
   void initState() {
@@ -217,7 +217,7 @@ class _CalendarRangeSheetState extends State<_CalendarRangeSheet> {
 
     return Container(
       height: screenH * 0.82,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xl)),
         boxShadow: AppShadows.modal,
@@ -226,7 +226,7 @@ class _CalendarRangeSheetState extends State<_CalendarRangeSheet> {
         children: [
           // ── Handle bar ──
           const SizedBox(height: AppSpacing.s),
-          const SheetDragHandle(color: AppColors.outline),
+          SheetDragHandle(color: AppColors.outline),
 
           // ── Header ──
           Padding(
@@ -384,10 +384,10 @@ class _CalendarRangeSheetState extends State<_CalendarRangeSheet> {
           right: !isLeft ? const Radius.circular(AppRadii.xs) : Radius.zero,
         ),
         border: Border(
-          top: const BorderSide(color: _edgeBorderColor, width: 1.5),
-          bottom: const BorderSide(color: _edgeBorderColor, width: 1.5),
-          left: isLeft ? const BorderSide(color: _edgeBorderColor, width: 1.5) : BorderSide.none,
-          right: !isLeft ? const BorderSide(color: _edgeBorderColor, width: 1.5) : BorderSide.none,
+          top: BorderSide(color: _edgeBorderColor, width: 1.5),
+          bottom: BorderSide(color: _edgeBorderColor, width: 1.5),
+          left: isLeft ? BorderSide(color: _edgeBorderColor, width: 1.5) : BorderSide.none,
+          right: !isLeft ? BorderSide(color: _edgeBorderColor, width: 1.5) : BorderSide.none,
         ),
       );
     } else if (isSingleDay && isStart) {
@@ -397,7 +397,7 @@ class _CalendarRangeSheetState extends State<_CalendarRangeSheet> {
         border: Border.all(color: _edgeBorderColor, width: 1.5),
       );
     } else if (inRange) {
-      decoration = const BoxDecoration(color: _rangeBg);
+      decoration = BoxDecoration(color: _rangeBg);
     }
 
     // Text color

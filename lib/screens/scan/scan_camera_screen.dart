@@ -520,7 +520,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
           _buildFrozenPreview()
         else
           Container(
-            decoration: const BoxDecoration(gradient: AppGradients.scanCameraSurface),
+            decoration: BoxDecoration(gradient: AppGradients.scanCameraSurface),
             child: !_isInitializing
                 ? Center(
                     child: Text(
@@ -528,7 +528,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
                       style: AppTextStyles.body14Regular.copyWith(color: AppColors.textSecondary),
                     ),
                   )
-                : const Center(
+                : Center(
                     child: CircularProgressIndicator(color: AppColors.onPrimary),
                   ),
           ),
@@ -692,7 +692,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
   Widget _buildBottomBar() {
     return Container(
       height: AppSizes.scanBottomBarHeight,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppColors.surface,
         boxShadow: AppShadows.button,
       ),

@@ -159,7 +159,7 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(CupertinoIcons.slider_horizontal_3, color: AppColors.textSecondary, size: AppSizes.iconSm),
+                      Icon(CupertinoIcons.slider_horizontal_3, color: AppColors.textSecondary, size: AppSizes.iconSm),
                       const SizedBox(width: 6),
                       Text(_sortLabel(_sort), style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary, letterSpacing: -0.1504)),
                     ],

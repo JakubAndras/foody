@@ -110,9 +110,9 @@ class RecentlyUploadedCard extends StatelessWidget {
               height: AppSizes.emptyStateIconSize,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: AppColors.outline),
+                border: AppBorders.screenCard,
               ),
-              child: const Icon(CupertinoIcons.add, color: AppColors.textTertiary),
+              child: Icon(CupertinoIcons.add, color: AppColors.textTertiary),
             ),
             const SizedBox(height: AppSpacing.m),
             Padding(
@@ -172,7 +172,7 @@ class RecentlyUploadedCard extends StatelessWidget {
                 width: AppSizes.exerciseImageSize,
                 height: AppSizes.exerciseImageSize,
                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppRadii.m), gradient: AppGradients.exerciseCalories),
-                child: const Icon(Icons.directions_run_rounded, color: AppColors.onPrimary),
+                child: Icon(Icons.directions_run_rounded, color: AppColors.onPrimary),
               ),
               const SizedBox(width: AppSpacing.m),
               Expanded(
@@ -450,8 +450,8 @@ class MealItemCard extends StatelessWidget {
                   child: Container(
                     width: 32,
                     height: 32,
-                    decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
-                    child: const Icon(CupertinoIcons.add, color: AppColors.onPrimary, size: AppSizes.iconMd),
+                    decoration: BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
+                    child: Icon(CupertinoIcons.add, color: AppColors.onPrimary, size: AppSizes.iconMd),
                   ),
                 ),
               ],
@@ -471,7 +471,7 @@ class MealItemCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppRadii.m),
         image: imageProvider != null ? DecorationImage(image: imageProvider!, fit: BoxFit.cover) : null,
       ),
-      child: imageProvider == null ? const Icon(Icons.restaurant, color: AppColors.textTertiary) : null,
+      child: imageProvider == null ? Icon(Icons.restaurant, color: AppColors.textTertiary) : null,
     );
   }
 }

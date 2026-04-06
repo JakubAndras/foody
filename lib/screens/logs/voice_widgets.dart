@@ -92,7 +92,7 @@ class VoiceLogFrostedSurface extends StatelessWidget {
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
         child: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             gradient: AppGradients.voiceFrostedSurface,
             borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xxl)),
           ),

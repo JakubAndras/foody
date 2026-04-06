@@ -17,7 +17,16 @@ class PreferencesScreen extends StatefulWidget {
 }
 
 class _PreferencesScreenState extends State<PreferencesScreen> {
-  int _appearanceIndex = 1;
+  int _themeIndexFromMode(ThemeMode mode) {
+    switch (mode) {
+      case ThemeMode.system:
+        return 0;
+      case ThemeMode.light:
+        return 1;
+      case ThemeMode.dark:
+        return 2;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +42,15 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
           const SizedBox(height: AppSpacing.xs),
           Text(tr(LocaleKeys.preferences_appearance_hint), style: AppTextStyles.body13),
           const SizedBox(height: AppSpacing.m),
-          GlassSegmentedTabs(
-            labels: [tr(LocaleKeys.preferences_system), tr(LocaleKeys.preferences_light), tr(LocaleKeys.preferences_dark)],
-            activeIndex: _appearanceIndex,
-            onTap: (index) => setState(() => _appearanceIndex = index),
+          Obx(
+            () => GlassSegmentedTabs(
+              labels: [tr(LocaleKeys.preferences_system), tr(LocaleKeys.preferences_light), tr(LocaleKeys.preferences_dark)],
+              activeIndex: _themeIndexFromMode(SessionManager.to.themeModeIndex.value),
+              onTap: (index) {
+                final mode = [ThemeMode.system, ThemeMode.light, ThemeMode.dark][index];
+                SessionManager.to.setThemeMode(mode);
+              },
+            ),
           ),
           const SizedBox(height: AppSpacing.m),
           ProfileCard(
@@ -88,4 +102,3 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
     );
   }
 }
-

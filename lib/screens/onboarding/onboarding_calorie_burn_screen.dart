@@ -67,7 +67,7 @@ class OnboardingCalorieBurnScreen extends StatelessWidget {
                           const SizedBox(height: AppSpacing.s),
                           Row(
                             children: [
-                              const Icon(CupertinoIcons.flame, color: AppColors.textPrimary, size: AppSizes.iconLg),
+                              Icon(CupertinoIcons.flame, color: AppColors.textPrimary, size: AppSizes.iconLg),
                               const SizedBox(width: AppSpacing.s),
                               Text(
                                 '500 Cals',
@@ -81,11 +81,11 @@ class OnboardingCalorieBurnScreen extends StatelessWidget {
                               Container(
                                 width: AppSizes.iconXl,
                                 height: AppSizes.iconXl,
-                                decoration: const BoxDecoration(
+                                decoration: BoxDecoration(
                                   color: AppColors.primaryDark,
                                   shape: BoxShape.circle,
                                 ),
-                                child: const Icon(CupertinoIcons.flame, color: AppColors.onPrimary, size: AppSizes.iconMd),
+                                child: Icon(CupertinoIcons.flame, color: AppColors.onPrimary, size: AppSizes.iconMd),
                               ),
                               const SizedBox(width: AppSpacing.s),
                               Column(

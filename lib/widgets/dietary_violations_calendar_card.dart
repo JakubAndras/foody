@@ -111,8 +111,8 @@ class _MonthlyCalendarCardState extends State<MonthlyCalendarCard> {
                   GestureDetector(
                     onTap: _previousMonth,
                     behavior: HitTestBehavior.opaque,
-                    child: const Padding(
-                      padding: EdgeInsets.all(AppSpacing.xs),
+                    child: Padding(
+                      padding: const EdgeInsets.all(AppSpacing.xs),
                       child: Icon(CupertinoIcons.chevron_left, color: AppColors.textSecondary, size: AppSizes.iconMd),
                     ),
                   ),
@@ -120,8 +120,8 @@ class _MonthlyCalendarCardState extends State<MonthlyCalendarCard> {
                   GestureDetector(
                     onTap: _nextMonth,
                     behavior: HitTestBehavior.opaque,
-                    child: const Padding(
-                      padding: EdgeInsets.only(left: AppSpacing.xs),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: AppSpacing.xs),
                       child: Icon(CupertinoIcons.chevron_right, color: AppColors.textSecondary, size: AppSizes.iconMd),
                     ),
                   ),
