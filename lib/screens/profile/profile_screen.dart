@@ -45,13 +45,16 @@ class ProfileScreen extends StatelessWidget {
       body: SafeArea(
         top: false,
         bottom: false,
-        child: VariableBlurScrollView(
+        child: Builder(builder: (context) {
+          final bottomInset = Platform.isAndroid ? MediaQuery.of(context).padding.bottom : 0.0;
+          final topInset = Platform.isAndroid ? AppSpacing.mega - 8 : AppSpacing.mega + AppSpacing.s;
+          return VariableBlurScrollView(
           topBlurSigma: 52,
           topFadeHeight: 40,
           backgroundColor: Colors.transparent,
           fadeColor: AppColors.meshBase,
           backgroundWidget: const MeshGradientBackground(),
-          padding: const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.mega + AppSpacing.s, AppSpacing.m, AppSpacing.mega + 42),
+          padding: EdgeInsets.fromLTRB(AppSpacing.m, topInset, AppSpacing.m, AppSpacing.mega + 42 + bottomInset),
           //collapsedHeader: Text(tr(LocaleKeys.profile_title), style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w700)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,7 +165,8 @@ class ProfileScreen extends StatelessWidget {
               ),
             ],
           ),
-        ),
+        );
+        }),
       ),
     );
   }

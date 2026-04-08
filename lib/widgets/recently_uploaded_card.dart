@@ -111,7 +111,7 @@ class RecentlyUploadedCard extends StatelessWidget {
               height: AppSizes.emptyStateIconSize,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: AppBorders.screenCard,
+                border: AppBorders.screenCard ?? Border.all(color: AppColors.textTertiary.withValues(alpha: 0.3)),
               ),
               child: Icon(CupertinoIcons.add, color: AppColors.textTertiary),
             ),

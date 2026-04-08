@@ -153,7 +153,7 @@ class _DateSelectorState extends State<DateSelector> {
               fontWeight: isToday ? FontWeight.w700 : FontWeight.w600,
             ),
           ),
-          const SizedBox(height: AppSpacing.s),
+          SizedBox(height: defaultTargetPlatform == TargetPlatform.android ? AppSpacing.xs : AppSpacing.s),
           SizedBox(
             width: AppSizes.minTap,
             height: AppSizes.minTap,

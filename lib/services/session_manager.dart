@@ -35,7 +35,7 @@ class SessionManager extends GetxService {
   final RxnDouble weightChangeRateKgPerWeek = RxnDouble();
   final RxBool savePhotosToGallery = false.obs;
   final RxBool burnedCaloriesEnabled = true.obs;
-  final RxBool rolloverCaloriesEnabled = false.obs;
+  final RxBool rolloverCaloriesEnabled = true.obs;
   final RxBool autoAdjustMacrosEnabled = true.obs;
   final RxBool editableNutrientsEnabled1 = false.obs;
   final RxBool sectionHeaderPaddingEnabled = true.obs;
@@ -77,7 +77,7 @@ class SessionManager extends GetxService {
     weightChangeRateKgPerWeek.value = await SharedPreferencesService.to.getDouble(key: profileWeightChangeRateKgPerWeekKey);
     savePhotosToGallery.value = await SharedPreferencesService.to.getBool(key: savePhotosToGalleryKey) ?? false;
     burnedCaloriesEnabled.value = await SharedPreferencesService.to.getBool(key: burnedCaloriesEnabledKey) ?? true;
-    rolloverCaloriesEnabled.value = await SharedPreferencesService.to.getBool(key: rolloverCaloriesEnabledKey) ?? false;
+    rolloverCaloriesEnabled.value = await SharedPreferencesService.to.getBool(key: rolloverCaloriesEnabledKey) ?? true;
     autoAdjustMacrosEnabled.value = await SharedPreferencesService.to.getBool(key: autoAdjustMacrosEnabledKey) ?? true;
     workoutsPerWeek.value = await SharedPreferencesService.to.getString(key: profileWorkoutsPerWeekKey);
     _recalculateBmr();

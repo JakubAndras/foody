@@ -1,3 +1,4 @@
+import 'dart:io' show Platform;
 import 'dart:ui';
 
 import 'package:diplomka/app_theme.dart';
@@ -24,7 +25,7 @@ class QuickActionSheet extends StatelessWidget {
   /// V1: Glass sheet background, white option cards
   Widget _buildV1(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(AppSpacing.xs),
+      padding: Platform.isAndroid ? const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.xxxl + AppSpacing.xs) : const EdgeInsets.all(AppSpacing.xs),
       child: ClipRRect(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadii.xxl), bottom: Radius.circular(AppRadii.xxl + 10)),
         child: BackdropFilter(
@@ -48,7 +49,7 @@ class QuickActionSheet extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.xs),
       child: SafeArea(
         top: false,
-        bottom: false,
+        bottom: Platform.isAndroid,
         child: _buildContent(
           _v2TileDecoration,
           _v2RowDecoration,
@@ -251,14 +252,6 @@ class _GlassSheetPainter extends CustomPainter {
     // Glass fill
     canvas.drawRRect(rrect, Paint()..color = AppColors.pickerGlassBase);
 
-    // Specular highlight at the top
-    final highlightRect = Rect.fromLTWH(size.width * 0.1, 0, size.width * 0.8, size.height * 0.12);
-    canvas.drawRRect(
-      RRect.fromRectAndCorners(highlightRect, topLeft: Radius.circular(AppRadii.xxl), topRight: Radius.circular(AppRadii.xxl)),
-      Paint()
-        ..shader = const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x30FFFFFF), Color(0x00FFFFFF)]).createShader(highlightRect)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2.0),
-    );
 
     // Border
     canvas.drawRRect(

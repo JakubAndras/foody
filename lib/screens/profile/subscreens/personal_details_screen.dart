@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -187,35 +189,38 @@ class PersonalDetailsScreen extends StatelessWidget {
       elevation: 0,
       barrierColor: AppColors.overlayDark40,
       builder: (sheetContext) {
-        return Container(
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xl), bottom: Radius.circular(AppRadii.xxl + 10)),
-          ),
-          child: SafeArea(
-            top: false,
-            bottom: false,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(height: AppSpacing.xxs),
-                const SheetDragHandle(),
-                const SizedBox(height: AppSpacing.xs),
-                SheetTopBar(
-                  title: tr(LocaleKeys.personal_details_dob_label),
-                  onClose: () => Navigator.of(sheetContext).pop(),
-                  onConfirm: () async {
-                    await SessionManager.to.setDateOfBirth(selected);
-                    if (sheetContext.mounted) Navigator.of(sheetContext).pop();
-                  },
-                ),
-                const SizedBox(height: AppSpacing.xs),
-                SizedBox(
-                  height: AppSizes.pickerHeight,
-                  child: CupertinoDatePicker(mode: CupertinoDatePickerMode.date, initialDateTime: initial, maximumDate: now, onDateTimeChanged: (value) => selected = value),
-                ),
-                const SizedBox(height: AppSpacing.xxl),
-              ],
+        return Padding(
+          padding: Platform.isAndroid ? const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.xxxl + AppSpacing.xs) : const EdgeInsets.all(AppSpacing.xs),
+          child: Container(
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadii.xl), bottom: Radius.circular(AppRadii.xxl + 10)),
+            ),
+            child: SafeArea(
+              top: false,
+              bottom: false,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: AppSpacing.xxs),
+                  const SheetDragHandle(),
+                  const SizedBox(height: AppSpacing.xs),
+                  SheetTopBar(
+                    title: tr(LocaleKeys.personal_details_dob_label),
+                    onClose: () => Navigator.of(sheetContext).pop(),
+                    onConfirm: () async {
+                      await SessionManager.to.setDateOfBirth(selected);
+                      if (sheetContext.mounted) Navigator.of(sheetContext).pop();
+                    },
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  SizedBox(
+                    height: AppSizes.pickerHeight,
+                    child: CupertinoDatePicker(mode: CupertinoDatePickerMode.date, initialDateTime: initial, maximumDate: now, onDateTimeChanged: (value) => selected = value),
+                  ),
+                  const SizedBox(height: AppSpacing.xxl),
+                ],
+              ),
             ),
           ),
         );
@@ -235,7 +240,7 @@ class PersonalDetailsScreen extends StatelessWidget {
       barrierColor: AppColors.overlayDark40,
       builder: (sheetContext) {
         return Padding(
-          padding: const EdgeInsets.all(AppSpacing.xs),
+          padding: Platform.isAndroid ? const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.xxxl + AppSpacing.xs) : const EdgeInsets.all(AppSpacing.xs),
           child: _HeightPickerSheet(
             initialCm: selectedCm,
             onSave: (cm) async {
@@ -258,7 +263,7 @@ class PersonalDetailsScreen extends StatelessWidget {
       barrierColor: AppColors.overlayDark40,
       builder: (sheetContext) {
         return Padding(
-          padding: const EdgeInsets.all(AppSpacing.xs),
+          padding: Platform.isAndroid ? const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.xxxl + AppSpacing.xs) : const EdgeInsets.all(AppSpacing.xs),
           child: _GenderPickerSheet(
             initialSex: current,
             onSave: (sex) async {
@@ -322,7 +327,7 @@ class PersonalDetailsScreen extends StatelessWidget {
       barrierColor: AppColors.overlayDark40,
       builder: (sheetContext) {
         return Padding(
-          padding: const EdgeInsets.all(AppSpacing.xs),
+          padding: Platform.isAndroid ? const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.xxxl + AppSpacing.xs) : const EdgeInsets.all(AppSpacing.xs),
           child: _WorkoutsPickerSheet(
             initialWorkouts: current,
             onSave: (value) async {

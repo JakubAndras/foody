@@ -58,6 +58,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
   bool _showSearch = false;
   SelectMealTab _tab = SelectMealTab.all;
   SelectMealSort _sort = SelectMealSort.mostRecent;
+  late final PageController _pageController;
   int _selectedMealtimeIndex = 1;
 
   // Voice search
@@ -69,6 +70,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
   void initState() {
     super.initState();
     _tab = widget.initialTab;
+    _pageController = PageController(initialPage: widget.initialTab.index);
     _searchFocusNode.addListener(_onFocusChanged);
   }
 
@@ -76,6 +78,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
   void dispose() {
     _debounce?.cancel();
     _voiceService.cancelListening().catchError((_) {});
+    _pageController.dispose();
     _searchFocusNode.removeListener(_onFocusChanged);
     _searchFocusNode.dispose();
     _searchController.dispose();
@@ -181,6 +184,15 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
     setState(() => _isListening = true);
   }
 
+  void _onTabChanged(int index) {
+    if (index == _tab.index) return;
+    _pageController.animateToPage(index, duration: const Duration(milliseconds: 420), curve: Curves.easeOutCubic);
+  }
+
+  void _onPageChanged(int index) {
+    setState(() => _tab = SelectMealTab.values[index]);
+  }
+
   void _openSortPicker() {
     showGlassPopup(
       context: context,
@@ -230,12 +242,12 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
     return IngredientTemplateRepository.to.allTemplates.map((t) => _IngredientItem(ingredient: t.toIngredient(), subtitle: '${t.calories.toStringAsFixed(0)} ${tr(LocaleKeys.common_kcal)}', template: t)).toList();
   }
 
-  List<MealTemplate> _applyMealFilters(List<MealTemplate> templates) {
+  List<MealTemplate> _applyMealFilters(List<MealTemplate> templates, {required SelectMealTab tab}) {
     var filtered = templates;
     if (_query.isNotEmpty) {
       filtered = filtered.where((t) => t.name.toLowerCase().contains(_query.toLowerCase())).toList();
     }
-    if (_tab == SelectMealTab.favorites) {
+    if (tab == SelectMealTab.favorites) {
       filtered = filtered.where((t) => t.isFavorite).toList();
     }
     switch (_sort) {
@@ -251,12 +263,12 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
     return filtered;
   }
 
-  List<_IngredientItem> _applyIngredientFilters(List<_IngredientItem> items) {
+  List<_IngredientItem> _applyIngredientFilters(List<_IngredientItem> items, {required SelectMealTab tab}) {
     var filtered = items;
     if (_query.isNotEmpty) {
       filtered = filtered.where((item) => item.ingredient.name.toLowerCase().contains(_query.toLowerCase())).toList();
     }
-    if (_tab == SelectMealTab.favorites) {
+    if (tab == SelectMealTab.favorites) {
       filtered = filtered.where((item) => item.template?.isFavorite == true).toList();
     }
     switch (_sort) {
@@ -322,9 +334,118 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
     );
   }
 
-  bool get _showMealsSection => _tab == SelectMealTab.all || _tab == SelectMealTab.meals || _tab == SelectMealTab.favorites;
+  Widget _buildPage(SelectMealTab tab) {
+    return Obx(() {
+      final allTemplates = MealTemplateRepository.to.allTemplates.toList();
+      IngredientTemplateRepository.to.allTemplates.length;
+      final allIngredients = _resolveIngredients();
+      final showMeals = tab == SelectMealTab.all || tab == SelectMealTab.meals || tab == SelectMealTab.favorites;
+      final showIngredients = tab == SelectMealTab.all || tab == SelectMealTab.ingredients || tab == SelectMealTab.favorites;
+      final meals = showMeals ? _applyMealFilters(allTemplates, tab: tab) : <MealTemplate>[];
+      final ingredients = showIngredients ? _applyIngredientFilters(allIngredients, tab: tab) : <_IngredientItem>[];
+      final isEmpty = meals.isEmpty && ingredients.isEmpty;
 
-  bool get _showIngredientsSection => _tab == SelectMealTab.all || _tab == SelectMealTab.ingredients || _tab == SelectMealTab.favorites;
+      return CustomScrollView(
+        slivers: [
+        if (isEmpty)
+          SliverFillRemaining(
+            hasScrollBody: false,
+            child: SelectMealEmptyState(title: tr(LocaleKeys.common_no_items_found), message: tr(LocaleKeys.common_try_adjusting_search)),
+          )
+        else ...[
+          if (showMeals && meals.isNotEmpty) ...[
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+              sliver: SliverToBoxAdapter(
+                child: SelectMealSectionHeader(
+                  title: tr(LocaleKeys.common_meals),
+                  trailing: GestureDetector(
+                    onTap: _openSortPicker,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(CupertinoIcons.slider_horizontal_3, color: AppColors.textSecondary, size: AppSizes.iconSm),
+                        const SizedBox(width: 6),
+                        Text(_sortLabel(_sort), style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary, letterSpacing: -0.1504)),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  final template = meals[index];
+                  final selectedDate = SelectedDateService.to.selectedDate.value;
+                  final previewMeal = template.toMeal(timestamp: _applyDateToTime(DateTime.now(), selectedDate));
+                  return MealItemCard(
+                    name: template.name,
+                    kcalText: '${template.totalCalories.toStringAsFixed(0)} ${tr(LocaleKeys.common_kcal)}',
+                    proteins: template.totalProteins,
+                    carbs: template.totalCarbs,
+                    fats: template.totalFats,
+                    imageProvider: _resolveImage(template.photoPath),
+                    onTap: () => Get.to(() => MealDetailScreen(meal: previewMeal, openedFromLogScreen: true, selectedDate: selectedDate)),
+                    onAdd: () => _addMealToToday(template),
+                  );
+                }, childCount: meals.length),
+              ),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xxs)),
+          ],
+          if (showIngredients && ingredients.isNotEmpty) ...[
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+              sliver: SliverToBoxAdapter(
+                child: SelectMealSectionHeader(
+                  title: tr(LocaleKeys.common_ingredients),
+                  trailing: (!showMeals || meals.isEmpty)
+                      ? GestureDetector(
+                          onTap: _openSortPicker,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(CupertinoIcons.slider_horizontal_3, color: AppColors.textSecondary, size: AppSizes.iconSm),
+                              const SizedBox(width: 6),
+                              Text(_sortLabel(_sort), style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary, letterSpacing: -0.1504)),
+                            ],
+                          ),
+                        )
+                      : null,
+                ),
+              ),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xs)),
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  final item = ingredients[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+                    child: IngredientRow(
+                      ingredient: item.ingredient,
+                      onAdd: () => _addIngredientToToday(item.ingredient),
+                      onTap: () async {
+                        final result = await Get.to<EditIngredientResult>(() => EditIngredientScreen(ingredient: item.ingredient, allowDelete: false));
+                        if (result?.ingredient != null && item.template != null) {
+                          await IngredientTemplateRepository.to.upsertFromIngredient(result!.ingredient!);
+                        }
+                      },
+                    ),
+                  );
+                }, childCount: ingredients.length),
+              ),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xxl)),
+          ],
+        ],
+        ],
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -426,148 +547,35 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                 ),
               ),
         body: LiquidGlassBackground(
-          child: Obx(() {
-            final allTemplates = MealTemplateRepository.to.allTemplates.toList();
-            final meals = _applyMealFilters(allTemplates);
-            // Touch allTemplates from IngredientTemplateRepository to trigger Obx reactivity
-            IngredientTemplateRepository.to.allTemplates.length;
-            final ingredients = _applyIngredientFilters(_resolveIngredients());
-            final visibleMeals = _showMealsSection ? meals : <MealTemplate>[];
-            final visibleIngredients = _showIngredientsSection ? ingredients : <_IngredientItem>[];
-            final isEmptyState = visibleMeals.isEmpty && visibleIngredients.isEmpty;
-
-            return SafeArea(
-              bottom: false,
-              child: Column(
-                children: [
-                  const SizedBox(height: AppSpacing.s),
-                  Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-                      child: SelectMealSegmentedTabs(
-                        labels: [tr(LocaleKeys.common_all), tr(LocaleKeys.common_favorites), tr(LocaleKeys.common_meals), tr(LocaleKeys.common_ingredients)],
-                        activeIndex: _tab.index,
-                        onTap: (index) => setState(() => _tab = SelectMealTab.values[index]),
-                      ),
-                    ),
-                  const SizedBox(height: AppSpacing.s),
+          child: SafeArea(
+            bottom: false,
+            child: Column(
+              children: [
+                const SizedBox(height: AppSpacing.s),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+                  child: SelectMealSegmentedTabs(
+                    labels: [tr(LocaleKeys.common_all), tr(LocaleKeys.common_favorites), tr(LocaleKeys.common_meals), tr(LocaleKeys.common_ingredients)],
+                    activeIndex: _tab.index,
+                    onTap: _onTabChanged,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.s),
+                if (widget.showLoading)
+                  const Expanded(child: SelectMealLoadingState())
+                else if (widget.errorMessage != null)
+                  Expanded(child: SelectMealErrorState(message: widget.errorMessage!, onRetry: () => setState(() {})))
+                else
                   Expanded(
-                    child: CustomScrollView(
-                      slivers: [
-                        if (widget.showLoading)
-                          const SliverFillRemaining(hasScrollBody: false, child: SelectMealLoadingState())
-                        else if (widget.errorMessage != null)
-                          SliverFillRemaining(
-                            hasScrollBody: false,
-                            child: SelectMealErrorState(message: widget.errorMessage!, onRetry: () => setState(() {})),
-                          )
-                        else if (isEmptyState)
-                          SliverFillRemaining(
-                            hasScrollBody: false,
-                            child: SelectMealEmptyState(title: tr(LocaleKeys.common_no_items_found), message: tr(LocaleKeys.common_try_adjusting_search)),
-                          )
-                        else ...[
-                          if (_showMealsSection) ...[
-                            SliverPadding(
-                              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-                              sliver: SliverToBoxAdapter(
-                                child: SelectMealSectionHeader(
-                                  title: tr(LocaleKeys.common_meals),
-                                  trailing: GestureDetector(
-                                    onTap: _openSortPicker,
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(CupertinoIcons.slider_horizontal_3, color: AppColors.textSecondary, size: AppSizes.iconSm),
-                                        const SizedBox(width: 6),
-                                        Text(
-                                          _sortLabel(_sort),
-                                          style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary, letterSpacing: -0.1504),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SliverPadding(
-                              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-                              sliver: SliverList(
-                                delegate: SliverChildBuilderDelegate((context, index) {
-                                  final template = meals[index];
-                                  final selectedDate = SelectedDateService.to.selectedDate.value;
-                                  final previewMeal = template.toMeal(timestamp: _applyDateToTime(DateTime.now(), selectedDate));
-                                  return MealItemCard(
-                                    name: template.name,
-                                    kcalText: '${template.totalCalories.toStringAsFixed(0)} ${tr(LocaleKeys.common_kcal)}',
-                                    proteins: template.totalProteins,
-                                    carbs: template.totalCarbs,
-                                    fats: template.totalFats,
-                                    imageProvider: _resolveImage(template.photoPath),
-                                    onTap: () => Get.to(() => MealDetailScreen(meal: previewMeal, openedFromLogScreen: true, selectedDate: selectedDate)),
-                                    onAdd: () => _addMealToToday(template),
-                                  );
-                                }, childCount: meals.length),
-                              ),
-                            ),
-                            const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xxs)),
-                          ],
-                          if (_showIngredientsSection) ...[
-                            SliverPadding(
-                              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-                              sliver: SliverToBoxAdapter(
-                                child: SelectMealSectionHeader(
-                                  title: tr(LocaleKeys.common_ingredients),
-                                  trailing: _showMealsSection
-                                      ? null
-                                      : GestureDetector(
-                                          onTap: _openSortPicker,
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Icon(CupertinoIcons.slider_horizontal_3, color: AppColors.textSecondary, size: AppSizes.iconSm),
-                                              const SizedBox(width: 6),
-                                              Text(
-                                                _sortLabel(_sort),
-                                                style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary, letterSpacing: -0.1504),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                ),
-                              ),
-                            ),
-                            const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xs)),
-                            SliverPadding(
-                              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-                              sliver: SliverList(
-                                delegate: SliverChildBuilderDelegate((context, index) {
-                                  final item = ingredients[index];
-                                  return Padding(
-                                    padding: const EdgeInsets.only(bottom: AppSpacing.xs),
-                                    child: IngredientRow(
-                                      ingredient: item.ingredient,
-                                      onAdd: () => _addIngredientToToday(item.ingredient),
-                                      onTap: () async {
-                                        final result = await Get.to<EditIngredientResult>(() => EditIngredientScreen(ingredient: item.ingredient, allowDelete: false));
-                                        if (result?.ingredient != null && item.template != null) {
-                                          await IngredientTemplateRepository.to.upsertFromIngredient(result!.ingredient!);
-                                        }
-                                      },
-                                    ),
-                                  );
-                                }, childCount: ingredients.length),
-                              ),
-                            ),
-                            const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xxl)),
-                          ],
-                        ],
-                      ],
+                    child: PageView(
+                      controller: _pageController,
+                      onPageChanged: _onPageChanged,
+                      children: SelectMealTab.values.map((tab) => _buildPage(tab)).toList(),
                     ),
                   ),
-                ],
-              ),
-            );
-          }),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -588,3 +596,4 @@ class _SuggestionItem {
 
   const _SuggestionItem({required this.name, required this.frequency});
 }
+

@@ -145,7 +145,7 @@ class _WeeklyEnergyCardState extends State<WeeklyEnergyCard> {
                           label: tr(LocaleKeys.progress_energy),
                           value: stats.totalEnergy > 0 ? '+${_formatCalories(stats.totalEnergy)}' : _formatCalories(stats.totalEnergy),
                           unit: calUnit,
-                          valueColor: AppColors.greenStrong,
+                          valueColor: stats.totalEnergy > 0 ? AppColors.error : AppColors.textPrimary,
                         ),
                       ),
                     ],

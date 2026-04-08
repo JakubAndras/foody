@@ -261,8 +261,11 @@ class AppSpacing {
   static const double screen = m;
   static const double edge = m;
   static const double bottom = m;
+
   static const double safeAreaTop = 64;
   static const double safeAreaBottom = 20;
+  static const double safeAreaTopAndroid = 48;
+  static const double safeAreaBottomAndroid = 48;
 }
 
 class AppRadii {

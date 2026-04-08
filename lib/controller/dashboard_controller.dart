@@ -98,9 +98,8 @@ class DashboardController extends BaseController {
       if (generation != _fetchGeneration) return;
       dayRecord.value = record;
       NutritionGoalsService.to.syncFromDayRecord(date: date, dayRecord: record);
-      rolloverAmount.value = await _calculateRollover(date);
-      if (generation != _fetchGeneration) return;
       initialLoadComplete.value = true;
+      rolloverAmount.value = await _calculateRollover(date);
     } catch (e) {
       if (generation != _fetchGeneration) return;
       dayRecordError.value = e.toString();
@@ -109,9 +108,7 @@ class DashboardController extends BaseController {
       NutritionGoalsService.to.syncFromDayRecord(date: date, dayRecord: null);
       showSnackBar(message: tr(LocaleKeys.common_error), subtitle: tr(LocaleKeys.common_something_went_wrong), type: SnackBarType.error);
     } finally {
-      if (generation == _fetchGeneration) {
-        isLoadingDayRecord.value = false;
-      }
+      isLoadingDayRecord.value = false;
     }
   }
 

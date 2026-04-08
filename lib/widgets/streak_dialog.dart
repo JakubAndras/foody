@@ -1,3 +1,4 @@
+import 'dart:io' show Platform;
 import 'dart:ui';
 
 import 'package:diplomka/app_theme.dart';
@@ -28,7 +29,7 @@ class StreakSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(AppSpacing.xs),
+      padding: Platform.isAndroid ? const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.xxxl + AppSpacing.xs) : const EdgeInsets.all(AppSpacing.xs),
       child: ClipRRect(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadii.xxl), bottom: Radius.circular(AppRadii.xxl + 10)),
         child: BackdropFilter(
@@ -150,7 +151,7 @@ class StreakSheet extends StatelessWidget {
                           decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(AppRadii.l)),
                           child: Row(
                             children: [
-                              Icon(CupertinoIcons.star_circle, size: 24, color: isNewRecord ? Colors.orange : AppColors.calendarDarkMuted),
+                              Icon(CupertinoIcons.star_circle, size: 24, color: Colors.orange),
                               const SizedBox(width: AppSpacing.s),
                               Expanded(
                                 child: Column(

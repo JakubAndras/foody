@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/screens/main_screen.dart';
 import 'package:diplomka/screens/logs/exercise_detail_screen.dart';
@@ -62,6 +64,7 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
                             return Center(child: Text(tr(LocaleKeys.dashboard_error_loading, namedArgs: {'error': dashboardController.dayRecordError.value})));
                           }
 
+                          final bottomInset = Platform.isAndroid ? MediaQuery.of(context).padding.bottom : 0.0;
                           return VariableBlurScrollView(
                             topBlurSigma: 52,
                             topBlurHeight: 0.1,
@@ -69,11 +72,11 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
                             fadeColor: AppColors.meshBase,
                             backgroundWidget: const MeshGradientBackground(),
                             controller: controller.scrollController,
-                            padding: const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.xs, AppSpacing.m, AppSpacing.mega + 42),
+                            padding: EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.xs, AppSpacing.m, AppSpacing.mega + 42 + bottomInset),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const SizedBox(height: AppSpacing.huge * 2 - 4),
+                                SizedBox(height: Platform.isAndroid ? AppSpacing.huge * 2 - 20 : AppSpacing.huge * 2 - 4),
                                 DateSelector(
                                   selectedDate: dashboardController.selectedDate.value,
                                   useSegmentedRing: _useSegmentedDateRing,

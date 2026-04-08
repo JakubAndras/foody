@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:diplomka/widgets/sheet_drag_handle.dart';
@@ -109,7 +111,7 @@ class _AskAiScreenState extends State<AskAiScreen> {
       barrierColor: AppColors.overlayDark40,
       isScrollControlled: true,
       builder: (_) => Padding(
-        padding: const EdgeInsets.all(AppSpacing.xs),
+        padding: Platform.isAndroid ? const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.xxxl + AppSpacing.xs) : const EdgeInsets.all(AppSpacing.xs),
         child: Container(
           decoration: BoxDecoration(
             color: AppColors.surface,
@@ -182,7 +184,7 @@ class _AskAiScreenState extends State<AskAiScreen> {
               backgroundColor: Colors.transparent,
               fadeColor: AppColors.meshBase,
               backgroundWidget: const MeshGradientBackground(),
-              padding: EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.mega + AppSpacing.s, AppSpacing.m, AppSpacing.xl),
+              padding: EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.mega + AppSpacing.s, AppSpacing.m, AppSpacing.xl + (Platform.isAndroid ? MediaQuery.of(context).padding.bottom : 0)),
               child: Obx(() {
                 final response = _controller.response.value;
                 final loading = _controller.isLoading.value;
@@ -194,7 +196,7 @@ class _AskAiScreenState extends State<AskAiScreen> {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: AppSpacing.s),
+                    SizedBox(height: Platform.isAndroid ? AppSpacing.l : AppSpacing.s),
                     AskAiPromptCard(
                       controller: _textController,
                       isLoading: loading,

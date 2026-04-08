@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:gal/gal.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -222,10 +222,8 @@ class MediaStorage {
       if (resolvedPath == null) return false;
       final file = File(resolvedPath);
       if (!await file.exists()) return false;
-      final Uint8List bytes = await file.readAsBytes();
-      if (bytes.isEmpty) return false;
-      final result = await ImageGallerySaver.saveImage(bytes, quality: 100, name: 'foody_${DateTime.now().millisecondsSinceEpoch}');
-      return result != null && result['isSuccess'] == true;
+      await Gal.putImage(resolvedPath);
+      return true;
     } catch (_) {
       return false;
     }

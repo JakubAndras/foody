@@ -1,3 +1,4 @@
+import 'dart:io' show Platform;
 import 'dart:ui';
 
 import 'package:diplomka/app_theme.dart';
@@ -110,7 +111,7 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
     final selectedDayIsToday = _selectedDate != _today || _displayedMonth.year != _today.year || _displayedMonth.month != _today.month;
 
     return Padding(
-      padding: const EdgeInsets.all(AppSpacing.xs),
+      padding: Platform.isAndroid ? const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.xxxl + AppSpacing.xs) : const EdgeInsets.all(AppSpacing.xs),
       child: ClipRRect(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadii.xxl), bottom: Radius.circular(AppRadii.xxl + 10)),
         child: BackdropFilter(
@@ -213,6 +214,8 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
   }
 
   Widget _buildCalendarGrid(int daysInMonth, int firstWeekday, int rowCount) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final weekdayColor = isDark ? Colors.white70 : AppColors.calendarDarkMuted;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
       child: Column(
@@ -224,7 +227,7 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
                   .map(
                     (key) => Expanded(
                       child: Center(
-                        child: Text(tr(key).toUpperCase(), style: AppTextStyles.label12.copyWith(color: AppColors.calendarDarkMuted)),
+                        child: Text(tr(key).toUpperCase(), style: AppTextStyles.label12.copyWith(color: weekdayColor)),
                       ),
                     ),
                   )
@@ -258,7 +261,8 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
     final isToday = date.year == _today.year && date.month == _today.month && date.day == _today.day;
     final isSelected = date.year == _selectedDate.year && date.month == _selectedDate.month && date.day == _selectedDate.day;
 
-    Color textColor = isSelected ? AppColors.white1 : AppColors.black;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    Color textColor = isSelected ? (isDark ? Colors.white : AppColors.white1) : (isDark ? Colors.white : AppColors.black);
 
     return GestureDetector(
       onTap: () {

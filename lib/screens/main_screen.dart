@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:get/get.dart';
 
@@ -9,6 +11,7 @@ import 'package:diplomka/screens/progress_screen.dart';
 import 'package:diplomka/screens/profile/profile_screen.dart';
 import 'package:diplomka/widgets/dashboard_calendar_sheet.dart';
 import 'package:diplomka/widgets/streak_dialog.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
@@ -36,41 +39,53 @@ class MainScreen extends GetView<MainScreenController> {
             final activeBody = controller.widgetOptions.elementAt(selectedIndex);
             final isDashboard = selectedIndex == 0;
             final appBarSpacing = AppSpacing.m + 1;
+            final appBarTop = defaultTargetPlatform == TargetPlatform.android ? AppSpacing.safeAreaTopAndroid : AppSpacing.safeAreaTop;
 
             return Stack(
               children: [
                 activeBody,
                 if (isDashboard) ...[
-                  Positioned(left: appBarSpacing, top: AppSpacing.safeAreaTop, child: const _DashboardStreakPill()),
-                  Positioned(right: appBarSpacing, top: AppSpacing.safeAreaTop, child: const _DashboardCalendarPill()),
+                  Positioned(left: appBarSpacing, top: appBarTop, child: const _DashboardStreakPill()),
+                  Positioned(right: appBarSpacing, top: appBarTop, child: const _DashboardCalendarPill()),
                 ],
               ],
             );
           }),
         ),
-        bottomNavigationBar: Obx(() => _BorderedGlassBottomBar(
-              child: GlassBottomBar(
-                quality: GlassQuality.premium,
-                barHeight: AppSizes.bottomNavHeight,
-                selectedIconColor: AppColors.textPrimary,
-                unselectedIconColor: AppColors.grey4,
-                glassSettings: AppGlass.standard,
-                tabs: [
-                  GlassBottomBarTab(label: tr(LocaleKeys.nav_home), icon: CupertinoIcons.house, selectedIcon: CupertinoIcons.house_fill),
-                  GlassBottomBarTab(label: tr(LocaleKeys.nav_progress), icon: CupertinoIcons.chart_bar, selectedIcon: CupertinoIcons.chart_bar_fill),
-                  GlassBottomBarTab(label: tr(LocaleKeys.nav_profile), icon: CupertinoIcons.person, selectedIcon: CupertinoIcons.person_fill),
-                ],
-                selectedIndex: controller._selectedIndex.value,
-                onTabSelected: controller._onItemTapped,
-                extraButton: GlassBottomBarExtraButton(
-                  icon: CupertinoIcons.add,
-                  label: tr(LocaleKeys.nav_home),
-                  onTap: () => controller.showQuickActions(context),
-                  iconColor: AppColors.primary,
-                  size: AppSizes.fabSize,
+        bottomNavigationBar: Builder(
+          builder: (ctx) {
+            final androidBottomPadding = Platform.isAndroid ? MediaQuery.of(ctx).viewPadding.bottom : 0.0;
+            return Obx(() => Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _BorderedGlassBottomBar(
+                  child: GlassBottomBar(
+                    quality: GlassQuality.premium,
+                    barHeight: AppSizes.bottomNavHeight,
+                    selectedIconColor: AppColors.textPrimary,
+                    unselectedIconColor: AppColors.grey4,
+                    glassSettings: AppGlass.standard,
+                    tabs: [
+                      GlassBottomBarTab(label: tr(LocaleKeys.nav_home), icon: CupertinoIcons.house, selectedIcon: CupertinoIcons.house_fill),
+                      GlassBottomBarTab(label: tr(LocaleKeys.nav_progress), icon: CupertinoIcons.chart_bar, selectedIcon: CupertinoIcons.chart_bar_fill),
+                      GlassBottomBarTab(label: tr(LocaleKeys.nav_profile), icon: CupertinoIcons.person, selectedIcon: CupertinoIcons.person_fill),
+                    ],
+                    selectedIndex: controller._selectedIndex.value,
+                    onTabSelected: controller._onItemTapped,
+                    extraButton: GlassBottomBarExtraButton(
+                      icon: CupertinoIcons.add,
+                      label: tr(LocaleKeys.nav_home),
+                      onTap: () => controller.showQuickActions(context),
+                      iconColor: AppColors.primary,
+                      size: AppSizes.fabSize,
+                    ),
+                  ),
                 ),
-              ),
-            )),
+                if (androidBottomPadding > 0) Container(height: androidBottomPadding, color: AppColors.meshBase),
+              ],
+            ));
+          },
+        ),
       ),
     );
   }

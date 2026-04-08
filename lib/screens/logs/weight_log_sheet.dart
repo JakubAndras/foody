@@ -1,3 +1,4 @@
+import 'dart:io' show Platform;
 import 'dart:math';
 
 import 'package:diplomka/app_theme.dart';
@@ -28,7 +29,7 @@ Future<void> showWeightLogSheet(
     elevation: 0,
     barrierColor: AppColors.overlayDark40,
     builder: (_) => Padding(
-      padding: const EdgeInsets.all(AppSpacing.xs),
+      padding: Platform.isAndroid ? const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.xxxl + AppSpacing.xs) : const EdgeInsets.all(AppSpacing.xs),
       child: WeightLogSheet(entry: entry, title: title, initialWeight: initialWeight, showDate: showDate, onSave: onSave),
     ),
   );

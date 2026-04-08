@@ -6,7 +6,7 @@ import 'package:diplomka/model/tracking_reminder_setting.dart';
 import 'package:diplomka/screens/main_screen.dart';
 import 'package:diplomka/services/shared_preferences_manager.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter_native_timezone/flutter_native_timezone.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -49,7 +49,7 @@ class TrackingReminderService extends GetxService {
     tz_data.initializeTimeZones();
 
     try {
-      final String localTimeZone = await FlutterNativeTimezone.getLocalTimezone();
+      final String localTimeZone = await FlutterTimezone.getLocalTimezone();
       tz.setLocalLocation(tz.getLocation(localTimeZone));
     } catch (_) {
       tz.setLocalLocation(tz.UTC);
