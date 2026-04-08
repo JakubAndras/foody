@@ -65,7 +65,33 @@ class BmiCard extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.m),
           if (bmi == null)
-            Text(missingLabel, style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary))
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
+              child: Row(
+                children: [
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: AppColors.surfaceMuted,
+                      borderRadius: BorderRadius.circular(AppRadii.s),
+                    ),
+                    child: Icon(CupertinoIcons.person_crop_circle, color: AppColors.textTertiary, size: 20),
+                  ),
+                  const SizedBox(width: AppSpacing.m),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(missingLabel, style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w600)),
+                        const SizedBox(height: AppSpacing.xxs),
+                        Text(tr(LocaleKeys.progress_bmi_empty_hint), style: AppTextStyles.caption12.copyWith(color: AppColors.textTertiary)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            )
           else
             Row(
               children: [

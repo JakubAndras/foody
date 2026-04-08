@@ -64,7 +64,7 @@ extension MotivationalSummaryTypeX on MotivationalSummaryType {
 
   int get defaultMinute => 0;
 
-  bool get defaultEnabled => false;
+  bool get defaultEnabled => this == MotivationalSummaryType.weekly;
 
   DateTimeComponents get dateTimeComponents {
     switch (this) {

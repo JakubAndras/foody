@@ -7,9 +7,13 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
+import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 
 class ScanOnboardingScreen extends StatefulWidget {
-  const ScanOnboardingScreen({super.key});
+  const ScanOnboardingScreen({super.key, this.forceShow = false});
+
+  final bool forceShow;
 
   @override
   State<ScanOnboardingScreen> createState() => _ScanOnboardingScreenState();
@@ -21,6 +25,7 @@ class _ScanOnboardingScreenState extends State<ScanOnboardingScreen> {
 
   List<_ScanOnboardingPageData> get _pages => [
     _ScanOnboardingPageData(
+      image: 'assets/images/scan_onboarding_1.png',
       title: tr(LocaleKeys.scan_best_scan),
       bullets: [
         _BulletData(icon: CupertinoIcons.camera, label: tr(LocaleKeys.scan_hold_still)),
@@ -29,6 +34,7 @@ class _ScanOnboardingScreenState extends State<ScanOnboardingScreen> {
       ],
     ),
     _ScanOnboardingPageData(
+      image: 'assets/images/scan_onboarding_2.png',
       title: tr(LocaleKeys.scan_ai_analyzes),
       bullets: [
         _BulletData(icon: CupertinoIcons.camera, label: tr(LocaleKeys.scan_ingredients_identified)),
@@ -37,6 +43,7 @@ class _ScanOnboardingScreenState extends State<ScanOnboardingScreen> {
       ],
     ),
     _ScanOnboardingPageData(
+      image: 'assets/images/scan_onboarding_3.png',
       title: tr(LocaleKeys.scan_fix_results),
       bullets: [
         _BulletData(icon: CupertinoIcons.sparkles, label: tr(LocaleKeys.scan_check_accurate)),
@@ -45,6 +52,7 @@ class _ScanOnboardingScreenState extends State<ScanOnboardingScreen> {
       ],
     ),
     _ScanOnboardingPageData(
+      image: 'assets/images/scan_onboarding_4.png',
       title: tr(LocaleKeys.scan_highest_accuracy),
       bullets: [
         _BulletData(icon: CupertinoIcons.sparkles, label: tr(LocaleKeys.scan_add_text_description)),
@@ -53,6 +61,7 @@ class _ScanOnboardingScreenState extends State<ScanOnboardingScreen> {
       ],
     ),
     _ScanOnboardingPageData(
+      image: 'assets/images/scan_onboarding_5.png',
       title: tr(LocaleKeys.scan_fastest_process),
       bullets: [
         _BulletData(icon: CupertinoIcons.flame, label: tr(LocaleKeys.scan_cooking_own_meal)),
@@ -66,7 +75,7 @@ class _ScanOnboardingScreenState extends State<ScanOnboardingScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (SessionManager.to.scanOnboardingComplete.value) {
+      if (!widget.forceShow && SessionManager.to.scanOnboardingComplete.value) {
         Get.off(() => const ScanCameraScreen());
       }
     });
@@ -76,6 +85,14 @@ class _ScanOnboardingScreenState extends State<ScanOnboardingScreen> {
   void dispose() {
     _pageController.dispose();
     super.dispose();
+  }
+
+  void _back() {
+    if (_activeIndex == 0) {
+      Get.back();
+    } else {
+      _pageController.previousPage(duration: const Duration(milliseconds: 250), curve: Curves.easeOutCubic);
+    }
   }
 
   void _next() {
@@ -114,24 +131,31 @@ class _ScanOnboardingScreenState extends State<ScanOnboardingScreen> {
           ),
         ),
       ),
-      body: SafeArea(
-        bottom: false,
-        child: Column(
-          children: [
-            Expanded(
-              child: PageView.builder(
+      body: LiquidGlassScope(
+        child: SafeArea(
+          bottom: false,
+          child: Stack(
+            children: [
+              PageView.builder(
                 controller: _pageController,
                 itemCount: _pages.length,
                 onPageChanged: (index) => setState(() => _activeIndex = index),
                 itemBuilder: (context, index) {
                   final data = _pages[index];
-                  return _ScanOnboardingPage(
-                    data: data,
-                  );
+                  return _ScanOnboardingPage(data: data);
                 },
               ),
-            ),
-          ],
+              Positioned(
+                top: AppSpacing.s,
+                left: AppSpacing.screen,
+                child: CustomGlassIconButton(
+                  icon: CupertinoIcons.chevron_left,
+                  iconSize: AppSizes.iconLg,
+                  onPressed: _back,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -177,12 +201,7 @@ class _ScanOnboardingPage extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: AppGradients.scanPlaceholder,
         ),
-        child: Center(
-          child: Text(
-            'Image placeholder',
-            style: AppTextStyles.body14Regular.copyWith(color: AppColors.textSecondary),
-          ),
-        ),
+        child: Image.asset(data.image, fit: BoxFit.cover),
       ),
     );
   }
@@ -207,10 +226,12 @@ class _ScanOnboardingPage extends StatelessWidget {
 
 class _ScanOnboardingPageData {
   const _ScanOnboardingPageData({
+    required this.image,
     required this.title,
     required this.bullets,
   });
 
+  final String image;
   final String title;
   final List<_BulletData> bullets;
 }

@@ -829,15 +829,20 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
         onTap: () => setState(() => _showTip = false),
         child: ColoredBox(
           color: AppColors.overlayDark40,
-          child: Align(
-            alignment: const Alignment(0, -0.2),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl),
-              child: ScanTipOverlay(
-                title: title,
-                body: body,
-                onDismiss: () => setState(() => _showTip = false),
-                child: child,
+          child: AnimatedPadding(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOut,
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Align(
+              alignment: const Alignment(0, -0.2),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl),
+                child: ScanTipOverlay(
+                  title: title,
+                  body: body,
+                  onDismiss: () => setState(() => _showTip = false),
+                  child: child,
+                ),
               ),
             ),
           ),

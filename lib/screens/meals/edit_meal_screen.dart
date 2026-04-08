@@ -180,7 +180,14 @@ class _EditMealScreenState extends State<EditMealScreen> {
 
   bool get _isEditMode => _mode == MealScreenMode.edit;
 
-  bool get _isValid => (_ingredients.isNotEmpty && _totalCalories > 0) || (widget.isNewMeal && (double.tryParse(_caloriesController.text) ?? 0) > 0);
+  bool get _isValid {
+    if (widget.isNewMeal && _nameController.text.trim().isEmpty) return false;
+    return (_ingredients.isNotEmpty && _totalCalories > 0) || widget.isNewMeal;
+  }
+
+  void _showValidationError() {
+    showSnackBar(context: context, message: tr(LocaleKeys.meal_validation_name_required), type: SnackBarType.error);
+  }
 
   bool get _isBusy => _isSaving || _isDeleting;
 
@@ -240,7 +247,11 @@ class _EditMealScreenState extends State<EditMealScreen> {
     );
     if (!mounted || confirmed == null) return;
     if (confirmed) {
-      _handlePrimaryAction();
+      if (widget.isNewMeal && !_isValid) {
+        if (mounted) _showValidationError();
+        return;
+      }
+      await _handlePrimaryAction();
     } else {
       Navigator.of(context).pop();
     }
@@ -1221,7 +1232,15 @@ class _EditMealScreenState extends State<EditMealScreen> {
                         ? _EditMealTopBar(onBack: _handleBack, onDone: null, isFavorite: _meal.isFavorite, onBookmark: null, onMenu: null)
                         : _EditMealTopBar(
                             onBack: _handleBack,
-                            onDone: widget.isNewMeal ? () { if (_isValid) _handlePrimaryAction(); } : _onPrimaryTap,
+                            onDone: widget.isNewMeal
+                                ? () {
+                                    if (_isValid) {
+                                      _handlePrimaryAction();
+                                    } else {
+                                      _showValidationError();
+                                    }
+                                  }
+                                : _onPrimaryTap,
                             isFavorite: _meal.isFavorite,
                             onBookmark: _toggleFavorite,
                             onPhoto: widget.isNewMeal ? _openPhotoSheet : null,

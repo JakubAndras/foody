@@ -97,20 +97,7 @@ extension TrackingReminderTypeX on TrackingReminderType {
     }
   }
 
-  bool get defaultEnabled {
-    switch (this) {
-      case TrackingReminderType.breakfast:
-        return true;
-      case TrackingReminderType.lunch:
-        return true;
-      case TrackingReminderType.snack:
-        return false;
-      case TrackingReminderType.dinner:
-        return true;
-      case TrackingReminderType.endOfDay:
-        return false;
-    }
-  }
+  bool get defaultEnabled => this == TrackingReminderType.endOfDay;
 }
 
 class TrackingReminderSetting {

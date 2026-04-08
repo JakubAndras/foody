@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:diplomka/app_theme.dart';
@@ -104,9 +105,10 @@ class _MealDatePickerSheetState extends State<MealDatePickerSheet> {
     final contentHeightWithoutBottom = MediaQuery.of(context).size.height * 0.34;
     final backToTodayHeight = MediaQuery.of(context).size.height * 0.02;
     final showBackToOriginal = _selectedDate != _originalDate || _displayedMonth.year != _originalDate.year || _displayedMonth.month != _originalDate.month;
+    final bottomSpacing = Platform.isAndroid ? AppSpacing.xs + AppSpacing.xxxl : AppSpacing.xs;
 
     return Padding(
-      padding: const EdgeInsets.all(AppSpacing.xs),
+      padding: EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: bottomSpacing),
       child: ClipRRect(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadii.xxl), bottom: Radius.circular(AppRadii.xxl + 10)),
         child: BackdropFilter(
@@ -131,19 +133,20 @@ class _MealDatePickerSheetState extends State<MealDatePickerSheet> {
                     child: _showMonthYearPicker ? _buildMonthYearPicker() : _buildCalendarGrid(daysInMonth, firstWeekday, rowCount),
                   ),
                   if (showBackToOriginal)
-                    SizedBox(
-                      height: backToTodayHeight,
-                      child: Center(
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _selectedDate = _originalDate;
-                              _displayedMonth = DateTime(_originalDate.year, _originalDate.month, 1);
-                              _pickerMonth = _originalDate.month;
-                              _pickerYear = _originalDate.year;
-                              _showMonthYearPicker = false;
-                            });
-                          },
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () {
+                        setState(() {
+                          _selectedDate = _originalDate;
+                          _displayedMonth = DateTime(_originalDate.year, _originalDate.month, 1);
+                          _pickerMonth = _originalDate.month;
+                          _pickerYear = _originalDate.year;
+                          _showMonthYearPicker = false;
+                        });
+                      },
+                      child: SizedBox(
+                        height: backToTodayHeight,
+                        child: Center(
                           child: Text(
                             tr(LocaleKeys.common_back_to_original_date),
                             style: AppTextStyles.body14.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w600),
@@ -210,7 +213,7 @@ class _MealDatePickerSheetState extends State<MealDatePickerSheet> {
               behavior: HitTestBehavior.opaque,
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.xs),
-                child: Icon(CupertinoIcons.chevron_left, color: AppColors.textPrimary, size: AppSizes.iconMd),
+                child: Icon(CupertinoIcons.chevron_left, color: AppColors.textPrimary, size: Platform.isAndroid ? AppSizes.iconLg : AppSizes.iconMd),
               ),
             ),
             const SizedBox(width: AppSpacing.xxs),
@@ -219,7 +222,7 @@ class _MealDatePickerSheetState extends State<MealDatePickerSheet> {
               behavior: HitTestBehavior.opaque,
               child: Padding(
                 padding: const EdgeInsets.only(left: AppSpacing.xs),
-                child: Icon(CupertinoIcons.chevron_right, color: AppColors.textPrimary, size: AppSizes.iconMd),
+                child: Icon(CupertinoIcons.chevron_right, color: AppColors.textPrimary, size: Platform.isAndroid ? AppSizes.iconLg : AppSizes.iconMd),
               ),
             ),
           ],

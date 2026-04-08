@@ -24,17 +24,23 @@ class _InfoDialogContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
     return GestureDetector(
       onTap: () => Navigator.of(context).pop(),
       behavior: HitTestBehavior.opaque,
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl),
-          child: ScanTipOverlay(
-            title: title,
-            body: body,
-            onDismiss: () => Navigator.of(context).pop(),
-            child: child,
+      child: AnimatedPadding(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+        padding: EdgeInsets.only(bottom: bottomInset),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl),
+            child: ScanTipOverlay(
+              title: title,
+              body: body,
+              onDismiss: () => Navigator.of(context).pop(),
+              child: child,
+            ),
           ),
         ),
       ),

@@ -9,14 +9,7 @@ class MacrosCard extends StatelessWidget {
   final IconData icon;
   final Color color;
 
-  const MacrosCard({
-    super.key,
-    required this.label,
-    required this.current,
-    required this.goal,
-    required this.icon,
-    required this.color,
-  });
+  const MacrosCard({super.key, required this.label, required this.current, required this.goal, required this.icon, required this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -25,11 +18,7 @@ class MacrosCard extends StatelessWidget {
     return Expanded(
       child: Container(
         height: AppSizes.macroCardHeight,
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(AppRadii.l),
-          border: AppBorders.screenCard,
-        ),
+        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l), border: AppBorders.screenCard),
         padding: const EdgeInsets.all(AppSpacing.m),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,9 +36,9 @@ class MacrosCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: AppSpacing.xxs),
-            Text(
-              label,
-              style: AppTextStyles.caption12.copyWith(color: AppColors.textMuted),
+            Align(
+              alignment: Alignment.center,
+              child: Text(label, style: AppTextStyles.caption12.copyWith(color: AppColors.textMuted)),
             ),
             const Spacer(),
             Align(

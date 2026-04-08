@@ -18,6 +18,11 @@ class NutritionGoals {
 
   /// Calculates nutrition goals from user profile using Mifflin-St Jeor equation.
   /// [workoutsPerWeek] maps to activity multiplier: 0-1 → 1.2, 2-3 → 1.375, 4-5 → 1.55, 6+ → 1.725.
+  /// [weightChangeRateKgPerWeek] — desired weekly weight change (0.1–1.5 kg).
+  /// Deficit/surplus scales with the rate:
+  ///   Lose: ~1000 kcal per kg/week, clamped to 300–1200.
+  ///   Gain: ~700 kcal per kg/week, clamped to 150–700.
+  /// Falls back to 500 kcal deficit / 300 kcal surplus when rate is null.
   factory NutritionGoals.fromProfile({
     required double weightKg,
     required double heightCm,
@@ -25,6 +30,7 @@ class NutritionGoals {
     required ProfileSex sex,
     required ProfileGoal goal,
     String workoutsPerWeek = '2-3',
+    double? weightChangeRateKgPerWeek,
   }) {
     final int age = DateTime.now().difference(dateOfBirth).inDays ~/ 365;
 
@@ -47,13 +53,15 @@ class NutritionGoals {
 
     double tdee = bmr * activityMultiplier;
 
-    // Goal adjustment
+    // Goal adjustment — scale with weight change rate when available
     switch (goal) {
       case ProfileGoal.lose:
-        tdee -= 500;
+        final double deficit = weightChangeRateKgPerWeek != null ? (weightChangeRateKgPerWeek * 1000).clamp(300, 1200) : 500;
+        tdee -= deficit;
         break;
       case ProfileGoal.gain:
-        tdee += 300;
+        final double surplus = weightChangeRateKgPerWeek != null ? (weightChangeRateKgPerWeek * 700).clamp(150, 700) : 300;
+        tdee += surplus;
         break;
       case ProfileGoal.maintain:
         break;

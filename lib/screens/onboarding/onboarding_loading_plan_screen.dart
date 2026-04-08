@@ -57,6 +57,7 @@ class _OnboardingLoadingPlanScreenState extends State<OnboardingLoadingPlanScree
       sex: sex,
       goal: goal,
       workoutsPerWeek: sm.workoutsPerWeek.value ?? '2-3',
+      weightChangeRateKgPerWeek: sm.weightChangeRateKgPerWeek.value,
     );
 
     await NutritionGoalsService.to.saveGoalsEffectiveFromDate(effectiveDate: DateTime.now(), goals: goals);

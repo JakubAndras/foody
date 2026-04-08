@@ -7,6 +7,7 @@ import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/widgets/liquid_glass/glass_segmented_tabs.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -110,6 +111,8 @@ class _WeeklyEnergyCardState extends State<WeeklyEnergyCard> {
       final ticks = _computeTicks(maxBar);
       final double chartMax = ticks.isNotEmpty ? ticks.first.toDouble() : 1;
 
+      final bool hasAnyData = stats.totalConsumed > 0 || stats.totalBurned > 0;
+
       final baseStart = _startOfWeekMonday(_dateOnly(DateTime.now()));
       final weekStart = DateTime(baseStart.year, baseStart.month, baseStart.day - 7 * _selectedIndex);
       final dayLabels = List.generate(7, (i) {
@@ -132,41 +135,65 @@ class _WeeklyEnergyCardState extends State<WeeklyEnergyCard> {
             const SizedBox(height: AppSpacing.s),
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),
-              child: Column(
-                key: ValueKey(_selectedIndex),
-                children: [
-                  Row(
-                    children: [
-                      if (bmr != null) Expanded(child: _EnergyStat(label: 'BMR', value: _formatCalories(stats.avgDailyGoal), unit: calUnit, valueColor: _bmrColor)),
-                      Expanded(child: _EnergyStat(label: tr(LocaleKeys.progress_burned), value: _formatCalories(stats.totalBurned), unit: calUnit, valueColor: AppColors.exerciseOrange)),
-                      Expanded(child: _EnergyStat(label: tr(LocaleKeys.progress_consumed), value: _formatCalories(stats.totalConsumed), unit: calUnit, valueColor: AppColors.textPrimary)),
-                      Expanded(
-                        child: _EnergyStat(
-                          label: tr(LocaleKeys.progress_energy),
-                          value: stats.totalEnergy > 0 ? '+${_formatCalories(stats.totalEnergy)}' : _formatCalories(stats.totalEnergy),
-                          unit: calUnit,
-                          valueColor: stats.totalEnergy > 0 ? AppColors.error : AppColors.textPrimary,
+              child: !hasAnyData
+                  ? Padding(
+                      key: ValueKey('energy_empty_$_selectedIndex'),
+                      padding: const EdgeInsets.symmetric(vertical: AppSpacing.mega),
+                      child: Center(
+                        child: Column(
+                          children: [
+                            Container(
+                              width: 48,
+                              height: 48,
+                              decoration: BoxDecoration(
+                                color: AppColors.surfaceMuted,
+                                borderRadius: BorderRadius.circular(AppRadii.m),
+                              ),
+                              child: Icon(CupertinoIcons.chart_bar_alt_fill, color: AppColors.textTertiary, size: 24),
+                            ),
+                            const SizedBox(height: AppSpacing.m),
+                            Text(tr(LocaleKeys.progress_no_energy_data), style: AppTextStyles.body15.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w600)),
+                            const SizedBox(height: AppSpacing.xs),
+                            Text(tr(LocaleKeys.progress_no_energy_data_hint), style: AppTextStyles.caption12.copyWith(color: AppColors.textTertiary), textAlign: TextAlign.center),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: AppSpacing.l),
-                  _WeeklyEnergyChart(days: stats.days, ticks: ticks, chartMax: chartMax, dayLabels: dayLabels, bmr: bmr),
-                  if (bmr != null) ...[
-                    const SizedBox(height: AppSpacing.m),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    )
+                  : Column(
+                      key: ValueKey(_selectedIndex),
                       children: [
-                        _LegendItem(label: tr(LocaleKeys.personal_details_bmr), color: _bmrColor),
-                        const SizedBox(width: AppSpacing.m),
-                        _LegendItem(label: tr(LocaleKeys.common_exercise), color: AppColors.exerciseOrange),
-                        const SizedBox(width: AppSpacing.m),
-                        _LegendItem(label: tr(LocaleKeys.progress_consumed), color: AppColors.textPrimary),
+                        Row(
+                          children: [
+                            if (bmr != null) Expanded(child: _EnergyStat(label: 'BMR', value: _formatCalories(stats.avgDailyGoal), unit: calUnit, valueColor: _bmrColor)),
+                            Expanded(child: _EnergyStat(label: tr(LocaleKeys.progress_burned), value: _formatCalories(stats.totalBurned), unit: calUnit, valueColor: AppColors.exerciseOrange)),
+                            Expanded(child: _EnergyStat(label: tr(LocaleKeys.progress_consumed), value: _formatCalories(stats.totalConsumed), unit: calUnit, valueColor: AppColors.textPrimary)),
+                            Expanded(
+                              child: _EnergyStat(
+                                label: tr(LocaleKeys.progress_energy),
+                                value: stats.totalEnergy > 0 ? '+${_formatCalories(stats.totalEnergy)}' : _formatCalories(stats.totalEnergy),
+                                unit: calUnit,
+                                valueColor: stats.totalEnergy > 0 ? AppColors.error : AppColors.textPrimary,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: AppSpacing.l),
+                        _WeeklyEnergyChart(days: stats.days, ticks: ticks, chartMax: chartMax, dayLabels: dayLabels, bmr: bmr),
+                        if (bmr != null) ...[
+                          const SizedBox(height: AppSpacing.m),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              _LegendItem(label: tr(LocaleKeys.personal_details_bmr), color: _bmrColor),
+                              const SizedBox(width: AppSpacing.m),
+                              _LegendItem(label: tr(LocaleKeys.common_exercise), color: AppColors.exerciseOrange),
+                              const SizedBox(width: AppSpacing.m),
+                              _LegendItem(label: tr(LocaleKeys.progress_consumed), color: AppColors.textPrimary),
+                            ],
+                          ),
+                        ],
                       ],
                     ),
-                  ],
-                ],
-              ),
             ),
             const SizedBox(height: AppSpacing.m),
             GlassSegmentedTabs(labels: _labels, activeIndex: _selectedIndex, onTap: (i) => setState(() => _selectedIndex = i), embedded: true),

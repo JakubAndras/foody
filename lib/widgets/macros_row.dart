@@ -17,7 +17,7 @@ class MacrosRow extends StatelessWidget {
     return Row(
       children: [
         MacrosCard(
-          label: tr(LocaleKeys.dashboard_protein_eaten),
+          label: tr(LocaleKeys.common_protein),
           current: caloriesPlanEnabled ? dayRecord.totalProteins : dayRecord.totalProteins,
           goal: dayRecord.proteinGoal,
           icon: AppIcons.protein,
@@ -25,7 +25,7 @@ class MacrosRow extends StatelessWidget {
         ),
         const SizedBox(width: AppSpacing.s),
         MacrosCard(
-          label: tr(LocaleKeys.dashboard_carbs_eaten),
+          label: tr(LocaleKeys.common_carbs),
           current: caloriesPlanEnabled ? dayRecord.totalCarbs : dayRecord.totalCarbs,
           goal: dayRecord.carbsGoal,
           icon: AppIcons.carbs,
@@ -33,7 +33,7 @@ class MacrosRow extends StatelessWidget {
         ),
         const SizedBox(width: AppSpacing.s),
         MacrosCard(
-          label: tr(LocaleKeys.dashboard_fat_eaten),
+          label: tr(LocaleKeys.common_fats),
           current: caloriesPlanEnabled ? dayRecord.totalFats : dayRecord.totalFats,
           goal: dayRecord.fatGoal,
           icon: AppIcons.fats,

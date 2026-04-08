@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:diplomka/app_theme.dart';
@@ -265,8 +266,9 @@ class _AmountPickerSheetState extends State<AmountPickerSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final bottomSpacing = Platform.isAndroid ? AppSpacing.xs + AppSpacing.xxxl : AppSpacing.xs;
     return Padding(
-      padding: const EdgeInsets.all(AppSpacing.xs),
+      padding: EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: bottomSpacing),
       child: ClipRRect(
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(AppRadii.xxl),
@@ -384,8 +386,9 @@ class _MealtimePickerSheetState extends State<MealtimePickerSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final bottomSpacing = Platform.isAndroid ? AppSpacing.xs + AppSpacing.xxxl : AppSpacing.xs;
     return Padding(
-      padding: const EdgeInsets.all(AppSpacing.xs),
+      padding: EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: bottomSpacing),
       child: ClipRRect(
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(AppRadii.xxl),

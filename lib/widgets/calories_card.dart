@@ -65,7 +65,7 @@ class CaloriesCard extends StatelessWidget {
                             style: AppTextStyles.h2.copyWith(color: AppColors.textPrimary),
                           ),
                           Text(
-                            caloriesPlanEnabled ? tr(LocaleKeys.dashboard_remaining) : tr(LocaleKeys.common_calories),
+                            '/${effectiveGoal.toStringAsFixed(0)} kcal',
                             style: AppTextStyles.caption12.copyWith(color: AppColors.textMuted),
                           ),
                         ],

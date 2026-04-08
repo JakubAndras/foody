@@ -170,6 +170,7 @@ class _EditNutritionGoalsScreenState extends State<EditNutritionGoalsScreen> {
       sex: sex,
       goal: goal,
       workoutsPerWeek: sm.workoutsPerWeek.value ?? '2-3',
+      weightChangeRateKgPerWeek: sm.weightChangeRateKgPerWeek.value,
     );
     _setControllersFromGoals(goals);
   }

@@ -62,7 +62,7 @@ class _PersonalDetailsCustomDietScreenState extends State<PersonalDetailsCustomD
           builder: (context, value, _) {
             final hasText = value.text.trim().isNotEmpty;
             return OnboardingPrimaryButton(
-              label: tr(LocaleKeys.common_save),
+              label: tr(LocaleKeys.common_continue_btn),
               isEnabled: hasText,
               onPressed: () {
                 widget.onPreferencesSaved?.call(_controller.text.trim());

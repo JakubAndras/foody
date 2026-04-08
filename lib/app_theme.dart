@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 class _LightColors {
@@ -242,9 +243,9 @@ class AppColors {
 }
 
 class AppIcons {
-  static const IconData protein = Icons.fitness_center_rounded;
-  static const IconData carbs = Icons.spa_rounded;
-  static const IconData fats = Icons.opacity_rounded;
+  static const IconData protein = FontAwesomeIcons.drumstickBite;
+  static const IconData carbs = FontAwesomeIcons.wheatAwn;
+  static const IconData fats = FontAwesomeIcons.droplet;
 }
 
 class AppSpacing {
@@ -364,7 +365,7 @@ class AppSizes {
   static const double mealDashboardImageSize = 94;
   static const double mealHeroHeight = 300;
   static const double macroCardSize = 72;
-  static const double caloriesCardHeight = 112;
+  static const double caloriesCardHeight = 118;
   static const double actionSheetWidth = 220;
   static const double emptyStateHeight = 168;
   static const double emptyStateIconSize = 64;

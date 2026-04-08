@@ -1,3 +1,4 @@
+import 'dart:io' show Platform;
 import 'dart:ui';
 
 import 'package:diplomka/app_theme.dart';
@@ -266,7 +267,7 @@ class MacroStatCard extends StatelessWidget {
 
     final card = Container(
       width: double.infinity,
-      height: height ?? AppSizes.macroCardSize,
+      height: height ?? (Platform.isAndroid ? AppSizes.macroCardSize + 10 : AppSizes.macroCardSize),
       padding: const EdgeInsets.all(AppSpacing.s),
       decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l), border: AppBorders.screenCard, boxShadow: AppShadows.screenCard),
       child: Column(
@@ -401,7 +402,7 @@ class IngredientRow extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(AppRadii.l),
       child: Container(
-        height: highlighted ? AppSizes.ingredientRowAlertHeight : AppSizes.ingredientRowHeight,
+        height: (highlighted ? AppSizes.ingredientRowAlertHeight : AppSizes.ingredientRowHeight) + (Platform.isAndroid ? 4 : 0),
         padding: const EdgeInsets.all(AppSpacing.m),
         decoration: BoxDecoration(
           color: background,

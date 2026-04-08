@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:diplomka/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -103,7 +105,7 @@ void showSnackBar({
       backgroundColor: isDark ? const Color(0xFF2C2C2E) : AppColors.white,
       elevation: 0.5,
       behavior: SnackBarBehavior.floating,
-      margin: const EdgeInsets.fromLTRB(AppSpacing.m, 0, AppSpacing.m, AppSpacing.xxs),
+      margin: EdgeInsets.fromLTRB(AppSpacing.m, 0, AppSpacing.m, Platform.isAndroid ? AppSpacing.l : AppSpacing.xxs),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadii.l)),
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.m),
       duration: duration,

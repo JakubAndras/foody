@@ -106,14 +106,18 @@ class _FixResultScreenState extends State<FixResultScreen> {
               onTap: () => setState(() => _showTip = false),
               child: ColoredBox(
                 color: AppColors.overlayDark40,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl),
-                    child: ScanTipOverlay(
-                      title: tr(LocaleKeys.fix_result_title),
-                      body: tr(LocaleKeys.fix_result_tip_body),
-                      onDismiss: () => setState(() => _showTip = false),
+                child: AnimatedPadding(
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeOut,
+                  padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl),
+                      child: ScanTipOverlay(
+                        title: tr(LocaleKeys.fix_result_title),
+                        body: tr(LocaleKeys.fix_result_tip_body),
+                        onDismiss: () => setState(() => _showTip = false),
+                      ),
                     ),
                   ),
                 ),

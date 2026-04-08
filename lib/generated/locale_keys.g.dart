@@ -147,6 +147,10 @@ abstract class  LocaleKeys {
   static const progress_since_start = 'progress_since_start';
   static const progress_of_goal = 'progress_of_goal';
   static const progress_no_weight_data = 'progress_no_weight_data';
+  static const progress_no_weight_data_hint = 'progress_no_weight_data_hint';
+  static const progress_no_energy_data = 'progress_no_energy_data';
+  static const progress_no_energy_data_hint = 'progress_no_energy_data_hint';
+  static const progress_bmi_empty_hint = 'progress_bmi_empty_hint';
   static const progress_log_first_weigh_in = 'progress_log_first_weigh_in';
   static const progress_log_today = 'progress_log_today';
   static const progress_next_weigh_in = 'progress_next_weigh_in';
@@ -221,6 +225,7 @@ abstract class  LocaleKeys {
   static const onboarding_weight_loss_speed_title = 'onboarding_weight_loss_speed_title';
   static const onboarding_weight_loss_goal_title = 'onboarding_weight_loss_goal_title';
   static const onboarding_weight_loss_speed_per_week = 'onboarding_weight_loss_speed_per_week';
+  static const onboarding_weight_gain_speed_per_week = 'onboarding_weight_gain_speed_per_week';
   static const onboarding_recommended = 'onboarding_recommended';
   static const onboarding_kg_per_week = 'onboarding_kg_per_week';
   static const onboarding_loading_title = 'onboarding_loading_title';
@@ -352,6 +357,8 @@ abstract class  LocaleKeys {
   static const meal_save_image_error = 'meal_save_image_error';
   static const meal_delete_title = 'meal_delete_title';
   static const meal_delete_message = 'meal_delete_message';
+  static const meal_validation_name_required = 'meal_validation_name_required';
+  static const meal_validation_calories_required = 'meal_validation_calories_required';
   static const meal_add_ingredient = 'meal_add_ingredient';
   static const meal_calories_positive = 'meal_calories_positive';
   static const meal_allergy_alert = 'meal_allergy_alert';

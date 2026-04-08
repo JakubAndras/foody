@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 
 import '../app_theme.dart';
@@ -34,7 +36,7 @@ class FoodyPrimaryButton extends StatelessWidget {
               children: [
                 if (leading != null) ...[leading!, const SizedBox(width: AppSpacing.xs)],
                 if (icon != null) ...[Icon(icon, color: AppColors.onPrimary, size: AppSizes.iconMd), const SizedBox(width: AppSpacing.xs)],
-                Text(label, style: AppTextStyles.title18.copyWith(height: 1.25, color: AppColors.onPrimary)),
+                Text(label, style: AppTextStyles.title18.copyWith(height: 1.25, color: AppColors.onPrimary, fontWeight: Platform.isAndroid ? FontWeight.w500 : null)),
               ],
             ),
           ),
@@ -78,7 +80,7 @@ class FoodySecondaryButton extends StatelessWidget {
               children: [
                 if (leading != null) ...[leading!, const SizedBox(width: AppSpacing.xs)],
                 if (icon != null) ...[Icon(icon, color: AppColors.textPrimary, size: AppSizes.iconMd), const SizedBox(width: AppSpacing.xs)],
-                Text(label, style: AppTextStyles.title18.copyWith(height: 1.25, color: AppColors.textPrimary)),
+                Text(label, style: AppTextStyles.title18.copyWith(height: 1.25, color: AppColors.textPrimary, fontWeight: Platform.isAndroid ? FontWeight.w500 : null)),
               ],
             ),
           ),

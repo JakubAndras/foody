@@ -155,8 +155,24 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
             child: !hasEntries
                 ? Padding(
                     key: ValueKey('empty_$_selectedIndex'),
-                    padding: const EdgeInsets.symmetric(vertical: AppSpacing.l),
-                    child: Text(tr(LocaleKeys.progress_no_weight_data), style: AppTextStyles.body15.copyWith(color: AppColors.textSecondary)),
+                    padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
+                    child: Column(
+                      children: [
+                        Container(
+                          width: 48,
+                          height: 48,
+                          decoration: BoxDecoration(
+                            color: AppColors.surfaceMuted,
+                            borderRadius: BorderRadius.circular(AppRadii.m),
+                          ),
+                          child: Icon(CupertinoIcons.chart_bar_alt_fill, color: AppColors.textTertiary, size: 24),
+                        ),
+                        const SizedBox(height: AppSpacing.m),
+                        Text(tr(LocaleKeys.progress_no_weight_data), style: AppTextStyles.body15.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w600)),
+                        const SizedBox(height: AppSpacing.xs),
+                        Text(tr(LocaleKeys.progress_no_weight_data_hint), style: AppTextStyles.caption12.copyWith(color: AppColors.textTertiary), textAlign: TextAlign.center),
+                      ],
+                    ),
                   )
                 : _WeightLineChart(key: ValueKey(_selectedIndex), entries: entries, ticks: ticks, formatWeight: _formatWeight),
           ),

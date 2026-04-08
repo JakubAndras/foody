@@ -128,10 +128,21 @@ class ProfileScreen extends StatelessWidget {
                 children: [
                   _ProfileActionRow(title: tr(LocaleKeys.profile_export_summary), icon: CupertinoIcons.share, onTap: () => Get.to(() => const ExportPdfIntroScreen())),
                   _ProfileActionRow(title: tr(LocaleKeys.profile_ask_ai), icon: CupertinoIcons.sparkles, onTap: () => Get.to(() => const AskAiScreen())),
-                  _ProfileActionRow(title: tr(LocaleKeys.profile_faq), icon: CupertinoIcons.question_circle, onTap: () => Get.to(() => const FaqScreen())),
+                  _ProfileActionRow(title: tr(LocaleKeys.profile_faq), icon: CupertinoIcons.question_circle, showDivider: false, onTap: () => Get.to(() => const FaqScreen())),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.l),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
+                child: ProfileSectionHeader(title: 'Test'),
+              ),
+              const SizedBox(height: AppSpacing.s),
+              _ProfileGroupCard(
+                children: [
                   _ProfileActionRow(title: 'Glass Test', icon: CupertinoIcons.circle_filled, onTap: () => Get.to(() => const GlassTestScreen())),
                   _ProfileActionRow(title: 'Liquid Glass Widgets Test', icon: CupertinoIcons.sparkles, onTap: () => Get.to(() => const LiquidGlassWidgetsTestScreen())),
-                  _ProfileActionRow(title: 'Test Onboarding', icon: CupertinoIcons.play_circle, showDivider: false, onTap: () => Get.to(() => const OnboardingFlowScreen())),
+                  _ProfileActionRow(title: 'Test Onboarding', icon: CupertinoIcons.play_circle, onTap: () => Get.to(() => const OnboardingFlowScreen())),
+                  _ProfileActionRow(title: 'Test Scanning Onboarding', icon: CupertinoIcons.viewfinder, showDivider: false, onTap: () => Get.to(() => const ScanOnboardingScreen(forceShow: true))),
                 ],
               ),
               // TODO: Account Actions section — hidden for now, will be needed later

@@ -119,14 +119,18 @@ class _MotivationalSummaryScreenState extends State<MotivationalSummaryScreen> {
               onTap: () => setState(() => _showTip = false),
               child: ColoredBox(
                 color: AppColors.overlayDark40,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl),
-                    child: ScanTipOverlay(
-                      title: tr(LocaleKeys.motivational_summary_title),
-                      body: tr(LocaleKeys.motivational_summary_description),
-                      onDismiss: () => setState(() => _showTip = false),
+                child: AnimatedPadding(
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeOut,
+                  padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl),
+                      child: ScanTipOverlay(
+                        title: tr(LocaleKeys.motivational_summary_title),
+                        body: tr(LocaleKeys.motivational_summary_description),
+                        onDismiss: () => setState(() => _showTip = false),
+                      ),
                     ),
                   ),
                 ),

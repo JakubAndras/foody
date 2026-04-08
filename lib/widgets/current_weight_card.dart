@@ -95,11 +95,27 @@ class CurrentWeightCard extends StatelessWidget {
                 ),
               ],
             ),
-            //const SizedBox(height: AppSpacing.xs),
             if (hasData)
               Text('${_formatWeight(currentWeight!)} kg', style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w800))
             else
-              Text('— kg', style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w800, color: AppColors.textTertiary)),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 36,
+                      height: 36,
+                      decoration: BoxDecoration(
+                        color: AppColors.surfaceMuted,
+                        borderRadius: BorderRadius.circular(AppRadii.s),
+                      ),
+                      child: Icon(Icons.monitor_weight_outlined, color: AppColors.textTertiary, size: 20),
+                    ),
+                    const SizedBox(width: AppSpacing.s),
+                    Text('— kg', style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w800, color: AppColors.textTertiary)),
+                  ],
+                ),
+              ),
             const SizedBox(height: AppSpacing.s),
             ClipRRect(
               borderRadius: BorderRadius.circular(AppRadii.pill),
