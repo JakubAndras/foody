@@ -113,7 +113,7 @@ class _MonthlyCalendarCardState extends State<MonthlyCalendarCard> {
                     behavior: HitTestBehavior.opaque,
                     child: Padding(
                       padding: const EdgeInsets.all(AppSpacing.xs),
-                      child: Icon(CupertinoIcons.chevron_left, color: AppColors.textSecondary, size: AppSizes.iconMd),
+                      child: Icon(CupertinoIcons.chevron_left, color: AppColors.textSecondary, size: AppSizes.iconLg),
                     ),
                   ),
                   const SizedBox(width: AppSpacing.xxs),
@@ -122,7 +122,7 @@ class _MonthlyCalendarCardState extends State<MonthlyCalendarCard> {
                     behavior: HitTestBehavior.opaque,
                     child: Padding(
                       padding: const EdgeInsets.only(left: AppSpacing.xs),
-                      child: Icon(CupertinoIcons.chevron_right, color: AppColors.textSecondary, size: AppSizes.iconMd),
+                      child: Icon(CupertinoIcons.chevron_right, color: AppColors.textSecondary, size: AppSizes.iconLg),
                     ),
                   ),
                 ],

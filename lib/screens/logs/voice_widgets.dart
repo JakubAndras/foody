@@ -6,6 +6,7 @@ import 'package:diplomka/widgets/foody_glass_buttons.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 class VoiceLogIconButton extends StatelessWidget {
   const VoiceLogIconButton({super.key, required this.icon, required this.onTap});
@@ -41,39 +42,14 @@ class VoiceLogToggle extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: onSelectMeals,
-          child: Text(
-            tr(LocaleKeys.common_meals),
-            style: AppTextStyles.title18.copyWith(color: isExercise ? AppColors.textMutedLight : AppColors.textPrimary, fontWeight: FontWeight.w600),
-          ),
+          child: Text(tr(LocaleKeys.common_meals), style: AppTextStyles.title18.copyWith(color: isExercise ? AppColors.textMutedLight : AppColors.textPrimary, fontWeight: FontWeight.w600)),
         ),
         const SizedBox(width: AppSpacing.m),
-        GestureDetector(
-          onTap: isExercise ? onSelectMeals : onSelectExercise,
-          child: Container(
-            width: AppSizes.voiceToggleWidth,
-            height: AppSizes.voiceToggleHeight,
-            padding: const EdgeInsets.all(2),
-            decoration: BoxDecoration(
-              gradient: isExercise ? AppGradients.askAiPrimary : AppGradients.primary,
-              borderRadius: BorderRadius.circular(AppRadii.pill),
-            ),
-            child: Align(
-              alignment: isExercise ? Alignment.centerRight : Alignment.centerLeft,
-              child: Container(
-                width: AppSizes.voiceToggleKnob,
-                height: AppSizes.voiceToggleKnob,
-                decoration: BoxDecoration(color: AppColors.surface, shape: BoxShape.circle, boxShadow: AppShadows.control),
-              ),
-            ),
-          ),
-        ),
+        GlassSwitch(value: isExercise, onChanged: (_) => isExercise ? onSelectMeals() : onSelectExercise(), useOwnLayer: true, activeColor: AppColors.primary, inactiveColor: AppColors.primary),
         const SizedBox(width: AppSpacing.m),
         GestureDetector(
           onTap: onSelectExercise,
-          child: Text(
-            tr(LocaleKeys.common_exercise),
-            style: AppTextStyles.title18.copyWith(color: isExercise ? AppColors.textPrimary : AppColors.textMutedLight, fontWeight: FontWeight.w600),
-          ),
+          child: Text(tr(LocaleKeys.common_exercise), style: AppTextStyles.title18.copyWith(color: isExercise ? AppColors.textPrimary : AppColors.textMutedLight, fontWeight: FontWeight.w600)),
         ),
       ],
     );

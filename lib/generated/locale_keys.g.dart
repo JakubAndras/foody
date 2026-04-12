@@ -346,6 +346,7 @@ abstract class  LocaleKeys {
   static const meal_meal_name = 'meal_meal_name';
   static const meal_enter_meal_name = 'meal_enter_meal_name';
   static const meal_ingredients_title = 'meal_ingredients_title';
+  static const meal_total_weight = 'meal_total_weight';
   static const meal_fix_issue = 'meal_fix_issue';
   static const meal_change_photo = 'meal_change_photo';
   static const meal_add_photo = 'meal_add_photo';

@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:diplomka/widgets/animated_add_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 enum MatchBadgeVariant { good, medium, low }
 
@@ -19,6 +20,7 @@ typedef OnTap = void Function();
 class MealHeroHeader extends StatelessWidget {
   final String title;
   final String timeLabel;
+  final String? trailingLabel;
   final ImageProvider? image;
   final Alignment imageAlignment;
   final double? confidence;
@@ -27,7 +29,7 @@ class MealHeroHeader extends StatelessWidget {
   final TextEditingController? titleController;
   final FocusNode? titleFocusNode;
 
-  const MealHeroHeader({super.key, required this.title, required this.timeLabel, this.image, this.imageAlignment = Alignment.center, this.confidence, this.onTitleTap, this.showTime = true, this.titleController, this.titleFocusNode});
+  const MealHeroHeader({super.key, required this.title, required this.timeLabel, this.trailingLabel, this.image, this.imageAlignment = Alignment.center, this.confidence, this.onTitleTap, this.showTime = true, this.titleController, this.titleFocusNode});
 
   @override
   Widget build(BuildContext context) {
@@ -53,13 +55,24 @@ class MealHeroHeader extends StatelessWidget {
                   Row(
                     children: [
                       Icon(CupertinoIcons.time, size: AppSizes.iconSm, color: Colors.white.withValues(alpha: 0.8)),
-                      const SizedBox(width: AppSpacing.xs),
+                      const SizedBox(width: AppSpacing.xxs),
                       Column(
                         children: [
                           Text(timeLabel, style: AppTextStyles.caption12.copyWith(color: Colors.white.withValues(alpha: 0.8))),
                           const SizedBox(height: 0.5),
                         ],
                       ),
+                      if (trailingLabel != null) ...[
+                        const SizedBox(width: AppSpacing.s),
+                        Icon(Icons.monitor_weight_outlined, size: AppSizes.iconSm, color: Colors.white.withValues(alpha: 0.8)),
+                        const SizedBox(width: AppSpacing.xxs),
+                        Column(
+                          children: [
+                            Text(trailingLabel!, style: AppTextStyles.caption12.copyWith(color: Colors.white.withValues(alpha: 0.8))),
+                            const SizedBox(height: 0.5),
+                          ],
+                        ),
+                      ],
                     ],
                   ),
                   const SizedBox(height: AppSpacing.xxs),

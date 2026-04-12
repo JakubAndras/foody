@@ -25,6 +25,7 @@ class Prompt {
               "name": "string",
               "confidence": "double - between 0 and 1",
               "quantity": "string",
+              "weight_grams": "double - estimated weight of this ingredient in grams. Always provide a realistic gram estimate even when quantity uses other units (e.g. '1 medium banana' → 120, '330 ml cola' → 330, '2 slices bread' → 60). This must always be grams.",
               "nutritional_values": {"calories": "int", "proteins": "double", "fats": "double", "carbs": "double"}
             }
           ]

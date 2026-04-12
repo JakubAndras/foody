@@ -57,6 +57,7 @@ class _WeeklyEnergyCardState extends State<WeeklyEnergyCard> {
     double totalBurned = 0;
     double totalConsumed = 0;
     double totalGoal = 0;
+    int elapsedDays = 0;
     final days = <_DayEnergyData>[];
 
     for (int i = 0; i < 7; i++) {
@@ -69,10 +70,12 @@ class _WeeklyEnergyCardState extends State<WeeklyEnergyCard> {
       totalBurned += burned;
       totalConsumed += consumed;
       totalGoal += dayGoal;
+      if (isPastOrToday) elapsedDays++;
       days.add(_DayEnergyData(burned: burned, consumed: consumed, goal: dayGoal, isPastOrToday: isPastOrToday));
     }
 
-    return _WeeklyEnergyStats(days: days, totalBurned: totalBurned, totalConsumed: totalConsumed, totalEnergy: totalConsumed - totalBurned, avgDailyGoal: totalGoal / 7, bmr: bmr);
+    final totalBmrBurned = (bmr ?? 0) * elapsedDays;
+    return _WeeklyEnergyStats(days: days, totalBurned: totalBurned, totalConsumed: totalConsumed, totalEnergy: totalConsumed - totalBurned - totalBmrBurned, avgDailyGoal: totalGoal / 7, bmr: bmr);
   }
 
   String _formatCalories(double value) {
@@ -164,7 +167,7 @@ class _WeeklyEnergyCardState extends State<WeeklyEnergyCard> {
                       children: [
                         Row(
                           children: [
-                            if (bmr != null) Expanded(child: _EnergyStat(label: 'BMR', value: _formatCalories(stats.avgDailyGoal), unit: calUnit, valueColor: _bmrColor)),
+                            if (bmr != null) Expanded(child: _EnergyStat(label: 'BMR', value: _formatCalories(bmr), unit: calUnit, valueColor: _bmrColor)),
                             Expanded(child: _EnergyStat(label: tr(LocaleKeys.progress_burned), value: _formatCalories(stats.totalBurned), unit: calUnit, valueColor: AppColors.exerciseOrange)),
                             Expanded(child: _EnergyStat(label: tr(LocaleKeys.progress_consumed), value: _formatCalories(stats.totalConsumed), unit: calUnit, valueColor: AppColors.textPrimary)),
                             Expanded(

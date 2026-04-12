@@ -184,7 +184,7 @@ class _AskAiScreenState extends State<AskAiScreen> {
               backgroundColor: Colors.transparent,
               fadeColor: AppColors.meshBase,
               backgroundWidget: const MeshGradientBackground(),
-              padding: EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.mega + AppSpacing.s, AppSpacing.m, AppSpacing.xl + (Platform.isAndroid ? MediaQuery.of(context).padding.bottom : 0)),
+              padding: EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.mega + AppSpacing.xxl, AppSpacing.m, AppSpacing.xl + (Platform.isAndroid ? MediaQuery.of(context).padding.bottom : 0)),
               child: Obx(() {
                 final response = _controller.response.value;
                 final loading = _controller.isLoading.value;

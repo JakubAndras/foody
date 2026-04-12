@@ -7,6 +7,7 @@ import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/weight_entry.dart';
 import 'package:diplomka/widgets/dashboard_calendar_sheet.dart';
+import 'package:diplomka/widgets/confirm_delete_dialog.dart';
 import 'package:diplomka/widgets/sheet_drag_handle.dart';
 import 'package:diplomka/widgets/sheet_top_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -108,6 +109,15 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
   Future<void> _handleDelete() async {
     final entry = widget.entry;
     if (entry == null) return;
+    final confirmed = await showConfirmationDialog(
+      context: context,
+      title: tr(LocaleKeys.weight_log_delete_entry),
+      subtitle: tr(LocaleKeys.common_cannot_undo),
+      primaryLabel: tr(LocaleKeys.common_delete),
+      secondaryLabel: tr(LocaleKeys.common_cancel),
+      isDestructive: true,
+    );
+    if (confirmed != true || !mounted) return;
     await WeightEntryController.to.deleteEntry(entry);
     if (!mounted) return;
     Navigator.of(context).pop();

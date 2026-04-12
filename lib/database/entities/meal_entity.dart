@@ -22,6 +22,7 @@ class MealEntity {
   final String? photoPath;
   final bool isFavorite;
   final double? confidence;
+  final String? barcode;
 
   MealEntity({
     this.id,
@@ -31,6 +32,7 @@ class MealEntity {
     this.photoPath,
     this.isFavorite = false,
     this.confidence,
+    this.barcode,
   });
 
   MealEntity copyWith({
@@ -41,6 +43,7 @@ class MealEntity {
     String? photoPath,
     bool? isFavorite,
     double? confidence,
+    String? barcode,
   }) {
     return MealEntity(
       id: id ?? this.id,
@@ -50,6 +53,7 @@ class MealEntity {
       photoPath: photoPath ?? this.photoPath,
       isFavorite: isFavorite ?? this.isFavorite,
       confidence: confidence ?? this.confidence,
+      barcode: barcode ?? this.barcode,
     );
   }
 }

@@ -23,6 +23,7 @@ import 'package:diplomka/utils/media_storage.dart';
 import 'package:diplomka/model/meal_template.dart';
 import 'package:diplomka/services/meal_template_repository.dart';
 import 'package:diplomka/widgets/edit_flow/edit_flow_widgets.dart';
+import 'package:diplomka/widgets/glass_toggle_row.dart';
 import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
@@ -85,6 +86,16 @@ class _EditMealScreenState extends State<EditMealScreen> {
   double _amountValue = 1;
   bool _isSaving = false;
   bool _isDeleting = false;
+  late bool _autoSync;
+  bool _isSyncing = false;
+  double _savedProteinRatio = 0;
+  double _savedCarbsRatio = 0;
+  double _savedFatsRatio = 0;
+  double _calorieOffset = 0;
+  String _lastCaloriesText = '';
+  String _lastProteinText = '';
+  String _lastCarbsText = '';
+  String _lastFatsText = '';
 
   // Inline editing for isNewMeal
   late final TextEditingController _nameController;
@@ -132,6 +143,13 @@ class _EditMealScreenState extends State<EditMealScreen> {
     _initialMealtime = _mealtime;
     _initialAmount = _amountValue;
     _heroImage = _resolveHeroImage(_meal.photoPath);
+    _autoSync = SessionManager.to.autoAdjustMacrosEnabled.value;
+    if (_totalCalories > 0) {
+      _savedProteinRatio = _totalProteins / _totalCalories;
+      _savedCarbsRatio = _totalCarbs / _totalCalories;
+      _savedFatsRatio = _totalFats / _totalCalories;
+    }
+    _calorieOffset = _totalCalories - (_totalProteins * 4 + _totalCarbs * 4 + _totalFats * 9);
     _scrollController.addListener(_handleScroll);
 
     _nameController = TextEditingController(text: _meal.name);
@@ -144,12 +162,16 @@ class _EditMealScreenState extends State<EditMealScreen> {
     _proteinFocus = FocusNode();
     _carbsFocus = FocusNode();
     _fatsFocus = FocusNode();
+    _lastCaloriesText = _caloriesController.text;
+    _lastProteinText = _proteinController.text;
+    _lastCarbsText = _carbsController.text;
+    _lastFatsText = _fatsController.text;
+    _caloriesController.addListener(_onInlineCaloriesChanged);
+    _proteinController.addListener(_onInlineProteinChanged);
+    _carbsController.addListener(_onInlineCarbsChanged);
+    _fatsController.addListener(_onInlineFatsChanged);
     if (widget.isNewMeal) {
       _nameController.addListener(_onInlineNameChanged);
-      _caloriesController.addListener(_onInlineNutrientChanged);
-      _proteinController.addListener(_onInlineNutrientChanged);
-      _carbsController.addListener(_onInlineNutrientChanged);
-      _fatsController.addListener(_onInlineNutrientChanged);
     }
   }
 
@@ -178,6 +200,14 @@ class _EditMealScreenState extends State<EditMealScreen> {
 
   double get _totalFats => _ingredients.fold(0, (sum, item) => sum + item.fats);
 
+  double get _totalWeight => _ingredients.fold(0, (sum, item) => sum + item.weight);
+
+  String? get _weightLabelText {
+    final w = _totalWeight;
+    if (w <= 0) return null;
+    return tr(LocaleKeys.meal_total_weight, namedArgs: {'weight': w.toStringAsFixed(0)});
+  }
+
   bool get _isEditMode => _mode == MealScreenMode.edit;
 
   bool get _isValid {
@@ -193,9 +223,11 @@ class _EditMealScreenState extends State<EditMealScreen> {
 
   bool get _isInteractionDisabled => _isBusy || widget.isPreview;
 
-  bool get _canEditNutrients => widget.isNewMeal || SessionManager.to.editableNutrientsEnabled1.value;
+  bool get _canEditNutrients => widget.isNewMeal || _ingredients.length <= 1 || SessionManager.to.editableNutrientsEnabled1.value;
 
   bool get _useInlineEditing => widget.isNewMeal;
+
+  bool get _useInlineNutrientEditing => widget.isNewMeal || _ingredients.length <= 1;
 
   void _onInlineNameChanged() {
     setState(() {
@@ -203,19 +235,175 @@ class _EditMealScreenState extends State<EditMealScreen> {
     });
   }
 
-  void _onInlineNutrientChanged() {
-    final cal = double.tryParse(_caloriesController.text) ?? 0;
-    final pro = double.tryParse(_proteinController.text) ?? 0;
-    final carb = double.tryParse(_carbsController.text) ?? 0;
-    final fat = double.tryParse(_fatsController.text) ?? 0;
-
+  void _updateSingleIngredient({double? calories, double? proteins, double? carbs, double? fats}) {
     setState(() {
       if (_ingredients.isEmpty) {
-        _ingredients.add(Ingredient(name: _meal.name.isEmpty ? 'Manual' : _meal.name, weight: 0, calories: cal, proteins: pro, carbs: carb, fats: fat));
+        _ingredients.add(Ingredient(
+          name: _meal.name.isEmpty ? 'Manual' : _meal.name,
+          weight: 0,
+          calories: calories ?? 0,
+          proteins: proteins ?? 0,
+          carbs: carbs ?? 0,
+          fats: fats ?? 0,
+        ));
       } else {
-        _ingredients[0] = _ingredients[0].copyWith(calories: cal, proteins: pro, carbs: carb, fats: fat);
+        _ingredients[0] = _ingredients[0].copyWith(
+          calories: calories ?? _ingredients[0].calories,
+          proteins: proteins ?? _ingredients[0].proteins,
+          carbs: carbs ?? _ingredients[0].carbs,
+          fats: fats ?? _ingredients[0].fats,
+        );
       }
     });
+  }
+
+  double _recalcCaloriesFromMacros({double? proOverride, double? carbOverride, double? fatOverride}) {
+    final pro = proOverride ?? (_ingredients.isEmpty ? 0.0 : _ingredients[0].proteins);
+    final carb = carbOverride ?? (_ingredients.isEmpty ? 0.0 : _ingredients[0].carbs);
+    final fat = fatOverride ?? (_ingredients.isEmpty ? 0.0 : _ingredients[0].fats);
+    final raw = pro * 4 + carb * 4 + fat * 9 + _calorieOffset;
+    return (raw < 0 ? 0.0 : raw).roundToDouble();
+  }
+
+  void _recomputeCalorieOffset() {
+    _calorieOffset = _totalCalories - (_totalProteins * 4 + _totalCarbs * 4 + _totalFats * 9);
+  }
+
+  void _updateSavedRatios({required double cal, required double pro, required double carb, required double fat}) {
+    if (cal <= 0) return;
+    if (pro > 0) _savedProteinRatio = pro / cal;
+    if (carb > 0) _savedCarbsRatio = carb / cal;
+    if (fat > 0) _savedFatsRatio = fat / cal;
+  }
+
+  void _onInlineCaloriesChanged() {
+    if (_isSyncing || _ingredients.length > 1) return;
+    if (_caloriesController.text == _lastCaloriesText) return;
+    _lastCaloriesText = _caloriesController.text;
+    final value = double.tryParse(_caloriesController.text.replaceAll(',', '.'));
+    if (value == null || value < 0) return;
+    final oldCal = _ingredients.isEmpty ? 0.0 : _ingredients[0].calories;
+    final oldPro = _ingredients.isEmpty ? 0.0 : _ingredients[0].proteins;
+    final oldCarb = _ingredients.isEmpty ? 0.0 : _ingredients[0].carbs;
+    final oldFat = _ingredients.isEmpty ? 0.0 : _ingredients[0].fats;
+    if (value == oldCal) return;
+    if (_autoSync) {
+      double newPro;
+      double newCarb;
+      double newFat;
+      if (oldCal > 0) {
+        final ratio = value / oldCal;
+        newPro = (oldPro * ratio).roundToDouble();
+        newCarb = (oldCarb * ratio).roundToDouble();
+        newFat = (oldFat * ratio).roundToDouble();
+        if (newPro == 0 && _savedProteinRatio > 0) newPro = (value * _savedProteinRatio).roundToDouble();
+        if (newCarb == 0 && _savedCarbsRatio > 0) newCarb = (value * _savedCarbsRatio).roundToDouble();
+        if (newFat == 0 && _savedFatsRatio > 0) newFat = (value * _savedFatsRatio).roundToDouble();
+      } else if (_savedProteinRatio > 0 || _savedCarbsRatio > 0 || _savedFatsRatio > 0) {
+        newPro = (value * _savedProteinRatio).roundToDouble();
+        newCarb = (value * _savedCarbsRatio).roundToDouble();
+        newFat = (value * _savedFatsRatio).roundToDouble();
+      } else {
+        _updateSingleIngredient(calories: value);
+        _recomputeCalorieOffset();
+        _updateSavedRatios(cal: value, pro: oldPro, carb: oldCarb, fat: oldFat);
+        return;
+      }
+      _isSyncing = true;
+      _proteinController.text = newPro.toStringAsFixed(0);
+      _carbsController.text = newCarb.toStringAsFixed(0);
+      _fatsController.text = newFat.toStringAsFixed(0);
+      _lastProteinText = _proteinController.text;
+      _lastCarbsText = _carbsController.text;
+      _lastFatsText = _fatsController.text;
+      _updateSingleIngredient(calories: value, proteins: newPro, carbs: newCarb, fats: newFat);
+      _isSyncing = false;
+      _recomputeCalorieOffset();
+      _updateSavedRatios(cal: value, pro: newPro, carb: newCarb, fat: newFat);
+    } else {
+      _updateSingleIngredient(calories: value);
+      _recomputeCalorieOffset();
+      _updateSavedRatios(cal: value, pro: oldPro, carb: oldCarb, fat: oldFat);
+    }
+  }
+
+  void _onInlineProteinChanged() {
+    if (_isSyncing || _ingredients.length > 1) return;
+    if (_proteinController.text == _lastProteinText) return;
+    _lastProteinText = _proteinController.text;
+    final value = double.tryParse(_proteinController.text.replaceAll(',', '.'));
+    if (value == null || value < 0) return;
+    final currentPro = _ingredients.isEmpty ? 0.0 : _ingredients[0].proteins;
+    if (value == currentPro) return;
+    if (_autoSync) {
+      _isSyncing = true;
+      final newCal = _recalcCaloriesFromMacros(proOverride: value);
+      _caloriesController.text = newCal.toStringAsFixed(0);
+      _lastCaloriesText = _caloriesController.text;
+      _updateSingleIngredient(calories: newCal, proteins: value);
+      _isSyncing = false;
+    } else {
+      _updateSingleIngredient(proteins: value);
+    }
+    _updateSavedRatios(cal: _totalCalories, pro: _totalProteins, carb: _totalCarbs, fat: _totalFats);
+  }
+
+  void _onInlineCarbsChanged() {
+    if (_isSyncing || _ingredients.length > 1) return;
+    if (_carbsController.text == _lastCarbsText) return;
+    _lastCarbsText = _carbsController.text;
+    final value = double.tryParse(_carbsController.text.replaceAll(',', '.'));
+    if (value == null || value < 0) return;
+    final currentCarb = _ingredients.isEmpty ? 0.0 : _ingredients[0].carbs;
+    if (value == currentCarb) return;
+    if (_autoSync) {
+      _isSyncing = true;
+      final newCal = _recalcCaloriesFromMacros(carbOverride: value);
+      _caloriesController.text = newCal.toStringAsFixed(0);
+      _lastCaloriesText = _caloriesController.text;
+      _updateSingleIngredient(calories: newCal, carbs: value);
+      _isSyncing = false;
+    } else {
+      _updateSingleIngredient(carbs: value);
+    }
+    _updateSavedRatios(cal: _totalCalories, pro: _totalProteins, carb: _totalCarbs, fat: _totalFats);
+  }
+
+  void _onInlineFatsChanged() {
+    if (_isSyncing || _ingredients.length > 1) return;
+    if (_fatsController.text == _lastFatsText) return;
+    _lastFatsText = _fatsController.text;
+    final value = double.tryParse(_fatsController.text.replaceAll(',', '.'));
+    if (value == null || value < 0) return;
+    final currentFat = _ingredients.isEmpty ? 0.0 : _ingredients[0].fats;
+    if (value == currentFat) return;
+    if (_autoSync) {
+      _isSyncing = true;
+      final newCal = _recalcCaloriesFromMacros(fatOverride: value);
+      _caloriesController.text = newCal.toStringAsFixed(0);
+      _lastCaloriesText = _caloriesController.text;
+      _updateSingleIngredient(calories: newCal, fats: value);
+      _isSyncing = false;
+    } else {
+      _updateSingleIngredient(fats: value);
+    }
+    _updateSavedRatios(cal: _totalCalories, pro: _totalProteins, carb: _totalCarbs, fat: _totalFats);
+  }
+
+  void _syncNutrientControllers() {
+    if (_ingredients.length > 1) return;
+    _isSyncing = true;
+    _caloriesController.text = _totalCalories > 0 ? _totalCalories.toStringAsFixed(0) : '';
+    _proteinController.text = _totalProteins > 0 ? _totalProteins.toStringAsFixed(0) : '';
+    _carbsController.text = _totalCarbs > 0 ? _totalCarbs.toStringAsFixed(0) : '';
+    _fatsController.text = _totalFats > 0 ? _totalFats.toStringAsFixed(0) : '';
+    _lastCaloriesText = _caloriesController.text;
+    _lastProteinText = _proteinController.text;
+    _lastCarbsText = _carbsController.text;
+    _lastFatsText = _fatsController.text;
+    _isSyncing = false;
+    _recomputeCalorieOffset();
+    _updateSavedRatios(cal: _totalCalories, pro: _totalProteins, carb: _totalCarbs, fat: _totalFats);
   }
 
   String get _mealTitle => _meal.name.trim().isEmpty ? tr(LocaleKeys.meal_untitled) : _meal.name.trim();
@@ -337,8 +525,8 @@ class _EditMealScreenState extends State<EditMealScreen> {
   }
 
   double _initialAmountValue() {
-    final totalWeight = _meal.ingredients.fold<double>(0, (sum, ingredient) => sum + ingredient.weight);
-    return totalWeight > 0 ? totalWeight : 1;
+    if (_meal.ingredients.isEmpty) return 1;
+    return _meal.ingredients.first.amount;
   }
 
   static const List<String> _fractionLabels = ['\u2013', '\u215B', '\u00BC', '\u2153', '\u215C', '\u00BD', '\u2154', '\u215D', '\u00BE', '\u215E'];
@@ -716,7 +904,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
         final scale = value / _amountValue;
         setState(() {
           _ingredients = _ingredients
-              .map((i) => i.copyWith(weight: i.weight * scale, calories: i.calories * scale, proteins: i.proteins * scale, carbs: i.carbs * scale, fats: i.fats * scale))
+              .map((i) => i.copyWith(weight: i.weight * scale, amount: value, calories: i.calories * scale, proteins: i.proteins * scale, carbs: i.carbs * scale, fats: i.fats * scale))
               .toList();
           _amountValue = value;
         });
@@ -863,6 +1051,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
     );
     if (confirmed != true || !mounted) return;
     setState(() => _ingredients.removeAt(index));
+    _syncNutrientControllers();
   }
 
   Future<void> _toggleIngredientFavorite(int index) async {
@@ -882,8 +1071,10 @@ class _EditMealScreenState extends State<EditMealScreen> {
     if (!mounted || result == null) return;
     if (result.deleted) {
       setState(() => _ingredients.removeAt(index));
+      _syncNutrientControllers();
     } else if (result.ingredient != null) {
       setState(() => _ingredients[index] = result.ingredient!);
+      _syncNutrientControllers();
     }
   }
 
@@ -957,6 +1148,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                         MealHeroHeader(
                                           title: _mealTitle,
                                           timeLabel: _formatTime(_meal.timestamp),
+                                          trailingLabel: _weightLabelText,
                                           showTime: !widget.openedFromLogScreen,
                                           onTitleTap: _isInteractionDisabled || _useInlineEditing ? null : _openMealNameEditor,
                                           titleController: _useInlineEditing ? _nameController : null,
@@ -983,9 +1175,9 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                       delta: widget.showCaloriesDelta ? widget.caloriesDelta : null,
                                       height: AppSizes.caloriesCardHeight,
                                       badge: _meal.confidence != null ? MatchBadge(text: _confidenceText, variant: _confidenceVariant) : null,
-                                      controller: _useInlineEditing ? _caloriesController : null,
-                                      focusNode: _useInlineEditing ? _caloriesFocus : null,
-                                      maxLength: _useInlineEditing ? 5 : null,
+                                      controller: _useInlineNutrientEditing ? _caloriesController : null,
+                                      focusNode: _useInlineNutrientEditing ? _caloriesFocus : null,
+                                      maxLength: _useInlineNutrientEditing ? 5 : null,
                                     ),
                                   ),
                                 ],
@@ -998,6 +1190,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                     MealHeroHeader(
                                       title: _mealTitle,
                                       timeLabel: _formatTime(_meal.timestamp),
+                                      trailingLabel: _weightLabelText,
                                       showTime: !widget.openedFromLogScreen,
                                       onTitleTap: _isInteractionDisabled || _useInlineEditing ? null : _openMealNameEditor,
                                       titleController: _useInlineEditing ? _nameController : null,
@@ -1007,7 +1200,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                       left: AppSpacing.edge,
                                       right: AppSpacing.edge,
                                       top: AppSizes.mealHeroHeight - heroOverlap,
-                                      child: _useInlineEditing
+                                      child: _useInlineNutrientEditing
                                           ? CaloriesSummaryCard(
                                               label: tr(LocaleKeys.common_calories),
                                               value: _totalCalories.toStringAsFixed(0),
@@ -1038,7 +1231,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                               child: Row(
                                 children: [
                                   Expanded(
-                                    child: _useInlineEditing
+                                    child: _useInlineNutrientEditing
                                         ? MacroStatCard(
                                             label: tr(LocaleKeys.common_protein),
                                             value: '${_totalProteins.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
@@ -1060,7 +1253,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                   ),
                                   const SizedBox(width: AppSpacing.s),
                                   Expanded(
-                                    child: _useInlineEditing
+                                    child: _useInlineNutrientEditing
                                         ? MacroStatCard(
                                             label: tr(LocaleKeys.common_carbs),
                                             value: '${_totalCarbs.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
@@ -1082,7 +1275,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                   ),
                                   const SizedBox(width: AppSpacing.s),
                                   Expanded(
-                                    child: _useInlineEditing
+                                    child: _useInlineNutrientEditing
                                         ? MacroStatCard(
                                             label: tr(LocaleKeys.common_fats),
                                             value: '${_totalFats.toStringAsFixed(0)}${tr(LocaleKeys.common_g)}',
@@ -1105,6 +1298,19 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                 ],
                               ),
                             ),
+                            if (_useInlineNutrientEditing) ...[
+                              const SizedBox(height: AppSpacing.xxs),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: AppSpacing.edge + (SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0)),
+                                child: GlassToggleRow(
+                                  title: tr(LocaleKeys.preferences_auto_adjust),
+                                  subtitle: tr(LocaleKeys.preferences_auto_adjust_desc),
+                                  isOn: _autoSync,
+                                  onChanged: (value) => setState(() => _autoSync = value),
+                                  showDivider: false,
+                                ),
+                              ),
+                            ],
                             const SizedBox(height: AppSpacing.s),
                             MealRecordCard(
                               amount: _amountLabel,
@@ -1268,14 +1474,9 @@ class _EditMealScreenState extends State<EditMealScreen> {
   }
 
   String _formatTime(DateTime date) {
-    final hour = date.hour == 0
-        ? 12
-        : date.hour > 12
-        ? date.hour - 12
-        : date.hour;
+    final hour = date.hour.toString().padLeft(2, '0');
     final minute = date.minute.toString().padLeft(2, '0');
-    final suffix = date.hour >= 12 ? 'PM' : 'AM';
-    return '$hour:$minute $suffix';
+    return '$hour:$minute';
   }
 
   MatchBadgeVariant get _confidenceVariant {

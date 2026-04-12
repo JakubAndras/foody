@@ -225,7 +225,7 @@ class _AmountPickerSheetState extends State<AmountPickerSheet> {
   late int _wholeIndex;
   late int _fractionIndex;
 
-  static final List<String> _wholeValues = List.generate(43, (i) => '$i');
+  static final List<String> _wholeValues = List.generate(101, (i) => '$i');
 
   static const List<String> _fractionLabels = ['\u2013', '\u215B', '\u00BC', '\u2153', '\u215C', '\u00BD', '\u2154', '\u215D', '\u00BE', '\u215E'];
   static const List<double> _fractionValues = [0, 0.125, 0.25, 1 / 3, 0.375, 0.5, 2 / 3, 0.625, 0.75, 0.875];
@@ -233,7 +233,7 @@ class _AmountPickerSheetState extends State<AmountPickerSheet> {
   @override
   void initState() {
     super.initState();
-    final whole = widget.initialValue.truncate().clamp(0, 42);
+    final whole = widget.initialValue.truncate().clamp(0, 100);
     final frac = widget.initialValue - widget.initialValue.truncate();
     _wholeIndex = whole;
     _fractionIndex = _closestFractionIndex(frac);

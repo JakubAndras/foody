@@ -96,7 +96,7 @@ class _$AppDatabase extends AppDatabase {
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 14,
+      version: 15,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -114,7 +114,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `DayRecord` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` INTEGER NOT NULL, `calorieGoal` REAL NOT NULL, `proteinGoal` REAL NOT NULL, `carbsGoal` REAL NOT NULL, `fatGoal` REAL NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Meal` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `dayRecordId` INTEGER NOT NULL, `name` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `photoPath` TEXT, `isFavorite` INTEGER NOT NULL, `confidence` REAL, FOREIGN KEY (`dayRecordId`) REFERENCES `DayRecord` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `Meal` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `dayRecordId` INTEGER NOT NULL, `name` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `photoPath` TEXT, `isFavorite` INTEGER NOT NULL, `confidence` REAL, `barcode` TEXT, FOREIGN KEY (`dayRecordId`) REFERENCES `DayRecord` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Ingredient` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `mealId` INTEGER NOT NULL, `name` TEXT NOT NULL, `weight` REAL NOT NULL, `amount` REAL, `calories` REAL NOT NULL, `proteins` REAL NOT NULL, `carbs` REAL NOT NULL, `fats` REAL NOT NULL, `confidence` REAL, `isFavorite` INTEGER NOT NULL, FOREIGN KEY (`mealId`) REFERENCES `Meal` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
@@ -336,7 +336,8 @@ class _$MealDao extends MealDao {
                   'timestamp': _dateTimeConverter.encode(item.timestamp),
                   'photoPath': item.photoPath,
                   'isFavorite': item.isFavorite ? 1 : 0,
-                  'confidence': item.confidence
+                  'confidence': item.confidence,
+                  'barcode': item.barcode
                 }),
         _mealEntityUpdateAdapter = UpdateAdapter(
             database,
@@ -349,7 +350,8 @@ class _$MealDao extends MealDao {
                   'timestamp': _dateTimeConverter.encode(item.timestamp),
                   'photoPath': item.photoPath,
                   'isFavorite': item.isFavorite ? 1 : 0,
-                  'confidence': item.confidence
+                  'confidence': item.confidence,
+                  'barcode': item.barcode
                 }),
         _mealEntityDeletionAdapter = DeletionAdapter(
             database,
@@ -362,7 +364,8 @@ class _$MealDao extends MealDao {
                   'timestamp': _dateTimeConverter.encode(item.timestamp),
                   'photoPath': item.photoPath,
                   'isFavorite': item.isFavorite ? 1 : 0,
-                  'confidence': item.confidence
+                  'confidence': item.confidence,
+                  'barcode': item.barcode
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -387,7 +390,8 @@ class _$MealDao extends MealDao {
             timestamp: _dateTimeConverter.decode(row['timestamp'] as int),
             photoPath: row['photoPath'] as String?,
             isFavorite: (row['isFavorite'] as int) != 0,
-            confidence: row['confidence'] as double?),
+            confidence: row['confidence'] as double?,
+            barcode: row['barcode'] as String?),
         arguments: [dayRecordId]);
   }
 
@@ -401,7 +405,8 @@ class _$MealDao extends MealDao {
             timestamp: _dateTimeConverter.decode(row['timestamp'] as int),
             photoPath: row['photoPath'] as String?,
             isFavorite: (row['isFavorite'] as int) != 0,
-            confidence: row['confidence'] as double?),
+            confidence: row['confidence'] as double?,
+            barcode: row['barcode'] as String?),
         arguments: [id]);
   }
 

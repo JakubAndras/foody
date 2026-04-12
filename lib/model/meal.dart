@@ -10,6 +10,7 @@ class Meal {
   final String? photoPath;
   final bool isFavorite;
   final double? confidence;
+  final String? barcode;
 
   Meal({
     this.id,
@@ -20,6 +21,7 @@ class Meal {
     this.photoPath,
     this.isFavorite = false,
     this.confidence,
+    this.barcode,
   });
 
   // Factory constructor for creating a new Meal instance from a map.
@@ -35,20 +37,23 @@ class Meal {
       photoPath: json['photoPath'] as String?,
       isFavorite: json['isFavorite'] as bool? ?? false,
       confidence: (json['confidence'] as num?)?.toDouble(),
+      barcode: json['barcode'] as String?,
     );
   }
 
   // Factory constructor for creating a new Meal instance from an Answer object.
   factory Meal.fromAnswer(Answer answer) {
-    final snappedAmount = _snapToFraction(answer.amount.clamp(0.0, 42.875));
+    final snappedAmount = _snapToFraction(answer.amount.clamp(0.0, 100.875));
 
     List<Ingredient> ingredients = answer.ingredients.map((ingResponse) {
-      double weight = 0.0;
-      // Attempt to parse weight from quantity string
-      final RegExp numRegExp = RegExp(r'\d+(\.\d+)?');
-      final Match? match = numRegExp.firstMatch(ingResponse.quantity);
-      if (match != null) {
-        weight = double.tryParse(match.group(0)!) ?? 0.0;
+      double weight = ingResponse.weightGrams ?? 0.0;
+      // Fallback: parse weight from quantity string if AI didn't provide weight_grams
+      if (weight <= 0) {
+        final RegExp numRegExp = RegExp(r'\d+(\.\d+)?');
+        final Match? match = numRegExp.firstMatch(ingResponse.quantity);
+        if (match != null) {
+          weight = double.tryParse(match.group(0)!) ?? 0.0;
+        }
       }
 
       return Ingredient(
@@ -102,6 +107,7 @@ class Meal {
       'photoPath': photoPath,
       'isFavorite': isFavorite,
       'confidence': confidence,
+      'barcode': barcode,
     };
   }
 
@@ -115,6 +121,7 @@ class Meal {
     bool clearPhotoPath = false,
     bool? isFavorite,
     double? confidence,
+    String? barcode,
   }) {
     return Meal(
       id: id ?? this.id,
@@ -125,6 +132,7 @@ class Meal {
       photoPath: clearPhotoPath ? null : (photoPath ?? this.photoPath),
       isFavorite: isFavorite ?? this.isFavorite,
       confidence: confidence ?? this.confidence,
+      barcode: barcode ?? this.barcode,
     );
   }
 
@@ -135,4 +143,5 @@ class Meal {
   double get totalCarbs =>
       ingredients.fold(0, (sum, item) => sum + item.carbs);
   double get totalFats => ingredients.fold(0, (sum, item) => sum + item.fats);
+  double get totalWeight => ingredients.fold(0, (sum, item) => sum + item.weight);
 }

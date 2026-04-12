@@ -34,7 +34,7 @@ class WeightHistoryScreen extends StatelessWidget {
               backgroundColor: Colors.transparent,
               fadeColor: AppColors.meshBase,
               backgroundWidget: const MeshGradientBackground(),
-              padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.huge + 4, AppSpacing.l, AppSpacing.l),
+              padding: const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.huge + 4, AppSpacing.m, AppSpacing.l),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -71,8 +71,8 @@ class WeightHistoryScreen extends StatelessWidget {
             ),
             Positioned(
               top: 0,
-              left: AppSpacing.l,
-              right: AppSpacing.l,
+              left: AppSpacing.m + 1,
+              right: AppSpacing.m + 1,
               child: SafeArea(
                 bottom: false,
                 child: CustomGlassAppBar(

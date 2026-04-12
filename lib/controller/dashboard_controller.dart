@@ -491,22 +491,55 @@ class DashboardController extends BaseController {
   }) {
     final timestamp = _applyDateToTime(DateTime.now(), selectedDate);
     final nutriments = result.nutriments;
+    final productWeight = _parseProductWeightGrams(result.quantity);
+    final scale = productWeight / 100.0;
 
     return Meal(
       name: result.productName,
       ingredients: <Ingredient>[
         Ingredient(
           name: result.productName,
-          weight: 100,
-          calories: nutriments.caloriesPer100g ?? 0,
-          proteins: nutriments.proteinsPer100g ?? 0,
-          carbs: nutriments.carbsPer100g ?? 0,
-          fats: nutriments.fatsPer100g ?? 0,
+          weight: productWeight,
+          amount: 1,
+          calories: (nutriments.caloriesPer100g ?? 0) * scale,
+          proteins: (nutriments.proteinsPer100g ?? 0) * scale,
+          carbs: (nutriments.carbsPer100g ?? 0) * scale,
+          fats: (nutriments.fatsPer100g ?? 0) * scale,
         ),
       ],
       timestamp: timestamp,
       photoPath: photoPath,
+      barcode: result.barcode,
     );
+  }
+
+  /// Parses product weight in grams from the Open Food Facts quantity string.
+  /// Handles formats like "190 g", "200g", "4 x 125 g", "500 ml".
+  /// Returns 100 as fallback when parsing fails.
+  double _parseProductWeightGrams(String? quantity) {
+    if (quantity == null || quantity.isEmpty) return 100;
+    final normalized = quantity.trim().toLowerCase();
+
+    // Handle "4 x 125 g" style (multi-pack)
+    final multiMatch = RegExp(r'(\d+)\s*[x×]\s*(\d+(?:[.,]\d+)?)\s*(g|ml)').firstMatch(normalized);
+    if (multiMatch != null) {
+      final count = double.tryParse(multiMatch.group(1)!) ?? 1;
+      final unit = double.tryParse(multiMatch.group(2)!.replaceAll(',', '.')) ?? 100;
+      return count * unit;
+    }
+
+    // Handle simple "190 g", "200g", "500 ml", "1.5 kg", "1 l"
+    final simpleMatch = RegExp(r'(\d+(?:[.,]\d+)?)\s*(kg|g|ml|l|cl)\b').firstMatch(normalized);
+    if (simpleMatch != null) {
+      final value = double.tryParse(simpleMatch.group(1)!.replaceAll(',', '.')) ?? 100;
+      final unit = simpleMatch.group(2)!;
+      if (unit == 'kg') return value * 1000;
+      if (unit == 'l') return value * 1000;
+      if (unit == 'cl') return value * 10;
+      return value; // g or ml
+    }
+
+    return 100;
   }
 
   String _buildBarcodeAiFallbackDescription({

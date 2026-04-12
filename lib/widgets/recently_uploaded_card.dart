@@ -65,8 +65,9 @@ class RecentlyUploadedCard extends StatelessWidget {
   List<Widget> _buildMealSection(BuildContext context, {required bool isMealLoading}) {
     final hasMeals = meals.isNotEmpty;
     return <Widget>[
+      // Loading card on top so the currently analyzing meal is most visible.
+      if (isMealLoading) ...<Widget>[const AnalyzingMealCard(), if (hasMeals) const SizedBox(height: AppSpacing.xs)],
       if (hasMeals) _buildMealsList(context),
-      if (isMealLoading) ...<Widget>[if (hasMeals) const SizedBox(height: AppSpacing.xs), const AnalyzingMealCard()],
       if (!isMealLoading && !hasMeals) ...<Widget>[const SizedBox(height: AppSpacing.xs), _buildEmptyState()],
     ];
   }
@@ -131,7 +132,8 @@ class RecentlyUploadedCard extends StatelessWidget {
   }
 
   Widget _buildMealsList(BuildContext context) {
-    final sorted = [...meals]..sort((a, b) => a.timestamp.compareTo(b.timestamp));
+    // Newest meals first so the most recently added meal appears at the top.
+    final sorted = [...meals]..sort((a, b) => b.timestamp.compareTo(a.timestamp));
     return Column(children: sorted.map((meal) => _buildMealItem(context, meal)).toList());
   }
 
@@ -145,6 +147,7 @@ class RecentlyUploadedCard extends StatelessWidget {
       fats: meal.totalFats,
       timeText: DateFormat('HH:mm').format(meal.timestamp),
       imageProvider: file != null ? FileImage(file) : null,
+      isBarcodeMeal: meal.barcode != null,
       onTap: () => onMealTap?.call(meal),
       onLongPress: () => onMealLongPress?.call(meal),
     );
@@ -364,6 +367,7 @@ class MealItemCard extends StatelessWidget {
     required this.fats,
     this.timeText,
     this.imageProvider,
+    this.isBarcodeMeal = false,
     this.onTap,
     this.onLongPress,
     this.onAdd,
@@ -376,6 +380,7 @@ class MealItemCard extends StatelessWidget {
   final double fats;
   final String? timeText;
   final ImageProvider? imageProvider;
+  final bool isBarcodeMeal;
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
   final VoidCallback? onAdd;
@@ -464,7 +469,7 @@ class MealItemCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppRadii.m),
         image: imageProvider != null ? DecorationImage(image: imageProvider!, fit: BoxFit.cover) : null,
       ),
-      child: imageProvider == null ? Icon(Icons.restaurant, color: AppColors.textTertiary) : null,
+      child: imageProvider == null ? Icon(isBarcodeMeal ? CupertinoIcons.barcode_viewfinder : Icons.restaurant, color: AppColors.textTertiary) : null,
     );
   }
 }

@@ -8,6 +8,7 @@ import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
 import 'package:diplomka/widgets/picker_column.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 class OnboardingHeightWeightScreen extends StatefulWidget {
   const OnboardingHeightWeightScreen({super.key, required this.onNext, required this.onBack, required this.step, required this.totalSteps});
@@ -205,33 +206,20 @@ class _UnitToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(tr(LocaleKeys.common_imperial), style: textTheme.titleSmall?.copyWith(color: metric ? AppColors.textTertiary : AppColors.textPrimary)),
-        const SizedBox(width: AppSpacing.s),
         GestureDetector(
-          onTap: () => onChanged(!metric),
-          child: Container(
-            width: AppSizes.toggleWidth,
-            height: AppSizes.toggleHeight,
-            padding: const EdgeInsets.all(AppSpacing.xxs),
-            decoration: BoxDecoration(gradient: AppGradients.primary, borderRadius: BorderRadius.circular(AppRadii.pill)),
-            child: AnimatedAlign(
-              alignment: metric ? Alignment.centerRight : Alignment.centerLeft,
-              duration: const Duration(milliseconds: 200),
-              child: Container(
-                width: AppSizes.toggleHeight - AppSpacing.xs,
-                height: AppSizes.toggleHeight - AppSpacing.xs,
-                decoration: BoxDecoration(color: AppColors.surface, shape: BoxShape.circle),
-              ),
-            ),
-          ),
+          onTap: () => onChanged(false),
+          child: Text(tr(LocaleKeys.common_imperial), style: AppTextStyles.title18.copyWith(color: metric ? AppColors.textTertiary : AppColors.textPrimary, fontWeight: FontWeight.w600)),
         ),
-        const SizedBox(width: AppSpacing.s),
-        Text(tr(LocaleKeys.common_metric), style: textTheme.titleSmall?.copyWith(color: metric ? AppColors.textPrimary : AppColors.textTertiary)),
+        const SizedBox(width: AppSpacing.m),
+        GlassSwitch(value: metric, onChanged: onChanged, useOwnLayer: true, activeColor: AppColors.primary, inactiveColor: AppColors.primary),
+        const SizedBox(width: AppSpacing.m),
+        GestureDetector(
+          onTap: () => onChanged(true),
+          child: Text(tr(LocaleKeys.common_metric), style: AppTextStyles.title18.copyWith(color: metric ? AppColors.textPrimary : AppColors.textTertiary, fontWeight: FontWeight.w600)),
+        ),
       ],
     );
   }

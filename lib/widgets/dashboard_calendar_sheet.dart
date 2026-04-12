@@ -195,7 +195,7 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
               behavior: HitTestBehavior.opaque,
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.xs),
-                child: Icon(CupertinoIcons.chevron_left, color: AppColors.textPrimary, size: Platform.isAndroid ? AppSizes.iconLg : AppSizes.iconMd),
+                child: Icon(CupertinoIcons.chevron_left, color: AppColors.textPrimary, size: AppSizes.iconLg),
               ),
             ),
             const SizedBox(width: AppSpacing.xxs),
@@ -204,7 +204,7 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
               behavior: HitTestBehavior.opaque,
               child: Padding(
                 padding: const EdgeInsets.only(left: AppSpacing.xs),
-                child: Icon(CupertinoIcons.chevron_right, color: AppColors.textPrimary, size: Platform.isAndroid ? AppSizes.iconLg : AppSizes.iconMd),
+                child: Icon(CupertinoIcons.chevron_right, color: AppColors.textPrimary, size: AppSizes.iconLg),
               ),
             ),
           ],

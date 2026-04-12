@@ -137,6 +137,12 @@ final Migration migration13to14 = Migration(13, 14, (database) async {
   await database.execute('CREATE UNIQUE INDEX IF NOT EXISTS `index_IngredientTemplate_normalizedName` ON `IngredientTemplate` (`normalizedName`)');
 });
 
+final Migration migration14to15 = Migration(14, 15, (database) async {
+  try {
+    await database.execute('ALTER TABLE `Meal` ADD COLUMN `barcode` TEXT');
+  } catch (_) {}
+});
+
 final Migration migration9to10 = Migration(9, 10, (database) async {
   await database.execute('''
     CREATE TABLE IF NOT EXISTS `MealTemplate` (

@@ -67,6 +67,14 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
   late String _lastCarbsText;
   late String _lastFatsText;
   late String _lastAmountText;
+  double _savedProteinRatio = 0;
+  double _savedCarbsRatio = 0;
+  double _savedFatsRatio = 0;
+  double _savedCalPerGram = 0;
+  double _savedProPerGram = 0;
+  double _savedCarbPerGram = 0;
+  double _savedFatPerGram = 0;
+  double _calorieOffset = 0;
 
   late List<_UnitOption> _unitOptions;
   late _UnitOption _selectedUnit;
@@ -84,6 +92,19 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
     _weight = _baseIngredient.weight;
     _autoSync = SessionManager.to.autoAdjustMacrosEnabled.value;
     _isFavorite = _baseIngredient.isFavorite;
+
+    if (_calories > 0) {
+      _savedProteinRatio = _proteins / _calories;
+      _savedCarbsRatio = _carbs / _calories;
+      _savedFatsRatio = _fats / _calories;
+    }
+    _calorieOffset = _calories - (_proteins * 4 + _carbs * 4 + _fats * 9);
+    if (_weight > 0) {
+      _savedCalPerGram = _calories / _weight;
+      _savedProPerGram = _proteins / _weight;
+      _savedCarbPerGram = _carbs / _weight;
+      _savedFatPerGram = _fats / _weight;
+    }
 
     // Build unit options — per-unit weight derived from AI data
     final perUnit = _baseIngredient.amount > 0 ? _weight / _baseIngredient.amount : _weight;
@@ -134,13 +155,34 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
     _lastCaloriesText = _caloriesController.text;
     final value = double.tryParse(_caloriesController.text.replaceAll(',', '.'));
     if (value == null || value < 0) return;
-    if (_autoSync && _calories > 0) {
-      final ratio = value / _calories;
+    if (value == _calories) return;
+    if (_autoSync) {
+      double newP;
+      double newC;
+      double newF;
+      if (_calories > 0) {
+        final ratio = value / _calories;
+        newP = (_proteins * ratio).roundToDouble();
+        newC = (_carbs * ratio).roundToDouble();
+        newF = (_fats * ratio).roundToDouble();
+        if (newP == 0 && _savedProteinRatio > 0) newP = (value * _savedProteinRatio).roundToDouble();
+        if (newC == 0 && _savedCarbsRatio > 0) newC = (value * _savedCarbsRatio).roundToDouble();
+        if (newF == 0 && _savedFatsRatio > 0) newF = (value * _savedFatsRatio).roundToDouble();
+      } else if (_savedProteinRatio > 0 || _savedCarbsRatio > 0 || _savedFatsRatio > 0) {
+        newP = (value * _savedProteinRatio).roundToDouble();
+        newC = (value * _savedCarbsRatio).roundToDouble();
+        newF = (value * _savedFatsRatio).roundToDouble();
+      } else {
+        _calories = value;
+        _recomputeCalorieOffset();
+        _updateSavedPerGram(weight: _weight, cal: _calories, pro: _proteins, carb: _carbs, fat: _fats);
+        return;
+      }
       _isSyncing = true;
       setState(() {
-        _proteins = (_proteins * ratio).roundToDouble();
-        _carbs = (_carbs * ratio).roundToDouble();
-        _fats = (_fats * ratio).roundToDouble();
+        _proteins = newP;
+        _carbs = newC;
+        _fats = newF;
         _calories = value;
         _proteinsController.text = _proteins.toStringAsFixed(0);
         _carbsController.text = _carbs.toStringAsFixed(0);
@@ -150,8 +192,14 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
         _lastFatsText = _fatsController.text;
       });
       _isSyncing = false;
+      _recomputeCalorieOffset();
+      _updateSavedRatios(cal: _calories, pro: _proteins, carb: _carbs, fat: _fats);
+      _updateSavedPerGram(weight: _weight, cal: _calories, pro: _proteins, carb: _carbs, fat: _fats);
     } else {
       _calories = value;
+      _recomputeCalorieOffset();
+      _updateSavedRatios(cal: _calories, pro: _proteins, carb: _carbs, fat: _fats);
+      _updateSavedPerGram(weight: _weight, cal: _calories, pro: _proteins, carb: _carbs, fat: _fats);
     }
   }
 
@@ -161,6 +209,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
     _lastProteinsText = _proteinsController.text;
     final value = double.tryParse(_proteinsController.text.replaceAll(',', '.'));
     if (value == null || value < 0) return;
+    if (value == _proteins) return;
     _proteins = value;
     if (_autoSync) {
       _isSyncing = true;
@@ -169,6 +218,8 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
       _lastCaloriesText = _caloriesController.text;
       _isSyncing = false;
     }
+    _updateSavedRatios(cal: _calories, pro: _proteins, carb: _carbs, fat: _fats);
+    _updateSavedPerGram(weight: _weight, cal: _calories, pro: _proteins, carb: _carbs, fat: _fats);
   }
 
   void _onCarbsChanged() {
@@ -177,6 +228,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
     _lastCarbsText = _carbsController.text;
     final value = double.tryParse(_carbsController.text.replaceAll(',', '.'));
     if (value == null || value < 0) return;
+    if (value == _carbs) return;
     _carbs = value;
     if (_autoSync) {
       _isSyncing = true;
@@ -185,6 +237,8 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
       _lastCaloriesText = _caloriesController.text;
       _isSyncing = false;
     }
+    _updateSavedRatios(cal: _calories, pro: _proteins, carb: _carbs, fat: _fats);
+    _updateSavedPerGram(weight: _weight, cal: _calories, pro: _proteins, carb: _carbs, fat: _fats);
   }
 
   void _onFatsChanged() {
@@ -193,6 +247,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
     _lastFatsText = _fatsController.text;
     final value = double.tryParse(_fatsController.text.replaceAll(',', '.'));
     if (value == null || value < 0) return;
+    if (value == _fats) return;
     _fats = value;
     if (_autoSync) {
       _isSyncing = true;
@@ -201,6 +256,8 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
       _lastCaloriesText = _caloriesController.text;
       _isSyncing = false;
     }
+    _updateSavedRatios(cal: _calories, pro: _proteins, carb: _carbs, fat: _fats);
+    _updateSavedPerGram(weight: _weight, cal: _calories, pro: _proteins, carb: _carbs, fat: _fats);
   }
 
   void _onAmountChanged() {
@@ -229,9 +286,30 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
         _lastFatsText = _fatsController.text;
       });
       _isSyncing = false;
+    } else if (_savedCalPerGram > 0 || _savedProPerGram > 0 || _savedCarbPerGram > 0 || _savedFatPerGram > 0) {
+      _isSyncing = true;
+      setState(() {
+        _calories = (newWeight * _savedCalPerGram).roundToDouble();
+        _proteins = (newWeight * _savedProPerGram).roundToDouble();
+        _carbs = (newWeight * _savedCarbPerGram).roundToDouble();
+        _fats = (newWeight * _savedFatPerGram).roundToDouble();
+        _weight = newWeight;
+        _caloriesController.text = _calories.toStringAsFixed(0);
+        _proteinsController.text = _proteins.toStringAsFixed(0);
+        _carbsController.text = _carbs.toStringAsFixed(0);
+        _fatsController.text = _fats.toStringAsFixed(0);
+        _lastCaloriesText = _caloriesController.text;
+        _lastProteinsText = _proteinsController.text;
+        _lastCarbsText = _carbsController.text;
+        _lastFatsText = _fatsController.text;
+      });
+      _isSyncing = false;
     } else {
       _weight = newWeight;
     }
+    _recomputeCalorieOffset();
+    _updateSavedRatios(cal: _calories, pro: _proteins, carb: _carbs, fat: _fats);
+    _updateSavedPerGram(weight: _weight, cal: _calories, pro: _proteins, carb: _carbs, fat: _fats);
   }
 
   void _onUnitSelected(_UnitOption unit) {
@@ -273,7 +351,27 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
   }
 
   void _recalcCalories() {
-    _calories = (_proteins * 4 + _carbs * 4 + _fats * 9).roundToDouble();
+    final raw = _proteins * 4 + _carbs * 4 + _fats * 9 + _calorieOffset;
+    _calories = (raw < 0 ? 0.0 : raw).roundToDouble();
+  }
+
+  void _recomputeCalorieOffset() {
+    _calorieOffset = _calories - (_proteins * 4 + _carbs * 4 + _fats * 9);
+  }
+
+  void _updateSavedRatios({required double cal, required double pro, required double carb, required double fat}) {
+    if (cal <= 0) return;
+    if (pro > 0) _savedProteinRatio = pro / cal;
+    if (carb > 0) _savedCarbsRatio = carb / cal;
+    if (fat > 0) _savedFatsRatio = fat / cal;
+  }
+
+  void _updateSavedPerGram({required double weight, required double cal, required double pro, required double carb, required double fat}) {
+    if (weight <= 0) return;
+    if (cal > 0) _savedCalPerGram = cal / weight;
+    if (pro > 0) _savedProPerGram = pro / weight;
+    if (carb > 0) _savedCarbPerGram = carb / weight;
+    if (fat > 0) _savedFatPerGram = fat / weight;
   }
 
   bool get _hasUnsavedChanges {

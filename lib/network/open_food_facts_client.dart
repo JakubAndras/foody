@@ -76,8 +76,6 @@ class OpenFoodFactsClient extends GetxService {
     try {
       await _ensureUserAgentHeader();
 
-      barcode = "4388860225068";
-
       final response = await _dio.get(
         '/api/v2/product/$barcode.json',
         queryParameters: const <String, dynamic>{
