@@ -25,6 +25,7 @@ class RecentlyUploadedCard extends StatelessWidget {
   final Function(Exercise exercise)? onExerciseTap;
   final Function(Exercise exercise)? onExerciseLongPress;
   final VoidCallback? onEmptyStateTap;
+  final GlobalKey? exerciseSectionKey;
 
   const RecentlyUploadedCard({
     super.key,
@@ -36,6 +37,7 @@ class RecentlyUploadedCard extends StatelessWidget {
     this.onExerciseTap,
     this.onExerciseLongPress,
     this.onEmptyStateTap,
+    this.exerciseSectionKey,
   });
 
   @override
@@ -100,6 +102,7 @@ class RecentlyUploadedCard extends StatelessWidget {
         ? tr(LocaleKeys.dashboard_exercises_title_today)
         : tr(LocaleKeys.dashboard_exercises_title, namedArgs: {'date': DateFormat('MMM d').format(selectedDate).replaceFirstMapped(RegExp(r'^.'), (m) => m[0]!.toUpperCase())});
     return Padding(
+      key: exerciseSectionKey,
       padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
       child: Align(
         alignment: Alignment.centerLeft,

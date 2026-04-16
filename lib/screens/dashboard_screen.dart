@@ -47,6 +47,7 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
                 final nutritionGoals = NutritionGoalsService.to.goalsForDate(selectedDate, fallbackRecord: existingDayRecord);
                 final recordToShow = nutritionGoals.applyToDayRecord(dayRecord);
                 controller.maybeHandleScrollToTodayMealsRequest(dashboardController.scrollToTodayMealsRequestId.value);
+                controller.maybeHandleScrollToExercisesRequest(dashboardController.scrollToExercisesRequestId.value, currentMealsRequestId: dashboardController.scrollToTodayMealsRequestId.value);
 
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,6 +92,7 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
                                   meals: recordToShow.meals,
                                   exercises: recordToShow.exercises,
                                   selectedDate: dashboardController.selectedDate.value,
+                                  exerciseSectionKey: controller.exerciseSectionKey,
                                   onMealTap: (meal) async {
                                     await Get.to(() => MealDetailScreen(meal: meal));
                                     dashboardController.refresh();
@@ -142,13 +144,22 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
 
 class _DashboardScreenController extends BaseController {
   final ScrollController scrollController = ScrollController();
+  final GlobalKey exerciseSectionKey = GlobalKey();
   int _lastHandledScrollRequestId = 0;
+  int _lastHandledExerciseScrollRequestId = 0;
   bool _isDisposed = false;
 
   void maybeHandleScrollToTodayMealsRequest(int requestId) {
     if (requestId <= _lastHandledScrollRequestId) return;
     _lastHandledScrollRequestId = requestId;
     _scheduleScrollToTop(attempt: 0);
+  }
+
+  void maybeHandleScrollToExercisesRequest(int requestId, {int currentMealsRequestId = 0}) {
+    if (requestId <= _lastHandledExerciseScrollRequestId) return;
+    _lastHandledExerciseScrollRequestId = requestId;
+    if (currentMealsRequestId > _lastHandledScrollRequestId) _lastHandledScrollRequestId = currentMealsRequestId;
+    _scheduleScrollToBottom(attempt: 0);
   }
 
   void _scheduleScrollToTop({required int attempt}) {
@@ -163,6 +174,22 @@ class _DashboardScreenController extends BaseController {
       }
 
       await scrollController.animateTo(0, duration: const Duration(milliseconds: 320), curve: Curves.easeOutCubic);
+    });
+  }
+
+  void _scheduleScrollToBottom({required int attempt}) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (_isDisposed) return;
+      final ctx = exerciseSectionKey.currentContext;
+      if (ctx == null) {
+        if (attempt < 4) {
+          await Future<void>.delayed(const Duration(milliseconds: 120));
+          _scheduleScrollToBottom(attempt: attempt + 1);
+        }
+        return;
+      }
+
+      await Scrollable.ensureVisible(ctx, duration: const Duration(milliseconds: 320), curve: Curves.easeOutCubic, alignment: 1.0);
     });
   }
 

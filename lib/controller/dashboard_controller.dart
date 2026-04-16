@@ -52,6 +52,7 @@ class DashboardController extends BaseController {
   final RxBool newMealAnalyzeLoading = false.obs;
   final RxBool newExerciseAnalyzeLoading = false.obs;
   final RxInt scrollToTodayMealsRequestId = 0.obs;
+  final RxInt scrollToExercisesRequestId = 0.obs;
   Worker? _dayRecordsWorker;
   int _activeMealAnalyses = 0;
   int _activeExerciseAnalyses = 0;
@@ -376,7 +377,7 @@ class DashboardController extends BaseController {
     }
 
     if (scrollToTodayMealsOnStart) {
-      requestScrollToTodayMealsBottom();
+      requestScrollToExercises();
     }
 
     _beginExerciseAnalysis();
@@ -663,6 +664,10 @@ class DashboardController extends BaseController {
 
   void requestScrollToTodayMealsBottom() {
     scrollToTodayMealsRequestId.value += 1;
+  }
+
+  void requestScrollToExercises() {
+    scrollToExercisesRequestId.value += 1;
   }
 
   // Placeholder for refresh method, if it needs to be part of this controller

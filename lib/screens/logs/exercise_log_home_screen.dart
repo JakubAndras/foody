@@ -4,6 +4,7 @@ import 'package:diplomka/controller/day_record_controller.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/exercise_template.dart';
 import 'package:diplomka/services/exercise_template_repository.dart';
+import 'package:diplomka/screens/main_screen.dart';
 import 'package:diplomka/screens/logs/add_exercise_screen.dart';
 import 'package:diplomka/screens/logs/exercise_detail_screen.dart';
 import 'package:diplomka/screens/logs/exercise_widgets.dart';
@@ -102,7 +103,11 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
       context: context,
       message: tr(LocaleKeys.common_exercise_logged),
       primaryLabel: tr(LocaleKeys.common_view),
-      onPrimary: () => Get.back(),
+      onPrimary: () {
+        DashboardController.to.requestScrollToExercises();
+        MainScreenController.to.showDashboardTab();
+        Get.until((route) => route.isFirst);
+      },
       secondaryLabel: tr(LocaleKeys.common_undo),
       onSecondary: () async {
         if (savedExercise != null) {
