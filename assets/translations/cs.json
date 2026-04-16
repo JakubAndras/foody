@@ -106,7 +106,9 @@
 
   "dashboard_title": "Calories AI app",
   "dashboard_meals_title": "Jídla dne {date}",
-  "dashboard_exercises_title": "Cvičení",
+  "dashboard_meals_title_today": "Dnešní jídla",
+  "dashboard_exercises_title": "Cvičení dne {date}",
+  "dashboard_exercises_title_today": "Dnešní cvičení",
   "dashboard_empty_state": "Klepněte na + pro přidání prvního jídla nebo cvičení dne",
   "dashboard_recognising_meal": "Rozpoznávání jídla",
   "dashboard_recognising_exercise": "Rozpoznávání cvičení",

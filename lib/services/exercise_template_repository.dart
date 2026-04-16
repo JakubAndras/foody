@@ -34,7 +34,6 @@ class ExerciseTemplateRepository extends GetxService {
 
     if (existing != null) {
       await _templateDao.updateTemplate(existing.copyWith(
-        lastUsedAt: exercise.timestamp,
         usageCount: existing.usageCount + 1,
       ));
     } else {

@@ -29,8 +29,9 @@ void _triggerAnimation(String key, VoidCallback onAdd) {
 class AnimatedAddButton extends StatelessWidget {
   final String itemKey;
   final VoidCallback onAdd;
+  final double size;
 
-  const AnimatedAddButton({super.key, required this.itemKey, required this.onAdd});
+  const AnimatedAddButton({super.key, required this.itemKey, required this.onAdd, this.size = 32});
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +45,8 @@ class AnimatedAddButton extends StatelessWidget {
               key: const ValueKey('add'),
               onTap: () => _triggerAnimation(itemKey, onAdd),
               child: Container(
-                width: 32,
-                height: 32,
+                width: size,
+                height: size,
                 decoration: BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
                 child: Icon(CupertinoIcons.add, color: AppColors.onPrimary, size: AppSizes.iconMd),
               ),
@@ -53,19 +54,19 @@ class AnimatedAddButton extends StatelessWidget {
           case AddButtonPhase.loading:
             child = SizedBox(
               key: const ValueKey('loading'),
-              width: 32,
-              height: 32,
+              width: size,
+              height: size,
               child: Padding(
-                padding: const EdgeInsets.all(6),
-                child: CupertinoActivityIndicator(radius: 10, color: AppColors.primary),
+                padding: EdgeInsets.all(size * 0.1875),
+                child: CupertinoActivityIndicator(radius: size * 0.3125, color: AppColors.primary),
               ),
             );
           case AddButtonPhase.done:
             child = SizedBox(
               key: const ValueKey('done'),
-              width: 32,
-              height: 32,
-              child: Icon(CupertinoIcons.checkmark_circle_fill, color: AppColors.success, size: 32),
+              width: size,
+              height: size,
+              child: Icon(CupertinoIcons.checkmark_circle_fill, color: AppColors.success, size: size),
             );
         }
         return AnimatedSwitcher(duration: const Duration(milliseconds: 200), child: child);

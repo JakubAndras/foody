@@ -104,7 +104,9 @@ abstract class  LocaleKeys {
   static const quick_action_exercise = 'quick_action_exercise';
   static const dashboard_title = 'dashboard_title';
   static const dashboard_meals_title = 'dashboard_meals_title';
+  static const dashboard_meals_title_today = 'dashboard_meals_title_today';
   static const dashboard_exercises_title = 'dashboard_exercises_title';
+  static const dashboard_exercises_title_today = 'dashboard_exercises_title_today';
   static const dashboard_empty_state = 'dashboard_empty_state';
   static const dashboard_recognising_meal = 'dashboard_recognising_meal';
   static const dashboard_recognising_exercise = 'dashboard_recognising_exercise';

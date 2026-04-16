@@ -319,7 +319,7 @@ class AppSizes {
   static const double navItemHeight = 56;
   static const double fabSize = 64;
   static const double progressBarHeight = 8;
-  static const double calendarStripHeight = 78;
+  static const double calendarStripHeight = 92;
   static const double borderThick = 2;
   static const double optionCardHeightLarge = 72;
   static const double workoutCardHeight = 100;

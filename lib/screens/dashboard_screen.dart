@@ -76,7 +76,7 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SizedBox(height: Platform.isAndroid ? AppSpacing.huge * 2 - 20 : AppSpacing.huge * 2 - 4),
+                                SizedBox(height: Platform.isAndroid ? AppSpacing.huge * 2 - 20 : AppSpacing.huge * 2 - 12),
                                 DateSelector(
                                   selectedDate: dashboardController.selectedDate.value,
                                   useSegmentedRing: _useSegmentedDateRing,
@@ -84,7 +84,7 @@ class DashboardScreen extends GetView<_DashboardScreenController> {
                                     dashboardController.updateDate(date);
                                   },
                                 ),
-                                const SizedBox(height: AppSpacing.m),
+                                const SizedBox(height: AppSpacing.xxs),
                                 _caloriesTrackerWidget(recordToShow),
                                 const SizedBox(height: AppSpacing.m),
                                 RecentlyUploadedCard(
@@ -148,27 +148,21 @@ class _DashboardScreenController extends BaseController {
   void maybeHandleScrollToTodayMealsRequest(int requestId) {
     if (requestId <= _lastHandledScrollRequestId) return;
     _lastHandledScrollRequestId = requestId;
-    _scheduleScrollToTodayMealsBottom(attempt: 0);
+    _scheduleScrollToTop(attempt: 0);
   }
 
-  void _scheduleScrollToTodayMealsBottom({required int attempt}) {
+  void _scheduleScrollToTop({required int attempt}) {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (_isDisposed) return;
       if (!scrollController.hasClients) {
-        if (attempt < 6) {
+        if (attempt < 4) {
           await Future<void>.delayed(const Duration(milliseconds: 120));
-          _scheduleScrollToTodayMealsBottom(attempt: attempt + 1);
+          _scheduleScrollToTop(attempt: attempt + 1);
         }
         return;
       }
 
-      final target = scrollController.position.maxScrollExtent;
-      await scrollController.animateTo(target, duration: const Duration(milliseconds: 320), curve: Curves.easeOutCubic);
-
-      if (attempt < 6) {
-        await Future<void>.delayed(const Duration(milliseconds: 120));
-        _scheduleScrollToTodayMealsBottom(attempt: attempt + 1);
-      }
+      await scrollController.animateTo(0, duration: const Duration(milliseconds: 320), curve: Curves.easeOutCubic);
     });
   }
 

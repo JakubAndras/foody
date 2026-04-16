@@ -127,7 +127,6 @@ class _DateSelectorState extends State<DateSelector> {
 
   Widget _buildDate(DateTime date, bool isSelected) {
     final normalizedDate = _normalizeDate(date);
-    final numberColor = isSelected ? AppColors.textPrimary : AppColors.borderStrong;
     final ringStrokeWidth = AppSizes.progressRingStroke * 0.8;
     final isToday = _isToday(date);
     final dayNames = [
@@ -143,43 +142,54 @@ class _DateSelectorState extends State<DateSelector> {
 
     return Obx(() {
       final ringStyle = _dayRecordController.weekRingStyles[normalizedDate] ?? CalendarDayRingService.emptyStyle;
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            dayLabel,
-            style: AppTextStyles.label11.copyWith(
-              color: isToday ? AppColors.textPrimary : AppColors.borderStrong,
-              fontWeight: isToday ? FontWeight.w700 : FontWeight.w600,
+      return Container(
+        padding: EdgeInsets.only(left: 1, top: AppSpacing.xxs + 2, right: 1, bottom: 2),
+        decoration: BoxDecoration(
+          color: isSelected
+            ? AppColors.surface
+            : isToday
+              ? AppColors.surface.withValues(alpha: 0.5)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(AppRadii.m),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              dayLabel,
+              style: AppTextStyles.label11.copyWith(
+                color: isSelected ? AppColors.textPrimary : AppColors.borderStrong,
+                fontWeight: isToday ? FontWeight.w700 : FontWeight.w600,
+              ),
             ),
-          ),
-          SizedBox(height: defaultTargetPlatform == TargetPlatform.android ? AppSpacing.xs : AppSpacing.s),
-          SizedBox(
-            width: AppSizes.minTap,
-            height: AppSizes.minTap,
-            child: Center(
-              child: SizedBox(
-                width: AppSizes.dateCircleSize,
-                height: AppSizes.dateCircleSize,
-                child: CustomPaint(
-                  painter: CalendarDayRingPainter(
-                    ringStyle: ringStyle,
-                    strokeWidth: ringStrokeWidth,
-                    useSegmentedRing: widget.useSegmentedRing,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppSizes.progressRingStroke),
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.transparent,
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        date.day.toString(),
-                        style: AppTextStyles.body16.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: numberColor,
+            SizedBox(height: 2),
+            SizedBox(
+              width: AppSizes.minTap,
+              height: AppSizes.minTap,
+              child: Center(
+                child: SizedBox(
+                  width: AppSizes.dateCircleSize,
+                  height: AppSizes.dateCircleSize,
+                  child: CustomPaint(
+                    painter: CalendarDayRingPainter(
+                      ringStyle: ringStyle,
+                      strokeWidth: ringStrokeWidth,
+                      useSegmentedRing: widget.useSegmentedRing,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(AppSizes.progressRingStroke),
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.transparent,
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          date.day.toString(),
+                          style: AppTextStyles.body16.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.textPrimary,
+                          ),
                         ),
                       ),
                     ),
@@ -187,8 +197,8 @@ class _DateSelectorState extends State<DateSelector> {
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       );
     });
   }

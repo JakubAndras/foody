@@ -1,5 +1,6 @@
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
+import 'package:diplomka/widgets/animated_add_button.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -153,19 +154,7 @@ class ExerciseListCard extends StatelessWidget {
                 ],
               ),
             ),
-            GestureDetector(
-              onTap: onAdd,
-              child: Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  shape: BoxShape.circle,
-                  // boxShadow: AppShadows.control,
-                ),
-                child: Icon(CupertinoIcons.add, color: AppColors.onPrimary, size: AppSizes.iconMd),
-              ),
-            ),
+            AnimatedAddButton(itemKey: title, onAdd: onAdd, size: 40),
           ],
         ),
       ),

@@ -40,13 +40,18 @@ class RecentlyUploadedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final now = DateTime.now();
+    final isToday = selectedDate.year == now.year && selectedDate.month == now.month && selectedDate.day == now.day;
+    final title = isToday
+        ? tr(LocaleKeys.dashboard_meals_title_today)
+        : tr(LocaleKeys.dashboard_meals_title, namedArgs: {'date': DateFormat('MMM d').format(selectedDate).replaceFirstMapped(RegExp(r'^.'), (m) => m[0]!.toUpperCase())});
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
           child: Text(
-            tr(LocaleKeys.dashboard_meals_title, namedArgs: {'date': DateFormat('MMM d').format(selectedDate).replaceFirstMapped(RegExp(r'^.'), (m) => m[0]!.toUpperCase())}),
+            title,
             style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700),
           ),
         ),
@@ -82,17 +87,23 @@ class RecentlyUploadedCard extends StatelessWidget {
       if (hasMealSectionContent) const SizedBox(height: AppSpacing.m),
       _buildExerciseHeader(),
       const SizedBox(height: AppSpacing.xxs),
+      // Loading card on top so the currently analyzing exercise is most visible.
+      if (isExerciseLoading) ...<Widget>[const AnalyzingMealCard(analysisType: AnalysisCardType.exercise), if (hasExercises) const SizedBox(height: AppSpacing.xs)],
       if (hasExercises) _buildExercisesList(context),
-      if (isExerciseLoading) ...<Widget>[if (hasExercises) const SizedBox(height: AppSpacing.xs), const AnalyzingMealCard(analysisType: AnalysisCardType.exercise)],
     ];
   }
 
   Widget _buildExerciseHeader() {
+    final now = DateTime.now();
+    final isToday = selectedDate.year == now.year && selectedDate.month == now.month && selectedDate.day == now.day;
+    final title = isToday
+        ? tr(LocaleKeys.dashboard_exercises_title_today)
+        : tr(LocaleKeys.dashboard_exercises_title, namedArgs: {'date': DateFormat('MMM d').format(selectedDate).replaceFirstMapped(RegExp(r'^.'), (m) => m[0]!.toUpperCase())});
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
       child: Align(
         alignment: Alignment.centerLeft,
-        child: Text(tr(LocaleKeys.dashboard_exercises_title), style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700)),
+        child: Text(title, style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700)),
       ),
     );
   }

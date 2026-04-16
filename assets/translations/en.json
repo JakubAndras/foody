@@ -106,7 +106,9 @@
 
   "dashboard_title": "Calories AI app",
   "dashboard_meals_title": "{date}'s meals",
-  "dashboard_exercises_title": "Exercises",
+  "dashboard_meals_title_today": "Today's meals",
+  "dashboard_exercises_title": "{date}'s exercises",
+  "dashboard_exercises_title_today": "Today's exercises",
   "dashboard_empty_state": "Tap + to add your first meal or exercise of the day",
   "dashboard_recognising_meal": "Recognising meal",
   "dashboard_recognising_exercise": "Recognising exercise",
