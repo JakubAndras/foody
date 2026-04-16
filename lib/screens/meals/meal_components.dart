@@ -163,7 +163,7 @@ class ConfidenceBadge extends StatelessWidget {
     return MatchBadgeVariant.low;
   }
 
-  String get _label => '${(confidence * 100).round()}%';
+  String get _label => '${(confidence * 100).round()}% ${tr(LocaleKeys.common_confidence)}';
 
   @override
   Widget build(BuildContext context) {

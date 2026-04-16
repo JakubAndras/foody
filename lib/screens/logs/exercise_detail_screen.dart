@@ -5,8 +5,11 @@ import 'package:diplomka/model/exercise.dart';
 import 'package:diplomka/model/exercise_template.dart';
 import 'package:diplomka/services/exercise_template_repository.dart';
 import 'package:diplomka/screens/logs/exercise_widgets.dart';
+import 'package:diplomka/screens/logs/fix_exercise_result_screen.dart';
+import 'package:diplomka/screens/meals/meal_components.dart' show MatchBadgeVariant;
 import 'package:diplomka/widgets/confirm_delete_dialog.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
+import 'package:diplomka/widgets/glass_popup.dart';
 import 'package:diplomka/utils/app_limits.dart';
 import 'package:diplomka/widgets/duration_picker_sheet.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -110,7 +113,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                 items: [
                   (icon: CupertinoIcons.checkmark, onPressed: _handleDone),
                   (icon: _exercise.isFavorite ? CupertinoIcons.bookmark_fill : CupertinoIcons.bookmark, onPressed: _toggleFavorite),
-                  (icon: CupertinoIcons.trash, onPressed: _handleDeleteExercise),
+                  (icon: CupertinoIcons.ellipsis, onPressed: _openActionSheet),
                 ],
               ),
             ],
@@ -119,25 +122,35 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(AppSpacing.l),
-            decoration: BoxDecoration(gradient: AppGradients.primary, borderRadius: BorderRadius.circular(AppRadii.l)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            decoration: BoxDecoration(gradient: AppColors.isDarkTheme ? const LinearGradient(begin: Alignment.bottomLeft, end: Alignment.topRight, colors: [Color(0x42FFFFFF), Color(0xFF1D1D1D)]) : AppGradients.primary, borderRadius: BorderRadius.circular(AppRadii.l)),
+            child: Stack(
               children: [
-                Text(tr(LocaleKeys.common_exercise), style: AppTextStyles.body14.copyWith(color: AppColors.onPrimary.withValues(alpha: 0.6))),
-                const SizedBox(height: AppSpacing.xs),
-                TextField(
-                  controller: _nameController,
-                  textCapitalization: TextCapitalization.sentences,
-                  cursorColor: AppColors.onPrimary,
-                  style: AppTextStyles.h2.copyWith(color: AppColors.onPrimary),
-                  decoration: InputDecoration(
-                    hintText: tr(LocaleKeys.common_name),
-                    hintStyle: AppTextStyles.h2.copyWith(color: AppColors.onPrimary.withValues(alpha: 0.6)),
-                    border: InputBorder.none,
-                    isDense: true,
-                    contentPadding: EdgeInsets.zero,
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(tr(LocaleKeys.common_exercise), style: AppTextStyles.body14.copyWith(color: (AppColors.isDarkTheme ? Colors.white : AppColors.onPrimary).withValues(alpha: 0.6))),
+                    const SizedBox(height: AppSpacing.xs),
+                    TextField(
+                      controller: _nameController,
+                      textCapitalization: TextCapitalization.sentences,
+                      cursorColor: AppColors.isDarkTheme ? Colors.white : AppColors.onPrimary,
+                      style: AppTextStyles.h2.copyWith(color: AppColors.isDarkTheme ? Colors.white : AppColors.onPrimary),
+                      decoration: InputDecoration(
+                        hintText: tr(LocaleKeys.common_name),
+                        hintStyle: AppTextStyles.h2.copyWith(color: (AppColors.isDarkTheme ? Colors.white : AppColors.onPrimary).withValues(alpha: 0.6)),
+                        border: InputBorder.none,
+                        isDense: true,
+                        contentPadding: EdgeInsets.zero,
+                      ),
+                    ),
+                  ],
                 ),
+                if (_exercise.confidence != null)
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: _ExerciseConfidenceBadge(confidence: _exercise.confidence!),
+                  ),
               ],
             ),
           ),
@@ -176,6 +189,35 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     );
   }
 
+  void _openActionSheet() {
+    showGlassPopup(
+      context: context,
+      items: [
+        GlassPopupItem(
+          label: tr(LocaleKeys.meal_fix_issue),
+          icon: CupertinoIcons.sparkles,
+          onTap: () {
+            Navigator.of(context).pop();
+            _handleFixIssue();
+          },
+        ),
+        GlassPopupItem(
+          label: tr(LocaleKeys.common_delete),
+          icon: CupertinoIcons.trash,
+          color: AppColors.error,
+          onTap: () {
+            Navigator.of(context).pop();
+            _handleDeleteExercise();
+          },
+        ),
+      ],
+    );
+  }
+
+  void _handleFixIssue() {
+    Get.to(() => FixExerciseResultScreen(baseExercise: _buildExercise(), selectedDate: widget.selectedDate, openedFromLogScreen: widget.openedFromLogScreen));
+  }
+
   Future<void> _handleDeleteExercise() async {
     final confirmed = await showConfirmationDialog(
       context: context,
@@ -199,5 +241,30 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     }
     if (!mounted) return;
     Get.back(result: true);
+  }
+}
+
+class _ExerciseConfidenceBadge extends StatelessWidget {
+  final double confidence;
+
+  const _ExerciseConfidenceBadge({required this.confidence});
+
+  MatchBadgeVariant get _variant {
+    if (confidence >= 0.7) return MatchBadgeVariant.good;
+    if (confidence >= 0.45) return MatchBadgeVariant.medium;
+    return MatchBadgeVariant.low;
+  }
+
+  String get _label => '${(confidence * 100).round()}% ${tr(LocaleKeys.common_confidence)}';
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: AppSizes.matchBadgeHeight,
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(AppRadii.pill)),
+      alignment: Alignment.center,
+      child: Text(_label, style: AppTextStyles.badge14.copyWith(color: _variant == MatchBadgeVariant.good ? AppColors.successText : _variant == MatchBadgeVariant.medium ? AppColors.matchYellowText : AppColors.errorText)),
+    );
   }
 }

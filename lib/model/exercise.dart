@@ -7,6 +7,7 @@ class Exercise {
   final double caloriesBurned;
   final bool isFavorite;
   final String? source;
+  final double? confidence;
 
   const Exercise({
     this.id,
@@ -17,6 +18,7 @@ class Exercise {
     required this.caloriesBurned,
     this.isFavorite = false,
     this.source,
+    this.confidence,
   });
 
   bool get isFromHealthSync => source == 'apple_health' || source == 'health_connect';
@@ -31,6 +33,7 @@ class Exercise {
       caloriesBurned: (json['caloriesBurned'] as num?)?.toDouble() ?? 0,
       isFavorite: json['isFavorite'] as bool? ?? false,
       source: json['source'] as String?,
+      confidence: (json['confidence'] as num?)?.toDouble(),
     );
   }
 
@@ -44,6 +47,7 @@ class Exercise {
       'caloriesBurned': caloriesBurned,
       'isFavorite': isFavorite,
       'source': source,
+      'confidence': confidence,
     };
   }
 
@@ -56,6 +60,7 @@ class Exercise {
     double? caloriesBurned,
     bool? isFavorite,
     String? source,
+    double? confidence,
   }) {
     return Exercise(
       id: id ?? this.id,
@@ -66,6 +71,7 @@ class Exercise {
       caloriesBurned: caloriesBurned ?? this.caloriesBurned,
       isFavorite: isFavorite ?? this.isFavorite,
       source: source ?? this.source,
+      confidence: confidence ?? this.confidence,
     );
   }
 }

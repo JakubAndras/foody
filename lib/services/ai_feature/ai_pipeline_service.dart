@@ -79,20 +79,30 @@ class AiPipelineService extends GetxService {
         userAttributes: userAttributes,
       );
       final analysis = _parseExerciseAnalysis(data);
-      if (analysis == null || !analysis.valid) {
+      if (analysis == null) {
         return AiExerciseAnalysisResult.failure(
           message: tr(LocaleKeys.error_ai_exercise_no_result),
         );
       }
 
       final answer = analysis.answer;
-      if (answer.name.isEmpty || !answer.hasUsableCalories) {
+
+      // Hard failure: AI returned valid=false AND (no name OR confidence too low)
+      if (!analysis.valid && (answer.name.isEmpty || answer.confidence < minExerciseConfidence)) {
+        return AiExerciseAnalysisResult.failure(
+          message: tr(LocaleKeys.error_ai_exercise_no_result),
+        );
+      }
+
+      // Hard failure: no name at all
+      if (answer.name.isEmpty) {
         return AiExerciseAnalysisResult.failure(
           message: tr(LocaleKeys.error_ai_exercise_missing),
         );
       }
 
-      if (answer.confidence < minExerciseConfidence) {
+      // Low confidence: either AI flagged invalid, or confidence below threshold, or missing calories
+      if (!analysis.valid || answer.confidence < minExerciseConfidence || !answer.hasUsableCalories) {
         return AiExerciseAnalysisResult.lowConfidence(
           analysis: analysis,
           message: tr(LocaleKeys.error_ai_exercise_low_confidence),

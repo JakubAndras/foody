@@ -23,6 +23,7 @@ class ExerciseEntity {
   final double caloriesBurned;
   final bool isFavorite;
   final String? source;
+  final double? confidence;
 
   ExerciseEntity({
     this.id,
@@ -33,5 +34,6 @@ class ExerciseEntity {
     required this.caloriesBurned,
     this.isFavorite = false,
     this.source,
+    this.confidence,
   });
 }

@@ -143,6 +143,12 @@ final Migration migration14to15 = Migration(14, 15, (database) async {
   } catch (_) {}
 });
 
+final Migration migration15to16 = Migration(15, 16, (database) async {
+  try {
+    await database.execute('ALTER TABLE `Exercise` ADD COLUMN `confidence` REAL');
+  } catch (_) {}
+});
+
 final Migration migration9to10 = Migration(9, 10, (database) async {
   await database.execute('''
     CREATE TABLE IF NOT EXISTS `MealTemplate` (

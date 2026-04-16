@@ -388,14 +388,6 @@ class DashboardController extends BaseController {
         return;
       }
 
-      if (result.status == AiExerciseAnalysisStatus.lowConfidence) {
-        showSnackBar(
-          message: tr(LocaleKeys.error_low_confidence),
-          subtitle: result.message ?? tr(LocaleKeys.error_low_confidence_review),
-          type: SnackBarType.warning,
-        );
-      }
-
       final answer = result.analysis!.answer;
       final int? duration = answer.durationMinutes;
       final double caloriesBurned = answer.caloriesTotal?.toDouble() ?? ((answer.caloriesPerMinute ?? 0) * (duration ?? 0));
@@ -414,6 +406,7 @@ class DashboardController extends BaseController {
         timestamp: _applyDateToTime(DateTime.now(), selectedDate),
         durationMinutes: duration,
         caloriesBurned: caloriesBurned,
+        confidence: answer.confidence,
       );
 
       await DayRecordController.to.saveExerciseForDate(
@@ -456,9 +449,6 @@ class DashboardController extends BaseController {
     );
 
     if (result.isSuccess && result.response != null) {
-      if (result.status == AiAnalysisStatus.lowConfidence) {
-        showSnackBar(message: tr(LocaleKeys.error_low_confidence), subtitle: result.message ?? tr(LocaleKeys.error_low_confidence_review), type: SnackBarType.warning);
-      }
       Meal meal = Meal.fromAnswer(result.response!.answer).copyWith(
         timestamp: _applyDateToTime(DateTime.now(), selectedDate),
         photoPath: photoPathToSave,

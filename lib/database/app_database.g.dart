@@ -96,7 +96,7 @@ class _$AppDatabase extends AppDatabase {
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 15,
+      version: 16,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -120,7 +120,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `WeightEntry` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` INTEGER NOT NULL, `weight` REAL NOT NULL, `photoPath` TEXT)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Exercise` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `dayRecordId` INTEGER NOT NULL, `name` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `durationMinutes` INTEGER, `caloriesBurned` REAL NOT NULL, `isFavorite` INTEGER NOT NULL, `source` TEXT, FOREIGN KEY (`dayRecordId`) REFERENCES `DayRecord` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `Exercise` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `dayRecordId` INTEGER NOT NULL, `name` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `durationMinutes` INTEGER, `caloriesBurned` REAL NOT NULL, `isFavorite` INTEGER NOT NULL, `source` TEXT, `confidence` REAL, FOREIGN KEY (`dayRecordId`) REFERENCES `DayRecord` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `MealTemplate` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `normalizedName` TEXT NOT NULL, `photoPath` TEXT, `isFavorite` INTEGER NOT NULL, `lastUsedAt` INTEGER NOT NULL, `usageCount` INTEGER NOT NULL)');
         await database.execute(
@@ -676,7 +676,8 @@ class _$ExerciseDao extends ExerciseDao {
                   'durationMinutes': item.durationMinutes,
                   'caloriesBurned': item.caloriesBurned,
                   'isFavorite': item.isFavorite ? 1 : 0,
-                  'source': item.source
+                  'source': item.source,
+                  'confidence': item.confidence
                 }),
         _exerciseEntityUpdateAdapter = UpdateAdapter(
             database,
@@ -690,7 +691,8 @@ class _$ExerciseDao extends ExerciseDao {
                   'durationMinutes': item.durationMinutes,
                   'caloriesBurned': item.caloriesBurned,
                   'isFavorite': item.isFavorite ? 1 : 0,
-                  'source': item.source
+                  'source': item.source,
+                  'confidence': item.confidence
                 }),
         _exerciseEntityDeletionAdapter = DeletionAdapter(
             database,
@@ -704,7 +706,8 @@ class _$ExerciseDao extends ExerciseDao {
                   'durationMinutes': item.durationMinutes,
                   'caloriesBurned': item.caloriesBurned,
                   'isFavorite': item.isFavorite ? 1 : 0,
-                  'source': item.source
+                  'source': item.source,
+                  'confidence': item.confidence
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -732,7 +735,8 @@ class _$ExerciseDao extends ExerciseDao {
             durationMinutes: row['durationMinutes'] as int?,
             caloriesBurned: row['caloriesBurned'] as double,
             isFavorite: (row['isFavorite'] as int) != 0,
-            source: row['source'] as String?),
+            source: row['source'] as String?,
+            confidence: row['confidence'] as double?),
         arguments: [dayRecordId]);
   }
 
@@ -751,7 +755,8 @@ class _$ExerciseDao extends ExerciseDao {
             durationMinutes: row['durationMinutes'] as int?,
             caloriesBurned: row['caloriesBurned'] as double,
             isFavorite: (row['isFavorite'] as int) != 0,
-            source: row['source'] as String?),
+            source: row['source'] as String?,
+            confidence: row['confidence'] as double?),
         arguments: [dayRecordId, source]);
   }
 

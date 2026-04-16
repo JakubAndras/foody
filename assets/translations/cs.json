@@ -684,6 +684,7 @@
   "error_barcode_service_unavailable": "Vyhledávání v Open Food Facts selhalo.",
   "error_barcode_parse_failed": "Nepodařilo se zpracovat odpověď vyhledávání.",
   "error_barcode_product_not_found": "Produkt nenalezen.",
+  "error_exercise_calories_estimated": "Kalorie byly odhadnuty automaticky. Klepnutím na cvičení je upravíte.",
   "error_exercise_analysis_failed": "Analýza cvičení selhala",
 
   "fix_result_title": "Opravit výsledek",

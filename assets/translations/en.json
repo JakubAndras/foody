@@ -684,6 +684,7 @@
   "error_barcode_service_unavailable": "Open Food Facts lookup failed.",
   "error_barcode_parse_failed": "Failed to parse lookup response.",
   "error_barcode_product_not_found": "Product not found.",
+  "error_exercise_calories_estimated": "Calories were estimated automatically. Tap the exercise to edit.",
   "error_exercise_analysis_failed": "Exercise analysis failed",
 
   "fix_result_title": "Fix Result",

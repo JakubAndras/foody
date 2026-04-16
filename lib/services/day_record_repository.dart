@@ -149,6 +149,7 @@ class DayRecordRepository extends GetxService {
       caloriesBurned: exercise.caloriesBurned,
       isFavorite: exercise.isFavorite,
       source: exercise.source,
+      confidence: exercise.confidence,
     );
 
     if (exercise.id == null) {
@@ -205,6 +206,7 @@ class DayRecordRepository extends GetxService {
       caloriesBurned: exercise.caloriesBurned,
       isFavorite: isFavorite,
       source: exercise.source,
+      confidence: exercise.confidence,
     );
     await _exerciseDao.updateExercise(entity);
   }
@@ -335,6 +337,7 @@ class DayRecordRepository extends GetxService {
       caloriesBurned: exerciseEntity.caloriesBurned,
       isFavorite: exerciseEntity.isFavorite,
       source: exerciseEntity.source,
+      confidence: exerciseEntity.confidence,
     );
   }
 

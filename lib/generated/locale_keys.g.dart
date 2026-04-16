@@ -667,6 +667,7 @@ abstract class  LocaleKeys {
   static const error_barcode_service_unavailable = 'error_barcode_service_unavailable';
   static const error_barcode_parse_failed = 'error_barcode_parse_failed';
   static const error_barcode_product_not_found = 'error_barcode_product_not_found';
+  static const error_exercise_calories_estimated = 'error_exercise_calories_estimated';
   static const error_exercise_analysis_failed = 'error_exercise_analysis_failed';
   static const fix_result_title = 'fix_result_title';
   static const fix_result_hint = 'fix_result_hint';
