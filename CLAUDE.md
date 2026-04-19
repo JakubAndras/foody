@@ -69,9 +69,9 @@ dart format --line-length 180 lib/
 All state management uses GetX. Services extend `GetxService`, controllers extend `GetxController` (or `BaseController`). Access pattern: `static FooService get to => Get.find();`. All services/controllers are registered in `lib/locator.dart` via `Get.put()` (permanent) or `Get.lazyPut()`.
 
 ### Database: Floor ORM
-- Current DB version: **8** (`lib/database/app_database.dart`)
-- Migrations in `lib/database/migrations.dart` (migration1to2 through migration7to8)
-- Entities: `DayRecord`, `Meal`, `Ingredient`, `WeightEntry`, `Exercise` in `lib/database/entities/`
+- Current DB version: **16** (`lib/database/app_database.dart`)
+- Migrations in `lib/database/migrations.dart` (migration1to2 through migration15to16)
+- Entities: `DayRecord`, `Meal`, `Ingredient`, `WeightEntry`, `Exercise`, `IngredientTemplate`, `ExerciseTemplate` in `lib/database/entities/`
 - DAOs in `lib/database/dao/`
 - **Normalized FK schema**: `Meal.dayRecordId → DayRecord`, `Ingredient.mealId → Meal`, `Exercise.dayRecordId → DayRecord` — all CASCADE delete
 - `DayRecordRepository` assembles domain aggregates (`DayRecord` + `Meal[]` + `Ingredient[]` + `Exercise[]`) for UI — always use the repository, not DAOs directly
@@ -128,7 +128,7 @@ Direct GetX navigation: `Get.to(() => const SomeScreen())` — no named route ta
 
 ## Functional Requirements Status
 
-Thesis requirements (FR-01 to FR-35). Status as of current codebase:
+Thesis requirements (FR-01 to FR-30). Status as of current codebase:
 
 | FR | Name | Status |
 |----|------|--------|
@@ -136,44 +136,96 @@ Thesis requirements (FR-01 to FR-35). Status as of current codebase:
 | FR-02 | Daily overview ("daily card") | Done |
 | FR-03 | Target goals | Done |
 | FR-04 | User profile management | Done |
-| FR-05 | Data control and deletion | Partial — meal deletion works, no account deletion |
+| FR-05 | Data control and deletion | Partial — meal/exercise deletion works, no account deletion |
 | FR-06 | Photo-based meal entry | Done |
 | FR-07 | AI suggestions for items/portions | Done |
-| FR-08 | Uncertainty indication | Done |
-| FR-09 | Explain AI limits | Partial — scan onboarding tips only |
-| FR-10 | AI error vs app error | Partial — pipeline distinguishes, UI limited |
+| FR-08 | Uncertainty indication | Done — color-coded badge (green ≥70%, yellow ≥45%, red <45%) |
+| FR-09 | Explain AI limits | Done — 5-page scan onboarding with tips |
+| FR-10 | AI error vs app error | Partial — barcode errors typed (6 types), AI pipeline generic failure |
 | FR-11 | Text fallback after photo failure | Done |
 | FR-12 | Import photo from gallery | Done |
-| FR-13 | Re-run recognition from edit | Done |
-| FR-14 | Entry without photo | Done |
-| FR-15 | Quantity units (grams/pieces) | Partial |
-| FR-16 | Portion presets | Not implemented |
-| FR-17 | Barcode scanner | Done |
-| FR-18 | Favorites | Partial — DB toggle works, listing uses mock data |
-| FR-19 | Duplicate previous record | Not implemented |
-| FR-20 | Name autocomplete from history | Not implemented |
-| FR-21 | Plan vs actual for cooking | Not implemented |
-| FR-22 | Dietary restrictions/intolerances | Done |
-| FR-23 | Violations in calendar | Not implemented |
-| FR-24 | Intake vs expenditure in one view | Done |
-| FR-25 | Expenditure integration settings | Not implemented |
-| FR-26 | Weekly and monthly overviews | Done |
-| FR-27 | Alerts on limit exceedance | Not implemented |
-| FR-28 | Data export (CSV/PDF) | Done |
-| FR-29 | Offline tolerance | Partial — local DB works offline, AI needs connectivity |
-| FR-30 | Cloud storage and sync | Deferred (out of scope) |
-| FR-31 | Natural-language queries (Ask AI) | Done |
-| FR-32 | Monthly motivational summary | Not implemented |
-| FR-33 | Gentle, configurable notifications | Done |
-| FR-34 | AI accuracy evaluation | Not implemented |
-| FR-35 | Show/hide advanced features | Not implemented — toggles are static UI |
+| FR-13 | Re-run recognition from edit | Done — "Fix with AI" in EditMealScreen → FixResultScreen |
+| FR-14 | Entry without photo | Done — voice, text description, manual entry |
+| FR-15 | Quantity units (grams/pieces) | Done — 1g, 100g, custom units, fraction display |
+| FR-16 | Barcode scanner | Done |
+| FR-17 | Favorites | Done — isFavorite on meals/ingredients/exercises, Favorites tab in SelectMealScreen |
+| FR-18 | Duplicate previous record | Done — MealCopyToSheet with calendar date picker |
+| FR-19 | Name autocomplete from history | Partial — search with debounce in SelectMealScreen, not classic autocomplete dropdown |
+| FR-20 | Dietary restrictions/intolerances | Done |
+| FR-21 | Violations in calendar | Done — DietaryViolationsCalendarCard with monthly grid |
+| FR-22 | Intake vs expenditure in one view | Done |
+| FR-23 | Expenditure integration settings | Partial — burnedCaloriesEnabled/rolloverCaloriesEnabled toggles, no granular multipliers |
+| FR-24 | Weekly and monthly overviews | Done |
+| FR-25 | Data export (CSV/PDF) | Done |
+| FR-26 | Offline tolerance | Done — SQLite local-first, AI needs connectivity |
+| FR-27 | Natural-language queries (Ask AI) | Done — two-pass system (date range → analysis) |
+| FR-28 | Monthly motivational summary | Done — MotivationalSummaryService: daily/weekly/monthly notifications |
+| FR-29 | Gentle, configurable notifications | Done |
+| FR-30 | Show/hide advanced features | Partial — individual toggles (burned cal, rollover, auto-adjust), no basic/advanced mode |
+
+**Extra features (not in original FR list):**
+- Voice input for meals and exercises (`VoiceTranscriptionService`, `VoiceLogScreen`)
+- Exercise tracking: manual + AI + voice + templates + favorites (`ExerciseLogHomeScreen`, `AddExerciseScreen`)
+- Weight tracking with photo, history, BMI (`WeightLogSheet`, `WeightHistoryScreen`, `BmiCard`)
+- Rollover calories system (max 500 kcal carry-forward, toggle)
+- Streak tracking (`StreakService`, current/longest streak, weekly activity)
+- Home widget support (`lib/services/home_widget/`)
+- Health data sync: Apple Health / Health Connect (`HealthIntegrationService`)
+- Multi-model AI: OpenAI + Gemini with fallback (`lib/services/ai_feature/`)
+- IngredientTemplate system for reusable ingredients with usage tracking
+- ExerciseTemplate system for reusable exercises
+- Report meal function for AI feedback (`ReportMealScreen`)
+- Auto-adjust macros proportionally when changing calories
+- Calendar day ring visualization (`CalendarDayRingService`)
+- Food label scanning (`ScanMode.foodLabel`)
+- Comprehensive onboarding flow (12+ screens)
 
 **Foundational decisions:**
 - Normalized FK tables (no embedded lists) — `DayRecordRepository` assembles aggregates
 - OpenAI primary provider, architecture provider-agnostic (Gemini ready)
-- Local-only storage, no online sync/auth — architecture allows future cloud sync
+- Local-only storage, no online sync/auth
 - `mobile_scanner` + Open Food Facts for barcode flow
 - `flutter_local_notifications` for reminder scheduling
+
+## Pravidla textu diplomové práce
+
+Téma práce: „Aplikace pro rozpoznávání potravin pomocí AI a sledování kalorického příjmu" (ČVUT FEL).
+
+### Role
+
+Funguj jako kombinace odborného konzultanta, oponenta a spoluautora textu. Intelektuální obsah (tvrzení, data, závěry, rozhodnutí) je vždy autorův. Nikdy negeneruj vlastní tvrzení, data, citáty ani výsledky měření bez podkladů od autora.
+
+### Jazyk a styl
+
+- Odpovídej primárně česky.
+- Piš akademickým, ale čitelným stylem: věcně, strukturovaně, bez zbytečné omáčky.
+- Preferuj stručné, konkrétní odpovědi s podnadpisy a příklady.
+- Detailní formátovací pravidla (třetí osoba, čísla, citace, struktura kapitol) definují `/diplomka-write` a `/diplomka-refactor` skilly ve svých SKILL.md.
+
+### Co přesně potřebuji
+
+- Pomáhej strukturovat kapitoly, psát a přepisovat části textu.
+- U uživatelského výzkumu (strukturované rozhovory, uživatelské testy): navrhuj scénáře, otázky, strukturu rozhovorů a testovacích úloh; analyzuj odpovědi (témata, insighty, závěry) a pomoz je správně popsat v textu.
+- Navrhuj formulace tak, aby zapadaly do diplomové práce (ne jako blogpost nebo próza).
+- Když dostaneš existující text: navrhni úpravy formulací, struktury a návaznosti argumentů; upozorni na nelogičnosti, opakování nebo chybějící kroky v argumentaci; navrhni, co doplnit (příklady, odkazy na literaturu, metodiku).
+
+### Akademická integrita
+
+- Nepředstírej znalost konkrétních studií. Pokud si nejsi jistý, navrhni typ zdrojů a klíčová slova k dohledání.
+- Nikdy nefabrikuj data, citáty participantů, výsledky měření ani SUS skóre.
+- Když něco může být sporné nebo spekulativní, upozorni na to.
+
+### Zdroje
+
+- Pouze akademická/vědecká literatura, odborné internetové články nebo oficiální weby zabývající se danou problematikou.
+- Zakázané zdroje: Wikipedia a obdobné nedůvěryhodné zdroje.
+- Preferované databáze: https://www.mdpi.com, https://jmirpublications.com. Pokud tam relevantní zdroj neexistuje, hledej v IEEE, ACM, Springer, Elsevier a dalších peer-reviewed zdrojích.
+
+### Typografie: pomlčky v textu
+
+- Nikdy nepoužívej em-dash (`—`) ani en-dash (`–`) jako parentetickou vsuvku uprostřed věty (typ: "aplikace – která je nová – funguje"). Přeformuluj pomocí čárek, vedlejších vět nebo samostatných vět.
+- En-dash (`–`) je povolený výhradně v číselných rozsazích (`200–500`, `18,5–24,9`).
+- Toto pravidlo platí globálně napříč celou prací a všemi skilly.
 
 ## Environment Setup
 

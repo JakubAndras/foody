@@ -39,12 +39,9 @@ import 'package:get/get.dart';
 import 'controller/streak_controller.dart';
 import 'controller/weight_entry_controller.dart';
 import 'database/app_database.dart';
-import 'database/migrations.dart';
-
 Future<void> setupServices() async {
   await MediaStorage.initialize();
-  final AppDatabase db = await Get.putAsync(
-      () => $FloorAppDatabase.databaseBuilder(AppDatabase.databaseName).addMigrations([migration1to2, migration2to3, migration3to4, migration4to5, migration5to6, migration6to7, migration7to8, migration8to9, migration9to10, migration10to11, migration11to12, migration12to13, migration13to14, migration14to15, migration15to16]).build());
+  final AppDatabase db = await Get.putAsync(() => $FloorAppDatabase.databaseBuilder(AppDatabase.databaseName).build());
 
   /// Inicializace singleton GetxService - jednodušší nalezení controlleru v paměti;
   Get.lazyPut<SharedPreferencesService>(() => SharedPreferencesService());

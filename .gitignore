@@ -48,3 +48,6 @@ app.*.map.json
 # Claude
 .claude/
 claude-output/
+
+# Thesis
+thesis/
