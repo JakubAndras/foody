@@ -28,7 +28,10 @@
       "WebFetch(domain:openai.com)",
       "Bash(flutter analyze lib/screens/meals/edit_meal_screen.dart lib/screens/meals/meal_components.dart 2>&1 | tail -20)",
       "Skill(plan-implement)",
-      "Skill(plan-create)"
+      "Skill(plan-create)",
+      "Bash(rm /Users/jakubandras/StudioProjects/diplomka/.claude/skills/diplomka-refactor/references/blueprint.md)",
+      "Bash(ln -s ../../shared/blueprint.md /Users/jakubandras/StudioProjects/diplomka/.claude/skills/diplomka-write/references/blueprint.md)",
+      "Bash(ln -s ../../shared/blueprint.md /Users/jakubandras/StudioProjects/diplomka/.claude/skills/diplomka-refactor/references/blueprint.md)"
     ]
   }
 }
