@@ -77,8 +77,8 @@ Před zahájením testování sdělte participantovi následující body svými 
 
 | Metrika | Hodnota |
 |---------|---------|
-| Dokončení (ano / ne / s pomocí) |         |
-| Kritické chyby (počet) |         |
+| Dokončení (ano / ne / s pomocí) | ano     |
+| Kritické chyby (počet) | 0       |
 | SEQ skóre (1-7) | 7       |
 
 **Poznámky (think aloud, pozorování, problémy):**
@@ -102,8 +102,8 @@ je trosku zmatena z vygenerovaneho planu, necekala ze ma jist vic sacharidu nez 
 
 | Metrika | Hodnota |
 |---------|---------|
-| Dokončení (ano / ne / s pomocí) |         |
-| Kritické chyby (počet) |         |
+| Dokončení (ano / ne / s pomocí) | ano     |
+| Kritické chyby (počet) | 0       |
 | SEQ skóre (1-7) | 7       |
 
 **NFR metriky:**
@@ -117,13 +117,13 @@ je trosku zmatena z vygenerovaneho planu, necekala ze ma jist vic sacharidu nez 
 **Poznámky (think aloud, pozorování, problémy):**
 
 ```
-sla hned pres plusku, akorat dala Log meal, db mela prazdnou, tak se vratila a az pak dala skenovani fotak. Z mini onboarding necetla, preskakala ho. potom uz v pohode, byla rychla.
+sla hned pres plusku, akorat dala Log meal, db mela prazdnou, tak se vratila a az pak dala skenovani fotak. Skenovaci onboarding vubec necetla, preskakala ho. Byla rychla.
 meal o tycince ma xy ingredienci
 
 ```
 
-- [x] Participant si všiml confidence badge .. nevsimla, je hodne extremne rychla az sbesila
-- [x] Participant pochopil význam confidence badge .. ano
+- [ ] Participant si všiml confidence badge .. ano
+- [ ] Participant pochopil význam confidence badge .. ano
 
 ---
 
@@ -136,14 +136,14 @@ meal o tycince ma xy ingredienci
 | Metrika | Hodnota  |
 |---------|----------|
 | Dokončení (ano / ne / s pomocí) | s pomoci |
-| Kritické chyby (počet) |          |
+| Kritické chyby (počet) | 1        | nevedela kde funkci najit, potrebovala navest na Meal Scan funkci, v ni to uz nasla
 | SEQ skóre (1-7) | 4        |
 
 **Poznámky (think aloud, pozorování, problémy):**
 
 ```
-necte texty tlacitek, sbesile klika na main tlacitka jak ji jdou pod ruku
-ikona pro vybec fotografie je hodne schovana
+Necte texty dialogu ani napovedy. Neprohlidne si celou obrazovku, ale hned klikne na prvni vec co uzna za spravne.
+Ikona pro vybec fotografie je schovana, mela by byt patrnejsi.
 
 ```
 
@@ -153,19 +153,17 @@ ikona pro vybec fotografie je hodne schovana
 
 **Pokryté FR/UC:** FR-11, FR-13, UC02
 
-**Zadání pro participanta:** U posledního zaznamenaného jídla upravte název nebo množství jedné položky a poté spusťte opětovnou analýzu pomocí funkce "Fix with AI".
+**Zadání pro participanta:** U posledního zaznamenaného jídla spusťte opětovnou analýzu pomocí funkce "Fix issue" a upravte tím název a množství jídla.
 
 | Metrika | Hodnota |
 |---------|---------|
 | Dokončení (ano / ne / s pomocí) | ano     |
-| Kritické chyby (počet) |         |
+| Kritické chyby (počet) | 0       |
 | SEQ skóre (1-7) | 7       |
 
 **Poznámky (think aloud, pozorování, problémy):**
 
 ```
-_
-
 
 ```
 
@@ -180,7 +178,7 @@ _
 | Metrika | Hodnota |
 |---------|---------|
 | Dokončení (ano / ne / s pomocí) | ano     |
-| Kritické chyby (počet) |         |
+| Kritické chyby (počet) | 0       |
 | SEQ skóre (1-7) | 7       |
 
 **NFR metriky:**
@@ -192,9 +190,7 @@ _
 **Poznámky (think aloud, pozorování, problémy):**
 
 ```
-
-
-
+Participantky mluveny vstup byl pomerne dlouhy a pravdepodobne odhalil bug, kdy se vstup nenahral cely. Vypada to, jako kdyby se v jistou chvili prestalo nahravat.
 ```
 
 ---
@@ -208,7 +204,7 @@ _
 | Metrika | Hodnota |
 |---------|---------|
 | Dokončení (ano / ne / s pomocí) | ano     |
-| Kritické chyby (počet) |         |
+| Kritické chyby (počet) | 0       |
 | SEQ skóre (1-7) | 7       |
 
 **NFR metriky:**
@@ -220,9 +216,7 @@ _
 **Poznámky (think aloud, pozorování, problémy):**
 
 ```
-mealtime v Edit Meal bottomSheet chybi Check button
-
-
+mealtime v Edit Meal bottomSheet chybi Check button. Participantka ho tam intuitivne ocekavala, ale poradila si i bez napovedy.
 ```
 
 ---
@@ -231,12 +225,12 @@ mealtime v Edit Meal bottomSheet chybi Check button
 
 **Pokryté FR/UC:** FR-01, FR-15, UC03
 
-**Zadání pro participanta:** PREFORMULOVAT - Přidejte jídlo ručně bez použití AI. Zadejte název, množství (v gramech i kusech) a nutriční hodnoty.
+**Zadání pro participanta:** Přidejte jídlo ručně bez použití fotografie, hlasu nebo čárového kódu. Zadejte název jídla, jeho množství a nutriční hodnoty (kalorie, bílkoviny, sacharidy, tuky).
 
 | Metrika | Hodnota |
 |---------|---------|
 | Dokončení (ano / ne / s pomocí) | ano     |
-| Kritické chyby (počet) |         |
+| Kritické chyby (počet) | 0       |
 | SEQ skóre (1-7) | 7       |
 
 **NFR metriky:**
@@ -249,64 +243,102 @@ mealtime v Edit Meal bottomSheet chybi Check button
 
 ```
 Obrazovku nasla pomerne rychle, sla spravnym smerem. Par sekund ji tvralo nez se zorientovala na Manual Add meal screen.
-
-
 ```
 
 ---
 
-### T8: Oblíbené
+### T8: Funkce oblíbené 
 
 **Pokryté FR/UC:** FR-17, FR-18, UC05
 
-**Zadání pro participanta:** Označte jedno z dříve zaznamenaných jídel jako oblíbené. Poté toto jídlo zkopírujte na jiný den.
+**Zadání pro participanta:** Najděte jedno z dříve zaznamenaných jídel a označte ho jako oblíbené. Poté ho z oblíbených položek zaznamenejte jako nový záznam.
 
 | Metrika | Hodnota  |
 |---------|----------|
 | Dokončení (ano / ne / s pomocí) | s pomoci |
-| Kritické chyby (počet) |          |
-| SEQ skóre (1-7) |          |
+| Kritické chyby (počet) | 1        |
+| SEQ skóre (1-7) | 4        |
 
 **NFR metriky:**
 
-| NFR metrika | Hodnota | Limit |
-|-------------|---------|-------|
-| Čas opakovaného záznamu (NFR-04) | _____ s | 1 min |
+| NFR metrika | Hodnota   | Limit |
+|-------------|-----------|-------|
+| Čas opakovaného záznamu (NFR-04) | __50___ s | 1 min |
 
 **Poznámky (think aloud, pozorování, problémy):**
 
 ```
-Oblibeny nasla, chtela by srdicko, mel bych na aktivaci zobrazit snackbar ze jidlo je v oblibenych
+Ikonu pro on/off Oblibeny nasla, chtela by srdicko, mel bych na aktivaci zobrazit snackbar ze polozka je v oblibenych
 Nemuze najit oblibena jidla. Jidlo jako oblibene pridala v pohode, ale nevi, kde ty oblibeny jidla jsou.
-Zaznamenat jidlo label je nedostatecne jasny. 
-Meal Log -> segmentTab Vse, Oblibene .. spatne citelne, jak participant hure vidi, tak si to vubec nevsimnul
+"Zaznamenat jidlo" label v cs je nedostatecne jasny. 
+Meal Log -> segmentTab Vse, Oblibene,  .. spatne citelne, jelikoz participantka hure vidi, tak si to vubec nevsimla
+NFR metrika delsi cas zaznamu si vysvetluju tim, ze participantka aplikaci nezna a v tomto pripade to byla prekazka.
 
 ```
 
 ---
 
-### TA: Duplikace jídla
-Vyber jedno ze svych jidel a zkopiruj ho do 3 dnu v minulem tydnu.
-Ano
-skore 7
-okamzite pochopila multicopy funkci
+### T9: Duplikace jídla
 
+**Pokryté FR/UC:** FR-18
 
+**Zadání pro participanta:** Vyberte jedno ze svých jídel a zkopírujte ho do 3 dnů v minulém týdnu.
 
-### TB: Calendar na dashboard
-navigace v nem, vsechno v pohode, jenom Back to today male pismena
-Ano
-7
-vsechno hned pochopila
+| Metrika | Hodnota |
+|---------|---------|
+| Dokončení (ano / ne / s pomocí) | ano     |
+| Kritické chyby (počet) | 0       |
+| SEQ skóre (1-7) | 7       |
 
+**Poznámky (think aloud, pozorování, problémy):**
 
-### TC: Edit Meal Amount nastaveni
-pochopila, ale mala pismena a zbytecne moc moznosti. Ale 1/8 se taky muze hodit rika.
-Ano
-7
+```
+Okamžitě pochopila multicopy funkci.
+```
 
+---
 
-### T9: Záznam cvičení hlasem
+### T10: Kalendář na dashboardu
+
+**Pokryté FR/UC:** FR-02
+
+**Zadání pro participanta:** Prozkoumejte kalendář na hlavní obrazovce. Přejděte na jiný měsíc a poté se vraťte na dnešek. Přejděte na o 3 roky zpět a poté se vraťte na dnešek.
+
+| Metrika | Hodnota |
+|---------|---------|
+| Dokončení (ano / ne / s pomocí) | ano     |
+| Kritické chyby (počet) | 0       |
+| SEQ skóre (1-7) | 7       |
+
+**Poznámky (think aloud, pozorování, problémy):**
+
+```
+Navigace v kalendáři v pořádku, všechno hned pochopila. Jenom "Back to today" má malá písmena, tak se ji spatne cetla.
+```
+
+---
+
+### T11: Nastavení množství jídla
+
+**Pokryté FR/UC:** FR-15
+
+**Zadání pro participanta:** U jednoho ze zaznamenaných jídel upravte množství. Řekněme, že jste snědl/a pouze polovinu zvoleného jídla.
+
+| Metrika | Hodnota |
+|---------|---------|
+| Dokončení (ano / ne / s pomocí) | ano     |
+| Kritické chyby (počet) | 0       |
+| SEQ skóre (1-7) | 7       |
+
+**Poznámky (think aloud, pozorování, problémy):**
+
+```
+Pochopila, ale malá písmena a zbytečně moc možností. Nicméně osminy se taky může hodit na některá jídla, říká, tedy možná je dobře, že tam jsou.
+```
+
+---
+
+### T12: Záznam cvičení hlasem
 
 **Pokryté FR/UC:** (rozšíření nad rámec FR)
 
@@ -315,7 +347,7 @@ Ano
 | Metrika | Hodnota |
 |---------|---------|
 | Dokončení (ano / ne / s pomocí) | ano     |
-| Kritické chyby (počet) |         |
+| Kritické chyby (počet) | 0       |
 | SEQ skóre (1-7) | 6       |
 
 **Poznámky (think aloud, pozorování, problémy):**
@@ -323,13 +355,13 @@ Ano
 ```
 Sla na cviceni, tam to nenasla, tak sla na hlasovi zaznam a tam to nasla, toggle spravne prepnula
 Dlouhe vstupy to jakoby v pulce usekne (prestane zaznamenavat)
-Toggle si nepamatuje posledni moznost, vzdy se nastavi na jidlo
+Toggle si nepamatuje posledni nastaveni (pri back/to na obrazovku), vzdy se nastavi na jidlo
 
 ```
 
 ---
 
-### T10: Zaznamenání váhy
+### T13: Zaznamenání váhy
 
 **Pokryté FR/UC:** (rozšíření nad rámec FR)
 
@@ -338,51 +370,51 @@ Toggle si nepamatuje posledni moznost, vzdy se nastavi na jidlo
 | Metrika | Hodnota |
 |---------|---------|
 | Dokončení (ano / ne / s pomocí) | ano     |
-| Kritické chyby (počet) |         |
+| Kritické chyby (počet) | 0       |
 | SEQ skóre (1-7) | 7       |
 
 **Poznámky (think aloud, pozorování, problémy):**
 
 ```
-V progressu to hned nasla
+V progress obrazovce to hned nasla
 
 
 ```
 
 ---
 
-### T11: Denní přehled a smazání záznamu
+### T14: Denní přehled a smazání záznamu
 
 **Pokryté FR/UC:** FR-02, FR-05, FR-22
 
-**Zadání pro participanta:** Prohlédněte si denní přehled a poté smažte jeden ze zaznamenaných záznamů z predchoziho tydne (jeden z tech, ktere jsme vytvorili v drivejsim kroku).
+**Zadání pro participanta:** Prohlédněte si denní přehled a poté smažte jeden ze zaznamenaných záznamů z predchoziho tydne (jeden z tech, ktere jsme vytvorili v drivejsim ukolu).
 
 | Metrika | Hodnota |
 |---------|---------|
 | Dokončení (ano / ne / s pomocí) | ano     |
-| Kritické chyby (počet) |         |
+| Kritické chyby (počet) | 0       |
 | SEQ skóre (1-7) | 7       |
 
 **Poznámky (think aloud, pozorování, problémy):**
 
 ```
 Napad na zlepseni od participanta: Dashboard kalendar by mel zobrazovat nejak ve kterych dnech uz bylo logovano, Bud to hvezdickou, nebo temi kruhy, podobne jako v Progressu
-Tapnuti na meal record je intuitivni, participantovi v drivejsich ukolech fungoval, ale participant najednou zacal delat longpress a ten nefunguje.
+Tapnuti na meal record je intuitivni. Participantce v drivejsich ukolech fungoval, ale najednou zacala delat longpress a ten nefunguje.
 
 ```
 
 ---
 
-### T12: Týdenní přehled a Ask AI
+### T15: Ask AI
 
 **Pokryté FR/UC:** FR-24, FR-27, UC07
 
-**Zadání pro participanta:** Přejděte na týdenní přehled a poté položte aplikaci otázku v přirozeném jazyce pomocí funkce Ask AI (např. "Kolik kalorií jsem průměrně snědl/a tento týden?").
+**Zadání pro participanta:** Přejděte na profilu aplikace a poté položte otázku v přirozeném jazyce pomocí funkce Ask AI (např. "Kolik kalorií jsem průměrně snědl/a tento týden?").
 
 | Metrika | Hodnota |
 |---------|---------|
 | Dokončení (ano / ne / s pomocí) | ano     |
-| Kritické chyby (počet) |         |
+| Kritické chyby (počet) | 0       |
 | SEQ skóre (1-7) | 7       |
 
 **Poznámky (think aloud, pozorování, problémy):**
@@ -395,29 +427,26 @@ Napad na zlepseni od participanta: Aby Ask AI podporovala hlasove zadavani vstup
 
 ---
 
-### T13: Export dat
+### T16: Export dat
 
 **Pokryté FR/UC:** FR-25
 
-**Zadání pro participanta:** Exportujte svá data z aplikace (CSV nebo PDF).
+**Zadání pro participanta:** Exportujte svá data z aplikace do souboru pomocí funkce k tomu určené. Formát souboru podle Vaší preference.
 
 | Metrika | Hodnota |
 |---------|---------|
 | Dokončení (ano / ne / s pomocí) | ano     |
-| Kritické chyby (počet) |         |
+| Kritické chyby (počet) | 0       |
 | SEQ skóre (1-7) | 7       |
 
 **Poznámky (think aloud, pozorování, problémy):**
 
 ```
-Po exportu zustala zanorena v export obrazovce, mohla by se vratit na profile + zobrazit snackbar
-Participantka necte pomocne texty, kolikrat necte ani texty tlacitek a hned klika -> navrhuje do nasteveni pridat moznost velikosti pisma v aplikaci
+Po exportu zustala zanorena v export obrazovce, mozna by bylo lepsi vratit se na profile + zobrazit snackbar
+Participantka necte pomocne texty, kolikrat necte ani texty tlacitek a hned klika
+Participantka navrhuje do nastaveni pridat moznost velikosti pisma v aplikaci
 
 ```
-
-Pro T12 a T13 coz jsou prvni ukoly z profile participantka nejdrive klikla na Plus FAB, pote se divala v Progress a az na konec to nasla v Profilu
-
----
 
 ## Souhrnná tabulka úloh
 
@@ -436,6 +465,9 @@ Pro T12 a T13 coz jsou prvni ukoly z profile participantka nejdrive klikla na Pl
 | T11 | | | |
 | T12 | | | |
 | T13 | | | |
+| T14 | | | |
+| T15 | | | |
+| T16 | | | |
 | **Průměr** | | | |
 
 ---
@@ -461,6 +493,9 @@ Pro T12 a T13 coz jsou prvni ukoly z profile participantka nejdrive klikla na Pl
 | T11 | |
 | T12 | |
 | T13 | |
+| T14 | |
+| T15 | |
+| T16 | |
 | **Průměr** | |
 
 ---
