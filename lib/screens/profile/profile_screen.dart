@@ -102,25 +102,6 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: AppSpacing.l),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
-                child: ProfileSectionHeader(
-                  title: tr(LocaleKeys.profile_widgets),
-                  trailing: GestureDetector(
-                    onTap: () => showSnackBar(message: tr(LocaleKeys.common_coming_soon), subtitle: tr(LocaleKeys.common_feature_not_available), type: SnackBarType.info),
-                    child: Text(
-                      tr(LocaleKeys.profile_how_to_add),
-                      style: TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.w600, fontSize: 14),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: AppSpacing.s),
-              GestureDetector(
-                onTap: () => showSnackBar(message: tr(LocaleKeys.common_coming_soon), subtitle: tr(LocaleKeys.common_feature_not_available), type: SnackBarType.info),
-                child: const AbsorbPointer(child: _WidgetSection()),
-              ),
-              const SizedBox(height: AppSpacing.l),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
                 child: ProfileSectionHeader(title: tr(LocaleKeys.profile_progress_data)),
               ),
               const SizedBox(height: AppSpacing.s),
@@ -131,20 +112,21 @@ class ProfileScreen extends StatelessWidget {
                   _ProfileActionRow(title: tr(LocaleKeys.profile_faq), icon: CupertinoIcons.question_circle, showDivider: false, onTap: () => Get.to(() => const FaqScreen())),
                 ],
               ),
-              const SizedBox(height: AppSpacing.l),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
-                child: ProfileSectionHeader(title: 'Test'),
-              ),
-              const SizedBox(height: AppSpacing.s),
-              _ProfileGroupCard(
-                children: [
-                  _ProfileActionRow(title: 'Glass Test', icon: CupertinoIcons.circle_filled, onTap: () => Get.to(() => const GlassTestScreen())),
-                  _ProfileActionRow(title: 'Liquid Glass Widgets Test', icon: CupertinoIcons.sparkles, onTap: () => Get.to(() => const LiquidGlassWidgetsTestScreen())),
-                  _ProfileActionRow(title: 'Test Onboarding', icon: CupertinoIcons.play_circle, onTap: () => Get.to(() => const OnboardingFlowScreen())),
-                  _ProfileActionRow(title: 'Test Scanning Onboarding', icon: CupertinoIcons.viewfinder, showDivider: false, onTap: () => Get.to(() => const ScanOnboardingScreen(forceShow: true))),
-                ],
-              ),
+              // TODO: Test section — hidden, re-enable for development
+              // const SizedBox(height: AppSpacing.l),
+              // Padding(
+              //   padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
+              //   child: ProfileSectionHeader(title: 'Test'),
+              // ),
+              // const SizedBox(height: AppSpacing.s),
+              // _ProfileGroupCard(
+              //   children: [
+              //     _ProfileActionRow(title: 'Glass Test', icon: CupertinoIcons.circle_filled, onTap: () => Get.to(() => const GlassTestScreen())),
+              //     _ProfileActionRow(title: 'Liquid Glass Widgets Test', icon: CupertinoIcons.sparkles, onTap: () => Get.to(() => const LiquidGlassWidgetsTestScreen())),
+              //     _ProfileActionRow(title: 'Test Onboarding', icon: CupertinoIcons.play_circle, onTap: () => Get.to(() => const OnboardingFlowScreen())),
+              //     _ProfileActionRow(title: 'Test Scanning Onboarding', icon: CupertinoIcons.viewfinder, showDivider: false, onTap: () => Get.to(() => const ScanOnboardingScreen(forceShow: true))),
+              //   ],
+              // ),
               // TODO: Account Actions section — hidden for now, will be needed later
               // const SizedBox(height: AppSpacing.l),
               // Padding(
@@ -171,7 +153,7 @@ class ProfileScreen extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
                 child: Center(
-                  child: Text(tr(LocaleKeys.profile_version), style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary)),
+                  child: Text(tr(LocaleKeys.profile_version, namedArgs: {'version': '0.0.0'}), style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary)),
                 ),
               ),
             ],

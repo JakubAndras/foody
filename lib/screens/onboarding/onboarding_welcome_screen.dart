@@ -38,15 +38,16 @@ class OnboardingWelcomeScreen extends StatelessWidget {
                       Text(tr(LocaleKeys.onboarding_welcome_title), textAlign: TextAlign.center, style: textTheme.displaySmall?.copyWith(height: 1.25)),
                       const SizedBox(height: AppSpacing.xl),
                       OnboardingPrimaryButton(label: tr(LocaleKeys.onboarding_get_started), onPressed: onNext),
-                      const SizedBox(height: AppSpacing.s),
-                      OnboardingOutlinedButton(
-                        label: tr(LocaleKeys.onboarding_skip_onboarding),
-                        onPressed: onSkip == null
-                            ? null
-                            : () async {
-                                onSkip!.call();
-                              },
-                      ),
+                      // TODO: Skip button — hidden for thesis demo
+                      // const SizedBox(height: AppSpacing.s),
+                      // OnboardingOutlinedButton(
+                      //   label: tr(LocaleKeys.onboarding_skip_onboarding),
+                      //   onPressed: onSkip == null
+                      //       ? null
+                      //       : () async {
+                      //           onSkip!.call();
+                      //         },
+                      // ),
                       // TODO: uncomment when sign-in is ready
                       // const SizedBox(height: AppSpacing.l),
                       // Wrap(
