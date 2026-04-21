@@ -48,9 +48,9 @@ Před zahájením testování sdělte participantovi následující body svými 
 | Primární cíl (proč by aplikaci používal/a)        |  |
 | Zkušenosti s calorie tracking aplikacemi          |  |
 | Technologická zdatnost (nízká / střední / vysoká) |                             |
-| Datum testování                                   | 20.4.2026 -                        |
-| Doba testování                                    | 90 minut                           |
-| Zařízení                                          | iPhone 16 Pro                      |
+| Datum testování                                   |                         |
+| Doba testování                                    |                            |
+| Zařízení                                          |                       |
 
 ---
 
@@ -150,7 +150,7 @@ _
 
 **Pokryté FR/UC:** FR-11, FR-13, UC02
 
-**Zadání pro participanta:** U posledního zaznamenaného jídla upravte název nebo množství jedné položky a poté spusťte opětovnou analýzu pomocí funkce "Fix with AI".
+**Zadání pro participanta:** U posledního zaznamenaného jídla spusťte opětovnou analýzu pomocí funkce "Fix issue" a upravte tím název a množství jídla.
 
 | Metrika | Hodnota |
 |---------|---------|
@@ -228,7 +228,7 @@ _
 
 **Pokryté FR/UC:** FR-01, FR-15, UC03
 
-**Zadání pro participanta:** Přidejte jídlo ručně bez použití AI. Zadejte název, množství (v gramech i kusech) a nutriční hodnoty.
+**Zadání pro participanta:** Přidejte jídlo ručně bez použití fotografie, hlasu nebo čárového kódu. Zadejte název jídla, jeho množství a nutriční hodnoty (kalorie, bílkoviny, sacharidy, tuky).
 
 | Metrika | Hodnota |
 |---------|---------|
@@ -252,11 +252,11 @@ _
 
 ---
 
-### T8: Oblíbené a duplikace jídla
+### T8: Funkce oblíbené
 
 **Pokryté FR/UC:** FR-17, FR-18, UC05
 
-**Zadání pro participanta:** Označte jedno z dříve zaznamenaných jídel jako oblíbené. Poté toto jídlo zkopírujte na jiný den.
+**Zadání pro participanta:** Najděte jedno z dříve zaznamenaných jídel a označte ho jako oblíbené. Poté ho z oblíbených položek zaznamenejte jako nový záznam.
 
 | Metrika | Hodnota |
 |---------|---------|
@@ -280,7 +280,73 @@ _
 
 ---
 
-### T9: Záznam cvičení hlasem
+### T9: Duplikace jídla
+
+**Pokryté FR/UC:** FR-18
+
+**Zadání pro participanta:** Vyberte jedno ze svých jídel a zkopírujte ho do 3 dnů v minulém týdnu.
+
+| Metrika | Hodnota |
+|---------|---------|
+| Dokončení (ano / ne / s pomocí) | |
+| Kritické chyby (počet) | |
+| SEQ skóre (1-7) | |
+
+**Poznámky (think aloud, pozorování, problémy):**
+
+```
+_
+
+
+```
+
+---
+
+### T10: Kalendář na dashboardu
+
+**Pokryté FR/UC:** FR-02
+
+**Zadání pro participanta:** Prozkoumejte kalendář na hlavní obrazovce. Přejděte na jiný měsíc a poté se vraťte na dnešek. Přejděte na o 3 roky zpět a poté se vraťte na dnešek.
+
+| Metrika | Hodnota |
+|---------|---------|
+| Dokončení (ano / ne / s pomocí) | |
+| Kritické chyby (počet) | |
+| SEQ skóre (1-7) | |
+
+**Poznámky (think aloud, pozorování, problémy):**
+
+```
+_
+
+
+```
+
+---
+
+### T11: Nastavení množství jídla
+
+**Pokryté FR/UC:** FR-15
+
+**Zadání pro participanta:** U jednoho ze zaznamenaných jídel upravte množství. Řekněme, že jste snědl/a pouze polovinu zvoleného jídla.
+
+| Metrika | Hodnota |
+|---------|---------|
+| Dokončení (ano / ne / s pomocí) | |
+| Kritické chyby (počet) | |
+| SEQ skóre (1-7) | |
+
+**Poznámky (think aloud, pozorování, problémy):**
+
+```
+_
+
+
+```
+
+---
+
+### T12: Záznam cvičení hlasem
 
 **Pokryté FR/UC:** (rozšíření nad rámec FR)
 
@@ -302,7 +368,7 @@ _
 
 ---
 
-### T10: Zaznamenání váhy
+### T13: Zaznamenání váhy
 
 **Pokryté FR/UC:** (rozšíření nad rámec FR)
 
@@ -324,11 +390,11 @@ _
 
 ---
 
-### T11: Denní přehled a smazání záznamu
+### T14: Denní přehled a smazání záznamu
 
 **Pokryté FR/UC:** FR-02, FR-05, FR-22
 
-**Zadání pro participanta:** Prohlédněte si denní přehled a poté smažte jeden ze zaznamenaných záznamů.
+**Zadání pro participanta:** Prohlédněte si denní přehled a poté smažte jeden ze zaznamenaných záznamů z předchozího týdne (jeden z těch, které jsme vytvořili v dřívějším úkolu).
 
 | Metrika | Hodnota |
 |---------|---------|
@@ -346,11 +412,11 @@ _
 
 ---
 
-### T12: Týdenní přehled a Ask AI
+### T15: Ask AI
 
 **Pokryté FR/UC:** FR-24, FR-27, UC07
 
-**Zadání pro participanta:** Přejděte na týdenní přehled a poté položte aplikaci otázku v přirozeném jazyce pomocí funkce Ask AI (např. "Kolik kalorií jsem průměrně snědl/a tento týden?").
+**Zadání pro participanta:** Přejděte na profilu aplikace a poté položte otázku v přirozeném jazyce pomocí funkce Ask AI (např. "Kolik kalorií jsem průměrně snědl/a tento týden?").
 
 | Metrika | Hodnota |
 |---------|---------|
@@ -368,11 +434,11 @@ _
 
 ---
 
-### T13: Export dat
+### T16: Export dat
 
 **Pokryté FR/UC:** FR-25
 
-**Zadání pro participanta:** Exportujte svá data z aplikace (CSV nebo PDF).
+**Zadání pro participanta:** Exportujte svá data z aplikace do souboru pomocí funkce k tomu určené. Formát souboru podle Vaší preference.
 
 | Metrika | Hodnota |
 |---------|---------|
@@ -407,6 +473,9 @@ _
 | T11 | | | |
 | T12 | | | |
 | T13 | | | |
+| T14 | | | |
+| T15 | | | |
+| T16 | | | |
 | **Průměr** | | | |
 
 ---
@@ -432,6 +501,9 @@ _
 | T11 | |
 | T12 | |
 | T13 | |
+| T14 | |
+| T15 | |
+| T16 | |
 | **Průměr** | |
 
 ---
@@ -561,3 +633,17 @@ _
 
 
 ```
+
+---
+
+## Souhrn výsledků
+
+| Metrika | Hodnota | Hodnocení |
+|---------|---------|-----------|
+| **SEQ průměr** | | >= 5,5 (dobré) |
+| **SUS** | | top 10 % (> 80,3), nadprůměrné (68–80,3), průměr (68), podprůměrné (51–68), neakceptovatelné (< 50) |
+| **UEQ-S pragmatická kvalita** | | pozitivní (> 0,8), neutrální (-0,8–0,8), negativní (< -0,8) |
+| **UEQ-S hedonická kvalita** | | pozitivní (> 0,8), neutrální (-0,8–0,8), negativní (< -0,8) |
+| **UEQ-S celkové skóre** | | pozitivní (> 0,8), neutrální (-0,8–0,8), negativní (< -0,8) |
+| **Dokončení úloh** | | |
+| **Kritické chyby** | | |

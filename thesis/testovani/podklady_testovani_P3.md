@@ -452,23 +452,23 @@ Participantka navrhuje do nastaveni pridat moznost velikosti pisma v aplikaci
 
 | Úloha | Dokončení | Krit. chyby | SEQ (1-7) |
 |-------|-----------|-------------|-----------|
-| T1 | | | |
-| T2 | | | |
-| T3 | | | |
-| T4 | | | |
-| T5 | | | |
-| T6 | | | |
-| T7 | | | |
-| T8 | | | |
-| T9 | | | |
-| T10 | | | |
-| T11 | | | |
-| T12 | | | |
-| T13 | | | |
-| T14 | | | |
-| T15 | | | |
-| T16 | | | |
-| **Průměr** | | | |
+| T1 | ano | 0 | 7 |
+| T2 | ano | 0 | 7 |
+| T3 | s pomocí | 1 | 4 |
+| T4 | ano | 0 | 7 |
+| T5 | ano | 0 | 7 |
+| T6 | ano | 0 | 7 |
+| T7 | ano | 0 | 7 |
+| T8 | s pomocí | 1 | 4 |
+| T9 | ano | 0 | 7 |
+| T10 | ano | 0 | 7 |
+| T11 | ano | 0 | 7 |
+| T12 | ano | 0 | 6 |
+| T13 | ano | 0 | 7 |
+| T14 | ano | 0 | 7 |
+| T15 | ano | 0 | 7 |
+| T16 | ano | 0 | 7 |
+| **Průměr** | 14/16 ano, 2/16 s pomocí | 0,13 | 6,56 |
 
 ---
 
@@ -480,23 +480,23 @@ Participantka navrhuje do nastaveni pridat moznost velikosti pisma v aplikaci
 
 | Úloha | Skóre (1-7) |
 |-------|-------------|
-| T1 | |
-| T2 | |
-| T3 | |
-| T4 | |
-| T5 | |
-| T6 | |
-| T7 | |
-| T8 | |
-| T9 | |
-| T10 | |
-| T11 | |
-| T12 | |
-| T13 | |
-| T14 | |
-| T15 | |
-| T16 | |
-| **Průměr** | |
+| T1 | 7 |
+| T2 | 7 |
+| T3 | 4 |
+| T4 | 7 |
+| T5 | 7 |
+| T6 | 7 |
+| T7 | 7 |
+| T8 | 4 |
+| T9 | 7 |
+| T10 | 7 |
+| T11 | 7 |
+| T12 | 6 |
+| T13 | 7 |
+| T14 | 7 |
+| T15 | 7 |
+| T16 | 7 |
+| **Průměr** | 6,56 |
 
 ---
 
@@ -521,11 +521,11 @@ Participantka navrhuje do nastaveni pridat moznost velikosti pisma v aplikaci
 
 | Krok | Hodnota |
 |------|---------|
-| Součet lichých položek (1, 3, 5, 7, 9) = S_L | |
-| Součet sudých položek (2, 4, 6, 8, 10) = S_S | |
-| SUS = ((S_L - 5) + (25 - S_S)) * 2,5 | |
+| Součet lichých položek (1, 3, 5, 7, 9) = S_L | 5 + 4 + 4 + 5 + 4 = 22 |
+| Součet sudých položek (2, 4, 6, 8, 10) = S_S | 2 + 1 + 1 + 1 + 1 = 6 |
+| SUS = ((S_L - 5) + (25 - S_S)) * 2,5 | ((22 - 5) + (25 - 6)) * 2,5 = 90 |
 
-**SUS skóre tohoto participanta:** ______
+**SUS skóre tohoto participanta:** 90 (top 10 %)
 
 Interpretace: 0-50 = neakceptovatelné, 51-68 = podprůměrné, 68 = průměr, 68-80,3 = nadprůměrné, >80,3 = top 10 %
 
@@ -557,9 +557,9 @@ Interpretace: 0-50 = neakceptovatelné, 51-68 = podprůměrné, 68 = průměr, 6
 
 | Metrika | Výpočet | Hodnota |
 |---------|---------|---------|
-| Pragmatická kvalita | průměr položek 1-4 | |
-| Hedonická kvalita | průměr položek 5-8 | |
-| Celkové skóre | průměr položek 1-8 | |
+| Pragmatická kvalita | průměr položek 1-4 | (3 + 2 + 3 + 2) / 4 = 2,50 |
+| Hedonická kvalita | průměr položek 5-8 | (1 + 3 + 2 + 3) / 4 = 2,25 |
+| Celkové skóre | průměr položek 1-8 | (3 + 2 + 3 + 2 + 1 + 3 + 2 + 3) / 8 = 2,38 |
 
 Interpretace: <-0,8 = negativní, -0,8 až 0,8 = neutrální, >0,8 = pozitivní
 
@@ -627,3 +627,17 @@ _
 
 
 ```
+
+---
+
+## Souhrn výsledků P3
+
+| Metrika | Hodnota | Hodnocení |
+|---------|---------|-----------|
+| **SEQ průměr** | 6,56 / 7 | >= 5,5 (dobré) |
+| **SUS** | 90 | top 10 % |
+| **UEQ-S pragmatická kvalita** | 2,50 | pozitivní (> 0,8) |
+| **UEQ-S hedonická kvalita** | 2,25 | pozitivní (> 0,8) |
+| **UEQ-S celkové skóre** | 2,38 | pozitivní (> 0,8) |
+| **Dokončení úloh** | 14/16 ano, 2/16 s pomocí | 100 % dokončení |
+| **Kritické chyby** | 2 celkem (T3, T8) | průměr 0,13 |
