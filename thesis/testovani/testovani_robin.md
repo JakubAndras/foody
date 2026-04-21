@@ -40,17 +40,17 @@ Před zahájením testování sdělte participantovi následující body svými 
 
 ## Informace o participantovi
 
-| Údaj                                              | Hodnota                            |
-|---------------------------------------------------|------------------------------------|
-| Označení                                          | P                                  |
-| Věk                                               |  let                               |
-| Pohlaví                                           |                                    |
-| Primární cíl (proč by aplikaci používal/a)        |  |
-| Zkušenosti s calorie tracking aplikacemi          |  |
-| Technologická zdatnost (nízká / střední / vysoká) |                             |
-| Datum testování                                   |                         |
-| Doba testování                                    |                            |
-| Zařízení                                          |                       |
+| Údaj                                              | Hodnota                       |
+|---------------------------------------------------|-------------------------------|
+| Označení                                          | P2                            |
+| Věk                                               | 25 let                        |
+| Pohlaví                                           | muž                           |
+| Primární cíl (proč by aplikaci používal/a)        | trackování bílkovin a kalorií |
+| Zkušenosti s calorie tracking aplikacemi          | Kalorické tabulky             |
+| Technologická zdatnost (nízká / střední / vysoká) | vysoká                        |
+| Datum testování                                   | 21.4.2026                     |
+| Doba testování                                    |                               |
+| Zařízení                                          | iPhone 16 Pro                 |
 
 ---
 
@@ -85,15 +85,15 @@ Před zahájením testování sdělte participantovi následující body svými 
 
 | Metrika | Hodnota |
 |---------|---------|
-| Dokončení (ano / ne / s pomocí) | |
-| Kritické chyby (počet) | |
-| SEQ skóre (1-7) | |
+| Dokončení (ano / ne / s pomocí) | ano     |
+| Kritické chyby (počet) | 0       |
+| SEQ skóre (1-7) | 7       |
 
 **Poznámky (think aloud, pozorování, problémy):**
 
 ```
-_
-
+dve vertikalni scroll operace na obrazovce kdy se nastavuje rychlost hubnuti/nabirani
+custom deita, zustala vysunuta klavesnice
 
 ```
 
@@ -107,9 +107,9 @@ _
 
 | Metrika | Hodnota |
 |---------|---------|
-| Dokončení (ano / ne / s pomocí) | |
-| Kritické chyby (počet) | |
-| SEQ skóre (1-7) | |
+| Dokončení (ano / ne / s pomocí) | ano     |
+| Kritické chyby (počet) | 0       |
+| SEQ skóre (1-7) | 7       |
 
 **NFR metriky:**
 
@@ -122,7 +122,7 @@ _
 **Poznámky (think aloud, pozorování, problémy):**
 
 ```
-_
+nelibilo se mu chybejici potvrzeni pres samotnym rozpozannim AI
 
 
 ```
@@ -140,14 +140,14 @@ _
 
 | Metrika | Hodnota |
 |---------|---------|
-| Dokončení (ano / ne / s pomocí) | |
-| Kritické chyby (počet) | |
-| SEQ skóre (1-7) | |
+| Dokončení (ano / ne / s pomocí) | ano     |
+| Kritické chyby (počet) | 0       |
+| SEQ skóre (1-7) | 5       |
 
 **Poznámky (think aloud, pozorování, problémy):**
 
 ```
-_
+tlacitko pro fotografie z galerie nasel, pohoda. Prislo mi ale pomerne schovane jeho slovy.
 
 
 ```
@@ -162,15 +162,16 @@ _
 
 | Metrika | Hodnota |
 |---------|---------|
-| Dokončení (ano / ne / s pomocí) | |
-| Kritické chyby (počet) | |
-| SEQ skóre (1-7) | |
+| Dokončení (ano / ne / s pomocí) | ano     |
+| Kritické chyby (počet) | 0       |
+| SEQ skóre (1-7) | 5       |
 
 **Poznámky (think aloud, pozorování, problémy):**
 
 ```
-_
-
+Je prekvapen ze to jde znovuanalyzovat. Vsechno ok.
+Tlacitko Fix issue mu taky prijde trochu schovany. Zaroven "Fix issue" mu prijde takovy zvlastni nazev.
+Nasel bug v Fix Issue feature.
 
 ```
 
@@ -184,9 +185,9 @@ _
 
 | Metrika | Hodnota |
 |---------|---------|
-| Dokončení (ano / ne / s pomocí) | |
-| Kritické chyby (počet) | |
-| SEQ skóre (1-7) | |
+| Dokončení (ano / ne / s pomocí) | ano     |
+| Kritické chyby (počet) | 0       |
+| SEQ skóre (1-7) | 7       |
 
 **NFR metriky:**
 
@@ -197,8 +198,8 @@ _
 **Poznámky (think aloud, pozorování, problémy):**
 
 ```
-_
-
+easy check, sedum
+lepe signalizovat ukonceni nahravani a ze je potreba kliknout na tlacitko analyzovat
 
 ```
 
@@ -212,9 +213,9 @@ _
 
 | Metrika | Hodnota |
 |---------|---------|
-| Dokončení (ano / ne / s pomocí) | |
-| Kritické chyby (počet) | |
-| SEQ skóre (1-7) | |
+| Dokončení (ano / ne / s pomocí) | ano     |
+| Kritické chyby (počet) | 1       |
+| SEQ skóre (1-7) | 7       |
 
 **NFR metriky:**
 
@@ -225,7 +226,8 @@ _
 **Poznámky (think aloud, pozorování, problémy):**
 
 ```
-_
+barcode db nedostatecna, baleny produkt nebyl rozeznan spravne..
+UI/flow ok
 
 
 ```
@@ -240,9 +242,9 @@ _
 
 | Metrika | Hodnota |
 |---------|---------|
-| Dokončení (ano / ne / s pomocí) | |
-| Kritické chyby (počet) | |
-| SEQ skóre (1-7) | |
+| Dokončení (ano / ne / s pomocí) | ano     |
+| Kritické chyby (počet) | 0       |
+| SEQ skóre (1-7) | 4       |
 
 **NFR metriky:**
 
@@ -253,7 +255,7 @@ _
 **Poznámky (think aloud, pozorování, problémy):**
 
 ```
-_
+sel do spravne obrazovky Meal Log, ale vahal jestli pridat zcela nove jidlo (vytvorit ho) nebo jen pres Plus pridat nejake jidlo z existujici db. Lepe formulovat zadani tohoto ukolu.
 
 
 ```
@@ -268,9 +270,9 @@ _
 
 | Metrika | Hodnota |
 |---------|---------|
-| Dokončení (ano / ne / s pomocí) | |
-| Kritické chyby (počet) | |
-| SEQ skóre (1-7) | |
+| Dokončení (ano / ne / s pomocí) | ano     |
+| Kritické chyby (počet) | 0       |
+| SEQ skóre (1-7) | 7       |
 
 **NFR metriky:**
 
@@ -281,8 +283,8 @@ _
 **Poznámky (think aloud, pozorování, problémy):**
 
 ```
-_
-
+nasel, udelal, ikona favorites se nelibi, radeji by srdicko nebo hvezdicku.
+easy check
 
 ```
 
@@ -294,16 +296,16 @@ _
 
 **Zadání pro participanta:** Vyberte jedno ze svých jídel a zkopírujte ho do 3 dnů v minulém týdnu.
 
-| Metrika | Hodnota |
-|---------|---------|
-| Dokončení (ano / ne / s pomocí) | |
-| Kritické chyby (počet) | |
-| SEQ skóre (1-7) | |
+| Metrika | Hodnota  |
+|---------|----------|
+| Dokončení (ano / ne / s pomocí) | s pomoci |
+| Kritické chyby (počet) | 1        |
+| SEQ skóre (1-7) | 4        |
 
 **Poznámky (think aloud, pozorování, problémy):**
 
 ```
-_
+sel do Meal Log screen a pridal ho jako normalni. Az po me napoveda, ze chci aby ho zkopiroval a ne pridal zacal hledat moznost kopirovat. Pak uz bylo vse ok.
 
 
 ```
@@ -318,14 +320,14 @@ _
 
 | Metrika | Hodnota |
 |---------|---------|
-| Dokončení (ano / ne / s pomocí) | |
-| Kritické chyby (počet) | |
-| SEQ skóre (1-7) | |
+| Dokončení (ano / ne / s pomocí) | ano     |
+| Kritické chyby (počet) | 0       |
+| SEQ skóre (1-7) | 7       |
 
 **Poznámky (think aloud, pozorování, problémy):**
 
 ```
-_
+v kaledari omezit budouci roky (mozna i hodne minuly)
 
 
 ```
@@ -340,14 +342,15 @@ _
 
 | Metrika | Hodnota |
 |---------|---------|
-| Dokončení (ano / ne / s pomocí) | |
-| Kritické chyby (počet) | |
-| SEQ skóre (1-7) | |
+| Dokončení (ano / ne / s pomocí) | ano     |
+| Kritické chyby (počet) | 0       |
+| SEQ skóre (1-7) | 6       |
 
 **Poznámky (think aloud, pozorování, problémy):**
 
 ```
-_
+trochu zmaten ze zlomku
+mozna to v user db nefunguje - urcite nekde bug ohledne amount funkce
 
 
 ```
@@ -362,14 +365,16 @@ _
 
 | Metrika | Hodnota |
 |---------|---------|
-| Dokončení (ano / ne / s pomocí) | |
-| Kritické chyby (počet) | |
-| SEQ skóre (1-7) | |
+| Dokončení (ano / ne / s pomocí) | ano     |
+| Kritické chyby (počet) | 1       |
+| SEQ skóre (1-7) | 7       |
 
 **Poznámky (think aloud, pozorování, problémy):**
 
 ```
-_
+Participantovi se povedlo aplikaci rozbit pote, co zadal pres 50 kopirovani do ruznych dnu s nerealne velikymi hodnotami. Aplikaci potom na navigaci main glass tabbarem pada. (Pada to kvuli Dashboard grafum, jsou tam ted mega sileny cisla)
+exercise nefunguje edit&save
+mohlo by byt hlasove pridani i pod exercise
 
 
 ```
@@ -384,14 +389,15 @@ _
 
 | Metrika | Hodnota |
 |---------|---------|
-| Dokončení (ano / ne / s pomocí) | |
-| Kritické chyby (počet) | |
-| SEQ skóre (1-7) | |
+| Dokončení (ano / ne / s pomocí) | ano     |
+| Kritické chyby (počet) | 0       |
+| SEQ skóre (1-7) | 7       |
 
 **Poznámky (think aloud, pozorování, problémy):**
 
 ```
-_
+chtel by to umet zadavat i jako cislo z klavesnice
+ikona panacka misto karty u personal details
 
 
 ```
@@ -402,18 +408,18 @@ _
 
 **Pokryté FR/UC:** FR-02, FR-05, FR-22
 
-**Zadání pro participanta:** Prohlédněte si denní přehled a poté smažte jeden ze zaznamenaných záznamů z předchozího týdne (jeden z těch, které jsme vytvořili v dřívějším úkolu).
+**Zadání pro participanta:** Prohlédněte si denní přehled a poté smažte jeden ze zaznamenaných jídel z předchozího týdne (jeden z těch, které jsme vytvořili v dřívějším úkolu).
 
 | Metrika | Hodnota |
 |---------|---------|
-| Dokončení (ano / ne / s pomocí) | |
-| Kritické chyby (počet) | |
-| SEQ skóre (1-7) | |
+| Dokončení (ano / ne / s pomocí) | ano     |
+| Kritické chyby (počet) | 0       |
+| SEQ skóre (1-7) | 7       |
 
 **Poznámky (think aloud, pozorování, problémy):**
 
 ```
-_
+taky chtel longpress, ale doslo mu, ze nefunguje, tak normalne tapnul.
 
 
 ```
@@ -424,19 +430,19 @@ _
 
 **Pokryté FR/UC:** FR-24, FR-27, UC07
 
-**Zadání pro participanta:** Zajímá vás, kolik kalorií jste průměrně přijímali tento týden. Zkuste tuto informaci zjistit pomocí aplikace.
+**Zadání pro participanta:** Zajímá vás, kolik kalorií jste průměrně přijímali tento měsíc. Zkuste tuto informaci zjistit pomocí aplikace.
 
-| Metrika | Hodnota |
-|---------|---------|
-| Dokončení (ano / ne / s pomocí) | |
-| Kritické chyby (počet) | |
-| SEQ skóre (1-7) | |
+| Metrika | Hodnota  |
+|---------|----------|
+| Dokončení (ano / ne / s pomocí) | s pomoci |
+| Kritické chyby (počet) | 1        |
+| SEQ skóre (1-7) | 2        |
 
 **Poznámky (think aloud, pozorování, problémy):**
 
 ```
-_
-
+Formulace otazky v tomto ukolu je nejasna, je treba aby zminila danou funkci.
+doslo mu ze na affected days muze tapnout
 
 ```
 
@@ -450,15 +456,16 @@ _
 
 | Metrika | Hodnota |
 |---------|---------|
-| Dokončení (ano / ne / s pomocí) | |
-| Kritické chyby (počet) | |
-| SEQ skóre (1-7) | |
+| Dokončení (ano / ne / s pomocí) | ano     |
+| Kritické chyby (počet) | 0       |
+| SEQ skóre (1-7) | 7       |
 
 **Poznámky (think aloud, pozorování, problémy):**
 
 ```
-_
-
+klikal na labels v obrazovce, kde jsou zobrazeny jen jako info.
+vsechno v pohode
+Share vystupu z Ask Ai by mohl posilat otazku a screenshot vystupu
 
 ```
 
@@ -522,16 +529,16 @@ _
 
 | # | Tvrzení | Skóre (1-5) |
 |---|---------|-------------|
-| 1 | Myslím, že bych tuto aplikaci rád/a používal/a pravidelně. | |
-| 2 | Aplikaci jsem shledal/a zbytečně složitou. | |
-| 3 | Myslím, že se aplikace snadno používá. | |
-| 4 | Myslím, že bych potřeboval/a pomoc technicky zdatné osoby, abych mohl/a aplikaci používat. | |
-| 5 | Jednotlivé funkce aplikace jsou dobře provázané. | |
-| 6 | V aplikaci je příliš mnoho nekonzistentností. | |
-| 7 | Myslím, že většina lidí by se naučila aplikaci používat velmi rychle. | |
-| 8 | Aplikace je velmi těžkopádná na používání. | |
-| 9 | Při používání aplikace jsem se cítil/a velmi sebejistě. | |
-| 10 | Musel/a jsem se naučit mnoho věcí, než jsem mohl/a aplikaci začít používat. | |
+| 1 | Myslím, že bych tuto aplikaci rád/a používal/a pravidelně. | 4           |
+| 2 | Aplikaci jsem shledal/a zbytečně složitou. | 2           |
+| 3 | Myslím, že se aplikace snadno používá. | 5           |
+| 4 | Myslím, že bych potřeboval/a pomoc technicky zdatné osoby, abych mohl/a aplikaci používat. | 1           |
+| 5 | Jednotlivé funkce aplikace jsou dobře provázané. | 4           |
+| 6 | V aplikaci je příliš mnoho nekonzistentností. | 2           |
+| 7 | Myslím, že většina lidí by se naučila aplikaci používat velmi rychle. | 5           |
+| 8 | Aplikace je velmi těžkopádná na používání. | 1           |
+| 9 | Při používání aplikace jsem se cítil/a velmi sebejistě. | 4           |
+| 10 | Musel/a jsem se naučit mnoho věcí, než jsem mohl/a aplikaci začít používat. | 5           |
 
 ### Výpočet SUS
 
@@ -555,19 +562,19 @@ Interpretace: 0-50 = neakceptovatelné, 51-68 = podprůměrné, 68 = průměr, 6
 
 | # | Levý pól (-3) | -3 | -2 | -1 | 0 | +1 | +2 | +3 | Pravý pól (+3) | Hodnota |
 |---|---------------|----|----|----|----|----|----|-----|-----------------|---------|
-| 1 | bránící | | | | | | | | podporující | |
-| 2 | složitý | | | | | | | | jednoduchý | |
-| 3 | neefektivní | | | | | | | | efektivní | |
-| 4 | matoucí | | | | | | | | jasný | |
+| 1 | bránící | | | | | | | | podporující | | 0
+| 2 | složitý | | | | | | | | jednoduchý | | +2
+| 3 | neefektivní | | | | | | | | efektivní | | 0
+| 4 | matoucí | | | | | | | | jasný | | +1
 
 ### Hedonická kvalita (položky 5-8)
 
 | # | Levý pól (-3) | -3 | -2 | -1 | 0 | +1 | +2 | +3 | Pravý pól (+3) | Hodnota |
 |---|---------------|----|----|----|----|----|----|-----|-----------------|---------|
-| 5 | nudný | | | | | | | | vzrušující | |
-| 6 | nezajímavý | | | | | | | | zajímavý | |
-| 7 | obvyklý | | | | | | | | vynalézavý | |
-| 8 | tradiční | | | | | | | | moderní | |
+| 5 | nudný | | | | | | | | vzrušující | | +3
+| 6 | nezajímavý | | | | | | | | zajímavý | | +3
+| 7 | obvyklý | | | | | | | | vynalézavý | | +1
+| 8 | tradiční | | | | | | | | moderní | | +3
 
 ### Výpočet UEQ-S
 
@@ -586,7 +593,7 @@ Interpretace: <-0,8 = negativní, -0,8 až 0,8 = neutrální, >0,8 = pozitivní
 **1. Jaký je váš celkový dojem z aplikace?**
 
 ```
-_
+az na drobnosti v pohode, prehledny, vizualne hezky. Oproti Kalorickym tabulkam si to dokaze predstavit pouzivat.
 
 
 ```
@@ -594,7 +601,7 @@ _
 **2. Co vás na aplikaci nejvíce zaujalo nebo co se vám líbilo?**
 
 ```
-_
+mohl zadat jidlo co vice jak 100 000 kcal. Zadavani hlasem je super.
 
 
 ```
@@ -602,7 +609,7 @@ _
 **3. Co vám dělalo největší potíže nebo co vás frustrovalo?**
 
 ```
-_
+padajici grafy na Dashboarde, pac pridal absuletne velika cisla do hodnot. Otazka na Ask AI, nejasna formualce vzhledem k pozadavku.
 
 
 ```
@@ -610,7 +617,7 @@ _
 **4. Máte zkušenosti s jinými aplikacemi pro sledování stravy? Jak byste je porovnal/a s Foody?**
 
 ```
-_
+Tabulky, oproti Kalorickym tabulkam si to dokaze predstavit pouzivat.
 
 
 ```
@@ -618,7 +625,7 @@ _
 **5. Představte si, že by aplikace byla dostupná ke stažení. Používal/a byste ji pravidelně? Proč ano/ne?**
 
 ```
-_
+ano, Kaloricke tabulky jsou na nej moc prehusteni.
 
 
 ```
@@ -626,7 +633,7 @@ _
 **6. Jak moc jste důvěřoval/a odhadům aplikace (nutriční hodnoty, rozpoznání jídla)? Kontroloval/a byste si hodnoty ještě jinde?**
 
 ```
-_
+Ano duveroval jim. Nekontroloval.
 
 
 ```
@@ -634,7 +641,7 @@ _
 **7. Je něco, co byste v aplikaci změnil/a nebo přidal/a?**
 
 ```
-_
+MONTHLY CALORIES OVERVIEW dny kde je neco zadano nejak zvyraznit, napriklad barva cisla dne
 
 
 ```
