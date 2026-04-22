@@ -40,17 +40,17 @@ Před zahájením testování sdělte participantovi následující body svými 
 
 ## Informace o participantovi
 
-| Údaj                                              | Hodnota                       |
-|---------------------------------------------------|-------------------------------|
-| Označení                                          | P2                            |
-| Věk                                               | 25 let                        |
-| Pohlaví                                           | muž                           |
-| Primární cíl (proč by aplikaci používal/a)        | trackování bílkovin a kalorií |
-| Zkušenosti s calorie tracking aplikacemi          | Kalorické tabulky             |
-| Technologická zdatnost (nízká / střední / vysoká) | vysoká                        |
-| Datum testování                                   | 21.4.2026                     |
-| Doba testování                                    |                               |
-| Zařízení                                          | iPhone 16 Pro                 |
+| Údaj                                              | Hodnota                                             |
+|---------------------------------------------------|-----------------------------------------------------|
+| Označení                                          | P2                                                  |
+| Věk                                               | 25 let                                              |
+| Pohlaví                                           | muž                                                 |
+| Primární cíl (proč by aplikaci používal/a)        | trackování bílkovin a kalorií -> hubnutí a nabírání |
+| Zkušenosti s calorie tracking aplikacemi          | střední, opakovaně používal Kalorické tabulky       |
+| Technologická zdatnost (nízká / střední / vysoká) | vysoká                                              |
+| Datum testování                                   | 21.4.2026                                           |
+| Doba testování                                    | 85 minut                                            |
+| Zařízení                                          | iPhone 16 Pro                                       |
 
 ---
 
@@ -113,11 +113,11 @@ custom deita, zustala vysunuta klavesnice
 
 **NFR metriky:**
 
-| NFR metrika | Hodnota | Limit |
-|-------------|---------|-------|
-| Latence AI rozpoznávání (NFR-02) | _____ s | 20 s |
-| Počet kroků pro zápis (NFR-03) | _____ | 6 kroků |
-| Čas zápisu nového záznamu (NFR-04) | _____ s | 5 min |
+| NFR metrika | Hodnota  | Limit |
+|-------------|----------|-------|
+| Latence AI rozpoznávání (NFR-02) | __9___ s | 20 s |
+| Počet kroků pro zápis (NFR-03) | __5___   | 6 kroků |
+| Čas zápisu nového záznamu (NFR-04) | __26___ s | 5 min |
 
 **Poznámky (think aloud, pozorování, problémy):**
 
@@ -127,8 +127,8 @@ nelibilo se mu chybejici potvrzeni pres samotnym rozpozannim AI
 
 ```
 
-- [ ] Participant si všiml confidence badge
-- [ ] Participant pochopil význam confidence badge
+- [ ] Participant si všiml confidence badge .. ano
+- [ ] Participant pochopil význam confidence badge .. ano
 
 ---
 
@@ -193,7 +193,7 @@ Nasel bug v Fix Issue feature.
 
 | NFR metrika | Hodnota | Limit |
 |-------------|---------|-------|
-| Počet kroků pro zápis (NFR-03) | _____ | 6 kroků |
+| Počet kroků pro zápis (NFR-03) | __4___  | 6 kroků |
 
 **Poznámky (think aloud, pozorování, problémy):**
 
@@ -221,7 +221,7 @@ lepe signalizovat ukonceni nahravani a ze je potreba kliknout na tlacitko analyz
 
 | NFR metrika | Hodnota | Limit |
 |-------------|---------|-------|
-| Počet kroků pro zápis (NFR-03) | _____ | 6 kroků |
+| Počet kroků pro zápis (NFR-03) | __2___  | 6 kroků |
 
 **Poznámky (think aloud, pozorování, problémy):**
 
@@ -248,9 +248,9 @@ UI/flow ok
 
 **NFR metriky:**
 
-| NFR metrika | Hodnota | Limit |
-|-------------|---------|-------|
-| Počet kroků pro zápis (NFR-03) | _____ | 6 kroků |
+| NFR metrika | Hodnota | Limit   |
+|-------------|---------|---------|
+| Počet kroků pro zápis (NFR-03) | __14___ | 9 kroků |
 
 **Poznámky (think aloud, pozorování, problémy):**
 
@@ -276,9 +276,9 @@ sel do spravne obrazovky Meal Log, ale vahal jestli pridat zcela nove jidlo (vyt
 
 **NFR metriky:**
 
-| NFR metrika | Hodnota | Limit |
-|-------------|---------|-------|
-| Čas opakovaného záznamu (NFR-04) | _____ s | 1 min |
+| NFR metrika | Hodnota   | Limit |
+|-------------|-----------|-------|
+| Čas opakovaného záznamu (NFR-04) | __27___ s | 1 min |
 
 **Poznámky (think aloud, pozorování, problémy):**
 

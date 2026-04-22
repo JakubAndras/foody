@@ -40,17 +40,17 @@ Před zahájením testování sdělte participantovi následující body svými 
 
 ## Informace o participantovi
 
-| Údaj                                              | Hodnota                                   |
-|---------------------------------------------------|-------------------------------------------|
-| Označení                                          | P3                                        |
-| Věk                                               | 54 let                                    |
-| Pohlaví                                           | žena                                      |
-| Primární cíl (proč by aplikaci používal/a)        | dlouhodobě se snaží zhubnout, bez úspěchu |
-| Zkušenosti s calorie tracking aplikacemi          | malá, krátce používala Kalorické tabulky  |
-| Technologická zdatnost (nízká / střední / vysoká) | střední                                   |
-| Datum testování                                   | 20.4.2026 -                               |
-| Doba testování                                    | 90 minut                                  |
-| Zařízení                                          | iPhone 16 Pro                             |
+| Údaj                                              | Hodnota                                  |
+|---------------------------------------------------|------------------------------------------|
+| Označení                                          | P3                                       |
+| Věk                                               | 54 let                                   |
+| Pohlaví                                           | žena                                     |
+| Primární cíl (proč by aplikaci používal/a)        | trackování kalorií -> hubnutí            |
+| Zkušenosti s calorie tracking aplikacemi          | malá, krátce používala Kalorické tabulky |
+| Technologická zdatnost (nízká / střední / vysoká) | střední                                  |
+| Datum testování                                   | 20.4.2026                                |
+| Doba testování                                    | 95 minut                                 |
+| Zařízení                                          | iPhone 16 Pro                            |
 
 ---
 
@@ -108,11 +108,11 @@ je trosku zmatena z vygenerovaneho planu, necekala ze ma jist vic sacharidu nez 
 
 **NFR metriky:**
 
-| NFR metrika | Hodnota              | Limit |
-|-------------|----------------------|-------|
-| Latence AI rozpoznávání (NFR-02) | __8s___ s            | 20 s |
-| Počet kroků pro zápis (NFR-03) | __minimalni mozny___ | 6 kroků |
-| Čas zápisu nového záznamu (NFR-04) | __20s___ s           | 5 min |
+| NFR metrika | Hodnota    | Limit |
+|-------------|------------|-------|
+| Latence AI rozpoznávání (NFR-02) | __8___ s   | 20 s |
+| Počet kroků pro zápis (NFR-03) | __4___     | 6 kroků |
+| Čas zápisu nového záznamu (NFR-04) | __16s___ s | 5 min |
 
 **Poznámky (think aloud, pozorování, problémy):**
 
@@ -183,9 +183,9 @@ Ikona pro vybec fotografie je schovana, mela by byt patrnejsi.
 
 **NFR metriky:**
 
-| NFR metrika | Hodnota                                                  | Limit |
-|-------------|----------------------------------------------------------|-------|
-| Počet kroků pro zápis (NFR-03) | __minimalni mozny + dvakrat zapnula/vypnuta nahravani___ | 6 kroků |
+| NFR metrika | Hodnota | Limit |
+|-------------|---------|-------|
+| Počet kroků pro zápis (NFR-03) | __6___  | 6 kroků |
 
 **Poznámky (think aloud, pozorování, problémy):**
 
@@ -209,9 +209,9 @@ Participantky mluveny vstup byl pomerne dlouhy a pravdepodobne odhalil bug, kdy 
 
 **NFR metriky:**
 
-| NFR metrika | Hodnota              | Limit |
-|-------------|----------------------|-------|
-| Počet kroků pro zápis (NFR-03) | __minimalni mozny___ | 6 kroků |
+| NFR metrika | Hodnota | Limit |
+|-------------|---------|-------|
+| Počet kroků pro zápis (NFR-03) | __2___  | 6 kroků |
 
 **Poznámky (think aloud, pozorování, problémy):**
 
@@ -235,9 +235,9 @@ mealtime v Edit Meal bottomSheet chybi Check button. Participantka ho tam intuit
 
 **NFR metriky:**
 
-| NFR metrika | Hodnota | Limit |
-|-------------|-------|-------|
-| Počet kroků pro zápis (NFR-03) | _____ | 6 kroků |
+| NFR metrika | Hodnota | Limit   |
+|-------------|---------|---------|
+| Počet kroků pro zápis (NFR-03) | __10___  | 9 kroků | 
 
 **Poznámky (think aloud, pozorování, problémy):**
 
@@ -263,7 +263,7 @@ Obrazovku nasla pomerne rychle, sla spravnym smerem. Par sekund ji tvralo nez se
 
 | NFR metrika | Hodnota   | Limit |
 |-------------|-----------|-------|
-| Čas opakovaného záznamu (NFR-04) | __50___ s | 1 min |
+| Čas opakovaného záznamu (NFR-04) | __56___ s | 1 min |
 
 **Poznámky (think aloud, pozorování, problémy):**
 

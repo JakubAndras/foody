@@ -8,4 +8,4 @@
 - Bug Edit Meal screen edit nazvu pouziva stary bottomSheet
 - Fix issue ma nejaky bug, kdy vytvori jakoby dalsi Edit Meal screen
 - Co zobrazit nejaky help dialog kdyz user poprve prida nejake jidlo do favorites
-- 
+- Bug meal bez ingredienci -> zmena Amount hodnoty nemeni kalorie a macra hodnota

@@ -38,7 +38,7 @@ Před zahájením testování sdělte participantovi následující body svými 
 
 ---
 
-## Informace o participantovi
+## Informace o participantovi - pridat do tabulky povolani?
 
 | Údaj                                              | Hodnota                            |
 |---------------------------------------------------|------------------------------------|
@@ -116,7 +116,7 @@ _
 | NFR metrika | Hodnota | Limit |
 |-------------|---------|-------|
 | Latence AI rozpoznávání (NFR-02) | _____ s | 20 s |
-| Počet kroků pro zápis (NFR-03) | _____ | 6 kroků |
+| Počet kroků pro zápis (NFR-03) | _____ | 6 kroků | minimalni mozny je 4
 | Čas zápisu nového záznamu (NFR-04) | _____ s | 5 min |
 
 **Poznámky (think aloud, pozorování, problémy):**
@@ -192,7 +192,7 @@ _
 
 | NFR metrika | Hodnota | Limit |
 |-------------|---------|-------|
-| Počet kroků pro zápis (NFR-03) | _____ | 6 kroků |
+| Počet kroků pro zápis (NFR-03) | _____ | 6 kroků | minimalni mozny je 4
 
 **Poznámky (think aloud, pozorování, problémy):**
 
@@ -220,7 +220,7 @@ _
 
 | NFR metrika | Hodnota | Limit |
 |-------------|---------|-------|
-| Počet kroků pro zápis (NFR-03) | _____ | 6 kroků |
+| Počet kroků pro zápis (NFR-03) | _____ | 6 kroků | minimalni mozny je 2
 
 **Poznámky (think aloud, pozorování, problémy):**
 
@@ -246,9 +246,9 @@ _
 
 **NFR metriky:**
 
-| NFR metrika | Hodnota | Limit |
-|-------------|---------|-------|
-| Počet kroků pro zápis (NFR-03) | _____ | 6 kroků |
+| NFR metrika | Hodnota | Limit   |
+|-------------|---------|---------|
+| Počet kroků pro zápis (NFR-03) | _____ | 9 kroků | minimalni mozny je 9
 
 **Poznámky (think aloud, pozorování, problémy):**
 

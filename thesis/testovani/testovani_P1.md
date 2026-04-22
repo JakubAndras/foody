@@ -40,17 +40,17 @@ Před zahájením testování sdělte participantovi následující body svými 
 
 ## Informace o participantovi
 
-| Údaj                                              | Hodnota                            |
-|---------------------------------------------------|------------------------------------|
-| Označení                                          | P                                  |
-| Věk                                               |  let                               |
-| Pohlaví                                           |                                    |
-| Primární cíl (proč by aplikaci používal/a)        |  |
-| Zkušenosti s calorie tracking aplikacemi          |  |
-| Technologická zdatnost (nízká / střední / vysoká) |                             |
-| Datum testování                                   |                         |
-| Doba testování                                    |                            |
-| Zařízení                                          |                       |
+| Údaj                                              | Hodnota                                       |
+|---------------------------------------------------|-----------------------------------------------|
+| Označení                                          | P1                                            |
+| Věk                                               | 28 let                                        |
+| Pohlaví                                           | žena                                          |
+| Primární cíl (proč by aplikaci používal/a)        | trackování kalorií -> hubnutí                 |
+| Zkušenosti s calorie tracking aplikacemi          | střední, opakovaně používal Kalorické tabulky |
+| Technologická zdatnost (nízká / střední / vysoká) | střední                                       |
+| Datum testování                                   | 21.4.2026                                     |
+| Doba testování                                    | 90 minut                                      |
+| Zařízení                                          | iPhone 16 Pro                                 |
 
 ---
 
@@ -119,11 +119,11 @@ Congratulations, .. pridat "," za to
 
 **NFR metriky:**
 
-| NFR metrika | Hodnota | Limit |
-|-------------|---------|-------|
-| Latence AI rozpoznávání (NFR-02) | _____ s | 20 s |
-| Počet kroků pro zápis (NFR-03) | _____ | 6 kroků |
-| Čas zápisu nového záznamu (NFR-04) | _____ s | 5 min |
+| NFR metrika | Hodnota   | Limit |
+|-------------|-----------|-------|
+| Latence AI rozpoznávání (NFR-02) | __6___ s  | 20 s |
+| Počet kroků pro zápis (NFR-03) | __5___    | 6 kroků |
+| Čas zápisu nového záznamu (NFR-04) | __24___ s | 5 min |
 
 **Poznámky (think aloud, pozorování, problémy):**
 
@@ -133,8 +133,8 @@ Mealtime bottomSheet at ma i Check icon nebo at nema krizek tj zadnou ikonu/tlac
 
 ```
 
-- [ ] Participant si všiml confidence badge
-- [ ] Participant pochopil význam confidence badge
+- [ ] Participant si všiml confidence badge .. ano
+- [ ] Participant pochopil význam confidence badge .. ano
 
 ---
 
@@ -199,7 +199,7 @@ v loading karte pisu o notifikaci co prijde po dokonceni rozpoznani jidla, ale z
 
 | NFR metrika | Hodnota | Limit |
 |-------------|---------|-------|
-| Počet kroků pro zápis (NFR-03) | _____ | 6 kroků |
+| Počet kroků pro zápis (NFR-03) | __4___  | 6 kroků |
 
 **Poznámky (think aloud, pozorování, problémy):**
 
@@ -227,7 +227,7 @@ Z nativni obrazovky pro udeleni permission ji to vratilo na Dashboard a ne na Vo
 
 | NFR metrika | Hodnota | Limit |
 |-------------|---------|-------|
-| Počet kroků pro zápis (NFR-03) | _____ | 6 kroků |
+| Počet kroků pro zápis (NFR-03) | __2___  | 6 kroků |
 
 **Poznámky (think aloud, pozorování, problémy):**
 
@@ -253,9 +253,9 @@ DB na barcode neobsahuje testovany predmet (random kukurice z lidlu), znamejsi p
 
 **NFR metriky:**
 
-| NFR metrika | Hodnota | Limit |
-|-------------|---------|-------|
-| Počet kroků pro zápis (NFR-03) | _____ | 6 kroků |
+| NFR metrika | Hodnota | Limit   |
+|-------------|---------|---------|
+| Počet kroků pro zápis (NFR-03) | __9___  | 9 kroků |
 
 **Poznámky (think aloud, pozorování, problémy):**
 
@@ -282,9 +282,9 @@ chtela by nahrat foto pro sve jidlo longpressem na placeholder v detailu
 
 **NFR metriky:**
 
-| NFR metrika | Hodnota | Limit |
-|-------------|---------|-------|
-| Čas opakovaného záznamu (NFR-04) | _____ s | 1 min |
+| NFR metrika | Hodnota   | Limit |
+|-------------|-----------|-------|
+| Čas opakovaného záznamu (NFR-04) | __36___ s | 1 min |
 
 **Poznámky (think aloud, pozorování, problémy):**
 
