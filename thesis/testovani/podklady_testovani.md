@@ -22,7 +22,7 @@ Před zahájením testování sdělte participantovi následující body svými 
 
 ### 4. Průběh testování
 
-> Testování bude probíhat tak, že vám postupně zadám několik úloh. U každé úlohy dostanete krátké zadání a pokusíte se ho splnit v aplikaci. Po každé úloze vám položím jednu krátkou otázku o tom, jak snadná pro vás úloha byla. Na závěr vyplníme dva krátké dotazníky a položím vám několik otevřených otázek k celkovému dojmu z aplikace. Celé testování zabere přibližně 60 až 75 minut.
+> Testování bude probíhat tak, že vám postupně zadám několik úloh. U každé úlohy dostanete krátké zadání a pokusíte se ho splnit v aplikaci. Po každé úloze vám položím jednu krátkou otázku o tom, jak snadná pro vás úloha byla. Na závěr vyplníme dva krátké dotazníky a položím vám několik otevřených otázek k celkovému dojmu z aplikace. Celé testování zabere přibližně 75 až 90 minut.
 
 ### 5. Záznam a soukromí
 
@@ -158,7 +158,7 @@ _
 
 **Pokryté FR/UC:** FR-11, FR-13, UC02
 
-**Zadání pro participanta:** Představte si, že AI špatně rozpoznalo vaše poslední jídlo. Pokuste se opravit název a množství u posledního zaznamenaného záznamu.
+**Zadání pro participanta:** Představte si, že AI špatně rozpoznalo vaše poslední jídlo. Použijte funkci na AI opravu výsledku jídla a opravte tak jeho název a množství.
 
 | Metrika | Hodnota |
 |---------|---------|
@@ -264,7 +264,7 @@ _
 
 **Pokryté FR/UC:** FR-17, FR-18, UC05
 
-**Zadání pro participanta:** Máte jídlo, které jíte často. Najděte způsob, jak si zjednodušit jeho opakované zaznamenávání do budoucna, a poté ho tímto způsobem zaznamenejte jako nový záznam.
+**Zadání pro participanta:** Představte si, že máte jídlo, které jíte pravidelně. Najděte v aplikaci způsob, jak si jeho opakované zaznamenávání zjednodušit, a následně ho tímto způsobem zaznamenejte jako nový záznam.
 
 | Metrika | Hodnota |
 |---------|---------|
@@ -402,7 +402,7 @@ _
 
 **Pokryté FR/UC:** FR-02, FR-05, FR-22
 
-**Zadání pro participanta:** Prohlédněte si denní přehled a poté smažte jeden ze zaznamenaných záznamů z předchozího týdne (jeden z těch, které jsme vytvořili v dřívějším úkolu).
+**Zadání pro participanta:** Prohlédněte si denní přehled a poté smažte jeden ze zaznamenaných jídel z předchozího týdne (jeden z těch, které jsme vytvořili v dřívějším úkolu).
 
 | Metrika | Hodnota |
 |---------|---------|
@@ -424,7 +424,7 @@ _
 
 **Pokryté FR/UC:** FR-24, FR-27, UC07
 
-**Zadání pro participanta:** Zajímá vás, kolik kalorií jste průměrně přijímali tento týden. Zkuste tuto informaci zjistit pomocí aplikace.
+**Zadání pro participanta:** Aplikace disponuje funkcí Ask AI, pomocí které se můžete zeptat AI na cokoliv ohledně svých stravovacích návyků a zaznamenaných dat. Zeptejte se na něco.
 
 | Metrika | Hodnota |
 |---------|---------|
@@ -446,7 +446,7 @@ _
 
 **Pokryté FR/UC:** FR-25
 
-**Zadání pro participanta:** Exportujte svá data z aplikace do souboru pomocí funkce k tomu určené. Formát souboru podle Vaší preference.
+**Zadání pro participanta:** Exportujte svá data z aplikace do souboru pomocí funkce k tomu určené. Formát souboru vyberte podle Vaší preference.
 
 | Metrika | Hodnota |
 |---------|---------|

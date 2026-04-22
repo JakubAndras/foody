@@ -22,7 +22,7 @@ Před zahájením testování sdělte participantovi následující body svými 
 
 ### 4. Průběh testování
 
-> Testování bude probíhat tak, že vám postupně zadám několik úloh. U každé úlohy dostanete krátké zadání a pokusíte se ho splnit v aplikaci. Po každé úloze vám položím jednu krátkou otázku o tom, jak snadná pro vás úloha byla. Na závěr vyplníme dva krátké dotazníky a položím vám několik otevřených otázek k celkovému dojmu z aplikace. Celé testování zabere přibližně 60 až 75 minut.
+> Testování bude probíhat tak, že vám postupně zadám několik úloh. U každé úlohy dostanete krátké zadání a pokusíte se ho splnit v aplikaci. Po každé úloze vám položím jednu krátkou otázku o tom, jak snadná pro vás úloha byla. Na závěr vyplníme dva krátké dotazníky a položím vám několik otevřených otázek k celkovému dojmu z aplikace. Celé testování zabere přibližně 75 až 90 minut.
 
 ### 5. Záznam a soukromí
 
@@ -166,7 +166,7 @@ v loading karte pisu o notifikaci co prijde po dokonceni rozpoznani jidla, ale z
 
 **Pokryté FR/UC:** FR-11, FR-13, UC02
 
-**Zadání pro participanta:** Představte si, že AI špatně rozpoznalo vaše poslední jídlo. Použij funkci na AI opravu výsledku jídla a opravit tak jeho název a množství.
+**Zadání pro participanta:** Představte si, že AI špatně rozpoznalo vaše poslední jídlo. Použijte funkci na AI opravu výsledku jídla a opravte tak jeho název a množství.
 
 | Metrika | Hodnota |
 |---------|---------|
@@ -192,7 +192,7 @@ v loading karte pisu o notifikaci co prijde po dokonceni rozpoznani jidla, ale z
 | Metrika | Hodnota |
 |---------|---------|
 | Dokončení (ano / ne / s pomocí) | ano     |
-| Kritické chyby (počet) |         |
+| Kritické chyby (počet) | 0       |
 | SEQ skóre (1-7) | 6       |
 
 **NFR metriky:**
@@ -272,7 +272,7 @@ chtela by nahrat foto pro sve jidlo longpressem na placeholder v detailu
 
 **Pokryté FR/UC:** FR-17, FR-18, UC05
 
-**Zadání pro participanta:** PREFORMULOVAT Máte jídlo, které jíte často. Najděte způsob, jak si zjednodušit jeho opakované zaznamenávání do budoucna, a poté ho tímto způsobem zaznamenejte jako nový záznam.
+**Zadání pro participanta:** Představte si, že máte jídlo, které jíte pravidelně. Najděte v aplikaci způsob, jak si jeho opakované zaznamenávání zjednodušit, a následně ho tímto způsobem zaznamenejte jako nový záznam.
 
 | Metrika | Hodnota  |
 |---------|----------|
@@ -413,7 +413,7 @@ Personal Details zmenit ikonu na profile/clovicka
 
 **Pokryté FR/UC:** FR-02, FR-05, FR-22
 
-**Zadání pro participanta:** Prohlédněte si denní přehled a poté smažte jeden ze zaznamenaných záznamů z předchozího týdne (jeden z těch, které jsme vytvořili v dřívějším úkolu).
+**Zadání pro participanta:** Prohlédněte si denní přehled a poté smažte jeden ze zaznamenaných jídel z předchozího týdne (jeden z těch, které jsme vytvořili v dřívějším úkolu).
 
 | Metrika | Hodnota |
 |---------|---------|
@@ -479,23 +479,23 @@ Ask AI button bz mel bzt disabled pokud je textfield prazdne
 
 | Úloha | Dokončení | Krit. chyby | SEQ (1-7) |
 |-------|-----------|-------------|-----------|
-| T1 | | | |
-| T2 | | | |
-| T3 | | | |
-| T4 | | | |
-| T5 | | | |
-| T6 | | | |
-| T7 | | | |
-| T8 | | | |
-| T9 | | | |
-| T10 | | | |
-| T11 | | | |
-| T12 | | | |
-| T13 | | | |
-| T14 | | | |
-| T15 | | | |
-| T16 | | | |
-| **Průměr** | | | |
+| T1 | ano | 0 | 6 |
+| T2 | ano | 0 | 6 |
+| T3 | s pomocí | 1 | 5 |
+| T4 | ano | 0 | 7 |
+| T5 | ano | 0 | 6 |
+| T6 | ano | 0 | 7 |
+| T7 | ano | 0 | 7 |
+| T8 | s pomocí | 1 | 3 |
+| T9 | ano | 0 | 7 |
+| T10 | ano | 0 | 7 |
+| T11 | ano | 0 | 6 |
+| T12 | ano | 0 | 5 |
+| T13 | ano | 0 | 6 |
+| T14 | ano | 0 | 7 |
+| T15 | ano | 0 | 7 |
+| T16 | ano | 0 | 7 |
+| **Průměr** | 14/16 ano, 2/16 s pomocí | 0,13 | 6,19 |
 
 ---
 
@@ -507,23 +507,23 @@ Ask AI button bz mel bzt disabled pokud je textfield prazdne
 
 | Úloha | Skóre (1-7) |
 |-------|-------------|
-| T1 | |
-| T2 | |
-| T3 | |
-| T4 | |
-| T5 | |
-| T6 | |
-| T7 | |
-| T8 | |
-| T9 | |
-| T10 | |
-| T11 | |
-| T12 | |
-| T13 | |
-| T14 | |
-| T15 | |
-| T16 | |
-| **Průměr** | |
+| T1 | 6 |
+| T2 | 6 |
+| T3 | 5 |
+| T4 | 7 |
+| T5 | 6 |
+| T6 | 7 |
+| T7 | 7 |
+| T8 | 3 |
+| T9 | 7 |
+| T10 | 7 |
+| T11 | 6 |
+| T12 | 5 |
+| T13 | 6 |
+| T14 | 7 |
+| T15 | 7 |
+| T16 | 7 |
+| **Průměr** | 6,19 |
 
 ---
 
@@ -533,26 +533,26 @@ Ask AI button bz mel bzt disabled pokud je textfield prazdne
 
 | # | Tvrzení | Skóre (1-5) |
 |---|---------|-------------|
-| 1 | Myslím, že bych tuto aplikaci rád/a používal/a pravidelně. | | 5
-| 2 | Aplikaci jsem shledal/a zbytečně složitou. | | 1
-| 3 | Myslím, že se aplikace snadno používá. | | 4
-| 4 | Myslím, že bych potřeboval/a pomoc technicky zdatné osoby, abych mohl/a aplikaci používat. | | 1
-| 5 | Jednotlivé funkce aplikace jsou dobře provázané. | | 4
-| 6 | V aplikaci je příliš mnoho nekonzistentností. | | 2
-| 7 | Myslím, že většina lidí by se naučila aplikaci používat velmi rychle. | | 4
-| 8 | Aplikace je velmi těžkopádná na používání. | | 1
-| 9 | Při používání aplikace jsem se cítil/a velmi sebejistě. | | 5
-| 10 | Musel/a jsem se naučit mnoho věcí, než jsem mohl/a aplikaci začít používat. | | 1
+| 1 | Myslím, že bych tuto aplikaci rád/a používal/a pravidelně. | 5           |
+| 2 | Aplikaci jsem shledal/a zbytečně složitou. | 1           |
+| 3 | Myslím, že se aplikace snadno používá. | 4           |
+| 4 | Myslím, že bych potřeboval/a pomoc technicky zdatné osoby, abych mohl/a aplikaci používat. | 1           |
+| 5 | Jednotlivé funkce aplikace jsou dobře provázané. | 4           |
+| 6 | V aplikaci je příliš mnoho nekonzistentností. | 2           |
+| 7 | Myslím, že většina lidí by se naučila aplikaci používat velmi rychle. | 4           |
+| 8 | Aplikace je velmi těžkopádná na používání. | 1           |
+| 9 | Při používání aplikace jsem se cítil/a velmi sebejistě. | 5           |
+| 10 | Musel/a jsem se naučit mnoho věcí, než jsem mohl/a aplikaci začít používat. | 1           |
 
 ### Výpočet SUS
 
 | Krok | Hodnota |
 |------|---------|
-| Součet lichých položek (1, 3, 5, 7, 9) = S_L | |
-| Součet sudých položek (2, 4, 6, 8, 10) = S_S | |
-| SUS = ((S_L - 5) + (25 - S_S)) * 2,5 | |
+| Součet lichých položek (1, 3, 5, 7, 9) = S_L | 5 + 4 + 4 + 4 + 5 = 22 |
+| Součet sudých položek (2, 4, 6, 8, 10) = S_S | 1 + 1 + 2 + 1 + 1 = 6 |
+| SUS = ((S_L - 5) + (25 - S_S)) * 2,5 | ((22 - 5) + (25 - 6)) * 2,5 = 90 |
 
-**SUS skóre tohoto participanta:** ______
+**SUS skóre tohoto participanta:** 90 (top 10 %)
 
 Interpretace: 0-50 = neakceptovatelné, 51-68 = podprůměrné, 68 = průměr, 68-80,3 = nadprůměrné, >80,3 = top 10 %
 
@@ -584,9 +584,9 @@ Interpretace: 0-50 = neakceptovatelné, 51-68 = podprůměrné, 68 = průměr, 6
 
 | Metrika | Výpočet | Hodnota |
 |---------|---------|---------|
-| Pragmatická kvalita | průměr položek 1-4 | |
-| Hedonická kvalita | průměr položek 5-8 | |
-| Celkové skóre | průměr položek 1-8 | |
+| Pragmatická kvalita | průměr položek 1-4 | (2 + 2 + 2 + 1) / 4 = 1,75 |
+| Hedonická kvalita | průměr položek 5-8 | (2 + 1 + 1 + 3) / 4 = 1,75 |
+| Celkové skóre | průměr položek 1-8 | (2 + 2 + 2 + 1 + 2 + 1 + 1 + 3) / 8 = 1,75 |
 
 Interpretace: <-0,8 = negativní, -0,8 až 0,8 = neutrální, >0,8 = pozitivní
 
@@ -664,14 +664,14 @@ _
 
 ---
 
-## Souhrn výsledků
+## Souhrn výsledků P1
 
 | Metrika | Hodnota | Hodnocení |
 |---------|---------|-----------|
-| **SEQ průměr** | | >= 5,5 (dobré) |
-| **SUS** | | top 10 % (> 80,3), nadprůměrné (68–80,3), průměr (68), podprůměrné (51–68), neakceptovatelné (< 50) |
-| **UEQ-S pragmatická kvalita** | | pozitivní (> 0,8), neutrální (-0,8–0,8), negativní (< -0,8) |
-| **UEQ-S hedonická kvalita** | | pozitivní (> 0,8), neutrální (-0,8–0,8), negativní (< -0,8) |
-| **UEQ-S celkové skóre** | | pozitivní (> 0,8), neutrální (-0,8–0,8), negativní (< -0,8) |
-| **Dokončení úloh** | | |
-| **Kritické chyby** | | |
+| **SEQ průměr** | 6,19 / 7 | >= 5,5 (dobré) |
+| **SUS** | 90 | top 10 % (> 80,3) |
+| **UEQ-S pragmatická kvalita** | 1,75 | pozitivní (> 0,8) |
+| **UEQ-S hedonická kvalita** | 1,75 | pozitivní (> 0,8) |
+| **UEQ-S celkové skóre** | 1,75 | pozitivní (> 0,8) |
+| **Dokončení úloh** | 14/16 ano, 2/16 s pomocí | 100 % dokončení |
+| **Kritické chyby** | 2 celkem (T3, T8) | průměr 0,13 |

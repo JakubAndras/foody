@@ -22,7 +22,7 @@ Před zahájením testování sdělte participantovi následující body svými 
 
 ### 4. Průběh testování
 
-> Testování bude probíhat tak, že vám postupně zadám několik úloh. U každé úlohy dostanete krátké zadání a pokusíte se ho splnit v aplikaci. Po každé úloze vám položím jednu krátkou otázku o tom, jak snadná pro vás úloha byla. Na závěr vyplníme dva krátké dotazníky a položím vám několik otevřených otázek k celkovému dojmu z aplikace. Celé testování zabere přibližně 30 minut.
+> Testování bude probíhat tak, že vám postupně zadám několik úloh. U každé úlohy dostanete krátké zadání a pokusíte se ho splnit v aplikaci. Po každé úloze vám položím jednu krátkou otázku o tom, jak snadná pro vás úloha byla. Na závěr vyplníme dva krátké dotazníky a položím vám několik otevřených otázek k celkovému dojmu z aplikace. Celé testování zabere přibližně 75 až 90 minut.
 
 ### 5. Záznam a soukromí
 
@@ -62,6 +62,14 @@ Před zahájením testování sdělte participantovi následující body svými 
 - [ ] Balený produkt s čárovým kódem připraven (pro T6)
 - [ ] Participant informován o průběhu a přínosu testování
 - [ ] Participant instruován k metodě think aloud
+
+---
+
+## Definice metrik
+
+**Kritická chyba** = participant nedokáže pokračovat v úloze bez pomoci moderátora.
+
+**Dokončení s pomocí** = moderátor napoví pomocnou informaci k úloze (např. „zkuste se podívat do nastavení" nebo „hledejte v detailu záznamu"), ale nesmí doslovně navigovat participanta (např. „klikněte sem") ani manipulovat s testovacím zařízením přímo.
 
 ---
 
@@ -153,7 +161,7 @@ Ikona pro vybec fotografie je schovana, mela by byt patrnejsi.
 
 **Pokryté FR/UC:** FR-11, FR-13, UC02
 
-**Zadání pro participanta:** U posledního zaznamenaného jídla spusťte opětovnou analýzu pomocí funkce "Fix issue" a upravte tím název a množství jídla.
+**Zadání pro participanta:** Představte si, že AI špatně rozpoznalo vaše poslední jídlo. Použijte funkci na AI opravu výsledku jídla a opravte tak jeho název a množství.
 
 | Metrika | Hodnota |
 |---------|---------|
@@ -251,7 +259,7 @@ Obrazovku nasla pomerne rychle, sla spravnym smerem. Par sekund ji tvralo nez se
 
 **Pokryté FR/UC:** FR-17, FR-18, UC05
 
-**Zadání pro participanta:** Najděte jedno z dříve zaznamenaných jídel a označte ho jako oblíbené. Poté ho z oblíbených položek zaznamenejte jako nový záznam.
+**Zadání pro participanta:** Představte si, že máte jídlo, které jíte pravidelně. Najděte v aplikaci způsob, jak si jeho opakované zaznamenávání zjednodušit, a následně ho tímto způsobem zaznamenejte jako nový záznam.
 
 | Metrika | Hodnota  |
 |---------|----------|
@@ -387,7 +395,7 @@ V progress obrazovce to hned nasla
 
 **Pokryté FR/UC:** FR-02, FR-05, FR-22
 
-**Zadání pro participanta:** Prohlédněte si denní přehled a poté smažte jeden ze zaznamenaných záznamů z predchoziho tydne (jeden z tech, ktere jsme vytvorili v drivejsim ukolu).
+**Zadání pro participanta:** Prohlédněte si denní přehled a poté smažte jeden ze zaznamenaných jídel z předchozího týdne (jeden z těch, které jsme vytvořili v dřívějším úkolu).
 
 | Metrika | Hodnota |
 |---------|---------|
@@ -409,7 +417,7 @@ Tapnuti na meal record je intuitivni. Participantce v drivejsich ukolech fungova
 
 **Pokryté FR/UC:** FR-24, FR-27, UC07
 
-**Zadání pro participanta:** Přejděte na profilu aplikace a poté položte otázku v přirozeném jazyce pomocí funkce Ask AI (např. "Kolik kalorií jsem průměrně snědl/a tento týden?").
+**Zadání pro participanta:** Aplikace disponuje funkcí Ask AI, pomocí které se můžete zeptat AI na cokoliv ohledně svých stravovacích návyků a zaznamenaných dat. Zeptejte se na něco.
 
 | Metrika | Hodnota |
 |---------|---------|
@@ -431,7 +439,7 @@ Napad na zlepseni od participanta: Aby Ask AI podporovala hlasove zadavani vstup
 
 **Pokryté FR/UC:** FR-25
 
-**Zadání pro participanta:** Exportujte svá data z aplikace do souboru pomocí funkce k tomu určené. Formát souboru podle Vaší preference.
+**Zadání pro participanta:** Exportujte svá data z aplikace do souboru pomocí funkce k tomu určené. Formát souboru vyberte podle Vaší preference.
 
 | Metrika | Hodnota |
 |---------|---------|
@@ -609,7 +617,15 @@ ano, pry lepsi nez kaloricke tabulky
 
 ```
 
-**6. Je něco, co byste v aplikaci změnil/a nebo přidal/a?**
+**6. Jak moc jste důvěřoval/a odhadům aplikace (nutriční hodnoty, rozpoznání jídla)? Kontroloval/a byste si hodnoty ještě jinde?**
+
+```
+Spíše důvěřovala, u neznámých jídel by si hodnoty případně ověřila.
+
+
+```
+
+**7. Je něco, co byste v aplikaci změnil/a nebo přidal/a?**
 
 ```
 Nastaveni velikosti pisma, recepty pres hlasovy vstup a toggle v obrazovce hlasoveho vstupu je matouci, nehezky.

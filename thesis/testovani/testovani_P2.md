@@ -22,7 +22,7 @@ Před zahájením testování sdělte participantovi následující body svými 
 
 ### 4. Průběh testování
 
-> Testování bude probíhat tak, že vám postupně zadám několik úloh. U každé úlohy dostanete krátké zadání a pokusíte se ho splnit v aplikaci. Po každé úloze vám položím jednu krátkou otázku o tom, jak snadná pro vás úloha byla. Na závěr vyplníme dva krátké dotazníky a položím vám několik otevřených otázek k celkovému dojmu z aplikace. Celé testování zabere přibližně 60 až 75 minut.
+> Testování bude probíhat tak, že vám postupně zadám několik úloh. U každé úlohy dostanete krátké zadání a pokusíte se ho splnit v aplikaci. Po každé úloze vám položím jednu krátkou otázku o tom, jak snadná pro vás úloha byla. Na závěr vyplníme dva krátké dotazníky a položím vám několik otevřených otázek k celkovému dojmu z aplikace. Celé testování zabere přibližně 75 až 90 minut.
 
 ### 5. Záznam a soukromí
 
@@ -158,7 +158,7 @@ tlacitko pro fotografie z galerie nasel, pohoda. Prislo mi ale pomerne schovane 
 
 **Pokryté FR/UC:** FR-11, FR-13, UC02
 
-**Zadání pro participanta:** Představte si, že AI špatně rozpoznalo vaše poslední jídlo. Pokuste se opravit název a množství u posledního zaznamenaného záznamu.
+**Zadání pro participanta:** Představte si, že AI špatně rozpoznalo vaše poslední jídlo. Použijte funkci na AI opravu výsledku jídla a opravte tak jeho název a množství.
 
 | Metrika | Hodnota |
 |---------|---------|
@@ -266,7 +266,7 @@ sel do spravne obrazovky Meal Log, ale vahal jestli pridat zcela nove jidlo (vyt
 
 **Pokryté FR/UC:** FR-17, FR-18, UC05
 
-**Zadání pro participanta:** Máte jídlo, které jíte často. Najděte způsob, jak si zjednodušit jeho opakované zaznamenávání do budoucna, a poté ho tímto způsobem zaznamenejte jako nový záznam.
+**Zadání pro participanta:** Představte si, že máte jídlo, které jíte pravidelně. Najděte v aplikaci způsob, jak si jeho opakované zaznamenávání zjednodušit, a následně ho tímto způsobem zaznamenejte jako nový záznam.
 
 | Metrika | Hodnota |
 |---------|---------|
@@ -430,7 +430,7 @@ taky chtel longpress, ale doslo mu, ze nefunguje, tak normalne tapnul.
 
 **Pokryté FR/UC:** FR-24, FR-27, UC07
 
-**Zadání pro participanta:** Zajímá vás, kolik kalorií jste průměrně přijímali tento měsíc. Zkuste tuto informaci zjistit pomocí aplikace.
+**Zadání pro participanta:** Aplikace disponuje funkcí Ask AI, pomocí které se můžete zeptat AI na cokoliv ohledně svých stravovacích návyků a zaznamenaných dat. Zeptejte se na něco.
 
 | Metrika | Hodnota  |
 |---------|----------|
@@ -452,7 +452,7 @@ doslo mu ze na affected days muze tapnout
 
 **Pokryté FR/UC:** FR-25
 
-**Zadání pro participanta:** Exportujte svá data z aplikace do souboru pomocí funkce k tomu určené. Formát souboru podle Vaší preference.
+**Zadání pro participanta:** Exportujte svá data z aplikace do souboru pomocí funkce k tomu určené. Formát souboru vyberte podle Vaší preference.
 
 | Metrika | Hodnota |
 |---------|---------|
@@ -475,23 +475,23 @@ Share vystupu z Ask Ai by mohl posilat otazku a screenshot vystupu
 
 | Úloha | Dokončení | Krit. chyby | SEQ (1-7) |
 |-------|-----------|-------------|-----------|
-| T1 | | | |
-| T2 | | | |
-| T3 | | | |
-| T4 | | | |
-| T5 | | | |
-| T6 | | | |
-| T7 | | | |
-| T8 | | | |
-| T9 | | | |
-| T10 | | | |
-| T11 | | | |
-| T12 | | | |
-| T13 | | | |
-| T14 | | | |
-| T15 | | | |
-| T16 | | | |
-| **Průměr** | | | |
+| T1 | ano | 0 | 7 |
+| T2 | ano | 0 | 7 |
+| T3 | ano | 0 | 5 |
+| T4 | ano | 0 | 5 |
+| T5 | ano | 0 | 7 |
+| T6 | ano | 1 | 7 |
+| T7 | ano | 0 | 4 |
+| T8 | ano | 0 | 7 |
+| T9 | s pomocí | 1 | 4 |
+| T10 | ano | 0 | 7 |
+| T11 | ano | 0 | 6 |
+| T12 | ano | 1 | 7 |
+| T13 | ano | 0 | 7 |
+| T14 | ano | 0 | 7 |
+| T15 | s pomocí | 1 | 2 |
+| T16 | ano | 0 | 7 |
+| **Průměr** | 14/16 ano, 2/16 s pomocí | 0,25 | 6,00 |
 
 ---
 
@@ -503,23 +503,23 @@ Share vystupu z Ask Ai by mohl posilat otazku a screenshot vystupu
 
 | Úloha | Skóre (1-7) |
 |-------|-------------|
-| T1 | |
-| T2 | |
-| T3 | |
-| T4 | |
-| T5 | |
-| T6 | |
-| T7 | |
-| T8 | |
-| T9 | |
-| T10 | |
-| T11 | |
-| T12 | |
-| T13 | |
-| T14 | |
-| T15 | |
-| T16 | |
-| **Průměr** | |
+| T1 | 7 |
+| T2 | 7 |
+| T3 | 5 |
+| T4 | 5 |
+| T5 | 7 |
+| T6 | 7 |
+| T7 | 4 |
+| T8 | 7 |
+| T9 | 4 |
+| T10 | 7 |
+| T11 | 6 |
+| T12 | 7 |
+| T13 | 7 |
+| T14 | 7 |
+| T15 | 2 |
+| T16 | 7 |
+| **Průměr** | 6,00 |
 
 ---
 
@@ -544,11 +544,11 @@ Share vystupu z Ask Ai by mohl posilat otazku a screenshot vystupu
 
 | Krok | Hodnota |
 |------|---------|
-| Součet lichých položek (1, 3, 5, 7, 9) = S_L | |
-| Součet sudých položek (2, 4, 6, 8, 10) = S_S | |
-| SUS = ((S_L - 5) + (25 - S_S)) * 2,5 | |
+| Součet lichých položek (1, 3, 5, 7, 9) = S_L | 4 + 5 + 4 + 5 + 4 = 22 |
+| Součet sudých položek (2, 4, 6, 8, 10) = S_S | 2 + 1 + 2 + 1 + 5 = 11 |
+| SUS = ((S_L - 5) + (25 - S_S)) * 2,5 | ((22 - 5) + (25 - 11)) * 2,5 = 77,5 |
 
-**SUS skóre tohoto participanta:** ______
+**SUS skóre tohoto participanta:** 77,5 (nadprůměrné)
 
 Interpretace: 0-50 = neakceptovatelné, 51-68 = podprůměrné, 68 = průměr, 68-80,3 = nadprůměrné, >80,3 = top 10 %
 
@@ -580,9 +580,9 @@ Interpretace: 0-50 = neakceptovatelné, 51-68 = podprůměrné, 68 = průměr, 6
 
 | Metrika | Výpočet | Hodnota |
 |---------|---------|---------|
-| Pragmatická kvalita | průměr položek 1-4 | |
-| Hedonická kvalita | průměr položek 5-8 | |
-| Celkové skóre | průměr položek 1-8 | |
+| Pragmatická kvalita | průměr položek 1-4 | (0 + 2 + 0 + 1) / 4 = 0,75 |
+| Hedonická kvalita | průměr položek 5-8 | (3 + 3 + 1 + 3) / 4 = 2,50 |
+| Celkové skóre | průměr položek 1-8 | (0 + 2 + 0 + 1 + 3 + 3 + 1 + 3) / 8 = 1,63 |
 
 Interpretace: <-0,8 = negativní, -0,8 až 0,8 = neutrální, >0,8 = pozitivní
 
@@ -659,14 +659,14 @@ _
 
 ---
 
-## Souhrn výsledků
+## Souhrn výsledků P2
 
 | Metrika | Hodnota | Hodnocení |
 |---------|---------|-----------|
-| **SEQ průměr** | | >= 5,5 (dobré) |
-| **SUS** | | top 10 % (> 80,3), nadprůměrné (68–80,3), průměr (68), podprůměrné (51–68), neakceptovatelné (< 50) |
-| **UEQ-S pragmatická kvalita** | | pozitivní (> 0,8), neutrální (-0,8–0,8), negativní (< -0,8) |
-| **UEQ-S hedonická kvalita** | | pozitivní (> 0,8), neutrální (-0,8–0,8), negativní (< -0,8) |
-| **UEQ-S celkové skóre** | | pozitivní (> 0,8), neutrální (-0,8–0,8), negativní (< -0,8) |
-| **Dokončení úloh** | | |
-| **Kritické chyby** | | |
+| **SEQ průměr** | 6,00 / 7 | >= 5,5 (dobré) |
+| **SUS** | 77,5 | nadprůměrné (68–80,3) |
+| **UEQ-S pragmatická kvalita** | 0,75 | neutrální (-0,8–0,8) |
+| **UEQ-S hedonická kvalita** | 2,50 | pozitivní (> 0,8) |
+| **UEQ-S celkové skóre** | 1,63 | pozitivní (> 0,8) |
+| **Dokončení úloh** | 14/16 ano, 2/16 s pomocí | 100 % dokončení |
+| **Kritické chyby** | 4 celkem (T6, T9, T12, T15) | průměr 0,25 |
