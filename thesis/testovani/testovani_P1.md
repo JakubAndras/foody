@@ -495,7 +495,7 @@ Ask AI button bz mel bzt disabled pokud je textfield prazdne
 | T14 | ano | 0 | 7 |
 | T15 | ano | 0 | 7 |
 | T16 | ano | 0 | 7 |
-| **Průměr** | 14/16 ano, 2/16 s pomocí | 0,13 | 6,19 |
+| **Průměr** | 14/16 ano, 2/16 s pomocí | 0,125 | 6,1875 |
 
 ---
 
@@ -523,7 +523,7 @@ Ask AI button bz mel bzt disabled pokud je textfield prazdne
 | T14 | 7 |
 | T15 | 7 |
 | T16 | 7 |
-| **Průměr** | 6,19 |
+| **Průměr** | 6,1875 |
 
 ---
 
@@ -668,10 +668,10 @@ _
 
 | Metrika | Hodnota | Hodnocení |
 |---------|---------|-----------|
-| **SEQ průměr** | 6,19 / 7 | >= 5,5 (dobré) |
+| **SEQ průměr** | 6,1875 / 7 | >= 5,5 (dobré) |
 | **SUS** | 90 | top 10 % (> 80,3) |
 | **UEQ-S pragmatická kvalita** | 1,75 | pozitivní (> 0,8) |
 | **UEQ-S hedonická kvalita** | 1,75 | pozitivní (> 0,8) |
 | **UEQ-S celkové skóre** | 1,75 | pozitivní (> 0,8) |
 | **Dokončení úloh** | 14/16 ano, 2/16 s pomocí | 100 % dokončení |
-| **Kritické chyby** | 2 celkem (T3, T8) | průměr 0,13 |
+| **Kritické chyby** | 2 celkem (T3, T8) | průměr 0,125 |

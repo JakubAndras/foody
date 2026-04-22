@@ -476,7 +476,7 @@ Participantka navrhuje do nastaveni pridat moznost velikosti pisma v aplikaci
 | T14 | ano | 0 | 7 |
 | T15 | ano | 0 | 7 |
 | T16 | ano | 0 | 7 |
-| **Průměr** | 14/16 ano, 2/16 s pomocí | 0,13 | 6,56 |
+| **Průměr** | 14/16 ano, 2/16 s pomocí | 0,125 | 6,5625 |
 
 ---
 
@@ -504,7 +504,7 @@ Participantka navrhuje do nastaveni pridat moznost velikosti pisma v aplikaci
 | T14 | 7 |
 | T15 | 7 |
 | T16 | 7 |
-| **Průměr** | 6,56 |
+| **Průměr** | 6,5625 |
 
 ---
 
@@ -567,7 +567,7 @@ Interpretace: 0-50 = neakceptovatelné, 51-68 = podprůměrné, 68 = průměr, 6
 |---------|---------|---------|
 | Pragmatická kvalita | průměr položek 1-4 | (3 + 2 + 3 + 2) / 4 = 2,50 |
 | Hedonická kvalita | průměr položek 5-8 | (1 + 3 + 2 + 3) / 4 = 2,25 |
-| Celkové skóre | průměr položek 1-8 | (3 + 2 + 3 + 2 + 1 + 3 + 2 + 3) / 8 = 2,38 |
+| Celkové skóre | průměr položek 1-8 | (3 + 2 + 3 + 2 + 1 + 3 + 2 + 3) / 8 = 2,375 |
 
 Interpretace: <-0,8 = negativní, -0,8 až 0,8 = neutrální, >0,8 = pozitivní
 
@@ -650,10 +650,10 @@ _
 
 | Metrika | Hodnota | Hodnocení |
 |---------|---------|-----------|
-| **SEQ průměr** | 6,56 / 7 | >= 5,5 (dobré) |
+| **SEQ průměr** | 6,5625 / 7 | >= 5,5 (dobré) |
 | **SUS** | 90 | top 10 % |
 | **UEQ-S pragmatická kvalita** | 2,50 | pozitivní (> 0,8) |
 | **UEQ-S hedonická kvalita** | 2,25 | pozitivní (> 0,8) |
-| **UEQ-S celkové skóre** | 2,38 | pozitivní (> 0,8) |
+| **UEQ-S celkové skóre** | 2,375 | pozitivní (> 0,8) |
 | **Dokončení úloh** | 14/16 ano, 2/16 s pomocí | 100 % dokončení |
-| **Kritické chyby** | 2 celkem (T3, T8) | průměr 0,13 |
+| **Kritické chyby** | 2 celkem (T3, T8) | průměr 0,125 |

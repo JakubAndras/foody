@@ -214,7 +214,7 @@ lepe signalizovat ukonceni nahravani a ze je potreba kliknout na tlacitko analyz
 | Metrika | Hodnota |
 |---------|---------|
 | Dokončení (ano / ne / s pomocí) | ano     |
-| Kritické chyby (počet) | 1       |
+| Kritické chyby (počet) | 0       |
 | SEQ skóre (1-7) | 7       |
 
 **NFR metriky:**
@@ -366,7 +366,7 @@ mozna to v user db nefunguje - urcite nekde bug ohledne amount funkce
 | Metrika | Hodnota |
 |---------|---------|
 | Dokončení (ano / ne / s pomocí) | ano     |
-| Kritické chyby (počet) | 1       |
+| Kritické chyby (počet) | 0       |
 | SEQ skóre (1-7) | 7       |
 
 **Poznámky (think aloud, pozorování, problémy):**
@@ -480,18 +480,18 @@ Share vystupu z Ask Ai by mohl posilat otazku a screenshot vystupu
 | T3 | ano | 0 | 5 |
 | T4 | ano | 0 | 5 |
 | T5 | ano | 0 | 7 |
-| T6 | ano | 1 | 7 |
+| T6 | ano | 0 | 7 |
 | T7 | ano | 0 | 4 |
 | T8 | ano | 0 | 7 |
 | T9 | s pomocí | 1 | 4 |
 | T10 | ano | 0 | 7 |
 | T11 | ano | 0 | 6 |
-| T12 | ano | 1 | 7 |
+| T12 | ano | 0 | 7 |
 | T13 | ano | 0 | 7 |
 | T14 | ano | 0 | 7 |
 | T15 | s pomocí | 1 | 2 |
 | T16 | ano | 0 | 7 |
-| **Průměr** | 14/16 ano, 2/16 s pomocí | 0,25 | 6,00 |
+| **Průměr** | 14/16 ano, 2/16 s pomocí | 0,125 | 6,00 |
 
 ---
 
@@ -582,7 +582,7 @@ Interpretace: 0-50 = neakceptovatelné, 51-68 = podprůměrné, 68 = průměr, 6
 |---------|---------|---------|
 | Pragmatická kvalita | průměr položek 1-4 | (0 + 2 + 0 + 1) / 4 = 0,75 |
 | Hedonická kvalita | průměr položek 5-8 | (3 + 3 + 1 + 3) / 4 = 2,50 |
-| Celkové skóre | průměr položek 1-8 | (0 + 2 + 0 + 1 + 3 + 3 + 1 + 3) / 8 = 1,63 |
+| Celkové skóre | průměr položek 1-8 | (0 + 2 + 0 + 1 + 3 + 3 + 1 + 3) / 8 = 1,625 |
 
 Interpretace: <-0,8 = negativní, -0,8 až 0,8 = neutrální, >0,8 = pozitivní
 
@@ -667,6 +667,6 @@ _
 | **SUS** | 77,5 | nadprůměrné (68–80,3) |
 | **UEQ-S pragmatická kvalita** | 0,75 | neutrální (-0,8–0,8) |
 | **UEQ-S hedonická kvalita** | 2,50 | pozitivní (> 0,8) |
-| **UEQ-S celkové skóre** | 1,63 | pozitivní (> 0,8) |
+| **UEQ-S celkové skóre** | 1,625 | pozitivní (> 0,8) |
 | **Dokončení úloh** | 14/16 ano, 2/16 s pomocí | 100 % dokončení |
-| **Kritické chyby** | 4 celkem (T6, T9, T12, T15) | průměr 0,25 |
+| **Kritické chyby** | 2 celkem (T9, T15) | průměr 0,125 |
