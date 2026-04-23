@@ -85,7 +85,8 @@ class _RingPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round;
 
     canvas.drawCircle(center, radius, backgroundPaint);
-    final sweep = (value.clamp(0.0, 1.0)) * 2 * math.pi;
+    final safeValue = value.isNaN || value.isInfinite ? 0.0 : value.clamp(0.0, 1.0);
+    final sweep = safeValue * 2 * math.pi;
     canvas.drawArc(rect, startAngle, sweep, false, foregroundPaint);
 
     // Draw red overflow arc on top of full ring
@@ -95,7 +96,8 @@ class _RingPainter extends CustomPainter {
         ..strokeWidth = strokeWidth
         ..color = overflowColor!
         ..strokeCap = StrokeCap.round;
-      final overflowSweep = (overflowValue.clamp(0.0, 1.0)) * 2 * math.pi;
+      final safeOverflow = overflowValue.isNaN || overflowValue.isInfinite ? 0.0 : overflowValue.clamp(0.0, 1.0);
+      final overflowSweep = safeOverflow * 2 * math.pi;
       canvas.drawArc(rect, startAngle, overflowSweep, false, overflowPaint);
     }
   }

@@ -24,9 +24,11 @@ class CaloriesCard extends StatelessWidget {
     final double exercise = dayRecord.totalExerciseCalories;
     final double remaining = burnedEnabled ? effectiveGoal - dayRecord.netCalories : effectiveGoal - dayRecord.totalCalories;
     final double consumed = burnedEnabled ? dayRecord.netCalories : dayRecord.totalCalories;
-    final double ratio = consumed / effectiveGoal;
+    final double rawRatio = consumed / effectiveGoal;
+    final double ratio = rawRatio.isNaN || rawRatio.isInfinite ? 0.0 : rawRatio;
     final double progress = ratio.clamp(0.0, 1.0);
-    final double overflowFraction = ratio > 1.0 ? ((consumed - effectiveGoal) / effectiveGoal).clamp(0.0, 1.0) : 0.0;
+    final double rawOverflow = ratio > 1.0 ? (consumed - effectiveGoal) / effectiveGoal : 0.0;
+    final double overflowFraction = (rawOverflow.isNaN || rawOverflow.isInfinite ? 0.0 : rawOverflow).clamp(0.0, 1.0);
 
     return Container(
       padding: const EdgeInsets.only(left: AppSpacing.m, right: AppSpacing.l, top: AppSpacing.m, bottom: AppSpacing.l),

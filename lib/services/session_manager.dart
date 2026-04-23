@@ -157,6 +157,19 @@ class SessionManager extends GetxService {
     await SharedPreferencesService.to.setDouble(key: profileWeightChangeRateKgPerWeekKey, value: value);
   }
 
+  Future<void> applyRecommendedWeightChangeRate() async {
+    final isGain = goal.value == ProfileGoal.gain;
+    final w = weightKg.value;
+    if (w == null) {
+      await setWeightChangeRateKgPerWeek(isGain ? 0.4 : 0.8);
+      return;
+    }
+    final double maxSpeed = isGain ? 1.0 : ((w * 0.012 * 10).round() / 10).clamp(0.5, 1.5);
+    final double factor = isGain ? 0.005 : 0.0075;
+    final double recommended = ((w * factor * 10).round() / 10).clamp(0.1, maxSpeed);
+    await setWeightChangeRateKgPerWeek(recommended);
+  }
+
   Future<void> setSavePhotosToGallery(bool value) async {
     savePhotosToGallery.value = value;
     await SharedPreferencesService.to.setBool(key: savePhotosToGalleryKey, value: value);

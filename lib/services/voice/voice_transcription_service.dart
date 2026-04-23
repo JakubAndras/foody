@@ -52,11 +52,11 @@ class VoiceTranscriptionService {
       await _speechToText.listen(
         onResult: onResult,
         localeId: localeId,
-        listenFor: const Duration(minutes: 1),
-        pauseFor: const Duration(seconds: 4),
+        listenFor: const Duration(minutes: 2),
+        pauseFor: const Duration(seconds: 8),
         listenOptions: SpeechListenOptions(
           partialResults: true,
-          cancelOnError: true,
+          cancelOnError: false,
           listenMode: ListenMode.dictation,
           autoPunctuation: true,
         ),

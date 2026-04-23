@@ -13,7 +13,8 @@ class MacrosCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double progress = goal <= 0 ? 0 : (current / goal).clamp(0.0, 1.0);
+    final double rawProgress = goal <= 0 ? 0.0 : current / goal;
+    final double progress = (rawProgress.isNaN || rawProgress.isInfinite ? 0.0 : rawProgress).clamp(0.0, 1.0);
 
     return Expanded(
       child: Container(

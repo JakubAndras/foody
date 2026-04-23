@@ -293,7 +293,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
   Future<bool> _requestGalleryPermission() async {
     if (Platform.isIOS) {
       final status = await Permission.photos.request();
-      if (status.isGranted) return true;
+      if (status.isGranted || status.isLimited) return true;
       if (status.isPermanentlyDenied) {
         await openAppSettings();
       }

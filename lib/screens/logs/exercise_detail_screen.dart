@@ -1,4 +1,5 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/controller/day_record_controller.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/exercise.dart';
@@ -34,6 +35,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
   late final TextEditingController _nameController;
   late final TextEditingController _caloriesController;
   late int _durationMinutes;
+  bool _isSaving = false;
 
   @override
   void initState() {
@@ -59,8 +61,37 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     );
   }
 
-  void _handleDone() {
-    Navigator.of(context).pop(_buildExercise());
+  Future<void> _handleDone() async {
+    if (_isSaving) return;
+    setState(() => _isSaving = true);
+
+    try {
+      final updated = _buildExercise();
+
+      if (widget.openedFromLogScreen) {
+        final normalized = ExerciseTemplate.normalize(updated.name);
+        final template = ExerciseTemplateRepository.to.allTemplates.firstWhereOrNull((t) => t.normalizedName == normalized);
+        if (template != null) {
+          await ExerciseTemplateRepository.to.updateTemplateValues(
+            template: template,
+            name: updated.name,
+            caloriesBurned: updated.caloriesBurned,
+            durationMinutes: updated.durationMinutes,
+          );
+        }
+      } else {
+        if (updated.id != null) {
+          final date = widget.selectedDate ?? DateTime(updated.timestamp.year, updated.timestamp.month, updated.timestamp.day);
+          await DayRecordController.to.saveExerciseForDate(date: date, exerciseToSave: updated);
+          DashboardController.to.refresh();
+        }
+      }
+
+      if (!mounted) return;
+      Navigator.of(context).pop(updated);
+    } finally {
+      if (mounted) setState(() => _isSaving = false);
+    }
   }
 
   String _formatDuration(int minutes) {
@@ -111,7 +142,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
               CustomGlassIconButtonGroup(
                 iconSize: AppSizes.iconLg,
                 items: [
-                  (icon: CupertinoIcons.checkmark, onPressed: _handleDone),
+                  (icon: CupertinoIcons.checkmark, onPressed: _isSaving ? () {} : _handleDone),
                   (icon: _exercise.isFavorite ? CupertinoIcons.bookmark_fill : CupertinoIcons.bookmark, onPressed: _toggleFavorite),
                   (icon: CupertinoIcons.ellipsis, onPressed: _openActionSheet),
                 ],
@@ -214,8 +245,19 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     );
   }
 
-  void _handleFixIssue() {
-    Get.to(() => FixExerciseResultScreen(baseExercise: _buildExercise(), selectedDate: widget.selectedDate, openedFromLogScreen: widget.openedFromLogScreen));
+  Future<void> _handleFixIssue() async {
+    final result = await Get.to<Exercise>(() => FixExerciseResultScreen(
+      baseExercise: _buildExercise(),
+      selectedDate: widget.selectedDate,
+      openedFromLogScreen: widget.openedFromLogScreen,
+    ));
+    if (result == null || !mounted) return;
+    setState(() {
+      _exercise = result;
+      _nameController.text = result.name;
+      _caloriesController.text = '${result.caloriesBurned.round()}';
+      _durationMinutes = result.durationMinutes ?? 0;
+    });
   }
 
   Future<void> _handleDeleteExercise() async {

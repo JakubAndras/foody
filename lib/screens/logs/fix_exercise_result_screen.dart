@@ -1,7 +1,6 @@
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/exercise.dart';
-import 'package:diplomka/screens/logs/exercise_detail_screen.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 import 'package:diplomka/screens/scan/scan_widgets.dart';
 import 'package:diplomka/services/ai_feature/ai_pipeline_service.dart';
@@ -149,6 +148,6 @@ class _FixExerciseResultScreenState extends State<FixExerciseResultScreen> {
     final caloriesBurned = updatedExercise.caloriesBurned;
     final Exercise exerciseToOpen = caloriesBurned > 0 ? updatedExercise : updatedExercise.copyWith(caloriesBurned: base.caloriesBurned);
 
-    Get.off(() => ExerciseDetailScreen(exercise: exerciseToOpen, selectedDate: widget.selectedDate, openedFromLogScreen: widget.openedFromLogScreen));
+    Get.back(result: exerciseToOpen);
   }
 }

@@ -9,6 +9,7 @@ abstract class  LocaleKeys {
   static const common_save = 'common_save';
   static const common_saving = 'common_saving';
   static const common_delete = 'common_delete';
+  static const common_app_name = 'common_app_name';
   static const common_done = 'common_done';
   static const common_edit = 'common_edit';
   static const common_add = 'common_add';
@@ -112,6 +113,8 @@ abstract class  LocaleKeys {
   static const dashboard_recognising_exercise = 'dashboard_recognising_exercise';
   static const dashboard_recognising_meal_subtitle = 'dashboard_recognising_meal_subtitle';
   static const dashboard_recognising_exercise_subtitle = 'dashboard_recognising_exercise_subtitle';
+  static const dashboard_meal_recognised = 'dashboard_meal_recognised';
+  static const dashboard_exercise_recognised = 'dashboard_exercise_recognised';
   static const dashboard_base_goal = 'dashboard_base_goal';
   static const dashboard_food = 'dashboard_food';
   static const dashboard_rollover = 'dashboard_rollover';
@@ -511,6 +514,7 @@ abstract class  LocaleKeys {
   static const voice_analyzing = 'voice_analyzing';
   static const voice_paused = 'voice_paused';
   static const voice_listening = 'voice_listening';
+  static const voice_resuming = 'voice_resuming';
   static const voice_mic_access = 'voice_mic_access';
   static const voice_mic_denied_message = 'voice_mic_denied_message';
   static const voice_mic_request_message = 'voice_mic_request_message';

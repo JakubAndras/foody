@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:ui';
+
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/controller/day_record_controller.dart';
@@ -14,18 +17,21 @@ import 'package:diplomka/screens/meals/meal_sheets.dart';
 import 'package:diplomka/widgets/confirm_delete_dialog.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:diplomka/widgets/glass_popup.dart';
-import 'package:diplomka/widgets/foody_glass_buttons.dart';
 import 'package:diplomka/services/share/app_share_service.dart';
 import 'package:diplomka/services/share/meal_share_builder.dart';
 import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/services/session_manager.dart';
+import 'package:diplomka/utils/app_limits.dart';
 import 'package:diplomka/utils/media_storage.dart';
 import 'package:diplomka/model/meal_template.dart';
 import 'package:diplomka/services/meal_template_repository.dart';
 import 'package:diplomka/widgets/edit_flow/edit_flow_widgets.dart';
 import 'package:diplomka/widgets/glass_toggle_row.dart';
 import 'package:diplomka/widgets/logged_snackbar.dart';
+import 'package:diplomka/widgets/sheet_drag_handle.dart';
+import 'package:diplomka/widgets/sheet_top_bar.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -170,9 +176,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
     _proteinController.addListener(_onInlineProteinChanged);
     _carbsController.addListener(_onInlineCarbsChanged);
     _fatsController.addListener(_onInlineFatsChanged);
-    if (widget.isNewMeal) {
-      _nameController.addListener(_onInlineNameChanged);
-    }
+    _nameController.addListener(_onInlineNameChanged);
   }
 
   @override
@@ -225,7 +229,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
 
   bool get _canEditNutrients => widget.isNewMeal || _ingredients.length <= 1 || SessionManager.to.editableNutrientsEnabled1.value;
 
-  bool get _useInlineEditing => widget.isNewMeal;
+
 
   bool get _useInlineNutrientEditing => widget.isNewMeal || _ingredients.length <= 1;
 
@@ -241,6 +245,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
         _ingredients.add(Ingredient(
           name: _meal.name.isEmpty ? 'Manual' : _meal.name,
           weight: 0,
+          amount: _amountValue,
           calories: calories ?? 0,
           proteins: proteins ?? 0,
           carbs: carbs ?? 0,
@@ -280,8 +285,9 @@ class _EditMealScreenState extends State<EditMealScreen> {
     if (_isSyncing || _ingredients.length > 1) return;
     if (_caloriesController.text == _lastCaloriesText) return;
     _lastCaloriesText = _caloriesController.text;
-    final value = double.tryParse(_caloriesController.text.replaceAll(',', '.'));
+    var value = double.tryParse(_caloriesController.text.replaceAll(',', '.'));
     if (value == null || value < 0) return;
+    value = value.clamp(0.0, AppLimits.mealMaxCalories.toDouble());
     final oldCal = _ingredients.isEmpty ? 0.0 : _ingredients[0].calories;
     final oldPro = _ingredients.isEmpty ? 0.0 : _ingredients[0].proteins;
     final oldCarb = _ingredients.isEmpty ? 0.0 : _ingredients[0].carbs;
@@ -331,8 +337,9 @@ class _EditMealScreenState extends State<EditMealScreen> {
     if (_isSyncing || _ingredients.length > 1) return;
     if (_proteinController.text == _lastProteinText) return;
     _lastProteinText = _proteinController.text;
-    final value = double.tryParse(_proteinController.text.replaceAll(',', '.'));
+    var value = double.tryParse(_proteinController.text.replaceAll(',', '.'));
     if (value == null || value < 0) return;
+    value = value.clamp(0.0, AppLimits.ingredientMaxMacro.toDouble());
     final currentPro = _ingredients.isEmpty ? 0.0 : _ingredients[0].proteins;
     if (value == currentPro) return;
     if (_autoSync) {
@@ -352,8 +359,9 @@ class _EditMealScreenState extends State<EditMealScreen> {
     if (_isSyncing || _ingredients.length > 1) return;
     if (_carbsController.text == _lastCarbsText) return;
     _lastCarbsText = _carbsController.text;
-    final value = double.tryParse(_carbsController.text.replaceAll(',', '.'));
+    var value = double.tryParse(_carbsController.text.replaceAll(',', '.'));
     if (value == null || value < 0) return;
+    value = value.clamp(0.0, AppLimits.ingredientMaxMacro.toDouble());
     final currentCarb = _ingredients.isEmpty ? 0.0 : _ingredients[0].carbs;
     if (value == currentCarb) return;
     if (_autoSync) {
@@ -373,8 +381,9 @@ class _EditMealScreenState extends State<EditMealScreen> {
     if (_isSyncing || _ingredients.length > 1) return;
     if (_fatsController.text == _lastFatsText) return;
     _lastFatsText = _fatsController.text;
-    final value = double.tryParse(_fatsController.text.replaceAll(',', '.'));
+    var value = double.tryParse(_fatsController.text.replaceAll(',', '.'));
     if (value == null || value < 0) return;
+    value = value.clamp(0.0, AppLimits.ingredientMaxMacro.toDouble());
     final currentFat = _ingredients.isEmpty ? 0.0 : _ingredients[0].fats;
     if (value == currentFat) return;
     if (_autoSync) {
@@ -521,7 +530,8 @@ class _EditMealScreenState extends State<EditMealScreen> {
 
   Meal _buildWorkingMeal({DateTime? forDate}) {
     final date = forDate ?? _selectedDate;
-    return _meal.copyWith(ingredients: List<Ingredient>.from(_ingredients), timestamp: _applyDate(_meal.timestamp, date));
+    final syncedIngredients = _ingredients.map((i) => i.amount != _amountValue ? i.copyWith(amount: _amountValue) : i).toList();
+    return _meal.copyWith(ingredients: syncedIngredients, timestamp: _applyDate(_meal.timestamp, date));
   }
 
   double _initialAmountValue() {
@@ -604,8 +614,16 @@ class _EditMealScreenState extends State<EditMealScreen> {
         name: baseMeal.name,
         ingredients: baseMeal.ingredients
             .map(
-              (i) =>
-                  Ingredient(name: i.name, weight: i.weight, amount: i.amount, calories: i.calories, proteins: i.proteins, carbs: i.carbs, fats: i.fats, confidence: i.confidence),
+              (i) => Ingredient(
+                name: i.name,
+                weight: i.weight,
+                amount: i.amount,
+                calories: i.calories.clamp(0, AppLimits.ingredientMaxCalories.toDouble()),
+                proteins: i.proteins.clamp(0, AppLimits.ingredientMaxMacro.toDouble()),
+                carbs: i.carbs.clamp(0, AppLimits.ingredientMaxMacro.toDouble()),
+                fats: i.fats.clamp(0, AppLimits.ingredientMaxMacro.toDouble()),
+                confidence: i.confidence,
+              ),
             )
             .toList(),
         timestamp: DateTime(date.year, date.month, date.day, DateTime.now().hour, DateTime.now().minute),
@@ -627,6 +645,22 @@ class _EditMealScreenState extends State<EditMealScreen> {
         Get.back();
       },
     );
+  }
+
+  Future<void> _handleFixWithAi() async {
+    final result = await Get.to<Meal>(() => FixResultScreen(baseMeal: _buildWorkingMeal(), selectedDate: _selectedDate, isNewMeal: widget.isNewMeal));
+    if (result == null || !mounted) return;
+    _applyFixResult(result);
+  }
+
+  void _applyFixResult(Meal updatedMeal) {
+    setState(() {
+      _meal = updatedMeal;
+      _ingredients = List<Ingredient>.from(updatedMeal.ingredients);
+      _heroImage = _resolveHeroImage(updatedMeal.photoPath);
+    });
+    _syncNutrientControllers();
+    _nameController.text = updatedMeal.name;
   }
 
   Future<void> _handleSaveImageToGallery() async {
@@ -653,6 +687,15 @@ class _EditMealScreenState extends State<EditMealScreen> {
   }
 
   Future<void> _handleUploadPhoto() async {
+    if (Platform.isIOS) {
+      final status = await Permission.photos.request();
+      if (!status.isGranted && !status.isLimited) {
+        if (status.isPermanentlyDenied) {
+          await openAppSettings();
+        }
+        return;
+      }
+    }
     final picker = ImagePicker();
     final image = await picker.pickImage(source: ImageSource.gallery);
     if (image == null || !mounted) return;
@@ -867,7 +910,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
           icon: CupertinoIcons.sparkles,
           onTap: () {
             Navigator.of(context).pop();
-            if (!_isBusy) Get.to(() => FixResultScreen(baseMeal: _buildWorkingMeal(), selectedDate: _selectedDate, isNewMeal: widget.isNewMeal));
+            if (!_isBusy) _handleFixWithAi();
           },
         ),
         GlassPopupItem(
@@ -895,19 +938,46 @@ class _EditMealScreenState extends State<EditMealScreen> {
   void _openPortionPicker() {
     if (_isBusy || widget.isPreview) return;
     _ensureEditMode();
+    if (_ingredients.isEmpty) {
+      final cal = double.tryParse(_caloriesController.text.replaceAll(',', '.')) ?? 0;
+      final pro = double.tryParse(_proteinController.text.replaceAll(',', '.')) ?? 0;
+      final carb = double.tryParse(_carbsController.text.replaceAll(',', '.')) ?? 0;
+      final fat = double.tryParse(_fatsController.text.replaceAll(',', '.')) ?? 0;
+      if (cal > 0 || pro > 0 || carb > 0 || fat > 0) {
+        _ingredients.add(Ingredient(
+          name: _meal.name.isEmpty ? 'Manual' : _meal.name,
+          weight: 0,
+          amount: _amountValue,
+          calories: cal,
+          proteins: pro,
+          carbs: carb,
+          fats: fat,
+        ));
+      }
+    }
+    final baseIngredients = List<Ingredient>.from(_ingredients);
+    final baseAmount = _amountValue;
     AmountPickerSheet.show(
       context,
       title: _mealTitle,
       initialValue: _amountValue,
       onChanged: (value) {
-        if (_amountValue == 0 || value == _amountValue) return;
-        final scale = value / _amountValue;
+        if (baseAmount == 0 || value == _amountValue) return;
+        final scale = value / baseAmount;
         setState(() {
-          _ingredients = _ingredients
-              .map((i) => i.copyWith(weight: i.weight * scale, amount: value, calories: i.calories * scale, proteins: i.proteins * scale, carbs: i.carbs * scale, fats: i.fats * scale))
+          _ingredients = baseIngredients
+              .map((i) => i.copyWith(
+                    weight: (i.weight * scale).roundToDouble(),
+                    amount: value,
+                    calories: (i.calories * scale).roundToDouble(),
+                    proteins: (i.proteins * scale).roundToDouble(),
+                    carbs: (i.carbs * scale).roundToDouble(),
+                    fats: (i.fats * scale).roundToDouble(),
+                  ))
               .toList();
           _amountValue = value;
         });
+        _syncNutrientControllers();
       },
     );
   }
@@ -917,10 +987,9 @@ class _EditMealScreenState extends State<EditMealScreen> {
     _ensureEditMode();
     final result = await showModalBottomSheet<double>(
       context: context,
-      backgroundColor: AppColors.surface,
-      shape: AppBorders.bottomSheetShape,
-      clipBehavior: Clip.antiAlias,
-      showDragHandle: false,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      barrierColor: AppColors.overlayDark40,
       isScrollControlled: true,
       builder: (context) => _NutrientEditorSheet(label: label, initialValue: currentValue),
     );
@@ -989,27 +1058,6 @@ class _EditMealScreenState extends State<EditMealScreen> {
     currentValue: _totalFats,
     onSave: (v) => _updateNutrientProportionally(v, (i) => i.fats, (i, val) => i.copyWith(fats: val)),
   );
-
-  Future<void> _openMealNameEditor() async {
-    if (_isBusy || widget.isPreview) return;
-    _ensureEditMode();
-    final updatedName = await showModalBottomSheet<String>(
-      context: context,
-      backgroundColor: AppColors.surface,
-      shape: AppBorders.bottomSheetShape,
-      clipBehavior: Clip.antiAlias,
-      showDragHandle: false,
-      isScrollControlled: true,
-      builder: (context) => _MealNameEditorSheet(initialName: _meal.name),
-    );
-
-    if (updatedName == null) return;
-    final nextName = updatedName.trim();
-    setState(() {
-      _meal = _meal.copyWith(name: nextName);
-    });
-    _persistCurrentState();
-  }
 
   void _openMealtimePicker() {
     if (_isBusy || widget.isPreview) return;
@@ -1150,9 +1198,8 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                           timeLabel: _formatTime(_meal.timestamp),
                                           trailingLabel: _weightLabelText,
                                           showTime: !widget.openedFromLogScreen,
-                                          onTitleTap: _isInteractionDisabled || _useInlineEditing ? null : _openMealNameEditor,
-                                          titleController: _useInlineEditing ? _nameController : null,
-                                          titleFocusNode: _useInlineEditing ? _nameFocus : null,
+                                          titleController: _isInteractionDisabled ? null : _nameController,
+                                          titleFocusNode: _isInteractionDisabled ? null : _nameFocus,
                                         ),
                                         Positioned(
                                           left: AppSpacing.edge,
@@ -1192,9 +1239,8 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                       timeLabel: _formatTime(_meal.timestamp),
                                       trailingLabel: _weightLabelText,
                                       showTime: !widget.openedFromLogScreen,
-                                      onTitleTap: _isInteractionDisabled || _useInlineEditing ? null : _openMealNameEditor,
-                                      titleController: _useInlineEditing ? _nameController : null,
-                                      titleFocusNode: _useInlineEditing ? _nameFocus : null,
+                                      titleController: _isInteractionDisabled ? null : _nameController,
+                                      titleFocusNode: _isInteractionDisabled ? null : _nameFocus,
                                     ),
                                     Positioned(
                                       left: AppSpacing.edge,
@@ -1493,79 +1539,6 @@ class _EditMealScreenState extends State<EditMealScreen> {
   }
 }
 
-class _MealNameEditorSheet extends StatefulWidget {
-  final String initialName;
-
-  const _MealNameEditorSheet({required this.initialName});
-
-  @override
-  State<_MealNameEditorSheet> createState() => _MealNameEditorSheetState();
-}
-
-class _MealNameEditorSheetState extends State<_MealNameEditorSheet> {
-  late final TextEditingController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController(text: widget.initialName);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: Padding(
-        padding: EdgeInsets.only(left: AppSpacing.l, right: AppSpacing.l, top: AppSpacing.l, bottom: AppSpacing.l + MediaQuery.viewInsetsOf(context).bottom),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(tr(LocaleKeys.common_name), style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700)),
-            const SizedBox(height: AppSpacing.m),
-            TextField(
-              controller: _controller,
-              autofocus: true,
-              textInputAction: TextInputAction.done,
-              onSubmitted: (value) => Navigator.of(context).pop(value),
-              decoration: InputDecoration(
-                hintText: tr(LocaleKeys.meal_enter_meal_name),
-                hintStyle: AppTextStyles.body16.copyWith(color: AppColors.textTertiary),
-                filled: true,
-                fillColor: AppColors.surfaceMuted,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadii.m), borderSide: BorderSide.none),
-                contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.m),
-              ),
-            ),
-            const SizedBox(height: AppSpacing.m),
-            Row(
-              children: [
-                Expanded(
-                  child: FoodySecondaryButton(label: tr(LocaleKeys.common_cancel), onTap: () => Navigator.of(context).pop()),
-                ),
-                const SizedBox(width: AppSpacing.s),
-                Expanded(
-                  child: FoodyPrimaryButton(
-                    label: tr(LocaleKeys.common_save),
-                    gradient: LinearGradient(colors: [AppColors.primary, AppColors.primary]),
-                    onTap: () => Navigator.of(context).pop(_controller.text),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class _NutrientEditorSheet extends StatefulWidget {
   final String label;
   final double initialValue;
@@ -1599,52 +1572,83 @@ class _NutrientEditorSheetState extends State<_NutrientEditorSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: Padding(
-        padding: EdgeInsets.only(left: AppSpacing.l, right: AppSpacing.l, top: AppSpacing.l, bottom: AppSpacing.l + MediaQuery.viewInsetsOf(context).bottom),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(widget.label, style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700)),
-            const SizedBox(height: AppSpacing.m),
-            TextField(
-              controller: _controller,
-              autofocus: true,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              textInputAction: TextInputAction.done,
-              onSubmitted: (_) => _submit(),
-              decoration: InputDecoration(
-                hintText: widget.label,
-                hintStyle: AppTextStyles.body16.copyWith(color: AppColors.textTertiary),
-                filled: true,
-                fillColor: AppColors.surfaceMuted,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadii.m), borderSide: BorderSide.none),
-                contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.m),
+    final bottomSpacing = Platform.isAndroid ? AppSpacing.xs + AppSpacing.xxxl : AppSpacing.xs;
+    final keyboardInset = MediaQuery.viewInsetsOf(context).bottom;
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: bottomSpacing),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(AppRadii.xxl),
+          topRight: Radius.circular(AppRadii.xxl),
+          bottomLeft: Radius.circular(AppRadii.xxl + 10),
+          bottomRight: Radius.circular(AppRadii.xxl + 10),
+        ),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+          child: CustomPaint(
+            painter: const _GlassEditorSheetPainter(),
+            child: SafeArea(
+              top: false,
+              bottom: false,
+              child: Padding(
+                padding: EdgeInsets.only(bottom: keyboardInset),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(height: AppSpacing.xxs),
+                    SheetDragHandle(color: AppColors.greyLight3),
+                    const SizedBox(height: AppSpacing.s),
+                    SheetTopBar(title: widget.label, onClose: () => Navigator.of(context).pop(), onConfirm: _submit),
+                    const SizedBox(height: AppSpacing.m),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+                      child: TextField(
+                        controller: _controller,
+                        autofocus: true,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                        textInputAction: TextInputAction.done,
+                        onSubmitted: (_) => _submit(),
+                        style: AppTextStyles.body16,
+                        decoration: InputDecoration(
+                          hintText: widget.label,
+                          hintStyle: AppTextStyles.body16.copyWith(color: AppColors.textTertiary),
+                          filled: true,
+                          fillColor: AppColors.surfaceMuted,
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadii.m), borderSide: BorderSide.none),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.m),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.xxl),
+                  ],
+                ),
               ),
             ),
-            const SizedBox(height: AppSpacing.m),
-            Row(
-              children: [
-                Expanded(
-                  child: FoodySecondaryButton(label: tr(LocaleKeys.common_cancel), onTap: () => Navigator.of(context).pop()),
-                ),
-                const SizedBox(width: AppSpacing.s),
-                Expanded(
-                  child: FoodyPrimaryButton(
-                    label: tr(LocaleKeys.common_save),
-                    gradient: LinearGradient(colors: [AppColors.primary, AppColors.primary]),
-                    onTap: _submit,
-                  ),
-                ),
-              ],
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
+}
+
+class _GlassEditorSheetPainter extends CustomPainter {
+  const _GlassEditorSheetPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rrect = RRect.fromLTRBAndCorners(
+      0, 0, size.width, size.height,
+      topLeft: Radius.circular(AppRadii.xxl),
+      topRight: Radius.circular(AppRadii.xxl),
+      bottomLeft: Radius.circular(AppRadii.xxl + 10),
+      bottomRight: Radius.circular(AppRadii.xxl + 10),
+    );
+    canvas.drawRRect(rrect, Paint()..color = AppColors.pickerGlassSolid);
+    canvas.drawRRect(rrect.deflate(0.4), Paint()..style = PaintingStyle.stroke..strokeWidth = 0.8..color = AppColors.glassBorder);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class _EditMealTopBar extends StatelessWidget {

@@ -16,6 +16,8 @@ class PersonalDetailsDietScreen extends StatefulWidget {
     this.onCanProceedChanged,
     this.keepAlive = false,
     this.customPreferences,
+    this.step,
+    this.totalSteps,
   });
 
   final VoidCallback onNext;
@@ -25,6 +27,8 @@ class PersonalDetailsDietScreen extends StatefulWidget {
   final ValueChanged<bool>? onCanProceedChanged;
   final bool keepAlive;
   final String? customPreferences;
+  final int? step;
+  final int? totalSteps;
 
   @override
   State<PersonalDetailsDietScreen> createState() => _PersonalDetailsDietScreenState();
@@ -57,12 +61,83 @@ class _PersonalDetailsDietScreenState extends State<PersonalDetailsDietScreen> w
     }
   }
 
+  Widget _buildDietOptions(TextTheme textTheme) {
+    return Column(
+      children: [
+        OnboardingOptionCard(
+          title: tr(LocaleKeys.onboarding_classic),
+          selected: _selected == 'classic',
+          height: AppSizes.optionCardHeightLarge,
+          leading: const _DietIcon(icon: Icons.restaurant_outlined),
+          onTap: () => _selectDiet('classic'),
+        ),
+        const SizedBox(height: AppSpacing.s),
+        OnboardingOptionCard(
+          title: tr(LocaleKeys.onboarding_vegetarian),
+          selected: _selected == 'vegetarian',
+          height: AppSizes.optionCardHeightLarge,
+          leading: const _DietIcon(icon: Icons.eco_outlined),
+          onTap: () => _selectDiet('vegetarian'),
+        ),
+        const SizedBox(height: AppSpacing.s),
+        OnboardingOptionCard(
+          title: tr(LocaleKeys.onboarding_vegan),
+          selected: _selected == 'vegan',
+          height: AppSizes.optionCardHeightLarge,
+          leading: const _DietIcon(icon: Icons.spa_outlined),
+          onTap: () => _selectDiet('vegan'),
+        ),
+        const SizedBox(height: AppSpacing.m),
+        Center(
+          child: Text(tr(LocaleKeys.common_or), style: textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary)),
+        ),
+        const SizedBox(height: AppSpacing.m),
+        OnboardingOptionCard(
+          title: tr(LocaleKeys.onboarding_custom),
+          selected: _selected == 'custom',
+          height: AppSizes.optionCardHeightLarge,
+          leading: const _DietIcon(icon: CupertinoIcons.slider_horizontal_3),
+          onTap: () => _selectDiet('custom'),
+        ),
+        if (widget.customPreferences?.trim().isNotEmpty ?? false) ...[
+          const SizedBox(height: AppSpacing.m),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
+            child: Text(
+              widget.customPreferences!.trim(),
+              style: AppTextStyles.body15.copyWith(fontWeight: FontWeight.w400),
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     final bool isOnboarding = widget.onCanProceedChanged != null;
+    final bool showProgress = widget.step != null && widget.totalSteps != null;
+
+    if (showProgress) {
+      return OnboardingPage(
+        progress: widget.step! / widget.totalSteps!,
+        onBack: widget.onBack,
+        bottom: OnboardingPrimaryButton(label: tr(LocaleKeys.common_continue_btn), isEnabled: _selected != null, onPressed: _selected != null ? widget.onNext : null),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(tr(LocaleKeys.personal_details_diet), style: Theme.of(context).textTheme.headlineLarge),
+            const SizedBox(height: AppSpacing.l),
+            _buildDietOptions(textTheme),
+          ],
+        ),
+      );
+    }
 
     return ProfileGradientScaffold(
       padding: const EdgeInsets.fromLTRB(AppSpacing.screen, 0, AppSpacing.screen, AppSpacing.xl),
@@ -80,53 +155,7 @@ class _PersonalDetailsDietScreenState extends State<PersonalDetailsDietScreen> w
         children: [
           ProfileTopBar(title: tr(LocaleKeys.personal_details_diet), onBack: widget.onBack),
           const SizedBox(height: AppSpacing.m),
-          OnboardingOptionCard(
-            title: tr(LocaleKeys.onboarding_classic),
-            selected: _selected == 'classic',
-            height: AppSizes.optionCardHeightLarge,
-            leading: const _DietIcon(icon: Icons.restaurant_outlined),
-            onTap: () => _selectDiet('classic'),
-          ),
-          const SizedBox(height: AppSpacing.s),
-          OnboardingOptionCard(
-            title: tr(LocaleKeys.onboarding_vegetarian),
-            selected: _selected == 'vegetarian',
-            height: AppSizes.optionCardHeightLarge,
-            leading: const _DietIcon(icon: Icons.eco_outlined),
-            onTap: () => _selectDiet('vegetarian'),
-          ),
-          const SizedBox(height: AppSpacing.s),
-          OnboardingOptionCard(
-            title: tr(LocaleKeys.onboarding_vegan),
-            selected: _selected == 'vegan',
-            height: AppSizes.optionCardHeightLarge,
-            leading: const _DietIcon(icon: Icons.spa_outlined),
-            onTap: () => _selectDiet('vegan'),
-          ),
-          const SizedBox(height: AppSpacing.m),
-          Center(
-            child: Text(tr(LocaleKeys.common_or), style: textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary)),
-          ),
-          const SizedBox(height: AppSpacing.m),
-          OnboardingOptionCard(
-            title: tr(LocaleKeys.onboarding_custom),
-            selected: _selected == 'custom',
-            height: AppSizes.optionCardHeightLarge,
-            leading: const _DietIcon(icon: CupertinoIcons.slider_horizontal_3),
-            onTap: () => _selectDiet('custom'),
-          ),
-          if (widget.customPreferences?.trim().isNotEmpty ?? false) ...[
-            const SizedBox(height: AppSpacing.m),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
-              child: Text(
-                widget.customPreferences!.trim(),
-                style: AppTextStyles.body15.copyWith(fontWeight: FontWeight.w400),
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
+          _buildDietOptions(textTheme),
         ],
       ),
     );

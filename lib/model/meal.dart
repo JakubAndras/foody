@@ -1,5 +1,6 @@
 import 'package:diplomka/model/ai_response.dart';
 import 'package:diplomka/model/ingredient.dart';
+import 'package:diplomka/utils/app_limits.dart';
 
 class Meal {
   final int? id;
@@ -60,10 +61,10 @@ class Meal {
         name: ingResponse.name,
         weight: weight,
         amount: snappedAmount,
-        calories: ingResponse.nutritionalValues.calories.toDouble(),
-        proteins: ingResponse.nutritionalValues.proteins,
-        carbs: ingResponse.nutritionalValues.carbs,
-        fats: ingResponse.nutritionalValues.fats,
+        calories: ingResponse.nutritionalValues.calories.toDouble().clamp(0, AppLimits.ingredientMaxCalories.toDouble()),
+        proteins: ingResponse.nutritionalValues.proteins.clamp(0, AppLimits.ingredientMaxMacro.toDouble()),
+        carbs: ingResponse.nutritionalValues.carbs.clamp(0, AppLimits.ingredientMaxMacro.toDouble()),
+        fats: ingResponse.nutritionalValues.fats.clamp(0, AppLimits.ingredientMaxMacro.toDouble()),
         confidence: ingResponse.confidence,
       );
     }).toList();

@@ -8,6 +8,7 @@ import 'package:diplomka/screens/main_screen.dart';
 import 'package:diplomka/screens/logs/add_exercise_screen.dart';
 import 'package:diplomka/screens/logs/exercise_detail_screen.dart';
 import 'package:diplomka/screens/logs/exercise_widgets.dart';
+import 'package:diplomka/screens/logs/voice_log_screen.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
@@ -132,10 +133,12 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
               leadingIconSize: AppSizes.iconLg,
               onBack: () => Navigator.of(context).maybePop(),
               actions: [
-                CustomGlassIconButton(
-                  icon: CupertinoIcons.add,
-                  iconSize: AppSizes.iconMd,
-                  onPressed: () => Get.to(() => const AddExerciseScreen()),
+                CustomGlassIconButtonGroup(
+                  iconSize: AppSizes.iconLg,
+                  items: [
+                    (icon: CupertinoIcons.mic, onPressed: () => Get.to(() => const VoiceLogScreen(initialMode: VoiceLogMode.exercise))),
+                    (icon: CupertinoIcons.add, onPressed: () => Get.to(() => const AddExerciseScreen())),
+                  ],
                 ),
               ],
             ),

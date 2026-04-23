@@ -34,7 +34,7 @@ class VoiceLogScreen extends StatefulWidget {
   State<VoiceLogScreen> createState() => _VoiceLogScreenState();
 }
 
-class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProviderStateMixin {
+class _VoiceLogScreenState extends State<VoiceLogScreen> with WidgetsBindingObserver, SingleTickerProviderStateMixin {
   final VoiceTranscriptionService _voiceService = VoiceTranscriptionService();
   final TextEditingController _controller = TextEditingController();
   late final AnimationController _pulseController;
@@ -49,11 +49,17 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
   String _dictationBaseText = '';
   String _currentSessionTranscript = '';
   String? _speechErrorMessage;
+  bool _userRequestedStop = false;
+  int _consecutiveRestarts = 0;
+  static const int _maxConsecutiveRestarts = 5;
+  Timer? _restartTimer;
   VoiceLogMode _mode = VoiceLogMode.meals;
+  bool _awaitingSettingsReturn = false;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _mode = widget.initialMode;
     _pulseController = AnimationController(vsync: this, duration: const Duration(milliseconds: 900))..repeat(reverse: true);
     _pulseAnimation = Tween<double>(begin: 1, end: 1.11).animate(CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut));
@@ -62,10 +68,26 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _restartTimer?.cancel();
     _voiceService.cancelListening().catchError((_) {});
     _pulseController.dispose();
     _controller.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _refreshPermissionStatus().then((_) {
+        if (_awaitingSettingsReturn && _hasPermission && mounted) {
+          _awaitingSettingsReturn = false;
+          _startListening();
+        } else {
+          _awaitingSettingsReturn = false;
+        }
+      });
+    }
   }
 
   Future<void> _refreshPermissionStatus() async {
@@ -146,7 +168,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
                         width: 54,
                         height: 54,
                         decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.pill)),
-                        child: const Icon(CupertinoIcons.mic_fill, color: AppColors.violetStrong, size: AppSizes.iconLg),
+                        child: Icon(CupertinoIcons.mic_fill, color: AppColors.textPrimary, size: AppSizes.iconLg),
                       ),
                       const SizedBox(height: AppSpacing.m),
                       Text(
@@ -173,8 +195,8 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
                               onTap: () async {
                                 Navigator.of(context).pop();
                                 if (_permissionPermanentlyDenied) {
+                                  _awaitingSettingsReturn = true;
                                   await openAppSettings();
-                                  await _refreshPermissionStatus();
                                 } else {
                                   await _requestPermission();
                                 }
@@ -230,6 +252,8 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
 
   Future<void> _startListening() async {
     if (_isAnalyzing) return;
+    _userRequestedStop = false;
+    _consecutiveRestarts = 0;
     final appLocale = context.locale;
     final preferredVoiceLanguageCode = LanguageSettingsService.to.resolveVoiceLogLanguageCode(appLanguageCode: appLocale.languageCode);
 
@@ -262,6 +286,8 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
   }
 
   Future<void> _stopListening({bool paused = false}) async {
+    _userRequestedStop = true;
+    _restartTimer?.cancel();
     if (!_isListening && !paused) return;
     try {
       await _voiceService.stopListening();
@@ -294,6 +320,8 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
 
   Future<void> _toggleMode(VoiceLogMode mode) async {
     if (_mode == mode) return;
+    _userRequestedStop = true;
+    _restartTimer?.cancel();
     String? cancellationErrorMessage;
 
     if (_isListening || _isPaused) {
@@ -371,34 +399,89 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
     }
 
     if (status == SpeechToText.notListeningStatus || status == SpeechToText.doneStatus) {
+      _dictationBaseText = _controller.text.trim();
+      _currentSessionTranscript = '';
+
+      if (!_userRequestedStop && !_isPaused && _consecutiveRestarts < _maxConsecutiveRestarts) {
+        setState(() => _isListening = false);
+        _scheduleRestart();
+        return;
+      }
+
       setState(() {
         _isListening = false;
-        if (!_isPaused) {
-          _dictationBaseText = _controller.text.trim();
-          _currentSessionTranscript = '';
-        }
+        if (_consecutiveRestarts >= _maxConsecutiveRestarts) _consecutiveRestarts = 0;
       });
     }
   }
 
+  void _scheduleRestart() {
+    _restartTimer?.cancel();
+    _restartTimer = Timer(const Duration(milliseconds: 200), () async {
+      if (!mounted || _userRequestedStop || _isPaused || _isAnalyzing) return;
+      _consecutiveRestarts++;
+      try {
+        final appLocale = context.locale;
+        final preferredVoiceLanguageCode = LanguageSettingsService.to.resolveVoiceLogLanguageCode(appLanguageCode: appLocale.languageCode);
+        await _voiceService.startListening(onResult: _handleSpeechResult, appLocale: appLocale, preferredLanguageCode: preferredVoiceLanguageCode);
+        if (!mounted) return;
+        setState(() {
+          _isListening = true;
+          _speechErrorMessage = null;
+        });
+      } catch (_) {
+        if (!mounted) return;
+        setState(() {
+          _isListening = false;
+          _consecutiveRestarts = 0;
+        });
+      }
+    });
+  }
+
   void _handleSpeechError(SpeechRecognitionError error) {
     if (!mounted) return;
+    final errorMsg = error.errorMsg;
+
+    if (errorMsg.contains('permission') || errorMsg.contains('error_audio') || errorMsg.contains('error_busy')) {
+      _userRequestedStop = true;
+      _restartTimer?.cancel();
+      setState(() {
+        _isListening = false;
+        _isPaused = false;
+        _consecutiveRestarts = 0;
+        _currentSessionTranscript = '';
+        if (errorMsg.contains('permission')) {
+          _hasPermission = false;
+          _speechErrorMessage = tr(LocaleKeys.voice_permission_missing);
+        } else {
+          _speechErrorMessage = '${tr(LocaleKeys.voice_recognition_error)}: $errorMsg';
+        }
+      });
+      return;
+    }
+
+    if (!_userRequestedStop && !_isPaused && _consecutiveRestarts < _maxConsecutiveRestarts) {
+      _dictationBaseText = _controller.text.trim();
+      _currentSessionTranscript = '';
+      setState(() => _isListening = false);
+      _scheduleRestart();
+      return;
+    }
+
     setState(() {
       _isListening = false;
       _isPaused = false;
+      _consecutiveRestarts = 0;
       _currentSessionTranscript = '';
-      if (error.errorMsg.contains('permission')) {
-        _hasPermission = false;
-        _speechErrorMessage = tr(LocaleKeys.voice_permission_missing);
-      } else {
-        _speechErrorMessage = '${tr(LocaleKeys.voice_recognition_error)}: ${error.errorMsg}';
-      }
+      _speechErrorMessage = '${tr(LocaleKeys.voice_recognition_error)}: $errorMsg';
     });
   }
 
   void _handleSpeechResult(SpeechRecognitionResult result) {
     final recognized = result.recognizedWords.trim();
     if (recognized.isEmpty) return;
+    _consecutiveRestarts = 0;
 
     _currentSessionTranscript = recognized;
     final nextText = _mergeTranscript(_dictationBaseText, _currentSessionTranscript);
@@ -570,7 +653,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
               child: CustomGlassAppBar(
-                leadingIcon: CupertinoIcons.xmark,
+                leadingIconSize: AppSizes.iconLg,
                 onBack: () => Navigator.of(context).maybePop(),
                 actions: [
                   CustomGlassIconButtonGroup(items: [
@@ -638,7 +721,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
                             AnimatedBuilder(
                               animation: _pulseAnimation,
                               builder: (context, child) {
-                                final scale = _isListening ? _pulseAnimation.value : 1.0;
+                                final scale = (_isListening || _restartTimer?.isActive == true) ? _pulseAnimation.value : 1.0;
                                 return Transform.scale(scale: scale, child: child);
                               },
                               child: VoiceMicButton(
@@ -648,9 +731,12 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with SingleTickerProvid
                               ),
                             ),
                             const SizedBox(height: AppSpacing.s),
-                            if (_isListening || _isPaused || _isAnalyzing || _speechErrorMessage != null)
+                            if (_isListening || _isPaused || _isAnalyzing || _speechErrorMessage != null || _restartTimer?.isActive == true)
                               Text(
-                                _speechErrorMessage ?? (_isAnalyzing ? tr(LocaleKeys.voice_analyzing) : (_isPaused ? tr(LocaleKeys.voice_paused) : tr(LocaleKeys.voice_listening))),
+                                _speechErrorMessage ??
+                                    (_isAnalyzing
+                                        ? tr(LocaleKeys.voice_analyzing)
+                                        : (_isPaused ? tr(LocaleKeys.voice_paused) : (_isListening ? tr(LocaleKeys.voice_listening) : tr(LocaleKeys.voice_resuming)))),
                                 style: AppTextStyles.body14.copyWith(color: _speechErrorMessage == null ? AppColors.textPrimary : AppColors.error, fontWeight: FontWeight.w600),
                                 textAlign: TextAlign.center,
                               ),
@@ -684,7 +770,7 @@ class _PermissionDialogButton extends StatelessWidget {
       child: Container(
         height: 44,
         decoration: BoxDecoration(
-          color: emphasized ? AppColors.violetStrong : Colors.white.withValues(alpha: 0.72),
+          color: emphasized ? AppColors.textPrimary : Colors.white.withValues(alpha: 0.72),
           borderRadius: BorderRadius.circular(AppRadii.pill),
           border: emphasized ? null : Border.all(color: AppColors.outline, width: 1),
         ),

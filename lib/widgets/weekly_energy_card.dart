@@ -91,11 +91,15 @@ class _WeeklyEnergyCardState extends State<WeeklyEnergyCard> {
       step = 100;
     } else if (maxValue <= 1000) {
       step = 500;
-    } else {
+    } else if (maxValue <= 5000) {
       step = 1000;
+    } else {
+      step = (maxValue / 5).ceil();
     }
     final int ceiling = ((maxValue / step).ceil()) * step;
-    return List.generate((ceiling ~/ step) + 1, (i) => ceiling - i * step);
+    final int tickCount = (ceiling ~/ step) + 1;
+    if (tickCount > 10) return List.generate(6, (i) => (ceiling - i * (ceiling ~/ 5)).clamp(0, ceiling));
+    return List.generate(tickCount, (i) => ceiling - i * step);
   }
 
   @override
@@ -339,9 +343,9 @@ class _WeeklyEnergyBarPainter extends CustomPainter {
 
       // Left bar: stacked BMR (bottom) + Exercise (top) — for past and today
       if (day.isPastOrToday && effectiveBmr > 0 && day.goal > 0) {
-        final totalGoalHeight = (day.goal / chartMax) * size.height;
-        final bmrHeight = (effectiveBmr / chartMax) * size.height;
-        final exerciseHeight = totalGoalHeight - bmrHeight;
+        final totalGoalHeight = ((day.goal / chartMax) * size.height).clamp(0.0, size.height);
+        final bmrHeight = ((effectiveBmr / chartMax) * size.height).clamp(0.0, size.height);
+        final exerciseHeight = (totalGoalHeight - bmrHeight).clamp(0.0, size.height);
 
         if (exerciseHeight > 0) {
           // BMR bottom segment — rounded bottom only
@@ -357,13 +361,13 @@ class _WeeklyEnergyBarPainter extends CustomPainter {
         }
       } else if (day.burned > 0) {
         // No BMR available — fallback: show exercise bar alone
-        final barHeight = (day.burned / chartMax) * size.height;
+        final barHeight = ((day.burned / chartMax) * size.height).clamp(0.0, size.height);
         canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(leftBarLeft, size.height - barHeight, barWidth, barHeight), radius), burnedPaint);
       }
 
       // Right bar: Consumed
       if (day.consumed > 0) {
-        final barHeight = (day.consumed / chartMax) * size.height;
+        final barHeight = ((day.consumed / chartMax) * size.height).clamp(0.0, size.height);
         final left = slotCenter + gap / 2;
         canvas.drawRRect(RRect.fromRectAndRadius(Rect.fromLTWH(left, size.height - barHeight, barWidth, barHeight), radius), consumedPaint);
       }

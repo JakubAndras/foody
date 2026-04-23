@@ -13,7 +13,6 @@ import 'package:diplomka/screens/onboarding/onboarding_plan_ready_screen.dart';
 import 'package:diplomka/screens/onboarding/onboarding_rollover_screen.dart';
 import 'package:diplomka/screens/onboarding/onboarding_save_progress_screen.dart';
 import 'package:diplomka/screens/onboarding/onboarding_desired_weight_screen.dart';
-import 'package:diplomka/screens/onboarding/onboarding_weight_loss_speed_screen.dart';
 import 'package:diplomka/screens/onboarding/onboarding_welcome_screen.dart';
 import 'package:diplomka/screens/onboarding/onboarding_workouts_screen.dart';
 import 'package:diplomka/services/session_manager.dart';
@@ -89,7 +88,7 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
     // Gender is always index 1, Workouts always index 2, Goal always index 5
     if (index == 1 || index == 2 || index == 5) return true;
     // Diet screen index shifts depending on whether weight screens are shown
-    final int dietIndex = _isGoalMaintain ? 6 : 8;
+    final int dietIndex = _isGoalMaintain ? 6 : 7;
     return index == dietIndex;
   }
 
@@ -123,7 +122,7 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
   }
 
   List<Widget> get _screens {
-    final int wOffset = _isGoalMaintain ? 0 : 2;
+    final int wOffset = _isGoalMaintain ? 0 : 1;
     final int dOffset = _showCustomDiet ? 1 : 0;
     final int totalSteps = 8 + wOffset + dOffset;
     final int postDiet = 7 + wOffset + dOffset;
@@ -135,13 +134,23 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
       OnboardingHeightWeightScreen(onNext: _next, onBack: _previous, step: 3, totalSteps: totalSteps),
       OnboardingDobScreen(onNext: _next, onBack: _previous, step: 4, totalSteps: totalSteps),
       OnboardingGoalScreen(onNext: _next, onBack: _previous, step: 5, totalSteps: totalSteps, onCanProceedChanged: (canProceed) => _setCanProceed(5, canProceed), onGoalChanged: _handleGoalChanged),
-      if (!_isGoalMaintain) OnboardingDesiredWeightScreen(onNext: _next, onBack: _previous, step: 6, totalSteps: totalSteps),
-      if (!_isGoalMaintain) OnboardingWeightLossSpeedScreen(onNext: _next, onBack: _previous, step: 7, totalSteps: totalSteps),
+      if (!_isGoalMaintain)
+        OnboardingDesiredWeightScreen(
+          onNext: () async {
+            await SessionManager.to.applyRecommendedWeightChangeRate();
+            _next();
+          },
+          onBack: _previous,
+          step: 6,
+          totalSteps: totalSteps,
+        ),
       PersonalDetailsDietScreen(
         onNext: _next,
         onBack: _previous,
         keepAlive: true,
-        onCanProceedChanged: (canProceed) => _setCanProceed(_isGoalMaintain ? 6 : 8, canProceed),
+        step: _isGoalMaintain ? 6 : 7,
+        totalSteps: totalSteps,
+        onCanProceedChanged: (canProceed) => _setCanProceed(_isGoalMaintain ? 6 : 7, canProceed),
         onDietChanged: _handleDietChanged,
       ),
       if (_showCustomDiet)

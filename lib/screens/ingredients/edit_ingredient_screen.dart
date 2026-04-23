@@ -1,4 +1,5 @@
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/utils/app_limits.dart';
 import 'package:diplomka/controller/day_record_controller.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/ingredient.dart';
@@ -80,6 +81,8 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
   late _UnitOption _selectedUnit;
   late final double _initialDisplayWeight;
 
+  int get _maxAmountForUnit => (AppLimits.ingredientMaxWeightGrams / _selectedUnit.grams).floor().clamp(1, AppLimits.ingredientMaxAmount);
+
   @override
   void initState() {
     super.initState();
@@ -153,8 +156,15 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
     if (_isSyncing) return;
     if (_caloriesController.text == _lastCaloriesText) return;
     _lastCaloriesText = _caloriesController.text;
-    final value = double.tryParse(_caloriesController.text.replaceAll(',', '.'));
-    if (value == null || value < 0) return;
+    final parsed = double.tryParse(_caloriesController.text.replaceAll(',', '.'));
+    if (parsed == null || parsed < 0) return;
+    final double value = parsed.clamp(0.0, AppLimits.ingredientMaxCalories.toDouble());
+    if (value != parsed) {
+      _isSyncing = true;
+      _caloriesController.text = value.toStringAsFixed(0);
+      _lastCaloriesText = _caloriesController.text;
+      _isSyncing = false;
+    }
     if (value == _calories) return;
     if (_autoSync) {
       double newP;
@@ -207,8 +217,15 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
     if (_isSyncing) return;
     if (_proteinsController.text == _lastProteinsText) return;
     _lastProteinsText = _proteinsController.text;
-    final value = double.tryParse(_proteinsController.text.replaceAll(',', '.'));
-    if (value == null || value < 0) return;
+    final parsedPro = double.tryParse(_proteinsController.text.replaceAll(',', '.'));
+    if (parsedPro == null || parsedPro < 0) return;
+    final double value = parsedPro.clamp(0.0, AppLimits.ingredientMaxMacro.toDouble());
+    if (value != parsedPro) {
+      _isSyncing = true;
+      _proteinsController.text = value.toStringAsFixed(0);
+      _lastProteinsText = _proteinsController.text;
+      _isSyncing = false;
+    }
     if (value == _proteins) return;
     _proteins = value;
     if (_autoSync) {
@@ -226,8 +243,15 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
     if (_isSyncing) return;
     if (_carbsController.text == _lastCarbsText) return;
     _lastCarbsText = _carbsController.text;
-    final value = double.tryParse(_carbsController.text.replaceAll(',', '.'));
-    if (value == null || value < 0) return;
+    final parsedCarb = double.tryParse(_carbsController.text.replaceAll(',', '.'));
+    if (parsedCarb == null || parsedCarb < 0) return;
+    final double value = parsedCarb.clamp(0.0, AppLimits.ingredientMaxMacro.toDouble());
+    if (value != parsedCarb) {
+      _isSyncing = true;
+      _carbsController.text = value.toStringAsFixed(0);
+      _lastCarbsText = _carbsController.text;
+      _isSyncing = false;
+    }
     if (value == _carbs) return;
     _carbs = value;
     if (_autoSync) {
@@ -245,8 +269,15 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
     if (_isSyncing) return;
     if (_fatsController.text == _lastFatsText) return;
     _lastFatsText = _fatsController.text;
-    final value = double.tryParse(_fatsController.text.replaceAll(',', '.'));
-    if (value == null || value < 0) return;
+    final parsedFat = double.tryParse(_fatsController.text.replaceAll(',', '.'));
+    if (parsedFat == null || parsedFat < 0) return;
+    final double value = parsedFat.clamp(0.0, AppLimits.ingredientMaxMacro.toDouble());
+    if (value != parsedFat) {
+      _isSyncing = true;
+      _fatsController.text = value.toStringAsFixed(0);
+      _lastFatsText = _fatsController.text;
+      _isSyncing = false;
+    }
     if (value == _fats) return;
     _fats = value;
     if (_autoSync) {
@@ -264,29 +295,17 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
     if (_isSyncing) return;
     if (_amountController.text == _lastAmountText) return;
     _lastAmountText = _amountController.text;
-    final value = int.tryParse(_amountController.text);
-    if (value == null || value <= 0) return;
-    final newWeight = value * _selectedUnit.grams;
-    if (_weight > 0) {
-      final ratio = newWeight / _weight;
+    final parsed = int.tryParse(_amountController.text);
+    if (parsed == null || parsed <= 0) return;
+    final value = parsed.clamp(1, _maxAmountForUnit);
+    if (value != parsed) {
       _isSyncing = true;
-      setState(() {
-        _calories = (_calories * ratio).roundToDouble();
-        _proteins = (_proteins * ratio).roundToDouble();
-        _carbs = (_carbs * ratio).roundToDouble();
-        _fats = (_fats * ratio).roundToDouble();
-        _weight = newWeight;
-        _caloriesController.text = _calories.toStringAsFixed(0);
-        _proteinsController.text = _proteins.toStringAsFixed(0);
-        _carbsController.text = _carbs.toStringAsFixed(0);
-        _fatsController.text = _fats.toStringAsFixed(0);
-        _lastCaloriesText = _caloriesController.text;
-        _lastProteinsText = _proteinsController.text;
-        _lastCarbsText = _carbsController.text;
-        _lastFatsText = _fatsController.text;
-      });
+      _amountController.text = value.toString();
+      _lastAmountText = _amountController.text;
       _isSyncing = false;
-    } else if (_savedCalPerGram > 0 || _savedProPerGram > 0 || _savedCarbPerGram > 0 || _savedFatPerGram > 0) {
+    }
+    final newWeight = value * _selectedUnit.grams;
+    if (_savedCalPerGram > 0 || _savedProPerGram > 0 || _savedCarbPerGram > 0 || _savedFatPerGram > 0) {
       _isSyncing = true;
       setState(() {
         _calories = (newWeight * _savedCalPerGram).roundToDouble();
@@ -309,14 +328,14 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
     }
     _recomputeCalorieOffset();
     _updateSavedRatios(cal: _calories, pro: _proteins, carb: _carbs, fat: _fats);
-    _updateSavedPerGram(weight: _weight, cal: _calories, pro: _proteins, carb: _carbs, fat: _fats);
   }
 
   void _onUnitSelected(_UnitOption unit) {
     if (unit == _selectedUnit) return;
     setState(() {
       _selectedUnit = unit;
-      final newAmount = (_weight / unit.grams).round().clamp(1, 999999);
+      final maxForUnit = (AppLimits.ingredientMaxWeightGrams / unit.grams).floor().clamp(1, AppLimits.ingredientMaxAmount);
+      final newAmount = (_weight / unit.grams).round().clamp(1, maxForUnit);
       _isSyncing = true;
       _amountController.text = newAmount.toString();
       _isSyncing = false;

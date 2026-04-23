@@ -56,6 +56,24 @@ class ExerciseTemplateRepository extends GetxService {
     await refreshTemplates();
   }
 
+  Future<void> updateTemplateValues({
+    required ExerciseTemplate template,
+    required String name,
+    required double caloriesBurned,
+    int? durationMinutes,
+  }) async {
+    if (template.id == null) return;
+    final entity = await _templateDao.findByNormalizedName(template.normalizedName);
+    if (entity == null) return;
+    await _templateDao.updateTemplate(entity.copyWith(
+      name: name,
+      normalizedName: ExerciseTemplate.normalize(name),
+      caloriesBurned: caloriesBurned,
+      durationMinutes: durationMinutes,
+    ));
+    await refreshTemplates();
+  }
+
   Future<void> deleteTemplate(ExerciseTemplate template) async {
     if (template.id == null) return;
     await _templateDao.deleteTemplateById(template.id!);

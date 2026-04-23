@@ -1,6 +1,9 @@
 import 'dart:io';
 
 import 'package:diplomka/controller/streak_controller.dart';
+import 'package:diplomka/services/tracking_reminder_service.dart';
+import 'package:diplomka/utils/app_limits.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:diplomka/services/health_integration_service.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
@@ -60,6 +63,13 @@ class DashboardController extends BaseController {
   DateTime? _exerciseAnalysisLoadingStartedAt;
   static const Duration _minMealLoadingVisible = Duration(milliseconds: 900);
   static const Duration _minExerciseLoadingVisible = Duration(milliseconds: 900);
+  bool _isInForeground = true;
+
+  @override
+  void onResumed() => _isInForeground = true;
+
+  @override
+  void onPaused() => _isInForeground = false;
 
   @override
   void onInit() {
@@ -170,7 +180,7 @@ class DashboardController extends BaseController {
     final permission = source == ImageSource.camera ? Permission.camera : Permission.photos;
     final status = await permission.request();
 
-    if (!status.isGranted) {
+    if (!status.isGranted && !status.isLimited) {
       String message;
       if (status.isPermanentlyDenied) {
         message = source == ImageSource.camera ? tr(LocaleKeys.error_camera_permanently_denied) : tr(LocaleKeys.error_gallery_permanently_denied);
@@ -293,6 +303,9 @@ class DashboardController extends BaseController {
         description: request.trimmedDescription,
         preferredMealName: request.preferredMealName,
       );
+      if (flowResult.success) {
+        _notifyRecognitionComplete(message: tr(LocaleKeys.dashboard_meal_recognised), notificationId: 4001);
+      }
       return flowResult;
     } catch (e) {
       showSnackBar(
@@ -335,6 +348,7 @@ class DashboardController extends BaseController {
         );
         await Future<void>.delayed(const Duration(milliseconds: 300));
         refresh();
+        _notifyRecognitionComplete(message: tr(LocaleKeys.dashboard_meal_recognised), notificationId: 4001);
         return;
       }
 
@@ -414,6 +428,7 @@ class DashboardController extends BaseController {
         exerciseToSave: exercise,
       );
       refresh();
+      _notifyRecognitionComplete(message: tr(LocaleKeys.dashboard_exercise_recognised), notificationId: 4002);
     } catch (e) {
       showSnackBar(
         message: tr(LocaleKeys.error_exercise_analysis_failed),
@@ -492,10 +507,10 @@ class DashboardController extends BaseController {
           name: result.productName,
           weight: productWeight,
           amount: 1,
-          calories: (nutriments.caloriesPer100g ?? 0) * scale,
-          proteins: (nutriments.proteinsPer100g ?? 0) * scale,
-          carbs: (nutriments.carbsPer100g ?? 0) * scale,
-          fats: (nutriments.fatsPer100g ?? 0) * scale,
+          calories: ((nutriments.caloriesPer100g ?? 0) * scale).clamp(0, AppLimits.ingredientMaxCalories.toDouble()),
+          proteins: ((nutriments.proteinsPer100g ?? 0) * scale).clamp(0, AppLimits.ingredientMaxMacro.toDouble()),
+          carbs: ((nutriments.carbsPer100g ?? 0) * scale).clamp(0, AppLimits.ingredientMaxMacro.toDouble()),
+          fats: ((nutriments.fatsPer100g ?? 0) * scale).clamp(0, AppLimits.ingredientMaxMacro.toDouble()),
         ),
       ],
       timestamp: timestamp,
@@ -660,11 +675,24 @@ class DashboardController extends BaseController {
     scrollToExercisesRequestId.value += 1;
   }
 
-  // Placeholder for refresh method, if it needs to be part of this controller
-  @override
+  void _notifyRecognitionComplete({required String message, required int notificationId}) {
+    if (_isInForeground) {
+      showSnackBar(message: message, type: SnackBarType.success);
+    } else {
+      TrackingReminderService.to.notificationsPlugin.show(
+        notificationId,
+        tr(LocaleKeys.common_app_name),
+        message,
+        const NotificationDetails(
+          android: AndroidNotificationDetails(trackingRemindersChannelId, 'Foody', importance: Importance.high, priority: Priority.high),
+          iOS: DarwinNotificationDetails(),
+        ),
+      );
+    }
+  }
+
   void refresh() {
     _fetchDayRecord(selectedDate.value);
     _fetchStreakInfo();
-    // Add other refresh logic if needed
   }
 }

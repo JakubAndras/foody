@@ -65,6 +65,7 @@ class _PersonalDetailsCustomDietScreenState extends State<PersonalDetailsCustomD
               label: tr(LocaleKeys.common_continue_btn),
               isEnabled: hasText,
               onPressed: () {
+                _focusNode.unfocus();
                 widget.onPreferencesSaved?.call(_controller.text.trim());
                 widget.onNext();
               },

@@ -60,7 +60,7 @@ class OnboardingWelcomeScreen extends StatelessWidget {
                       //     ),
                       //   ],
                       // ),
-                      const SizedBox(height: AppSpacing.xxl),
+                      const SizedBox(height: AppSpacing.m),
                     ],
                   ),
                 ),

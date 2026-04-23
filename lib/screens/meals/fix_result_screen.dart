@@ -1,7 +1,6 @@
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/meal.dart';
-import 'package:diplomka/screens/meals/edit_meal_screen.dart';
 import 'package:diplomka/screens/meals/meal_components.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 import 'package:diplomka/screens/scan/scan_widgets.dart';
@@ -163,6 +162,6 @@ class _FixResultScreenState extends State<FixResultScreen> {
       name: analyzedMeal.name.isEmpty && baseMeal != null ? baseMeal.name : analyzedMeal.name,
     );
 
-    Get.off(() => EditMealScreen(meal: updatedMeal, isNewMeal: widget.isNewMeal, selectedDate: widget.selectedDate));
+    Get.back(result: updatedMeal);
   }
 }
