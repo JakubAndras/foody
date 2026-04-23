@@ -248,7 +248,7 @@ _
 
 | NFR metrika | Hodnota | Limit   |
 |-------------|---------|---------|
-| Počet kroků pro zápis (NFR-03) | _____ | 9 kroků | minimalni mozny je 9
+| Počet kroků pro zápis (NFR-03) | _____ | 12 kroků | minimalni mozny je 9
 
 **Poznámky (think aloud, pozorování, problémy):**
 

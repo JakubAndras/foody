@@ -250,7 +250,7 @@ UI/flow ok
 
 | NFR metrika | Hodnota | Limit   |
 |-------------|---------|---------|
-| Počet kroků pro zápis (NFR-03) | __14___ | 9 kroků |
+| Počet kroků pro zápis (NFR-03) | __14___ | 12 kroků |
 
 **Poznámky (think aloud, pozorování, problémy):**
 

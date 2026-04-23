@@ -245,7 +245,7 @@ mealtime v Edit Meal bottomSheet chybi Check button. Participantka ho tam intuit
 
 | NFR metrika | Hodnota | Limit   |
 |-------------|---------|---------|
-| Počet kroků pro zápis (NFR-03) | __10___  | 9 kroků | 
+| Počet kroků pro zápis (NFR-03) | __10___  | 12 kroků | 
 
 **Poznámky (think aloud, pozorování, problémy):**
 
