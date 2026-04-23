@@ -5,7 +5,7 @@
 ## 1. Přehled participantů
 
 | Údaj | P1 | P2 | P3 |
-|------|----|----|-----|
+|------------------------------|----------------|----------------|----------------|
 | Věk | 28 let | 25 let | 54 let |
 | Pohlaví | žena | muž | žena |
 | Primární cíl | hubnutí | hubnutí a nabírání | hubnutí |
@@ -22,7 +22,7 @@
 ### 2.1 Dokončení a kritické chyby po úlohách
 
 | Úloha | P1 dok. | P2 dok. | P3 dok. | P1 krit. | P2 krit. | P3 krit. |
-|-------|---------|---------|---------|----------|----------|----------|
+|----------------------|----------|----------|----------|----------|----------|----------|
 | T1: Onboarding | ano | ano | ano | 0 | 0 | 0 |
 | T2: Foto jídla | ano | ano | ano | 0 | 0 | 0 |
 | T3: Import z galerie | s pomocí | ano | s pomocí | 1 | 0 | 1 |
@@ -43,7 +43,7 @@
 ### 2.2 Souhrnné dokončení napříč participanty
 
 | Metrika | Hodnota |
-|---------|---------|
+|----------------------------------------|-------------------------------|
 | Celkový počet provedených úloh | 48 (16 úloh x 3 participanti) |
 | Dokončeno samostatně (ano) | 42 / 48 (87,5 %) |
 | Dokončeno s pomocí | 6 / 48 (12,5 %) |
@@ -55,7 +55,7 @@
 ### 2.3 Úlohy s opakovanými problémy
 
 | Úloha | Počet „s pomocí" | Počet krit. chyb | Poznámka |
-|-------|-------------------|-------------------|----------|
+|----------------------|---------|---------|-----------------------------------------------|
 | T3: Import z galerie | 2/3 | 2 | Ikona pro výběr z galerie příliš schovaná |
 | T8: Oblíbené | 2/3 | 2 | Funkce obtížně nalezitelná, neintuitivní ikona |
 | T9: Duplikace | 1/3 | 1 | Nejasné zadání vs. přidání nového záznamu |
@@ -70,7 +70,7 @@
 ### 3.1 SEQ po úlohách
 
 | Úloha | P1 | P2 | P3 | Průměr |
-|-------|----|----|-----|--------|
+|----------------------|------|------|------|--------|
 | T1: Onboarding | 6 | 7 | 7 | 6,67 |
 | T2: Foto jídla | 6 | 7 | 7 | 6,67 |
 | T3: Import z galerie | 5 | 5 | 4 | 4,67 |
@@ -91,7 +91,7 @@
 ### 3.2 SEQ souhrnně
 
 | Metrika | P1 | P2 | P3 | Celkový průměr |
-|---------|----|----|-----|----------------|
+|------------|--------|--------|--------|----------------|
 | SEQ průměr | 6,1875 | 6,00 | 6,5625 | 6,25 |
 
 Celkový průměr SEQ = (99 + 96 + 105) / 48 = 300 / 48 = **6,25** (nad benchmarkem 5,5).
@@ -105,7 +105,7 @@ Celkový průměr SEQ = (99 + 96 + 105) / 48 = 300 / 48 = **6,25** (nad benchmar
 ### 4.1 Latence AI rozpoznávání (T2, limit 20 s)
 
 | Participant | Hodnota |
-|-------------|---------|
+|-------------|------------|
 | P1 | 6 s |
 | P2 | 9 s |
 | P3 | 8 s |
@@ -116,7 +116,7 @@ Splněno u všech participantů.
 ### 4.2 Počet kroků pro zápis
 
 | Úloha | P1 | P2 | P3 | Průměr | Limit | Splněno |
-|-------|----|----|-----|--------|-------|---------|
+|----------------------|------|------|------|--------|-------|----------------|
 | T2: Foto jídla | 5 | 5 | 4 | 4,67 | 6 | ano |
 | T5: Hlasový vstup | 4 | 4 | 6 | 4,67 | 6 | ano |
 | T6: Čárový kód | 2 | 2 | 2 | 2,00 | 6 | ano |
@@ -125,7 +125,7 @@ Splněno u všech participantů.
 ### 4.3 Čas zápisu nového záznamu (T2, limit 5 min)
 
 | Participant | Hodnota |
-|-------------|---------|
+|-------------|------------|
 | P1 | 24 s |
 | P2 | 26 s |
 | P3 | 16 s |
@@ -136,7 +136,7 @@ Splněno u všech participantů.
 ### 4.4 Čas opakovaného záznamu (T8, limit 1 min)
 
 | Participant | Hodnota |
-|-------------|---------|
+|-------------|------------|
 | P1 | 36 s |
 | P2 | 27 s |
 | P3 | 56 s |
@@ -151,7 +151,7 @@ Splněno u všech participantů.
 ### 5.1 Odpovědi po položkách
 
 | # | Tvrzení | P1 | P2 | P3 |
-|---|---------|----|----|-----|
+|---|---------------------------------------------|------|------|------|
 | 1 | Rád/a bych aplikaci používal/a pravidelně | 5 | 4 | 5 |
 | 2 | Zbytečně složitá | 1 | 2 | 2 |
 | 3 | Snadno se používá | 4 | 5 | 4 |
@@ -166,7 +166,7 @@ Splněno u všech participantů.
 ### 5.2 SUS skóre
 
 | Participant | S_L (liché) | S_S (sudé) | SUS skóre | Interpretace |
-|-------------|-------------|------------|-----------|--------------|
+|-------------|-------------|------------|-----------|-----------------|
 | P1 | 22 | 6 | 90 | top 10 % |
 | P2 | 22 | 11 | 77,5 | nadprůměrné |
 | P3 | 22 | 6 | 90 | top 10 % |
@@ -183,7 +183,7 @@ Interpretace: 0-50 = neakceptovatelné, 51-68 = podprůměrné, 68 = průměr, 6
 ### 6.1 Odpovědi po položkách (škála -3 až +3)
 
 | # | Dimenze | Pól (-3 / +3) | P1 | P2 | P3 |
-|---|---------|---------------|----|----|-----|
+|---|-------------|---------------------------|------|------|------|
 | 1 | Pragmatická | bránící / podporující | +2 | 0 | +3 |
 | 2 | Pragmatická | složitý / jednoduchý | +2 | +2 | +2 |
 | 3 | Pragmatická | neefektivní / efektivní | +2 | 0 | +3 |
@@ -196,7 +196,7 @@ Interpretace: 0-50 = neakceptovatelné, 51-68 = podprůměrné, 68 = průměr, 6
 ### 6.2 UEQ-S skóre
 
 | Metrika | P1 | P2 | P3 | Průměr | Interpretace |
-|---------|----|----|-----|--------|--------------|
+|----------------------|--------|--------|--------|--------|--------------|
 | Pragmatická kvalita | 1,75 | 0,75 | 2,50 | 1,667 | pozitivní |
 | Hedonická kvalita | 1,75 | 2,50 | 2,25 | 2,167 | pozitivní |
 | Celkové skóre | 1,75 | 1,625 | 2,375 | 1,917 | pozitivní |
@@ -218,7 +218,7 @@ Všichni tři participanti hodnotili aplikaci pozitivně. Opakovaně zmiňovali 
 ### 7.2 Co se nejvíce líbilo
 
 | Participant | Odpověď |
-|-------------|---------|
+|-------------|----------------------------------------------------------|
 | P1 | Vizuál dashboardu (kalorie, makra), minimalistický design |
 | P2 | Hlasové zadávání |
 | P3 | Hlasové zadávání |
@@ -253,45 +253,45 @@ Všichni tři participanti by aplikaci používali pravidelně.
 
 ### 8.1 Nalezené bugy
 
-| # | Bug | Úloha | Participant | Popis |
-|---|-----|-------|-------------|-------|
-| 1 | Částečný přístup do galerie rozbije import | T3 | P1 | Při částečném přístupu do galerie (iOS permission) nelze přidat fotografii. |
-| 2 | Pád aplikace při extrémních hodnotách | T12 | P2 | Kopírování záznamu s extrémně velkými hodnotami do více dnů způsobí pád Dashboard grafů. |
-| 3 | Bug v Fix Issue feature | T4 | P2 | Fix Issue vytvoří jakoby další Edit Meal screen (duplikace obrazovky). |
-| 4 | Bug v amount funkci u jídla bez ingrediencí | T11 | P2 | Změna Amount hodnoty nemění kalorie a makra u jídel bez ingrediencí. |
-| 5 | Exercise edit a save nefunguje | T12 | P2 | Nelze uložit upravené cvičení. |
-| 6 | Dlouhé hlasové vstupy se useknou | T5, T12 | P3 | Nahrávání se v půlce přestane zaznamenávat u delších promluv. |
-| 7 | Klávesnice zůstává vysunutá | T1 | P1, P2, P3 | Na obrazovce custom diety v onboardingu zůstane klávesnice vysunutá po odeslání. |
-| 8 | Notifikace o dokončení rozpoznání nepřišla | T3 | P1 | Loading karta zmiňuje notifikaci po dokončení, ale žádná nedorazí. |
-| 9 | Návrat na Dashboard místo Voice Log | T5 | P1 | Po udělení systémového oprávnění se uživatel vrátí na Dashboard místo zpět na Voice Log obrazovku. |
-| 10 | Editace gramáže vynuluje makra přes auto sync | — | notes | Při editaci gramáže se auto syncem vynuluje macro hodnota. |
-| 11 | Edit Meal: edit názvu používá starý bottomSheet | — | notes | Obrazovka Edit Meal při editaci názvu jídla používá zastaralý bottomSheet. |
+| # | Bug | Úloha    | Parti. | Popis |
+|---|------------------------------|---------|--------|--------------------------------------------|
+| 1 | Částečný přístup do galerie rozbije import | T3       | P1 | Při částečném přístupu do galerie (iOS permission) nelze přidat fotografii. |
+| 2 | Pád aplikace při extrémních hodnotách | T12      | P2 | Kopírování záznamu s extrémně velkými hodnotami do více dnů způsobí pád Dashboard grafů. |
+| 3 | Bug v Fix Issue feature | T4       | P2 | Fix Issue vytvoří jakoby další Edit Meal screen (duplikace obrazovky). |
+| 4 | Bug v amount funkci u jídla bez ingrediencí | T11      | P2 | Změna Amount hodnoty nemění kalorie a makra u jídel bez ingrediencí. |
+| 5 | Exercise edit a save nefunguje | T12      | P2 | Nelze uložit upravené cvičení. |
+| 6 | Dlouhé hlasové vstupy se useknou | T5, T12  | P3 | Nahrávání se v půlce přestane zaznamenávat u delších promluv. |
+| 7 | Klávesnice zůstává vysunutá | T1       | P1, P2, P3 | Na obrazovce custom diety v onboardingu zůstane klávesnice vysunutá po odeslání. |
+| 8 | Notifikace o dokončení rozpoznání nepřišla | T3       | P1 | Loading karta zmiňuje notifikaci po dokončení, ale žádná nedorazí. |
+| 9 | Návrat na Dashboard místo Voice Log | T5       | P1 | Po udělení systémového oprávnění se uživatel vrátí na Dashboard místo zpět na Voice Log obrazovku. |
+| 10 | Editace gramáže vynuluje makra přes auto sync | —        | notes | Při editaci gramáže se auto syncem vynuluje macro hodnota. |
+| 11 | Edit Meal: edit názvu používá starý bottomSheet | —        | notes | Obrazovka Edit Meal při editaci názvu jídla používá zastaralý bottomSheet. |
 
 ### 8.2 UI/UX problémy
 
-| # | Problém | Úloha | Participanti | Doporučení |
-|---|---------|-------|--------------|------------|
-| 1 | Ikona pro import z galerie příliš schovaná | T3 | P1, P2, P3 | Dva ze tří participantů potřebovali pomoc. Tlačítko pro výběr fotografie z galerie není dostatečně viditelné. |
-| 2 | Funkce oblíbených obtížně nalezitelná | T8 | P1, P3 | Dva ze tří participantů potřebovali pomoc. Neintuitivní ikona, segment tab „Oblíbené" špatně čitelný, chybí onboarding/nápověda. |
-| 3 | Ikona oblíbených neintuitivní | T8 | P1, P2, P3 | Všichni participanti navrhovali srdíčko nebo hvězdičku místo aktuální ikony. |
-| 4 | Ikona Personal Details | T13 | P1, P2 | Změnit ikonu na profil/človíčka místo aktuální karty. |
-| 5 | Zlomky u množství matoucí | T11 | P1, P2 | 5/8 je lehce matoucí; malý font; zvážit řazení od nejpoužívanějších zlomků. |
-| 6 | Malé/nečitelné texty | obecně | P3 | Font příliš malý, participantka překlikávala texty bez čtení. |
-| 7 | „Back to today" špatně čitelné | T10 | P3 | Malá písmena, špatně se čte. |
-| 8 | Chybějící Check button v bottomSheet | T2, T6 | P1, P3 | Mealtime bottomSheet nemá potvrzovací tlačítko, participanti ho intuitivně očekávali. |
-| 9 | Chybějící potvrzení před AI rozpoznáním | T2 | P2 | Nelíbí se chybějící krok potvrzení před spuštěním rozpoznání. |
-| 10 | Název „Fix issue" nejasný | T4 | P2 | Tlačítko přijde schované a název zvláštní. |
-| 11 | Barcode databáze nedostatečná | T6 | P1, P2 | Testované balené produkty nebyly správně rozpoznány. |
-| 12 | Dva vertikální scrolly na jedné obrazovce | T1 | P2 | Obrazovka nastavení rychlosti hubnutí/nabírání má dva scrollovatelné elementy. |
-| 13 | Onboarding step „poskakuje" | T1 | P1 | Volba „Maintain" u váhy způsobí poskakující onboarding krok. |
-| 14 | Snackbar při přidání do oblíbených chybí | T8 | P3 | Chybí zpětná vazba (snackbar) při přidání jídla do oblíbených. |
-| 15 | Signalizace ukončení nahrávání | T5 | P2 | Lépe signalizovat ukončení nahrávání a potřebu kliknout na tlačítko analyzovat. |
-| 16 | Toggle hlasového vstupu si nepamatuje stav | T12 | P3 | Při návratu na obrazovku se toggle vždy nastaví na „jídlo" místo posledního nastavení. |
+| # | Problém | Úloha   | Parti. | Doporučení |
+|---|------------------------------|---------|--------|--------------------------------------------|
+| 1 | Ikona pro import z galerie příliš schovaná | T3      | P1, P2, P3 | Dva ze tří participantů potřebovali pomoc. Tlačítko pro výběr fotografie z galerie není dostatečně viditelné. |
+| 2 | Funkce oblíbených obtížně nalezitelná | T8      | P1, P3 | Dva ze tří participantů potřebovali pomoc. Neintuitivní ikona, segment tab „Oblíbené" špatně čitelný, chybí onboarding/nápověda. |
+| 3 | Ikona oblíbených neintuitivní | T8      | P1, P2, P3 | Všichni participanti navrhovali srdíčko nebo hvězdičku místo aktuální ikony. |
+| 4 | Ikona Personal Details | T13     | P1, P2 | Změnit ikonu na profil/človíčka místo aktuální karty. |
+| 5 | Zlomky u množství matoucí | T11     | P1, P2 | 5/8 je lehce matoucí; malý font; zvážit řazení od nejpoužívanějších zlomků. |
+| 6 | Malé/nečitelné texty | obecně  | P3 | Font příliš malý, participantka překlikávala texty bez čtení. |
+| 7 | „Back to today" špatně čitelné | T10     | P3 | Malá písmena, špatně se čte. |
+| 8 | Chybějící Check button v bottomSheet | T2, T6  | P1, P3 | Mealtime bottomSheet nemá potvrzovací tlačítko, participanti ho intuitivně očekávali. |
+| 9 | Chybějící potvrzení před AI rozpoznáním | T2      | P2 | Nelíbí se chybějící krok potvrzení před spuštěním rozpoznání. |
+| 10 | Název „Fix issue" nejasný | T4      | P2 | Tlačítko přijde schované a název zvláštní. |
+| 11 | Barcode databáze nedostatečná | T6      | P1, P2 | Testované balené produkty nebyly správně rozpoznány. |
+| 12 | Dva vertikální scrolly na jedné obrazovce | T1      | P2 | Obrazovka nastavení rychlosti hubnutí/nabírání má dva scrollovatelné elementy. |
+| 13 | Onboarding step „poskakuje" | T1      | P1 | Volba „Maintain" u váhy způsobí poskakující onboarding krok. |
+| 14 | Snackbar při přidání do oblíbených chybí | T8      | P3 | Chybí zpětná vazba (snackbar) při přidání jídla do oblíbených. |
+| 15 | Signalizace ukončení nahrávání | T5      | P2 | Lépe signalizovat ukončení nahrávání a potřebu kliknout na tlačítko analyzovat. |
+| 16 | Toggle hlasového vstupu si nepamatuje stav | T12     | P3 | Při návratu na obrazovku se toggle vždy nastaví na „jídlo" místo posledního nastavení. |
 
 ### 8.3 Návrhy na nové funkce a vylepšení
 
-| # | Návrh | Participanti | Popis |
-|---|-------|--------------|-------|
+| # | Návrh | Parti. | Popis |
+|---|------------------------------|--------|----------------------------------------------|
 | 1 | Hlasové zadávání i v Exercise a Fix Issue | P1, P2, P3 | Participanti intuitivně očekávali hlasové zadávání i v dalších částech aplikace. |
 | 2 | Zvýraznění dnů s logy v kalendáři | P2, P3 | V měsíčním přehledu zvýraznit dny, kde jsou zaznamenány údaje (barvou, hvězdičkou, kruhy). |
 | 3 | Ask AI: podpora hlasového vstupu | P3 | Umožnit hlasové zadávání dotazů v Ask AI. |
@@ -313,7 +313,7 @@ Všichni tři participanti by aplikaci používali pravidelně.
 ## 9. Souhrnná tabulka výsledků
 
 | Metrika | P1 | P2 | P3 | Průměr |
-|---------|----|----|-----|--------|
+|----------------------------------|--------|--------|--------|--------|
 | SEQ průměr (1-7) | 6,1875 | 6,00 | 6,5625 | 6,25 |
 | SUS (0-100) | 90 | 77,5 | 90 | 85,83 |
 | UEQ-S pragmatická (-3 až +3) | 1,75 | 0,75 | 2,50 | 1,667 |
@@ -342,7 +342,7 @@ Uživatelské testování proběhlo se třemi participanty odlišného věku (25
 **NFR metriky:**
 
 | NFR metrika | Úloha | Průměr | Limit | Splněno |
-|-------------|-------|--------|-------|---------|
+|------------------------------|-------|----------|-------|---------|
 | Latence AI rozpoznávání | T2 | 7,67 s | 20 s | ano     |
 | Čas zápisu nového záznamu | T2 | 22 s | 5 min | ano     |
 | Čas záznamu přes oblíbené | T8 | 39,67 s | 1 min | ano     |

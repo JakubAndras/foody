@@ -2,7 +2,7 @@
 
 ---
 
-## Úvodní poznámky pro moderátora (co říct participantovi)
+## Úvodní poznámky
 
 Před zahájením testování sdělte participantovi následující body svými slovy. Cílem je, aby se participant cítil pohodlně, rozuměl průběhu a věděl, co se od něj očekává.
 
@@ -26,7 +26,7 @@ Před zahájením testování sdělte participantovi následující body svými 
 
 ### 5. Záznam a soukromí
 
-> Během testování si budu dělat písemné poznámky. [Pokud nahráváte: Testování budu také nahrávat na obrazovce/zvuk, abych mohl/a zpětně analyzovat průběh.] Veškerá data budou anonymizována a použita výhradně pro účely diplomové práce. Kdykoliv můžete testování ukončit bez udání důvodu.
+> Během testování si budu dělat písemné poznámky. Veškerá data budou anonymizována a použita výhradně pro účely diplomové práce. Kdykoliv můžete testování ukončit bez udání důvodu.
 
 ### 6. Pravidla interakce
 
@@ -34,7 +34,7 @@ Před zahájením testování sdělte participantovi následující body svými 
 
 ### 7. Souhlas a dotazy
 
-> Máte nějaké dotazy, než začneme? [Počkejte na odpověď.] Pokud je vše jasné, můžeme začít první úlohou.
+> Máte nějaké dotazy, než začneme? Pokud je vše jasné, můžeme začít první úlohou.
 
 ---
 
@@ -56,12 +56,12 @@ Před zahájením testování sdělte participantovi následující body svými 
 
 ## Úvodní checklist
 
-- [ ] Čistá instalace aplikace (bez předchozích dat)
-- [ ] Fotografie jídel nahrány do galerie (pro T3)
-- [ ] Reálné jídlo připraveno na stole (pro T2)
-- [ ] Balený produkt s čárovým kódem připraven (pro T6)
-- [ ] Participant informován o průběhu a přínosu testování
-- [ ] Participant instruován k metodě think aloud
+- [x] Čistá instalace aplikace
+- [x] Fotografie jídel nahrány do galerie
+- [x] Reálné jídlo připraveno na stole
+- [x] Balený produkt s čárovým kódem připraven
+- [x] Participant informován o průběhu a přínosu testování
+- [x] Participant instruován k metodě think aloud
 
 ---
 
@@ -478,7 +478,7 @@ Ask AI button bz mel bzt disabled pokud je textfield prazdne
 ## Souhrnná tabulka úloh
 
 | Úloha | Dokončení | Krit. chyby | SEQ (1-7) |
-|-------|-----------|-------------|-----------|
+|-------|----------------|-------------|-----------|
 | T1 | ano | 0 | 6 |
 | T2 | ano | 0 | 6 |
 | T3 | s pomocí | 1 | 5 |
@@ -532,7 +532,7 @@ Ask AI button bz mel bzt disabled pokud je textfield prazdne
 **Instrukce pro participanta:** U každého tvrzení označte na škále 1-5, do jaké míry souhlasíte (1 = rozhodně nesouhlasím, 5 = rozhodně souhlasím).
 
 | # | Tvrzení | Skóre (1-5) |
-|---|---------|-------------|
+|---|------------------------------------------------------|-------------|
 | 1 | Myslím, že bych tuto aplikaci rád/a používal/a pravidelně. | 5           |
 | 2 | Aplikaci jsem shledal/a zbytečně složitou. | 1           |
 | 3 | Myslím, že se aplikace snadno používá. | 4           |
@@ -547,7 +547,7 @@ Ask AI button bz mel bzt disabled pokud je textfield prazdne
 ### Výpočet SUS
 
 | Krok | Hodnota |
-|------|---------|
+|------------------------------|----------------------------------------------|
 | Součet lichých položek (1, 3, 5, 7, 9) = S_L | 5 + 4 + 4 + 4 + 5 = 22 |
 | Součet sudých položek (2, 4, 6, 8, 10) = S_S | 1 + 1 + 2 + 1 + 1 = 6 |
 | SUS = ((S_L - 5) + (25 - S_S)) * 2,5 | ((22 - 5) + (25 - 6)) * 2,5 = 90 |
@@ -565,7 +565,7 @@ Interpretace: 0-50 = neakceptovatelné, 51-68 = podprůměrné, 68 = průměr, 6
 ### Pragmatická kvalita (položky 1-4)
 
 | # | Levý pól (-3) | -3 | -2 | -1 | 0 | +1 | +2 | +3 | Pravý pól (+3) | Hodnota |
-|---|---------------|----|----|----|----|----|----|-----|-----------------|---------|
+|---|---------------|--|--|--|--|--|--|--|-----------------|---------|
 | 1 | bránící | | | | | | | | podporující | | +2
 | 2 | složitý | | | | | | | | jednoduchý | | +2
 | 3 | neefektivní | | | | | | | | efektivní | | +2
@@ -574,7 +574,7 @@ Interpretace: 0-50 = neakceptovatelné, 51-68 = podprůměrné, 68 = průměr, 6
 ### Hedonická kvalita (položky 5-8)
 
 | # | Levý pól (-3) | -3 | -2 | -1 | 0 | +1 | +2 | +3 | Pravý pól (+3) | Hodnota |
-|---|---------------|----|----|----|----|----|----|-----|-----------------|---------|
+|---|---------------|--|--|--|--|--|--|--|-----------------|---------|
 | 5 | nudný | | | | | | | | vzrušující | | +2
 | 6 | nezajímavý | | | | | | | | zajímavý | | +1
 | 7 | obvyklý | | | | | | | | vynalézavý | | +1
@@ -583,7 +583,7 @@ Interpretace: 0-50 = neakceptovatelné, 51-68 = podprůměrné, 68 = průměr, 6
 ### Výpočet UEQ-S
 
 | Metrika | Výpočet | Hodnota |
-|---------|---------|---------|
+|----------------------|-------------------------------|----------------------------------------------|
 | Pragmatická kvalita | průměr položek 1-4 | (2 + 2 + 2 + 1) / 4 = 1,75 |
 | Hedonická kvalita | průměr položek 5-8 | (2 + 1 + 1 + 3) / 4 = 1,75 |
 | Celkové skóre | průměr položek 1-8 | (2 + 2 + 2 + 1 + 2 + 1 + 1 + 3) / 8 = 1,75 |
@@ -667,7 +667,7 @@ _
 ## Souhrn výsledků P1
 
 | Metrika | Hodnota | Hodnocení |
-|---------|---------|-----------|
+|------------------------------|-------------------------------|-----------|
 | **SEQ průměr** | 6,1875 / 7 | >= 5,5 (dobré) |
 | **SUS** | 90 | top 10 % (> 80,3) |
 | **UEQ-S pragmatická kvalita** | 1,75 | pozitivní (> 0,8) |

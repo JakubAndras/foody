@@ -2,7 +2,7 @@
 
 ---
 
-## Úvodní poznámky pro moderátora (co říct participantovi)
+## Úvodní poznámky
 
 Před zahájením testování sdělte participantovi následující body svými slovy. Cílem je, aby se participant cítil pohodlně, rozuměl průběhu a věděl, co se od něj očekává.
 
@@ -26,7 +26,7 @@ Před zahájením testování sdělte participantovi následující body svými 
 
 ### 5. Záznam a soukromí
 
-> Během testování si budu dělat písemné poznámky. [Pokud nahráváte: Testování budu také nahrávat na obrazovce/zvuk, abych mohl/a zpětně analyzovat průběh.] Veškerá data budou anonymizována a použita výhradně pro účely diplomové práce. Kdykoliv můžete testování ukončit bez udání důvodu.
+> Během testování si budu dělat písemné poznámky. Veškerá data budou anonymizována a použita výhradně pro účely diplomové práce. Kdykoliv můžete testování ukončit bez udání důvodu.
 
 ### 6. Pravidla interakce
 
@@ -34,7 +34,7 @@ Před zahájením testování sdělte participantovi následující body svými 
 
 ### 7. Souhlas a dotazy
 
-> Máte nějaké dotazy, než začneme? [Počkejte na odpověď.] Pokud je vše jasné, můžeme začít první úlohou.
+> Máte nějaké dotazy, než začneme? Pokud je vše jasné, můžeme začít první úlohou.
 
 ---
 
@@ -56,10 +56,10 @@ Před zahájením testování sdělte participantovi následující body svými 
 
 ## Úvodní checklist
 
-- [ ] Čistá instalace aplikace (bez předchozích dat)
-- [ ] Fotografie jídel nahrány do galerie (pro T3)
-- [ ] Reálné jídlo připraveno na stole (pro T2)
-- [ ] Balený produkt s čárovým kódem připraven (pro T6)
+- [ ] Čistá instalace aplikace
+- [ ] Fotografie jídel nahrány do galerie
+- [ ] Reálné jídlo připraveno na stole
+- [ ] Balený produkt s čárovým kódem připraven
 - [ ] Participant informován o průběhu a přínosu testování
 - [ ] Participant instruován k metodě think aloud
 
