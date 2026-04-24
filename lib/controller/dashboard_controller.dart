@@ -305,7 +305,7 @@ class DashboardController extends BaseController {
         preferredMealName: request.preferredMealName,
       );
       if (flowResult.success) {
-        _notifyRecognitionComplete(message: tr(LocaleKeys.dashboard_meal_recognised), notificationId: 4001);
+        _notifyRecognitionComplete(message: tr(LocaleKeys.dashboard_meal_recognised), notificationId: 4001, showForegroundSnackBar: false);
       }
       return flowResult;
     } catch (e) {
@@ -349,7 +349,7 @@ class DashboardController extends BaseController {
         );
         await Future<void>.delayed(const Duration(milliseconds: 300));
         refresh();
-        _notifyRecognitionComplete(message: tr(LocaleKeys.dashboard_meal_recognised), notificationId: 4001);
+        _notifyRecognitionComplete(message: tr(LocaleKeys.dashboard_meal_recognised), notificationId: 4001, showForegroundSnackBar: false);
         return;
       }
 
@@ -680,10 +680,10 @@ class DashboardController extends BaseController {
     scrollToExercisesRequestId.value += 1;
   }
 
-  void _notifyRecognitionComplete({required String message, required int notificationId}) {
+  void _notifyRecognitionComplete({required String message, required int notificationId, bool showForegroundSnackBar = true}) {
     print('[Notifications] _notifyRecognitionComplete: foreground=$_isInForeground');
     if (_isInForeground) {
-      showSnackBar(message: message, type: SnackBarType.success);
+      if (showForegroundSnackBar) showSnackBar(message: message, type: SnackBarType.success);
     } else {
       print('[Notifications] Sending instant notification id=$notificationId');
       TrackingReminderService.to.notificationsPlugin.show(

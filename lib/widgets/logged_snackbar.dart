@@ -105,7 +105,7 @@ void showSnackBar({
       backgroundColor: isDark ? const Color(0xFF2C2C2E) : AppColors.white,
       elevation: 0.5,
       behavior: SnackBarBehavior.floating,
-      margin: EdgeInsets.fromLTRB(AppSpacing.m, 0, AppSpacing.m, Platform.isAndroid ? AppSpacing.l : AppSpacing.xxs),
+      margin: EdgeInsets.fromLTRB(AppSpacing.m, 0, AppSpacing.m, Platform.isAndroid ? AppSpacing.xxs : 0),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadii.l)),
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.m),
       duration: duration,

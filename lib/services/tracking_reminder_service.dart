@@ -210,12 +210,23 @@ class TrackingReminderService extends GetxService {
 
   static void _onNotificationTap(NotificationResponse response) {
     final payload = response.payload ?? '';
-    if (payload.startsWith('motivational_')) {
-      MainScreenController.to.showProgressTabAndScrollToEnergy();
-    } else {
-      // Tracking reminders → Dashboard on today's date
-      MainScreenController.to.showDashboardTab();
-      DashboardController.to.updateDate(DateTime.now());
+    print('[Notifications] Tap received: payload=$payload, type=${response.notificationResponseType}');
+
+    try {
+      // Pop any pushed routes back to MainScreen so the tab switch is visible
+      if (Get.currentRoute != '/') {
+        Get.until((route) => route.isFirst);
+      }
+
+      if (payload.startsWith('motivational_')) {
+        MainScreenController.to.showProgressTabAndScrollToEnergy();
+      } else {
+        // Tracking reminders → Dashboard on today's date
+        MainScreenController.to.showDashboardTab();
+        DashboardController.to.updateDate(DateTime.now());
+      }
+    } catch (e) {
+      print('[Notifications] Error handling tap: $e');
     }
   }
 }

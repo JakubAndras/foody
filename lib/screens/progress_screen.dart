@@ -94,6 +94,11 @@ class _ProgressScreenState extends State<ProgressScreen> {
         WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToCalendarSection());
       }
     });
+    // Cold start: flag may already be set before the worker was registered
+    if (MainScreenController.to.scrollToEnergy.value) {
+      MainScreenController.to.scrollToEnergy.value = false;
+      WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToCalendarSection());
+    }
   }
 
   @override
