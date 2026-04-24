@@ -9,6 +9,7 @@ import 'package:diplomka/screens/logs/exercise_widgets.dart';
 import 'package:diplomka/screens/logs/fix_exercise_result_screen.dart';
 import 'package:diplomka/screens/meals/meal_components.dart' show MatchBadgeVariant;
 import 'package:diplomka/widgets/confirm_delete_dialog.dart';
+import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:diplomka/widgets/glass_popup.dart';
 import 'package:diplomka/utils/app_limits.dart';
@@ -124,6 +125,15 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     // Dashboard path: also update the Exercise record
     if (_exercise.id == null || _exercise.dayRecordId == null) return;
     await DayRecordController.to.setExerciseFavorite(exercise: _exercise, isFavorite: next);
+
+    if (next && mounted) {
+      showSnackBar(
+        context: context,
+        message: tr(LocaleKeys.common_added_to_favorites),
+        icon: CupertinoIcons.heart_fill,
+        duration: const Duration(seconds: 2),
+      );
+    }
   }
 
   @override
@@ -143,7 +153,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
                 iconSize: AppSizes.iconLg,
                 items: [
                   (icon: CupertinoIcons.checkmark, onPressed: _isSaving ? () {} : _handleDone),
-                  (icon: _exercise.isFavorite ? CupertinoIcons.bookmark_fill : CupertinoIcons.bookmark, onPressed: _toggleFavorite),
+                  (icon: _exercise.isFavorite ? CupertinoIcons.heart_fill : CupertinoIcons.heart, onPressed: _toggleFavorite),
                   (icon: CupertinoIcons.ellipsis, onPressed: _openActionSheet),
                 ],
               ),

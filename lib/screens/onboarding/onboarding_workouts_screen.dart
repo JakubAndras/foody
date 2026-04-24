@@ -7,12 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 class OnboardingWorkoutsScreen extends StatefulWidget {
-  const OnboardingWorkoutsScreen({super.key, required this.onNext, required this.onBack, required this.step, required this.totalSteps, this.onCanProceedChanged});
+  const OnboardingWorkoutsScreen({super.key, required this.onNext, required this.onBack, this.progress, this.onCanProceedChanged});
 
   final VoidCallback onNext;
   final VoidCallback onBack;
-  final int step;
-  final int totalSteps;
+  final double? progress;
   final ValueChanged<bool>? onCanProceedChanged;
 
   @override
@@ -39,7 +38,7 @@ class _OnboardingWorkoutsScreenState extends State<OnboardingWorkoutsScreen> wit
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     return OnboardingPage(
-      progress: widget.step / widget.totalSteps,
+      progress: widget.progress,
       onBack: widget.onBack,
       bottom: OnboardingPrimaryButton(
         label: tr(LocaleKeys.common_continue_btn),

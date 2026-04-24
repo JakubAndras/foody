@@ -103,7 +103,6 @@ class _MealDatePickerSheetState extends State<MealDatePickerSheet> {
     final rowCount = (totalSlots / 7).ceil();
     final contentHeight = MediaQuery.of(context).size.height * 0.36;
     final contentHeightWithoutBottom = MediaQuery.of(context).size.height * 0.34;
-    final backToTodayHeight = MediaQuery.of(context).size.height * 0.02;
     final showBackToOriginal = _selectedDate != _originalDate || _displayedMonth.year != _originalDate.year || _displayedMonth.month != _originalDate.month;
     final bottomSpacing = Platform.isAndroid ? AppSpacing.xs + AppSpacing.xxxl : AppSpacing.xs;
 
@@ -145,7 +144,7 @@ class _MealDatePickerSheetState extends State<MealDatePickerSheet> {
                         });
                       },
                       child: SizedBox(
-                        height: backToTodayHeight,
+                        height: MediaQuery.of(context).size.height * 0.02,
                         child: Center(
                           child: Text(
                             tr(LocaleKeys.common_back_to_original_date),

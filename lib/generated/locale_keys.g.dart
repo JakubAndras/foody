@@ -44,6 +44,7 @@ abstract class  LocaleKeys {
   static const common_try_adjusting_search = 'common_try_adjusting_search';
   static const common_all = 'common_all';
   static const common_favorites = 'common_favorites';
+  static const common_added_to_favorites = 'common_added_to_favorites';
   static const common_search = 'common_search';
   static const common_sort_by = 'common_sort_by';
   static const common_most_recent = 'common_most_recent';
@@ -227,11 +228,6 @@ abstract class  LocaleKeys {
   static const onboarding_rollover_explanation = 'onboarding_rollover_explanation';
   static const onboarding_yesterday = 'onboarding_yesterday';
   static const onboarding_cals_left = 'onboarding_cals_left';
-  static const onboarding_weight_loss_speed_title = 'onboarding_weight_loss_speed_title';
-  static const onboarding_weight_loss_goal_title = 'onboarding_weight_loss_goal_title';
-  static const onboarding_weight_loss_speed_per_week = 'onboarding_weight_loss_speed_per_week';
-  static const onboarding_weight_gain_speed_per_week = 'onboarding_weight_gain_speed_per_week';
-  static const onboarding_recommended = 'onboarding_recommended';
   static const onboarding_kg_per_week = 'onboarding_kg_per_week';
   static const onboarding_loading_title = 'onboarding_loading_title';
   static const onboarding_loading_subtitle = 'onboarding_loading_subtitle';
@@ -528,6 +524,7 @@ abstract class  LocaleKeys {
   static const voice_stop_failed = 'voice_stop_failed';
   static const voice_cancel_failed = 'voice_cancel_failed';
   static const voice_permission_missing = 'voice_permission_missing';
+  static const voice_tap_analyze = 'voice_tap_analyze';
   static const voice_recognition_error = 'voice_recognition_error';
   static const ask_ai_title = 'ask_ai_title';
   static const ask_ai_example_questions = 'ask_ai_example_questions';
@@ -681,6 +678,12 @@ abstract class  LocaleKeys {
   static const fix_result_update = 'fix_result_update';
   static const fix_result_add_details = 'fix_result_add_details';
   static const fix_result_tip_body = 'fix_result_tip_body';
+  static const fix_result_tip_subtitle = 'fix_result_tip_subtitle';
+  static const fix_result_tip_cooking = 'fix_result_tip_cooking';
+  static const fix_result_tip_ingredient = 'fix_result_tip_ingredient';
+  static const fix_result_tip_portion = 'fix_result_tip_portion';
+  static const fix_result_tip_missing = 'fix_result_tip_missing';
+  static const fix_result_tip_voice = 'fix_result_tip_voice';
   static const report_meal_title = 'report_meal_title';
   static const report_meal_hint = 'report_meal_hint';
   static const report_meal_example_prefix = 'report_meal_example_prefix';

@@ -16,8 +16,7 @@ class PersonalDetailsDietScreen extends StatefulWidget {
     this.onCanProceedChanged,
     this.keepAlive = false,
     this.customPreferences,
-    this.step,
-    this.totalSteps,
+    this.progress,
   });
 
   final VoidCallback onNext;
@@ -27,8 +26,7 @@ class PersonalDetailsDietScreen extends StatefulWidget {
   final ValueChanged<bool>? onCanProceedChanged;
   final bool keepAlive;
   final String? customPreferences;
-  final int? step;
-  final int? totalSteps;
+  final double? progress;
 
   @override
   State<PersonalDetailsDietScreen> createState() => _PersonalDetailsDietScreenState();
@@ -121,11 +119,9 @@ class _PersonalDetailsDietScreenState extends State<PersonalDetailsDietScreen> w
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     final bool isOnboarding = widget.onCanProceedChanged != null;
-    final bool showProgress = widget.step != null && widget.totalSteps != null;
-
-    if (showProgress) {
+    if (widget.progress != null) {
       return OnboardingPage(
-        progress: widget.step! / widget.totalSteps!,
+        progress: widget.progress!,
         onBack: widget.onBack,
         bottom: OnboardingPrimaryButton(label: tr(LocaleKeys.common_continue_btn), isEnabled: _selected != null, onPressed: _selected != null ? widget.onNext : null),
         child: Column(

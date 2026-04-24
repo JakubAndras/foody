@@ -88,8 +88,8 @@ class Ingredient {
     );
   }
 
-  static const List<String> _fractionLabels = ['\u2013', '\u215B', '\u00BC', '\u2153', '\u215C', '\u00BD', '\u2154', '\u215D', '\u00BE', '\u215E'];
-  static const List<double> _fractionValues = [0, 0.125, 0.25, 1 / 3, 0.375, 0.5, 2 / 3, 0.625, 0.75, 0.875];
+  static const List<String> _fractionLabels = ['\u2013', '\u00BD', '\u2153', '\u00BC', '\u215B', '\u2154', '\u00BE', '\u215C', '\u215D', '\u215E'];
+  static const List<double> _fractionValues = [0, 0.5, 1 / 3, 0.25, 0.125, 2 / 3, 0.75, 0.375, 0.625, 0.875];
 
   String get amountLabel {
     final whole = amount.truncate();

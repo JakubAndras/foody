@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:diplomka/model/user_profile.dart';
-import 'package:diplomka/screens/onboarding/onboarding_calorie_burn_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/personal_details_custom_diet_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/personal_details_diet_screen.dart';
 import 'package:diplomka/screens/onboarding/onboarding_dob_screen.dart';
@@ -10,8 +9,6 @@ import 'package:diplomka/screens/onboarding/onboarding_goal_screen.dart';
 import 'package:diplomka/screens/onboarding/onboarding_height_weight_screen.dart';
 import 'package:diplomka/screens/onboarding/onboarding_loading_plan_screen.dart';
 import 'package:diplomka/screens/onboarding/onboarding_plan_ready_screen.dart';
-import 'package:diplomka/screens/onboarding/onboarding_rollover_screen.dart';
-import 'package:diplomka/screens/onboarding/onboarding_save_progress_screen.dart';
 import 'package:diplomka/screens/onboarding/onboarding_desired_weight_screen.dart';
 import 'package:diplomka/screens/onboarding/onboarding_welcome_screen.dart';
 import 'package:diplomka/screens/onboarding/onboarding_workouts_screen.dart';
@@ -84,12 +81,17 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
     );
   }
 
-  bool _isGateRequired(int index) {
+  Set<int> get _gateRequiredIndices {
     // Gender is always index 1, Workouts always index 2, Goal always index 5
-    if (index == 1 || index == 2 || index == 5) return true;
-    // Diet screen index shifts depending on whether weight screens are shown
+    final Set<int> gates = {1, 2, 5};
+    // Diet index shifts based on whether desired weight screen is shown
     final int dietIndex = _isGoalMaintain ? 6 : 7;
-    return index == dietIndex;
+    gates.add(dietIndex);
+    return gates;
+  }
+
+  bool _isGateRequired(int index) {
+    return _gateRequiredIndices.contains(index);
   }
 
   bool _defaultCanProceed(int index) {
@@ -122,51 +124,104 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
   }
 
   List<Widget> get _screens {
-    final int wOffset = _isGoalMaintain ? 0 : 1;
-    final int dOffset = _showCustomDiet ? 1 : 0;
-    final int totalSteps = 8 + wOffset + dOffset;
-    final int postDiet = 7 + wOffset + dOffset;
+    final List<Widget> screens = [];
 
-    return [
-      OnboardingWelcomeScreen(onNext: _next, onSkip: _skipOnboarding),
-      OnboardingGenderScreen(onNext: _next, onBack: _previous, step: 1, totalSteps: totalSteps, onCanProceedChanged: (canProceed) => _setCanProceed(1, canProceed)),
-      OnboardingWorkoutsScreen(onNext: _next, onBack: _previous, step: 2, totalSteps: totalSteps, onCanProceedChanged: (canProceed) => _setCanProceed(2, canProceed)),
-      OnboardingHeightWeightScreen(onNext: _next, onBack: _previous, step: 3, totalSteps: totalSteps),
-      OnboardingDobScreen(onNext: _next, onBack: _previous, step: 4, totalSteps: totalSteps),
-      OnboardingGoalScreen(onNext: _next, onBack: _previous, step: 5, totalSteps: totalSteps, onCanProceedChanged: (canProceed) => _setCanProceed(5, canProceed), onGoalChanged: _handleGoalChanged),
-      if (!_isGoalMaintain)
-        OnboardingDesiredWeightScreen(
-          onNext: () async {
-            await SessionManager.to.applyRecommendedWeightChangeRate();
-            _next();
-          },
-          onBack: _previous,
-          step: 6,
-          totalSteps: totalSteps,
-        ),
-      PersonalDetailsDietScreen(
+    final bool showDesiredWeight = !_isGoalMaintain;
+    final bool showCustomDiet = _showCustomDiet;
+
+    // Total screens in list:
+    //   1 (welcome) + 1 (gender) + 1 (workouts) + 1 (height/weight) + 1 (dob)
+    //   + 1 (goal) + (1 if desired weight) + 1 (diet) + (1 if custom diet)
+    //   + 1 (loading) + 1 (plan ready)
+    // = 10 + (1 if desired weight) + (1 if custom diet)
+    final int totalScreens = 10 + (showDesiredWeight ? 1 : 0) + (showCustomDiet ? 1 : 0);
+
+    // Progress screens = totalScreens - 2 (minus welcome and loading)
+    final int progressScreenCount = totalScreens - 2;
+
+    int progressIndex = 0;
+
+    double nextProgress() {
+      final double p = progressIndex / (progressScreenCount - 1);
+      progressIndex++;
+      return p.clamp(0.0, 1.0);
+    }
+
+    // Index 0: Welcome (no progress bar)
+    screens.add(OnboardingWelcomeScreen(onNext: _next, onSkip: _skipOnboarding));
+
+    // Index 1: Gender
+    screens.add(OnboardingGenderScreen(
+      onNext: _next,
+      onBack: _previous,
+      progress: nextProgress(),
+      onCanProceedChanged: (canProceed) => _setCanProceed(1, canProceed),
+    ));
+
+    // Index 2: Workouts
+    screens.add(OnboardingWorkoutsScreen(
+      onNext: _next,
+      onBack: _previous,
+      progress: nextProgress(),
+      onCanProceedChanged: (canProceed) => _setCanProceed(2, canProceed),
+    ));
+
+    // Index 3: Height & Weight
+    screens.add(OnboardingHeightWeightScreen(onNext: _next, onBack: _previous, progress: nextProgress()));
+
+    // Index 4: Date of Birth
+    screens.add(OnboardingDobScreen(onNext: _next, onBack: _previous, progress: nextProgress()));
+
+    // Index 5: Goal
+    screens.add(OnboardingGoalScreen(
+      onNext: _next,
+      onBack: _previous,
+      progress: nextProgress(),
+      onCanProceedChanged: (canProceed) => _setCanProceed(5, canProceed),
+      onGoalChanged: _handleGoalChanged,
+    ));
+
+    // Conditional: Desired Weight
+    if (showDesiredWeight) {
+      screens.add(OnboardingDesiredWeightScreen(
+        onNext: () async {
+          await SessionManager.to.applyRecommendedWeightChangeRate();
+          _next();
+        },
+        onBack: _previous,
+        progress: nextProgress(),
+      ));
+    }
+
+    // Diet
+    final int dietIndex = screens.length;
+    screens.add(PersonalDetailsDietScreen(
+      onNext: _next,
+      onBack: _previous,
+      keepAlive: true,
+      progress: nextProgress(),
+      onCanProceedChanged: (canProceed) => _setCanProceed(dietIndex, canProceed),
+      onDietChanged: _handleDietChanged,
+    ));
+
+    // Custom Diet (conditional, no progress bar)
+    if (showCustomDiet) {
+      screens.add(PersonalDetailsCustomDietScreen(
         onNext: _next,
         onBack: _previous,
         keepAlive: true,
-        step: _isGoalMaintain ? 6 : 7,
-        totalSteps: totalSteps,
-        onCanProceedChanged: (canProceed) => _setCanProceed(_isGoalMaintain ? 6 : 7, canProceed),
-        onDietChanged: _handleDietChanged,
-      ),
-      if (_showCustomDiet)
-        PersonalDetailsCustomDietScreen(
-          onNext: _next,
-          onBack: _previous,
-          keepAlive: true,
-          initialPreferences: SessionManager.to.customDietPreferences.value,
-          onPreferencesSaved: (value) => unawaited(SessionManager.to.setCustomDietPreferences(value)),
-        ),
-      // OnboardingCalorieBurnScreen(onNext: _next, onBack: _previous, step: postDiet, totalSteps: totalSteps),
-      // OnboardingRolloverScreen(onNext: _next, onBack: _previous, step: postDiet + 1, totalSteps: totalSteps),
-      OnboardingLoadingPlanScreen(onNext: _next, step: postDiet, totalSteps: totalSteps),
-      OnboardingPlanReadyScreen(onNext: _next, onBack: _previous, step: postDiet + 1, totalSteps: totalSteps),
-      // OnboardingSaveProgressScreen(onNext: _next, onBack: _previous, step: postDiet + 2, totalSteps: totalSteps),
-    ];
+        initialPreferences: SessionManager.to.customDietPreferences.value,
+        onPreferencesSaved: (value) => unawaited(SessionManager.to.setCustomDietPreferences(value)),
+      ));
+    }
+
+    // Loading (no progress bar)
+    screens.add(OnboardingLoadingPlanScreen(onNext: _next));
+
+    // Plan Ready
+    screens.add(OnboardingPlanReadyScreen(onNext: _next, onBack: _previous, progress: nextProgress()));
+
+    return screens;
   }
 
   @override

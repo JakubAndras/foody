@@ -13,11 +13,9 @@ import 'package:flutter/material.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 class OnboardingLoadingPlanScreen extends StatefulWidget {
-  const OnboardingLoadingPlanScreen({super.key, required this.onNext, required this.step, required this.totalSteps});
+  const OnboardingLoadingPlanScreen({super.key, required this.onNext});
 
   final VoidCallback onNext;
-  final int step;
-  final int totalSteps;
 
   @override
   State<OnboardingLoadingPlanScreen> createState() => _OnboardingLoadingPlanScreenState();

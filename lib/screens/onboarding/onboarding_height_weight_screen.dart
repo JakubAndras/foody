@@ -11,12 +11,11 @@ import 'package:flutter/material.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 class OnboardingHeightWeightScreen extends StatefulWidget {
-  const OnboardingHeightWeightScreen({super.key, required this.onNext, required this.onBack, required this.step, required this.totalSteps});
+  const OnboardingHeightWeightScreen({super.key, required this.onNext, required this.onBack, this.progress});
 
   final VoidCallback onNext;
   final VoidCallback onBack;
-  final int step;
-  final int totalSteps;
+  final double? progress;
 
   @override
   State<OnboardingHeightWeightScreen> createState() => _OnboardingHeightWeightScreenState();
@@ -121,7 +120,7 @@ class _OnboardingHeightWeightScreenState extends State<OnboardingHeightWeightScr
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     return OnboardingPage(
-      progress: widget.step / widget.totalSteps,
+      progress: widget.progress,
       onBack: widget.onBack,
       bottom: OnboardingPrimaryButton(
         label: tr(LocaleKeys.common_continue_btn),

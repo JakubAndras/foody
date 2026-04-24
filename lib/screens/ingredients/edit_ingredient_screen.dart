@@ -3,13 +3,17 @@ import 'package:diplomka/utils/app_limits.dart';
 import 'package:diplomka/controller/day_record_controller.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/ingredient.dart';
+import 'package:diplomka/model/ingredient_template.dart';
+import 'package:diplomka/services/ingredient_template_repository.dart';
 import 'package:diplomka/screens/meals/meal_components.dart';
 import 'package:diplomka/screens/meals/meal_sheets.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/widgets/edit_flow/edit_flow_widgets.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
+import 'package:diplomka/screens/log_meal/select_meal_screen.dart';
 import 'package:diplomka/widgets/confirm_delete_dialog.dart';
 import 'package:diplomka/widgets/glass_toggle_row.dart';
+import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -432,8 +436,24 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
   void _toggleFavorite() {
     final next = !_isFavorite;
     setState(() => _isFavorite = next);
+
+    final normalized = IngredientTemplate.normalize(_baseIngredient.name);
+    final template = IngredientTemplateRepository.to.allTemplates.firstWhereOrNull((t) => t.normalizedName == normalized);
+    if (template != null) IngredientTemplateRepository.to.setFavorite(template, next);
+
     if (_baseIngredient.id != null && _baseIngredient.mealId != null) {
       DayRecordController.to.setIngredientFavorite(ingredient: _baseIngredient, isFavorite: next);
+    }
+
+    if (next) {
+      showSnackBar(
+        context: context,
+        message: tr(LocaleKeys.common_added_to_favorites),
+        icon: CupertinoIcons.heart_fill,
+        primaryLabel: tr(LocaleKeys.common_view),
+        onPrimary: () => Get.to(() => const SelectMealScreen(initialTab: SelectMealTab.favorites)),
+        duration: const Duration(seconds: 3),
+      );
     }
   }
 
@@ -480,7 +500,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
                 iconSize: AppSizes.iconLg,
                 items: [
                   (icon: CupertinoIcons.checkmark, onPressed: _handleDone),
-                  (icon: _isFavorite ? CupertinoIcons.bookmark_fill : CupertinoIcons.bookmark, onPressed: _toggleFavorite),
+                  (icon: _isFavorite ? CupertinoIcons.heart_fill : CupertinoIcons.heart, onPressed: _toggleFavorite),
                   if (widget.allowDelete) (icon: CupertinoIcons.trash, onPressed: _confirmDelete),
                 ],
               ),

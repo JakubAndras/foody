@@ -12,14 +12,12 @@ class OnboardingDesiredWeightScreen extends StatefulWidget {
     super.key,
     required this.onNext,
     required this.onBack,
-    required this.step,
-    required this.totalSteps,
+    this.progress,
   });
 
   final VoidCallback onNext;
   final VoidCallback onBack;
-  final int step;
-  final int totalSteps;
+  final double? progress;
 
   @override
   State<OnboardingDesiredWeightScreen> createState() => _OnboardingDesiredWeightScreenState();
@@ -76,7 +74,7 @@ class _OnboardingDesiredWeightScreenState extends State<OnboardingDesiredWeightS
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     return OnboardingPage(
-      progress: widget.step / widget.totalSteps,
+      progress: widget.progress,
       onBack: widget.onBack,
       bottom: OnboardingPrimaryButton(
         label: tr(LocaleKeys.common_continue_btn),

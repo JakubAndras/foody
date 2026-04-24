@@ -490,7 +490,9 @@ class _EditMealScreenState extends State<EditMealScreen> {
         left: 0,
         right: 0,
         height: AppSizes.mealHeroHeight + _topPullExtent,
-        child: IgnorePointer(
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onLongPress: widget.isPreview ? null : _openPhotoSheet,
           child: Container(
             color: AppColors.surfaceMuted,
             child: Center(
@@ -507,7 +509,9 @@ class _EditMealScreenState extends State<EditMealScreen> {
       right: 0,
       height: AppSizes.mealHeroHeight + _topPullExtent,
       child: ClipRect(
-        child: IgnorePointer(
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onLongPress: widget.isPreview ? null : _openPhotoSheet,
           child: Stack(
             children: [
               Positioned(
@@ -539,8 +543,8 @@ class _EditMealScreenState extends State<EditMealScreen> {
     return _meal.ingredients.first.amount;
   }
 
-  static const List<String> _fractionLabels = ['\u2013', '\u215B', '\u00BC', '\u2153', '\u215C', '\u00BD', '\u2154', '\u215D', '\u00BE', '\u215E'];
-  static const List<double> _fractionValues = [0, 0.125, 0.25, 1 / 3, 0.375, 0.5, 2 / 3, 0.625, 0.75, 0.875];
+  static const List<String> _fractionLabels = ['\u2013', '\u00BD', '\u2153', '\u00BC', '\u215B', '\u2154', '\u00BE', '\u215C', '\u215D', '\u215E'];
+  static const List<double> _fractionValues = [0, 0.5, 1 / 3, 0.25, 0.125, 2 / 3, 0.75, 0.375, 0.625, 0.875];
 
   String get _amountLabel {
     final whole = _amountValue.truncate();
@@ -750,6 +754,17 @@ class _EditMealScreenState extends State<EditMealScreen> {
     // Dashboard path: also update the Meal record
     if (_meal.id == null || _meal.dayRecordId == null) return;
     await DayRecordController.to.setMealFavorite(meal: _meal, isFavorite: next);
+
+    if (next && mounted) {
+      showSnackBar(
+        context: context,
+        message: tr(LocaleKeys.common_added_to_favorites),
+        icon: CupertinoIcons.heart_fill,
+        primaryLabel: tr(LocaleKeys.common_view),
+        onPrimary: () => Get.to(() => const SelectMealScreen(initialTab: SelectMealTab.favorites)),
+        duration: const Duration(seconds: 3),
+      );
+    }
   }
 
   Future<void> _handleDeleteMeal() async {
@@ -1481,7 +1496,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
                     child: widget.isPreview
-                        ? _EditMealTopBar(onBack: _handleBack, onDone: null, isFavorite: _meal.isFavorite, onBookmark: null, onMenu: null)
+                        ? _EditMealTopBar(onBack: _handleBack, onDone: null, isFavorite: _meal.isFavorite, onFavorite: null, onMenu: null)
                         : _EditMealTopBar(
                             onBack: _handleBack,
                             onDone: widget.isNewMeal
@@ -1494,7 +1509,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                   }
                                 : _onPrimaryTap,
                             isFavorite: _meal.isFavorite,
-                            onBookmark: _toggleFavorite,
+                            onFavorite: _toggleFavorite,
                             onPhoto: widget.isNewMeal ? _openPhotoSheet : null,
                             onMenu: widget.isNewMeal ? null : _openActionSheet,
                           ),
@@ -1654,16 +1669,16 @@ class _GlassEditorSheetPainter extends CustomPainter {
 class _EditMealTopBar extends StatelessWidget {
   final VoidCallback onBack;
   final VoidCallback? onDone;
-  final VoidCallback? onBookmark;
+  final VoidCallback? onFavorite;
   final VoidCallback? onMenu;
   final VoidCallback? onPhoto;
   final bool isFavorite;
 
-  const _EditMealTopBar({required this.onBack, this.onDone, this.onBookmark, this.onMenu, this.onPhoto, required this.isFavorite});
+  const _EditMealTopBar({required this.onBack, this.onDone, this.onFavorite, this.onMenu, this.onPhoto, required this.isFavorite});
 
   @override
   Widget build(BuildContext context) {
-    final hasActions = onDone != null || onBookmark != null || onMenu != null || onPhoto != null;
+    final hasActions = onDone != null || onFavorite != null || onMenu != null || onPhoto != null;
     return CustomGlassAppBar(
       //leadingIcon: CupertinoIcons.xmark,
       leadingIconSize: AppSizes.iconLg,
@@ -1674,7 +1689,7 @@ class _EditMealTopBar extends StatelessWidget {
             iconSize: AppSizes.iconLg,
             items: [
               if (onDone != null) (icon: CupertinoIcons.checkmark, onPressed: onDone!),
-              if (onBookmark != null) (icon: isFavorite ? CupertinoIcons.bookmark_fill : CupertinoIcons.bookmark, onPressed: onBookmark!),
+              if (onFavorite != null) (icon: isFavorite ? CupertinoIcons.heart_fill : CupertinoIcons.heart, onPressed: onFavorite!),
               if (onPhoto != null) (icon: CupertinoIcons.camera, onPressed: onPhoto!),
               if (onMenu != null) (icon: CupertinoIcons.ellipsis, onPressed: onMenu!),
             ],

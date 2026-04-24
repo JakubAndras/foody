@@ -9,12 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 class OnboardingPlanReadyScreen extends StatelessWidget {
-  const OnboardingPlanReadyScreen({super.key, required this.onNext, required this.onBack, required this.step, required this.totalSteps});
+  const OnboardingPlanReadyScreen({super.key, required this.onNext, required this.onBack, this.progress});
 
   final VoidCallback onNext;
   final VoidCallback onBack;
-  final int step;
-  final int totalSteps;
+  final double? progress;
 
   String _formatKg(double value) {
     if (value == value.roundToDouble()) {
@@ -67,7 +66,7 @@ class OnboardingPlanReadyScreen extends StatelessWidget {
     final NutritionGoals goals = NutritionGoalsService.to.goalsForDate(DateTime.now());
 
     return OnboardingPage(
-      progress: step / totalSteps,
+      progress: progress,
       onBack: onBack,
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
       bottom: OnboardingPrimaryButton(label: tr(LocaleKeys.onboarding_lets_get_started), onPressed: onNext),

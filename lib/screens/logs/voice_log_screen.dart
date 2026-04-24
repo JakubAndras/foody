@@ -11,11 +11,13 @@ import 'package:diplomka/screens/logs/voice_widgets.dart';
 import 'package:diplomka/model/language_settings.dart';
 import 'package:diplomka/services/language_settings_service.dart';
 import 'package:diplomka/services/selected_date_service.dart';
+import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/services/voice/voice_transcription_service.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -34,11 +36,13 @@ class VoiceLogScreen extends StatefulWidget {
   State<VoiceLogScreen> createState() => _VoiceLogScreenState();
 }
 
-class _VoiceLogScreenState extends State<VoiceLogScreen> with WidgetsBindingObserver, SingleTickerProviderStateMixin {
+class _VoiceLogScreenState extends State<VoiceLogScreen> with WidgetsBindingObserver, TickerProviderStateMixin {
   final VoiceTranscriptionService _voiceService = VoiceTranscriptionService();
   final TextEditingController _controller = TextEditingController();
   late final AnimationController _pulseController;
   late final Animation<double> _pulseAnimation;
+  late final AnimationController _analyzeAttentionController;
+  late final Animation<double> _analyzeScaleAnimation;
 
   bool _hasPermission = false;
   bool _permissionPermanentlyDenied = false;
@@ -55,14 +59,21 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with WidgetsBindingObse
   Timer? _restartTimer;
   VoiceLogMode _mode = VoiceLogMode.meals;
   bool _awaitingSettingsReturn = false;
+  bool _showAnalyzeHint = false;
+  Timer? _analyzeHintTimer;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _mode = widget.initialMode;
+    _mode = widget.initialMode != VoiceLogMode.meals ? widget.initialMode : SessionManager.to.voiceLogMode.value;
     _pulseController = AnimationController(vsync: this, duration: const Duration(milliseconds: 900))..repeat(reverse: true);
     _pulseAnimation = Tween<double>(begin: 1, end: 1.11).animate(CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut));
+    _analyzeAttentionController = AnimationController(vsync: this, duration: const Duration(milliseconds: 600));
+    _analyzeScaleAnimation = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.06), weight: 50),
+      TweenSequenceItem(tween: Tween(begin: 1.06, end: 1.0), weight: 50),
+    ]).animate(CurvedAnimation(parent: _analyzeAttentionController, curve: Curves.easeInOut));
     _refreshPermissionStatus();
   }
 
@@ -70,8 +81,10 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with WidgetsBindingObse
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _restartTimer?.cancel();
+    _analyzeHintTimer?.cancel();
     _voiceService.cancelListening().catchError((_) {});
     _pulseController.dispose();
+    _analyzeAttentionController.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -292,6 +305,17 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with WidgetsBindingObse
     try {
       await _voiceService.stopListening();
       if (!mounted) return;
+      HapticFeedback.mediumImpact();
+      if (!paused && _controller.text.trim().isNotEmpty) {
+        _showAnalyzeHint = true;
+        _analyzeHintTimer?.cancel();
+        _analyzeHintTimer = Timer(const Duration(seconds: 4), () {
+          if (mounted) setState(() => _showAnalyzeHint = false);
+        });
+        _analyzeAttentionController.forward(from: 0).then((_) {
+          _analyzeAttentionController.forward(from: 0);
+        });
+      }
       setState(() {
         _isListening = false;
         _isPaused = paused;
@@ -340,11 +364,15 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with WidgetsBindingObse
       _currentSessionTranscript = '';
       _speechErrorMessage = cancellationErrorMessage;
     });
+    SessionManager.to.setVoiceLogMode(mode);
   }
 
   Future<void> _handleAnalyze() async {
     final description = _controller.text.trim();
     if (description.isEmpty || _isAnalyzing) return;
+
+    _showAnalyzeHint = false;
+    _analyzeHintTimer?.cancel();
 
     FocusManager.instance.primaryFocus?.unfocus();
     if (_isListening) {
@@ -479,6 +507,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with WidgetsBindingObse
   }
 
   void _handleSpeechResult(SpeechRecognitionResult result) {
+    if (!_isListening) return;
     final recognized = result.recognizedWords.trim();
     if (recognized.isEmpty) return;
     _consecutiveRestarts = 0;
@@ -697,12 +726,16 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with WidgetsBindingObse
                                       enabled: !_isListening && !_isAnalyzing,
                                     ),
                                     const SizedBox(height: AppSpacing.m),
-                                    VoiceLogAnalyzeButton(
-                                      label: _isAnalyzing
-                                          ? (isExercise ? tr(LocaleKeys.voice_analyzing_exercise) : tr(LocaleKeys.voice_analyzing_meals))
-                                          : (isExercise ? tr(LocaleKeys.voice_analyze_exercise) : tr(LocaleKeys.voice_analyze_meals)),
-                                      onTap: _handleAnalyze,
-                                      enabled: hasText && !_isAnalyzing,
+                                    AnimatedBuilder(
+                                      animation: _analyzeScaleAnimation,
+                                      builder: (context, child) => Transform.scale(scale: _analyzeScaleAnimation.value, child: child),
+                                      child: VoiceLogAnalyzeButton(
+                                        label: _isAnalyzing
+                                            ? (isExercise ? tr(LocaleKeys.voice_analyzing_exercise) : tr(LocaleKeys.voice_analyzing_meals))
+                                            : (isExercise ? tr(LocaleKeys.voice_analyze_exercise) : tr(LocaleKeys.voice_analyze_meals)),
+                                        onTap: _handleAnalyze,
+                                        enabled: hasText && !_isAnalyzing,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -731,13 +764,18 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with WidgetsBindingObse
                               ),
                             ),
                             const SizedBox(height: AppSpacing.s),
-                            if (_isListening || _isPaused || _isAnalyzing || _speechErrorMessage != null || _restartTimer?.isActive == true)
+                            if (_isListening || _isPaused || _isAnalyzing || _speechErrorMessage != null || _restartTimer?.isActive == true || _showAnalyzeHint)
                               Text(
                                 _speechErrorMessage ??
-                                    (_isAnalyzing
-                                        ? tr(LocaleKeys.voice_analyzing)
-                                        : (_isPaused ? tr(LocaleKeys.voice_paused) : (_isListening ? tr(LocaleKeys.voice_listening) : tr(LocaleKeys.voice_resuming)))),
-                                style: AppTextStyles.body14.copyWith(color: _speechErrorMessage == null ? AppColors.textPrimary : AppColors.error, fontWeight: FontWeight.w600),
+                                    (_showAnalyzeHint
+                                        ? tr(LocaleKeys.voice_tap_analyze)
+                                        : (_isAnalyzing
+                                            ? tr(LocaleKeys.voice_analyzing)
+                                            : (_isPaused
+                                                ? tr(LocaleKeys.voice_paused)
+                                                : (_isListening ? tr(LocaleKeys.voice_listening) : tr(LocaleKeys.voice_resuming))))),
+                                style: AppTextStyles.body14.copyWith(
+                                    color: _speechErrorMessage == null ? AppColors.textPrimary : AppColors.error, fontWeight: FontWeight.w600),
                                 textAlign: TextAlign.center,
                               ),
                             const SizedBox(height: AppSpacing.xl),

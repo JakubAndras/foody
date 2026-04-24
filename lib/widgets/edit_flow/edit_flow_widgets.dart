@@ -261,7 +261,7 @@ class _EditIngredientPopupButton extends StatelessWidget {
       items: [
         GlassPopupItem(
           label: tr(LocaleKeys.common_favorites),
-          icon: isFavorite ? CupertinoIcons.bookmark_fill : CupertinoIcons.bookmark,
+          icon: isFavorite ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
           onTap: () {
             Navigator.of(context).pop();
             onFavorite?.call();

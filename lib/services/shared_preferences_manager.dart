@@ -24,6 +24,7 @@ const String profileWorkoutsPerWeekKey = "profileWorkoutsPerWeekKey";
 const String editableNutrientsEnabledKey = "editableNutrientsEnabledKey";
 const String healthIntegrationEnabledKey = "healthIntegration_enabled";
 const String healthIntegrationLastSyncKey = "healthIntegration_lastSync";
+const String voiceLogModeKey = "voiceLogModeKey";
 
 class SharedPreferencesService extends GetxService {
   static SharedPreferencesService get to => Get.find();

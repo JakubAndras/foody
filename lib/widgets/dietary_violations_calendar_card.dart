@@ -165,7 +165,7 @@ class _MonthlyCalendarCardState extends State<MonthlyCalendarCard> {
         },
         child: Text(
           tr(LocaleKeys.common_back_to_today),
-          style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w600),
+          style: AppTextStyles.body14.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w600),
         ),
       ),
     );

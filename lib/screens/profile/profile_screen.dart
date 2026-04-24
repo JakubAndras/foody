@@ -70,7 +70,7 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: AppSpacing.s),
               _ProfileGroupCard(
                 children: [
-                  _ProfileActionRow(title: tr(LocaleKeys.profile_personal_details), icon: CupertinoIcons.creditcard, onTap: () => Get.to(() => const PersonalDetailsScreen())),
+                  _ProfileActionRow(title: tr(LocaleKeys.profile_personal_details), icon: CupertinoIcons.person, onTap: () => Get.to(() => const PersonalDetailsScreen())),
                   _ProfileActionRow(title: tr(LocaleKeys.profile_preferences), icon: CupertinoIcons.gear, onTap: () => Get.to(() => const PreferencesScreen())),
                   _ProfileActionRow(title: tr(LocaleKeys.profile_language), icon: CupertinoIcons.globe, showDivider: false, onTap: () => _showLanguageSheet(context)),
                 ],

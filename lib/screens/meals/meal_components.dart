@@ -508,7 +508,7 @@ class _MacroDotsRowWithCalories extends StatelessWidget {
         if (showAmount) ...[
           Text(
             ingredient.amountLabel,
-            style: AppTextStyles.body13.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w500),
+            style: AppTextStyles.body14.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w500),
           ),
           _separator,
         ],
@@ -565,7 +565,7 @@ class _IngredientPopupButton extends StatelessWidget {
       items: [
         GlassPopupItem(
           label: tr(LocaleKeys.common_favorites),
-          icon: isFavorite ? CupertinoIcons.bookmark_fill : CupertinoIcons.bookmark,
+          icon: isFavorite ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
           onTap: () {
             Navigator.of(context).pop();
             onFavorite?.call();

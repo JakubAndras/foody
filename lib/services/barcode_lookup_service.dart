@@ -57,7 +57,8 @@ class BarcodeLookupService extends GetxService {
     }
 
     try {
-      final lookupResponse = await _client.fetchProductByBarcode(normalized);
+      final appLocale = Get.locale?.languageCode ?? 'cs';
+      final lookupResponse = await _client.fetchProductByBarcode(normalized, locale: appLocale);
       final product = lookupResponse.product;
       if (!lookupResponse.found || product == null) {
         throw BarcodeLookupException(
@@ -122,11 +123,39 @@ class BarcodeLookupService extends GetxService {
   }
 
   String _resolveProductName(OffProductDto product) {
+    final appLocale = Get.locale?.languageCode ?? 'cs';
+    if (appLocale == 'cs') {
+      final czechName = _cleanString(product.productNameCs);
+      if (czechName != null) return czechName;
+    }
     final localizedName = _cleanString(product.productName);
     if (localizedName != null) return localizedName;
     final englishName = _cleanString(product.productNameEn);
     if (englishName != null) return englishName;
     return '';
+  }
+
+  /// Returns a country/region hint based on EAN-13 prefix (GS1 country code).
+  /// Returns null for non-EAN-13 or unrecognized prefixes.
+  String? getEanCountryHint(String barcode) {
+    if (barcode.length != 13) return null;
+    final prefix3 = int.tryParse(barcode.substring(0, 3));
+    if (prefix3 == null) return null;
+
+    if (prefix3 == 859) return 'Czech Republic';
+    if (prefix3 == 858) return 'Slovakia';
+    if (prefix3 == 590) return 'Poland';
+    if (prefix3 >= 400 && prefix3 <= 440) return 'Germany';
+    if (prefix3 >= 900 && prefix3 <= 919) return 'Austria';
+    if (prefix3 == 599) return 'Hungary';
+    if (prefix3 >= 300 && prefix3 <= 379) return 'France';
+    if (prefix3 >= 800 && prefix3 <= 839) return 'Italy';
+    if (prefix3 >= 840 && prefix3 <= 849) return 'Spain';
+    if (prefix3 >= 500 && prefix3 <= 509) return 'United Kingdom';
+    if (prefix3 >= 870 && prefix3 <= 879) return 'Netherlands';
+    if (prefix3 >= 540 && prefix3 <= 549) return 'Belgium/Luxembourg';
+
+    return null;
   }
 
   String? _cleanString(String? value) {

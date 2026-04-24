@@ -107,7 +107,6 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
     final rowCount = (totalSlots / 7).ceil();
     final contentHeightSheet = MediaQuery.of(context).size.height * 0.36;
     final contentHeightSheetWithoutBottom = MediaQuery.of(context).size.height * 0.34;
-    final contentHeightSheetBackToToday = MediaQuery.of(context).size.height * 0.02;
     final selectedDayIsToday = _selectedDate != _today || _displayedMonth.year != _today.year || _displayedMonth.month != _today.month;
 
     return Padding(
@@ -135,7 +134,7 @@ class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
                   ),
                   if (selectedDayIsToday)
                     SizedBox(
-                      height: contentHeightSheetBackToToday,
+                      height: MediaQuery.of(context).size.height * 0.02,
                       child: Center(
                         child: GestureDetector(
                           onTap: () {

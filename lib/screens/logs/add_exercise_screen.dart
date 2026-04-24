@@ -118,7 +118,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
                 iconSize: AppSizes.iconLg,
                 items: [
                   (icon: CupertinoIcons.checkmark, onPressed: _isSaving ? () {} : _saveExercise),
-                  (icon: _isFavorite ? CupertinoIcons.bookmark_fill : CupertinoIcons.bookmark, onPressed: () => setState(() => _isFavorite = !_isFavorite)),
+                  (icon: _isFavorite ? CupertinoIcons.heart_fill : CupertinoIcons.heart, onPressed: () => setState(() => _isFavorite = !_isFavorite)),
                 ],
               ),
             ],

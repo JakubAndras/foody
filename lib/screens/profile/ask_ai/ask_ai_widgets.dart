@@ -73,6 +73,9 @@ class AskAiPromptCard extends StatelessWidget {
     this.onClear,
     this.readOnly = false,
     this.isLoading = false,
+    this.hintText,
+    this.buttonLabel,
+    this.loadingLabel,
   });
 
   static const int _maxLength = 500;
@@ -82,6 +85,9 @@ class AskAiPromptCard extends StatelessWidget {
   final VoidCallback? onClear;
   final bool readOnly;
   final bool isLoading;
+  final String? hintText;
+  final String? buttonLabel;
+  final String? loadingLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +128,7 @@ class AskAiPromptCard extends StatelessWidget {
                             color: AppColors.textMuted,
                           ),
                           decoration: InputDecoration(
-                            hintText: tr(LocaleKeys.ask_ai_hint),
+                            hintText: hintText ?? tr(LocaleKeys.ask_ai_hint),
                             hintStyle: AppTextStyles.body14.copyWith(
                               fontWeight: FontWeight.w400,
                               color: AppColors.textTertiary,
@@ -159,7 +165,7 @@ class AskAiPromptCard extends StatelessWidget {
           if (!readOnly) ...[
             const SizedBox(height: AppSpacing.m),
             AskAiPrimaryButton(
-              label: isLoading ? tr(LocaleKeys.voice_analyzing) : tr(LocaleKeys.ask_ai_title),
+              label: isLoading ? (loadingLabel ?? tr(LocaleKeys.voice_analyzing)) : (buttonLabel ?? tr(LocaleKeys.ask_ai_title)),
               leading: isLoading
                   ? SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.onPrimary))
                   : Icon(CupertinoIcons.sparkles, size: AppSizes.iconMd, color: AppColors.onPrimary),

@@ -7,12 +7,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingDobScreen extends StatefulWidget {
-  const OnboardingDobScreen({super.key, required this.onNext, required this.onBack, required this.step, required this.totalSteps});
+  const OnboardingDobScreen({super.key, required this.onNext, required this.onBack, this.progress});
 
   final VoidCallback onNext;
   final VoidCallback onBack;
-  final int step;
-  final int totalSteps;
+  final double? progress;
 
   @override
   State<OnboardingDobScreen> createState() => _OnboardingDobScreenState();
@@ -36,7 +35,7 @@ class _OnboardingDobScreenState extends State<OnboardingDobScreen> {
     final TextTheme textTheme = Theme.of(context).textTheme;
 
     return OnboardingPage(
-      progress: widget.step / widget.totalSteps,
+      progress: widget.progress,
       onBack: widget.onBack,
       bottom: OnboardingPrimaryButton(
         label: tr(LocaleKeys.common_continue_btn),

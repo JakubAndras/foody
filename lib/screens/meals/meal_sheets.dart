@@ -227,8 +227,10 @@ class _AmountPickerSheetState extends State<AmountPickerSheet> {
 
   static final List<String> _wholeValues = List.generate(101, (i) => '$i');
 
-  static const List<String> _fractionLabels = ['\u2013', '\u215B', '\u00BC', '\u2153', '\u215C', '\u00BD', '\u2154', '\u215D', '\u00BE', '\u215E'];
-  static const List<double> _fractionValues = [0, 0.125, 0.25, 1 / 3, 0.375, 0.5, 2 / 3, 0.625, 0.75, 0.875];
+  static const List<String> _fractionLabels = ['\u2013', '\u00BD', '\u2153', '\u00BC', '\u215B', '\u2154', '\u00BE', '\u215C', '\u215D', '\u215E'];
+  static const List<double> _fractionValues = [0, 0.5, 1 / 3, 0.25, 0.125, 2 / 3, 0.75, 0.375, 0.625, 0.875];
+
+  late double _initialValue;
 
   @override
   void initState() {
@@ -237,6 +239,7 @@ class _AmountPickerSheetState extends State<AmountPickerSheet> {
     final frac = widget.initialValue - widget.initialValue.truncate();
     _wholeIndex = whole;
     _fractionIndex = _closestFractionIndex(frac);
+    _initialValue = _currentValue;
   }
 
   int _closestFractionIndex(double frac) {
@@ -289,7 +292,14 @@ class _AmountPickerSheetState extends State<AmountPickerSheet> {
                   const SizedBox(height: AppSpacing.xxs),
                   SheetDragHandle(color: AppColors.greyLight3),
                   const SizedBox(height: AppSpacing.s),
-                  SheetTopBar(title: tr(LocaleKeys.ingredient_amount), onClose: () => Navigator.of(context).pop()),
+                  SheetTopBar(
+                    title: tr(LocaleKeys.ingredient_amount),
+                    onClose: () {
+                      widget.onChanged?.call(_initialValue);
+                      Navigator.of(context).pop();
+                    },
+                    onConfirm: () => Navigator.of(context).pop(),
+                  ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl * 2),
                     child: SizedBox(height: 200, child: _buildPicker()),
@@ -339,6 +349,8 @@ class _AmountPickerSheetState extends State<AmountPickerSheet> {
             selectedIndex: fractionIndex,
             height: 200,
             selectionHighlightBorderRadius: AppRadii.l,
+            textStyle: TextStyle(fontSize: 24, fontWeight: FontWeight.w400, color: AppColors.textPrimary, letterSpacing: -0.3),
+            selectedTextStyle: TextStyle(fontSize: 24, fontWeight: FontWeight.w500, color: AppColors.textPrimary, letterSpacing: -0.3),
             onSelected: (index) {
               setState(() {
                 _fractionIndex = _wholeIndex == 0 ? index + 1 : index;
@@ -377,11 +389,13 @@ class MealtimePickerSheet extends StatefulWidget {
 
 class _MealtimePickerSheetState extends State<MealtimePickerSheet> {
   late int _selectedIndex;
+  late int _initialIndex;
 
   @override
   void initState() {
     super.initState();
-    _selectedIndex = widget.initialIndex.clamp(0, widget.options.length - 1);
+    _initialIndex = widget.initialIndex.clamp(0, widget.options.length - 1);
+    _selectedIndex = _initialIndex;
   }
 
   @override
@@ -409,7 +423,14 @@ class _MealtimePickerSheetState extends State<MealtimePickerSheet> {
                   const SizedBox(height: AppSpacing.xxs),
                   SheetDragHandle(color: AppColors.greyLight3),
                   const SizedBox(height: AppSpacing.s),
-                  SheetTopBar(title: widget.title ?? tr(LocaleKeys.meal_mealtime), onClose: () => Navigator.of(context).pop()),
+                  SheetTopBar(
+                    title: widget.title ?? tr(LocaleKeys.meal_mealtime),
+                    onClose: () {
+                      widget.onChanged?.call(_initialIndex);
+                      Navigator.of(context).pop();
+                    },
+                    onConfirm: () => Navigator.of(context).pop(),
+                  ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl * 2),
                     child: SizedBox(

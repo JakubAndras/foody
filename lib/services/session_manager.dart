@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/model/user_profile.dart';
+import 'package:diplomka/screens/logs/voice_log_screen.dart';
 import 'package:diplomka/services/shared_preferences_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -40,6 +41,7 @@ class SessionManager extends GetxService {
   final RxBool editableNutrientsEnabled1 = false.obs;
   final RxBool sectionHeaderPaddingEnabled = true.obs;
   final RxnString workoutsPerWeek = RxnString();
+  final Rx<VoiceLogMode> voiceLogMode = VoiceLogMode.meals.obs;
   final RxnDouble bmr = RxnDouble();
 
   void _recalculateBmr() {
@@ -80,6 +82,8 @@ class SessionManager extends GetxService {
     rolloverCaloriesEnabled.value = await SharedPreferencesService.to.getBool(key: rolloverCaloriesEnabledKey) ?? true;
     autoAdjustMacrosEnabled.value = await SharedPreferencesService.to.getBool(key: autoAdjustMacrosEnabledKey) ?? true;
     workoutsPerWeek.value = await SharedPreferencesService.to.getString(key: profileWorkoutsPerWeekKey);
+    final voiceLogModeCode = await SharedPreferencesService.to.getString(key: voiceLogModeKey);
+    voiceLogMode.value = voiceLogModeCode == 'exercise' ? VoiceLogMode.exercise : VoiceLogMode.meals;
     _recalculateBmr();
   }
 
@@ -197,5 +201,13 @@ class SessionManager extends GetxService {
 
   void setSectionHeaderPaddingEnabled(bool value) {
     sectionHeaderPaddingEnabled.value = value;
+  }
+
+  Future<void> setVoiceLogMode(VoiceLogMode mode) async {
+    voiceLogMode.value = mode;
+    await SharedPreferencesService.to.setString(
+      key: voiceLogModeKey,
+      value: mode == VoiceLogMode.exercise ? 'exercise' : 'meals',
+    );
   }
 }

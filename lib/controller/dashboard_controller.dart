@@ -556,6 +556,10 @@ class DashboardController extends BaseController {
     final buffer = StringBuffer();
     buffer.writeln('Barcode scan fallback request.');
     buffer.writeln('barcode: $barcode');
+    final countryHint = BarcodeLookupService.to.getEanCountryHint(barcode);
+    if (countryHint != null) {
+      buffer.writeln('product_origin: $countryHint');
+    }
     if (result != null) {
       buffer.writeln('product_name: ${result.productName}');
       if (result.brand != null && result.brand!.isNotEmpty) {

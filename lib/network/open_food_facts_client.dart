@@ -6,6 +6,7 @@ class OffProductDto {
   const OffProductDto({
     required this.code,
     this.productName,
+    this.productNameCs,
     this.productNameEn,
     this.brands,
     this.quantity,
@@ -16,6 +17,7 @@ class OffProductDto {
 
   final String code;
   final String? productName;
+  final String? productNameCs;
   final String? productNameEn;
   final String? brands;
   final String? quantity;
@@ -30,6 +32,7 @@ class OffProductDto {
     return OffProductDto(
       code: _readString(json['code']) ?? barcode,
       productName: _readString(json['product_name']),
+      productNameCs: _readString(json['product_name_cs']),
       productNameEn: _readString(json['product_name_en']),
       brands: _readString(json['brands']),
       quantity: _readString(json['quantity']),
@@ -72,14 +75,15 @@ class OpenFoodFactsClient extends GetxService {
     ),
   );
 
-  Future<OffLookupResponse> fetchProductByBarcode(String barcode) async {
+  Future<OffLookupResponse> fetchProductByBarcode(String barcode, {String? locale}) async {
     try {
       await _ensureUserAgentHeader();
 
       final response = await _dio.get(
         '/api/v2/product/$barcode.json',
-        queryParameters: const <String, dynamic>{
-          'fields': 'code,product_name,product_name_en,brands,quantity,image_front_url,image_url,nutriments,status',
+        queryParameters: <String, dynamic>{
+          'fields': 'code,product_name,product_name_cs,product_name_en,brands,quantity,image_front_url,image_url,nutriments,status',
+          if (locale != null) 'lc': locale,
         },
       );
 
