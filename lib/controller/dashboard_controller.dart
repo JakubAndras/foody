@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:diplomka/controller/streak_controller.dart';
+import 'package:diplomka/services/background_task_service.dart';
 import 'package:diplomka/services/tracking_reminder_service.dart';
 import 'package:diplomka/utils/app_limits.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -615,12 +616,14 @@ class DashboardController extends BaseController {
     _activeMealAnalyses += 1;
     _mealAnalysisLoadingStartedAt ??= DateTime.now();
     newMealAnalyzeLoading.value = true;
+    BackgroundTaskService.begin();
   }
 
   void _beginExerciseAnalysis() {
     _activeExerciseAnalyses += 1;
     _exerciseAnalysisLoadingStartedAt ??= DateTime.now();
     newExerciseAnalyzeLoading.value = true;
+    BackgroundTaskService.begin();
   }
 
   Future<void> _endMealAnalysis() async {
@@ -643,6 +646,7 @@ class DashboardController extends BaseController {
 
     _mealAnalysisLoadingStartedAt = null;
     newMealAnalyzeLoading.value = false;
+    BackgroundTaskService.end();
   }
 
   Future<void> _endExerciseAnalysis() async {
@@ -665,6 +669,7 @@ class DashboardController extends BaseController {
 
     _exerciseAnalysisLoadingStartedAt = null;
     newExerciseAnalyzeLoading.value = false;
+    BackgroundTaskService.end();
   }
 
   void requestScrollToTodayMealsBottom() {
@@ -676,16 +681,18 @@ class DashboardController extends BaseController {
   }
 
   void _notifyRecognitionComplete({required String message, required int notificationId}) {
+    print('[Notifications] _notifyRecognitionComplete: foreground=$_isInForeground');
     if (_isInForeground) {
       showSnackBar(message: message, type: SnackBarType.success);
     } else {
+      print('[Notifications] Sending instant notification id=$notificationId');
       TrackingReminderService.to.notificationsPlugin.show(
         notificationId,
         tr(LocaleKeys.common_app_name),
         message,
         const NotificationDetails(
           android: AndroidNotificationDetails(trackingRemindersChannelId, 'Foody', importance: Importance.high, priority: Priority.high),
-          iOS: DarwinNotificationDetails(),
+          iOS: DarwinNotificationDetails(presentAlert: true, presentBadge: true, presentSound: true),
         ),
       );
     }

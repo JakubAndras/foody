@@ -26,6 +26,13 @@ Future<void> main() async {
   await MotivationalSummaryService.to.initialize();
   await MotivationalSummaryService.to.rescheduleAllFromStorage();
   await WidgetSyncService.to.initialize();
+  if (SessionManager.to.onboardingComplete.value) {
+    print('[Notifications] Requesting permission at startup...');
+    final granted = await TrackingReminderService.to.ensureNotificationPermission();
+    print('[Notifications] Permission result: $granted');
+  } else {
+    print('[Notifications] Skipping permission request (onboarding not complete)');
+  }
 
   runApp(
     EasyLocalization(

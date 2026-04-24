@@ -31,9 +31,9 @@ class TrackingReminderService extends GetxService {
     const initializationSettings = InitializationSettings(
       android: AndroidInitializationSettings('@mipmap/ic_launcher'),
       iOS: DarwinInitializationSettings(
-        requestAlertPermission: false,
-        requestBadgePermission: false,
-        requestSoundPermission: false,
+        requestAlertPermission: true,
+        requestBadgePermission: true,
+        requestSoundPermission: true,
       ),
     );
 
@@ -43,6 +43,7 @@ class TrackingReminderService extends GetxService {
     );
     await _createAndroidChannel();
     _initialized = true;
+    print('[Notifications] Plugin initialized');
   }
 
   Future<void> _configureLocalTimeZone() async {
@@ -71,15 +72,15 @@ class TrackingReminderService extends GetxService {
   Future<bool> hasNotificationPermission() async {
     if (Platform.isAndroid) {
       final AndroidFlutterLocalNotificationsPlugin? androidImplementation = notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
-      return await androidImplementation?.areNotificationsEnabled() ?? true;
+      final result = await androidImplementation?.areNotificationsEnabled() ?? true;
+      print('[Notifications] hasPermission (Android): $result');
+      return result;
     }
 
     if (Platform.isIOS) {
       final status = await Permission.notification.status;
-      // Only return false for permanentlyDenied — that's when the user
-      // explicitly denied and must go to system settings to fix it.
-      // isDenied on iOS means "not yet asked", so treat it as OK.
-      return !status.isPermanentlyDenied;
+      print('[Notifications] hasPermission (iOS): status=$status, isGranted=${status.isGranted}');
+      return status.isGranted;
     }
 
     return true;
@@ -87,23 +88,28 @@ class TrackingReminderService extends GetxService {
 
   Future<bool> ensureNotificationPermission() async {
     await initialize();
-    if (await hasNotificationPermission()) {
+    final alreadyGranted = await hasNotificationPermission();
+    if (alreadyGranted) {
+      print('[Notifications] Permission already granted');
       return true;
     }
 
     if (Platform.isAndroid) {
       final AndroidFlutterLocalNotificationsPlugin? androidImplementation = notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
       final bool? granted = await androidImplementation?.requestNotificationsPermission();
+      print('[Notifications] Android permission requested: $granted');
       return granted ?? await hasNotificationPermission();
     }
 
     if (Platform.isIOS) {
       final IOSFlutterLocalNotificationsPlugin? iosImplementation = notificationsPlugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>();
+      print('[Notifications] iOS plugin resolved: ${iosImplementation != null}');
       final bool? granted = await iosImplementation?.requestPermissions(
         alert: true,
         badge: true,
         sound: true,
       );
+      print('[Notifications] iOS permission requested: $granted');
       return granted ?? false;
     }
 
@@ -149,17 +155,22 @@ class TrackingReminderService extends GetxService {
       ),
     );
 
-    await notificationsPlugin.zonedSchedule(
-      setting.type.notificationId,
-      _notificationTitle(),
-      _notificationBody(setting.type),
-      scheduledDate,
-      notificationDetails,
-      payload: setting.type.code,
-      matchDateTimeComponents: DateTimeComponents.time,
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-    );
+    try {
+      await notificationsPlugin.zonedSchedule(
+        setting.type.notificationId,
+        _notificationTitle(),
+        _notificationBody(setting.type),
+        scheduledDate,
+        notificationDetails,
+        payload: setting.type.code,
+        matchDateTimeComponents: DateTimeComponents.time,
+        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      );
+      print('[Notifications] Scheduled ${setting.type.code} for $scheduledDate (id=${setting.type.notificationId})');
+    } catch (e) {
+      print('[Notifications] ERROR scheduling ${setting.type.code}: $e');
+    }
   }
 
   Future<void> cancelReminder(TrackingReminderType type) async {
