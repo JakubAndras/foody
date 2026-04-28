@@ -1,0 +1,3969 @@
+[
+  {
+    "dish_id": "dish_1563465805",
+    "total_calories": 32.43,
+    "total_mass_grams": 23.0,
+    "total_fat": 1.56,
+    "total_carbs": 4.14,
+    "total_protein": 0.48,
+    "ingredient_count": 1,
+    "calorie_stratum": "very_low",
+    "complexity": "simple",
+    "ingredients_summary": "roasted potatoes (23.0g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000433",
+        "name": "roasted potatoes",
+        "grams": 23.0,
+        "calories": 32.43,
+        "fat": 1.56,
+        "carbs": 4.14,
+        "protein": 0.48
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1561574600",
+    "total_calories": 32.98,
+    "total_mass_grams": 100.0,
+    "total_fat": 1.18,
+    "total_carbs": 5.78,
+    "total_protein": 0.98,
+    "ingredient_count": 3,
+    "calorie_stratum": "very_low",
+    "complexity": "simple",
+    "ingredients_summary": "salt (0.98g), olive oil (0.98g), eggplant (98.04g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000291",
+        "name": "salt",
+        "grams": 0.98,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000161",
+        "name": "olive oil",
+        "grams": 0.98,
+        "calories": 8.67,
+        "fat": 0.98,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000335",
+        "name": "eggplant",
+        "grams": 98.04,
+        "calories": 24.31,
+        "fat": 0.2,
+        "carbs": 5.78,
+        "protein": 0.98
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1564774773",
+    "total_calories": 50.14,
+    "total_mass_grams": 90.0,
+    "total_fat": 2.55,
+    "total_carbs": 6.15,
+    "total_protein": 2.11,
+    "ingredient_count": 2,
+    "calorie_stratum": "very_low",
+    "complexity": "simple",
+    "ingredients_summary": "broccoli (87.8g), olive oil (2.2g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000027",
+        "name": "broccoli",
+        "grams": 87.8,
+        "calories": 30.73,
+        "fat": 0.35,
+        "carbs": 6.15,
+        "protein": 2.11
+      },
+      {
+        "id": "ingr_0000000161",
+        "name": "olive oil",
+        "grams": 2.2,
+        "calories": 19.4,
+        "fat": 2.2,
+        "carbs": 0.0,
+        "protein": 0.0
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1562775456",
+    "total_calories": 50.16,
+    "total_mass_grams": 66.0,
+    "total_fat": 0.0,
+    "total_carbs": 11.88,
+    "total_protein": 0.66,
+    "ingredient_count": 1,
+    "calorie_stratum": "very_low",
+    "complexity": "simple",
+    "ingredients_summary": "sweet potato (66.0g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000437",
+        "name": "sweet potato",
+        "grams": 66.0,
+        "calories": 50.16,
+        "fat": 0.0,
+        "carbs": 11.88,
+        "protein": 0.66
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1567785654",
+    "total_calories": 51.78,
+    "total_mass_grams": 96.0,
+    "total_fat": 0.2,
+    "total_carbs": 13.02,
+    "total_protein": 0.59,
+    "ingredient_count": 2,
+    "calorie_stratum": "very_low",
+    "complexity": "simple",
+    "ingredients_summary": "berries (54.0g), pineapple (42.0g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000013",
+        "name": "berries",
+        "grams": 54.0,
+        "calories": 30.78,
+        "fat": 0.16,
+        "carbs": 7.56,
+        "protein": 0.38
+      },
+      {
+        "id": "ingr_0000000038",
+        "name": "pineapple",
+        "grams": 42.0,
+        "calories": 21.0,
+        "fat": 0.04,
+        "carbs": 5.46,
+        "protein": 0.21
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1566502437",
+    "total_calories": 74.56,
+    "total_mass_grams": 64.0,
+    "total_fat": 6.42,
+    "total_carbs": 3.82,
+    "total_protein": 1.71,
+    "ingredient_count": 9,
+    "calorie_stratum": "very_low",
+    "complexity": "complex",
+    "ingredients_summary": "vinegar (3.08g), spinach (raw) (38.44g), sun dried tomatoes (3.08g), garlic (0.38g), onions (4.61g), cucumbers (7.69g), mustard (0.38g), salt (0.19g), olive oil (6.15g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000189",
+        "name": "vinegar",
+        "grams": 3.08,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000036",
+        "name": "spinach (raw)",
+        "grams": 38.44,
+        "calories": 8.84,
+        "fat": 0.15,
+        "carbs": 1.38,
+        "protein": 1.11
+      },
+      {
+        "id": "ingr_0000000457",
+        "name": "sun dried tomatoes",
+        "grams": 3.08,
+        "calories": 7.93,
+        "fat": 0.09,
+        "carbs": 1.72,
+        "protein": 0.43
+      },
+      {
+        "id": "ingr_0000000122",
+        "name": "garlic",
+        "grams": 0.38,
+        "calories": 0.57,
+        "fat": 0.0,
+        "carbs": 0.13,
+        "protein": 0.02
+      },
+      {
+        "id": "ingr_0000000094",
+        "name": "onions",
+        "grams": 4.61,
+        "calories": 1.85,
+        "fat": 0.0,
+        "carbs": 0.42,
+        "protein": 0.05
+      },
+      {
+        "id": "ingr_0000000031",
+        "name": "cucumbers",
+        "grams": 7.69,
+        "calories": 0.77,
+        "fat": 0.0,
+        "carbs": 0.15,
+        "protein": 0.08
+      },
+      {
+        "id": "ingr_0000000126",
+        "name": "mustard",
+        "grams": 0.38,
+        "calories": 0.24,
+        "fat": 0.01,
+        "carbs": 0.02,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000291",
+        "name": "salt",
+        "grams": 0.19,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000161",
+        "name": "olive oil",
+        "grams": 6.15,
+        "calories": 54.37,
+        "fat": 6.15,
+        "carbs": 0.0,
+        "protein": 0.0
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1560367904",
+    "total_calories": 76.02,
+    "total_mass_grams": 69.0,
+    "total_fat": 8.84,
+    "total_carbs": 3.73,
+    "total_protein": 10.41,
+    "ingredient_count": 7,
+    "calorie_stratum": "very_low",
+    "complexity": "medium",
+    "ingredients_summary": "olive oil (1.08g), garlic (0.27g), salt (0.14g), green onions (0.54g), onions (2.16g), fish (54.01g), country rice (10.8g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000161",
+        "name": "olive oil",
+        "grams": 1.08,
+        "calories": 9.55,
+        "fat": 1.08,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000122",
+        "name": "garlic",
+        "grams": 0.27,
+        "calories": 0.4,
+        "fat": 0.0,
+        "carbs": 0.09,
+        "protein": 0.02
+      },
+      {
+        "id": "ingr_0000000291",
+        "name": "salt",
+        "grams": 0.14,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000535",
+        "name": "green onions",
+        "grams": 0.54,
+        "calories": 0.17,
+        "fat": 0.0,
+        "carbs": 0.04,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000094",
+        "name": "onions",
+        "grams": 2.16,
+        "calories": 0.86,
+        "fat": 0.0,
+        "carbs": 0.19,
+        "protein": 0.02
+      },
+      {
+        "id": "ingr_0000000049",
+        "name": "fish",
+        "grams": 54.01,
+        "calories": 48.61,
+        "fat": 7.02,
+        "carbs": 0.0,
+        "protein": 9.94
+      },
+      {
+        "id": "ingr_0000000534",
+        "name": "country rice",
+        "grams": 10.8,
+        "calories": 16.42,
+        "fat": 0.73,
+        "carbs": 3.41,
+        "protein": 0.42
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1563824339",
+    "total_calories": 85.34,
+    "total_mass_grams": 175.0,
+    "total_fat": 4.09,
+    "total_carbs": 12.08,
+    "total_protein": 2.1,
+    "ingredient_count": 4,
+    "calorie_stratum": "very_low",
+    "complexity": "medium",
+    "ingredients_summary": "onions (43.0g), cherry tomatoes (53.0g), olives (36.0g), bell peppers (43.0g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000094",
+        "name": "onions",
+        "grams": 43.0,
+        "calories": 17.2,
+        "fat": 0.04,
+        "carbs": 3.87,
+        "protein": 0.47
+      },
+      {
+        "id": "ingr_0000000471",
+        "name": "cherry tomatoes",
+        "grams": 53.0,
+        "calories": 9.54,
+        "fat": 0.11,
+        "carbs": 2.07,
+        "protein": 0.48
+      },
+      {
+        "id": "ingr_0000000012",
+        "name": "olives",
+        "grams": 36.0,
+        "calories": 41.4,
+        "fat": 3.85,
+        "carbs": 2.27,
+        "protein": 0.29
+      },
+      {
+        "id": "ingr_0000000033",
+        "name": "bell peppers",
+        "grams": 43.0,
+        "calories": 17.2,
+        "fat": 0.09,
+        "carbs": 3.87,
+        "protein": 0.86
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1563566674",
+    "total_calories": 100.89,
+    "total_mass_grams": 88.0,
+    "total_fat": 6.93,
+    "total_carbs": 9.71,
+    "total_protein": 1.82,
+    "ingredient_count": 3,
+    "calorie_stratum": "low",
+    "complexity": "simple",
+    "ingredients_summary": "olive oil (0.99g), olives (54.0g), wheat berry (33.01g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000161",
+        "name": "olive oil",
+        "grams": 0.99,
+        "calories": 8.75,
+        "fat": 0.99,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000012",
+        "name": "olives",
+        "grams": 54.0,
+        "calories": 62.1,
+        "fat": 5.78,
+        "carbs": 3.4,
+        "protein": 0.43
+      },
+      {
+        "id": "ingr_0000000514",
+        "name": "wheat berry",
+        "grams": 33.01,
+        "calories": 30.04,
+        "fat": 0.17,
+        "carbs": 6.3,
+        "protein": 1.39
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1566502472",
+    "total_calories": 132.92,
+    "total_mass_grams": 119.0,
+    "total_fat": 7.74,
+    "total_carbs": 15.92,
+    "total_protein": 3.42,
+    "ingredient_count": 10,
+    "calorie_stratum": "low",
+    "complexity": "complex",
+    "ingredients_summary": "sun dried tomatoes (3.08g), garlic (0.38g), olive oil (6.15g), mustard (0.38g), cucumbers (7.69g), vinegar (3.08g), spinach (raw) (38.44g), onions (4.61g), corn on the cob (55.0g), salt (0.19g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000457",
+        "name": "sun dried tomatoes",
+        "grams": 3.08,
+        "calories": 7.93,
+        "fat": 0.09,
+        "carbs": 1.72,
+        "protein": 0.43
+      },
+      {
+        "id": "ingr_0000000122",
+        "name": "garlic",
+        "grams": 0.38,
+        "calories": 0.57,
+        "fat": 0.0,
+        "carbs": 0.13,
+        "protein": 0.02
+      },
+      {
+        "id": "ingr_0000000161",
+        "name": "olive oil",
+        "grams": 6.15,
+        "calories": 54.37,
+        "fat": 6.15,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000126",
+        "name": "mustard",
+        "grams": 0.38,
+        "calories": 0.24,
+        "fat": 0.01,
+        "carbs": 0.02,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000031",
+        "name": "cucumbers",
+        "grams": 7.69,
+        "calories": 0.77,
+        "fat": 0.0,
+        "carbs": 0.15,
+        "protein": 0.08
+      },
+      {
+        "id": "ingr_0000000189",
+        "name": "vinegar",
+        "grams": 3.08,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000036",
+        "name": "spinach (raw)",
+        "grams": 38.44,
+        "calories": 8.84,
+        "fat": 0.15,
+        "carbs": 1.38,
+        "protein": 1.11
+      },
+      {
+        "id": "ingr_0000000094",
+        "name": "onions",
+        "grams": 4.61,
+        "calories": 1.85,
+        "fat": 0.0,
+        "carbs": 0.42,
+        "protein": 0.05
+      },
+      {
+        "id": "ingr_0000000205",
+        "name": "corn on the cob",
+        "grams": 55.0,
+        "calories": 58.36,
+        "fat": 1.32,
+        "carbs": 12.1,
+        "protein": 1.71
+      },
+      {
+        "id": "ingr_0000000291",
+        "name": "salt",
+        "grams": 0.19,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1567023335",
+    "total_calories": 138.34,
+    "total_mass_grams": 117.0,
+    "total_fat": 12.02,
+    "total_carbs": 5.83,
+    "total_protein": 3.29,
+    "ingredient_count": 13,
+    "calorie_stratum": "low",
+    "complexity": "complex",
+    "ingredients_summary": "greek salad (64.0g), garlic (0.13g), salt (0.19g), pecans (0.67g), raspberries (2.58g), mustard (0.34g), olive oil (4.76g), almonds (1.03g), blueberries (3.93g), arugula (26.59g), vinegar (1.66g), chard (8.53g), carrot (2.58g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000409",
+        "name": "greek salad",
+        "grams": 64.0,
+        "calories": 72.32,
+        "fat": 6.02,
+        "carbs": 3.01,
+        "protein": 2.05
+      },
+      {
+        "id": "ingr_0000000122",
+        "name": "garlic",
+        "grams": 0.13,
+        "calories": 0.19,
+        "fat": 0.0,
+        "carbs": 0.04,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000291",
+        "name": "salt",
+        "grams": 0.19,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000082",
+        "name": "pecans",
+        "grams": 0.67,
+        "calories": 4.64,
+        "fat": 0.48,
+        "carbs": 0.09,
+        "protein": 0.06
+      },
+      {
+        "id": "ingr_0000000040",
+        "name": "raspberries",
+        "grams": 2.58,
+        "calories": 1.37,
+        "fat": 0.02,
+        "carbs": 0.31,
+        "protein": 0.03
+      },
+      {
+        "id": "ingr_0000000126",
+        "name": "mustard",
+        "grams": 0.34,
+        "calories": 0.21,
+        "fat": 0.01,
+        "carbs": 0.02,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000161",
+        "name": "olive oil",
+        "grams": 4.76,
+        "calories": 42.06,
+        "fat": 4.76,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000077",
+        "name": "almonds",
+        "grams": 1.03,
+        "calories": 5.98,
+        "fat": 0.51,
+        "carbs": 0.23,
+        "protein": 0.23
+      },
+      {
+        "id": "ingr_0000000201",
+        "name": "blueberries",
+        "grams": 3.93,
+        "calories": 2.25,
+        "fat": 0.01,
+        "carbs": 0.57,
+        "protein": 0.03
+      },
+      {
+        "id": "ingr_0000000515",
+        "name": "arugula",
+        "grams": 26.59,
+        "calories": 6.65,
+        "fat": 0.19,
+        "carbs": 0.98,
+        "protein": 0.69
+      },
+      {
+        "id": "ingr_0000000189",
+        "name": "vinegar",
+        "grams": 1.66,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000517",
+        "name": "chard",
+        "grams": 8.53,
+        "calories": 1.62,
+        "fat": 0.02,
+        "carbs": 0.32,
+        "protein": 0.15
+      },
+      {
+        "id": "ingr_0000000045",
+        "name": "carrot",
+        "grams": 2.58,
+        "calories": 1.06,
+        "fat": 0.01,
+        "carbs": 0.26,
+        "protein": 0.02
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1564601528",
+    "total_calories": 142.74,
+    "total_mass_grams": 163.0,
+    "total_fat": 6.19,
+    "total_carbs": 19.92,
+    "total_protein": 2.4,
+    "ingredient_count": 2,
+    "calorie_stratum": "low",
+    "complexity": "simple",
+    "ingredients_summary": "turnips (73.0g), roasted potatoes (90.0g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000342",
+        "name": "turnips",
+        "grams": 73.0,
+        "calories": 15.84,
+        "fat": 0.07,
+        "carbs": 3.72,
+        "protein": 0.51
+      },
+      {
+        "id": "ingr_0000000433",
+        "name": "roasted potatoes",
+        "grams": 90.0,
+        "calories": 126.9,
+        "fat": 6.12,
+        "carbs": 16.2,
+        "protein": 1.89
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1561577146",
+    "total_calories": 154.24,
+    "total_mass_grams": 99.0,
+    "total_fat": 7.91,
+    "total_carbs": 14.02,
+    "total_protein": 7.93,
+    "ingredient_count": 11,
+    "calorie_stratum": "low",
+    "complexity": "complex",
+    "ingredients_summary": "vinegar (0.47g), olive oil (2.03g), mustard (0.16g), cheese pizza (37.0g), walnuts (0.51g), salt (0.09g), pepper (0.02g), arugula (14.18g), blueberries (1.01g), tofu (41.0g), chard (2.53g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000189",
+        "name": "vinegar",
+        "grams": 0.47,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000161",
+        "name": "olive oil",
+        "grams": 2.03,
+        "calories": 17.91,
+        "fat": 2.03,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000126",
+        "name": "mustard",
+        "grams": 0.16,
+        "calories": 0.1,
+        "fat": 0.01,
+        "carbs": 0.01,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000011",
+        "name": "cheese pizza",
+        "grams": 37.0,
+        "calories": 98.38,
+        "fat": 3.48,
+        "carbs": 12.4,
+        "protein": 4.14
+      },
+      {
+        "id": "ingr_0000000124",
+        "name": "walnuts",
+        "grams": 0.51,
+        "calories": 3.31,
+        "fat": 0.33,
+        "carbs": 0.07,
+        "protein": 0.08
+      },
+      {
+        "id": "ingr_0000000291",
+        "name": "salt",
+        "grams": 0.09,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000312",
+        "name": "pepper",
+        "grams": 0.02,
+        "calories": 0.01,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000515",
+        "name": "arugula",
+        "grams": 14.18,
+        "calories": 3.54,
+        "fat": 0.1,
+        "carbs": 0.52,
+        "protein": 0.37
+      },
+      {
+        "id": "ingr_0000000201",
+        "name": "blueberries",
+        "grams": 1.01,
+        "calories": 0.58,
+        "fat": 0.0,
+        "carbs": 0.15,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000050",
+        "name": "tofu",
+        "grams": 41.0,
+        "calories": 29.93,
+        "fat": 1.97,
+        "carbs": 0.78,
+        "protein": 3.28
+      },
+      {
+        "id": "ingr_0000000517",
+        "name": "chard",
+        "grams": 2.53,
+        "calories": 0.48,
+        "fat": 0.01,
+        "carbs": 0.09,
+        "protein": 0.05
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1561665671",
+    "total_calories": 158.39,
+    "total_mass_grams": 89.0,
+    "total_fat": 5.06,
+    "total_carbs": 23.98,
+    "total_protein": 5.92,
+    "ingredient_count": 2,
+    "calorie_stratum": "low",
+    "complexity": "simple",
+    "ingredients_summary": "corn on the cob (49.0g), pizza (40.0g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000205",
+        "name": "corn on the cob",
+        "grams": 49.0,
+        "calories": 51.99,
+        "fat": 1.18,
+        "carbs": 10.78,
+        "protein": 1.52
+      },
+      {
+        "id": "ingr_0000000380",
+        "name": "pizza",
+        "grams": 40.0,
+        "calories": 106.4,
+        "fat": 3.88,
+        "carbs": 13.2,
+        "protein": 4.4
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1562686492",
+    "total_calories": 160.0,
+    "total_mass_grams": 100.0,
+    "total_fat": 10.0,
+    "total_carbs": 3.0,
+    "total_protein": 14.0,
+    "ingredient_count": 1,
+    "calorie_stratum": "low",
+    "complexity": "simple",
+    "ingredients_summary": "chicken apple sausage (100.0g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000510",
+        "name": "chicken apple sausage",
+        "grams": 100.0,
+        "calories": 160.0,
+        "fat": 10.0,
+        "carbs": 3.0,
+        "protein": 14.0
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1567020394",
+    "total_calories": 176.16,
+    "total_mass_grams": 265.0,
+    "total_fat": 12.67,
+    "total_carbs": 16.69,
+    "total_protein": 13.63,
+    "ingredient_count": 15,
+    "calorie_stratum": "low",
+    "complexity": "complex",
+    "ingredients_summary": "fish (43.49g), pepper (0.04g), kale (2.17g), parsley (0.43g), olive oil (6.18g), chive (0.11g), broccoli (163.9g), cherry tomatoes (1.74g), wheat berry (8.7g), chard (1.74g), lemon juice (0.87g), salt (0.28g), shallots (0.87g), garlic (0.03g), brussels sprouts (34.44g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000049",
+        "name": "fish",
+        "grams": 43.49,
+        "calories": 39.14,
+        "fat": 5.65,
+        "carbs": 0.0,
+        "protein": 8.0
+      },
+      {
+        "id": "ingr_0000000312",
+        "name": "pepper",
+        "grams": 0.04,
+        "calories": 0.02,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000072",
+        "name": "kale",
+        "grams": 2.17,
+        "calories": 1.07,
+        "fat": 0.02,
+        "carbs": 0.2,
+        "protein": 0.07
+      },
+      {
+        "id": "ingr_0000000524",
+        "name": "parsley",
+        "grams": 0.43,
+        "calories": 0.16,
+        "fat": 0.0,
+        "carbs": 0.03,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000161",
+        "name": "olive oil",
+        "grams": 6.18,
+        "calories": 54.64,
+        "fat": 6.18,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000527",
+        "name": "chive",
+        "grams": 0.11,
+        "calories": 0.03,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000027",
+        "name": "broccoli",
+        "grams": 163.9,
+        "calories": 57.37,
+        "fat": 0.66,
+        "carbs": 11.47,
+        "protein": 3.93
+      },
+      {
+        "id": "ingr_0000000471",
+        "name": "cherry tomatoes",
+        "grams": 1.74,
+        "calories": 0.31,
+        "fat": 0.0,
+        "carbs": 0.07,
+        "protein": 0.02
+      },
+      {
+        "id": "ingr_0000000514",
+        "name": "wheat berry",
+        "grams": 8.7,
+        "calories": 7.92,
+        "fat": 0.04,
+        "carbs": 1.66,
+        "protein": 0.37
+      },
+      {
+        "id": "ingr_0000000517",
+        "name": "chard",
+        "grams": 1.74,
+        "calories": 0.33,
+        "fat": 0.0,
+        "carbs": 0.06,
+        "protein": 0.03
+      },
+      {
+        "id": "ingr_0000000520",
+        "name": "lemon juice",
+        "grams": 0.87,
+        "calories": 0.15,
+        "fat": 0.0,
+        "carbs": 0.05,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000291",
+        "name": "salt",
+        "grams": 0.28,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000133",
+        "name": "shallots",
+        "grams": 0.87,
+        "calories": 0.17,
+        "fat": 0.0,
+        "carbs": 0.03,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000122",
+        "name": "garlic",
+        "grams": 0.03,
+        "calories": 0.04,
+        "fat": 0.0,
+        "carbs": 0.01,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000016",
+        "name": "brussels sprouts",
+        "grams": 34.44,
+        "calories": 14.81,
+        "fat": 0.1,
+        "carbs": 3.1,
+        "protein": 1.17
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1562688482",
+    "total_calories": 193.46,
+    "total_mass_grams": 169.0,
+    "total_fat": 8.42,
+    "total_carbs": 19.77,
+    "total_protein": 10.86,
+    "ingredient_count": 3,
+    "calorie_stratum": "low",
+    "complexity": "simple",
+    "ingredients_summary": "roasted potatoes (17.0g), chicken apple sausage (71.0g), grapes (81.0g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000433",
+        "name": "roasted potatoes",
+        "grams": 17.0,
+        "calories": 23.97,
+        "fat": 1.16,
+        "carbs": 3.06,
+        "protein": 0.36
+      },
+      {
+        "id": "ingr_0000000510",
+        "name": "chicken apple sausage",
+        "grams": 71.0,
+        "calories": 113.6,
+        "fat": 7.1,
+        "carbs": 2.13,
+        "protein": 9.94
+      },
+      {
+        "id": "ingr_0000000440",
+        "name": "grapes",
+        "grams": 81.0,
+        "calories": 55.89,
+        "fat": 0.16,
+        "carbs": 14.58,
+        "protein": 0.57
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1562777000",
+    "total_calories": 195.36,
+    "total_mass_grams": 132.0,
+    "total_fat": 14.52,
+    "total_carbs": 2.11,
+    "total_protein": 13.2,
+    "ingredient_count": 1,
+    "calorie_stratum": "low",
+    "complexity": "simple",
+    "ingredients_summary": "scrambled eggs (132.0g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000008",
+        "name": "scrambled eggs",
+        "grams": 132.0,
+        "calories": 195.36,
+        "fat": 14.52,
+        "carbs": 2.11,
+        "protein": 13.2
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1561748950",
+    "total_calories": 197.25,
+    "total_mass_grams": 205.0,
+    "total_fat": 7.97,
+    "total_carbs": 14.05,
+    "total_protein": 16.75,
+    "ingredient_count": 8,
+    "calorie_stratum": "low",
+    "complexity": "complex",
+    "ingredients_summary": "salt (0.16g), olive oil (2.48g), thyme (0.08g), honeydew melons (118.0g), brown rice (13.07g), arugula (2.61g), pepper (3.27g), salmon (65.33g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000291",
+        "name": "salt",
+        "grams": 0.16,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000161",
+        "name": "olive oil",
+        "grams": 2.48,
+        "calories": 21.94,
+        "fat": 2.48,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000518",
+        "name": "thyme",
+        "grams": 0.08,
+        "calories": 0.08,
+        "fat": 0.0,
+        "carbs": 0.02,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000112",
+        "name": "honeydew melons",
+        "grams": 118.0,
+        "calories": 42.48,
+        "fat": 0.12,
+        "carbs": 10.62,
+        "protein": 0.59
+      },
+      {
+        "id": "ingr_0000000023",
+        "name": "brown rice",
+        "grams": 13.07,
+        "calories": 14.5,
+        "fat": 0.12,
+        "carbs": 3.01,
+        "protein": 0.34
+      },
+      {
+        "id": "ingr_0000000515",
+        "name": "arugula",
+        "grams": 2.61,
+        "calories": 0.65,
+        "fat": 0.02,
+        "carbs": 0.1,
+        "protein": 0.07
+      },
+      {
+        "id": "ingr_0000000312",
+        "name": "pepper",
+        "grams": 3.27,
+        "calories": 1.31,
+        "fat": 0.01,
+        "carbs": 0.3,
+        "protein": 0.07
+      },
+      {
+        "id": "ingr_0000000332",
+        "name": "salmon",
+        "grams": 65.33,
+        "calories": 116.28,
+        "fat": 5.23,
+        "carbs": 0.0,
+        "protein": 15.68
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1562777037",
+    "total_calories": 215.27,
+    "total_mass_grams": 171.0,
+    "total_fat": 15.02,
+    "total_carbs": 5.57,
+    "total_protein": 14.51,
+    "ingredient_count": 5,
+    "calorie_stratum": "low",
+    "complexity": "medium",
+    "ingredients_summary": "brussels sprouts (38.38g), scrambled eggs (132.0g), olive oil (0.38g), pepper (0.05g), salt (0.19g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000016",
+        "name": "brussels sprouts",
+        "grams": 38.38,
+        "calories": 16.5,
+        "fat": 0.12,
+        "carbs": 3.45,
+        "protein": 1.3
+      },
+      {
+        "id": "ingr_0000000008",
+        "name": "scrambled eggs",
+        "grams": 132.0,
+        "calories": 195.36,
+        "fat": 14.52,
+        "carbs": 2.11,
+        "protein": 13.2
+      },
+      {
+        "id": "ingr_0000000161",
+        "name": "olive oil",
+        "grams": 0.38,
+        "calories": 3.39,
+        "fat": 0.38,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000312",
+        "name": "pepper",
+        "grams": 0.05,
+        "calories": 0.02,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000291",
+        "name": "salt",
+        "grams": 0.19,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1568061202",
+    "total_calories": 256.55,
+    "total_mass_grams": 334.0,
+    "total_fat": 7.67,
+    "total_carbs": 39.15,
+    "total_protein": 9.44,
+    "ingredient_count": 7,
+    "calorie_stratum": "medium",
+    "complexity": "medium",
+    "ingredients_summary": "salt (0.75g), pepper (0.06g), brussels sprouts (46.25g), olive oil (1.85g), squash (139.09g), pineapple (91.0g), cheese pizza (55.0g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000291",
+        "name": "salt",
+        "grams": 0.75,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000312",
+        "name": "pepper",
+        "grams": 0.06,
+        "calories": 0.02,
+        "fat": 0.0,
+        "carbs": 0.01,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000016",
+        "name": "brussels sprouts",
+        "grams": 46.25,
+        "calories": 19.89,
+        "fat": 0.14,
+        "carbs": 4.16,
+        "protein": 1.57
+      },
+      {
+        "id": "ingr_0000000161",
+        "name": "olive oil",
+        "grams": 1.85,
+        "calories": 16.38,
+        "fat": 1.85,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000021",
+        "name": "squash",
+        "grams": 139.09,
+        "calories": 28.51,
+        "fat": 0.42,
+        "carbs": 4.73,
+        "protein": 1.25
+      },
+      {
+        "id": "ingr_0000000038",
+        "name": "pineapple",
+        "grams": 91.0,
+        "calories": 45.5,
+        "fat": 0.09,
+        "carbs": 11.83,
+        "protein": 0.46
+      },
+      {
+        "id": "ingr_0000000011",
+        "name": "cheese pizza",
+        "grams": 55.0,
+        "calories": 146.25,
+        "fat": 5.17,
+        "carbs": 18.43,
+        "protein": 6.16
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1567542778",
+    "total_calories": 260.58,
+    "total_mass_grams": 98.0,
+    "total_fat": 9.21,
+    "total_carbs": 32.83,
+    "total_protein": 10.98,
+    "ingredient_count": 1,
+    "calorie_stratum": "medium",
+    "complexity": "simple",
+    "ingredients_summary": "cheese pizza (98.0g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000011",
+        "name": "cheese pizza",
+        "grams": 98.0,
+        "calories": 260.58,
+        "fat": 9.21,
+        "carbs": 32.83,
+        "protein": 10.98
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1563900205",
+    "total_calories": 262.26,
+    "total_mass_grams": 301.0,
+    "total_fat": 14.25,
+    "total_carbs": 21.51,
+    "total_protein": 12.86,
+    "ingredient_count": 5,
+    "calorie_stratum": "medium",
+    "complexity": "medium",
+    "ingredients_summary": "sweet potato (47.8g), broccoli (44.88g), olive oil (2.32g), scrambled eggs (105.0g), cantaloupe (101.0g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000437",
+        "name": "sweet potato",
+        "grams": 47.8,
+        "calories": 36.33,
+        "fat": 0.0,
+        "carbs": 8.6,
+        "protein": 0.48
+      },
+      {
+        "id": "ingr_0000000027",
+        "name": "broccoli",
+        "grams": 44.88,
+        "calories": 15.71,
+        "fat": 0.18,
+        "carbs": 3.14,
+        "protein": 1.08
+      },
+      {
+        "id": "ingr_0000000161",
+        "name": "olive oil",
+        "grams": 2.32,
+        "calories": 20.48,
+        "fat": 2.32,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000008",
+        "name": "scrambled eggs",
+        "grams": 105.0,
+        "calories": 155.4,
+        "fat": 11.55,
+        "carbs": 1.68,
+        "protein": 10.5
+      },
+      {
+        "id": "ingr_0000000037",
+        "name": "cantaloupe",
+        "grams": 101.0,
+        "calories": 34.34,
+        "fat": 0.2,
+        "carbs": 8.08,
+        "protein": 0.81
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1561662842",
+    "total_calories": 263.13,
+    "total_mass_grams": 172.0,
+    "total_fat": 8.76,
+    "total_carbs": 5.88,
+    "total_protein": 38.17,
+    "ingredient_count": 17,
+    "calorie_stratum": "medium",
+    "complexity": "complex",
+    "ingredients_summary": "apple (2.37g), vinegar (0.47g), parsley (0.27g), onions (0.95g), carrot (12.03g), salt (0.66g), chive (0.15g), chicken (120.28g), millet (1.9g), garlic (0.6g), chard (3.01g), brown rice (12.03g), lemon juice (0.93g), rosemary (0.15g), olive oil (4.21g), basil (0.15g), mixed greens (11.86g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000054",
+        "name": "apple",
+        "grams": 2.37,
+        "calories": 1.23,
+        "fat": 0.0,
+        "carbs": 0.33,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000189",
+        "name": "vinegar",
+        "grams": 0.47,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000524",
+        "name": "parsley",
+        "grams": 0.27,
+        "calories": 0.1,
+        "fat": 0.0,
+        "carbs": 0.02,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000094",
+        "name": "onions",
+        "grams": 0.95,
+        "calories": 0.38,
+        "fat": 0.0,
+        "carbs": 0.09,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000045",
+        "name": "carrot",
+        "grams": 12.03,
+        "calories": 4.93,
+        "fat": 0.02,
+        "carbs": 1.2,
+        "protein": 0.11
+      },
+      {
+        "id": "ingr_0000000291",
+        "name": "salt",
+        "grams": 0.66,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000527",
+        "name": "chive",
+        "grams": 0.15,
+        "calories": 0.05,
+        "fat": 0.0,
+        "carbs": 0.01,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000028",
+        "name": "chicken",
+        "grams": 120.28,
+        "calories": 198.46,
+        "fat": 4.33,
+        "carbs": 0.0,
+        "protein": 37.29
+      },
+      {
+        "id": "ingr_0000000513",
+        "name": "millet",
+        "grams": 1.9,
+        "calories": 2.26,
+        "fat": 0.02,
+        "carbs": 0.45,
+        "protein": 0.07
+      },
+      {
+        "id": "ingr_0000000122",
+        "name": "garlic",
+        "grams": 0.6,
+        "calories": 0.9,
+        "fat": 0.0,
+        "carbs": 0.2,
+        "protein": 0.04
+      },
+      {
+        "id": "ingr_0000000517",
+        "name": "chard",
+        "grams": 3.01,
+        "calories": 0.57,
+        "fat": 0.01,
+        "carbs": 0.11,
+        "protein": 0.05
+      },
+      {
+        "id": "ingr_0000000023",
+        "name": "brown rice",
+        "grams": 12.03,
+        "calories": 13.35,
+        "fat": 0.11,
+        "carbs": 2.77,
+        "protein": 0.31
+      },
+      {
+        "id": "ingr_0000000520",
+        "name": "lemon juice",
+        "grams": 0.93,
+        "calories": 0.16,
+        "fat": 0.0,
+        "carbs": 0.05,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000516",
+        "name": "rosemary",
+        "grams": 0.15,
+        "calories": 0.2,
+        "fat": 0.01,
+        "carbs": 0.03,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000161",
+        "name": "olive oil",
+        "grams": 4.21,
+        "calories": 37.19,
+        "fat": 4.21,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000521",
+        "name": "basil",
+        "grams": 0.15,
+        "calories": 0.04,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000029",
+        "name": "mixed greens",
+        "grams": 11.86,
+        "calories": 3.32,
+        "fat": 0.05,
+        "carbs": 0.63,
+        "protein": 0.26
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1558029923",
+    "total_calories": 279.55,
+    "total_mass_grams": 200.0,
+    "total_fat": 9.6,
+    "total_carbs": 38.3,
+    "total_protein": 10.45,
+    "ingredient_count": 3,
+    "calorie_stratum": "medium",
+    "complexity": "simple",
+    "ingredients_summary": "bacon (22.0g), yam (111.0g), cantaloupe (67.0g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000004",
+        "name": "bacon",
+        "grams": 22.0,
+        "calories": 119.02,
+        "fat": 9.24,
+        "carbs": 0.31,
+        "protein": 8.14
+      },
+      {
+        "id": "ingr_0000000192",
+        "name": "yam",
+        "grams": 111.0,
+        "calories": 137.75,
+        "fat": 0.22,
+        "carbs": 32.63,
+        "protein": 1.78
+      },
+      {
+        "id": "ingr_0000000037",
+        "name": "cantaloupe",
+        "grams": 67.0,
+        "calories": 22.78,
+        "fat": 0.13,
+        "carbs": 5.36,
+        "protein": 0.54
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1562700957",
+    "total_calories": 286.93,
+    "total_mass_grams": 424.0,
+    "total_fat": 23.18,
+    "total_carbs": 21.41,
+    "total_protein": 20.52,
+    "ingredient_count": 20,
+    "calorie_stratum": "medium",
+    "complexity": "complex",
+    "ingredients_summary": "fish (75.68g), chive (3.03g), corn (3.78g), squash (103.58g), arugula (2.27g), garlic (0.38g), onions (4.27g), parsley (0.72g), olive oil (12.17g), snow peas (3.03g), mixed greens (53.35g), artichokes (3.78g), pepper (1.51g), cauliflower (117.0g), apple (10.67g), millet (8.54g), lentils (15.14g), vinegar (2.13g), lemon juice (2.13g), salt (0.84g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000049",
+        "name": "fish",
+        "grams": 75.68,
+        "calories": 68.11,
+        "fat": 9.84,
+        "carbs": 0.0,
+        "protein": 13.92
+      },
+      {
+        "id": "ingr_0000000527",
+        "name": "chive",
+        "grams": 3.03,
+        "calories": 0.91,
+        "fat": 0.02,
+        "carbs": 0.13,
+        "protein": 0.1
+      },
+      {
+        "id": "ingr_0000000047",
+        "name": "corn",
+        "grams": 3.78,
+        "calories": 3.63,
+        "fat": 0.06,
+        "carbs": 0.79,
+        "protein": 0.13
+      },
+      {
+        "id": "ingr_0000000021",
+        "name": "squash",
+        "grams": 103.58,
+        "calories": 21.23,
+        "fat": 0.31,
+        "carbs": 3.52,
+        "protein": 0.93
+      },
+      {
+        "id": "ingr_0000000515",
+        "name": "arugula",
+        "grams": 2.27,
+        "calories": 0.57,
+        "fat": 0.02,
+        "carbs": 0.08,
+        "protein": 0.06
+      },
+      {
+        "id": "ingr_0000000122",
+        "name": "garlic",
+        "grams": 0.38,
+        "calories": 0.56,
+        "fat": 0.0,
+        "carbs": 0.12,
+        "protein": 0.02
+      },
+      {
+        "id": "ingr_0000000094",
+        "name": "onions",
+        "grams": 4.27,
+        "calories": 1.71,
+        "fat": 0.0,
+        "carbs": 0.38,
+        "protein": 0.05
+      },
+      {
+        "id": "ingr_0000000524",
+        "name": "parsley",
+        "grams": 0.72,
+        "calories": 0.27,
+        "fat": 0.01,
+        "carbs": 0.05,
+        "protein": 0.02
+      },
+      {
+        "id": "ingr_0000000161",
+        "name": "olive oil",
+        "grams": 12.17,
+        "calories": 107.6,
+        "fat": 12.17,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000102",
+        "name": "snow peas",
+        "grams": 3.03,
+        "calories": 2.45,
+        "fat": 0.01,
+        "carbs": 0.42,
+        "protein": 0.15
+      },
+      {
+        "id": "ingr_0000000029",
+        "name": "mixed greens",
+        "grams": 53.35,
+        "calories": 14.94,
+        "fat": 0.21,
+        "carbs": 2.83,
+        "protein": 1.17
+      },
+      {
+        "id": "ingr_0000000095",
+        "name": "artichokes",
+        "grams": 3.78,
+        "calories": 1.78,
+        "fat": 0.01,
+        "carbs": 0.42,
+        "protein": 0.12
+      },
+      {
+        "id": "ingr_0000000312",
+        "name": "pepper",
+        "grams": 1.51,
+        "calories": 0.61,
+        "fat": 0.0,
+        "carbs": 0.14,
+        "protein": 0.03
+      },
+      {
+        "id": "ingr_0000000007",
+        "name": "cauliflower",
+        "grams": 117.0,
+        "calories": 29.25,
+        "fat": 0.35,
+        "carbs": 5.85,
+        "protein": 2.11
+      },
+      {
+        "id": "ingr_0000000054",
+        "name": "apple",
+        "grams": 10.67,
+        "calories": 5.55,
+        "fat": 0.02,
+        "carbs": 1.49,
+        "protein": 0.03
+      },
+      {
+        "id": "ingr_0000000513",
+        "name": "millet",
+        "grams": 8.54,
+        "calories": 10.16,
+        "fat": 0.09,
+        "carbs": 2.02,
+        "protein": 0.3
+      },
+      {
+        "id": "ingr_0000000357",
+        "name": "lentils",
+        "grams": 15.14,
+        "calories": 17.25,
+        "fat": 0.06,
+        "carbs": 3.03,
+        "protein": 1.36
+      },
+      {
+        "id": "ingr_0000000189",
+        "name": "vinegar",
+        "grams": 2.13,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000520",
+        "name": "lemon juice",
+        "grams": 2.13,
+        "calories": 0.36,
+        "fat": 0.0,
+        "carbs": 0.12,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000291",
+        "name": "salt",
+        "grams": 0.84,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1558725403",
+    "total_calories": 289.05,
+    "total_mass_grams": 50.0,
+    "total_fat": 24.75,
+    "total_carbs": 11.35,
+    "total_protein": 11.2,
+    "ingredient_count": 1,
+    "calorie_stratum": "medium",
+    "complexity": "simple",
+    "ingredients_summary": "almonds (50.0g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000077",
+        "name": "almonds",
+        "grams": 50.0,
+        "calories": 289.05,
+        "fat": 24.75,
+        "carbs": 11.35,
+        "protein": 11.2
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1562007763",
+    "total_calories": 290.7,
+    "total_mass_grams": 298.0,
+    "total_fat": 6.34,
+    "total_carbs": 47.41,
+    "total_protein": 11.84,
+    "ingredient_count": 10,
+    "calorie_stratum": "medium",
+    "complexity": "complex",
+    "ingredients_summary": "salt (2.23g), arugula (19.85g), quinoa (198.51g), parsley (3.97g), caesar salad (65.0g), garlic (4.96g), shallots (0.99g), lemon juice (0.5g), thyme (0.99g), olive oil (0.99g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000291",
+        "name": "salt",
+        "grams": 2.23,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000515",
+        "name": "arugula",
+        "grams": 19.85,
+        "calories": 4.96,
+        "fat": 0.14,
+        "carbs": 0.73,
+        "protein": 0.52
+      },
+      {
+        "id": "ingr_0000000377",
+        "name": "quinoa",
+        "grams": 198.51,
+        "calories": 238.21,
+        "fat": 3.77,
+        "carbs": 41.69,
+        "protein": 8.73
+      },
+      {
+        "id": "ingr_0000000524",
+        "name": "parsley",
+        "grams": 3.97,
+        "calories": 1.47,
+        "fat": 0.03,
+        "carbs": 0.25,
+        "protein": 0.12
+      },
+      {
+        "id": "ingr_0000000006",
+        "name": "caesar salad",
+        "grams": 65.0,
+        "calories": 28.6,
+        "fat": 1.37,
+        "carbs": 2.8,
+        "protein": 2.08
+      },
+      {
+        "id": "ingr_0000000122",
+        "name": "garlic",
+        "grams": 4.96,
+        "calories": 7.39,
+        "fat": 0.02,
+        "carbs": 1.64,
+        "protein": 0.32
+      },
+      {
+        "id": "ingr_0000000133",
+        "name": "shallots",
+        "grams": 0.99,
+        "calories": 0.2,
+        "fat": 0.0,
+        "carbs": 0.03,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000520",
+        "name": "lemon juice",
+        "grams": 0.5,
+        "calories": 0.08,
+        "fat": 0.0,
+        "carbs": 0.03,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000518",
+        "name": "thyme",
+        "grams": 0.99,
+        "calories": 1.0,
+        "fat": 0.02,
+        "carbs": 0.24,
+        "protein": 0.06
+      },
+      {
+        "id": "ingr_0000000161",
+        "name": "olive oil",
+        "grams": 0.99,
+        "calories": 8.77,
+        "fat": 0.99,
+        "carbs": 0.0,
+        "protein": 0.0
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1561146781",
+    "total_calories": 300.1,
+    "total_mass_grams": 223.0,
+    "total_fat": 1.66,
+    "total_carbs": 63.77,
+    "total_protein": 9.78,
+    "ingredient_count": 2,
+    "calorie_stratum": "medium",
+    "complexity": "simple",
+    "ingredients_summary": "bagels (93.0g), apple (130.0g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000264",
+        "name": "bagels",
+        "grams": 93.0,
+        "calories": 232.5,
+        "fat": 1.4,
+        "carbs": 45.57,
+        "protein": 9.39
+      },
+      {
+        "id": "ingr_0000000054",
+        "name": "apple",
+        "grams": 130.0,
+        "calories": 67.6,
+        "fat": 0.26,
+        "carbs": 18.2,
+        "protein": 0.39
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1562096933",
+    "total_calories": 312.66,
+    "total_mass_grams": 314.0,
+    "total_fat": 31.21,
+    "total_carbs": 16.6,
+    "total_protein": 38.92,
+    "ingredient_count": 15,
+    "calorie_stratum": "medium",
+    "complexity": "complex",
+    "ingredients_summary": "garlic (0.91g), bell peppers (3.63g), snow peas (7.27g), onions (9.09g), white beans (36.35g), fish (181.73g), pepper (0.23g), chive (0.45g), lime (3.63g), salt (0.45g), artichokes (9.09g), olive oil (7.27g), green beans (48.0g), parsley (0.45g), arugula (5.45g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000122",
+        "name": "garlic",
+        "grams": 0.91,
+        "calories": 1.35,
+        "fat": 0.0,
+        "carbs": 0.3,
+        "protein": 0.06
+      },
+      {
+        "id": "ingr_0000000033",
+        "name": "bell peppers",
+        "grams": 3.63,
+        "calories": 1.45,
+        "fat": 0.01,
+        "carbs": 0.33,
+        "protein": 0.07
+      },
+      {
+        "id": "ingr_0000000102",
+        "name": "snow peas",
+        "grams": 7.27,
+        "calories": 5.89,
+        "fat": 0.03,
+        "carbs": 1.02,
+        "protein": 0.36
+      },
+      {
+        "id": "ingr_0000000094",
+        "name": "onions",
+        "grams": 9.09,
+        "calories": 3.63,
+        "fat": 0.01,
+        "carbs": 0.82,
+        "protein": 0.1
+      },
+      {
+        "id": "ingr_0000000542",
+        "name": "white beans",
+        "grams": 36.35,
+        "calories": 50.52,
+        "fat": 0.15,
+        "carbs": 9.12,
+        "protein": 3.53
+      },
+      {
+        "id": "ingr_0000000049",
+        "name": "fish",
+        "grams": 181.73,
+        "calories": 163.55,
+        "fat": 23.62,
+        "carbs": 0.0,
+        "protein": 33.44
+      },
+      {
+        "id": "ingr_0000000312",
+        "name": "pepper",
+        "grams": 0.23,
+        "calories": 0.09,
+        "fat": 0.0,
+        "carbs": 0.02,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000527",
+        "name": "chive",
+        "grams": 0.45,
+        "calories": 0.14,
+        "fat": 0.0,
+        "carbs": 0.02,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000367",
+        "name": "lime",
+        "grams": 3.63,
+        "calories": 1.09,
+        "fat": 0.01,
+        "carbs": 0.38,
+        "protein": 0.03
+      },
+      {
+        "id": "ingr_0000000291",
+        "name": "salt",
+        "grams": 0.45,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000095",
+        "name": "artichokes",
+        "grams": 9.09,
+        "calories": 4.27,
+        "fat": 0.02,
+        "carbs": 1.0,
+        "protein": 0.3
+      },
+      {
+        "id": "ingr_0000000161",
+        "name": "olive oil",
+        "grams": 7.27,
+        "calories": 64.26,
+        "fat": 7.27,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000043",
+        "name": "green beans",
+        "grams": 48.0,
+        "calories": 14.88,
+        "fat": 0.05,
+        "carbs": 3.36,
+        "protein": 0.86
+      },
+      {
+        "id": "ingr_0000000524",
+        "name": "parsley",
+        "grams": 0.45,
+        "calories": 0.17,
+        "fat": 0.0,
+        "carbs": 0.03,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000515",
+        "name": "arugula",
+        "grams": 5.45,
+        "calories": 1.36,
+        "fat": 0.04,
+        "carbs": 0.2,
+        "protein": 0.14
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1562704640",
+    "total_calories": 333.28,
+    "total_mass_grams": 275.0,
+    "total_fat": 14.81,
+    "total_carbs": 26.86,
+    "total_protein": 22.07,
+    "ingredient_count": 12,
+    "calorie_stratum": "medium",
+    "complexity": "complex",
+    "ingredients_summary": "beef (51.92g), salt (0.39g), olive oil (1.22g), shallots (3.46g), spinach (cooked) (1.73g), onions (1.73g), squash (87.79g), vinegar (0.09g), bok choy (1.73g), millet (6.92g), cauliflower (62.0g), cheese pizza (56.0g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000025",
+        "name": "beef",
+        "grams": 51.92,
+        "calories": 129.81,
+        "fat": 7.79,
+        "carbs": 0.0,
+        "protein": 13.5
+      },
+      {
+        "id": "ingr_0000000291",
+        "name": "salt",
+        "grams": 0.39,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000161",
+        "name": "olive oil",
+        "grams": 1.22,
+        "calories": 10.82,
+        "fat": 1.22,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000133",
+        "name": "shallots",
+        "grams": 3.46,
+        "calories": 0.69,
+        "fat": 0.01,
+        "carbs": 0.11,
+        "protein": 0.05
+      },
+      {
+        "id": "ingr_0000000511",
+        "name": "spinach (cooked)",
+        "grams": 1.73,
+        "calories": 0.4,
+        "fat": 0.0,
+        "carbs": 0.07,
+        "protein": 0.05
+      },
+      {
+        "id": "ingr_0000000094",
+        "name": "onions",
+        "grams": 1.73,
+        "calories": 0.69,
+        "fat": 0.0,
+        "carbs": 0.16,
+        "protein": 0.02
+      },
+      {
+        "id": "ingr_0000000021",
+        "name": "squash",
+        "grams": 87.79,
+        "calories": 18.0,
+        "fat": 0.26,
+        "carbs": 2.98,
+        "protein": 0.79
+      },
+      {
+        "id": "ingr_0000000189",
+        "name": "vinegar",
+        "grams": 0.09,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000525",
+        "name": "bok choy",
+        "grams": 1.73,
+        "calories": 0.23,
+        "fat": 0.0,
+        "carbs": 0.04,
+        "protein": 0.03
+      },
+      {
+        "id": "ingr_0000000513",
+        "name": "millet",
+        "grams": 6.92,
+        "calories": 8.24,
+        "fat": 0.07,
+        "carbs": 1.64,
+        "protein": 0.24
+      },
+      {
+        "id": "ingr_0000000007",
+        "name": "cauliflower",
+        "grams": 62.0,
+        "calories": 15.5,
+        "fat": 0.19,
+        "carbs": 3.1,
+        "protein": 1.12
+      },
+      {
+        "id": "ingr_0000000011",
+        "name": "cheese pizza",
+        "grams": 56.0,
+        "calories": 148.9,
+        "fat": 5.26,
+        "carbs": 18.76,
+        "protein": 6.27
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1561049435",
+    "total_calories": 338.18,
+    "total_mass_grams": 257.0,
+    "total_fat": 22.43,
+    "total_carbs": 13.22,
+    "total_protein": 20.82,
+    "ingredient_count": 4,
+    "calorie_stratum": "medium",
+    "complexity": "medium",
+    "ingredients_summary": "raspberries (51.0g), cantaloupe (60.0g), scrambled eggs (127.0g), bacon (19.0g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000040",
+        "name": "raspberries",
+        "grams": 51.0,
+        "calories": 27.03,
+        "fat": 0.36,
+        "carbs": 6.12,
+        "protein": 0.61
+      },
+      {
+        "id": "ingr_0000000037",
+        "name": "cantaloupe",
+        "grams": 60.0,
+        "calories": 20.4,
+        "fat": 0.12,
+        "carbs": 4.8,
+        "protein": 0.48
+      },
+      {
+        "id": "ingr_0000000008",
+        "name": "scrambled eggs",
+        "grams": 127.0,
+        "calories": 187.96,
+        "fat": 13.97,
+        "carbs": 2.03,
+        "protein": 12.7
+      },
+      {
+        "id": "ingr_0000000004",
+        "name": "bacon",
+        "grams": 19.0,
+        "calories": 102.79,
+        "fat": 7.98,
+        "carbs": 0.27,
+        "protein": 7.03
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1567022296",
+    "total_calories": 425.41,
+    "total_mass_grams": 444.0,
+    "total_fat": 10.97,
+    "total_carbs": 18.48,
+    "total_protein": 61.86,
+    "ingredient_count": 6,
+    "calorie_stratum": "high",
+    "complexity": "medium",
+    "ingredients_summary": "cherry tomatoes (74.0g), onions (57.0g), olives (35.0g), bell peppers (54.0g), carrot (34.0g), chicken (190.0g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000471",
+        "name": "cherry tomatoes",
+        "grams": 74.0,
+        "calories": 13.32,
+        "fat": 0.15,
+        "carbs": 2.89,
+        "protein": 0.67
+      },
+      {
+        "id": "ingr_0000000094",
+        "name": "onions",
+        "grams": 57.0,
+        "calories": 22.8,
+        "fat": 0.06,
+        "carbs": 5.13,
+        "protein": 0.63
+      },
+      {
+        "id": "ingr_0000000012",
+        "name": "olives",
+        "grams": 35.0,
+        "calories": 40.25,
+        "fat": 3.75,
+        "carbs": 2.21,
+        "protein": 0.28
+      },
+      {
+        "id": "ingr_0000000033",
+        "name": "bell peppers",
+        "grams": 54.0,
+        "calories": 21.6,
+        "fat": 0.11,
+        "carbs": 4.86,
+        "protein": 1.08
+      },
+      {
+        "id": "ingr_0000000045",
+        "name": "carrot",
+        "grams": 34.0,
+        "calories": 13.94,
+        "fat": 0.07,
+        "carbs": 3.4,
+        "protein": 0.31
+      },
+      {
+        "id": "ingr_0000000028",
+        "name": "chicken",
+        "grams": 190.0,
+        "calories": 313.5,
+        "fat": 6.84,
+        "carbs": 0.0,
+        "protein": 58.9
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1561663580",
+    "total_calories": 432.06,
+    "total_mass_grams": 307.0,
+    "total_fat": 9.84,
+    "total_carbs": 31.34,
+    "total_protein": 51.43,
+    "ingredient_count": 12,
+    "calorie_stratum": "high",
+    "complexity": "complex",
+    "ingredients_summary": "chicken (154.3g), chard (3.86g), brown rice (127.43g), salt (0.77g), parsley (0.19g), olive oil (3.09g), rosemary (0.19g), basil (0.19g), lemon juice (0.58g), chive (0.19g), garlic (0.77g), carrot (15.43g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000028",
+        "name": "chicken",
+        "grams": 154.3,
+        "calories": 254.6,
+        "fat": 5.55,
+        "carbs": 0.0,
+        "protein": 47.83
+      },
+      {
+        "id": "ingr_0000000517",
+        "name": "chard",
+        "grams": 3.86,
+        "calories": 0.73,
+        "fat": 0.01,
+        "carbs": 0.14,
+        "protein": 0.07
+      },
+      {
+        "id": "ingr_0000000023",
+        "name": "brown rice",
+        "grams": 127.43,
+        "calories": 141.45,
+        "fat": 1.15,
+        "carbs": 29.31,
+        "protein": 3.31
+      },
+      {
+        "id": "ingr_0000000291",
+        "name": "salt",
+        "grams": 0.77,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000524",
+        "name": "parsley",
+        "grams": 0.19,
+        "calories": 0.07,
+        "fat": 0.0,
+        "carbs": 0.01,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000161",
+        "name": "olive oil",
+        "grams": 3.09,
+        "calories": 27.28,
+        "fat": 3.09,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000516",
+        "name": "rosemary",
+        "grams": 0.19,
+        "calories": 0.25,
+        "fat": 0.01,
+        "carbs": 0.04,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000521",
+        "name": "basil",
+        "grams": 0.19,
+        "calories": 0.05,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000520",
+        "name": "lemon juice",
+        "grams": 0.58,
+        "calories": 0.1,
+        "fat": 0.0,
+        "carbs": 0.03,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000527",
+        "name": "chive",
+        "grams": 0.19,
+        "calories": 0.06,
+        "fat": 0.0,
+        "carbs": 0.01,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000122",
+        "name": "garlic",
+        "grams": 0.77,
+        "calories": 1.15,
+        "fat": 0.0,
+        "carbs": 0.25,
+        "protein": 0.05
+      },
+      {
+        "id": "ingr_0000000045",
+        "name": "carrot",
+        "grams": 15.43,
+        "calories": 6.33,
+        "fat": 0.03,
+        "carbs": 1.54,
+        "protein": 0.14
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1563206409",
+    "total_calories": 443.46,
+    "total_mass_grams": 277.0,
+    "total_fat": 33.37,
+    "total_carbs": 4.39,
+    "total_protein": 29.68,
+    "ingredient_count": 2,
+    "calorie_stratum": "high",
+    "complexity": "simple",
+    "ingredients_summary": "scrambled eggs (263.81g), cheese (13.19g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000008",
+        "name": "scrambled eggs",
+        "grams": 263.81,
+        "calories": 390.44,
+        "fat": 29.02,
+        "carbs": 4.22,
+        "protein": 26.38
+      },
+      {
+        "id": "ingr_0000000052",
+        "name": "cheese",
+        "grams": 13.19,
+        "calories": 53.03,
+        "fat": 4.35,
+        "carbs": 0.17,
+        "protein": 3.3
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1560442303",
+    "total_calories": 444.77,
+    "total_mass_grams": 297.0,
+    "total_fat": 25.35,
+    "total_carbs": 30.08,
+    "total_protein": 24.22,
+    "ingredient_count": 4,
+    "calorie_stratum": "high",
+    "complexity": "medium",
+    "ingredients_summary": "scrambled eggs (75.0g), berries (147.0g), quinoa (37.0g), bacon (38.0g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000008",
+        "name": "scrambled eggs",
+        "grams": 75.0,
+        "calories": 111.0,
+        "fat": 8.25,
+        "carbs": 1.2,
+        "protein": 7.5
+      },
+      {
+        "id": "ingr_0000000013",
+        "name": "berries",
+        "grams": 147.0,
+        "calories": 83.79,
+        "fat": 0.44,
+        "carbs": 20.58,
+        "protein": 1.03
+      },
+      {
+        "id": "ingr_0000000377",
+        "name": "quinoa",
+        "grams": 37.0,
+        "calories": 44.4,
+        "fat": 0.7,
+        "carbs": 7.77,
+        "protein": 1.63
+      },
+      {
+        "id": "ingr_0000000004",
+        "name": "bacon",
+        "grams": 38.0,
+        "calories": 205.58,
+        "fat": 15.96,
+        "carbs": 0.53,
+        "protein": 14.06
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1560455442",
+    "total_calories": 457.58,
+    "total_mass_grams": 293.0,
+    "total_fat": 24.78,
+    "total_carbs": 49.61,
+    "total_protein": 23.52,
+    "ingredient_count": 22,
+    "calorie_stratum": "high",
+    "complexity": "complex",
+    "ingredients_summary": "sour cream (2.32g), nopales (1.39g), mustard (0.27g), parsley (0.38g), chard (37.0g), vinegar (1.06g), corn on the cob (40.0g), corn (9.3g), pepper (0.93g), chive (0.12g), salt (0.25g), garlic (0.23g), lime (1.39g), carrot (4.45g), olive oil (6.34g), almonds (1.06g), pizza (104.0g), arugula (2.32g), spinach (raw) (26.54g), blueberries (5.31g), jicama (1.86g), fish (46.48g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000434",
+        "name": "sour cream",
+        "grams": 2.32,
+        "calories": 4.6,
+        "fat": 0.44,
+        "carbs": 0.11,
+        "protein": 0.06
+      },
+      {
+        "id": "ingr_0000000539",
+        "name": "nopales",
+        "grams": 1.39,
+        "calories": 0.22,
+        "fat": 0.0,
+        "carbs": 0.05,
+        "protein": 0.02
+      },
+      {
+        "id": "ingr_0000000126",
+        "name": "mustard",
+        "grams": 0.27,
+        "calories": 0.16,
+        "fat": 0.01,
+        "carbs": 0.02,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000524",
+        "name": "parsley",
+        "grams": 0.38,
+        "calories": 0.14,
+        "fat": 0.0,
+        "carbs": 0.02,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000517",
+        "name": "chard",
+        "grams": 37.0,
+        "calories": 7.03,
+        "fat": 0.07,
+        "carbs": 1.37,
+        "protein": 0.67
+      },
+      {
+        "id": "ingr_0000000189",
+        "name": "vinegar",
+        "grams": 1.06,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000205",
+        "name": "corn on the cob",
+        "grams": 40.0,
+        "calories": 42.44,
+        "fat": 0.96,
+        "carbs": 8.8,
+        "protein": 1.24
+      },
+      {
+        "id": "ingr_0000000047",
+        "name": "corn",
+        "grams": 9.3,
+        "calories": 8.92,
+        "fat": 0.14,
+        "carbs": 1.95,
+        "protein": 0.32
+      },
+      {
+        "id": "ingr_0000000312",
+        "name": "pepper",
+        "grams": 0.93,
+        "calories": 0.37,
+        "fat": 0.0,
+        "carbs": 0.09,
+        "protein": 0.02
+      },
+      {
+        "id": "ingr_0000000527",
+        "name": "chive",
+        "grams": 0.12,
+        "calories": 0.03,
+        "fat": 0.0,
+        "carbs": 0.01,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000291",
+        "name": "salt",
+        "grams": 0.25,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000122",
+        "name": "garlic",
+        "grams": 0.23,
+        "calories": 0.35,
+        "fat": 0.0,
+        "carbs": 0.08,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000367",
+        "name": "lime",
+        "grams": 1.39,
+        "calories": 0.42,
+        "fat": 0.0,
+        "carbs": 0.15,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000045",
+        "name": "carrot",
+        "grams": 4.45,
+        "calories": 1.82,
+        "fat": 0.01,
+        "carbs": 0.44,
+        "protein": 0.04
+      },
+      {
+        "id": "ingr_0000000161",
+        "name": "olive oil",
+        "grams": 6.34,
+        "calories": 56.02,
+        "fat": 6.34,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000077",
+        "name": "almonds",
+        "grams": 1.06,
+        "calories": 6.14,
+        "fat": 0.53,
+        "carbs": 0.24,
+        "protein": 0.24
+      },
+      {
+        "id": "ingr_0000000380",
+        "name": "pizza",
+        "grams": 104.0,
+        "calories": 276.64,
+        "fat": 10.09,
+        "carbs": 34.32,
+        "protein": 11.44
+      },
+      {
+        "id": "ingr_0000000515",
+        "name": "arugula",
+        "grams": 2.32,
+        "calories": 0.58,
+        "fat": 0.02,
+        "carbs": 0.09,
+        "protein": 0.06
+      },
+      {
+        "id": "ingr_0000000036",
+        "name": "spinach (raw)",
+        "grams": 26.54,
+        "calories": 6.1,
+        "fat": 0.11,
+        "carbs": 0.96,
+        "protein": 0.77
+      },
+      {
+        "id": "ingr_0000000201",
+        "name": "blueberries",
+        "grams": 5.31,
+        "calories": 3.04,
+        "fat": 0.02,
+        "carbs": 0.76,
+        "protein": 0.04
+      },
+      {
+        "id": "ingr_0000000538",
+        "name": "jicama",
+        "grams": 1.86,
+        "calories": 0.71,
+        "fat": 0.0,
+        "carbs": 0.17,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000049",
+        "name": "fish",
+        "grams": 46.48,
+        "calories": 41.83,
+        "fat": 6.04,
+        "carbs": 0.0,
+        "protein": 8.55
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1562603813",
+    "total_calories": 475.96,
+    "total_mass_grams": 146.0,
+    "total_fat": 32.12,
+    "total_carbs": 46.72,
+    "total_protein": 3.8,
+    "ingredient_count": 1,
+    "calorie_stratum": "high",
+    "complexity": "simple",
+    "ingredients_summary": "hash browns (146.0g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000015",
+        "name": "hash browns",
+        "grams": 146.0,
+        "calories": 475.96,
+        "fat": 32.12,
+        "carbs": 46.72,
+        "protein": 3.8
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1566934430",
+    "total_calories": 519.54,
+    "total_mass_grams": 361.0,
+    "total_fat": 43.78,
+    "total_carbs": 37.58,
+    "total_protein": 49.06,
+    "ingredient_count": 16,
+    "calorie_stratum": "high",
+    "complexity": "complex",
+    "ingredients_summary": "chive (0.53g), fish (212.47g), pepper (0.27g), garlic (1.06g), onions (10.62g), bell peppers (4.25g), lime (4.25g), artichokes (10.62g), arugula (6.37g), olive oil (8.5g), parsley (0.53g), snow peas (8.5g), cookies (17.0g), white beans (42.49g), salt (0.53g), cheese pizza (33.0g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000527",
+        "name": "chive",
+        "grams": 0.53,
+        "calories": 0.16,
+        "fat": 0.0,
+        "carbs": 0.02,
+        "protein": 0.02
+      },
+      {
+        "id": "ingr_0000000049",
+        "name": "fish",
+        "grams": 212.47,
+        "calories": 191.22,
+        "fat": 27.62,
+        "carbs": 0.0,
+        "protein": 39.09
+      },
+      {
+        "id": "ingr_0000000312",
+        "name": "pepper",
+        "grams": 0.27,
+        "calories": 0.11,
+        "fat": 0.0,
+        "carbs": 0.02,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000122",
+        "name": "garlic",
+        "grams": 1.06,
+        "calories": 1.58,
+        "fat": 0.01,
+        "carbs": 0.35,
+        "protein": 0.07
+      },
+      {
+        "id": "ingr_0000000094",
+        "name": "onions",
+        "grams": 10.62,
+        "calories": 4.25,
+        "fat": 0.01,
+        "carbs": 0.96,
+        "protein": 0.12
+      },
+      {
+        "id": "ingr_0000000033",
+        "name": "bell peppers",
+        "grams": 4.25,
+        "calories": 1.7,
+        "fat": 0.01,
+        "carbs": 0.38,
+        "protein": 0.08
+      },
+      {
+        "id": "ingr_0000000367",
+        "name": "lime",
+        "grams": 4.25,
+        "calories": 1.27,
+        "fat": 0.01,
+        "carbs": 0.45,
+        "protein": 0.03
+      },
+      {
+        "id": "ingr_0000000095",
+        "name": "artichokes",
+        "grams": 10.62,
+        "calories": 4.99,
+        "fat": 0.02,
+        "carbs": 1.17,
+        "protein": 0.35
+      },
+      {
+        "id": "ingr_0000000515",
+        "name": "arugula",
+        "grams": 6.37,
+        "calories": 1.59,
+        "fat": 0.04,
+        "carbs": 0.24,
+        "protein": 0.17
+      },
+      {
+        "id": "ingr_0000000161",
+        "name": "olive oil",
+        "grams": 8.5,
+        "calories": 75.13,
+        "fat": 8.5,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000524",
+        "name": "parsley",
+        "grams": 0.53,
+        "calories": 0.2,
+        "fat": 0.0,
+        "carbs": 0.03,
+        "protein": 0.02
+      },
+      {
+        "id": "ingr_0000000102",
+        "name": "snow peas",
+        "grams": 8.5,
+        "calories": 6.88,
+        "fat": 0.03,
+        "carbs": 1.19,
+        "protein": 0.42
+      },
+      {
+        "id": "ingr_0000000455",
+        "name": "cookies",
+        "grams": 17.0,
+        "calories": 83.64,
+        "fat": 4.25,
+        "carbs": 11.05,
+        "protein": 0.87
+      },
+      {
+        "id": "ingr_0000000542",
+        "name": "white beans",
+        "grams": 42.49,
+        "calories": 59.07,
+        "fat": 0.17,
+        "carbs": 10.67,
+        "protein": 4.12
+      },
+      {
+        "id": "ingr_0000000291",
+        "name": "salt",
+        "grams": 0.53,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000011",
+        "name": "cheese pizza",
+        "grams": 33.0,
+        "calories": 87.75,
+        "fat": 3.1,
+        "carbs": 11.06,
+        "protein": 3.7
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1568320470",
+    "total_calories": 521.04,
+    "total_mass_grams": 341.0,
+    "total_fat": 24.97,
+    "total_carbs": 44.14,
+    "total_protein": 29.33,
+    "ingredient_count": 19,
+    "calorie_stratum": "high",
+    "complexity": "complex",
+    "ingredients_summary": "vinegar (0.1g), feta cheese (4.3g), olive oil (1.36g), vinaigrette (8.6g), spinach (cooked) (1.99g), olives (4.3g), lettuce (42.98g), beef (59.56g), quinoa (32.04g), bok choy (1.99g), millet (7.94g), cherry tomatoes (10.74g), cucumbers (21.49g), onions (6.28g), shallots (3.97g), salt (0.07g), cheese pizza (85.0g), bell peppers (4.3g), green beans (44.0g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000189",
+        "name": "vinegar",
+        "grams": 0.1,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000319",
+        "name": "feta cheese",
+        "grams": 4.3,
+        "calories": 11.35,
+        "fat": 0.91,
+        "carbs": 0.18,
+        "protein": 0.59
+      },
+      {
+        "id": "ingr_0000000161",
+        "name": "olive oil",
+        "grams": 1.36,
+        "calories": 12.01,
+        "fat": 1.36,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000338",
+        "name": "vinaigrette",
+        "grams": 8.6,
+        "calories": 40.01,
+        "fat": 4.45,
+        "carbs": 0.22,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000511",
+        "name": "spinach (cooked)",
+        "grams": 1.99,
+        "calories": 0.46,
+        "fat": 0.0,
+        "carbs": 0.08,
+        "protein": 0.06
+      },
+      {
+        "id": "ingr_0000000012",
+        "name": "olives",
+        "grams": 4.3,
+        "calories": 4.94,
+        "fat": 0.46,
+        "carbs": 0.27,
+        "protein": 0.03
+      },
+      {
+        "id": "ingr_0000000030",
+        "name": "lettuce",
+        "grams": 42.98,
+        "calories": 6.45,
+        "fat": 0.09,
+        "carbs": 1.25,
+        "protein": 0.6
+      },
+      {
+        "id": "ingr_0000000025",
+        "name": "beef",
+        "grams": 59.56,
+        "calories": 148.9,
+        "fat": 8.93,
+        "carbs": 0.0,
+        "protein": 15.49
+      },
+      {
+        "id": "ingr_0000000377",
+        "name": "quinoa",
+        "grams": 32.04,
+        "calories": 38.45,
+        "fat": 0.61,
+        "carbs": 6.73,
+        "protein": 1.41
+      },
+      {
+        "id": "ingr_0000000525",
+        "name": "bok choy",
+        "grams": 1.99,
+        "calories": 0.26,
+        "fat": 0.0,
+        "carbs": 0.04,
+        "protein": 0.03
+      },
+      {
+        "id": "ingr_0000000513",
+        "name": "millet",
+        "grams": 7.94,
+        "calories": 9.45,
+        "fat": 0.08,
+        "carbs": 1.88,
+        "protein": 0.28
+      },
+      {
+        "id": "ingr_0000000471",
+        "name": "cherry tomatoes",
+        "grams": 10.74,
+        "calories": 1.93,
+        "fat": 0.02,
+        "carbs": 0.42,
+        "protein": 0.1
+      },
+      {
+        "id": "ingr_0000000031",
+        "name": "cucumbers",
+        "grams": 21.49,
+        "calories": 2.15,
+        "fat": 0.0,
+        "carbs": 0.43,
+        "protein": 0.21
+      },
+      {
+        "id": "ingr_0000000094",
+        "name": "onions",
+        "grams": 6.28,
+        "calories": 2.51,
+        "fat": 0.01,
+        "carbs": 0.57,
+        "protein": 0.07
+      },
+      {
+        "id": "ingr_0000000133",
+        "name": "shallots",
+        "grams": 3.97,
+        "calories": 0.79,
+        "fat": 0.01,
+        "carbs": 0.13,
+        "protein": 0.06
+      },
+      {
+        "id": "ingr_0000000291",
+        "name": "salt",
+        "grams": 0.07,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000011",
+        "name": "cheese pizza",
+        "grams": 85.0,
+        "calories": 226.02,
+        "fat": 7.99,
+        "carbs": 28.48,
+        "protein": 9.52
+      },
+      {
+        "id": "ingr_0000000033",
+        "name": "bell peppers",
+        "grams": 4.3,
+        "calories": 1.72,
+        "fat": 0.01,
+        "carbs": 0.39,
+        "protein": 0.09
+      },
+      {
+        "id": "ingr_0000000043",
+        "name": "green beans",
+        "grams": 44.0,
+        "calories": 13.64,
+        "fat": 0.04,
+        "carbs": 3.08,
+        "protein": 0.79
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1562181217",
+    "total_calories": 546.48,
+    "total_mass_grams": 199.0,
+    "total_fat": 36.5,
+    "total_carbs": 11.24,
+    "total_protein": 41.38,
+    "ingredient_count": 9,
+    "calorie_stratum": "high",
+    "complexity": "complex",
+    "ingredients_summary": "salt (0.79g), buttermilk (25.27g), chicken (126.35g), flour (12.63g), parsley (0.39g), lemon juice (0.79g), vegetable oil (31.59g), thyme (0.39g), garlic (0.79g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000291",
+        "name": "salt",
+        "grams": 0.79,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000200",
+        "name": "buttermilk",
+        "grams": 25.27,
+        "calories": 10.16,
+        "fat": 0.23,
+        "carbs": 1.21,
+        "protein": 0.83
+      },
+      {
+        "id": "ingr_0000000028",
+        "name": "chicken",
+        "grams": 126.35,
+        "calories": 208.48,
+        "fat": 4.55,
+        "carbs": 0.0,
+        "protein": 39.17
+      },
+      {
+        "id": "ingr_0000000318",
+        "name": "flour",
+        "grams": 12.63,
+        "calories": 46.0,
+        "fat": 0.13,
+        "carbs": 9.6,
+        "protein": 1.29
+      },
+      {
+        "id": "ingr_0000000524",
+        "name": "parsley",
+        "grams": 0.39,
+        "calories": 0.15,
+        "fat": 0.0,
+        "carbs": 0.03,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000520",
+        "name": "lemon juice",
+        "grams": 0.79,
+        "calories": 0.13,
+        "fat": 0.0,
+        "carbs": 0.04,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000221",
+        "name": "vegetable oil",
+        "grams": 31.59,
+        "calories": 279.99,
+        "fat": 31.59,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000518",
+        "name": "thyme",
+        "grams": 0.39,
+        "calories": 0.4,
+        "fat": 0.01,
+        "carbs": 0.09,
+        "protein": 0.02
+      },
+      {
+        "id": "ingr_0000000122",
+        "name": "garlic",
+        "grams": 0.79,
+        "calories": 1.18,
+        "fat": 0.0,
+        "carbs": 0.26,
+        "protein": 0.05
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1558723847",
+    "total_calories": 554.98,
+    "total_mass_grams": 96.0,
+    "total_fat": 47.52,
+    "total_carbs": 21.79,
+    "total_protein": 21.5,
+    "ingredient_count": 1,
+    "calorie_stratum": "high",
+    "complexity": "simple",
+    "ingredients_summary": "almonds (96.0g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000077",
+        "name": "almonds",
+        "grams": 96.0,
+        "calories": 554.98,
+        "fat": 47.52,
+        "carbs": 21.79,
+        "protein": 21.5
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1568048053",
+    "total_calories": 607.2,
+    "total_mass_grams": 356.0,
+    "total_fat": 43.04,
+    "total_carbs": 10.33,
+    "total_protein": 44.27,
+    "ingredient_count": 5,
+    "calorie_stratum": "very_high",
+    "complexity": "medium",
+    "ingredients_summary": "chicken apple sausage (69.0g), turkey bacon (53.0g), scrambled eggs (179.0g), olive oil (1.34g), broccoli (53.66g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000510",
+        "name": "chicken apple sausage",
+        "grams": 69.0,
+        "calories": 110.4,
+        "fat": 6.9,
+        "carbs": 2.07,
+        "protein": 9.66
+      },
+      {
+        "id": "ingr_0000000080",
+        "name": "turkey bacon",
+        "grams": 53.0,
+        "calories": 201.24,
+        "fat": 14.89,
+        "carbs": 1.64,
+        "protein": 15.42
+      },
+      {
+        "id": "ingr_0000000008",
+        "name": "scrambled eggs",
+        "grams": 179.0,
+        "calories": 264.92,
+        "fat": 19.69,
+        "carbs": 2.86,
+        "protein": 17.9
+      },
+      {
+        "id": "ingr_0000000161",
+        "name": "olive oil",
+        "grams": 1.34,
+        "calories": 11.86,
+        "fat": 1.34,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000027",
+        "name": "broccoli",
+        "grams": 53.66,
+        "calories": 18.78,
+        "fat": 0.21,
+        "carbs": 3.76,
+        "protein": 1.29
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1558630207",
+    "total_calories": 670.6,
+    "total_mass_grams": 116.0,
+    "total_fat": 57.42,
+    "total_carbs": 26.33,
+    "total_protein": 25.98,
+    "ingredient_count": 1,
+    "calorie_stratum": "very_high",
+    "complexity": "simple",
+    "ingredients_summary": "almonds (116.0g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000077",
+        "name": "almonds",
+        "grams": 116.0,
+        "calories": 670.6,
+        "fat": 57.42,
+        "carbs": 26.33,
+        "protein": 25.98
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1558379712",
+    "total_calories": 687.94,
+    "total_mass_grams": 119.0,
+    "total_fat": 58.9,
+    "total_carbs": 27.01,
+    "total_protein": 26.66,
+    "ingredient_count": 1,
+    "calorie_stratum": "very_high",
+    "complexity": "simple",
+    "ingredients_summary": "almonds (119.0g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000077",
+        "name": "almonds",
+        "grams": 119.0,
+        "calories": 687.94,
+        "fat": 58.91,
+        "carbs": 27.01,
+        "protein": 26.66
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1565974409",
+    "total_calories": 688.65,
+    "total_mass_grams": 228.0,
+    "total_fat": 50.0,
+    "total_carbs": 5.48,
+    "total_protein": 51.47,
+    "ingredient_count": 2,
+    "calorie_stratum": "very_high",
+    "complexity": "simple",
+    "ingredients_summary": "chicken apple sausage (143.0g), bacon (85.0g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000510",
+        "name": "chicken apple sausage",
+        "grams": 143.0,
+        "calories": 228.8,
+        "fat": 14.3,
+        "carbs": 4.29,
+        "protein": 20.02
+      },
+      {
+        "id": "ingr_0000000004",
+        "name": "bacon",
+        "grams": 85.0,
+        "calories": 459.85,
+        "fat": 35.7,
+        "carbs": 1.19,
+        "protein": 31.45
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1563813501",
+    "total_calories": 694.12,
+    "total_mass_grams": 414.0,
+    "total_fat": 46.64,
+    "total_carbs": 27.8,
+    "total_protein": 40.46,
+    "ingredient_count": 10,
+    "calorie_stratum": "very_high",
+    "complexity": "complex",
+    "ingredients_summary": "cheese (8.19g), sausage (30.0g), pineapple (87.0g), pepper (0.05g), bacon (38.0g), salt (0.19g), scrambled eggs (163.81g), olive oil (1.57g), brussels sprouts (37.39g), sweet potato (47.8g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000052",
+        "name": "cheese",
+        "grams": 8.19,
+        "calories": 32.93,
+        "fat": 2.7,
+        "carbs": 0.11,
+        "protein": 2.05
+      },
+      {
+        "id": "ingr_0000000039",
+        "name": "sausage",
+        "grams": 30.0,
+        "calories": 103.38,
+        "fat": 8.19,
+        "carbs": 1.26,
+        "protein": 5.79
+      },
+      {
+        "id": "ingr_0000000038",
+        "name": "pineapple",
+        "grams": 87.0,
+        "calories": 43.5,
+        "fat": 0.09,
+        "carbs": 11.31,
+        "protein": 0.44
+      },
+      {
+        "id": "ingr_0000000312",
+        "name": "pepper",
+        "grams": 0.05,
+        "calories": 0.02,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000004",
+        "name": "bacon",
+        "grams": 38.0,
+        "calories": 205.58,
+        "fat": 15.96,
+        "carbs": 0.53,
+        "protein": 14.06
+      },
+      {
+        "id": "ingr_0000000291",
+        "name": "salt",
+        "grams": 0.19,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000008",
+        "name": "scrambled eggs",
+        "grams": 163.81,
+        "calories": 242.44,
+        "fat": 18.02,
+        "carbs": 2.62,
+        "protein": 16.38
+      },
+      {
+        "id": "ingr_0000000161",
+        "name": "olive oil",
+        "grams": 1.57,
+        "calories": 13.87,
+        "fat": 1.57,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000016",
+        "name": "brussels sprouts",
+        "grams": 37.39,
+        "calories": 16.08,
+        "fat": 0.11,
+        "carbs": 3.37,
+        "protein": 1.27
+      },
+      {
+        "id": "ingr_0000000437",
+        "name": "sweet potato",
+        "grams": 47.8,
+        "calories": 36.33,
+        "fat": 0.0,
+        "carbs": 8.6,
+        "protein": 0.48
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1566590007",
+    "total_calories": 740.76,
+    "total_mass_grams": 457.0,
+    "total_fat": 29.23,
+    "total_carbs": 57.95,
+    "total_protein": 61.8,
+    "ingredient_count": 13,
+    "calorie_stratum": "very_high",
+    "complexity": "complex",
+    "ingredients_summary": "bell peppers (14.25g), garlic (2.85g), tomatoes (14.25g), salt (2.85g), onions (5.7g), olive oil (5.7g), pizza (135.0g), pepper (0.53g), tofu (122.0g), jalapenos (5.7g), spinach (raw) (5.7g), chicken (113.98g), millet (28.5g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000033",
+        "name": "bell peppers",
+        "grams": 14.25,
+        "calories": 5.7,
+        "fat": 0.03,
+        "carbs": 1.28,
+        "protein": 0.28
+      },
+      {
+        "id": "ingr_0000000122",
+        "name": "garlic",
+        "grams": 2.85,
+        "calories": 4.25,
+        "fat": 0.01,
+        "carbs": 0.94,
+        "protein": 0.18
+      },
+      {
+        "id": "ingr_0000000032",
+        "name": "tomatoes",
+        "grams": 14.25,
+        "calories": 4.84,
+        "fat": 0.1,
+        "carbs": 0.97,
+        "protein": 0.1
+      },
+      {
+        "id": "ingr_0000000291",
+        "name": "salt",
+        "grams": 2.85,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000094",
+        "name": "onions",
+        "grams": 5.7,
+        "calories": 2.28,
+        "fat": 0.01,
+        "carbs": 0.51,
+        "protein": 0.06
+      },
+      {
+        "id": "ingr_0000000161",
+        "name": "olive oil",
+        "grams": 5.7,
+        "calories": 50.38,
+        "fat": 5.7,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000380",
+        "name": "pizza",
+        "grams": 135.0,
+        "calories": 359.1,
+        "fat": 13.1,
+        "carbs": 44.55,
+        "protein": 14.85
+      },
+      {
+        "id": "ingr_0000000312",
+        "name": "pepper",
+        "grams": 0.53,
+        "calories": 0.21,
+        "fat": 0.0,
+        "carbs": 0.05,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000050",
+        "name": "tofu",
+        "grams": 122.0,
+        "calories": 89.06,
+        "fat": 5.86,
+        "carbs": 2.32,
+        "protein": 9.76
+      },
+      {
+        "id": "ingr_0000000448",
+        "name": "jalapenos",
+        "grams": 5.7,
+        "calories": 1.65,
+        "fat": 0.02,
+        "carbs": 0.37,
+        "protein": 0.05
+      },
+      {
+        "id": "ingr_0000000036",
+        "name": "spinach (raw)",
+        "grams": 5.7,
+        "calories": 1.31,
+        "fat": 0.02,
+        "carbs": 0.21,
+        "protein": 0.17
+      },
+      {
+        "id": "ingr_0000000028",
+        "name": "chicken",
+        "grams": 113.98,
+        "calories": 188.07,
+        "fat": 4.1,
+        "carbs": 0.0,
+        "protein": 35.33
+      },
+      {
+        "id": "ingr_0000000513",
+        "name": "millet",
+        "grams": 28.5,
+        "calories": 33.91,
+        "fat": 0.28,
+        "carbs": 6.75,
+        "protein": 1.0
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1559244649",
+    "total_calories": 906.76,
+    "total_mass_grams": 455.0,
+    "total_fat": 40.27,
+    "total_carbs": 51.69,
+    "total_protein": 83.28,
+    "ingredient_count": 20,
+    "calorie_stratum": "very_high",
+    "complexity": "complex",
+    "ingredients_summary": "pepper (3.25g), chive (0.3g), olive oil (16.37g), mustard greens (8.02g), walnuts (1.42g), basil (0.3g), rosemary (0.3g), garlic (1.21g), brown rice (24.17g), arugula (47.85g), blueberries (2.85g), chicken (241.67g), chickpeas (32.06g), lemon juice (0.91g), vinegar (4.54g), parsley (3.51g), mustard (0.44g), chard (13.16g), cookies (51.0g), salt (1.68g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000312",
+        "name": "pepper",
+        "grams": 3.25,
+        "calories": 1.3,
+        "fat": 0.01,
+        "carbs": 0.3,
+        "protein": 0.07
+      },
+      {
+        "id": "ingr_0000000527",
+        "name": "chive",
+        "grams": 0.3,
+        "calories": 0.09,
+        "fat": 0.0,
+        "carbs": 0.01,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000161",
+        "name": "olive oil",
+        "grams": 16.37,
+        "calories": 144.75,
+        "fat": 16.37,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000526",
+        "name": "mustard greens",
+        "grams": 8.02,
+        "calories": 2.16,
+        "fat": 0.03,
+        "carbs": 0.38,
+        "protein": 0.23
+      },
+      {
+        "id": "ingr_0000000124",
+        "name": "walnuts",
+        "grams": 1.42,
+        "calories": 9.29,
+        "fat": 0.91,
+        "carbs": 0.2,
+        "protein": 0.21
+      },
+      {
+        "id": "ingr_0000000521",
+        "name": "basil",
+        "grams": 0.3,
+        "calories": 0.07,
+        "fat": 0.0,
+        "carbs": 0.01,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000516",
+        "name": "rosemary",
+        "grams": 0.3,
+        "calories": 0.4,
+        "fat": 0.02,
+        "carbs": 0.06,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000122",
+        "name": "garlic",
+        "grams": 1.21,
+        "calories": 1.8,
+        "fat": 0.01,
+        "carbs": 0.4,
+        "protein": 0.08
+      },
+      {
+        "id": "ingr_0000000023",
+        "name": "brown rice",
+        "grams": 24.17,
+        "calories": 26.83,
+        "fat": 0.22,
+        "carbs": 5.56,
+        "protein": 0.63
+      },
+      {
+        "id": "ingr_0000000515",
+        "name": "arugula",
+        "grams": 47.85,
+        "calories": 11.96,
+        "fat": 0.33,
+        "carbs": 1.77,
+        "protein": 1.24
+      },
+      {
+        "id": "ingr_0000000201",
+        "name": "blueberries",
+        "grams": 2.85,
+        "calories": 1.63,
+        "fat": 0.01,
+        "carbs": 0.41,
+        "protein": 0.02
+      },
+      {
+        "id": "ingr_0000000028",
+        "name": "chicken",
+        "grams": 241.67,
+        "calories": 398.75,
+        "fat": 8.7,
+        "carbs": 0.0,
+        "protein": 74.92
+      },
+      {
+        "id": "ingr_0000000187",
+        "name": "chickpeas",
+        "grams": 32.06,
+        "calories": 52.58,
+        "fat": 0.83,
+        "carbs": 8.66,
+        "protein": 2.89
+      },
+      {
+        "id": "ingr_0000000520",
+        "name": "lemon juice",
+        "grams": 0.91,
+        "calories": 0.15,
+        "fat": 0.0,
+        "carbs": 0.05,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000189",
+        "name": "vinegar",
+        "grams": 4.54,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000524",
+        "name": "parsley",
+        "grams": 3.51,
+        "calories": 1.3,
+        "fat": 0.03,
+        "carbs": 0.22,
+        "protein": 0.1
+      },
+      {
+        "id": "ingr_0000000126",
+        "name": "mustard",
+        "grams": 0.44,
+        "calories": 0.27,
+        "fat": 0.01,
+        "carbs": 0.03,
+        "protein": 0.02
+      },
+      {
+        "id": "ingr_0000000517",
+        "name": "chard",
+        "grams": 13.16,
+        "calories": 2.5,
+        "fat": 0.03,
+        "carbs": 0.49,
+        "protein": 0.24
+      },
+      {
+        "id": "ingr_0000000455",
+        "name": "cookies",
+        "grams": 51.0,
+        "calories": 250.92,
+        "fat": 12.75,
+        "carbs": 33.15,
+        "protein": 2.6
+      },
+      {
+        "id": "ingr_0000000291",
+        "name": "salt",
+        "grams": 1.68,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      }
+    ]
+  },
+  {
+    "dish_id": "dish_1562963704",
+    "total_calories": 663.76,
+    "total_mass_grams": 479.0,
+    "total_fat": 28.42,
+    "total_carbs": 66.05,
+    "total_protein": 35.92,
+    "ingredient_count": 19,
+    "calorie_stratum": "very_high",
+    "complexity": "complex",
+    "ingredients_summary": "radishes (3.51g), bok choy (12.32g), vinegar (3.51g), salt (0.62g), roasted potatoes (103.0g), mixed greens (17.54g), soy sauce (5.8g), caesar salad (104.0g), garlic (3.74g), sugar (9.24g), pepper (0.31g), white rice (12.32g), pork (86.21g), rice noodles (35.08g), cabbage (17.54g), pizza (52.0g), olive oil (1.75g), carrot (8.77g), green onions (1.75g)",
+    "ingredients": [
+      {
+        "id": "ingr_0000000073",
+        "name": "radishes",
+        "grams": 3.51,
+        "calories": 0.56,
+        "fat": 0.0,
+        "carbs": 0.12,
+        "protein": 0.02
+      },
+      {
+        "id": "ingr_0000000525",
+        "name": "bok choy",
+        "grams": 12.32,
+        "calories": 1.6,
+        "fat": 0.02,
+        "carbs": 0.27,
+        "protein": 0.18
+      },
+      {
+        "id": "ingr_0000000189",
+        "name": "vinegar",
+        "grams": 3.51,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000291",
+        "name": "salt",
+        "grams": 0.62,
+        "calories": 0.0,
+        "fat": 0.0,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000433",
+        "name": "roasted potatoes",
+        "grams": 103.0,
+        "calories": 145.23,
+        "fat": 7.0,
+        "carbs": 18.54,
+        "protein": 2.16
+      },
+      {
+        "id": "ingr_0000000029",
+        "name": "mixed greens",
+        "grams": 17.54,
+        "calories": 4.91,
+        "fat": 0.07,
+        "carbs": 0.93,
+        "protein": 0.39
+      },
+      {
+        "id": "ingr_0000000508",
+        "name": "soy sauce",
+        "grams": 5.8,
+        "calories": 3.08,
+        "fat": 0.03,
+        "carbs": 0.28,
+        "protein": 0.47
+      },
+      {
+        "id": "ingr_0000000006",
+        "name": "caesar salad",
+        "grams": 104.0,
+        "calories": 45.76,
+        "fat": 2.18,
+        "carbs": 4.47,
+        "protein": 3.33
+      },
+      {
+        "id": "ingr_0000000122",
+        "name": "garlic",
+        "grams": 3.74,
+        "calories": 5.57,
+        "fat": 0.02,
+        "carbs": 1.23,
+        "protein": 0.24
+      },
+      {
+        "id": "ingr_0000000328",
+        "name": "sugar",
+        "grams": 9.24,
+        "calories": 35.84,
+        "fat": 0.0,
+        "carbs": 9.24,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000312",
+        "name": "pepper",
+        "grams": 0.31,
+        "calories": 0.12,
+        "fat": 0.0,
+        "carbs": 0.03,
+        "protein": 0.01
+      },
+      {
+        "id": "ingr_0000000026",
+        "name": "white rice",
+        "grams": 12.32,
+        "calories": 16.01,
+        "fat": 0.04,
+        "carbs": 3.45,
+        "protein": 0.33
+      },
+      {
+        "id": "ingr_0000000462",
+        "name": "pork",
+        "grams": 86.21,
+        "calories": 205.17,
+        "fat": 12.07,
+        "carbs": 0.0,
+        "protein": 22.41
+      },
+      {
+        "id": "ingr_0000000180",
+        "name": "rice noodles",
+        "grams": 35.08,
+        "calories": 38.24,
+        "fat": 0.07,
+        "carbs": 8.77,
+        "protein": 0.32
+      },
+      {
+        "id": "ingr_0000000152",
+        "name": "cabbage",
+        "grams": 17.54,
+        "calories": 3.68,
+        "fat": 0.09,
+        "carbs": 0.56,
+        "protein": 0.23
+      },
+      {
+        "id": "ingr_0000000380",
+        "name": "pizza",
+        "grams": 52.0,
+        "calories": 138.32,
+        "fat": 5.04,
+        "carbs": 17.16,
+        "protein": 5.72
+      },
+      {
+        "id": "ingr_0000000161",
+        "name": "olive oil",
+        "grams": 1.75,
+        "calories": 15.51,
+        "fat": 1.75,
+        "carbs": 0.0,
+        "protein": 0.0
+      },
+      {
+        "id": "ingr_0000000045",
+        "name": "carrot",
+        "grams": 8.77,
+        "calories": 3.6,
+        "fat": 0.02,
+        "carbs": 0.88,
+        "protein": 0.08
+      },
+      {
+        "id": "ingr_0000000535",
+        "name": "green onions",
+        "grams": 1.75,
+        "calories": 0.56,
+        "fat": 0.0,
+        "carbs": 0.12,
+        "protein": 0.03
+      }
+    ]
+  }
+]

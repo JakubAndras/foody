@@ -1,0 +1,68 @@
+==============================================
+ AI Accuracy Benchmark - Nutrition5k Dataset
+==============================================
+Date:       2026-04-26
+Model:      gpt-5.4-mini
+Prompt:     improved_v2
+Dishes:     50 (from Nutrition5k Cafe 1)
+Runs/dish:  3 (median aggregation)
+API calls:  150
+
+CALORIE ACCURACY
+  MAPE:          45.32%
+  MAE:           106.45 kcal
+  Within +-10%:  18.00% of dishes
+  Within +-20%:  38.00% of dishes
+  Within +-30%:  56.00% of dishes
+
+MACRONUTRIENT ACCURACY (MAPE)
+  Protein:       56.41%
+  Fat:           65.35%
+  Carbohydrates: 82.89%
+
+WEIGHT ESTIMATION
+  MAPE:          30.70%
+  MAE:           54.71 g
+
+API RESPONSE TIME
+  Average:           4.06 s
+  Median:            3.73 s
+  Min:               2.15 s
+  Max:               17.22 s
+
+AI BEHAVIOR
+  Valid responses:    50/50 (100.00%)
+  Mean confidence:    0.90
+  Avg AI ingredients: 3.06
+  Avg N5k ingredients:7.26
+
+COMPARISON WITH NUTRITION5K PAPER (Table 3, CVPR 2021)
+  Paper 2D direct prediction:  26.1% calorie MAPE
+  This benchmark (Foody app):  45.32% calorie MAPE
+
+CALORIE ACCURACY BY DISH COMPLEXITY
+  simple (N=21)                 64.59% MAPE, 23.81% within +-20%
+  medium (N=9)                  36.53% MAPE, 44.44% within +-20%
+  complex (N=20)                29.05% MAPE, 50.00% within +-20%
+
+CALORIE ACCURACY BY CALORIE RANGE
+  very_low (N=8)                128.44% MAPE, 0.00% within +-20%
+  low (N=12)                    27.38% MAPE, 66.67% within +-20%
+  medium (N=12)                 28.55% MAPE, 33.33% within +-20%
+  high (N=10)                   28.43% MAPE, 40.00% within +-20%
+  very_high (N=8)               35.42% MAPE, 37.50% within +-20%
+
+TOP 5 MOST ACCURATE DISHES
+  dish_1568048053: 0.79% error (AI: 612.00 kcal, ref: 607.20 kcal) "Scrambled eggs plate"
+  dish_1567020394: 1.61% error (AI: 179.00 kcal, ref: 176.16 kcal) "broccoli and salmon"
+  dish_1566934430: 2.01% error (AI: 530.00 kcal, ref: 519.54 kcal) "Salmon plate"
+  dish_1562777037: 5.45% error (AI: 227.00 kcal, ref: 215.27 kcal) "scrambled eggs with sprouts"
+  dish_1564601528: 5.79% error (AI: 151.00 kcal, ref: 142.74 kcal) "Potato and root veg"
+
+TOP 5 LEAST ACCURATE DISHES
+  dish_1563465805: 421.12% error (AI: 169.00 kcal, ref: 32.43 kcal) "fried potato wedges"
+  dish_1561574600: 239.60% error (AI: 112.00 kcal, ref: 32.98 kcal) "Roasted eggplant"
+  dish_1560367904: 143.36% error (AI: 185.00 kcal, ref: 76.02 kcal) "small fried chicken"
+  dish_1561577146: 82.18% error (AI: 281.00 kcal, ref: 154.24 kcal) "Tofu, greens, pizza"
+  dish_1563566674: 81.39% error (AI: 183.00 kcal, ref: 100.89 kcal) "grapes and grain"
+

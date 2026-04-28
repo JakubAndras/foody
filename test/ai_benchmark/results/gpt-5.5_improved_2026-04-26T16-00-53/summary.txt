@@ -1,0 +1,62 @@
+==============================================
+ AI Accuracy Benchmark - Nutrition5k Dataset
+==============================================
+Date:       2026-04-26
+Model:      gpt-5.5
+Prompt:     improved
+Dishes:     50 (from Nutrition5k Cafe 1)
+Runs/dish:  3 (median aggregation)
+API calls:  150
+
+CALORIE ACCURACY
+  MAPE:          50.64%
+  MAE:           101.41 kcal
+  Within +-10%:  24.00% of dishes
+  Within +-20%:  44.00% of dishes
+  Within +-30%:  48.00% of dishes
+
+MACRONUTRIENT ACCURACY (MAPE)
+  Protein:       66.50%
+  Fat:           75.41%
+  Carbohydrates: 51.05%
+
+WEIGHT ESTIMATION
+  MAPE:          29.03%
+  MAE:           47.14 g
+
+AI BEHAVIOR
+  Valid responses:    50/50 (100.00%)
+  Mean confidence:    0.78
+  Avg AI ingredients: 4.42
+  Avg N5k ingredients:7.26
+
+COMPARISON WITH NUTRITION5K PAPER (Table 3, CVPR 2021)
+  Paper 2D direct prediction:  26.1% calorie MAPE
+  This benchmark (Foody app):  50.64% calorie MAPE
+
+CALORIE ACCURACY BY DISH COMPLEXITY
+  simple (N=21)                 78.73% MAPE, 28.57% within +-20%
+  medium (N=9)                  29.93% MAPE, 55.56% within +-20%
+  complex (N=20)                30.46% MAPE, 55.00% within +-20%
+
+CALORIE ACCURACY BY CALORIE RANGE
+  very_low (N=8)                144.76% MAPE, 25.00% within +-20%
+  low (N=12)                    47.97% MAPE, 25.00% within +-20%
+  medium (N=12)                 27.54% MAPE, 58.33% within +-20%
+  high (N=10)                   26.65% MAPE, 60.00% within +-20%
+  very_high (N=8)               25.15% MAPE, 50.00% within +-20%
+
+TOP 5 MOST ACCURATE DISHES
+  dish_1564774773: 0.28% error (AI: 50.00 kcal, ref: 50.14 kcal) "Roasted broccoli"
+  dish_1560442303: 0.73% error (AI: 448.00 kcal, ref: 444.77 kcal) "Bacon egg berry plate"
+  dish_1566934430: 2.99% error (AI: 504.00 kcal, ref: 519.54 kcal) "Salmon antipasto plate"
+  dish_1562686492: 3.13% error (AI: 165.00 kcal, ref: 160.00 kcal) "Sliced sausage"
+  dish_1561662842: 3.75% error (AI: 273.00 kcal, ref: 263.13 kcal) "Fried fish & greens"
+
+TOP 5 LEAST ACCURATE DISHES
+  dish_1561574600: 557.97% error (AI: 217.00 kcal, ref: 32.98 kcal) "Roasted eggplant & potato"
+  dish_1563465805: 226.86% error (AI: 106.00 kcal, ref: 32.43 kcal) "Fried potato wedges"
+  dish_1562775456: 191.07% error (AI: 146.00 kcal, ref: 50.16 kcal) "Pan-fried paneer cubes"
+  dish_1560367904: 113.10% error (AI: 162.00 kcal, ref: 76.02 kcal) "Sauced chicken bite"
+  dish_1561665671: 108.98% error (AI: 331.00 kcal, ref: 158.39 kcal) "Savory tart and corn"
+

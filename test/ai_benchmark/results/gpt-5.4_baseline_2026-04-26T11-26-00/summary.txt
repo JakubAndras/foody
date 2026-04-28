@@ -1,0 +1,62 @@
+==============================================
+ AI Accuracy Benchmark - Nutrition5k Dataset
+==============================================
+Date:       2026-04-26
+Model:      gpt-5.4
+Prompt:     baseline
+Dishes:     50 (from Nutrition5k Cafe 1)
+Runs/dish:  3 (median aggregation)
+API calls:  150
+
+CALORIE ACCURACY
+  MAPE:          45.84%
+  MAE:           116.76 kcal
+  Within +-10%:  18.00% of dishes
+  Within +-20%:  32.00% of dishes
+  Within +-30%:  48.00% of dishes
+
+MACRONUTRIENT ACCURACY (MAPE)
+  Protein:       56.78%
+  Fat:           65.67%
+  Carbohydrates: 76.22%
+
+WEIGHT ESTIMATION
+  MAPE:          36.81%
+  MAE:           57.93 g
+
+AI BEHAVIOR
+  Valid responses:    50/50 (100.00%)
+  Mean confidence:    0.89
+  Avg AI ingredients: 4.52
+  Avg N5k ingredients:7.26
+
+COMPARISON WITH NUTRITION5K PAPER (Table 3, CVPR 2021)
+  Paper 2D direct prediction:  26.1% calorie MAPE
+  This benchmark (Foody app):  45.84% calorie MAPE
+
+CALORIE ACCURACY BY DISH COMPLEXITY
+  simple (N=21)                 67.91% MAPE, 28.57% within +-20%
+  medium (N=9)                  31.68% MAPE, 33.33% within +-20%
+  complex (N=20)                29.04% MAPE, 35.00% within +-20%
+
+CALORIE ACCURACY BY CALORIE RANGE
+  very_low (N=8)                106.48% MAPE, 25.00% within +-20%
+  low (N=12)                    39.55% MAPE, 41.67% within +-20%
+  medium (N=12)                 24.56% MAPE, 41.67% within +-20%
+  high (N=10)                   37.30% MAPE, 30.00% within +-20%
+  very_high (N=8)               37.26% MAPE, 12.50% within +-20%
+
+TOP 5 MOST ACCURATE DISHES
+  dish_1566934430: 0.28% error (AI: 521.00 kcal, ref: 519.54 kcal) "Salmon plate"
+  dish_1561748950: 2.66% error (AI: 192.00 kcal, ref: 197.25 kcal) "Salmon with melon"
+  dish_1562096933: 4.05% error (AI: 300.00 kcal, ref: 312.66 kcal) "Fish with greens"
+  dish_1564601528: 5.42% error (AI: 135.00 kcal, ref: 142.74 kcal) "Roasted potatoes & yam"
+  dish_1568061202: 6.41% error (AI: 273.00 kcal, ref: 256.55 kcal) "Pizza with fruit plate"
+
+TOP 5 LEAST ACCURATE DISHES
+  dish_1561574600: 424.56% error (AI: 173.00 kcal, ref: 32.98 kcal) "Roasted eggplant plate"
+  dish_1563465805: 263.86% error (AI: 118.00 kcal, ref: 32.43 kcal) "Roasted potatoes"
+  dish_1561577146: 113.30% error (AI: 329.00 kcal, ref: 154.24 kcal) "Lasagna with salad"
+  dish_1562603813: 76.47% error (AI: 112.00 kcal, ref: 475.96 kcal) "White rice"
+  dish_1563566674: 75.44% error (AI: 177.00 kcal, ref: 100.89 kcal) "Quinoa and black beans"
+

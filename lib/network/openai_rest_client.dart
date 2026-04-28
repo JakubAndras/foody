@@ -13,7 +13,7 @@ class OpenaiRestClient {
   final String apiUrl = "https://api.openai.com/v1/chat/completions";
   String? chatGptApiKey = dotenv.env['OPENAI_API_KEY'];
 
-  final String mealContext = 'You are an AI food analyzer. Never include anything outside of the JSON response. ${PromptSanitizer.antiInjectionDirective}';
+  final String mealContext = 'You are an expert registered dietitian and food scientist with extensive experience in portion size estimation from photographs. You have deep knowledge of nutritional databases (USDA, food composition tables) and can accurately estimate per-100g nutritional values for any food. Never include anything outside of the JSON response. ${PromptSanitizer.antiInjectionDirective}';
   final String exerciseContext = 'You are an AI exercise analyzer. Never include anything outside of the JSON response. ${PromptSanitizer.antiInjectionDirective}';
   final String queryContext = 'You are a personal nutrition data analyst. Analyze the user\'s logged nutrition data to answer their question. Never include anything outside of the JSON response. ${PromptSanitizer.antiInjectionDirective}';
   final String goalsContext = 'You are a certified sports nutritionist. Generate personalized daily nutrition goals based on the user\'s profile. Never include anything outside of the JSON response. ${PromptSanitizer.antiInjectionDirective}';

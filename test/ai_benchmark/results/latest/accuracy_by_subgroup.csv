@@ -1,0 +1,9 @@
+group_type,group_name,n_dishes,cal_mape_%,pro_mape_%,fat_mape_%,carb_mape_%,cal_within_20_%
+complexity,simple,21,52.38,59.33,79.75,68.29,33.33
+complexity,medium,9,24.85,27.92,27.11,80.94,55.56
+complexity,complex,20,29.49,45.09,51.46,32.06,55.00
+calorie_range,very_low,8,76.25,57.75,144.11,61.24,25.00
+calorie_range,low,12,30.73,55.86,47.22,89.85,41.67
+calorie_range,medium,12,19.67,33.67,41.83,33.49,83.33
+calorie_range,high,10,38.46,47.48,38.47,33.95,40.00
+calorie_range,very_high,8,39.25,48.48,42.70,61.80,25.00

@@ -1,0 +1,68 @@
+==============================================
+ AI Accuracy Benchmark - Nutrition5k Dataset
+==============================================
+Date:       2026-04-26
+Model:      gpt-5.4
+Prompt:     improved_v2
+Dishes:     50 (from Nutrition5k Cafe 1)
+Runs/dish:  3 (median aggregation)
+API calls:  150
+
+CALORIE ACCURACY
+  MAPE:          38.27%
+  MAE:           112.65 kcal
+  Within +-10%:  16.00% of dishes
+  Within +-20%:  46.00% of dishes
+  Within +-30%:  50.00% of dishes
+
+MACRONUTRIENT ACCURACY (MAPE)
+  Protein:       47.98%
+  Fat:           59.33%
+  Carbohydrates: 56.08%
+
+WEIGHT ESTIMATION
+  MAPE:          30.88%
+  MAE:           55.80 g
+
+API RESPONSE TIME
+  Average:           6.03 s
+  Median:            5.95 s
+  Min:               2.82 s
+  Max:               11.64 s
+
+AI BEHAVIOR
+  Valid responses:    50/50 (100.00%)
+  Mean confidence:    0.88
+  Avg AI ingredients: 3.96
+  Avg N5k ingredients:7.26
+
+COMPARISON WITH NUTRITION5K PAPER (Table 3, CVPR 2021)
+  Paper 2D direct prediction:  26.1% calorie MAPE
+  This benchmark (Foody app):  38.27% calorie MAPE
+
+CALORIE ACCURACY BY DISH COMPLEXITY
+  simple (N=21)                 52.38% MAPE, 33.33% within +-20%
+  medium (N=9)                  24.85% MAPE, 55.56% within +-20%
+  complex (N=20)                29.49% MAPE, 55.00% within +-20%
+
+CALORIE ACCURACY BY CALORIE RANGE
+  very_low (N=8)                76.25% MAPE, 25.00% within +-20%
+  low (N=12)                    30.73% MAPE, 41.67% within +-20%
+  medium (N=12)                 19.67% MAPE, 83.33% within +-20%
+  high (N=10)                   38.46% MAPE, 40.00% within +-20%
+  very_high (N=8)               39.25% MAPE, 25.00% within +-20%
+
+TOP 5 MOST ACCURATE DISHES
+  dish_1567020394: 0.66% error (AI: 175.00 kcal, ref: 176.16 kcal) "Chicken with broccoli"
+  dish_1564601528: 2.98% error (AI: 147.00 kcal, ref: 142.74 kcal) "Potatoes and cassava"
+  dish_1558029923: 4.10% error (AI: 291.00 kcal, ref: 279.55 kcal) "Bacon, sweet potato, melon"
+  dish_1567785654: 4.29% error (AI: 54.00 kcal, ref: 51.78 kcal) "Mixed fruit bowl"
+  dish_1560367904: 5.29% error (AI: 72.00 kcal, ref: 76.02 kcal) "Small chicken piece"
+
+TOP 5 LEAST ACCURATE DISHES
+  dish_1561574600: 282.05% error (AI: 126.00 kcal, ref: 32.98 kcal) "Roasted eggplant pieces"
+  dish_1563465805: 143.60% error (AI: 79.00 kcal, ref: 32.43 kcal) "Roasted potato pieces"
+  dish_1562603813: 82.35% error (AI: 84.00 kcal, ref: 475.96 kcal) "Small portion rice"
+  dish_1566502472: 71.41% error (AI: 38.00 kcal, ref: 132.92 kcal) "Spinach salad"
+  dish_1562181217: 69.99% error (AI: 164.00 kcal, ref: 546.48 kcal) "Fried fish with slaw"
+

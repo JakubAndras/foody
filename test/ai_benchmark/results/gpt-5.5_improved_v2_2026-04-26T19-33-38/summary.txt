@@ -1,0 +1,68 @@
+==============================================
+ AI Accuracy Benchmark - Nutrition5k Dataset
+==============================================
+Date:       2026-04-26
+Model:      gpt-5.5
+Prompt:     improved_v2
+Dishes:     50 (from Nutrition5k Cafe 1)
+Runs/dish:  3 (median aggregation)
+API calls:  150
+
+CALORIE ACCURACY
+  MAPE:          32.12%
+  MAE:           84.94 kcal
+  Within +-10%:  24.00% of dishes
+  Within +-20%:  44.00% of dishes
+  Within +-30%:  58.00% of dishes
+
+MACRONUTRIENT ACCURACY (MAPE)
+  Protein:       49.65%
+  Fat:           50.70%
+  Carbohydrates: 41.94%
+
+WEIGHT ESTIMATION
+  MAPE:          26.57%
+  MAE:           52.62 g
+
+API RESPONSE TIME
+  Average:           27.93 s
+  Median:            24.49 s
+  Min:               11.72 s
+  Max:               105.96 s
+
+AI BEHAVIOR
+  Valid responses:    50/50 (100.00%)
+  Mean confidence:    0.76
+  Avg AI ingredients: 4.88
+  Avg N5k ingredients:7.26
+
+COMPARISON WITH NUTRITION5K PAPER (Table 3, CVPR 2021)
+  Paper 2D direct prediction:  26.1% calorie MAPE
+  This benchmark (Foody app):  32.12% calorie MAPE
+
+CALORIE ACCURACY BY DISH COMPLEXITY
+  simple (N=21)                 40.35% MAPE, 47.62% within +-20%
+  medium (N=9)                  23.64% MAPE, 55.56% within +-20%
+  complex (N=20)                27.31% MAPE, 35.00% within +-20%
+
+CALORIE ACCURACY BY CALORIE RANGE
+  very_low (N=8)                74.92% MAPE, 25.00% within +-20%
+  low (N=12)                    20.39% MAPE, 66.67% within +-20%
+  medium (N=12)                 22.54% MAPE, 50.00% within +-20%
+  high (N=10)                   29.46% MAPE, 40.00% within +-20%
+  very_high (N=8)               24.64% MAPE, 25.00% within +-20%
+
+TOP 5 MOST ACCURATE DISHES
+  dish_1567023335: 0.48% error (AI: 139.00 kcal, ref: 138.34 kcal) "Mixed green salad"
+  dish_1558029923: 1.95% error (AI: 285.00 kcal, ref: 279.55 kcal) "Bacon, melon & sweet potato"
+  dish_1560455442: 3.37% error (AI: 473.00 kcal, ref: 457.58 kcal) "Pizza salad corn salmon"
+  dish_1563813501: 3.91% error (AI: 667.00 kcal, ref: 694.12 kcal) "Breakfast plate"
+  dish_1568320470: 4.41% error (AI: 544.00 kcal, ref: 521.04 kcal) "Mixed plate with halloumi"
+
+TOP 5 LEAST ACCURATE DISHES
+  dish_1561574600: 227.47% error (AI: 108.00 kcal, ref: 32.98 kcal) "Fried eggplant"
+  dish_1563465805: 125.10% error (AI: 73.00 kcal, ref: 32.43 kcal) "Fried potato pieces"
+  dish_1562775456: 99.36% error (AI: 100.00 kcal, ref: 50.16 kcal) "Pan-fried paneer cubes"
+  dish_1562603813: 76.47% error (AI: 112.00 kcal, ref: 475.96 kcal) "Hash browns"
+  dish_1562181217: 64.68% error (AI: 193.00 kcal, ref: 546.48 kcal) "Fried chicken with slaw"
+

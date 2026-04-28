@@ -269,44 +269,44 @@ Všichni tři participanti by aplikaci používali pravidelně.
 
 ### 8.2 UI/UX problémy
 
-| # | Problém | Úloha   | Parti. | Doporučení |
-|---|------------------------------|---------|--------|--------------------------------------------|
-| 1 | Ikona pro import z galerie příliš schovaná | T3      | P1, P2, P3 | Dva ze tří participantů potřebovali pomoc. Tlačítko pro výběr fotografie z galerie není dostatečně viditelné. |
-| 2 | Funkce oblíbených obtížně nalezitelná | T8      | P1, P3 | Dva ze tří participantů potřebovali pomoc. Neintuitivní ikona, segment tab „Oblíbené" špatně čitelný, chybí onboarding/nápověda. |
-| 3 | Ikona oblíbených neintuitivní | T8      | P1, P2, P3 | Všichni participanti navrhovali srdíčko nebo hvězdičku místo aktuální ikony. |
-| 4 | Ikona Personal Details | T13     | P1, P2 | Změnit ikonu na profil/človíčka místo aktuální karty. |
-| 5 | Zlomky u množství matoucí | T11     | P1, P2 | 5/8 je lehce matoucí; malý font; zvážit řazení od nejpoužívanějších zlomků. |
-| 6 | Malé/nečitelné texty | obecně  | P3 | Font příliš malý, participantka překlikávala texty bez čtení. |
-| 7 | „Back to today" špatně čitelné | T10     | P3 | Malá písmena, špatně se čte. |
-| 8 | Chybějící Check button v bottomSheet | T2, T6  | P1, P3 | Mealtime bottomSheet nemá potvrzovací tlačítko, participanti ho intuitivně očekávali. |
-| 9 | Chybějící potvrzení před AI rozpoznáním | T2      | P2 | Nelíbí se chybějící krok potvrzení před spuštěním rozpoznání. |
-| 10 | Název „Fix issue" nejasný | T4      | P2 | Tlačítko přijde schované a název zvláštní. |
-| 11 | Barcode databáze nedostatečná | T6      | P1, P2 | Testované balené produkty nebyly správně rozpoznány. |
-| 12 | Dva vertikální scrolly na jedné obrazovce | T1      | P2 | Obrazovka nastavení rychlosti hubnutí/nabírání má dva scrollovatelné elementy. |
-| 13 | Onboarding step „poskakuje" | T1      | P1 | Volba „Maintain" u váhy způsobí poskakující onboarding krok. |
-| 14 | Snackbar při přidání do oblíbených chybí | T8      | P3 | Chybí zpětná vazba (snackbar) při přidání jídla do oblíbených. |
-| 15 | Signalizace ukončení nahrávání | T5      | P2 | Lépe signalizovat ukončení nahrávání a potřebu kliknout na tlačítko analyzovat. |
-| 16 | Toggle hlasového vstupu si nepamatuje stav | T12     | P3 | Při návratu na obrazovku se toggle vždy nastaví na „jídlo" místo posledního nastavení. |
+| # | Problém                                          | Úloha   | Parti. | Doporučení                                                                                                                                                                                                                                                                   |
+|---|--------------------------------------------------|---------|--------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1 | NE - Ikona pro import z galerie příliš schovaná  | T3      | P1, P2, P3 | Dva ze tří participantů potřebovali pomoc. Tlačítko pro výběr fotografie z galerie není dostatečně viditelné.                                                                                                                                                                |
+| 2 | ANO - Funkce oblíbených obtížně nalezitelná      | T8      | P1, P3 | Dva ze tří participantů potřebovali pomoc. Neintuitivní ikona, segment tab „Oblíbené" špatně čitelný, chybí onboarding/nápověda. |
+| 3 | ANO - Ikona oblíbených neintuitivní              | T8      | P1, P2, P3 | Všichni participanti navrhovali srdíčko nebo hvězdičku místo aktuální ikony. |
+| 4 | ANO - Ikona Personal Details                     | T13     | P1, P2 | Změnit ikonu na profil/človíčka místo aktuální karty.                                                                                                                                                                                                                        |
+| 5 | ANO - Zlomky u množství matoucí                  | T11     | P1, P2 | 5/8 je lehce matoucí; malý font; zvážit řazení od nejpoužívanějších zlomků. |
+| 6 | ANO - Malé/nečitelné texty                       | obecně  | P3 | Font příliš malý, participantka překlikávala texty bez čtení. |
+| 7 | ANO - „Back to today" špatně čitelné             | T10     | P3 | Malá písmena, špatně se čte. |
+| 8 | Ano - Chybějící Check button v bottomSheet       | T2, T6  | P1, P3 | Mealtime bottomSheet nemá potvrzovací tlačítko, participanti ho intuitivně očekávali.                                                                                                                                                                                        |
+| 9 | NE - Chybějící potvrzení před AI rozpoznáním     | T2      | P2 | Nelíbí se chybějící krok potvrzení před spuštěním rozpoznání.                                                                                                                                                                                                                |
+| 10 | ANO - Název „Fix issue" nejasný                  | T4      | P2 | Tlačítko přijde schované a název zvláštní. |
+| 11 | ANO - Barcode databáze nedostatečná              | T6      | P1, P2 | Testované balené produkty nebyly správně rozpoznány. |
+| 12 | ANO - Dva vertikální scrolly na jedné obrazovce  | T1      | P2 | Obrazovka nastavení rychlosti hubnutí/nabírání má dva scrollovatelné elementy. |
+| 13 | ANO - Onboarding step „poskakuje"                | T1      | P1 | Volba „Maintain" u váhy způsobí poskakující onboarding krok. |
+| 14 | ANO - Snackbar při přidání do oblíbených chybí   | T8      | P3 | Chybí zpětná vazba (snackbar) při přidání jídla do oblíbených.                                                                                                                                                                                                               |
+| 15 | ANO - Signalizace ukončení nahrávání             | T5      | P2 | Lépe signalizovat ukončení nahrávání a potřebu kliknout na tlačítko analyzovat.                                                                                                                                                                                              |
+| 16 | ANO - Toggle hlasového vstupu si nepamatuje stav | T12     | P3 | Při návratu na obrazovku se toggle vždy nastaví na „jídlo" místo posledního nastavení.                                                                                                                                                                                       |
 
 ### 8.3 Návrhy na nové funkce a vylepšení
 
 | # | Návrh | Parti. | Popis |
 |---|------------------------------|--------|----------------------------------------------|
-| 1 | Hlasové zadávání i v Exercise a Fix Issue | P1, P2, P3 | Participanti intuitivně očekávali hlasové zadávání i v dalších částech aplikace. |
-| 2 | Zvýraznění dnů s logy v kalendáři | P2, P3 | V měsíčním přehledu zvýraznit dny, kde jsou zaznamenány údaje (barvou, hvězdičkou, kruhy). |
-| 3 | Ask AI: podpora hlasového vstupu | P3 | Umožnit hlasové zadávání dotazů v Ask AI. |
-| 4 | Ask AI: přesun do Progress obrazovky | P3 | Participantka by funkci očekávala v Progress, ne v Profilu. |
-| 5 | Ask AI: disable button při prázdném vstupu | P1 | Tlačítko by mělo být neaktivní, pokud je textfield prázdné. |
-| 6 | Nastavení velikosti písma | P3 | Přidat do nastavení možnost velikosti písma. |
-| 7 | Longpress pro nahrání vlastní fotky | P1 | Na placeholder obrázek v detailu jídla přidat longpress pro nahrání vlastní fotografie. |
-| 8 | Zadat váhu z klávesnice | P2 | Umožnit zadat váhu jako číslo z klávesnice, ne jen posuvníkem. |
-| 9 | Omezit rozsah let v kalendáři | P2 | Omezit budoucí (a vzdálené minulé) roky v kalendáři. |
-| 10 | Help dialog pro oblíbené | P1 | Zobrazit nápovědu při prvním přidání jídla do oblíbených. |
-| 11 | Share z Ask AI | P2 | Sdílení výstupu z Ask AI by mohlo posílat otázku + screenshot. |
-| 12 | Po exportu návrat na profil + snackbar | P3 | Po exportu uživatel zůstane zanořen v obrazovce, lepší by byl návrat + potvrzení. |
-| 13 | Recommended obrazovka v onboardingu | P1 | Zvážit automatické nastavení recommended hodnot bez extra obrazovky. |
-| 14 | Custom dieta: příklady klíčových slov | P1 | V příkladu u textového pole dát i stručná klíčová slova (nejen celé věty). |
-| 15 | Tvorba receptu z hlasového vstupu | P3 | Návrh na budoucí funkci. |
+| 1 | ANO - Hlasové zadávání i v Exercise a Fix Issue | P1, P2, P3 | Participanti intuitivně očekávali hlasové zadávání i v dalších částech aplikace. |
+| 2 | NE - Zvýraznění dnů s logy v kalendáři | P2, P3 | V měsíčním přehledu zvýraznit dny, kde jsou zaznamenány údaje (barvou, hvězdičkou, kruhy). |
+| 3 | ANO - Ask AI: podpora hlasového vstupu | P3 | Umožnit hlasové zadávání dotazů v Ask AI. |
+| 4 | NE - Ask AI: přesun do Progress obrazovky | P3 | Participantka by funkci očekávala v Progress, ne v Profilu. |
+| 5 | NE - Ask AI: disable button při prázdném vstupu | P1 | Tlačítko by mělo být neaktivní, pokud je textfield prázdné. |
+| 6 | NE - Nastavení velikosti písma | P3 | Přidat do nastavení možnost velikosti písma. |
+| 7 | ANO - Longpress pro nahrání vlastní fotky | P1 | Na placeholder obrázek v detailu jídla přidat longpress pro nahrání vlastní fotografie. |
+| 8 | NE - Zadat váhu z klávesnice | P2 | Umožnit zadat váhu jako číslo z klávesnice, ne jen posuvníkem. |
+| 9 | NE - Omezit rozsah let v kalendáři | P2 | Omezit budoucí (a vzdálené minulé) roky v kalendáři. |
+| 10 | NE - Help dialog pro oblíbené | P1 | Zobrazit nápovědu při prvním přidání jídla do oblíbených. |
+| 11 | NE - Share z Ask AI | P2 | Sdílení výstupu z Ask AI by mohlo posílat otázku + screenshot. |
+| 12 | NE - Po exportu návrat na profil + snackbar | P3 | Po exportu uživatel zůstane zanořen v obrazovce, lepší by byl návrat + potvrzení. |
+| 13 | ANO - Recommended obrazovka v onboardingu | P1 | Zvážit automatické nastavení recommended hodnot bez extra obrazovky. |
+| 14 | ANO - Custom dieta: příklady klíčových slov | P1 | V příkladu u textového pole dát i stručná klíčová slova (nejen celé věty). |
+| 15 | NE - Tvorba receptu z hlasového vstupu | P3 | Návrh na budoucí funkci. |
 
 ---
 

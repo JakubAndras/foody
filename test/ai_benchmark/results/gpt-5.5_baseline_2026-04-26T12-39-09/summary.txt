@@ -1,0 +1,62 @@
+==============================================
+ AI Accuracy Benchmark - Nutrition5k Dataset
+==============================================
+Date:       2026-04-26
+Model:      gpt-5.5
+Prompt:     baseline
+Dishes:     50 (from Nutrition5k Cafe 1)
+Runs/dish:  3 (median aggregation)
+API calls:  150
+
+CALORIE ACCURACY
+  MAPE:          44.94%
+  MAE:           100.31 kcal
+  Within +-10%:  22.00% of dishes
+  Within +-20%:  40.00% of dishes
+  Within +-30%:  56.00% of dishes
+
+MACRONUTRIENT ACCURACY (MAPE)
+  Protein:       60.96%
+  Fat:           65.85%
+  Carbohydrates: 48.53%
+
+WEIGHT ESTIMATION
+  MAPE:          28.75%
+  MAE:           49.89 g
+
+AI BEHAVIOR
+  Valid responses:    50/50 (100.00%)
+  Mean confidence:    0.80
+  Avg AI ingredients: 4.44
+  Avg N5k ingredients:7.26
+
+COMPARISON WITH NUTRITION5K PAPER (Table 3, CVPR 2021)
+  Paper 2D direct prediction:  26.1% calorie MAPE
+  This benchmark (Foody app):  44.94% calorie MAPE
+
+CALORIE ACCURACY BY DISH COMPLEXITY
+  simple (N=21)                 63.59% MAPE, 33.33% within +-20%
+  medium (N=9)                  31.60% MAPE, 33.33% within +-20%
+  complex (N=20)                31.35% MAPE, 50.00% within +-20%
+
+CALORIE ACCURACY BY CALORIE RANGE
+  very_low (N=8)                113.61% MAPE, 50.00% within +-20%
+  low (N=12)                    43.46% MAPE, 25.00% within +-20%
+  medium (N=12)                 27.01% MAPE, 50.00% within +-20%
+  high (N=10)                   26.56% MAPE, 50.00% within +-20%
+  very_high (N=8)               28.35% MAPE, 25.00% within +-20%
+
+TOP 5 MOST ACCURATE DISHES
+  dish_1561146781: 0.97% error (AI: 303.00 kcal, ref: 300.10 kcal) "Bagel and apple"
+  dish_1562686492: 3.13% error (AI: 165.00 kcal, ref: 160.00 kcal) "Sausage bites"
+  dish_1567542778: 3.29% error (AI: 252.00 kcal, ref: 260.58 kcal) "Cheese pizza slice"
+  dish_1566934430: 3.57% error (AI: 501.00 kcal, ref: 519.54 kcal) "Salmon snack plate"
+  dish_1561748950: 3.93% error (AI: 205.00 kcal, ref: 197.25 kcal) "Salmon with melon"
+
+TOP 5 LEAST ACCURATE DISHES
+  dish_1561574600: 433.66% error (AI: 176.00 kcal, ref: 32.98 kcal) "Roasted eggplant potatoes"
+  dish_1563465805: 180.60% error (AI: 91.00 kcal, ref: 32.43 kcal) "Roasted potato wedges"
+  dish_1562775456: 165.15% error (AI: 133.00 kcal, ref: 50.16 kcal) "Pan-fried paneer cubes"
+  dish_1561577146: 97.74% error (AI: 305.00 kcal, ref: 154.24 kcal) "Pizza tofu salad plate"
+  dish_1560367904: 89.42% error (AI: 144.00 kcal, ref: 76.02 kcal) "Sauced chicken piece"
+

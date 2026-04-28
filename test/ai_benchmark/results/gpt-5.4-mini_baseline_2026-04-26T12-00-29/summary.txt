@@ -1,0 +1,62 @@
+==============================================
+ AI Accuracy Benchmark - Nutrition5k Dataset
+==============================================
+Date:       2026-04-26
+Model:      gpt-5.4-mini
+Prompt:     baseline
+Dishes:     50 (from Nutrition5k Cafe 1)
+Runs/dish:  3 (median aggregation)
+API calls:  150
+
+CALORIE ACCURACY
+  MAPE:          51.12%
+  MAE:           114.78 kcal
+  Within +-10%:  10.00% of dishes
+  Within +-20%:  32.00% of dishes
+  Within +-30%:  44.00% of dishes
+
+MACRONUTRIENT ACCURACY (MAPE)
+  Protein:       97.44%
+  Fat:           71.76%
+  Carbohydrates: 69.79%
+
+WEIGHT ESTIMATION
+  MAPE:          42.28%
+  MAE:           58.04 g
+
+AI BEHAVIOR
+  Valid responses:    50/50 (100.00%)
+  Mean confidence:    0.90
+  Avg AI ingredients: 3.40
+  Avg N5k ingredients:7.26
+
+COMPARISON WITH NUTRITION5K PAPER (Table 3, CVPR 2021)
+  Paper 2D direct prediction:  26.1% calorie MAPE
+  This benchmark (Foody app):  51.12% calorie MAPE
+
+CALORIE ACCURACY BY DISH COMPLEXITY
+  simple (N=21)                 77.35% MAPE, 23.81% within +-20%
+  medium (N=9)                  42.24% MAPE, 33.33% within +-20%
+  complex (N=20)                27.58% MAPE, 40.00% within +-20%
+
+CALORIE ACCURACY BY CALORIE RANGE
+  very_low (N=8)                140.24% MAPE, 12.50% within +-20%
+  low (N=12)                    43.53% MAPE, 25.00% within +-20%
+  medium (N=12)                 27.86% MAPE, 41.67% within +-20%
+  high (N=10)                   28.67% MAPE, 50.00% within +-20%
+  very_high (N=8)               36.34% MAPE, 25.00% within +-20%
+
+TOP 5 MOST ACCURATE DISHES
+  dish_1566934430: 0.09% error (AI: 520.00 kcal, ref: 519.54 kcal) "Salmon dinner plate"
+  dish_1562700957: 0.72% error (AI: 289.00 kcal, ref: 286.93 kcal) "Salad plate"
+  dish_1561662842: 1.19% error (AI: 260.00 kcal, ref: 263.13 kcal) "Breaded tofu plate"
+  dish_1562686492: 3.13% error (AI: 155.00 kcal, ref: 160.00 kcal) "Roasted potatoes"
+  dish_1560442303: 3.32% error (AI: 430.00 kcal, ref: 444.77 kcal) "Breakfast plate"
+
+TOP 5 LEAST ACCURATE DISHES
+  dish_1563465805: 455.04% error (AI: 180.00 kcal, ref: 32.43 kcal) "fried potatoes"
+  dish_1561574600: 263.86% error (AI: 120.00 kcal, ref: 32.98 kcal) "Roasted eggplant"
+  dish_1560367904: 136.78% error (AI: 180.00 kcal, ref: 76.02 kcal) "Spicy chicken bites"
+  dish_1563566674: 132.93% error (AI: 235.00 kcal, ref: 100.89 kcal) "beans with couscous"
+  dish_1562775456: 89.39% error (AI: 95.00 kcal, ref: 50.16 kcal) "fried tofu cubes"
+

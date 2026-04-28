@@ -1,0 +1,10 @@
+metric,calories,protein,fat,carbs,weight
+mape_%,32.12,49.65,50.70,41.94,26.57
+mae,84.94,7.91,6.74,7.62,52.62
+within_10_%,24.00,,,,
+within_20_%,44.00,,,,
+within_30_%,58.00,,,,
+mean_confidence,0.76,,,,
+valid_rate_%,100.00,,,,
+n_dishes,50,,,,
+n_valid,50,,,,
