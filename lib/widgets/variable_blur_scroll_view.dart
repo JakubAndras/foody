@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/utils/platform_utils.dart';
 import 'package:variable_blur/variable_blur.dart';
 
 /// A performant alternative to [FadedEdgeScrollView] that uses the
@@ -132,7 +133,9 @@ class _VariableBlurScrollViewState extends State<VariableBlurScrollView> {
   @override
   Widget build(BuildContext context) {
     final topPadding = MediaQuery.of(context).padding.top;
-    final useBlur = widget.topBlurSigma > 0;
+    // Skip the GPU shader on devices where its R8 intermediate buffer
+    // allocation fails (older Android GPUs). See PlatformUtils.useGpuBlurShader.
+    final useBlur = widget.topBlurSigma > 0 && PlatformUtils.useGpuBlurShader;
 
     final bgColor = widget.backgroundColor ?? AppColors.background;
     final fade = widget.fadeColor ?? bgColor;
