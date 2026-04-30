@@ -10,7 +10,6 @@
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.health.READ_ACTIVE_CALORIES_BURNED" />
     <uses-feature android:name="android.hardware.camera" android:required="false" />
-    <uses-sdk android:minSdkVersion="21" />
 
     <application
         android:label="Foody"
@@ -32,6 +31,9 @@
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
               />
+            <meta-data
+              android:name="io.flutter.embedding.android.EnableImpeller"
+              android:value="false" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
