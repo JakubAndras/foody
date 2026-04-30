@@ -47,15 +47,15 @@ dependencies:
   timezone: 0.9.4
   flutter_timezone: 3.0.1
   liquid_glass_easy: 1.1.1
-  liquid_glass_widgets: 0.4.0-dev.4
+  liquid_glass_widgets: 0.5.0
   pdf: 3.11.1
   csv: 6.0.0
-  gal: ^2.3.0
+  gal: 2.3.0
   variable_blur: 0.1.0
   health: 13.3.1
   url_launcher: 6.2.5
   confetti: 0.8.0
-  font_awesome_flutter: ^10.7.0
+  font_awesome_flutter: 10.7.0
 
 dev_dependencies:
   flutter_test:
@@ -65,6 +65,16 @@ dev_dependencies:
   custom_lint:
   riverpod_lint: 2.3.10
   riverpod_generator: 2.3.11
+  flutter_launcher_icons: 0.14.4
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/launcher_icon.png"
+  remove_alpha_ios: true
+  min_sdk_android: 21
+  adaptive_icon_background: "#000000"
+  adaptive_icon_foreground: "assets/images/launcher_icon.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

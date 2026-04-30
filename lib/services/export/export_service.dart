@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:csv/csv.dart';
+import 'package:diplomka/database/entities/ai_attempt_entity.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/model/weight_entry.dart';
@@ -32,6 +33,9 @@ class ExportService {
     double? weightChangeRateKgPerWeek,
     bool? prefersMetric,
     DateTime? dateOfBirth,
+    // RESEARCH-ONLY: research-only — emit the AI attempt log section. Drop
+    // with the rest of telemetry. See RESEARCH_ONLY.md.
+    List<AiAttemptEntity> aiAttempts = const [],
   }) {
     final rows = <List<dynamic>>[];
 
@@ -47,6 +51,12 @@ class ExportService {
     rows.add([tr(LocaleKeys.export_csv_weight_change_rate), weightChangeRateKgPerWeek != null ? '$weightChangeRateKgPerWeek' : '']);
     rows.add([tr(LocaleKeys.export_csv_prefers_metric), prefersMetric != null ? (prefersMetric ? 'yes' : 'no') : '']);
     rows.add([tr(LocaleKeys.export_csv_date_of_birth), dateOfBirth != null ? _dateFmt.format(dateOfBirth) : '']);
+
+    // RESEARCH-ONLY: build a "living" view that excludes soft-deleted meals
+    // and ingredients. Used for daily summary aggregates so deleted records
+    // don't inflate intake. The full `records` list (with deleted) is still
+    // used in Meal Details so the AI snapshot of removed records survives.
+    final livingRecords = records.map(_excludeDeleted).toList();
 
     // ── Section 1: Daily Summary ──
     rows.add([]);
@@ -66,7 +76,7 @@ class ExportService {
       tr(LocaleKeys.export_csv_meal_count),
       tr(LocaleKeys.export_csv_exercise_count),
     ]);
-    for (final r in records) {
+    for (final r in livingRecords) {
       rows.add([
         _dateFmt.format(r.date),
         r.totalCalories.round(),
@@ -85,8 +95,8 @@ class ExportService {
     }
 
     // ── Calorie balance ──
-    final totalConsumed = records.fold<double>(0, (s, r) => s + r.totalCalories);
-    final totalBurned = records.fold<double>(0, (s, r) => s + r.totalExerciseCalories);
+    final totalConsumed = livingRecords.fold<double>(0, (s, r) => s + r.totalCalories);
+    final totalBurned = livingRecords.fold<double>(0, (s, r) => s + r.totalExerciseCalories);
     if (records.isNotEmpty) {
       rows.add([]);
       rows.add([tr(LocaleKeys.export_consumed), '${totalConsumed.round()} ${tr(LocaleKeys.common_kcal)}']);
@@ -95,6 +105,12 @@ class ExportService {
     }
 
     // ── Section 2: Meal Details ──
+    // RESEARCH-ONLY: 23 telemetry columns added to this section
+    // (input_source, ai_provider, ai_model, barcode, meal_was_edited_by_user,
+    // meal_edited_at, meal_deleted_at, meal_ai_original_*,
+    // ing_was_edited_by_user, ing_deleted_at, ing_ai_original_*). Strip them
+    // and revert to the pre-thesis 13-column schema before production. See
+    // RESEARCH_ONLY.md.
     final hasMeals = records.any((r) => r.meals.isNotEmpty);
     if (hasMeals) {
       rows.add([]);
@@ -105,6 +121,21 @@ class ExportService {
         tr(LocaleKeys.export_csv_meal_timestamp),
         tr(LocaleKeys.export_csv_meal_confidence),
         tr(LocaleKeys.export_csv_has_photo),
+        // ── Telemetry: meal-level ──
+        'input_source',
+        'ai_provider',
+        'ai_model',
+        'barcode',
+        'meal_was_edited_by_user',
+        'meal_edited_at',
+        'meal_deleted_at',
+        'meal_ai_original_name',
+        'meal_ai_original_calories',
+        'meal_ai_original_proteins',
+        'meal_ai_original_carbs',
+        'meal_ai_original_fats',
+        'meal_ai_original_confidence',
+        // ── Ingredient ──
         tr(LocaleKeys.common_ingredients),
         tr(LocaleKeys.common_weight),
         tr(LocaleKeys.export_csv_ingredient_amount),
@@ -113,14 +144,51 @@ class ExportService {
         tr(LocaleKeys.export_csv_carbs),
         tr(LocaleKeys.export_csv_fat),
         tr(LocaleKeys.export_csv_ingredient_confidence),
+        // ── Telemetry: ingredient-level ──
+        'ing_was_edited_by_user',
+        'ing_deleted_at',
+        'ing_ai_original_name',
+        'ing_ai_original_weight',
+        'ing_ai_original_amount',
+        'ing_ai_original_calories',
+        'ing_ai_original_proteins',
+        'ing_ai_original_carbs',
+        'ing_ai_original_fats',
+        'ing_ai_original_confidence',
       ]);
       for (final r in records) {
         for (final meal in r.meals) {
           final mealTimestamp = _dateTimeFmt.format(meal.timestamp);
           final mealConf = meal.confidence != null ? meal.confidence!.toStringAsFixed(2) : '';
           final hasPhoto = meal.photoPath != null ? 'yes' : 'no';
+
+          final mealCols = [
+            meal.inputSource ?? '',
+            meal.aiProvider ?? '',
+            meal.aiModel ?? '',
+            meal.barcode ?? '',
+            meal.wasEditedByUser ? 'yes' : 'no',
+            meal.editedAt != null ? _dateTimeFmt.format(meal.editedAt!) : '',
+            meal.deletedAt != null ? _dateTimeFmt.format(meal.deletedAt!) : '',
+            meal.aiOriginalName ?? '',
+            meal.aiOriginalCalories != null ? meal.aiOriginalCalories!.round() : '',
+            meal.aiOriginalProteins != null ? meal.aiOriginalProteins!.round() : '',
+            meal.aiOriginalCarbs != null ? meal.aiOriginalCarbs!.round() : '',
+            meal.aiOriginalFats != null ? meal.aiOriginalFats!.round() : '',
+            meal.aiOriginalConfidence != null ? meal.aiOriginalConfidence!.toStringAsFixed(2) : '',
+          ];
+
           if (meal.ingredients.isEmpty) {
-            rows.add([_dateFmt.format(r.date), meal.name, mealTimestamp, mealConf, hasPhoto, '', '', '', '', '', '', '', '']);
+            rows.add([
+              _dateFmt.format(r.date),
+              meal.name,
+              mealTimestamp,
+              mealConf,
+              hasPhoto,
+              ...mealCols,
+              '', '', '', '', '', '', '', '', // ingredient nutrient cols
+              '', '', '', '', '', '', '', '', '', '', // ingredient telemetry cols
+            ]);
           }
           for (final ing in meal.ingredients) {
             rows.add([
@@ -129,6 +197,7 @@ class ExportService {
               mealTimestamp,
               mealConf,
               hasPhoto,
+              ...mealCols,
               ing.name,
               ing.weight.round(),
               ing.amount,
@@ -137,6 +206,16 @@ class ExportService {
               ing.carbs.round(),
               ing.fats.round(),
               ing.confidence != null ? ing.confidence!.toStringAsFixed(2) : '',
+              ing.wasEditedByUser ? 'yes' : 'no',
+              ing.deletedAt != null ? _dateTimeFmt.format(ing.deletedAt!) : '',
+              ing.aiOriginalName ?? '',
+              ing.aiOriginalWeight != null ? ing.aiOriginalWeight!.round() : '',
+              ing.aiOriginalAmount ?? '',
+              ing.aiOriginalCalories != null ? ing.aiOriginalCalories!.round() : '',
+              ing.aiOriginalProteins != null ? ing.aiOriginalProteins!.round() : '',
+              ing.aiOriginalCarbs != null ? ing.aiOriginalCarbs!.round() : '',
+              ing.aiOriginalFats != null ? ing.aiOriginalFats!.round() : '',
+              ing.aiOriginalConfidence != null ? ing.aiOriginalConfidence!.toStringAsFixed(2) : '',
             ]);
           }
         }
@@ -178,27 +257,87 @@ class ExportService {
       }
     }
 
+    // ── Section X: AI Attempts ──
+    // RESEARCH-ONLY: research-only — every AI invocation outcome (success,
+    // low confidence, parse failure, network error). Drop entire section
+    // before production. See RESEARCH_ONLY.md.
+    if (aiAttempts.isNotEmpty) {
+      rows.add([]);
+      rows.add(['--- AI Attempts ---']);
+      rows.add([
+        'Timestamp',
+        'kind',
+        'modality',
+        'provider',
+        'model',
+        'status',
+        'confidence',
+        'error_message',
+      ]);
+      for (final a in aiAttempts) {
+        rows.add([
+          _dateTimeFmt.format(DateTime.fromMillisecondsSinceEpoch(a.timestampMs)),
+          a.kind,
+          a.modality ?? '',
+          a.provider ?? '',
+          a.model ?? '',
+          a.status,
+          a.confidence != null ? a.confidence!.toStringAsFixed(2) : '',
+          a.errorMessage ?? '',
+        ]);
+      }
+    }
+
     // ── Section 5: Summary Statistics ──
-    final totalMeals = records.fold<int>(0, (s, r) => s + r.meals.length);
-    final totalIngredients = records.fold<int>(0, (s, r) => s + r.meals.fold<int>(0, (ms, m) => ms + m.ingredients.length));
-    final totalExercises = records.fold<int>(0, (s, r) => s + r.exercises.length);
+    final totalMeals = livingRecords.fold<int>(0, (s, r) => s + r.meals.length);
+    final totalIngredients = livingRecords.fold<int>(0, (s, r) => s + r.meals.fold<int>(0, (ms, m) => ms + m.ingredients.length));
+    final totalExercises = livingRecords.fold<int>(0, (s, r) => s + r.exercises.length);
     rows.add([]);
     rows.add(['--- ${tr(LocaleKeys.export_summary_statistics)} ---']);
-    rows.add([tr(LocaleKeys.export_csv_total_days), records.length]);
+    rows.add([tr(LocaleKeys.export_csv_total_days), livingRecords.length]);
     rows.add([tr(LocaleKeys.export_csv_total_meals), totalMeals]);
     rows.add([tr(LocaleKeys.export_csv_total_ingredients), totalIngredients]);
     rows.add([tr(LocaleKeys.export_csv_total_exercises), totalExercises]);
     rows.add([tr(LocaleKeys.export_csv_total_weight_entries), weights.length]);
-    if (records.isNotEmpty) {
-      rows.add([tr(LocaleKeys.export_csv_avg_calories_per_day), (totalConsumed / records.length).round()]);
-      rows.add([tr(LocaleKeys.export_csv_avg_protein_per_day), (records.fold<double>(0, (s, r) => s + r.totalProteins) / records.length).round()]);
-      rows.add([tr(LocaleKeys.export_csv_avg_carbs_per_day), (records.fold<double>(0, (s, r) => s + r.totalCarbs) / records.length).round()]);
-      rows.add([tr(LocaleKeys.export_csv_avg_fat_per_day), (records.fold<double>(0, (s, r) => s + r.totalFats) / records.length).round()]);
-      rows.add([tr(LocaleKeys.export_csv_avg_meals_per_day), (totalMeals / records.length).toStringAsFixed(1)]);
-      rows.add([tr(LocaleKeys.export_csv_avg_exercises_per_day), (totalExercises / records.length).toStringAsFixed(1)]);
+    if (livingRecords.isNotEmpty) {
+      rows.add([tr(LocaleKeys.export_csv_avg_calories_per_day), (totalConsumed / livingRecords.length).round()]);
+      rows.add([tr(LocaleKeys.export_csv_avg_protein_per_day), (livingRecords.fold<double>(0, (s, r) => s + r.totalProteins) / livingRecords.length).round()]);
+      rows.add([tr(LocaleKeys.export_csv_avg_carbs_per_day), (livingRecords.fold<double>(0, (s, r) => s + r.totalCarbs) / livingRecords.length).round()]);
+      rows.add([tr(LocaleKeys.export_csv_avg_fat_per_day), (livingRecords.fold<double>(0, (s, r) => s + r.totalFats) / livingRecords.length).round()]);
+      rows.add([tr(LocaleKeys.export_csv_avg_meals_per_day), (totalMeals / livingRecords.length).toStringAsFixed(1)]);
+      rows.add([tr(LocaleKeys.export_csv_avg_exercises_per_day), (totalExercises / livingRecords.length).toStringAsFixed(1)]);
+    }
+
+    // RESEARCH-ONLY: research-only roll-up of soft-deleted counts. Useful
+    // shortcut so the analyst can see at a glance how many records the user
+    // discarded. Drop with the rest of telemetry.
+    final deletedMealCount = records.fold<int>(0, (s, r) => s + r.meals.where((m) => m.deletedAt != null).length);
+    final deletedIngredientCount = records.fold<int>(0, (s, r) => s + r.meals.fold<int>(0, (ms, m) => ms + m.ingredients.where((i) => i.deletedAt != null).length));
+    if (deletedMealCount > 0 || deletedIngredientCount > 0) {
+      rows.add(['Soft-deleted meals', deletedMealCount]);
+      rows.add(['Soft-deleted ingredients', deletedIngredientCount]);
+    }
+    if (aiAttempts.isNotEmpty) {
+      final byStatus = <String, int>{};
+      for (final a in aiAttempts) {
+        byStatus[a.status] = (byStatus[a.status] ?? 0) + 1;
+      }
+      rows.add(['AI attempts (total)', aiAttempts.length]);
+      for (final entry in byStatus.entries) {
+        rows.add(['AI attempts (${entry.key})', entry.value]);
+      }
     }
 
     return const ListToCsvConverter().convert(rows);
+  }
+
+  // RESEARCH-ONLY: research-only helper. Drop with the rest of telemetry.
+  static DayRecord _excludeDeleted(DayRecord record) {
+    final livingMeals = record.meals
+        .where((m) => m.deletedAt == null)
+        .map((m) => m.copyWith(ingredients: m.ingredients.where((i) => i.deletedAt == null).toList()))
+        .toList();
+    return record.copyWith(meals: livingMeals);
   }
 
   // ─── PDF ──────────────────────────────────────────────────────────────
@@ -222,13 +361,19 @@ class ExportService {
       theme: pw.ThemeData.withFont(base: regular, bold: bold),
     );
 
+    // RESEARCH-ONLY: filter out soft-deleted meals from aggregate display
+    // so the user-facing PDF reflects the actual intake. The full `records`
+    // list is still used in Meal Details so soft-deleted records remain
+    // visible in the export. Drop with telemetry.
+    final livingRecords = records.map(_excludeDeleted).toList();
+
     // Pre-compute averages & totals
-    final avgCalories = records.isEmpty ? 0.0 : records.fold<double>(0, (s, r) => s + r.totalCalories) / records.length;
-    final avgProtein = records.isEmpty ? 0.0 : records.fold<double>(0, (s, r) => s + r.totalProteins) / records.length;
-    final avgCarbs = records.isEmpty ? 0.0 : records.fold<double>(0, (s, r) => s + r.totalCarbs) / records.length;
-    final avgFat = records.isEmpty ? 0.0 : records.fold<double>(0, (s, r) => s + r.totalFats) / records.length;
-    final totalConsumed = records.fold<double>(0, (s, r) => s + r.totalCalories);
-    final totalBurned = records.fold<double>(0, (s, r) => s + r.totalExerciseCalories);
+    final avgCalories = livingRecords.isEmpty ? 0.0 : livingRecords.fold<double>(0, (s, r) => s + r.totalCalories) / livingRecords.length;
+    final avgProtein = livingRecords.isEmpty ? 0.0 : livingRecords.fold<double>(0, (s, r) => s + r.totalProteins) / livingRecords.length;
+    final avgCarbs = livingRecords.isEmpty ? 0.0 : livingRecords.fold<double>(0, (s, r) => s + r.totalCarbs) / livingRecords.length;
+    final avgFat = livingRecords.isEmpty ? 0.0 : livingRecords.fold<double>(0, (s, r) => s + r.totalFats) / livingRecords.length;
+    final totalConsumed = livingRecords.fold<double>(0, (s, r) => s + r.totalCalories);
+    final totalBurned = livingRecords.fold<double>(0, (s, r) => s + r.totalExerciseCalories);
     final calorieBalance = totalConsumed - totalBurned;
 
     doc.addPage(
@@ -268,7 +413,7 @@ class ExportService {
 
           // ── Summary ──
           pw.Header(level: 1, text: tr(LocaleKeys.export_daily_summary)),
-          _buildDailySummaryTable(records),
+          _buildDailySummaryTable(livingRecords),
           pw.SizedBox(height: 8),
           pw.Text(
             '${tr(LocaleKeys.export_period_averages_label)}: ${tr(LocaleKeys.common_calories)}: ${avgCalories.round()} ${tr(LocaleKeys.common_kcal)}  |  ${tr(LocaleKeys.common_protein)}: ${avgProtein.round()}${tr(LocaleKeys.common_g)}  |  ${tr(LocaleKeys.common_carbs)}: ${avgCarbs.round()}${tr(LocaleKeys.common_g)}  |  ${tr(LocaleKeys.common_fats)}: ${avgFat.round()}${tr(LocaleKeys.common_g)}',
@@ -283,12 +428,12 @@ class ExportService {
 
           // ── Meal details ──
           pw.Header(level: 1, text: tr(LocaleKeys.export_meal_details)),
-          ...records.expand((r) => _buildDayMealDetails(r)),
+          ...livingRecords.expand((r) => _buildDayMealDetails(r)),
 
           // ── Exercise log ──
-          if (records.any((r) => r.exercises.isNotEmpty)) ...[
+          if (livingRecords.any((r) => r.exercises.isNotEmpty)) ...[
             pw.Header(level: 1, text: tr(LocaleKeys.export_exercise_log)),
-            _buildExerciseTable(records),
+            _buildExerciseTable(livingRecords),
             pw.SizedBox(height: 16),
           ],
 

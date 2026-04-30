@@ -22,6 +22,10 @@ import 'package:diplomka/model/streak_info.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:diplomka/model/meal.dart';
 import 'package:diplomka/services/barcode_lookup_service.dart';
+// RESEARCH-ONLY: imports for research-only telemetry wiring
+import 'package:diplomka/model/meal_entry_source.dart';
+import 'package:diplomka/services/ai_feature/ai_service_manager.dart';
+// RESEARCH-ONLY: end
 import 'package:diplomka/services/ai_feature/ai_pipeline_service.dart';
 import 'package:diplomka/services/day_record_repository.dart';
 import 'package:diplomka/services/nutrition_goals_service.dart';
@@ -178,27 +182,35 @@ class DashboardController extends BaseController {
   }
 
   Future<void> pickImage(ImageSource source) async {
-    final permission = source == ImageSource.camera ? Permission.camera : Permission.photos;
-    final status = await permission.request();
+    // Camera always needs runtime permission. Gallery: iOS needs Photos
+    // permission; Android 13+ uses the system Photo Picker via image_picker
+    // which is sandboxed and requires no runtime permission. Skipping the
+    // request avoids a hard 'denied' on Android (the photos permission isn't
+    // even declared in AndroidManifest because we don't need it).
+    final bool needsPermission = source == ImageSource.camera || Platform.isIOS;
+    if (needsPermission) {
+      final permission = source == ImageSource.camera ? Permission.camera : Permission.photos;
+      final status = await permission.request();
 
-    if (!status.isGranted && !status.isLimited) {
-      String message;
-      if (status.isPermanentlyDenied) {
-        message = source == ImageSource.camera ? tr(LocaleKeys.error_camera_permanently_denied) : tr(LocaleKeys.error_gallery_permanently_denied);
-        showSnackBar(
-          message: tr(LocaleKeys.error_permission_denied),
-          subtitle: message,
-          type: SnackBarType.error,
-          primaryLabel: tr(LocaleKeys.tracking_reminders_open_settings),
-          onPrimary: () => openAppSettings(),
-          duration: const Duration(seconds: 5),
-        );
-      } else {
-        message = source == ImageSource.camera ? tr(LocaleKeys.error_camera_denied) : tr(LocaleKeys.error_gallery_denied);
-        showSnackBar(message: tr(LocaleKeys.error_permission_denied), subtitle: message, type: SnackBarType.error, duration: const Duration(seconds: 3));
+      if (!status.isGranted && !status.isLimited) {
+        String message;
+        if (status.isPermanentlyDenied) {
+          message = source == ImageSource.camera ? tr(LocaleKeys.error_camera_permanently_denied) : tr(LocaleKeys.error_gallery_permanently_denied);
+          showSnackBar(
+            message: tr(LocaleKeys.error_permission_denied),
+            subtitle: message,
+            type: SnackBarType.error,
+            primaryLabel: tr(LocaleKeys.tracking_reminders_open_settings),
+            onPrimary: () => openAppSettings(),
+            duration: const Duration(seconds: 5),
+          );
+        } else {
+          message = source == ImageSource.camera ? tr(LocaleKeys.error_camera_denied) : tr(LocaleKeys.error_gallery_denied);
+          showSnackBar(message: tr(LocaleKeys.error_permission_denied), subtitle: message, type: SnackBarType.error, duration: const Duration(seconds: 3));
+        }
+        print(message);
+        return;
       }
-      print(message);
-      return;
     }
 
     final ImagePicker picker = ImagePicker();
@@ -303,6 +315,8 @@ class DashboardController extends BaseController {
         photoPathToSave: storedPhotoRef,
         description: request.trimmedDescription,
         preferredMealName: request.preferredMealName,
+        // RESEARCH-ONLY: entrySource arg is research-only
+        entrySource: request.source == MealInputSource.voice ? MealEntrySource.voiceAi : MealEntrySource.photoAi,
       );
       if (flowResult.success) {
         _notifyRecognitionComplete(message: tr(LocaleKeys.dashboard_meal_recognised), notificationId: 4001, showForegroundSnackBar: false);
@@ -362,6 +376,9 @@ class DashboardController extends BaseController {
           result: lookupResult,
         ),
         preferredMealName: lookupResult?.productName,
+        // RESEARCH-ONLY: entrySource + barcodeOverride args are research-only
+        entrySource: MealEntrySource.barcodeAiFallback,
+        barcodeOverride: barcode,
       );
     } catch (e) {
       showSnackBar(
@@ -456,18 +473,33 @@ class DashboardController extends BaseController {
     required DateTime selectedDate,
     required List<File>? imageFiles,
     required String? photoPathToSave,
+    // RESEARCH-ONLY: required entrySource + optional barcodeOverride are
+    // research-only. Strip these params (and their use-sites below) when
+    // removing telemetry.
+    required MealEntrySource entrySource,
     String? description,
     String? preferredMealName,
+    String? barcodeOverride,
   }) async {
     final result = await AiPipelineService.to.analyzeMeal(
       imageFiles: imageFiles,
       description: description,
+      // RESEARCH-ONLY: modality routed to AiAttempt log
+      modality: entrySource.code,
     );
 
     if (result.isSuccess && result.response != null) {
+      // RESEARCH-ONLY: providerCode/modelCode reads are research-only
+      final providerCode = AiServiceManager.to.currentProviderCode;
+      final modelCode = AiServiceManager.to.currentModelCode;
       Meal meal = Meal.fromAnswer(result.response!.answer).copyWith(
         timestamp: _applyDateToTime(DateTime.now(), selectedDate),
         photoPath: photoPathToSave,
+        // RESEARCH-ONLY: research-only fields below
+        inputSource: entrySource.code,
+        aiProvider: providerCode,
+        aiModel: modelCode,
+        barcode: barcodeOverride,
       );
       final String trimmedName = preferredMealName?.trim() ?? '';
       if (trimmedName.isNotEmpty) {
@@ -517,6 +549,8 @@ class DashboardController extends BaseController {
       timestamp: timestamp,
       photoPath: photoPath,
       barcode: result.barcode,
+      // RESEARCH-ONLY: research-only field
+      inputSource: MealEntrySource.barcode.code,
     );
   }
 

@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
@@ -69,7 +71,9 @@ class _ReportMealScreenState extends State<ReportMealScreen> {
         bottomNavigationBar: SafeArea(
           top: false,
           child: Padding(
-            padding: EdgeInsets.fromLTRB(AppSpacing.edge, AppSpacing.s, AppSpacing.edge, AppSpacing.l + MediaQuery.of(context).viewInsets.bottom),
+            // Android-only extra bottom padding to lift the CTA above the
+            // gesture bar (matches the bottom-button pattern across the app).
+            padding: EdgeInsets.fromLTRB(AppSpacing.edge, AppSpacing.s, AppSpacing.edge, AppSpacing.l + MediaQuery.of(context).viewInsets.bottom + (Platform.isAndroid ? AppSpacing.m : 0)),
             child: FoodyPrimaryButton(
               label: _isSubmitting ? tr(LocaleKeys.report_meal_reporting) : tr(LocaleKeys.report_meal_submit),
               gradient: AppGradients.primary,

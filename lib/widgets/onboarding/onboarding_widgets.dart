@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:diplomka/app_theme.dart';
@@ -25,16 +26,22 @@ class OnboardingPage extends StatelessWidget {
     final double contentTopInset = hasTopChrome ? AppSizes.topBarHeight : 0;
 
     final media = MediaQuery.of(context);
-    final double topInset = media.padding.top;
+    final double topInset = Platform.isIOS ?  media.padding.top : media.padding.top + AppSpacing.m;
     final double bottomInset = media.padding.bottom;
     final double bottomBarHeight = bottom == null ? 0 : AppSizes.buttonHeight + AppSpacing.bottom + bottomInset;
+    // Android's gesture bar inset is smaller than iOS's home-indicator inset,
+    // so the bottom CTA feels too close to the bottom edge. Add an extra
+    // AppSpacing.m of bottom padding only on Android.
     final Widget? floatingActionButton = bottom == null
         ? null
         : SafeArea(
             top: false,
             bottom: false,
             minimum: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-            child: SizedBox(width: double.infinity, child: bottom),
+            child: Padding(
+              padding: EdgeInsets.only(bottom: Platform.isAndroid ? AppSpacing.m : 0),
+              child: SizedBox(width: double.infinity, child: bottom),
+            ),
           );
 
     return LiquidGlassScope(

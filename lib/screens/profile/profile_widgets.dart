@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:diplomka/app_theme.dart';
@@ -51,11 +53,18 @@ class ProfileGradientScaffold extends StatelessWidget {
           : content,
     );
 
+    // Android's gesture bar inset is smaller than iOS's home-indicator inset,
+    // so bottom action buttons feel cramped against the bottom edge. Add an
+    // extra AppSpacing.m of bottom padding only on Android.
+    final Widget? wrappedFab = (Platform.isAndroid && floatingActionButton != null)
+        ? Padding(padding: const EdgeInsets.only(bottom: AppSpacing.m), child: floatingActionButton)
+        : floatingActionButton;
+
     return LiquidGlassScope(
       child: Scaffold(
         backgroundColor: useMeshBackground ? Colors.transparent : AppColors.background,
         extendBodyBehindAppBar: true,
-        floatingActionButton: floatingActionButton,
+        floatingActionButton: wrappedFab,
         floatingActionButtonLocation: floatingActionButtonLocation,
         body: LiquidGlassBackground(
           child: useMeshBackground

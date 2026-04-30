@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -150,7 +152,11 @@ class CustomGlassAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool useSafeArea;
 
   @override
-  Size get preferredSize => const Size.fromHeight(AppSizes.topBarHeight);
+  Size get preferredSize => Size.fromHeight(
+    // Mirror the Android-only extra top padding applied in build() so
+    // Scaffold.appBar slots reserve enough height. iOS unaffected.
+    AppSizes.topBarHeight + (Platform.isAndroid ? AppSpacing.m : 0),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -161,7 +167,7 @@ class CustomGlassAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     final titleContent = titleWidget ?? (title != null ? Text(title!, style: AppTextStyles.title18) : null);
 
-    final bar = Padding(
+    Widget bar = Padding(
       padding: EdgeInsets.symmetric(horizontal: horizontalPadding ?? 0),
       child: SizedBox(
         height: preferredSize.height,
@@ -183,6 +189,13 @@ class CustomGlassAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
     );
+
+    // Android's status bar inset (~24px) is smaller than iOS's notch/dynamic
+    // island inset (~47px), so SafeArea alone leaves the bar feeling cramped
+    // against the status bar. Add extra breathing room only on Android.
+    if (Platform.isAndroid && useSafeArea) {
+      bar = Padding(padding: const EdgeInsets.only(top: AppSpacing.m), child: bar);
+    }
 
     return useSafeArea ? SafeArea(bottom: false, child: bar) : bar;
   }

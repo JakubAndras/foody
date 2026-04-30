@@ -158,8 +158,8 @@ class ConfidenceBadge extends StatelessWidget {
   const ConfidenceBadge({super.key, required this.confidence});
 
   MatchBadgeVariant get _variant {
-    if (confidence >= 0.7) return MatchBadgeVariant.good;
-    if (confidence >= 0.45) return MatchBadgeVariant.medium;
+    if (confidence >= 0.75) return MatchBadgeVariant.good;
+    if (confidence >= 0.50) return MatchBadgeVariant.medium;
     return MatchBadgeVariant.low;
   }
 

@@ -50,6 +50,17 @@ class DayRecordRepository extends GetxService {
     return records;
   }
 
+  // RESEARCH-ONLY: research-only — returns aggregates that include
+  // soft-deleted meals and ingredients so the export preserves the full AI
+  // signal even for records the user removed. Drop with the rest of the
+  // soft-delete telemetry. See RESEARCH_ONLY.md.
+  Future<List<DayRecord>> getAllDayRecordsForExport() async {
+    final entities = await _dayRecordDao.getAllDayRecords();
+    final records = await Future.wait(entities.map((e) => _buildDayRecordFromEntity(e, includeDeleted: true)));
+    records.sort((a, b) => b.date.compareTo(a.date));
+    return records;
+  }
+
   Future<DayRecord> upsertDayRecord(DayRecord record) async {
     final normalizedDate = _normalizeDate(record.date);
     final existing = await _dayRecordDao.findDayRecordByDate(normalizedDate.millisecondsSinceEpoch);
@@ -82,6 +93,23 @@ class DayRecordRepository extends GetxService {
     final normalizedDate = _normalizeDate(date);
     final dayRecordId = await _ensureDayRecordId(normalizedDate);
 
+    // RESEARCH-ONLY: edit-detection block. Research-only — remove with the
+    // entity columns. See RESEARCH_ONLY.md.
+    final bool mealHasAiSnapshot = meal.aiOriginalCalories != null;
+    bool mealEditedNow = meal.wasEditedByUser;
+    DateTime? mealEditedAt = meal.editedAt;
+    if (mealHasAiSnapshot && !meal.wasEditedByUser) {
+      final divergent = (meal.name != (meal.aiOriginalName ?? meal.name)) ||
+          _diverges(meal.totalCalories, meal.aiOriginalCalories) ||
+          _diverges(meal.totalProteins, meal.aiOriginalProteins) ||
+          _diverges(meal.totalCarbs, meal.aiOriginalCarbs) ||
+          _diverges(meal.totalFats, meal.aiOriginalFats);
+      if (divergent) {
+        mealEditedNow = true;
+        mealEditedAt ??= DateTime.now();
+      }
+    }
+
     final mealEntity = MealEntity(
       id: meal.id,
       dayRecordId: dayRecordId,
@@ -91,6 +119,18 @@ class DayRecordRepository extends GetxService {
       isFavorite: meal.isFavorite,
       confidence: meal.confidence,
       barcode: meal.barcode,
+      // RESEARCH-ONLY: research-only fields below
+      inputSource: meal.inputSource,
+      aiProvider: meal.aiProvider,
+      aiModel: meal.aiModel,
+      aiOriginalName: meal.aiOriginalName,
+      aiOriginalCalories: meal.aiOriginalCalories,
+      aiOriginalProteins: meal.aiOriginalProteins,
+      aiOriginalCarbs: meal.aiOriginalCarbs,
+      aiOriginalFats: meal.aiOriginalFats,
+      aiOriginalConfidence: meal.aiOriginalConfidence,
+      wasEditedByUser: mealEditedNow,
+      editedAtMs: mealEditedAt?.millisecondsSinceEpoch,
     );
 
     int mealId;
@@ -99,23 +139,50 @@ class DayRecordRepository extends GetxService {
     } else {
       await _mealDao.updateMeal(mealEntity);
       mealId = meal.id!;
-      await _ingredientDao.deleteIngredientsForMeal(mealId);
+      // RESEARCH-ONLY: soft-delete previous ingredients on edit so the AI
+      // snapshot of any removed ingredient survives in the export. The next
+      // insert below writes the user's current ingredient list. Drop with the
+      // `deletedAtMs` column. See RESEARCH_ONLY.md.
+      await _ingredientDao.softDeleteIngredientsForMeal(mealId, DateTime.now().millisecondsSinceEpoch);
     }
 
-    final ingredients = meal.ingredients
-        .map((ingredient) => IngredientEntity(
-              mealId: mealId,
-              name: ingredient.name,
-              weight: ingredient.weight,
-              amount: ingredient.amount,
-              calories: ingredient.calories,
-              proteins: ingredient.proteins,
-              carbs: ingredient.carbs,
-              fats: ingredient.fats,
-              confidence: ingredient.confidence,
-              isFavorite: ingredient.isFavorite,
-            ))
-        .toList();
+    final ingredients = meal.ingredients.map((ingredient) {
+      // RESEARCH-ONLY: per-ingredient edit-detection. Research-only.
+      final bool ingHasSnapshot = ingredient.aiOriginalCalories != null;
+      bool ingEdited = ingredient.wasEditedByUser;
+      if (ingHasSnapshot && !ingredient.wasEditedByUser) {
+        final divergent = (ingredient.name != (ingredient.aiOriginalName ?? ingredient.name)) ||
+            _diverges(ingredient.weight, ingredient.aiOriginalWeight) ||
+            _diverges(ingredient.amount, ingredient.aiOriginalAmount) ||
+            _diverges(ingredient.calories, ingredient.aiOriginalCalories) ||
+            _diverges(ingredient.proteins, ingredient.aiOriginalProteins) ||
+            _diverges(ingredient.carbs, ingredient.aiOriginalCarbs) ||
+            _diverges(ingredient.fats, ingredient.aiOriginalFats);
+        if (divergent) ingEdited = true;
+      }
+      return IngredientEntity(
+        mealId: mealId,
+        name: ingredient.name,
+        weight: ingredient.weight,
+        amount: ingredient.amount,
+        calories: ingredient.calories,
+        proteins: ingredient.proteins,
+        carbs: ingredient.carbs,
+        fats: ingredient.fats,
+        confidence: ingredient.confidence,
+        isFavorite: ingredient.isFavorite,
+        // RESEARCH-ONLY: research-only fields below
+        aiOriginalName: ingredient.aiOriginalName,
+        aiOriginalWeight: ingredient.aiOriginalWeight,
+        aiOriginalAmount: ingredient.aiOriginalAmount,
+        aiOriginalCalories: ingredient.aiOriginalCalories,
+        aiOriginalProteins: ingredient.aiOriginalProteins,
+        aiOriginalCarbs: ingredient.aiOriginalCarbs,
+        aiOriginalFats: ingredient.aiOriginalFats,
+        aiOriginalConfidence: ingredient.aiOriginalConfidence,
+        wasEditedByUser: ingEdited,
+      );
+    }).toList();
 
     if (ingredients.isNotEmpty) {
       await _ingredientDao.insertIngredients(ingredients);
@@ -125,10 +192,23 @@ class DayRecordRepository extends GetxService {
     return _buildDayRecordFromEntity(entity!);
   }
 
+  // RESEARCH-ONLY: divergence helper for edit detection. Research-only.
+  static const double _editTolerance = 0.5;
+
+  static bool _diverges(double current, double? original) {
+    if (original == null) return false;
+    return (current - original).abs() > _editTolerance;
+  }
+  // RESEARCH-ONLY: end
+
   Future<void> deleteMeal(Meal meal) async {
     if (meal.id == null) return;
-    await _ingredientDao.deleteIngredientsForMeal(meal.id!);
-    await _mealDao.deleteMealById(meal.id!);
+    // RESEARCH-ONLY: soft-delete preserves the AI snapshot for the export.
+    // To revert to hard delete, swap these two calls back to
+    // `deleteIngredientsForMeal` + `deleteMealById`. See RESEARCH_ONLY.md.
+    final nowMs = DateTime.now().millisecondsSinceEpoch;
+    await _ingredientDao.softDeleteIngredientsForMeal(meal.id!, nowMs);
+    await _mealDao.softDeleteMealById(meal.id!, nowMs);
   }
 
   Future<void> deleteExercise(Exercise exercise) async {
@@ -173,6 +253,18 @@ class DayRecordRepository extends GetxService {
       isFavorite: isFavorite,
       confidence: meal.confidence,
       barcode: meal.barcode,
+      // RESEARCH-ONLY: research-only fields below
+      inputSource: meal.inputSource,
+      aiProvider: meal.aiProvider,
+      aiModel: meal.aiModel,
+      aiOriginalName: meal.aiOriginalName,
+      aiOriginalCalories: meal.aiOriginalCalories,
+      aiOriginalProteins: meal.aiOriginalProteins,
+      aiOriginalCarbs: meal.aiOriginalCarbs,
+      aiOriginalFats: meal.aiOriginalFats,
+      aiOriginalConfidence: meal.aiOriginalConfidence,
+      wasEditedByUser: meal.wasEditedByUser,
+      editedAtMs: meal.editedAt?.millisecondsSinceEpoch,
     );
     await _mealDao.updateMeal(entity);
   }
@@ -191,6 +283,16 @@ class DayRecordRepository extends GetxService {
       fats: ingredient.fats,
       confidence: ingredient.confidence,
       isFavorite: isFavorite,
+      // RESEARCH-ONLY: research-only fields below
+      aiOriginalName: ingredient.aiOriginalName,
+      aiOriginalWeight: ingredient.aiOriginalWeight,
+      aiOriginalAmount: ingredient.aiOriginalAmount,
+      aiOriginalCalories: ingredient.aiOriginalCalories,
+      aiOriginalProteins: ingredient.aiOriginalProteins,
+      aiOriginalCarbs: ingredient.aiOriginalCarbs,
+      aiOriginalFats: ingredient.aiOriginalFats,
+      aiOriginalConfidence: ingredient.aiOriginalConfidence,
+      wasEditedByUser: ingredient.wasEditedByUser,
     );
     await _ingredientDao.updateIngredient(entity);
   }
@@ -249,18 +351,7 @@ class DayRecordRepository extends GetxService {
           continue;
         }
 
-        await _mealDao.updateMeal(
-          MealEntity(
-            id: mealEntity.id,
-            dayRecordId: mealEntity.dayRecordId,
-            name: mealEntity.name,
-            timestamp: mealEntity.timestamp,
-            photoPath: nextPhotoPath,
-            isFavorite: mealEntity.isFavorite,
-            confidence: mealEntity.confidence,
-            barcode: mealEntity.barcode,
-          ),
-        );
+        await _mealDao.updateMeal(mealEntity.copyWith(photoPath: nextPhotoPath));
       }
     }
   }
@@ -277,10 +368,12 @@ class DayRecordRepository extends GetxService {
     return id;
   }
 
-  Future<DayRecord> _buildDayRecordFromEntity(DayRecordEntity entity) async {
-    final mealEntities = await _mealDao.findMealsForDayRecord(entity.id!);
+  Future<DayRecord> _buildDayRecordFromEntity(DayRecordEntity entity, {bool includeDeleted = false}) async {
+    final mealEntities = includeDeleted
+        ? await _mealDao.findAllMealsForDayRecordIncludingDeleted(entity.id!)
+        : await _mealDao.findMealsForDayRecord(entity.id!);
     final exerciseEntities = await _exerciseDao.findExercisesForDayRecord(entity.id!);
-    final meals = await Future.wait(mealEntities.map(_buildMealFromEntity));
+    final meals = await Future.wait(mealEntities.map((m) => _buildMealFromEntity(m, includeDeleted: includeDeleted)));
     final exercises = exerciseEntities.map(_buildExerciseFromEntity).toList();
     return DayRecord(
       id: entity.id,
@@ -294,8 +387,10 @@ class DayRecordRepository extends GetxService {
     );
   }
 
-  Future<Meal> _buildMealFromEntity(MealEntity mealEntity) async {
-    final ingredientEntities = await _ingredientDao.findIngredientsForMeal(mealEntity.id!);
+  Future<Meal> _buildMealFromEntity(MealEntity mealEntity, {bool includeDeleted = false}) async {
+    final ingredientEntities = includeDeleted
+        ? await _ingredientDao.findAllIngredientsForMealIncludingDeleted(mealEntity.id!)
+        : await _ingredientDao.findIngredientsForMeal(mealEntity.id!);
     final ingredients = ingredientEntities
         .map(
           (ingredient) => Ingredient(
@@ -310,6 +405,17 @@ class DayRecordRepository extends GetxService {
             fats: ingredient.fats,
             confidence: ingredient.confidence,
             isFavorite: ingredient.isFavorite,
+            // RESEARCH-ONLY: research-only fields below
+            aiOriginalName: ingredient.aiOriginalName,
+            aiOriginalWeight: ingredient.aiOriginalWeight,
+            aiOriginalAmount: ingredient.aiOriginalAmount,
+            aiOriginalCalories: ingredient.aiOriginalCalories,
+            aiOriginalProteins: ingredient.aiOriginalProteins,
+            aiOriginalCarbs: ingredient.aiOriginalCarbs,
+            aiOriginalFats: ingredient.aiOriginalFats,
+            aiOriginalConfidence: ingredient.aiOriginalConfidence,
+            wasEditedByUser: ingredient.wasEditedByUser,
+            deletedAt: ingredient.deletedAtMs != null ? DateTime.fromMillisecondsSinceEpoch(ingredient.deletedAtMs!) : null,
           ),
         )
         .toList();
@@ -324,6 +430,19 @@ class DayRecordRepository extends GetxService {
       isFavorite: mealEntity.isFavorite,
       confidence: mealEntity.confidence,
       barcode: mealEntity.barcode,
+      // RESEARCH-ONLY: research-only fields below
+      inputSource: mealEntity.inputSource,
+      aiProvider: mealEntity.aiProvider,
+      aiModel: mealEntity.aiModel,
+      aiOriginalName: mealEntity.aiOriginalName,
+      aiOriginalCalories: mealEntity.aiOriginalCalories,
+      aiOriginalProteins: mealEntity.aiOriginalProteins,
+      aiOriginalCarbs: mealEntity.aiOriginalCarbs,
+      aiOriginalFats: mealEntity.aiOriginalFats,
+      aiOriginalConfidence: mealEntity.aiOriginalConfidence,
+      wasEditedByUser: mealEntity.wasEditedByUser,
+      editedAt: mealEntity.editedAtMs != null ? DateTime.fromMillisecondsSinceEpoch(mealEntity.editedAtMs!) : null,
+      deletedAt: mealEntity.deletedAtMs != null ? DateTime.fromMillisecondsSinceEpoch(mealEntity.deletedAtMs!) : null,
     );
   }
 

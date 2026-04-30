@@ -24,7 +24,6 @@ import 'package:diplomka/screens/profile/subscreens/export_pdf_intro_screen.dart
 import 'package:diplomka/screens/profile/ask_ai/ask_ai_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/faq_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/glass_test_screen.dart';
-import 'package:diplomka/screens/profile/subscreens/liquid_glass_widgets_test_screen.dart';
 import 'package:diplomka/screens/onboarding/onboarding_flow_screen.dart';
 import 'package:diplomka/screens/scan/scan_camera_screen.dart';
 import 'package:diplomka/screens/scan/scan_onboarding_screen.dart';

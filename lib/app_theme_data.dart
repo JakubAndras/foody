@@ -57,6 +57,20 @@ class AppThemeData {
       elevation: Platform.isIOS ? 0 : 1,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadii.l)),
     ),
+    // Override Android's default ZoomPageTransitionsBuilder. The zoom
+    // transition snapshots the outgoing page via SnapshotWidget, which
+    // triggers markNeedsPaint inside RenderLiquidGlassLayer during the paint
+    // phase — illegal in Flutter and shows up as a hard assertion in debug,
+    // visual artefacts in release. The Cupertino slide transition does not
+    // snapshot, so the issue disappears. iOS already uses Cupertino, so this
+    // only changes Android visually. Drop this override once
+    // liquid_glass_widgets ships a fix (current pinned version: 0.4.0-dev.4).
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: {
+        TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+      },
+    ),
     bottomSheetTheme: BottomSheetThemeData(
       backgroundColor: AppColors.surface,
       surfaceTintColor: AppColors.surface,
@@ -102,6 +116,20 @@ class AppThemeData {
     cardTheme: CardThemeData(
       elevation: Platform.isIOS ? 0 : 1,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadii.l)),
+    ),
+    // Override Android's default ZoomPageTransitionsBuilder. The zoom
+    // transition snapshots the outgoing page via SnapshotWidget, which
+    // triggers markNeedsPaint inside RenderLiquidGlassLayer during the paint
+    // phase — illegal in Flutter and shows up as a hard assertion in debug,
+    // visual artefacts in release. The Cupertino slide transition does not
+    // snapshot, so the issue disappears. iOS already uses Cupertino, so this
+    // only changes Android visually. Drop this override once
+    // liquid_glass_widgets ships a fix (current pinned version: 0.4.0-dev.4).
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: {
+        TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+      },
     ),
     bottomSheetTheme: const BottomSheetThemeData(
       backgroundColor: Color(0xFF1C1C1E),

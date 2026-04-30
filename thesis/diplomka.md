@@ -925,7 +925,7 @@ Vedle plnohodnotných obrazovek využívá aplikace modální listy pro doplňko
 
 #### 4.5.3 Práce s Nejistotou a Confidence Gate
 
-[CONTENT TO BE FILLED: Implementace FR-08. Confidence thresholds: jídlo ≥ 0,45, cvičení ≥ 0,35 (definované v AiPipelineService). Tříúrovňová indikace nejistoty v UI: zelená (≥ 70 %), žlutá (≥ 45 %), červená (< 45 %). Logika rozhodování: pokud confidence < threshold → lowConfidence status (data se zobrazí uživateli, ale s varováním). isSuccess flag: success i lowConfidence jsou považovány za použitelné (uživatel může potvrdit/opravit). Víceúrovňová validace cvičení: hard failure (valid=false + prázdný název + confidence < 0,35) vs. low confidence.]
+[CONTENT TO BE FILLED: Implementace FR-08. Confidence thresholds: jídlo ≥ 0,50, cvičení ≥ 0,50 (definované v AiPipelineService). Tříúrovňová indikace nejistoty v UI: zelená (≥ 75 %), žlutá (≥ 50 %), červená (< 50 %). Logika rozhodování: pokud confidence < threshold → lowConfidence status (data se zobrazí uživateli, ale s varováním). isSuccess flag: success i lowConfidence jsou považovány za použitelné (uživatel může potvrdit/opravit). Víceúrovňová validace cvičení: hard failure (valid=false + prázdný název + confidence < 0,50) vs. low confidence.]
 
 #### 4.5.4 Zabezpečení Vstupu a Ochrana Proti Prompt Injection
 
@@ -1074,7 +1074,7 @@ Vedle plnohodnotných obrazovek využívá aplikace modální listy pro doplňko
 | FR-05 | Kontrola nad daty a mazání | Částečně implementováno | Mazání jídel/cvičení funkční, mazání účtu chybí |
 | FR-06 | Fotografie jako vstup pro rozpoznání | Implementováno | ScanCameraScreen, AI pipeline |
 | FR-07 | AI návrh položek a porcí | Implementováno | AiPipelineService, strukturovaný JSON prompt |
-| FR-08 | Indikace nejistoty výstupu | Implementováno | Barevný badge (zelená ≥ 70 %, žlutá ≥ 45 %, červená < 45 %) |
+| FR-08 | Indikace nejistoty výstupu | Implementováno | Barevný badge (zelená ≥ 75 %, žlutá ≥ 50 %, červená < 50 %) |
 | FR-09 | Vysvětlení limitů AI | Implementováno | ScanOnboardingScreen (5 stránek s tipy) |
 | FR-10 | Rozlišení limitu AI a technické chyby | Částečně implementováno | Barcode: 6 typů chyb, AI pipeline: generické selhání |
 | FR-11 | Textový fallback po selhání rozpoznání | Implementováno | Textový popis → AI pipeline |

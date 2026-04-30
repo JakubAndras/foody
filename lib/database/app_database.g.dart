@@ -90,6 +90,8 @@ class _$AppDatabase extends AppDatabase {
 
   IngredientTemplateDao? _ingredientTemplateDaoInstance;
 
+  AiAttemptDao? _aiAttemptDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
@@ -114,9 +116,9 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `DayRecord` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` INTEGER NOT NULL, `calorieGoal` REAL NOT NULL, `proteinGoal` REAL NOT NULL, `carbsGoal` REAL NOT NULL, `fatGoal` REAL NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Meal` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `dayRecordId` INTEGER NOT NULL, `name` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `photoPath` TEXT, `isFavorite` INTEGER NOT NULL, `confidence` REAL, `barcode` TEXT, FOREIGN KEY (`dayRecordId`) REFERENCES `DayRecord` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `Meal` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `dayRecordId` INTEGER NOT NULL, `name` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `photoPath` TEXT, `isFavorite` INTEGER NOT NULL, `confidence` REAL, `barcode` TEXT, `inputSource` TEXT, `aiProvider` TEXT, `aiModel` TEXT, `aiOriginalName` TEXT, `aiOriginalCalories` REAL, `aiOriginalProteins` REAL, `aiOriginalCarbs` REAL, `aiOriginalFats` REAL, `aiOriginalConfidence` REAL, `wasEditedByUser` INTEGER NOT NULL, `editedAtMs` INTEGER, `deletedAtMs` INTEGER, FOREIGN KEY (`dayRecordId`) REFERENCES `DayRecord` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Ingredient` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `mealId` INTEGER NOT NULL, `name` TEXT NOT NULL, `weight` REAL NOT NULL, `amount` REAL, `calories` REAL NOT NULL, `proteins` REAL NOT NULL, `carbs` REAL NOT NULL, `fats` REAL NOT NULL, `confidence` REAL, `isFavorite` INTEGER NOT NULL, FOREIGN KEY (`mealId`) REFERENCES `Meal` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `Ingredient` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `mealId` INTEGER NOT NULL, `name` TEXT NOT NULL, `weight` REAL NOT NULL, `amount` REAL, `calories` REAL NOT NULL, `proteins` REAL NOT NULL, `carbs` REAL NOT NULL, `fats` REAL NOT NULL, `confidence` REAL, `isFavorite` INTEGER NOT NULL, `aiOriginalName` TEXT, `aiOriginalWeight` REAL, `aiOriginalAmount` REAL, `aiOriginalCalories` REAL, `aiOriginalProteins` REAL, `aiOriginalCarbs` REAL, `aiOriginalFats` REAL, `aiOriginalConfidence` REAL, `wasEditedByUser` INTEGER NOT NULL, `deletedAtMs` INTEGER, FOREIGN KEY (`mealId`) REFERENCES `Meal` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `WeightEntry` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` INTEGER NOT NULL, `weight` REAL NOT NULL, `photoPath` TEXT)');
         await database.execute(
@@ -129,6 +131,8 @@ class _$AppDatabase extends AppDatabase {
             'CREATE TABLE IF NOT EXISTS `ExerciseTemplate` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `normalizedName` TEXT NOT NULL, `durationMinutes` INTEGER, `caloriesBurned` REAL NOT NULL, `isFavorite` INTEGER NOT NULL, `lastUsedAt` INTEGER NOT NULL, `usageCount` INTEGER NOT NULL)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `IngredientTemplate` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `normalizedName` TEXT NOT NULL, `weight` REAL NOT NULL, `amount` REAL NOT NULL, `calories` REAL NOT NULL, `proteins` REAL NOT NULL, `carbs` REAL NOT NULL, `fats` REAL NOT NULL, `isFavorite` INTEGER NOT NULL, `lastUsedAt` INTEGER NOT NULL, `usageCount` INTEGER NOT NULL)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `AiAttempt` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `timestampMs` INTEGER NOT NULL, `kind` TEXT NOT NULL, `modality` TEXT, `provider` TEXT, `model` TEXT, `status` TEXT NOT NULL, `confidence` REAL, `errorMessage` TEXT)');
         await database.execute(
             'CREATE UNIQUE INDEX `index_DayRecord_date` ON `DayRecord` (`date`)');
         await database.execute(
@@ -192,6 +196,11 @@ class _$AppDatabase extends AppDatabase {
   IngredientTemplateDao get ingredientTemplateDao {
     return _ingredientTemplateDaoInstance ??=
         _$IngredientTemplateDao(database, changeListener);
+  }
+
+  @override
+  AiAttemptDao get aiAttemptDao {
+    return _aiAttemptDaoInstance ??= _$AiAttemptDao(database, changeListener);
   }
 }
 
@@ -337,7 +346,19 @@ class _$MealDao extends MealDao {
                   'photoPath': item.photoPath,
                   'isFavorite': item.isFavorite ? 1 : 0,
                   'confidence': item.confidence,
-                  'barcode': item.barcode
+                  'barcode': item.barcode,
+                  'inputSource': item.inputSource,
+                  'aiProvider': item.aiProvider,
+                  'aiModel': item.aiModel,
+                  'aiOriginalName': item.aiOriginalName,
+                  'aiOriginalCalories': item.aiOriginalCalories,
+                  'aiOriginalProteins': item.aiOriginalProteins,
+                  'aiOriginalCarbs': item.aiOriginalCarbs,
+                  'aiOriginalFats': item.aiOriginalFats,
+                  'aiOriginalConfidence': item.aiOriginalConfidence,
+                  'wasEditedByUser': item.wasEditedByUser ? 1 : 0,
+                  'editedAtMs': item.editedAtMs,
+                  'deletedAtMs': item.deletedAtMs
                 }),
         _mealEntityUpdateAdapter = UpdateAdapter(
             database,
@@ -351,7 +372,19 @@ class _$MealDao extends MealDao {
                   'photoPath': item.photoPath,
                   'isFavorite': item.isFavorite ? 1 : 0,
                   'confidence': item.confidence,
-                  'barcode': item.barcode
+                  'barcode': item.barcode,
+                  'inputSource': item.inputSource,
+                  'aiProvider': item.aiProvider,
+                  'aiModel': item.aiModel,
+                  'aiOriginalName': item.aiOriginalName,
+                  'aiOriginalCalories': item.aiOriginalCalories,
+                  'aiOriginalProteins': item.aiOriginalProteins,
+                  'aiOriginalCarbs': item.aiOriginalCarbs,
+                  'aiOriginalFats': item.aiOriginalFats,
+                  'aiOriginalConfidence': item.aiOriginalConfidence,
+                  'wasEditedByUser': item.wasEditedByUser ? 1 : 0,
+                  'editedAtMs': item.editedAtMs,
+                  'deletedAtMs': item.deletedAtMs
                 }),
         _mealEntityDeletionAdapter = DeletionAdapter(
             database,
@@ -365,7 +398,19 @@ class _$MealDao extends MealDao {
                   'photoPath': item.photoPath,
                   'isFavorite': item.isFavorite ? 1 : 0,
                   'confidence': item.confidence,
-                  'barcode': item.barcode
+                  'barcode': item.barcode,
+                  'inputSource': item.inputSource,
+                  'aiProvider': item.aiProvider,
+                  'aiModel': item.aiModel,
+                  'aiOriginalName': item.aiOriginalName,
+                  'aiOriginalCalories': item.aiOriginalCalories,
+                  'aiOriginalProteins': item.aiOriginalProteins,
+                  'aiOriginalCarbs': item.aiOriginalCarbs,
+                  'aiOriginalFats': item.aiOriginalFats,
+                  'aiOriginalConfidence': item.aiOriginalConfidence,
+                  'wasEditedByUser': item.wasEditedByUser ? 1 : 0,
+                  'editedAtMs': item.editedAtMs,
+                  'deletedAtMs': item.deletedAtMs
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -382,6 +427,35 @@ class _$MealDao extends MealDao {
 
   @override
   Future<List<MealEntity>> findMealsForDayRecord(int dayRecordId) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM Meal WHERE dayRecordId = ?1 AND deletedAtMs IS NULL',
+        mapper: (Map<String, Object?> row) => MealEntity(
+            id: row['id'] as int?,
+            dayRecordId: row['dayRecordId'] as int,
+            name: row['name'] as String,
+            timestamp: _dateTimeConverter.decode(row['timestamp'] as int),
+            photoPath: row['photoPath'] as String?,
+            isFavorite: (row['isFavorite'] as int) != 0,
+            confidence: row['confidence'] as double?,
+            barcode: row['barcode'] as String?,
+            inputSource: row['inputSource'] as String?,
+            aiProvider: row['aiProvider'] as String?,
+            aiModel: row['aiModel'] as String?,
+            aiOriginalName: row['aiOriginalName'] as String?,
+            aiOriginalCalories: row['aiOriginalCalories'] as double?,
+            aiOriginalProteins: row['aiOriginalProteins'] as double?,
+            aiOriginalCarbs: row['aiOriginalCarbs'] as double?,
+            aiOriginalFats: row['aiOriginalFats'] as double?,
+            aiOriginalConfidence: row['aiOriginalConfidence'] as double?,
+            wasEditedByUser: (row['wasEditedByUser'] as int) != 0,
+            editedAtMs: row['editedAtMs'] as int?,
+            deletedAtMs: row['deletedAtMs'] as int?),
+        arguments: [dayRecordId]);
+  }
+
+  @override
+  Future<List<MealEntity>> findAllMealsForDayRecordIncludingDeleted(
+      int dayRecordId) async {
     return _queryAdapter.queryList('SELECT * FROM Meal WHERE dayRecordId = ?1',
         mapper: (Map<String, Object?> row) => MealEntity(
             id: row['id'] as int?,
@@ -391,7 +465,19 @@ class _$MealDao extends MealDao {
             photoPath: row['photoPath'] as String?,
             isFavorite: (row['isFavorite'] as int) != 0,
             confidence: row['confidence'] as double?,
-            barcode: row['barcode'] as String?),
+            barcode: row['barcode'] as String?,
+            inputSource: row['inputSource'] as String?,
+            aiProvider: row['aiProvider'] as String?,
+            aiModel: row['aiModel'] as String?,
+            aiOriginalName: row['aiOriginalName'] as String?,
+            aiOriginalCalories: row['aiOriginalCalories'] as double?,
+            aiOriginalProteins: row['aiOriginalProteins'] as double?,
+            aiOriginalCarbs: row['aiOriginalCarbs'] as double?,
+            aiOriginalFats: row['aiOriginalFats'] as double?,
+            aiOriginalConfidence: row['aiOriginalConfidence'] as double?,
+            wasEditedByUser: (row['wasEditedByUser'] as int) != 0,
+            editedAtMs: row['editedAtMs'] as int?,
+            deletedAtMs: row['deletedAtMs'] as int?),
         arguments: [dayRecordId]);
   }
 
@@ -406,7 +492,19 @@ class _$MealDao extends MealDao {
             photoPath: row['photoPath'] as String?,
             isFavorite: (row['isFavorite'] as int) != 0,
             confidence: row['confidence'] as double?,
-            barcode: row['barcode'] as String?),
+            barcode: row['barcode'] as String?,
+            inputSource: row['inputSource'] as String?,
+            aiProvider: row['aiProvider'] as String?,
+            aiModel: row['aiModel'] as String?,
+            aiOriginalName: row['aiOriginalName'] as String?,
+            aiOriginalCalories: row['aiOriginalCalories'] as double?,
+            aiOriginalProteins: row['aiOriginalProteins'] as double?,
+            aiOriginalCarbs: row['aiOriginalCarbs'] as double?,
+            aiOriginalFats: row['aiOriginalFats'] as double?,
+            aiOriginalConfidence: row['aiOriginalConfidence'] as double?,
+            wasEditedByUser: (row['wasEditedByUser'] as int) != 0,
+            editedAtMs: row['editedAtMs'] as int?,
+            deletedAtMs: row['deletedAtMs'] as int?),
         arguments: [id]);
   }
 
@@ -420,6 +518,16 @@ class _$MealDao extends MealDao {
   Future<void> deleteMealsForDayRecord(int dayRecordId) async {
     await _queryAdapter.queryNoReturn('DELETE FROM Meal WHERE dayRecordId = ?1',
         arguments: [dayRecordId]);
+  }
+
+  @override
+  Future<void> softDeleteMealById(
+    int id,
+    int deletedAtMs,
+  ) async {
+    await _queryAdapter.queryNoReturn(
+        'UPDATE Meal SET deletedAtMs = ?2 WHERE id = ?1',
+        arguments: [id, deletedAtMs]);
   }
 
   @override
@@ -464,7 +572,17 @@ class _$IngredientDao extends IngredientDao {
                   'carbs': item.carbs,
                   'fats': item.fats,
                   'confidence': item.confidence,
-                  'isFavorite': item.isFavorite ? 1 : 0
+                  'isFavorite': item.isFavorite ? 1 : 0,
+                  'aiOriginalName': item.aiOriginalName,
+                  'aiOriginalWeight': item.aiOriginalWeight,
+                  'aiOriginalAmount': item.aiOriginalAmount,
+                  'aiOriginalCalories': item.aiOriginalCalories,
+                  'aiOriginalProteins': item.aiOriginalProteins,
+                  'aiOriginalCarbs': item.aiOriginalCarbs,
+                  'aiOriginalFats': item.aiOriginalFats,
+                  'aiOriginalConfidence': item.aiOriginalConfidence,
+                  'wasEditedByUser': item.wasEditedByUser ? 1 : 0,
+                  'deletedAtMs': item.deletedAtMs
                 }),
         _ingredientEntityUpdateAdapter = UpdateAdapter(
             database,
@@ -481,7 +599,17 @@ class _$IngredientDao extends IngredientDao {
                   'carbs': item.carbs,
                   'fats': item.fats,
                   'confidence': item.confidence,
-                  'isFavorite': item.isFavorite ? 1 : 0
+                  'isFavorite': item.isFavorite ? 1 : 0,
+                  'aiOriginalName': item.aiOriginalName,
+                  'aiOriginalWeight': item.aiOriginalWeight,
+                  'aiOriginalAmount': item.aiOriginalAmount,
+                  'aiOriginalCalories': item.aiOriginalCalories,
+                  'aiOriginalProteins': item.aiOriginalProteins,
+                  'aiOriginalCarbs': item.aiOriginalCarbs,
+                  'aiOriginalFats': item.aiOriginalFats,
+                  'aiOriginalConfidence': item.aiOriginalConfidence,
+                  'wasEditedByUser': item.wasEditedByUser ? 1 : 0,
+                  'deletedAtMs': item.deletedAtMs
                 }),
         _ingredientEntityDeletionAdapter = DeletionAdapter(
             database,
@@ -498,7 +626,17 @@ class _$IngredientDao extends IngredientDao {
                   'carbs': item.carbs,
                   'fats': item.fats,
                   'confidence': item.confidence,
-                  'isFavorite': item.isFavorite ? 1 : 0
+                  'isFavorite': item.isFavorite ? 1 : 0,
+                  'aiOriginalName': item.aiOriginalName,
+                  'aiOriginalWeight': item.aiOriginalWeight,
+                  'aiOriginalAmount': item.aiOriginalAmount,
+                  'aiOriginalCalories': item.aiOriginalCalories,
+                  'aiOriginalProteins': item.aiOriginalProteins,
+                  'aiOriginalCarbs': item.aiOriginalCarbs,
+                  'aiOriginalFats': item.aiOriginalFats,
+                  'aiOriginalConfidence': item.aiOriginalConfidence,
+                  'wasEditedByUser': item.wasEditedByUser ? 1 : 0,
+                  'deletedAtMs': item.deletedAtMs
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -515,6 +653,36 @@ class _$IngredientDao extends IngredientDao {
 
   @override
   Future<List<IngredientEntity>> findIngredientsForMeal(int mealId) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM Ingredient WHERE mealId = ?1 AND deletedAtMs IS NULL',
+        mapper: (Map<String, Object?> row) => IngredientEntity(
+            id: row['id'] as int?,
+            mealId: row['mealId'] as int,
+            name: row['name'] as String,
+            weight: row['weight'] as double,
+            amount: row['amount'] as double?,
+            calories: row['calories'] as double,
+            proteins: row['proteins'] as double,
+            carbs: row['carbs'] as double,
+            fats: row['fats'] as double,
+            confidence: row['confidence'] as double?,
+            isFavorite: (row['isFavorite'] as int) != 0,
+            aiOriginalName: row['aiOriginalName'] as String?,
+            aiOriginalWeight: row['aiOriginalWeight'] as double?,
+            aiOriginalAmount: row['aiOriginalAmount'] as double?,
+            aiOriginalCalories: row['aiOriginalCalories'] as double?,
+            aiOriginalProteins: row['aiOriginalProteins'] as double?,
+            aiOriginalCarbs: row['aiOriginalCarbs'] as double?,
+            aiOriginalFats: row['aiOriginalFats'] as double?,
+            aiOriginalConfidence: row['aiOriginalConfidence'] as double?,
+            wasEditedByUser: (row['wasEditedByUser'] as int) != 0,
+            deletedAtMs: row['deletedAtMs'] as int?),
+        arguments: [mealId]);
+  }
+
+  @override
+  Future<List<IngredientEntity>> findAllIngredientsForMealIncludingDeleted(
+      int mealId) async {
     return _queryAdapter.queryList('SELECT * FROM Ingredient WHERE mealId = ?1',
         mapper: (Map<String, Object?> row) => IngredientEntity(
             id: row['id'] as int?,
@@ -527,7 +695,17 @@ class _$IngredientDao extends IngredientDao {
             carbs: row['carbs'] as double,
             fats: row['fats'] as double,
             confidence: row['confidence'] as double?,
-            isFavorite: (row['isFavorite'] as int) != 0),
+            isFavorite: (row['isFavorite'] as int) != 0,
+            aiOriginalName: row['aiOriginalName'] as String?,
+            aiOriginalWeight: row['aiOriginalWeight'] as double?,
+            aiOriginalAmount: row['aiOriginalAmount'] as double?,
+            aiOriginalCalories: row['aiOriginalCalories'] as double?,
+            aiOriginalProteins: row['aiOriginalProteins'] as double?,
+            aiOriginalCarbs: row['aiOriginalCarbs'] as double?,
+            aiOriginalFats: row['aiOriginalFats'] as double?,
+            aiOriginalConfidence: row['aiOriginalConfidence'] as double?,
+            wasEditedByUser: (row['wasEditedByUser'] as int) != 0,
+            deletedAtMs: row['deletedAtMs'] as int?),
         arguments: [mealId]);
   }
 
@@ -536,6 +714,16 @@ class _$IngredientDao extends IngredientDao {
     await _queryAdapter.queryNoReturn(
         'DELETE FROM Ingredient WHERE mealId = ?1',
         arguments: [mealId]);
+  }
+
+  @override
+  Future<void> softDeleteIngredientsForMeal(
+    int mealId,
+    int deletedAtMs,
+  ) async {
+    await _queryAdapter.queryNoReturn(
+        'UPDATE Ingredient SET deletedAtMs = ?2 WHERE mealId = ?1 AND deletedAtMs IS NULL',
+        arguments: [mealId, deletedAtMs]);
   }
 
   @override
@@ -1190,6 +1378,68 @@ class _$IngredientTemplateDao extends IngredientTemplateDao {
   Future<void> updateTemplate(IngredientTemplateEntity template) async {
     await _ingredientTemplateEntityUpdateAdapter.update(
         template, OnConflictStrategy.abort);
+  }
+}
+
+class _$AiAttemptDao extends AiAttemptDao {
+  _$AiAttemptDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _aiAttemptEntityInsertionAdapter = InsertionAdapter(
+            database,
+            'AiAttempt',
+            (AiAttemptEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'timestampMs': item.timestampMs,
+                  'kind': item.kind,
+                  'modality': item.modality,
+                  'provider': item.provider,
+                  'model': item.model,
+                  'status': item.status,
+                  'confidence': item.confidence,
+                  'errorMessage': item.errorMessage
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<AiAttemptEntity> _aiAttemptEntityInsertionAdapter;
+
+  @override
+  Future<List<AiAttemptEntity>> findAllAttempts() async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM AiAttempt ORDER BY timestampMs ASC',
+        mapper: (Map<String, Object?> row) => AiAttemptEntity(
+            id: row['id'] as int?,
+            timestampMs: row['timestampMs'] as int,
+            kind: row['kind'] as String,
+            modality: row['modality'] as String?,
+            provider: row['provider'] as String?,
+            model: row['model'] as String?,
+            status: row['status'] as String,
+            confidence: row['confidence'] as double?,
+            errorMessage: row['errorMessage'] as String?));
+  }
+
+  @override
+  Future<List<AiAttemptEntity>> findAttemptsInRange(
+    int startMs,
+    int endMs,
+  ) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM AiAttempt WHERE timestampMs >= ?1 AND timestampMs < ?2 ORDER BY timestampMs ASC',
+        mapper: (Map<String, Object?> row) => AiAttemptEntity(id: row['id'] as int?, timestampMs: row['timestampMs'] as int, kind: row['kind'] as String, modality: row['modality'] as String?, provider: row['provider'] as String?, model: row['model'] as String?, status: row['status'] as String, confidence: row['confidence'] as double?, errorMessage: row['errorMessage'] as String?),
+        arguments: [startMs, endMs]);
+  }
+
+  @override
+  Future<int> insertAttempt(AiAttemptEntity attempt) {
+    return _aiAttemptEntityInsertionAdapter.insertAndReturnId(
+        attempt, OnConflictStrategy.replace);
   }
 }
 

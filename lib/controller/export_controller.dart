@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:diplomka/database/entities/ai_attempt_entity.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/model/weight_entry.dart';
+import 'package:diplomka/services/ai_feature/ai_attempt_log_service.dart';
 import 'package:diplomka/services/day_record_repository.dart';
 import 'package:diplomka/services/export/export_service.dart';
 import 'package:diplomka/services/nutrition_goals_service.dart';
@@ -66,13 +68,23 @@ class ExportController extends GetxController {
     final (start, end) = _resolveDateRange();
     final endInclusive = end.add(const Duration(days: 1));
 
-    final allRecords = await DayRecordRepository.to.getAllDayRecords();
+    // RESEARCH-ONLY: include soft-deleted meals/ingredients in the export.
+    // For production, swap back to `getAllDayRecords()`.
+    final allRecords = await DayRecordRepository.to.getAllDayRecordsForExport();
     final records = allRecords.where((r) => !r.date.isBefore(start) && r.date.isBefore(endInclusive)).toList()..sort((a, b) => a.date.compareTo(b.date));
 
     final allWeights = await WeightEntryRepository.to.getAllEntries();
     final weights = allWeights.where((w) => !w.date.isBefore(start) && w.date.isBefore(endInclusive)).toList()..sort((a, b) => a.date.compareTo(b.date));
 
     return (records, weights);
+  }
+
+  // RESEARCH-ONLY: research-only fetch. Drop with telemetry.
+  Future<List<AiAttemptEntity>> _fetchAiAttempts() async {
+    if (!Get.isRegistered<AiAttemptLogService>()) return const [];
+    final (start, end) = _resolveDateRange();
+    final endInclusive = end.add(const Duration(days: 1));
+    return AiAttemptLogService.to.getAttempts(start: start, end: endInclusive);
   }
 
   Future<void> exportPdf() async {
@@ -120,6 +132,8 @@ class ExportController extends GetxController {
         return;
       }
       final session = SessionManager.to;
+      // RESEARCH-ONLY: AI attempt log fetched alongside records.
+      final aiAttempts = await _fetchAiAttempts();
       final csvString = ExportService.generateCsv(
         records,
         weights,
@@ -133,6 +147,7 @@ class ExportController extends GetxController {
         weightChangeRateKgPerWeek: session.weightChangeRateKgPerWeek.value,
         prefersMetric: session.prefersMetric.value,
         dateOfBirth: session.dateOfBirth.value,
+        aiAttempts: aiAttempts,
       );
       final dir = await getTemporaryDirectory();
       final file = File('${dir.path}/foody_report_${_fileNameDateRange()}.csv');

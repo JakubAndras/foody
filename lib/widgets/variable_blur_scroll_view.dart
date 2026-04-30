@@ -1,5 +1,3 @@
-import 'dart:io' show Platform;
-
 import 'package:flutter/material.dart';
 import 'package:diplomka/app_theme.dart';
 import 'package:variable_blur/variable_blur.dart';
@@ -166,7 +164,7 @@ class _VariableBlurScrollViewState extends State<VariableBlurScrollView> {
             sigma: 8,
             blurSides: BlurSides.vertical(top: widget.topBlurHeight), // ResponsiveBlurSides.vertical(top: 200.0),
             edgeIntensity: widget.edgeIntensity,
-            isYFlipNeed: Platform.isAndroid,
+            isYFlipNeed: false,
             child: scrollContent,
           )
         else

@@ -17,6 +17,7 @@ import 'package:diplomka/services/barcode_lookup_service.dart';
 import 'package:diplomka/services/calendar_day_ring_service.dart';
 import 'package:diplomka/services/dietary_violation_service.dart';
 import 'package:diplomka/services/selected_date_service.dart';
+import 'package:diplomka/services/ai_feature/ai_attempt_log_service.dart';
 import 'package:diplomka/services/ai_feature/ai_service_manager.dart';
 import 'package:diplomka/services/ai_feature/gemini_service.dart';
 import 'package:diplomka/services/ai_feature/openai_service.dart';
@@ -48,6 +49,8 @@ Future<void> setupServices() async {
   Get.lazyPut<OpenAiService>(() => OpenAiService());
   Get.lazyPut<GeminiService>(() => GeminiService());
   Get.put(AiServiceManager(), permanent: true);
+  // RESEARCH-ONLY: research-only attempt log. Drop with telemetry.
+  Get.put(AiAttemptLogService(database: db), permanent: true);
   Get.lazyPut<AiPipelineService>(() => AiPipelineService());
   Get.put(OpenFoodFactsClient(), permanent: true);
   Get.put(

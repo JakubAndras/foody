@@ -45,4 +45,17 @@ class AiServiceManager extends GetxController {
   }
 
   AiService get currentService => Get.find<AiService>();
+
+  // RESEARCH-ONLY: provider/model code getters used only by telemetry
+  // wiring (MealEntity.aiProvider/aiModel). Research-only.
+  /// Stable code identifying the active provider (`openai` or `gemini`).
+  String get currentProviderCode {
+    return currentServiceType.value == AiServiceProviderType.gemini ? 'gemini' : 'openai';
+  }
+
+  /// Stable code identifying the active model. Mirrors values configured in REST clients.
+  String get currentModelCode {
+    return currentServiceType.value == AiServiceProviderType.gemini ? 'gemini-default' : 'gpt-5.4';
+  }
+  // RESEARCH-ONLY: end
 }

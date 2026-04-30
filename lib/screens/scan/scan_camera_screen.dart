@@ -299,12 +299,12 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
       }
       return false;
     }
-    final status = await Permission.storage.request();
-    if (status.isGranted) return true;
-    if (status.isPermanentlyDenied) {
-      await openAppSettings();
-    }
-    return false;
+    // Android: image_picker uses the system Photo Picker on Android 13+ which
+    // requires no runtime permission, and the OS file picker on older
+    // versions which also doesn't need READ_EXTERNAL_STORAGE for picker-mode
+    // access. Don't gate the gallery on a permission that isn't declared and
+    // isn't needed.
+    return true;
   }
 
   Future<void> _toggleMode(ScanMode mode) async {

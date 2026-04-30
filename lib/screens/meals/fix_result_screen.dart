@@ -4,6 +4,10 @@ import 'dart:io' show Platform;
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/meal.dart';
+// RESEARCH-ONLY: imports for research-only telemetry wiring
+import 'package:diplomka/model/meal_entry_source.dart';
+import 'package:diplomka/services/ai_feature/ai_service_manager.dart';
+// RESEARCH-ONLY: end
 import 'package:diplomka/model/language_settings.dart';
 import 'package:diplomka/screens/logs/voice_widgets.dart';
 import 'package:diplomka/screens/profile/ask_ai/ask_ai_widgets.dart';
@@ -75,7 +79,11 @@ class _FixResultScreenState extends State<FixResultScreen> with SingleTickerProv
 
   Future<void> _refreshPermissionStatus() async {
     final micStatus = await Permission.microphone.status;
-    final speechStatus = await Permission.speech.status;
+    // Permission.speech is iOS-only (maps to NSSpeechRecognitionUsageDescription).
+    // On Android it always returns 'denied', which would block voice from
+    // ever starting. Default to 'granted' on Android — RECORD_AUDIO is the
+    // only permission speech_to_text actually needs there.
+    final speechStatus = Platform.isIOS ? await Permission.speech.status : PermissionStatus.granted;
     if (!mounted) return;
     setState(() => _hasPermission = micStatus.isGranted && speechStatus.isGranted);
   }
@@ -123,7 +131,8 @@ class _FixResultScreenState extends State<FixResultScreen> with SingleTickerProv
 
     if (!_hasPermission) {
       final micStatus = await Permission.microphone.request();
-      final speechStatus = await Permission.speech.request();
+      // Permission.speech is iOS-only — see _refreshPermissionStatus comment.
+      final speechStatus = Platform.isIOS ? await Permission.speech.request() : PermissionStatus.granted;
       if (!micStatus.isGranted || !speechStatus.isGranted) return;
       setState(() => _hasPermission = true);
     }
@@ -359,7 +368,12 @@ class _FixResultScreenState extends State<FixResultScreen> with SingleTickerProv
     final photoPath = widget.baseMeal?.photoPath;
     final photoFile = MediaStorage.existingMealPhotoFile(photoPath);
     final imageFiles = photoFile == null ? null : [photoFile];
-    final result = await AiPipelineService.to.analyzeMeal(imageFiles: imageFiles, description: text);
+    // RESEARCH-ONLY: modality routed to AiAttempt log
+    final result = await AiPipelineService.to.analyzeMeal(
+      imageFiles: imageFiles,
+      description: text,
+      modality: MealEntrySource.fixWithAiRerun.code,
+    );
 
     if (!mounted) return;
     setState(() => _isSubmitting = false);
@@ -375,12 +389,22 @@ class _FixResultScreenState extends State<FixResultScreen> with SingleTickerProv
 
     final analyzedMeal = Meal.fromAnswer(result.response!.answer);
     final baseMeal = widget.baseMeal;
+    // RESEARCH-ONLY: provider/model/source resolution is research-only.
+    // When stripping telemetry, drop the four extra copyWith args below.
+    final providerCode = AiServiceManager.to.currentProviderCode;
+    final modelCode = AiServiceManager.to.currentModelCode;
+    final isRerun = !widget.isNewMeal && baseMeal?.id != null;
+    final resolvedSource = isRerun ? MealEntrySource.fixWithAiRerun.code : (baseMeal?.inputSource ?? MealEntrySource.textAi.code);
     final updatedMeal = analyzedMeal.copyWith(
       id: baseMeal?.id,
       dayRecordId: baseMeal?.dayRecordId,
       timestamp: baseMeal?.timestamp ?? DateTime.now(),
       photoPath: baseMeal?.photoPath,
       name: analyzedMeal.name.isEmpty && baseMeal != null ? baseMeal.name : analyzedMeal.name,
+      // RESEARCH-ONLY: research-only fields below
+      inputSource: resolvedSource,
+      aiProvider: providerCode,
+      aiModel: modelCode,
     );
 
     Get.back(result: updatedMeal);
@@ -437,7 +461,9 @@ class _FixResultScreenState extends State<FixResultScreen> with SingleTickerProv
             ),
             // Bottom mic button
             Positioned(
-              bottom: MediaQuery.of(context).padding.bottom + AppSpacing.xl,
+              // Android-only extra bottom padding to lift the mic above the
+              // gesture bar (matches the bottom-button pattern across the app).
+              bottom: MediaQuery.of(context).padding.bottom + AppSpacing.xl + (Platform.isAndroid ? AppSpacing.m : 0),
               left: 0,
               right: 0,
               child: Column(

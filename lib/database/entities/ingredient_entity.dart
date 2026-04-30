@@ -27,6 +27,21 @@ class IngredientEntity {
   final double? confidence;
   final bool isFavorite;
 
+  // RESEARCH-ONLY: all fields below are research-only. Drop columns
+  // (`aiOriginal*`, `wasEditedByUser`, `deletedAtMs`) and constructor params
+  // before production. See RESEARCH_ONLY.md.
+  final String? aiOriginalName;
+  final double? aiOriginalWeight;
+  final double? aiOriginalAmount;
+  final double? aiOriginalCalories;
+  final double? aiOriginalProteins;
+  final double? aiOriginalCarbs;
+  final double? aiOriginalFats;
+  final double? aiOriginalConfidence;
+  final bool wasEditedByUser;
+  final int? deletedAtMs;
+  // RESEARCH-ONLY: end
+
   IngredientEntity({
     this.id,
     required this.mealId,
@@ -39,6 +54,17 @@ class IngredientEntity {
     required this.fats,
     this.confidence,
     this.isFavorite = false,
+    // RESEARCH-ONLY: research-only ctor params below
+    this.aiOriginalName,
+    this.aiOriginalWeight,
+    this.aiOriginalAmount,
+    this.aiOriginalCalories,
+    this.aiOriginalProteins,
+    this.aiOriginalCarbs,
+    this.aiOriginalFats,
+    this.aiOriginalConfidence,
+    this.wasEditedByUser = false,
+    this.deletedAtMs,
   });
 
   IngredientEntity copyWith({
@@ -53,6 +79,17 @@ class IngredientEntity {
     double? fats,
     double? confidence,
     bool? isFavorite,
+    // RESEARCH-ONLY: research-only copyWith params below
+    String? aiOriginalName,
+    double? aiOriginalWeight,
+    double? aiOriginalAmount,
+    double? aiOriginalCalories,
+    double? aiOriginalProteins,
+    double? aiOriginalCarbs,
+    double? aiOriginalFats,
+    double? aiOriginalConfidence,
+    bool? wasEditedByUser,
+    int? deletedAtMs,
   }) {
     return IngredientEntity(
       id: id ?? this.id,
@@ -66,6 +103,16 @@ class IngredientEntity {
       fats: fats ?? this.fats,
       confidence: confidence ?? this.confidence,
       isFavorite: isFavorite ?? this.isFavorite,
+      aiOriginalName: aiOriginalName ?? this.aiOriginalName,
+      aiOriginalWeight: aiOriginalWeight ?? this.aiOriginalWeight,
+      aiOriginalAmount: aiOriginalAmount ?? this.aiOriginalAmount,
+      aiOriginalCalories: aiOriginalCalories ?? this.aiOriginalCalories,
+      aiOriginalProteins: aiOriginalProteins ?? this.aiOriginalProteins,
+      aiOriginalCarbs: aiOriginalCarbs ?? this.aiOriginalCarbs,
+      aiOriginalFats: aiOriginalFats ?? this.aiOriginalFats,
+      aiOriginalConfidence: aiOriginalConfidence ?? this.aiOriginalConfidence,
+      wasEditedByUser: wasEditedByUser ?? this.wasEditedByUser,
+      deletedAtMs: deletedAtMs ?? this.deletedAtMs,
     );
   }
 }

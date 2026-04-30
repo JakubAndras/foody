@@ -24,6 +24,24 @@ class MealEntity {
   final double? confidence;
   final String? barcode;
 
+  // RESEARCH-ONLY: all fields below are research-only. Drop columns
+  // (`inputSource`, `aiProvider`, `aiModel`, `aiOriginal*`, `wasEditedByUser`,
+  // `editedAtMs`, `deletedAtMs`) and constructor params before production. See
+  // RESEARCH_ONLY.md.
+  final String? inputSource;
+  final String? aiProvider;
+  final String? aiModel;
+  final String? aiOriginalName;
+  final double? aiOriginalCalories;
+  final double? aiOriginalProteins;
+  final double? aiOriginalCarbs;
+  final double? aiOriginalFats;
+  final double? aiOriginalConfidence;
+  final bool wasEditedByUser;
+  final int? editedAtMs;
+  final int? deletedAtMs;
+  // RESEARCH-ONLY: end
+
   MealEntity({
     this.id,
     required this.dayRecordId,
@@ -33,6 +51,19 @@ class MealEntity {
     this.isFavorite = false,
     this.confidence,
     this.barcode,
+    // RESEARCH-ONLY: research-only ctor params below
+    this.inputSource,
+    this.aiProvider,
+    this.aiModel,
+    this.aiOriginalName,
+    this.aiOriginalCalories,
+    this.aiOriginalProteins,
+    this.aiOriginalCarbs,
+    this.aiOriginalFats,
+    this.aiOriginalConfidence,
+    this.wasEditedByUser = false,
+    this.editedAtMs,
+    this.deletedAtMs,
   });
 
   MealEntity copyWith({
@@ -44,6 +75,19 @@ class MealEntity {
     bool? isFavorite,
     double? confidence,
     String? barcode,
+    // RESEARCH-ONLY: research-only copyWith params below
+    String? inputSource,
+    String? aiProvider,
+    String? aiModel,
+    String? aiOriginalName,
+    double? aiOriginalCalories,
+    double? aiOriginalProteins,
+    double? aiOriginalCarbs,
+    double? aiOriginalFats,
+    double? aiOriginalConfidence,
+    bool? wasEditedByUser,
+    int? editedAtMs,
+    int? deletedAtMs,
   }) {
     return MealEntity(
       id: id ?? this.id,
@@ -54,6 +98,18 @@ class MealEntity {
       isFavorite: isFavorite ?? this.isFavorite,
       confidence: confidence ?? this.confidence,
       barcode: barcode ?? this.barcode,
+      inputSource: inputSource ?? this.inputSource,
+      aiProvider: aiProvider ?? this.aiProvider,
+      aiModel: aiModel ?? this.aiModel,
+      aiOriginalName: aiOriginalName ?? this.aiOriginalName,
+      aiOriginalCalories: aiOriginalCalories ?? this.aiOriginalCalories,
+      aiOriginalProteins: aiOriginalProteins ?? this.aiOriginalProteins,
+      aiOriginalCarbs: aiOriginalCarbs ?? this.aiOriginalCarbs,
+      aiOriginalFats: aiOriginalFats ?? this.aiOriginalFats,
+      aiOriginalConfidence: aiOriginalConfidence ?? this.aiOriginalConfidence,
+      wasEditedByUser: wasEditedByUser ?? this.wasEditedByUser,
+      editedAtMs: editedAtMs ?? this.editedAtMs,
+      deletedAtMs: deletedAtMs ?? this.deletedAtMs,
     );
   }
 }

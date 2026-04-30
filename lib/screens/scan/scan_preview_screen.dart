@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/widgets/sheet_drag_handle.dart';
 import 'package:diplomka/controller/dashboard_controller.dart';
@@ -106,7 +108,10 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.m),
+                  // Android-only extra bottom padding to lift the Analyze CTA
+                  // above the gesture bar (matches the bottom-button pattern
+                  // applied across the app).
+                  padding: EdgeInsets.fromLTRB(AppSpacing.m, 0, AppSpacing.m, Platform.isAndroid ? AppSpacing.m : 0),
                   child: ScanPrimaryButton(
                     label: tr(LocaleKeys.scan_preview_analyze),
                     icon: CupertinoIcons.sparkles,

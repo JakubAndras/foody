@@ -70,7 +70,11 @@ class _AskAiScreenState extends State<AskAiScreen> with SingleTickerProviderStat
 
   Future<void> _refreshPermissionStatus() async {
     final micStatus = await Permission.microphone.status;
-    final speechStatus = await Permission.speech.status;
+    // Permission.speech is iOS-only (maps to NSSpeechRecognitionUsageDescription).
+    // On Android it always returns 'denied', which would block voice from
+    // ever starting. Default to 'granted' on Android — RECORD_AUDIO is the
+    // only permission speech_to_text actually needs there.
+    final speechStatus = Platform.isIOS ? await Permission.speech.status : PermissionStatus.granted;
     if (!mounted) return;
     setState(() => _hasPermission = micStatus.isGranted && speechStatus.isGranted);
   }
@@ -118,7 +122,8 @@ class _AskAiScreenState extends State<AskAiScreen> with SingleTickerProviderStat
 
     if (!_hasPermission) {
       final micStatus = await Permission.microphone.request();
-      final speechStatus = await Permission.speech.request();
+      // Permission.speech is iOS-only — see _refreshPermissionStatus comment.
+      final speechStatus = Platform.isIOS ? await Permission.speech.request() : PermissionStatus.granted;
       if (!micStatus.isGranted || !speechStatus.isGranted) return;
       setState(() => _hasPermission = true);
     }
@@ -454,7 +459,9 @@ class _AskAiScreenState extends State<AskAiScreen> with SingleTickerProviderStat
               final hasResponse = _controller.response.value != null;
               if (hasResponse) return const SizedBox.shrink();
               return Positioned(
-                bottom: MediaQuery.of(context).padding.bottom + AppSpacing.xl,
+                // Android-only extra bottom padding to lift the mic above the
+                // gesture bar (matches the bottom-button pattern across the app).
+                bottom: MediaQuery.of(context).padding.bottom + AppSpacing.xl + (Platform.isAndroid ? AppSpacing.m : 0),
                 left: 0,
                 right: 0,
                 child: Column(

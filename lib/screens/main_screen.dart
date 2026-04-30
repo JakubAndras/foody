@@ -36,14 +36,20 @@ class MainScreen extends GetView<MainScreenController> {
         body: LiquidGlassBackground(
           child: Obx(() {
             final selectedIndex = controller._selectedIndex.value;
-            final activeBody = controller.widgetOptions.elementAt(selectedIndex);
             final isDashboard = selectedIndex == 0;
             final appBarSpacing = AppSpacing.m + 1;
             final appBarTop = defaultTargetPlatform == TargetPlatform.android ? AppSpacing.safeAreaTopAndroid : AppSpacing.safeAreaTop;
 
+            // On Android, keep all tabs mounted via IndexedStack to avoid expensive
+            // teardown/rebuild (Floor queries, LiquidGlass shader recompilation) that
+            // causes visible blank frames on slower devices. iOS handles the swap fine.
+            final body = Platform.isAndroid
+                ? IndexedStack(index: selectedIndex, children: controller.widgetOptions)
+                : controller.widgetOptions.elementAt(selectedIndex);
+
             return Stack(
               children: [
-                activeBody,
+                body,
                 if (isDashboard) ...[
                   Positioned(left: appBarSpacing, top: appBarTop, child: const _DashboardStreakPill()),
                   Positioned(right: appBarSpacing, top: appBarTop, child: const _DashboardCalendarPill()),
@@ -66,14 +72,16 @@ class MainScreen extends GetView<MainScreenController> {
                     unselectedIconColor: AppColors.grey4,
                     glassSettings: AppGlass.standard,
                     tabs: [
-                      GlassBottomBarTab(label: tr(LocaleKeys.nav_home), icon: CupertinoIcons.house, selectedIcon: CupertinoIcons.house_fill),
-                      GlassBottomBarTab(label: tr(LocaleKeys.nav_progress), icon: CupertinoIcons.chart_bar, selectedIcon: CupertinoIcons.chart_bar_fill),
-                      GlassBottomBarTab(label: tr(LocaleKeys.nav_profile), icon: CupertinoIcons.person, selectedIcon: CupertinoIcons.person_fill),
+                      // liquid_glass_widgets 0.5.x: `icon` is now a Widget,
+                      // `selectedIcon` was renamed to `activeIcon`.
+                      GlassBottomBarTab(label: tr(LocaleKeys.nav_home), icon: const Icon(CupertinoIcons.house), activeIcon: const Icon(CupertinoIcons.house_fill)),
+                      GlassBottomBarTab(label: tr(LocaleKeys.nav_progress), icon: const Icon(CupertinoIcons.chart_bar), activeIcon: const Icon(CupertinoIcons.chart_bar_fill)),
+                      GlassBottomBarTab(label: tr(LocaleKeys.nav_profile), icon: const Icon(CupertinoIcons.person), activeIcon: const Icon(CupertinoIcons.person_fill)),
                     ],
                     selectedIndex: controller._selectedIndex.value,
                     onTabSelected: controller._onItemTapped,
                     extraButton: GlassBottomBarExtraButton(
-                      icon: CupertinoIcons.add,
+                      icon: const Icon(CupertinoIcons.add),
                       label: tr(LocaleKeys.nav_home),
                       onTap: () => controller.showQuickActions(context),
                       iconColor: AppColors.primary,

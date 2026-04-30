@@ -13,6 +13,22 @@ class Meal {
   final double? confidence;
   final String? barcode;
 
+  // RESEARCH-ONLY: all fields below are research-only. Mirror MealEntity
+  // telemetry. Remove with the entity columns. See RESEARCH_ONLY.md.
+  final String? inputSource;
+  final String? aiProvider;
+  final String? aiModel;
+  final String? aiOriginalName;
+  final double? aiOriginalCalories;
+  final double? aiOriginalProteins;
+  final double? aiOriginalCarbs;
+  final double? aiOriginalFats;
+  final double? aiOriginalConfidence;
+  final bool wasEditedByUser;
+  final DateTime? editedAt;
+  final DateTime? deletedAt;
+  // RESEARCH-ONLY: end
+
   Meal({
     this.id,
     this.dayRecordId,
@@ -23,6 +39,19 @@ class Meal {
     this.isFavorite = false,
     this.confidence,
     this.barcode,
+    // RESEARCH-ONLY: research-only ctor params below
+    this.inputSource,
+    this.aiProvider,
+    this.aiModel,
+    this.aiOriginalName,
+    this.aiOriginalCalories,
+    this.aiOriginalProteins,
+    this.aiOriginalCarbs,
+    this.aiOriginalFats,
+    this.aiOriginalConfidence,
+    this.wasEditedByUser = false,
+    this.editedAt,
+    this.deletedAt,
   });
 
   // Factory constructor for creating a new Meal instance from a map.
@@ -39,10 +68,27 @@ class Meal {
       isFavorite: json['isFavorite'] as bool? ?? false,
       confidence: (json['confidence'] as num?)?.toDouble(),
       barcode: json['barcode'] as String?,
+      // RESEARCH-ONLY: research-only fromJson fields below
+      inputSource: json['inputSource'] as String?,
+      aiProvider: json['aiProvider'] as String?,
+      aiModel: json['aiModel'] as String?,
+      aiOriginalName: json['aiOriginalName'] as String?,
+      aiOriginalCalories: (json['aiOriginalCalories'] as num?)?.toDouble(),
+      aiOriginalProteins: (json['aiOriginalProteins'] as num?)?.toDouble(),
+      aiOriginalCarbs: (json['aiOriginalCarbs'] as num?)?.toDouble(),
+      aiOriginalFats: (json['aiOriginalFats'] as num?)?.toDouble(),
+      aiOriginalConfidence: (json['aiOriginalConfidence'] as num?)?.toDouble(),
+      wasEditedByUser: json['wasEditedByUser'] == true || json['wasEditedByUser'] == 1,
+      editedAt: json['editedAt'] != null ? DateTime.tryParse(json['editedAt'] as String) : null,
+      deletedAt: json['deletedAt'] != null ? DateTime.tryParse(json['deletedAt'] as String) : null,
     );
   }
 
   // Factory constructor for creating a new Meal instance from an Answer object.
+  // RESEARCH-ONLY: this factory also populates aiOriginal* snapshot fields
+  // so the long-term test can later detect user edits. When stripping
+  // telemetry, simplify back to the pre-thesis form (no aiOriginal* args on
+  // Ingredient or on the returned Meal). See RESEARCH_ONLY.md.
   factory Meal.fromAnswer(Answer answer) {
     final snappedAmount = _snapToFraction(answer.amount.clamp(0.0, 100.875));
 
@@ -57,23 +103,47 @@ class Meal {
         }
       }
 
+      final clampedCalories = ingResponse.nutritionalValues.calories.toDouble().clamp(0, AppLimits.ingredientMaxCalories.toDouble()).toDouble();
+      final clampedProteins = ingResponse.nutritionalValues.proteins.clamp(0, AppLimits.ingredientMaxMacro.toDouble()).toDouble();
+      final clampedCarbs = ingResponse.nutritionalValues.carbs.clamp(0, AppLimits.ingredientMaxMacro.toDouble()).toDouble();
+      final clampedFats = ingResponse.nutritionalValues.fats.clamp(0, AppLimits.ingredientMaxMacro.toDouble()).toDouble();
+
       return Ingredient(
         name: ingResponse.name,
         weight: weight,
         amount: snappedAmount,
-        calories: ingResponse.nutritionalValues.calories.toDouble().clamp(0, AppLimits.ingredientMaxCalories.toDouble()),
-        proteins: ingResponse.nutritionalValues.proteins.clamp(0, AppLimits.ingredientMaxMacro.toDouble()),
-        carbs: ingResponse.nutritionalValues.carbs.clamp(0, AppLimits.ingredientMaxMacro.toDouble()),
-        fats: ingResponse.nutritionalValues.fats.clamp(0, AppLimits.ingredientMaxMacro.toDouble()),
+        calories: clampedCalories,
+        proteins: clampedProteins,
+        carbs: clampedCarbs,
+        fats: clampedFats,
         confidence: ingResponse.confidence,
+        aiOriginalName: ingResponse.name,
+        aiOriginalWeight: weight,
+        aiOriginalAmount: snappedAmount,
+        aiOriginalCalories: clampedCalories,
+        aiOriginalProteins: clampedProteins,
+        aiOriginalCarbs: clampedCarbs,
+        aiOriginalFats: clampedFats,
+        aiOriginalConfidence: ingResponse.confidence,
       );
     }).toList();
+
+    final totalCalories = ingredients.fold<double>(0, (s, i) => s + i.calories);
+    final totalProteins = ingredients.fold<double>(0, (s, i) => s + i.proteins);
+    final totalCarbs = ingredients.fold<double>(0, (s, i) => s + i.carbs);
+    final totalFats = ingredients.fold<double>(0, (s, i) => s + i.fats);
 
     return Meal(
       name: answer.name,
       ingredients: ingredients,
       timestamp: DateTime.now(),
       confidence: answer.confidence,
+      aiOriginalName: answer.name,
+      aiOriginalCalories: totalCalories,
+      aiOriginalProteins: totalProteins,
+      aiOriginalCarbs: totalCarbs,
+      aiOriginalFats: totalFats,
+      aiOriginalConfidence: answer.confidence,
     );
   }
 
@@ -109,6 +179,19 @@ class Meal {
       'isFavorite': isFavorite,
       'confidence': confidence,
       'barcode': barcode,
+      // RESEARCH-ONLY: research-only toJson fields below
+      'inputSource': inputSource,
+      'aiProvider': aiProvider,
+      'aiModel': aiModel,
+      'aiOriginalName': aiOriginalName,
+      'aiOriginalCalories': aiOriginalCalories,
+      'aiOriginalProteins': aiOriginalProteins,
+      'aiOriginalCarbs': aiOriginalCarbs,
+      'aiOriginalFats': aiOriginalFats,
+      'aiOriginalConfidence': aiOriginalConfidence,
+      'wasEditedByUser': wasEditedByUser,
+      'editedAt': editedAt?.toIso8601String(),
+      'deletedAt': deletedAt?.toIso8601String(),
     };
   }
 
@@ -123,6 +206,19 @@ class Meal {
     bool? isFavorite,
     double? confidence,
     String? barcode,
+    // RESEARCH-ONLY: research-only copyWith params below
+    String? inputSource,
+    String? aiProvider,
+    String? aiModel,
+    String? aiOriginalName,
+    double? aiOriginalCalories,
+    double? aiOriginalProteins,
+    double? aiOriginalCarbs,
+    double? aiOriginalFats,
+    double? aiOriginalConfidence,
+    bool? wasEditedByUser,
+    DateTime? editedAt,
+    DateTime? deletedAt,
   }) {
     return Meal(
       id: id ?? this.id,
@@ -134,6 +230,18 @@ class Meal {
       isFavorite: isFavorite ?? this.isFavorite,
       confidence: confidence ?? this.confidence,
       barcode: barcode ?? this.barcode,
+      inputSource: inputSource ?? this.inputSource,
+      aiProvider: aiProvider ?? this.aiProvider,
+      aiModel: aiModel ?? this.aiModel,
+      aiOriginalName: aiOriginalName ?? this.aiOriginalName,
+      aiOriginalCalories: aiOriginalCalories ?? this.aiOriginalCalories,
+      aiOriginalProteins: aiOriginalProteins ?? this.aiOriginalProteins,
+      aiOriginalCarbs: aiOriginalCarbs ?? this.aiOriginalCarbs,
+      aiOriginalFats: aiOriginalFats ?? this.aiOriginalFats,
+      aiOriginalConfidence: aiOriginalConfidence ?? this.aiOriginalConfidence,
+      wasEditedByUser: wasEditedByUser ?? this.wasEditedByUser,
+      editedAt: editedAt ?? this.editedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
     );
   }
 

@@ -69,14 +69,17 @@ dart format --line-length 180 lib/
 All state management uses GetX. Services extend `GetxService`, controllers extend `GetxController` (or `BaseController`). Access pattern: `static FooService get to => Get.find();`. All services/controllers are registered in `lib/locator.dart` via `Get.put()` (permanent) or `Get.lazyPut()`.
 
 ### Database: Floor ORM
-- Current DB version: **16** (`lib/database/app_database.dart`)
-- Migrations in `lib/database/migrations.dart` (migration1to2 through migration15to16)
+- Current DB version: **1** (`lib/database/app_database.dart`) — thesis release ships at v1 with all schema baked into `onCreate`. No migration file exists.
 - Entities: `DayRecord`, `Meal`, `Ingredient`, `WeightEntry`, `Exercise`, `IngredientTemplate`, `ExerciseTemplate` in `lib/database/entities/`
 - DAOs in `lib/database/dao/`
 - **Normalized FK schema**: `Meal.dayRecordId → DayRecord`, `Ingredient.mealId → Meal`, `Exercise.dayRecordId → DayRecord` — all CASCADE delete
 - `DayRecordRepository` assembles domain aggregates (`DayRecord` + `Meal[]` + `Ingredient[]` + `Exercise[]`) for UI — always use the repository, not DAOs directly
+- `Meal` and `Ingredient` carry research-only telemetry columns (`inputSource`, `aiProvider`, `aiModel`, `aiOriginal*`, `wasEditedByUser`, `editedAtMs`) — see `RESEARCH_ONLY.md` for the removal plan before production.
 
-**Adding DB fields/tables:** bump version in `app_database.dart`, add migration in `migrations.dart`, register in the `addMigrations()` chain in `locator.dart`, then run `build_runner`.
+**Adding DB fields/tables (dev workflow during testing phase):**
+1. Modify entity, run `build_runner`.
+2. **If no testers have the app yet** (or you can ask them to reinstall): keep version at 1, uninstall the app on your own dev device, and the new schema will be created fresh on next launch.
+3. **If testers are already collecting data**: bump version to 2, create `lib/database/migrations.dart` with a `migration1to2` Migration object (ALTER TABLE …), register it via `.addMigrations(appMigrations)` in `lib/locator.dart`.
 
 ### AI Pipeline
 ```
@@ -84,7 +87,7 @@ Input (photo/text/voice) → AiPipelineService → AiServiceManager (OpenAI|Gemi
   → REST client → structured JSON prompt (lib/utils/prompt.dart)
   → AiResponse (json_serializable) → confidence gate → result
 ```
-Confidence thresholds: meal >= 0.45, exercise >= 0.35 (in `AiPipelineService`).
+Confidence thresholds: meal >= 0.50, exercise >= 0.50 (in `AiPipelineService`).
 
 **Subsystem flows:**
 - **Voice**: `speech_to_text` → `VoiceTranscriptionService` (locale-aware: cs/en) → transcribed text → `AiPipelineService` → save. UI in `lib/screens/logs/voice_log_screen.dart`.
@@ -139,7 +142,7 @@ Thesis requirements (FR-01 to FR-30). Status as of current codebase:
 | FR-05 | Data control and deletion | Partial — meal/exercise deletion works, no account deletion |
 | FR-06 | Photo-based meal entry | Done |
 | FR-07 | AI suggestions for items/portions | Done |
-| FR-08 | Uncertainty indication | Done — color-coded badge (green ≥70%, yellow ≥45%, red <45%) |
+| FR-08 | Uncertainty indication | Done — color-coded badge (green ≥75%, yellow ≥50%, red <50%) |
 | FR-09 | Explain AI limits | Done — 5-page scan onboarding with tips |
 | FR-10 | AI error vs app error | Partial — barcode errors typed (6 types), AI pipeline generic failure |
 | FR-11 | Text fallback after photo failure | Done |

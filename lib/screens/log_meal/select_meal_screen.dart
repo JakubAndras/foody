@@ -6,6 +6,8 @@ import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/controller/day_record_controller.dart';
 import 'package:diplomka/model/ingredient.dart';
 import 'package:diplomka/model/meal.dart';
+// RESEARCH-ONLY: import for research-only inputSource tagging
+import 'package:diplomka/model/meal_entry_source.dart';
 import 'package:diplomka/model/meal_template.dart';
 import 'package:diplomka/services/meal_template_repository.dart';
 import 'package:diplomka/model/ingredient_template.dart';
@@ -224,7 +226,8 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
 
   void _openManualLog() {
     final selectedDate = SelectedDateService.to.selectedDate.value;
-    final meal = Meal(name: '', ingredients: const [], timestamp: _applyDateToTime(DateTime.now(), selectedDate));
+    // RESEARCH-ONLY: inputSource arg is research-only
+    final meal = Meal(name: '', ingredients: const [], timestamp: _applyDateToTime(DateTime.now(), selectedDate), inputSource: MealEntrySource.manual.code);
     Get.to(() => EditMealScreen(meal: meal, isNewMeal: true, selectedDate: selectedDate));
   }
 
@@ -286,7 +289,8 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
 
   Future<void> _addMealToToday(MealTemplate template) async {
     final selectedDate = SelectedDateService.to.selectedDate.value;
-    final newMeal = template.toMeal(timestamp: _applyDateToTime(DateTime.now(), selectedDate));
+    // RESEARCH-ONLY: inputSource copyWith is research-only
+    final newMeal = template.toMeal(timestamp: _applyDateToTime(DateTime.now(), selectedDate)).copyWith(inputSource: MealEntrySource.manual.code);
     final savedMeal = await DayRecordController.to.saveMealForDate(date: selectedDate, mealToSave: newMeal);
     DashboardController.to.refresh();
     if (!mounted) return;
@@ -311,7 +315,8 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
 
   Future<void> _addIngredientToToday(Ingredient ingredient) async {
     final selectedDate = SelectedDateService.to.selectedDate.value;
-    final meal = Meal(name: ingredient.name, ingredients: [ingredient], timestamp: _applyDateToTime(DateTime.now(), selectedDate));
+    // RESEARCH-ONLY: inputSource arg is research-only
+    final meal = Meal(name: ingredient.name, ingredients: [ingredient], timestamp: _applyDateToTime(DateTime.now(), selectedDate), inputSource: MealEntrySource.manual.code);
     final savedMeal = await DayRecordController.to.saveMealForDate(date: selectedDate, mealToSave: meal);
     DashboardController.to.refresh();
     if (!mounted) return;
@@ -522,29 +527,25 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                   ),
                 ),
               )
-            : PreferredSize(
-                preferredSize: const Size.fromHeight(AppSizes.topBarHeight),
-                child: SafeArea(
-                  bottom: false,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
-                    child: CustomGlassAppBar(
-                      //leadingIcon: CupertinoIcons.xmark,
-                      leadingIconSize: AppSizes.iconLg,
-                      onBack: () => Get.back(),
-                      titleWidget: Text(tr(LocaleKeys.meal_select_title), style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600, letterSpacing: -0.3125, color: AppColors.primary)),
-                      actions: [
-                        CustomGlassIconButtonGroup(
-                          iconSize: AppSizes.iconLg,
-                          items: [
-                            (icon: CupertinoIcons.search, onPressed: _toggleSearch),
-                            (icon: CupertinoIcons.add, onPressed: _openManualLog),
-                          ],
-                        ),
-                      ],
-                    ),
+            : CustomGlassAppBar(
+                // Use horizontalPadding instead of wrapping in PreferredSize
+                // + SafeArea + Padding, which double-wraps SafeArea and
+                // misreports the bar's preferred height on Android (where the
+                // bar is taller by AppSpacing.m). This made the back/action
+                // icons look squished on Meal Log.
+                horizontalPadding: AppSpacing.screen,
+                leadingIconSize: AppSizes.iconLg,
+                onBack: () => Get.back(),
+                titleWidget: Text(tr(LocaleKeys.meal_select_title), style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600, letterSpacing: -0.3125, color: AppColors.primary)),
+                actions: [
+                  CustomGlassIconButtonGroup(
+                    iconSize: AppSizes.iconLg,
+                    items: [
+                      (icon: CupertinoIcons.search, onPressed: _toggleSearch),
+                      (icon: CupertinoIcons.add, onPressed: _openManualLog),
+                    ],
                   ),
-                ),
+                ],
               ),
         body: LiquidGlassBackground(
           child: SafeArea(

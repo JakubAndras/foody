@@ -675,24 +675,23 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with WidgetsBindingObse
         extendBodyBehindAppBar: true,
         backgroundColor: AppColors.background,
         resizeToAvoidBottomInset: false,
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(AppSizes.topBarHeight),
-          child: SafeArea(
-            bottom: false,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
-              child: CustomGlassAppBar(
-                leadingIconSize: AppSizes.iconLg,
-                onBack: () => Navigator.of(context).maybePop(),
-                actions: [
-                  CustomGlassIconButtonGroup(items: [
-                    (icon: CupertinoIcons.globe, onPressed: () => _showVoiceLanguageSheet(context)),
-                    (icon: CupertinoIcons.info_circle, onPressed: () => _showVoiceTips(context)),
-                  ]),
-                ],
-              ),
+        appBar: CustomGlassAppBar(
+          // Use horizontalPadding instead of wrapping in PreferredSize +
+          // SafeArea + Padding, which double-wraps SafeArea and misreports
+          // the bar's preferred height on Android, making the icons look
+          // smaller than on the rest of the app.
+          horizontalPadding: AppSpacing.screen,
+          leadingIconSize: AppSizes.iconLg,
+          onBack: () => Navigator.of(context).maybePop(),
+          actions: [
+            CustomGlassIconButtonGroup(
+              iconSize: AppSizes.iconLg,
+              items: [
+                (icon: CupertinoIcons.globe, onPressed: () => _showVoiceLanguageSheet(context)),
+                (icon: CupertinoIcons.info_circle, onPressed: () => _showVoiceTips(context)),
+              ],
             ),
-          ),
+          ],
         ),
         body: LiquidGlassBackground(
           child: SafeArea(

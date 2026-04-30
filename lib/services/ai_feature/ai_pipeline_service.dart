@@ -7,7 +7,9 @@ import 'package:diplomka/model/exercise_ai_analysis.dart';
 import 'package:diplomka/model/nutrition_goals.dart';
 import 'package:diplomka/model/user_profile.dart';
 import 'package:diplomka/network/openai_rest_client.dart';
+import 'package:diplomka/services/ai_feature/ai_attempt_log_service.dart';
 import 'package:diplomka/services/ai_feature/ai_service.dart';
+import 'package:diplomka/services/ai_feature/ai_service_manager.dart';
 import 'package:diplomka/services/ai_feature/openai_service.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/utils/app_limits.dart';
@@ -19,12 +21,15 @@ import 'package:get/get.dart';
 class AiPipelineService extends GetxService {
   static AiPipelineService get to => Get.find();
 
-  static const double minMealConfidence = 0.45;
-  static const double minExerciseConfidence = 0.35;
+  static const double minMealConfidence = 0.50;
+  static const double minExerciseConfidence = 0.50;
 
   Future<AiAnalysisResult> analyzeMeal({
     List<File>? imageFiles,
     String? description,
+    // RESEARCH-ONLY: modality code is research-only. Used purely to log the
+    // attempt into AiAttempt. Drop with telemetry. See RESEARCH_ONLY.md.
+    String? modality,
   }) async {
     try {
       final sanitizedDescription = description != null ? PromptSanitizer.sanitize(description, maxLength: PromptSanitizer.maxDescriptionLength) : null;
@@ -40,6 +45,13 @@ class AiPipelineService extends GetxService {
       );
 
       if (response == null || response.valid == false) {
+        // RESEARCH-ONLY: research-only attempt log
+        _logMealAttempt(
+          modality: modality,
+          status: AiAttemptStatus.invalidResponse,
+          confidence: response?.answer.confidence,
+          errorMessage: response == null ? 'null_response' : 'valid_false',
+        );
         return AiAnalysisResult.failure(
           message: tr(LocaleKeys.error_ai_no_result),
         );
@@ -47,16 +59,54 @@ class AiPipelineService extends GetxService {
 
       final confidence = response.answer.confidence;
       if (confidence < minMealConfidence) {
+        // RESEARCH-ONLY: research-only attempt log
+        _logMealAttempt(
+          modality: modality,
+          status: AiAttemptStatus.lowConfidence,
+          confidence: confidence,
+        );
         return AiAnalysisResult.lowConfidence(
           response: response,
           message: tr(LocaleKeys.error_ai_low_confidence),
         );
       }
 
+      // RESEARCH-ONLY: research-only attempt log
+      _logMealAttempt(
+        modality: modality,
+        status: AiAttemptStatus.success,
+        confidence: confidence,
+      );
       return AiAnalysisResult.success(response: response);
     } catch (e) {
+      // RESEARCH-ONLY: research-only attempt log
+      _logMealAttempt(
+        modality: modality,
+        status: AiAttemptStatus.error,
+        errorMessage: e.toString(),
+      );
       return AiAnalysisResult.failure(message: e.toString());
     }
+  }
+
+  // RESEARCH-ONLY: research-only helper. Drop with telemetry.
+  void _logMealAttempt({
+    required String? modality,
+    required AiAttemptStatus status,
+    double? confidence,
+    String? errorMessage,
+  }) {
+    if (!Get.isRegistered<AiAttemptLogService>()) return;
+    final manager = Get.isRegistered<AiServiceManager>() ? AiServiceManager.to : null;
+    AiAttemptLogService.to.log(
+      kind: AiAttemptKind.meal,
+      status: status,
+      modality: modality,
+      provider: manager?.currentProviderCode,
+      model: manager?.currentModelCode,
+      confidence: confidence,
+      errorMessage: errorMessage,
+    );
   }
 
   Future<AiExerciseAnalysisResult> analyzeExercise({
@@ -80,6 +130,8 @@ class AiPipelineService extends GetxService {
       );
       final analysis = _parseExerciseAnalysis(data);
       if (analysis == null) {
+        // RESEARCH-ONLY: research-only attempt log
+        _logExerciseAttempt(status: AiAttemptStatus.invalidResponse, errorMessage: 'parse_failed');
         return AiExerciseAnalysisResult.failure(
           message: tr(LocaleKeys.error_ai_exercise_no_result),
         );
@@ -89,6 +141,12 @@ class AiPipelineService extends GetxService {
 
       // Hard failure: AI returned valid=false AND (no name OR confidence too low)
       if (!analysis.valid && (answer.name.isEmpty || answer.confidence < minExerciseConfidence)) {
+        // RESEARCH-ONLY: research-only attempt log
+        _logExerciseAttempt(
+          status: AiAttemptStatus.invalidResponse,
+          confidence: answer.confidence,
+          errorMessage: 'valid_false_or_no_name',
+        );
         return AiExerciseAnalysisResult.failure(
           message: tr(LocaleKeys.error_ai_exercise_no_result),
         );
@@ -96,6 +154,12 @@ class AiPipelineService extends GetxService {
 
       // Hard failure: no name at all
       if (answer.name.isEmpty) {
+        // RESEARCH-ONLY: research-only attempt log
+        _logExerciseAttempt(
+          status: AiAttemptStatus.invalidResponse,
+          confidence: answer.confidence,
+          errorMessage: 'missing_name',
+        );
         return AiExerciseAnalysisResult.failure(
           message: tr(LocaleKeys.error_ai_exercise_missing),
         );
@@ -103,26 +167,78 @@ class AiPipelineService extends GetxService {
 
       // Low confidence: either AI flagged invalid, or confidence below threshold, or missing calories
       if (!analysis.valid || answer.confidence < minExerciseConfidence || !answer.hasUsableCalories) {
+        // RESEARCH-ONLY: research-only attempt log
+        _logExerciseAttempt(
+          status: AiAttemptStatus.lowConfidence,
+          confidence: answer.confidence,
+        );
         return AiExerciseAnalysisResult.lowConfidence(
           analysis: analysis,
           message: tr(LocaleKeys.error_ai_exercise_low_confidence),
         );
       }
 
+      // RESEARCH-ONLY: research-only attempt log
+      _logExerciseAttempt(
+        status: AiAttemptStatus.success,
+        confidence: answer.confidence,
+      );
       return AiExerciseAnalysisResult.success(analysis: analysis);
     } catch (e) {
+      // RESEARCH-ONLY: research-only attempt log
+      _logExerciseAttempt(status: AiAttemptStatus.error, errorMessage: e.toString());
       return AiExerciseAnalysisResult.failure(message: e.toString());
     }
+  }
+
+  // RESEARCH-ONLY: research-only helper. Drop with telemetry.
+  void _logExerciseAttempt({
+    required AiAttemptStatus status,
+    double? confidence,
+    String? errorMessage,
+  }) {
+    if (!Get.isRegistered<AiAttemptLogService>()) return;
+    final manager = Get.isRegistered<AiServiceManager>() ? AiServiceManager.to : null;
+    AiAttemptLogService.to.log(
+      kind: AiAttemptKind.exercise,
+      status: status,
+      modality: 'voice_ai',
+      provider: manager?.currentProviderCode,
+      model: manager?.currentModelCode,
+      confidence: confidence,
+      errorMessage: errorMessage,
+    );
   }
 
   Future<NutritionGoals?> generateNutritionGoals() async {
     try {
       final userProfile = _buildGoalsUserProfile();
       final data = await OpenaiRestClient().generateGoalsResponse(userProfile: userProfile);
-      return _parseNutritionGoals(data);
-    } catch (_) {
+      final goals = _parseNutritionGoals(data);
+      // RESEARCH-ONLY: research-only attempt log
+      _logGoalsAttempt(
+        status: goals == null ? AiAttemptStatus.invalidResponse : AiAttemptStatus.success,
+        errorMessage: goals == null ? 'parse_failed' : null,
+      );
+      return goals;
+    } catch (e) {
+      // RESEARCH-ONLY: research-only attempt log
+      _logGoalsAttempt(status: AiAttemptStatus.error, errorMessage: e.toString());
       return null;
     }
+  }
+
+  // RESEARCH-ONLY: research-only helper. Drop with telemetry.
+  void _logGoalsAttempt({required AiAttemptStatus status, String? errorMessage}) {
+    if (!Get.isRegistered<AiAttemptLogService>()) return;
+    final manager = Get.isRegistered<AiServiceManager>() ? AiServiceManager.to : null;
+    AiAttemptLogService.to.log(
+      kind: AiAttemptKind.goals,
+      status: status,
+      provider: manager?.currentProviderCode,
+      model: manager?.currentModelCode,
+      errorMessage: errorMessage,
+    );
   }
 
   NutritionGoals? _parseNutritionGoals(Map<String, dynamic> data) {

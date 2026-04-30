@@ -4,6 +4,8 @@ import 'package:diplomka/screens/scan/scan_camera_screen.dart';
 import 'package:diplomka/screens/scan/scan_widgets.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -112,8 +114,10 @@ class _ScanOnboardingScreenState extends State<ScanOnboardingScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: SafeArea(
         top: false,
+        // Android's gesture bar inset is smaller than iOS's home-indicator
+        // inset; add AppSpacing.m of bottom padding only on Android.
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+          padding: EdgeInsets.fromLTRB(AppSpacing.l, 0, AppSpacing.l, Platform.isAndroid ? AppSpacing.m : 0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
