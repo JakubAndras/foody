@@ -1,0 +1,802 @@
+\chapter{Implementace}
+\label{ch:implementace}
+
+Tato kapitola popisuje realizaci mobilní aplikace Foody, která navazuje na analytickou a návrhovou fázi představenou v~kapitolách~\ref{ch:analyza} a~\ref{ch:navrh}.
+Na základě HiFi prototypu a funkčních požadavků definovaných v~sekci~\ref{subsec:pozadavky} byla provedena implementace vybraných funkcí aplikace s~cílem ověřit, do jaké míry je navržený koncept technicky realizovatelný.
+V~úvodu kapitoly je provedena rešerše přístupů k~vývoji mobilních aplikací a srovnání relevantních technologických frameworků, na jejímž základě byly zvoleny konkrétní technologie popsané v~sekci~\ref{sec:vyberTechnologii}.
+Následuje popis softwarové architektury, datového modelu a integrace modelu umělé inteligence pro rozpoznávání potravin.
+Dále jsou představeny vstupní modality, klíčové implementované funkce a vybrané obrazovky aplikace.
+Kapitola je uzavřena přehledem stavu implementace funkčních požadavků a diskusí omezení výsledného řešení.
+
+\section{Přístupy k~vývoji mobilních aplikací}
+\label{sec:pristupyVyvoj}
+
+Před volbou konkrétních technologií pro implementaci aplikace je nezbytné analyzovat dostupné přístupy k~vývoji mobilních aplikací.
+V~rámci této sekce jsou porovnány dva základní přístupy: nativní vývoj, při kterém je aplikace vytvořena samostatně pro každou cílovou platformu, a multiplatformní vývoj, který umožňuje sdílení kódu napříč platformami z~jednoho zdrojového základu.
+Následně jsou srovnány tři hlavní multiplatformní frameworky, přičemž výsledky tohoto srovnání tvoří analytický podklad pro rozhodnutí o~vývojové platformě popsané v~sekci~\ref{sec:vyberTechnologii}.
+
+\subsection{Nativní vs. multiplatformní vývoj}
+\label{subsec:nativniVsMulti}
+
+Nativní vývoj mobilních aplikací představuje přístup, při kterém je aplikace implementována samostatně pro každou cílovou platformu s~využitím jejích nativních nástrojů a programovacích jazyků.
+V~případě platformy iOS se jedná o~jazyk Swift s~frameworkem SwiftUI, zatímco pro platformu Android je standardním jazykem Kotlin s~knihovnou Jetpack Compose.
+Nativní aplikace mají přímý přístup ke všem platformním API, čímž je zajištěn optimální výkon a plná kompatibilita s~nejnovějšími funkcemi operačního systému~\cite{flutterDoc,reactNativeDoc}.
+
+Z~hlediska výhod nativního přístupu lze uvést maximální výkon vykreslování a odezvy uživatelského rozhraní, okamžitou podporu nových verzí operačního systému a nativních API bez nutnosti čekat na aktualizaci třetí strany a přirozený vzhled a chování odpovídající platformním konvencím.
+Na druhou stranu je hlavní nevýhodou nutnost udržovat dva oddělené kódové základy, což přináší dvojnásobné náklady na vývoj a údržbu.
+Kromě toho existuje riziko divergence funkčnosti mezi platformami, kdy některé funkce mohou být implementovány pouze na jedné z~nich nebo se v~průběhu času liší v~chování~\cite{flutterDoc,reactNativeDoc}.
+
+Multiplatformní vývoj představuje alternativní přístup, jehož podstatou je sdílení zdrojového kódu mezi cílovými platformami.
+Přehledová studie Biørn-Hansena a~kol. identifikuje znovupoužitelnost kódu jako jeden z~klíčových konceptů multiplatformního vývoje, přičemž v~závislosti na zvoleném frameworku a typu aplikace je typicky sdíleno 70 až 95~\% kódového základu, zatímco platformně specifické části jsou implementovány pomocí nativních modulů nebo pluginů~\cite{biornHansen2018survey}.
+Výhodou tohoto přístupu je výrazné snížení nákladů na vývoj a údržbu, rychlejší iterační cyklus díky jednotnému kódovému základu a konzistentní uživatelská zkušenost napříč platformami.
+Nevýhody zahrnují závislost na frameworku třetí strany, potenciální kompromisy ve výkonu oproti nativním aplikacím a v~některých případech omezený přístup k~nejnovějším platformním funkcím.
+
+V~kontextu této práce, kde je aplikace vyvíjena jedním vývojářem s~cílem pokrýt obě hlavní mobilní platformy (Android i iOS), se multiplatformní přístup jeví jako vhodnější volba.
+Udržování dvou oddělených kódových základů by při daných časových a personálních omezeních diplomové práce vedlo k~neúměrně vysoké režii vývoje.
+Multiplatformní framework naopak umožňuje soustředit veškeré úsilí na jedinou implementaci a zajistit konzistentní chování aplikace na obou platformách, což je v~souladu s~požadavkem na efektivní využití dostupných zdrojů.
+
+\subsection{Srovnání multiplatformních frameworků}
+\label{subsec:srovnaniFrameworku}
+
+Na základě rozhodnutí pro multiplatformní přístup je v~této podsekci provedeno srovnání tří hlavních frameworků, které jsou v~současnosti nejčastěji využívány pro vývoj mobilních aplikací: Flutter, React Native a Kotlin Multiplatform.
+Cílem srovnání je identifikovat framework, který nejlépe odpovídá požadavkům tohoto projektu, zejména s~ohledem na vývoj jedním vývojářem, potřebu rychlého prototypování a integraci s~externími službami umělé inteligence prostřednictvím REST API.
+
+Flutter je multiplatformní framework vyvinutý společností Google, který využívá programovací jazyk Dart.
+Klíčovou architektonickou vlastností je použití vlastního renderovacího enginu (Skia, nověji Impeller), díky kterému Flutter nevyužívá nativní UI komponenty platformy, ale vykresluje veškeré prvky rozhraní přímo na grafickém plátně.
+Tento přístup zajišťuje konzistentní vizuální výstup na všech podporovaných platformách bez ohledu na verzi operačního systému.
+Dart je kompilován přímo do nativního strojového kódu prostřednictvím AOT (\emph{Ahead-of-Time}) kompilace, což přispívá k~vysokému výkonu za běhu aplikace.
+V~průběhu vývoje je naopak využívána JIT (\emph{Just-in-Time}) kompilace umožňující funkci \emph{hot reload}, která výrazně urychluje iterační cyklus.
+Ekosystém balíčků dostupných prostřednictvím registru pub.dev pokrývá širokou škálu funkcionalit včetně práce s~kamerou, lokálními notifikacemi, databázemi a zdravotními daty~\cite{flutterDoc}.
+
+React Native je framework vyvinutý společností Meta, který umožňuje vývoj mobilních aplikací v~jazyce JavaScript, případně TypeScript.
+Na rozdíl od Flutteru React Native využívá nativní UI komponenty cílové platformy, k~nimž přistupuje prostřednictvím komunikační vrstvy.
+Původní architektura založená na asynchronním \emph{bridge} byla postupně nahrazena novější architekturou JSI (\emph{JavaScript Interface}) a systémem Fabric, které snižují režii komunikace mezi JavaScriptovým vláknem a nativní vrstvou.
+Silnou stránkou React Native je možnost využít znalosti z~webového vývoje v~ekosystému React a rozsáhlá komunita vývojářů sdílející balíčky prostřednictvím registru npm.
+Omezením je historicky nižší výkon v~graficky náročných scénářích oproti nativním řešením a složitější ladění při práci s~nativními moduly~\cite{reactNativeDoc}.
+
+Kotlin Multiplatform je technologie vyvíjená společností JetBrains, která umožňuje sdílení business logiky napsané v~jazyce Kotlin mezi platformami Android, iOS a dalšími cílovými prostředími.
+V~základním režimu zůstává uživatelské rozhraní nativní (Jetpack Compose pro Android, SwiftUI pro iOS), přičemž sdílena je pouze doménová a síťová vrstva.
+Experimentální rozšíření Compose Multiplatform umožňuje sdílení i prezentační vrstvy, avšak podpora pro iOS se v~době psaní této práce nachází ve fázi beta.
+Výhodou Kotlin Multiplatform je přirozená integrace s~ekosystémem jazyka Kotlin a možnost sdílet logiku bez kompromisů v~uživatelském rozhraní.
+Omezením je relativní novost technologie a menší ekosystém multiplatformních knihoven ve srovnání s~Flutter a React Native~\cite{kotlinMultiplatformDoc}.
+
+Srovnání klíčových vlastností uvedených frameworků je shrnuto v~tabulce~\ref{tab:frameworky}.
+Kritéria zahrnují použitý programovací jazyk, architekturu vykreslování, přibližnou míru sdílení kódu, podporu hot reload, velikost ekosystému a zralost platformy.
+
+\begin{table}[ht]
+	\centering
+	\caption{Srovnání multiplatformních frameworků pro mobilní vývoj.}
+	\label{tab:frameworky}
+	\small
+	\begin{tabular}{p{3.2cm}p{3.0cm}p{3.0cm}p{3.0cm}}
+		\toprule
+		\textbf{Kritérium} & \textbf{Flutter} & \textbf{React Native} & \textbf{Kotlin Multiplatform} \\
+		\midrule
+		Jazyk & Dart & JavaScript / TypeScript & Kotlin \\
+		Vykreslování & Vlastní engine (Skia / Impeller) & Nativní UI komponenty & Nativní UI / Compose Multiplatform \\
+		Kompilace & AOT do nativního kódu & JIT (Hermes engine) & AOT (Kotlin/Native) \\
+		Sdílení kódu & 90--95~\% (UI + logika) & 80--90~\% (logika + UI) & 50--70~\% (logika), 80--90~\% s~Compose MP \\
+		Hot reload & Ano & Ano (Fast Refresh) & Částečně (Compose preview) \\
+		Ekosystém balíčků & pub.dev & npm (sdílený s~webem) & Maven / Gradle (menší MP ekosystém) \\
+		Zralost platformy & Stabilní (od 2018) & Stabilní (od 2015) & Stabilní logika, UI sdílení v~beta \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+Z~provedeného srovnání vyplývá, že pro potřeby tohoto projektu se jako nejvhodnější jeví framework Flutter.
+Rozhodujícími faktory jsou nejvyšší míra sdílení kódu včetně prezentační vrstvy, což je klíčové pro vývoj realizovaný jedním vývojářem, konzistentní vykreslování na obou platformách bez závislosti na nativních komponentách a zralý ekosystém balíčků pokrývající všechny požadované funkcionality aplikace (práce s~kamerou, řečový vstup, lokální databáze, notifikace, zdravotní data).
+Funkce \emph{hot reload} navíc výrazně urychluje iterační cyklus, což je při vývoji v~rámci diplomové práce s~omezenými časovými zdroji podstatnou výhodou.
+Konkrétní zdůvodnění volby frameworku Flutter a dalších technologií je podrobněji rozvedeno v~navazující sekci~\ref{sec:vyberTechnologii}.
+
+\section{Výběr technologií}
+\label{sec:vyberTechnologii}
+
+Na základě analytického srovnání přístupů k~vývoji mobilních aplikací provedeného v~sekci~\ref{sec:pristupyVyvoj} byly pro implementaci aplikace Foody zvoleny konkrétní technologie a knihovny.
+Tato sekce zdůvodňuje výběr jednotlivých technologických komponent s~ohledem na specifické požadavky projektu definované funkčními a nefunkčními požadavky v~sekci~\ref{subsec:pozadavky}.
+Nejprve je v~podsekci~\ref{subsec:vyvojovaPlatforma} popsána zvolená vývojová platforma, následuje volba databázové vrstvy a mechanismu perzistence dat (\ref{subsec:databaze}), integrace modelu umělé inteligence a komunikace s~externím API (\ref{subsec:aiApi}) a přehled dalších klíčových knihoven třetích stran (\ref{subsec:dalsiKnihovny}).
+
+\subsection{Vývojová platforma}
+\label{subsec:vyvojovaPlatforma}
+
+V~návaznosti na srovnání multiplatformních frameworků provedené v~sekci~\ref{sec:pristupyVyvoj} byl pro implementaci aplikace Foody zvolen framework Flutter s~programovacím jazykem Dart.
+Rozhodujícími faktory identifikovanými v~rámci srovnání byly nejvyšší míra sdílení kódu včetně prezentační vrstvy, konzistentní vykreslování nezávislé na nativních komponentách a zralý ekosystém balíčků.
+Tato podsekce doplňuje analytické srovnání o~konkrétní vlastnosti jazyka Dart a platformy Flutter, které se ukázaly jako podstatné v~průběhu samotné implementace.
+
+Jednou z~klíčových vlastností jazyka Dart, která se v~kontextu tohoto projektu projevila jako přínosná, je podpora \emph{null safety} na úrovni typového systému.
+Aplikace pro sledování kalorického příjmu pracuje s~rozsáhlými datovými strukturami získávanými z~různých zdrojů, včetně strukturovaných JSON odpovědí od modelu umělé inteligence, dat z~databáze Open Food Facts a uživatelských vstupů.
+Striktní rozlišování nullable a non-nullable typů umožňuje zachytit řadu potenciálních chyb již v~době kompilace, což přispívá k~vyšší robustnosti kódu při zpracování neúplných nebo neočekávaných dat~\cite{flutterDoc}.
+Dalším přínosem je nativní podpora asynchronního programování prostřednictvím konstrukcí \texttt{async} a \texttt{await} a třídy \texttt{Future}, která zjednodušuje implementaci paralelních operací, jako jsou současné dotazy na API umělé inteligence a lokální databázi.
+
+Z~hlediska architektury uživatelského rozhraní využívá Flutter deklarativní přístup založený na kompozici widgetů.
+Každý vizuální prvek aplikace, od jednoduchého textového popisku až po komplexní obrazovku denního přehledu, je reprezentován jako widget, přičemž výsledné rozhraní vzniká hierarchickým skládáním těchto komponent.
+Pro aplikaci zaměřenou na sledování kalorického příjmu, která obsahuje datově orientované obrazovky s~grafy, tabulkami, formuláři a dynamicky generovanými seznamy ingrediencí, se tento přístup jeví jako vhodný, protože umožňuje opakované využití jednou definovaných komponent napříč různými obrazovkami.
+V~projektu Foody bylo na tomto principu postaveno přibližně 60~obrazovek organizovaných do tematických skupin (onboarding, skenování, jídla, cvičení, profil), přičemž sdílené widgety, jako jsou karty nutričních hodnot, vstupní pole pro ingredience nebo grafové komponenty, jsou definovány v~adresáři \texttt{lib/widgets/} a využívány napříč celou aplikací~\cite{flutterDoc}.
+
+V~rámci ekosystému balíčků dostupných prostřednictvím registru pub.dev bylo pro tento projekt identifikováno a integrováno více než 30~knihoven třetích stran pokrývajících klíčové funkcionality definované funkčními požadavky.
+Mezi ně patří zejména balíčky pro práci s~kamerou a fotografiemi (\texttt{camera}, \texttt{image\_picker}), hlasovou transkripci (\texttt{speech\_to\_text}), skenování čárových kódů (\texttt{mobile\_scanner}), lokální notifikace (\texttt{flutter\_local\_notifications}), integraci se zdravotními platformami (\texttt{health}) a lokalizaci (\texttt{easy\_localization}).
+Dostupnost těchto knihoven v~rámci jednoho ekosystému umožnila soustředit implementační úsilí na doménovou logiku aplikace namísto vývoje nízkoúrovňových platformně specifických řešení.
+Podrobný přehled jednotlivých knihoven a jejich role v~projektu je uveden v~podsekci~\ref{subsec:dalsiKnihovny}.
+
+Aplikace je primárně vyvíjena a testována pro operační systém iOS, přičemž díky multiplatformní povaze frameworku Flutter je zároveň funkční na platformě Android.
+Projekt využívá Flutter ve verzi 3.35 s~jazykem Dart ve verzi 3.9, přičemž minimální požadovaná verze Dart SDK je stanovena na 3.9.0.
+Pro vizuální styl aplikace byl zvolen Material Design jako výchozí designový systém, doplněný o~vlastní návrhové tokeny definované v~souboru \texttt{lib/app\_theme.dart}, které zajišťují konzistentní vzhled napříč všemi obrazovkami aplikace.
+Funkce \emph{hot reload} umožňující okamžitou aplikaci změn v~kódu bez nutnosti restartu aplikace výrazně urychlila iterační cyklus v~průběhu vývoje a ladění uživatelského rozhraní~\cite{flutterDoc}.
+
+Celkově lze konstatovat, že volba frameworku Flutter a jazyka Dart umožnila realizovat implementaci pokrývající obě hlavní mobilní platformy z~jednoho kódového základu při zachování dostatečného výkonu a přístupu k~platformním funkcím.
+Tato volba se v~průběhu implementace potvrdila jako vhodná zejména díky kombinaci typové bezpečnosti jazyka Dart, zralého ekosystému balíčků a rychlého iteračního cyklu umožněného funkcí hot reload.
+Konkrétní technologická rozhodnutí navazující na tuto platformní volbu, zejména výběr databázové vrstvy a mechanismu komunikace s~modelem umělé inteligence, jsou popsána v~následujících podsekcích.
+
+\subsection{Databáze a perzistence dat}
+\label{subsec:databaze}
+
+Pro ukládání strukturovaných dat aplikace Foody bylo nezbytné zvolit databázový systém, který umožní efektivní správu relačních entit a zároveň bude kompatibilní s~platformou Flutter a jazykem Dart.
+Vedle relační databáze bylo třeba zajistit perzistenci jednoduchých uživatelských nastavení a bezpečné načítání konfiguračních údajů, jako jsou klíče k~externím API.
+Tato podsekce popisuje zvolenou databázovou vrstvu, mechanismus klíč-hodnota úložiště a správu konfigurace prostředí.
+
+Jako primární databázová vrstva byl zvolen framework Floor, který představuje objektově-relační mapování (ORM) nad databází SQLite pro jazyk Dart.
+Floor využívá anotacemi řízené generování kódu prostřednictvím nástroje \texttt{build\_runner}, čímž automaticky vytváří implementace datových přístupových objektů (DAO) a databázových tříd na základě deklarativních definic entit a dotazů.
+V~projektu Foody je definováno 9~databázových entit s~odpovídajícími 9~DAO třídami, přičemž veškerý přístup k~datům probíhá prostřednictvím typově bezpečného rozhraní v~jazyce Dart.
+Typová bezpečnost v~kombinaci s~generováním kódu eliminuje celou kategorii chyb, které by při přímém použití SQL dotazů mohly vzniknout v~důsledku nesprávných názvů sloupců, chybějících parametrů nebo neočekávaných datových typů~\cite{floorDoc}.
+
+Z~hlediska porovnání s~alternativními řešeními byly v~průběhu technologického výběru zváženy knihovny Hive, Isar a drift (dříve moor).
+Hive nabízí rychlé klíč-hodnota úložiště s~podporou binární serializace, avšak postrádá podporu relačních vazeb mezi entitami, které jsou pro datový model aplikace Foody s~normalizovaným schématem a kaskádovým mazáním záznamů nezbytné.
+Isar v~době zahájení implementace představoval novější řešení s~omezenější dokumentací a menší komunitní podporou ve srovnání s~Floor.
+Drift nabízí srovnatelnou funkcionalitu jako Floor, včetně typově bezpečných SQL dotazů a generování kódu, avšak Floor byl zvolen na základě jeho jednoduššího anotačního modelu a přímočařejší integrace se vzorem DAO, který umožňuje deklarativní definici dotazů přímo v~abstraktních třídách pomocí anotace \texttt{@Query}.
+
+Dalším klíčovým prvkem databázové vrstvy je podpora reaktivních streamů.
+Floor umožňuje definovat dotazy vracející typ \texttt{Stream<List<Entity>>}, což zajišťuje automatickou notifikaci prezentační vrstvy při jakékoliv změně dat v~příslušné tabulce.
+V~kontextu aplikace pro sledování kalorického příjmu, kde uživatel průběžně přidává a upravuje záznamy o~jídlech a cvičení, je tato vlastnost podstatná, protože eliminuje nutnost manuální synchronizace mezi stavem databáze a stavem uživatelského rozhraní.
+Repozitářová vrstva, která z~databázových entit sestavuje doménové agregáty, je podrobně popsána v~sekci~\ref{sec:datovyModel}.
+
+Pro perzistenci jednoduchých uživatelských nastavení, jako jsou údaje profilu (hmotnost, výška, datum narození, pohlaví), preference aplikace (metrické jednotky, povolení notifikací, zapnutí sledování spálených kalorií) a stav onboardingu, byl zvolen balíček \texttt{shared\_preferences}.
+Tento mechanismus poskytuje klíč-hodnota úložiště s~podporou základních datových typů (\texttt{bool}, \texttt{int}, \texttt{double}, \texttt{String}) a je v~projektu zapouzdřen do služby \texttt{SharedPreferencesService}, která centralizuje veškerý přístup k~uloženým preferencím.
+Na rozdíl od relačních dat spravovaných prostřednictvím Floor se jedná o~jednoduché konfigurační hodnoty, u~nichž není zapotřebí relačních vazeb ani komplexních dotazů.
+
+Bezpečné načítání konfiguračních údajů prostředí, zejména API klíčů pro komunikaci s~externími službami OpenAI a Google Gemini, je realizováno prostřednictvím balíčku \texttt{flutter\_dotenv}.
+Klíče jsou uloženy v~souboru \texttt{.env} v~kořenovém adresáři projektu, který je vyloučen z~verzovacího systému prostřednictvím souboru \texttt{.gitignore}, čímž je zamezeno neúmyslnému zveřejnění citlivých údajů.
+Při spuštění aplikace jsou hodnoty ze souboru \texttt{.env} načteny do paměti a zpřístupněny prostřednictvím rozhraní \texttt{dotenv.env}, odkud je využívají síťoví klienti pro autorizaci API požadavků.
+Podrobný popis datového modelu a schématu databáze je uveden v~sekci~\ref{sec:datovyModel}.
+
+\subsection{Model umělé inteligence a komunikace s~API}
+\label{subsec:aiApi}
+
+V~rámci návrhu aplikace Foody bylo jako klíčová technologická komponenta identifikováno propojení s~externím modelem umělé inteligence, který zajišťuje automatické rozpoznávání jídel z~fotografií, analýzu cvičení z~textových popisů a generování nutričních doporučení.
+Tato podsekce popisuje výběr konkrétního poskytovatele modelu, zdůvodnění přístupu založeného na vzdáleném cloudovém API a základní komunikační vzor mezi mobilním klientem a API koncovým bodem.
+
+Jako primární poskytovatel byl zvolen multimodální jazykový model od společnosti OpenAI, přístupný prostřednictvím rozhraní Chat Completions API.
+Tento model podporuje vstup kombinující textové instrukce s~obrazovými daty kódovanými ve formátu Base64, což umožňuje předat mu fotografii jídla společně se strukturovaným promptem a kontextem uživatelského profilu v~rámci jediného API požadavku.
+Odpověď modelu je strukturována ve formátu JSON definovaném v~rámci systémového promptu, přičemž obsahuje identifikaci jídla, odhad nutričních hodnot jednotlivých ingrediencí, numerickou míru nejistoty a celkový výsledek analýzy.
+Pro implementaci HTTP komunikace s~API koncovým bodem je využita knihovna Dio, která poskytuje podporu pro konfiguraci hlaviček, nastavení časových limitů a strukturované zpracování chybových odpovědí~\cite{openAiApi}.
+
+Z~hlediska alternativních přístupů byl při technologickém výběru zvážen rovněž přístup založený na modelu běžícím přímo na zařízení (\emph{on-device inference}).
+Cloudový přístup byl upřednostněn z~několika důvodů.
+Multimodální modely provozované v~cloudové infrastruktuře poskytují podstatně vyšší kvalitu rozpoznávání u~složitějších vizuálních scénářů, jako jsou kombinovaná jídla s~více ingrediencemi na jednom talíři, než modely komprimované pro běh na mobilním zařízení.
+Aktualizace modelu na straně poskytovatele se projeví okamžitě bez nutnosti vydání nové verze aplikace, což zjednodušuje údržbu a umožňuje těžit z~průběžného zlepšování schopností modelu.
+Podpora strukturovaného JSON výstupu, kterou cloudové API nabízí prostřednictvím systémových promptů, umožňuje přímé mapování odpovědi na typované datové modely v~jazyce Dart bez nutnosti implementace vlastního parseru.
+
+Jako alternativní poskytovatel byl do architektury aplikace integrován model Google Gemini, přístupný prostřednictvím rozhraní Generative Language API.
+Architektura komunikační vrstvy je navržena jako agnostická vůči poskytovateli s~využitím abstraktního rozhraní \texttt{AiService}, které definuje jednotný kontrakt pro generování odpovědí bez ohledu na konkrétního poskytovatele.
+Třída \texttt{AiServiceManager} spravuje aktuálně zvoleného poskytovatele a umožňuje za běhu přepínat mezi implementacemi \texttt{OpenAiService} a \texttt{GeminiService}, přičemž obě třídy implementují totéž rozhraní.
+Tento návrh umožňuje rozšíření o~další poskytovatele bez zásahu do vyšších vrstev aplikace~\cite{geminiApi}.
+
+Na straně bezpečnosti komunikace je vstup uživatele před odesláním do API ošetřen prostřednictvím třídy \texttt{PromptSanitizer}, která provádí sanitizaci vstupního textu (odstranění řídících znaků, ořez na maximální povolenou délku), detekci podezřelých vzorů naznačujících pokus o~\emph{prompt injection} a obalení uživatelského textu do XML delimitérů (\texttt{<user\_input>...</user\_input>}) pro strukturální izolaci od systémových instrukcí.
+Systémové prompty obsahují explicitní direktivu zakazující modelu interpretovat obsah uživatelského vstupu jako instrukce.
+Tato vícevrstvá ochrana snižuje riziko manipulace chování modelu prostřednictvím záměrně formulovaných vstupů.
+
+Přístup založený na cloudovém API s~sebou nese rovněž omezení, která je třeba zohlednit.
+Aplikace vyžaduje pro funkci rozpoznávání pomocí umělé inteligence aktivní internetové připojení, přičemž zbývající funkcionality (manuální záznam, prohlížení historie, export dat) jsou plně dostupné v~režimu offline.
+Latence API požadavku se v~závislosti na velikosti odesílaného obrázku a vytížení poskytovatele pohybuje řádově v~jednotkách sekund, což vyžaduje vhodný návrh uživatelského rozhraní s~indikací probíhajícího zpracování.
+V~neposlední řadě je každý API požadavek zpoplatněn dle cenového modelu poskytovatele, což představuje provozní náklad, jehož výše je úměrná frekvenci používání funkcí postavených na umělé inteligenci.
+Podrobný popis architektury pipeline pro umělou inteligenci, struktury promptů a mechanismu práce s~nejistotou výstupu je uveden v~sekci~\ref{sec:integraceAi}.
+
+\subsection{Další klíčové knihovny}
+\label{subsec:dalsiKnihovny}
+
+Kromě vývojové platformy Flutter, databázové vrstvy Floor a integrace s~modely umělé inteligence využívá aplikace Foody řadu dalších knihoven třetích stran, které pokrývají specifické funkcionality definované funkčními požadavky.
+V~průběhu implementace bylo z~registru pub.dev integrováno více než 30~balíčků, z~nichž nejvýznamnější jsou shrnuty v~tabulce~\ref{tab:knihovny} spolu s~jejich účelem a zdůvodněním volby~\cite{pubDev}.
+
+\begin{table}[ht]
+	\centering
+	\caption{Přehled klíčových knihoven třetích stran použitých v~aplikaci.}
+	\label{tab:knihovny}
+	\small
+	\begin{tabular}{p{4cm}p{4.5cm}p{5.5cm}}
+		\toprule
+		\textbf{Knihovna} & \textbf{Účel} & \textbf{Zdůvodnění volby} \\
+		\midrule
+		\texttt{speech\_to\_text} & Hlasová transkripce vstupů (cs/en) & Podpora českého jazyka, integrace s~nativními rozpoznávači iOS a Android \\
+		\texttt{mobile\_scanner} & Skenování čárových kódů (EAN) & Vysoká rychlost detekce, podpora formátů EAN-8 a EAN-13 \\
+		\texttt{flutter\_local\_notifications} & Plánování lokálních notifikací & Podpora časově plánovaných notifikací s~respektováním časových pásem \\
+		\texttt{easy\_localization} & Lokalizace aplikace (en, cs) & Generování typově bezpečných klíčů, podpora JSON překladových souborů \\
+		\texttt{health} & Integrace s~Apple Health a Health Connect & Jednotné API pro čtení a zápis zdravotních dat napříč platformami \\
+		\texttt{image\_picker} & Výběr fotografií z~galerie a kamery & Standardní Flutter plugin s~podporou obou mobilních platforem \\
+		\texttt{camera} & Přímý přístup ke kameře zařízení & Vlastní skenovací rozhraní pro fotografický vstup a skenování etiket \\
+		\texttt{json\_serializable} & Serializace a deserializace datových modelů & Generování metod \texttt{fromJson}/\texttt{toJson} prostřednictvím \texttt{build\_runner} \\
+		\texttt{home\_widget} & Widgety na domovskou obrazovku zařízení & Zobrazení denního souhrnu kalorií bez nutnosti otevření aplikace \\
+		\texttt{dio} & HTTP klient pro síťovou komunikaci & Podpora interceptorů, časových limitů a strukturovaného zpracování chyb \\
+		\texttt{connectivity\_plus} & Detekce stavu internetového připojení & Rozlišení online a offline režimu pro podmíněné spouštění funkcí umělé inteligence \\
+		\texttt{pdf}, \texttt{csv} & Export dat do formátů PDF a CSV & Generování strukturovaných dokumentů pro sdílení nutričních záznamů \\
+		\texttt{share\_plus} & Sdílení obsahu prostřednictvím systémového dialogu & Distribuce exportovaných souborů a snímků uživateli \\
+		\texttt{timezone} & Práce s~časovými pásmy & Korektní plánování notifikací a zobrazování časových údajů \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+Z~hlediska správy závislostí je většina uvedených knihoven deklarována v~souboru \texttt{pubspec.yaml} s~fixními verzemi, což zajišťuje reprodukovatelnost sestavení projektu.
+Knihovny vyžadující generování kódu (\texttt{floor}, \texttt{json\_serializable}) jsou doplněny o~odpovídající generátory v~sekci \texttt{dev\_dependencies} a jejich výstupní soubory jsou regenerovány příkazem \texttt{flutter pub run build\_runner build {-}{-}delete-conflicting-outputs} po každé změně dotčených entit nebo datových modelů.
+
+Celkově lze konstatovat, že dostupnost zralých a aktivně udržovaných knihoven v~ekosystému Flutter umožnila soustředit implementační úsilí na doménovou logiku aplikace, konkrétně na pipeline umělé inteligence, správu nutričních dat a uživatelské interakční toky, namísto vývoje nízkoúrovňových komponent od základu.
+Konkrétní způsob, jakým jsou tyto knihovny provázány v~rámci softwarové architektury aplikace, je popsán v~sekci~\ref{sec:softwarovaArchitektura}.
+
+\section{Softwarová architektura}
+\label{sec:softwarovaArchitektura}
+
+Na základě technologií zvolených v~sekci~\ref{sec:vyberTechnologii} byla navržena softwarová architektura aplikace Foody optimalizovaná pro lokální zpracování dat s~komunikací s~externími službami umělé inteligence prostřednictvím REST API.
+Architektura vychází z~návrhového vzoru \emph{Model-View-ViewModel} (MVVM) adaptovaného pro prostředí frameworku Flutter s~využitím reaktivních rozšíření knihovny GetX a doplněného o~další etablované vzory, jako jsou \emph{Repository}, \emph{Strategy} a \emph{Service Locator}.
+Tato sekce popisuje celkovou architekturu systému včetně použitých architektonických vzorů, zvolené přístupy ke správě reaktivního stavu a registraci závislostí a navigační model s~organizací obrazovek.
+V~podsekci~\ref{subsec:celkovaArchitektura} je představena celková architektura klientské aplikace bez vlastního backendu, včetně vrstveného uspořádání komponent, použitých návrhových vzorů a struktury projektu.
+Podsekce~\ref{subsec:spravaStavu} se zaměřuje na správu reaktivního stavu prostřednictvím frameworku GetX a centralizovanou registraci závislostí.
+V~závěrečné podsekci~\ref{subsec:navigace} je popsán navigační model aplikace, struktura hlavní obrazovky a organizace přibližně 60~obrazovek do tematických skupin.
+
+\subsection{Celková architektura systému}
+\label{subsec:celkovaArchitektura}
+
+V~rámci návrhu architektury aplikace Foody bylo základním rozhodnutím zvolení přístupu bez vlastního backendového serveru.
+Aplikace je koncipována jako samostatný mobilní klient, který veškerá uživatelská data ukládá lokálně na zařízení v~databázi SQLite a s~externími službami komunikuje přímo prostřednictvím REST API.
+Tento architektonický přístup byl zvolen na základě čtyř klíčových faktorů: zachování maximální jednoduchosti řešení přiměřené rozsahu diplomové práce, podpora plné funkčnosti v~režimu offline s~výjimkou rozpoznávání pomocí umělé inteligence vyžadujícího cloudové zpracování, ochrana soukromí uživatelských dat, která neopouštějí zařízení, a eliminace provozních nákladů spojených s~údržbou serverové infrastruktury.
+
+Z~hlediska komunikace s~externími službami aplikace využívá tři vzdálená API.
+Primárním poskytovatelem analýzy je rozhraní OpenAI Chat Completions API, prostřednictvím kterého jsou zpracovávány fotografické a textové vstupy pro rozpoznávání jídel, analýzu cvičení a generování nutričních doporučení.
+Jako alternativní poskytovatel je integrováno rozhraní Google Gemini Generative Language API, přičemž architektura umožňuje za běhu přepínat mezi oběma poskytovateli, jak bylo popsáno v~sekci~\ref{subsec:aiApi}.
+Pro vyhledávání nutričních údajů produktů na základě čárového kódu je využíváno veřejné API služby Open Food Facts.
+Veškerá síťová komunikace probíhá prostřednictvím HTTP klienta Dio, který zajišťuje jednotné zpracování časových limitů, chybových odpovědí a autorizačních hlaviček.
+Schéma celkové architektury zahrnující mobilního klienta, lokální databázi a externí služby je znázorněno na obrázku~\ref{fig:architektura}.
+
+% TODO: doplnit schéma architektury -- vrstvený mobilní klient (UI, Controllers, Services, Network, Database),
+% lokální SQLite databáze a tři externí API (OpenAI Chat Completions, Google Gemini, Open Food Facts)
+% s naznačenými směry komunikace a typem přenášených dat (Base64 obrázky, JSON prompty, JSON odpovědi,
+% HTTP GET požadavky na barcode endpoint).
+\begin{figure}[ht]
+	\centering
+	\framebox{\parbox[c][6cm][c]{0.8\textwidth}{\centering \emph{TODO: Schéma celkové architektury aplikace Foody}}}
+	\caption{Schéma celkové architektury aplikace Foody -- vrstvený mobilní klient, lokální SQLite databáze a komunikace s~externími službami (OpenAI, Google Gemini, Open Food Facts).}
+	\label{fig:architektura}
+\end{figure}
+
+Z~hlediska architektonického vzoru je vnitřní organizace klientské aplikace založena na vzoru \emph{Model-View-ViewModel} (MVVM), který odděluje prezentační vrstvu od doménové a datové logiky prostřednictvím mezilehlé vrstvy ViewModelů spravujících stav uživatelského rozhraní~\cite{getxDoc}.
+V~klasické definici MVVM komunikuje vrstva View s~vrstvou ViewModel prostřednictvím obousměrného \emph{data binding}, přičemž ViewModel vystavuje pozorovatelné vlastnosti, na jejichž změny se View automaticky naváže.
+V~kontextu frameworku Flutter a knihovny GetX je tento mechanismus realizován prostřednictvím reaktivních typů (\texttt{Rx<T>}, \texttt{RxList<T>}, \texttt{RxBool}) deklarovaných v~třídách kontrolerů a widgetů \texttt{Obx()}, které se na tyto proměnné naváží a automaticky překreslí příslušnou část rozhraní při změně hodnoty.
+Oproti klasickému MVVM s~obousměrným \emph{data binding} se jedná o~jednosměrnou reaktivní vazbu, čímž se tato implementace blíží variantě MVVM s~reaktivními rozšířeními, obdobně jako architektura Android Jetpack s~komponentou LiveData.
+Kromě vzoru MVVM jsou v~architektuře aplikace uplatněny další etablované návrhové vzory: vzor \emph{Repository} pro abstrakci přístupu k~datům za jednotným rozhraním, vzor \emph{Strategy} pro zaměnitelné implementace poskytovatelů umělé inteligence umožňující přepínání za běhu a vzor \emph{Service Locator} pro centralizovanou správu závislostí mezi komponentami.
+
+V~souladu se vzorem MVVM je vnitřní architektura mobilního klienta organizována do pěti logických vrstev, které lze mapovat na tři základní role tohoto vzoru.
+Nejvyšší vrstvou je prezentační vrstva (View), tvořená obrazovkami (adresář \texttt{lib/screens/}) a sdílenými widgety (\texttt{lib/widgets/}), která definuje uživatelské rozhraní aplikace prostřednictvím deklarativní kompozice Flutter widgetů.
+Pod ní se nachází vrstva kontrolerů (ViewModel, adresář \texttt{lib/controller/}), jejíž komponenty rozšiřují třídu \texttt{GetxController} a zapouzdřují prezentační logiku jednotlivých obrazovek včetně reakcí na uživatelské akce a správy reaktivního stavu zobrazených dat prostřednictvím pozorovatelných proměnných.
+Zbývající tři vrstvy společně tvoří vrstvu Model vzoru MVVM: vrstva služeb a repozitářů (\texttt{lib/services/}) implementuje doménovou logiku aplikace včetně pipeline pro umělou inteligenci pro zpracování vstupů, správy uživatelského profilu, plánování notifikací a sestavování doménových agregátů z~databázových entit.
+
+Přístup k~datům zajišťují dvě oddělené vrstvy odpovídající dvěma typům datových zdrojů aplikace, přičemž abstrakci nad těmito zdroji poskytuje vzor \emph{Repository}.
+Lokální datová vrstva (\texttt{lib/database/}) obsahuje definice databázových entit, datových přístupových objektů (DAO) a migračních skriptů frameworku Floor, přičemž zajišťuje typově bezpečný přístup k~relačním datům uloženým v~SQLite.
+Síťová vrstva (\texttt{lib/network/}) zapouzdřuje REST klienty pro komunikaci s~externími API a poskytuje vyšším vrstvám typované odpovědi bez nutnosti pracovat přímo s~HTTP protokolem.
+Repozitáře (například \texttt{DayRecordRepository}) fungují jako fasáda nad těmito datovými zdroji: koordinují přístup k~příslušným DAO, transformují databázové entity na doménové modely a vystavují výsledky prostřednictvím reaktivních streamů, čímž kontrolery a služby nejsou vázány na konkrétní implementaci úložiště.
+Na nejnižší úrovni stojí vrstva modelů (\texttt{lib/model/}), která definuje datové třídy s~podporou serializace prostřednictvím knihovny \texttt{json\_serializable} a slouží jako společný jazyk pro výměnu dat mezi ostatními vrstvami.
+
+Na úrovni adresářové struktury projektu odpovídá každá architektonická vrstva samostatnému adresáři v~rámci kořenového adresáře \texttt{lib/}.
+Kromě výše popsaných vrstev projekt obsahuje adresář \texttt{lib/utils/} se sdílenými pomocnými funkcemi, jako jsou definice promptů pro model umělé inteligence, validační logika a formátovací utility, a adresář \texttt{lib/generated/} s~automaticky generovanými soubory pro lokalizaci a databázový kód, které nejsou editovány ručně.
+Konfigurační soubor \texttt{lib/app\_theme.dart} centralizuje veškeré návrhové tokeny aplikace (barvy, rozestupy, typografie, stíny), čímž zajišťuje konzistentní vizuální styl napříč všemi obrazovkami.
+Vstupním bodem aplikace je soubor \texttt{lib/main.dart}, který řídí inicializační sekvenci zahrnující načtení konfigurace prostředí, registraci závislostí, obnovení uživatelské relace a spuštění plánovaných notifikací, přičemž samotná konfigurace \texttt{MaterialApp} je definována v~souboru \texttt{lib/app.dart}~\cite{flutterDoc}.
+
+Komunikace mezi vrstvami probíhá prostřednictvím vzoru \emph{Service Locator}, který je realizován pomocí registru závislostí frameworku GetX~\cite{getxDoc}.
+Kontrolery a služby nezískávají své závislosti přímým vytvářením instancí, ale prostřednictvím centralizovaného registru, do kterého jsou veškeré komponenty zaregistrovány při spuštění aplikace v~souboru \texttt{lib/locator.dart}.
+Na rozdíl od vzoru \emph{Dependency Injection}, kde jsou závislosti předávány prostřednictvím konstruktoru, vzor Service Locator umožňuje komponentám aktivně vyhledávat požadované závislosti za běhu voláním \texttt{Get.find<T>()}.
+Tento přístup zároveň umožňuje nahrazovat implementace za běhu, čehož je využito při realizaci vzoru \emph{Strategy} v~architektuře služeb umělé inteligence, kde třída \texttt{AiServiceManager} dynamicky přepíná mezi konkrétními implementacemi rozhraní \texttt{AiService} (viz sekce~\ref{subsec:aiApi}).
+Podrobný popis správy stavu, reaktivních typů a mechanismu registrace závislostí je uveden v~následující sekci~\ref{subsec:spravaStavu}.
+
+\subsection{Správa stavu a Dependency Injection}
+\label{subsec:spravaStavu}
+
+V~podsekci~\ref{subsec:celkovaArchitektura} byl představen vzor Service Locator jako základní mechanismus komunikace mezi architektonickými vrstvami aplikace.
+Tato podsekce se zaměřuje na konkrétní realizaci správy stavu a registrace závislostí prostřednictvím frameworku GetX, který v~projektu Foody slouží jako jednotné řešení pro tři vzájemně provázané oblasti: reaktivní správu stavu uživatelského rozhraní, správu životního cyklu komponent a centralizovanou registraci závislostí~\cite{getxDoc}.
+Na rozdíl od alternativních přístupů v~ekosystému Flutter, jako jsou balíčky Provider, Riverpod nebo BLoC, které se typicky specializují na jednu z~uvedených oblastí, GetX integruje všechny tři aspekty do jednoho frameworku, čímž snižuje počet externích závislostí projektu a umožňuje konzistentní přístup ke správě stavu napříč celou aplikací.
+
+Z~hlediska životního cyklu komponent rozlišuje GetX dva základní typy řízených objektů, které odpovídají odlišným rolím v~architektuře aplikace.
+Prvním typem jsou služby s~životním cyklem vázaným na celou dobu běhu aplikace, které jsou inicializovány při startu a zůstávají v~paměti až do jejího ukončení.
+V~projektu Foody do této kategorie spadají komponenty zodpovědné za správu uživatelského profilu, perzistenci preferencí, plánování notifikací, výpočet vizualizací kalendáře a všechny repozitáře zajišťující přístup k~databázovým entitám.
+Druhým typem jsou kontrolery s~životním cyklem typicky vázaným na konkrétní obrazovku nebo skupinu obrazovek, které spravují prezentační stav a reagují na uživatelské akce.
+Framework poskytuje kontrolerům sadu životních metod volaných při inicializaci, připravenosti a uzavření komponenty, čímž umožňuje strukturovanou správu zdrojů a asynchronních operací~\cite{getxDoc}.
+
+V~rámci kontrolerové vrstvy je definována společná abstraktní bázová třída, která slouží jako předek pro většinu kontrolerů v~aplikaci a poskytuje sdílenou funkcionalitu využívanou napříč celou prezentační vrstvou.
+Tato třída zapouzdřuje zejména logiku ověřování dostupnosti internetového připojení s~volitelným zobrazením informačního dialogu a předdefinovaný indikátor průběhu.
+Zároveň umožňuje kontrolerům reagovat na změny stavu životního cyklu aplikace na úrovni operačního systému, jako je přechod do pozadí, návrat do popředí nebo neaktivita, čehož je využito například pro automatické obnovení dat při návratu uživatele do aplikace.
+
+Registrace veškerých komponent do registru závislostí probíhá centralizovaně v~jednom konfiguračním souboru, který je volán při spuštění aplikace ještě před vykreslením prvního snímku uživatelského rozhraní.
+Celkem je takto zaregistrováno 37~komponent prostřednictvím tří registračních strategií, které se liší okamžikem vytvoření instance a jejím chováním při uvolnění z~paměti.
+Permanentní registrace vytváří instanci okamžitě a zajišťuje její dostupnost po celou dobu běhu aplikace, přičemž je využívána pro klíčové služby a repozitáře.
+Odložená registrace odkládá vytvoření instance až do okamžiku prvního vyžádání, čímž snižuje paměťovou náročnost při startu aplikace.
+Třetí strategií je odložená registrace s~automatickou reinicializací, která zajišťuje, že pokud je instance uvolněna z~paměti při opuštění obrazovky, framework ji při dalším vyžádání automaticky vytvoří znovu, čímž je garantováno korektní obnovení stavu při opakované navigaci~\cite{getxDoc}.
+
+Na úrovni přístupu k~registrovaným komponentám je v~celém projektu uplatněn standardizovaný vzor, kdy každá služba a kontroler vystavuje statický přístupový bod umožňující typově bezpečné vyhledání instance z~jakéhokoliv místa v~kódu bez nutnosti předávání referencí přes konstruktor nebo kontext widgetového stromu.
+Reaktivní stav je deklarován prostřednictvím rodiny pozorovatelných typů pokrývajících základní datové typy, kolekce i nullable hodnoty.
+Prezentační vrstva se na tyto pozorovatelné proměnné naváže prostřednictvím speciálních widgetů, které automaticky sledují všechny reaktivní proměnné přečtené v~rámci svého builderu a překreslí příslušnou část uživatelského rozhraní při změně kterékoliv z~nich, bez nutnosti explicitní registrace odběratele či manuální invalidace stavu.
+
+Kromě přímé vazby mezi pozorovatelnými proměnnými a uživatelským rozhraním využívá aplikace pro pokročilejší scénáře reaktivní propagace mechanismy umožňující imperativní reakci na změnu hodnoty.
+Jedním z~nich je pozorovatel reagující na každou změnu sledované kolekce, který je využíván například v~kontroleru hlavní obrazovky, kde sleduje změny v~seznamu denních záznamů a při každé aktualizaci automaticky přepočítává statistiky aktivní série.
+Dalším mechanismem je naslouchání změnám jednotlivých proměnných, které umožňuje spouštět asynchronní operace, jako je načtení dat pro nově vybrané datum v~kalendáři.
+Celkově lze konstatovat, že kombinace centralizované registrace závislostí, dvoutypového komponentového modelu a reaktivního systému poskytuje konzistentní infrastrukturu pro správu stavu a komunikaci mezi vrstvami aplikace, přičemž podrobnosti navigačního modelu a organizace obrazovek jsou popsány v~následující podsekci~\ref{subsec:navigace}.
+
+\subsection{Navigace a struktura obrazovek}
+\label{subsec:navigace}
+
+Pro navigaci mezi obrazovkami využívá aplikace Foody imperativní navigační model frameworku GetX, který je založen na přímém volání navigačních metod bez použití pojmenované tabulky rout~\cite{getxDoc}.
+Tento přístup byl zvolen na základě dvou faktorů: eliminace nutnosti udržovat centrální registr názvů rout synchronizovaný s~implementací obrazovek a možnosti předávat typované parametry přímo prostřednictvím konstruktoru cílové obrazovky namísto serializace do textových argumentů.
+Základní navigační operace zahrnují přechod na novou obrazovku s~přidáním na navigační zásobník, návrat na předchozí obrazovku a nahrazení aktuální obrazovky bez možnosti návratu, přičemž poslední varianta je využívána například při přechodu z~onboardingového toku na hlavní rozhraní po dokončení prvotní konfigurace.
+
+Kořenovou komponentou navigační hierarchie je hlavní obrazovka, která implementuje třízáložkový shell tvořící primární rozhraní aplikace po dokončení onboardingu.
+Jednotlivé záložky odpovídají třem hlavním funkčním oblastem.
+Záložka Dashboard zobrazuje denní přehled kalorického příjmu, seznam zaznamenaných jídel a cvičení a kalorický souhrn dne.
+Záložka Progress poskytuje týdenní a měsíční vizualizace, trendy hmotnosti a přehled plnění cílů.
+Záložka Profile zpřístupňuje správu osobních údajů, nutričních cílů, nastavení aplikace a doplňkových funkcí včetně exportu dat a integrace se zdravotními platformami.
+Přepínání mezi záložkami je řízeno prostřednictvím reaktivní proměnné a neprovádí navigaci na novou obrazovku, nýbrž přepíná zobrazený obsah v~rámci téhož kontejneru, čímž je zachován stav jednotlivých záložek při přepínání mezi nimi.
+
+Součástí spodní navigační lišty je plovoucí akční tlačítko, které otevírá panel rychlých akcí obsahující pět primárních vstupních bodů pro záznam dat: vyhledání a záznam jídla z~historie, skenování jídla z~fotografie (případně s~předřazenou instruktáží při prvním použití), hlasový záznam jídla, skenování čárového kódu a záznam cvičení.
+Tento panel funguje jako centrální rozcestník pro všechny modality záznamu definované funkčními požadavky a je dostupný z~libovolné záložky hlavní obrazovky, čímž minimalizuje počet kroků potřebných k~zahájení záznamu nové položky.
+Výběrem konkrétní akce je uživatel navigován na příslušnou obrazovku, přičemž panel je automaticky uzavřen.
+
+Z~hlediska organizace zdrojového kódu je celkem přibližně 58~obrazovek a modálních listů uspořádáno do tematických skupin.
+Skupina onboarding obsahuje 15~obrazovek pokrývajících prvotní konfiguraci uživatelského profilu od zadání pohlaví a cílů po výpočet kalorického plánu.
+Skupina skenování zahrnuje 4~obrazovky pro fotografický vstup, náhled výsledku rozpoznání umělou inteligencí, správu oprávnění kamery a úvodní instruktáž.
+Skupina jídel a ingrediencí sdružuje 8~obrazovek a modálních listů pro editaci záznamů, detailní zobrazení ingrediencí, kopírování jídel mezi dny a hlášení chyb rozpoznání.
+Skupina logování obsahuje 7~obrazovek pro hlasový vstup, záznam a detail cvičení a evidenci hmotnosti.
+Skupina profilu je s~18~obrazovkami nejrozsáhlejší a pokrývá osobní údaje, nutriční cíle, historii hmotnosti, export dat, integraci se zdravotními platformami, nastavení notifikací a dotazy v~přirozeném jazyce prostřednictvím funkce Ask AI.
+
+Pro hlavní scénáře záznamu jídla prostřednictvím fotografie je typický vícekrokový navigační tok, který odpovídá případu užití UC01 definovanému v~sekci~\ref{subsec:pripadyUziti}.
+Uživatel zahájí tok aktivací akce skenování z~panelu rychlých akcí, čímž je navigován na obrazovku kamery, kde pořídí fotografii jídla.
+Po odeslání fotografie k~analýze pomocí umělé inteligence je zobrazen náhled výsledku s~barevnou indikací míry nejistoty rozpoznání v~souladu s~funkčním požadavkem FR-08.
+V~případě potvrzení výsledku je záznam uložen a uživatel je vrácen na hlavní obrazovku, v~případě potřeby korekce je navigován na editační obrazovku, kde může upravit jednotlivé ingredience, gramáže a nutriční hodnoty.
+Alternativní toky, jako je opakované rozpoznání z~editační obrazovky (FR-13) nebo kopírování existujícího záznamu na jiný den (FR-18), rozšiřují základní tok o~doplňkové kroky bez narušení celkové navigační struktury.
+
+Vedle plnohodnotných obrazovek využívá aplikace modální listy pro doplňkové interakce, které nevyžadují opuštění aktuálního kontextu.
+V~projektu pokrývají modální listy funkcionality jako výběr data pro kopírování jídla, záznam hmotnosti, výběr data v~kalendáři a volbu akce u~detailu cvičení.
+Tento přístup respektuje navigační konvence mobilních platforem, kde modální listy slouží k~rychlým akcím s~návratem do kontextu nadřazené obrazovky bez ztráty jejího stavu.
+Podrobný popis datového modelu, nad kterým operují výše uvedené obrazovky a navigační toky, je uveden v~následující sekci~\ref{sec:datovyModel}.
+
+\section{Datový model}
+\label{sec:datovyModel}
+
+V~návaznosti na softwarovou architekturu představenou v~sekci~\ref{sec:softwarovaArchitektura} popisuje tato sekce konkrétní podobu datové vrstvy aplikace Foody.
+Důraz je kladen na strukturu lokální relační databáze, vztahy mezi jednotlivými entitami a způsob, jakým je nad těmito entitami sestavena repozitářová vrstva poskytující doménové agregáty prezentační vrstvě.
+Nejprve je v~podsekci~\ref{subsec:schemaDb} popsáno schéma databáze a vztahy mezi devíti hlavními entitami.
+Podsekce~\ref{subsec:sablony} dokumentuje samostatný subsystém šablon pro opakovaně zapisované položky, který adresuje funkční požadavky na zrychlení záznamu.
+Závěrečná podsekce~\ref{subsec:repozitare} popisuje repozitářovou vrstvu, transformaci databázových entit na doménové modely a mechanismus reaktivního zpřístupnění dat uživatelskému rozhraní.
+
+\subsection{Schéma databáze a vztahy mezi entitami}
+\label{subsec:schemaDb}
+
+V~rámci datového modelu aplikace Foody je definováno celkem devět entit, které lze rozdělit do dvou logických skupin podle účelu uložených dat.
+Transakční skupinu tvoří pět entit zachycujících konkrétní časově vázané záznamy uživatele (denní záznam, jídlo, ingredience, cvičení, hmotnost), zatímco šablonová skupina sdružuje čtyři entity pro opakovaně používané položky, jejichž role je podrobně rozebrána v~podsekci~\ref{subsec:sablony}.
+Přehled všech entit, jejich klíčových atributů a vztahu k~nadřazené entitě je uveden v~tabulce~\ref{tab:entity}, vizuální znázornění schématu s~naznačenými cizími klíči a kardinalitami je zachyceno na obrázku~\ref{fig:erDiagram}.
+
+\begin{table}[ht]
+	\centering
+	\caption{Přehled databázových entit aplikace Foody.}
+	\label{tab:entity}
+	\small
+	\begin{tabular}{p{3.5cm}p{6.5cm}p{4cm}}
+		\toprule
+		\textbf{Entita} & \textbf{Vybrané atributy} & \textbf{Vztah k~nadřazené entitě} \\
+		\midrule
+		\texttt{DayRecord} & \texttt{id}, \texttt{date} (unique), \texttt{calorieGoal}, \texttt{proteinGoal}, \texttt{carbsGoal}, \texttt{fatGoal} & --- (kořenová entita) \\
+		\texttt{Meal} & \texttt{id}, \texttt{dayRecordId}, \texttt{name}, \texttt{timestamp}, \texttt{photoPath}, \texttt{confidence}, \texttt{barcode}, \texttt{isFavorite} & \texttt{dayRecordId} \(\to\) \texttt{DayRecord.id} (CASCADE) \\
+		\texttt{Ingredient} & \texttt{id}, \texttt{mealId}, \texttt{name}, \texttt{weight}, \texttt{amount}, \texttt{calories}, \texttt{proteins}, \texttt{carbs}, \texttt{fats} & \texttt{mealId} \(\to\) \texttt{Meal.id} (CASCADE) \\
+		\texttt{Exercise} & \texttt{id}, \texttt{dayRecordId}, \texttt{name}, \texttt{timestamp}, \texttt{durationMinutes}, \texttt{caloriesBurned}, \texttt{source} & \texttt{dayRecordId} \(\to\) \texttt{DayRecord.id} (CASCADE) \\
+		\texttt{WeightEntry} & \texttt{id}, \texttt{date}, \texttt{weight}, \texttt{photoPath} & --- (samostatná entita) \\
+		\texttt{MealTemplate} & \texttt{id}, \texttt{name}, \texttt{normalizedName} (unique), \texttt{photoPath}, \texttt{isFavorite}, \texttt{lastUsedAt}, \texttt{usageCount} & --- (samostatná entita) \\
+		\texttt{MealTemplateIngredient} & \texttt{id}, \texttt{templateId}, \texttt{name}, \texttt{weight}, \texttt{calories}, \texttt{proteins}, \texttt{carbs}, \texttt{fats} & \texttt{templateId} \(\to\) \texttt{MealTemplate.id} (CASCADE) \\
+		\texttt{IngredientTemplate} & \texttt{id}, \texttt{name}, \texttt{normalizedName} (unique), \texttt{weight}, \texttt{amount}, makroživiny, \texttt{usageCount} & --- (samostatná entita) \\
+		\texttt{ExerciseTemplate} & \texttt{id}, \texttt{name}, \texttt{normalizedName} (unique), \texttt{durationMinutes}, \texttt{caloriesBurned}, \texttt{usageCount} & --- (samostatná entita) \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+% TODO: doplnit ER diagram databázového schématu (devět entit, transakční vs. šablonové, cizí klíče, kardinality, kaskádové mazání).
+\begin{figure}[ht]
+	\centering
+	\framebox{\parbox[c][6cm][c]{0.8\textwidth}{\centering \emph{TODO: ER diagram databázového schématu}}}
+	\caption{ER diagram databázového schématu aplikace Foody -- transakční a šablonové entity s~vyznačenými cizími klíči, kardinalitami a kaskádovým chováním při mazání.}
+	\label{fig:erDiagram}
+\end{figure}
+
+Z~hlediska struktury vazeb tvoří transakční entity dvouúrovňovou hierarchii s~entitou \texttt{DayRecord} v~kořeni.
+Entita \texttt{Meal} je s~denním záznamem propojena vztahem 1:N prostřednictvím cizího klíče \texttt{dayRecordId}, čímž je každé zaznamenané jídlo jednoznačně přiřazeno právě jednomu dni.
+Entita \texttt{Ingredient} je obdobně připojena k~jídlu vztahem 1:N prostřednictvím cizího klíče \texttt{mealId}, což zachycuje skutečnost, že každé jídlo se skládá z~jedné nebo více ingrediencí, přičemž každá ingredience nese vlastní hmotnost v~gramech v~atributu \texttt{weight} a volitelně i kusové množství v~atributu \texttt{amount} pro položky zapisované po porcích.
+Cvičení je k~dennímu záznamu připojeno přímo vztahem 1:N přes cizí klíč \texttt{dayRecordId}, neboť cvičení nejsou zanořena do jídel a tvoří paralelní podstrom pod denním záznamem.
+Záznamy hmotnosti jsou modelovány jako samostatná entita bez vazby na denní záznam, což odpovídá jejich povaze nezávislého časového zápisu odděleného od nutričního denního cyklu.
+
+V~rámci normalizovaného schématu jsou veškeré cizí klíče deklarovány s~pravidlem kaskádového mazání.
+Při odstranění denního záznamu jsou tedy automaticky odstraněna i všechna jídla a cvičení daného dne, přičemž odstranění jídla automaticky odstraní i všechny jeho ingredience.
+Tento mechanismus zajišťuje referenční integritu na úrovni databázového stroje SQLite a eliminuje riziko vzniku osiřelých záznamů v~důsledku neúplných transakcí v~aplikační vrstvě.
+Atomicita kaskádového mazání je obzvláště významná pro funkce uživatelského smazání denního záznamu nebo přechodu mezi profily, kde by manuální mazání podřízených záznamů zvyšovalo složitost aplikační logiky a riziko nekonzistence.
+
+V~průběhu návrhu schématu byla zvažována alternativa v~podobě denormalizovaného úložiště, ve kterém by každý denní záznam obsahoval vnořený seznam jídel a ingrediencí v~jednom řádku, například formou serializovaného JSON dokumentu.
+Tato varianta by sice zjednodušila načítání celého denního záznamu jediným dotazem, znemožnila by však efektivní dotazování napříč jednotlivými dny, vyhodnocování statistik za delší časová období a indexaci podle atributů jednotlivých jídel nebo ingrediencí.
+Klíčové analytické scénáře aplikace, jako jsou týdenní a měsíční přehledy, vyhledávání oblíbených položek napříč historií a vyhodnocování porušení dietních omezení, vyžadují přístup ke konkrétním atributům jídel a ingrediencí bez nutnosti načítat a parsovat celé denní záznamy.
+Z~těchto důvodů bylo zvoleno normalizované schéma s~referenční integritou vynucenou na úrovni databáze, doplněné o~repozitářovou vrstvu, která tyto rozdrobené entity skládá zpět do doménových agregátů popsaných v~podsekci~\ref{subsec:repozitare}.
+
+Z~hlediska indexace jsou v~schématu definovány dva typy unikátních indexů.
+Sloupec \texttt{date} v~entitě \texttt{DayRecord} je opatřen unikátním indexem, který zajišťuje existenci nejvýše jednoho denního záznamu pro daný kalendářní den a zároveň urychluje vyhledávání podle data, jež je nejčastější dotazovací operací aplikace.
+Sloupec \texttt{normalizedName} ve všech třech šablonových entitách je rovněž unikátní, což vynucuje deduplikaci šablon na úrovni databáze a umožňuje rychlé vyhledávání existující šablony podle normalizovaného názvu při ukládání nového záznamu.
+
+\subsection{Systém šablon pro opakovaně používané položky}
+\label{subsec:sablony}
+
+Jednou z~opakujících se úloh při dlouhodobém sledování stravy je opětovný zápis identických nebo téměř identických položek, ať už se jedná o~pravidelně konzumovaná jídla, často používané ingredience nebo opakované cvičební aktivity.
+Pro adresování této potřeby, vyplývající z~funkčních požadavků FR-17 (oblíbené položky), FR-18 (duplikace dřívějších záznamů) a FR-19 (našeptávání názvů z~historie), zavádí datový model aplikace Foody samostatný subsystém šablon.
+Subsystém je tvořen třemi šablonovými entitami pro jídla, ingredience a cvičení, které paralelně k~transakčním entitám uchovávají kanonické verze opakovaně používaných položek.
+Každá šablona slouží jako zdroj dat při vytváření nového transakčního záznamu, aniž by byla s~tímto záznamem trvale relačně vázána, což umožňuje editovat pozdější výskyt bez vlivu na šablonu samotnou.
+
+Společným rysem všech tří šablonových entit je dvojice atributů \texttt{name} a \texttt{normalizedName}.
+Atribut \texttt{name} uchovává název v~podobě, ve které jej uživatel zapsal, včetně velkých písmen, diakritiky a případných mezer na okrajích, čímž je v~uživatelském rozhraní zachována původní vizuální podoba zápisu.
+Atribut \texttt{normalizedName} obsahuje technickou variantu téhož názvu po aplikaci normalizační funkce, která provádí převod na malá písmena a odstranění bílých znaků na okrajích, a slouží jako klíč pro deduplikaci.
+Na sloupci \texttt{normalizedName} je v~každé ze tří šablonových entit definován unikátní index, který na úrovni databázového stroje vynucuje existenci nejvýše jedné šablony s~daným normalizovaným názvem.
+Při uložení nového záznamu je tak okamžitě rozpoznáno, zda obdobná položka již v~šablonách existuje, bez nutnosti procházet celou tabulku.
+
+Pro řazení šablon v~uživatelských nabídkách a vyhodnocování jejich aktuálnosti uchovává každá šablona dvojici metrik používání.
+Atribut \texttt{usageCount} zaznamenává počet záznamů, při jejichž ukládání byla šablona vytvořena nebo aktualizována, a slouží jako odhad celkové popularity dané položky v~historii uživatele.
+Atribut \texttt{lastUsedAt} zachycuje časovou značku posledního výskytu, podle které lze v~nabídkách upřednostnit nedávno používané položky před položkami zapomenutými.
+Kombinace obou metrik umožňuje implementovat smíšené řazení reflektující jak dlouhodobou frekvenci, tak nedávnou aktivitu, čímž je zlepšena relevance položek nabízených uživateli při zápisu nového záznamu.
+
+Specifickým prvkem entity \texttt{MealTemplate} je její vazba na podřízenou entitu \texttt{MealTemplateIngredient}, která uchovává konkrétní skladbu ingrediencí dané šablony jídla.
+Vazba je realizována cizím klíčem \texttt{templateId} s~pravidlem kaskádového mazání, čímž je odstranění šablony jídla doprovázeno odstraněním všech příslušných šablonových ingrediencí.
+Tento návrh umožňuje uložit u~šablony jídla nejen jeho název, ale i kompletní rozpis ingrediencí včetně hmotností a nutričních hodnot, takže opětovné použití šablony obnovuje celé jídlo včetně jeho podrobností bez nutnosti dotazu na model umělé inteligence nebo manuálního zápisu.
+U~šablon ingrediencí a cvičení analogická vazba na podřízené entity neexistuje, neboť tyto položky jsou modelovány jako atomární bez vnitřní hierarchie.
+
+Mechanismus naplňování šablon je realizován v~aplikační vrstvě v~okamžiku ukládání nového transakčního záznamu.
+Při uložení záznamu jídla je v~kontroleru denního záznamu vyvolána operace převzetí položky do šablon nad odpovídajícím repozitářem, která podle normalizovaného názvu vyhledá existující šablonu: pokud existuje, inkrementuje její \texttt{usageCount} a aktualizuje cestu k~fotografii, pokud neexistuje, založí nový záznam včetně vložení skladby ingrediencí.
+Obdobně jsou při ukládání záznamu jídla automaticky aktualizovány šablony jednotlivých ingrediencí.
+Analogický mechanismus je aplikován i při ukládání cvičení, kde dochází k~aktualizaci šablon cvičebních aktivit.
+Šablony jsou tímto způsobem udržovány v~aktuálním stavu bez explicitní akce uživatele, který tedy nemusí oddělené šablony spravovat ručně.
+Volání těchto operací probíhá v~asynchronním režimu, takže neblokuje dokončení primární transakce uložení záznamu, čímž je zachována odezva uživatelského rozhraní.
+
+\subsection{Repozitářová vrstva a doménové modely}
+\label{subsec:repozitare}
+
+V~rámci architektonického vzoru \emph{Repository} zavedeného v~sekci~\ref{subsec:celkovaArchitektura} je v~aplikaci Foody definováno pět konkrétních repozitářů, z~nichž každý zapouzdřuje přístup k~jedné věcné oblasti datového modelu.
+Přehled repozitářů, jejich věcné oblasti a typu vystaveného rozhraní je uveden v~tabulce~\ref{tab:repozitare}, přičemž schéma datového toku z~databázových entit přes repozitářovou vrstvu na doménové modely je znázorněno na obrázku~\ref{fig:repozitare}.
+Vyšší vrstvy aplikace, zejména kontrolery a doménové služby, přistupují k~datům výhradně prostřednictvím těchto repozitářů a nikoli přímo přes datové přístupové objekty.
+
+\begin{table}[ht]
+	\centering
+	\caption{Přehled repozitářů aplikace Foody.}
+	\label{tab:repozitare}
+	\small
+	\begin{tabular}{p{4.5cm}p{5.5cm}p{4.5cm}}
+		\toprule
+		\textbf{Repozitář} & \textbf{Věcná oblast} & \textbf{Vystavené rozhraní} \\
+		\midrule
+		\texttt{DayRecordRepository} & Denní záznam s~vnořenými jídly, ingrediencemi a cvičeními & Jednorázové dotazy a reaktivní stream agregátů \\
+		\texttt{WeightEntryRepository} & Záznamy hmotnosti & Jednorázové dotazy a reaktivní stream záznamů \\
+		\texttt{MealTemplateRepository} & Šablony jídel se skladbou ingrediencí & Reaktivní paměťová cache typu \texttt{RxList} \\
+		\texttt{IngredientTemplateRepository} & Šablony jednotlivých ingrediencí & Reaktivní paměťová cache typu \texttt{RxList} \\
+		\texttt{ExerciseTemplateRepository} & Šablony cvičebních aktivit & Reaktivní paměťová cache typu \texttt{RxList} \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+% TODO: doplnit schéma repozitářové vrstvy (5 repozitářů jako fasáda nad DAO,
+% transformace entita -> doménový model, reaktivní propagace dat ke kontrolerům).
+\begin{figure}[ht]
+	\centering
+	\framebox{\parbox[c][6cm][c]{0.8\textwidth}{\centering \emph{TODO: Schéma repozitářové vrstvy}}}
+	\caption{Schéma repozitářové vrstvy aplikace Foody -- pět repozitářů jako fasáda nad DAO, transformace databázových entit na doménové agregáty a reaktivní propagace dat do prezentační vrstvy.}
+	\label{fig:repozitare}
+\end{figure}
+
+Klíčovou odpovědností repozitáře pro denní záznamy je sestavení doménového modelu z~rozdrobených databázových entit.
+Při načtení denního záznamu repozitář postupně dotazuje příslušné DAO a kombinuje výstupy: nejprve načte záznam denního přehledu, následně načte všechna jídla pro daný den, ke každému jídlu načte odpovídající ingredience a paralelně načte všechna cvičení daného dne.
+Výsledný doménový agregát tak obsahuje plně sestavenou hierarchii v~podobě seznamu jídel s~vnořeným seznamem ingrediencí u~každého z~nich a paralelního seznamu cvičení, což je struktura, kterou prezentační vrstva přímo využívá pro zobrazení denního přehledu.
+Tato transformace mezi normalizovaným úložištěm a denormalizovaným doménovým agregátem je centralizována v~repozitáři, čímž je odstíněna od kontrolerů a komponent uživatelského rozhraní.
+
+V~návaznosti na obecný popis reaktivních streamů uvedený v~sekci~\ref{subsec:databaze} zpřístupňuje repozitář pro denní záznamy aktuální stav dat prostřednictvím reaktivního proudu, jehož specifikem je transformace každé emise na sestavený doménový agregát.
+Při každé změně podřízené tabulky je vyvolána asynchronní transformační funkce, která pro každou položku znovu sestaví vnořenou hierarchii jídel, ingrediencí a cvičení tak, jak byla popsána v~předchozím odstavci.
+Repozitář pro váhové záznamy zveřejňuje obdobný proud nad samostatnou tabulkou hmotnosti, který nevyžaduje vnoření a omezuje se na lineární mapování entit na doménové modely.
+Tato vlastnost umožňuje vyšším vrstvám aplikace registrovat se k~odběru dat bez nutnosti manuálního dotazování po každé změně, což je v~souladu s~reaktivní povahou uživatelského rozhraní popsaného v~sekci~\ref{subsec:spravaStavu}.
+
+Z~hlediska normalizace časových údajů sjednocuje repozitář pro denní záznamy reprezentaci kalendářních dnů prostřednictvím privátní funkce, která ze zadaného časového razítka odvozuje pouze datovou složku v~lokálním časovém pásmu zařízení (tzv. půlnoc lokálního dne).
+Tato normalizace je aplikována při všech operacích vyhledávání, vkládání a aktualizace denního záznamu, čímž je zajištěno, že dvě různá časová razítka v~rámci téhož kalendářního dne odkazují na stejný denní záznam.
+Bez této normalizace by mohlo dojít k~vytvoření vícero denních záznamů pro tentýž den, pokud by aplikace pracovala s~časovými razítky generovanými v~různých okamžicích dne.
+Volba lokálního časového pásma odpovídá perspektivě uživatele, který sleduje stravování v~rámci svého denního cyklu, nikoli v~koordinovaném světovém čase.
+
+Šablonové repozitáře implementují odlišný vzorec přístupu k~datům, než repozitáře transakční.
+Vzhledem k~relativně malému počtu šablon a četnosti jejich čtení v~rámci uživatelských nabídek je v~každém z~trojice šablonových repozitářů udržována reaktivní paměťová cache realizovaná prostřednictvím kolekce typu \texttt{RxList} poskytované frameworkem GetX~\cite{getxDoc}, do které jsou při inicializaci načteny všechny šablony z~databáze.
+Po každé operaci vkládání, aktualizace nebo mazání je cache obnovena z~databáze a aktuální stav je automaticky propagován prostřednictvím reaktivního mechanismu téhož frameworku.
+Komponenty uživatelského rozhraní se na tuto kolekci naváží a získávají tak přímý přístup k~aktuálnímu seznamu šablon bez nutnosti vlastní synchronizace.
+Tento návrh je vhodný pro datové sady, jejichž velikost se pohybuje v~řádu desítek až stovek položek a u~nichž převažuje četnost čtení nad četností zápisu.
+
+Celkově lze konstatovat, že repozitářová vrstva uzavírá datovou architekturu aplikace tím, že odděluje fyzické úložiště od doménového pohledu, centralizuje transformaci entit na agregáty a poskytuje vyšším vrstvám reaktivní rozhraní pro odběr aktuálních dat.
+Konkrétní způsob, jakým je tato datová vrstva využívána při integraci s~modelem umělé inteligence pro rozpoznávání jídel a cvičení, je popsán v~následující sekci~\ref{sec:integraceAi}.
+
+\section{Integrace modelu umělé inteligence}
+\label{sec:integraceAi}
+
+% TODO: scope paragraph -- popis pipeline pro UI rozpoznávání jídel a cvičení, struktura promptů,
+% mechanismus práce s nejistotou, zabezpečení vstupu, podpora více poskytovatelů.
+% Odkaz na FR-06, FR-07, FR-08, FR-10, FR-11.
+
+\subsection{Architektura pipeline}
+\label{subsec:aiPipeline}
+
+% TODO: tok dat v pipeline -- vstup (foto + text / samotný text) -> PromptSanitizer -> AiService (OpenAI/Gemini)
+% -> REST klient -> strukturovaná JSON odpověď -> parsování -> confidence gate
+% -> AiAnalysisResult (success / lowConfidence / failure).
+% Samostatný tok pro cvičení a pro výpočet nutričních cílů (Mifflin-St Jeor přes prompt).
+
+% TODO: doplnit sekvenční diagram pipeline.
+\begin{figure}[ht]
+	\centering
+	\framebox{\parbox[c][6cm][c]{0.8\textwidth}{\centering \emph{TODO: Sekvenční diagram pipeline pro rozpoznání jídla z~fotografie}}}
+	\caption{Sekvenční diagram pipeline umělé inteligence pro rozpoznání jídla z~fotografie -- od vstupu po zobrazení výsledku s~indikací nejistoty.}
+	\label{fig:aiPipeline}
+\end{figure}
+
+\subsection{Struktura promptů a formát odpovědí}
+\label{subsec:prompty}
+
+% TODO: struktura JSON promptu (prompt.dart): pole task, expected_output, schema.rules
+% (amount = COUNT, confidence 0-1).
+% Injekce uživatelského kontextu: dietní typ, customDietPreferences, jazykové preference.
+% Formát odpovědi pro jídlo: valid, answer (name, confidence, amount, nutritional_values, ingredients[]).
+% Formát odpovědi pro cvičení: name, duration, caloriesPerMinute, confidence.
+% XML wrapping uživatelského vstupu (<user_input>) pro oddělení dat od instrukcí.
+
+\subsection{Práce s~nejistotou a confidence gate}
+\label{subsec:confidence}
+
+% TODO: implementace FR-08. Confidence thresholds: jídlo >= 0,50, cvičení >= 0,50.
+% Tříúrovňová indikace nejistoty v UI: zelená (>= 75 %), žlutá (>= 50 %), červená (< 50 %).
+% Logika: pokud confidence < threshold -> lowConfidence (uživatel vidí varování, ale data lze potvrdit/opravit).
+% Víceúrovňová validace cvičení: hard failure (valid=false + prázdný název + confidence < 0,50) vs. low confidence.
+
+\subsection{Zabezpečení vstupu a ochrana proti prompt injection}
+\label{subsec:promptInjection}
+
+% TODO: PromptSanitizer pipeline: trim whitespace -> strip control characters (\x00-\x1F, \x7F)
+% -> odstranění literálních <user_input> tagů -> truncation (descriptions 500, preferences 200, queries 500).
+% Regex-based pre-screening (6 vzorů). Volitelný LLM-based pre-screening (GPT-4o-mini).
+% Anti-injection direktiva v systémových promptech.
+% Důvody pro vícevrstvý přístup k zabezpečení.
+
+\subsection{Podpora více poskytovatelů}
+\label{subsec:vicePoskytovatelu}
+
+% TODO: abstraktní rozhraní AiService. Implementace OpenAiService a GeminiService.
+% AiServiceManager pro přepínání (switchService). OpenAI jako výchozí poskytovatel.
+% Gemini využívá OpenAI-kompatibilní endpoint (generativelanguage.googleapis.com/v1beta/openai/).
+% Architektonické rozhodnutí: provider-agnostic design.
+% Omezení: cvičení a nutriční cíle vázány přímo na OpenAI (nepřepínatelné).
+% Modely: GPT-4o pro analýzu jídel/cvičení, GPT-4o-mini pro detekci injekcí.
+
+\section{Vstupní modality pro záznam stravy}
+\label{sec:vstupniModality}
+
+% TODO: scope paragraph -- aplikace implementuje šest různých vstupních modalit pro záznam jídla
+% (foto + AI, hlas, text + AI, manuální, čárový kód, skenování etiket).
+% Odkaz na FR-01, FR-06, FR-11, FR-12, FR-14, FR-16.
+% Diverzita vychází z uživatelské studie (kap. 3.2).
+
+\subsection{Fotografický vstup a rozpoznání jídla}
+\label{subsec:fotoVstup}
+
+% TODO: implementace FR-06 a FR-12. Dva zdroje: kamera (ScanCameraScreen) a galerie (image_picker).
+% ScanMode.scanMeal: foto -> volitelný textový popis -> AI pipeline -> ScanPreviewScreen.
+% Scan onboarding (5 stránek s tipy, FR-09). Crop a úpravy fotografie.
+
+\subsection{Hlasový vstup}
+\label{subsec:hlasovyVstup}
+
+% TODO: implementace FR-14 (voice). VoiceTranscriptionService: speech_to_text + locale-aware (cs/en).
+% VoiceLogScreen. Tok: nahrávání -> real-time transkripce -> potvrzení -> AI pipeline.
+% Podpora pro jídla i cvičení.
+
+\subsection{Textový vstup s~podporou umělé inteligence}
+\label{subsec:textovyVstup}
+
+% TODO: implementace FR-14 (text) a FR-11 (fallback po selhání foto).
+% Volný textový popis -> AI pipeline -> rozpoznání ingrediencí a nutričních hodnot.
+% Přístup přes QuickActionSheet z hlavní obrazovky.
+
+\subsection{Manuální zadání bez umělé inteligence}
+\label{subsec:manualniVstup}
+
+% TODO: implementace FR-01. Plně manuální záznam bez AI asistence.
+% Uživatel vyplní název, ingredience, nutriční hodnoty, gramáž.
+% EditMealScreen, EditIngredientScreen. SelectMealScreen pro výběr z historie/šablon/oblíbených.
+% Klíčové pro situace s přesnou znalostí složení (domácí vaření, balené potraviny).
+% Propojení s FR-15 (jednotky 1g, 100g, vlastní, zlomky).
+
+\subsection{Čtečka čárových kódů}
+\label{subsec:carovyKod}
+
+% TODO: implementace FR-16. mobile_scanner pro EAN-8, EAN-13, UPC-A, UPC-E, Code128.
+% BarcodeLookupService -> OpenFoodFactsClient. BarcodeLookupResult: nutriční hodnoty.
+% 6 typů chyb (FR-10). Omezení: závislost na kompletnosti databáze.
+
+\subsection{Skenování nutričních etiket}
+\label{subsec:nutricniEtikety}
+
+% TODO: ScanMode.foodLabel. Multimodální AI model pro extrakci nutričních hodnot z fotografie etikety.
+% Aktuální stav implementace a omezení.
+
+\section{Implementace klíčových funkcí}
+\label{sec:klicoveFunkce}
+
+% TODO: scope paragraph -- popis hlavních funkčních celků nad rámec vstupních modalit.
+% Každá podsekce odkazuje na příslušné FR z kapitoly 3.2.
+
+\subsection{Denní přehled a správa nutričních cílů}
+\label{subsec:dennPrehled}
+
+% TODO: implementace FR-02, FR-03. DashboardScreen, DashboardController, DayRecordController.
+% NutritionGoalsService (Mifflin-St Jeor). Rollover calories (max 500 kcal).
+% CalendarDayRingService, CalendarDayRingPainter. Scrollable calendar.
+
+\subsection{Správa jídel a ingrediencí}
+\label{subsec:spravaJidel}
+
+% TODO: implementace FR-01, FR-13, FR-15. EditMealScreen, IngredientDetailScreen, EditIngredientScreen.
+% FR-15: jednotky (1g, 100g, vlastní, zlomky).
+% FR-13: "Fix with AI" -> FixResultScreen.
+% MealCopyToSheet, MealDatePickerSheet (FR-18).
+
+\subsection{Sledování cvičení}
+\label{subsec:sledovaniCviceni}
+
+% TODO: implementace FR-22 (částečně FR-23). ExerciseLogHomeScreen, AddExerciseScreen.
+% AI rozpoznávání cvičení (text/hlas) -> AiPipelineService.analyzeExercise().
+% ExerciseTemplate. ExerciseDetailScreen, ExerciseDetailOptionsSheet.
+% Vizualizace výdeje na dashboard.
+
+\subsection{Sledování hmotnosti}
+\label{subsec:sledovaniHmotnosti}
+
+% TODO: WeightLogSheet, WeightHistoryScreen, WeightHistoryEditEntryScreen.
+% WeightEntryRepository. BmiCard. WeightProgressCard.
+% Propojení s onboarding flow.
+
+\subsection{Oblíbené položky, šablony a historie}
+\label{subsec:oblibene}
+
+% TODO: implementace FR-17, FR-18, FR-19. isFavorite na Meal, Ingredient, Exercise.
+% SelectMealScreen + Favorites tab. Systém šablon (4.4.2).
+% FR-18: MealCopyToSheet. FR-19: vyhledávání s debounce. Řazení dle usageCount.
+
+\subsection{Dietní omezení a vizualizace porušení}
+\label{subsec:dietniOmezeni}
+
+% TODO: implementace FR-20, FR-21. SessionManager.dietType + customDietPreferences.
+% PersonalDetailsDietScreen, PersonalDetailsCustomDietScreen.
+% Injekce do AI promptů přes _buildMealUserAttributes().
+% DietaryViolationService. DietaryViolationsCalendarCard (FR-21).
+
+\subsection{Dotazy v~přirozeném jazyce}
+\label{subsec:askAi}
+
+% TODO: implementace FR-27. AskAiController, AskAiScreen.
+% Two-pass systém: 1. pass určí časový rozsah, 2. pass analyzuje data a generuje odpověď.
+% Typy dotazů: trendy, srovnání, doporučení, vzorce stravování.
+
+\subsection{Notifikace a motivační souhrny}
+\label{subsec:notifikace}
+
+% TODO: implementace FR-28, FR-29. TrackingReminderService (flutter_local_notifications, zonedSchedule).
+% 5 typů připomínek (snídaně, oběd, svačina, večeře, konec dne). Perzistence přes SharedPreferences.
+% TrackingRemindersController (FR-29). MotivationalSummaryService (denní/týdenní/měsíční).
+
+\subsection{Export dat a sdílení}
+\label{subsec:exportDat}
+
+% TODO: implementace FR-25. ExportService, ExportController.
+% CSV export (tabulkový formát). PDF export (formátovaný report, ExportPdfIntroScreen, ExportPdfDateRangeScreen).
+% MealShareBuilder, AppShareService.
+
+\subsection{Integrace se zdravotními platformami}
+\label{subsec:zdravotniIntegrace}
+
+% TODO: částečná implementace FR-23. HealthIntegrationService (Apple Health / Health Connect).
+% HealthIntegrationController, HealthIntegrationScreen.
+% Exercise.source: rozlišení manuální vs. importované.
+% Přepínače burnedCaloriesEnabled, rolloverCaloriesEnabled.
+% Omezení: bez granulárních multiplikátorů.
+
+\subsection{Lokalizace, onboarding a profil uživatele}
+\label{subsec:lokalizaceOnboarding}
+
+% TODO: implementace FR-04, FR-09 (částečně FR-30). easy_localization (en, cs).
+% Onboarding flow: 12+ obrazovek (welcome, DOB, height/weight, gender, goal, ...).
+% FR-04: PersonalDetailsScreen. SessionManager + SharedPreferencesService.
+% FR-09: ScanOnboardingScreen (5 stránek).
+% FR-30: individuální přepínače (burnedCalories, rollover, autoAdjust).
+
+\subsection{Další implementované funkce}
+\label{subsec:dalsiFunkce}
+
+% TODO: doplňkové funkce nad rámec FR. StreakService, StreakController, StreakDialog.
+% Home widget (WidgetSyncService, WidgetActionRouter, WidgetConstants).
+% CalendarDayRingService, CalendarDayRingPainter.
+% ReportMealScreen. Auto-adjust makroživin.
+% FR-05: mazání jídel/cvičení (částečně, bez mazání účtu).
+% FR-26: offline tolerance (SQLite local-first).
+
+\section{Klíčové obrazovky aplikace}
+\label{sec:klicoveObrazovky}
+
+% TODO: scope paragraph -- vybrané obrazovky ilustrují klíčové interakční toky z kapitoly 3.2.
+% 8 až 10 snímků (Dashboard, ScanCamera, ScanPreview, EditMeal, SelectMeal, VoiceLog, ExerciseLog, Profile, AskAi, Progress).
+
+% TODO: doplnit snímky obrazovek (10 obrazovek).
+
+\section{Přehled implementovaných funkčních požadavků}
+\label{sec:prehledFR}
+
+% TODO: scope paragraph -- tabulka shrnuje stav implementace všech FR-01 až FR-30.
+% Klasifikace: Implementováno / Částečně implementováno / Neimplementováno + krátké zdůvodnění.
+
+\begin{table}[ht]
+	\centering
+	\caption{Přehled stavu implementace funkčních požadavků FR-01 až FR-30.}
+	\label{tab:fr-status}
+	\small
+	\begin{tabular}{p{1.1cm}p{5.5cm}p{2.6cm}p{5cm}}
+		\toprule
+		\textbf{FR} & \textbf{Název} & \textbf{Stav} & \textbf{Poznámka} \\
+		\midrule
+		FR-01 & Ruční přidání záznamu jídla bez umělé inteligence & Implementováno & EditMealScreen, manuální vstup ingrediencí \\
+		FR-02 & Denní přehled kalorií a makroživin & Implementováno & DashboardScreen, DayRecordController \\
+		FR-03 & Nastavení cílových hodnot & Implementováno & NutritionGoalsService, EditNutritionGoalsScreen \\
+		FR-04 & Správa profilu uživatele & Implementováno & PersonalDetailsScreen, SessionManager \\
+		FR-05 & Kontrola nad daty a mazání & Částečně implementováno & Mazání jídel a cvičení funkční, mazání účtu chybí \\
+		FR-06 & Fotografie jako vstup pro rozpoznání & Implementováno & ScanCameraScreen, pipeline umělé inteligence \\
+		FR-07 & Návrh položek a porcí umělou inteligencí & Implementováno & AiPipelineService, strukturovaný JSON prompt \\
+		FR-08 & Indikace nejistoty výstupu & Implementováno & Barevný badge (zelená $\geq$ 75~\%, žlutá $\geq$ 50~\%, červená $<$ 50~\%) \\
+		FR-09 & Vysvětlení limitů umělé inteligence & Implementováno & ScanOnboardingScreen (5 stránek s~tipy) \\
+		FR-10 & Rozlišení limitu umělé inteligence a technické chyby & Částečně implementováno & Barcode: 6 typů chyb, AI pipeline: generické selhání \\
+		FR-11 & Textový fallback po selhání rozpoznání & Implementováno & Textový popis $\to$ pipeline umělé inteligence \\
+		FR-12 & Import fotografie z~galerie & Implementováno & Integrace image\_picker \\
+		FR-13 & Opakování rozpoznání z~editace & Implementováno & „Fix with AI" $\to$ FixResultScreen \\
+		FR-14 & Záznam bez fotografie (hlas, text) & Implementováno & VoiceLogScreen, textový popis, manuální vstup \\
+		FR-15 & Jednotky množství (gramy, kusy) & Implementováno & 1~g, 100~g, vlastní jednotky, zlomky \\
+		FR-16 & Čtečka čárových kódů & Implementováno & mobile\_scanner, OpenFoodFactsClient \\
+		FR-17 & Oblíbené položky & Implementováno & isFavorite na jídlech, ingrediencích, cvičeních \\
+		FR-18 & Duplikace předchozího záznamu & Implementováno & MealCopyToSheet s~výběrem data \\
+		FR-19 & Našeptávání podle historie & Částečně implementováno & Fulltextové vyhledávání s~debounce, bez klasického dropdown \\
+		FR-20 & Dietní omezení a intolerance & Implementováno & SessionManager.dietType, customDietPreferences \\
+		FR-21 & Porušení dietních omezení v~kalendáři & Implementováno & DietaryViolationsCalendarCard \\
+		FR-22 & Příjem versus výdej v~jednom pohledu & Implementováno & Dashboard: kalorický příjem a spálené kalorie \\
+		FR-23 & Nastavení integrace výdeje & Částečně implementováno & Přepínače burnedCalories/rollover, bez granulárních multiplikátorů \\
+		FR-24 & Týdenní a měsíční přehledy & Implementováno & ProgressScreen, WeeklyEnergyCard \\
+		FR-25 & Export dat (CSV, PDF) & Implementováno & ExportService, výběr období \\
+		FR-26 & Offline tolerance & Implementováno & SQLite local-first, umělá inteligence vyžaduje připojení \\
+		FR-27 & Dotazy v~přirozeném jazyce & Implementováno & AskAiScreen, two-pass systém \\
+		FR-28 & Měsíční motivační souhrn & Implementováno & MotivationalSummaryService (denní, týdenní, měsíční) \\
+		FR-29 & Nastavitelné notifikace & Implementováno & TrackingReminderService, 5 typů připomínek \\
+		FR-30 & Skrytí a zobrazení pokročilých funkcí & Částečně implementováno & Individuální přepínače, bez režimu basic / advanced \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\section{Omezení implementace}
+\label{sec:omezeniImplementace}
+
+% TODO: scope paragraph -- transparentní identifikace oblastí, kde implementace nedosahuje plného potenciálu návrhu.
+
+% TODO: pět tematických odstavců:
+% 1. Omezení rozpoznávání umělou inteligencí: přesnost u složených/regionálních pokrmů,
+%    závislost na kvalitě fotografie, latence (NFR-02), aproximace energetického odhadu.
+% 2. Závislost na externích službách: OpenAI API vyžaduje připojení (omezení offline pro AI),
+%    Open Food Facts neobsahuje všechny produkty (lokální značky), náklady na API volání.
+% 3. Neimplementované nebo částečné FR: FR-05 bez mazání účtu, FR-10 bez granulárního rozlišení,
+%    FR-19 bez klasického autocomplete, FR-23 bez granulárních multiplikátorů, FR-30 bez basic/advanced režimu.
+% 4. Technická omezení: foodLabel scan není plně implementován,
+%    cvičení a nutriční cíle vázány na OpenAI (nepřepínatelné), absence automatického fallbacku mezi poskytovateli,
+%    absence cloudové synchronizace a zálohování.
+% 5. Omezení uživatelského testování: aplikace nebyla testována na velkém vzorku v produkci,
+%    dlouhodobá retence neověřena.
+% Forward bridge na kapitolu Testování.

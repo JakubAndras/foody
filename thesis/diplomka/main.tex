@@ -1,0 +1,102 @@
+% arara: pdflatex: { synctex: yes }
+% arara: makeindex: { style: ctuthesis }
+% arara: bibtex
+% arara: pdflatex
+% arara: pdflatex
+
+\documentclass[twoside]{ctuthesis}
+
+% enumitem: rozšířené možnosti formátování seznamů (např. style=nextline u description).
+\usepackage{enumitem}
+
+\ctusetup{
+	preprint = \ctuverlog,
+	mainlanguage = czech,
+	otherlanguages = {english},
+	title-czech = {Aplikace pro rozpoznávání potravin a sledování kalorického příjmu pomocí AI},
+	title-english = {AI-Powered Food Recognition and Calorie Tracking Application},
+	doctype = M,
+	faculty = F3,
+	department-czech = {Katedra počítačové grafiky a interakce},
+	department-english = {Department of Computer Graphics and Interaction},
+	author = {Bc. Jakub Sebastian Andráš},
+	supervisor = {Ing. Ivo Malý, Ph.D.},
+	fieldofstudy-czech = {Otevřená informatika},
+	subfieldofstudy-czech = {Software Engineering},
+	fieldofstudy-english = {Open Informatics},
+	subfieldofstudy-english = {Software Engineering},
+	keywords-czech = {umělá inteligence, rozpoznávání potravin, sledování kalorií, mobilní aplikace, Flutter, OpenAI},
+	keywords-english = {artificial intelligence, food recognition, calorie tracking, mobile application, Flutter, OpenAI},
+	day = 1,
+	month = 5,
+	year = 2026,
+}
+
+\ctuprocess
+
+\addto\ctucaptionsczech{%
+	\def\supervisorname{Vedoucí}%
+	\def\subfieldofstudyname{Studijní program}%
+}
+
+\ctutemplateset{maketitle twocolumn default}{
+	\begin{twocolumnfrontmatterpage}
+		\ctutemplate{twocolumn.thanks}
+		\ctutemplate{twocolumn.declaration}
+		\ctutemplate{twocolumn.abstract.in.titlelanguage}
+		\ctutemplate{twocolumn.abstract.in.secondlanguage}
+		\ctutemplate{twocolumn.tableofcontents}
+		\ctutemplate{twocolumn.listoffigures}
+	\end{twocolumnfrontmatterpage}
+}
+
+\setlength{\parskip}{5ex plus 0.2ex minus 0.2ex}
+
+% Český abstrakt
+\begin{abstract-czech}
+	% TODO: doplnit český abstrakt (cca 150 až 250 slov)
+	Placeholder českého abstraktu.
+\end{abstract-czech}
+
+% Anglický abstrakt
+\begin{abstract-english}
+	% TODO: write English abstract (approx. 150 to 250 words)
+	Placeholder of the English abstract.
+\end{abstract-english}
+
+% Poděkování
+\begin{thanks}
+	% TODO: doplnit poděkování
+	Děkuji vedoucímu práce Ing. Ivu Malému, Ph.D. za odborné vedení a cenné připomínky.
+\end{thanks}
+
+% Prohlášení
+\begin{declaration}
+	Prohlašuji, že jsem předloženou práci vypracoval samostatně a že jsem uvedl veškeré
+	použité informační zdroje v souladu s Metodickým pokynem o dodržování etických
+	principů při přípravě vysokoškolských závěrečných prací.
+
+	V Praze, \ctufield{day}.~\monthinlanguage{title}~\ctufield{year}
+\end{declaration}
+
+\begin{document}
+
+\maketitle
+
+\include{chapters/01-uvod}
+\include{chapters/02-analyza}
+\include{chapters/03-navrh}
+\include{chapters/04-implementace}
+\include{chapters/05-testovani}
+\include{chapters/06-zaver}
+
+% Bibliografie
+% Numerický styl v pořadí citování ([1], [2], ...). Odpovídá ČSN ISO 690 numerické variantě.
+% TODO: později ideálně přepnout na specifický `iso690` styl (vyžaduje `tlmgr install iso690`).
+\bibliographystyle{unsrt}
+\bibliography{bibliography}
+
+\appendix
+% \include{chapters/prilohy}
+
+\end{document}

@@ -1,0 +1,329 @@
+\chapter{Testování}
+\label{ch:testovani}
+
+Tato kapitola popisuje průběh a výsledky uživatelského testování aplikace Foody.
+Cílem testování bylo ověřit použitelnost implementované aplikace na reálných uživatelích a identifikovat případné problémy v~uživatelském rozhraní a interakčních tocích.
+V~první části kapitoly je popsána zvolená metodika, výběr participantů, sada testovacích úloh a použité dotazníky.
+Následně jsou prezentovány výsledky plnění jednotlivých úloh, výstupy standardizovaných dotazníků a identifikované problémy s~doporučeními pro další iteraci vývoje.
+
+\section{Metodika testování}
+\label{sec:metodikaTestovani}
+
+V~rámci testování aplikace Foody byla zvolena kombinace metody \emph{think aloud} a úlohového testování (\emph{task-based usability testing}).
+Tato kombinace umožňuje získat jak kvantitativní data o~úspěšnosti a rychlosti plnění úloh, tak kvalitativní poznatky o~kognitivních procesech participantů při interakci s~aplikací.
+Následující podkapitoly popisují výběr participantů, prostředí testování, sadu testovacích úloh a použité dotazníky a metriky.
+
+\subsection{Výběr a charakteristika participantů}
+\label{subsec:vyberParticipantu}
+
+Pro uživatelské testování byli vybráni celkem čtyři participanti, kteří představují různé uživatelské profily z~hlediska zkušeností se sledováním stravy a technologické zdatnosti.
+Tento počet je v~souladu s~doporučeními Nielsena, podle kterých pět participantů odhalí přibližně 80~\% problémů použitelnosti, přičemž již čtyři participanti pokrývají většinu kritických nedostatků~\cite{nielsen2000fiveUsers}.
+Participanti byli vybráni s~ohledem na variabilitu věku, pohlaví a předchozích zkušeností s~aplikacemi pro sledování kalorického příjmu, čímž bylo zajištěno pokrytí rozdílných uživatelských perspektiv.
+
+% TODO: doplnit profily participantů P1--P4 (jedná se o stejné participanty jako v uživatelské studii v sekci 3.2.2).
+% Pro každého uvést primární cíl, zkušenosti s calorie tracking aplikacemi a technologickou zdatnost (2--4 věty).
+% Vzor: „P1 (žena, 28 let) se aktivně věnuje fitness a sledování stravy. Dříve používala MyFitnessPal po dobu šesti měsíců,
+% kterou opustila kvůli časové náročnosti manuálního zápisu. Od testované aplikace očekává rychlejší záznam díky AI rozpoznávání."
+
+\subsection{Prostředí a průběh testovací relace}
+\label{subsec:prostrediRelace}
+
+Testování probíhalo formou individuálních relací v~kontrolovaném prostředí, kdy každý participant pracoval s~aplikací na reálném mobilním zařízení.
+V~průběhu testování byla použita metoda souběžného protokolu \emph{think aloud}, při které participanti verbalizovali své myšlenky, dojmy a pochybnosti během plnění úloh~\cite{nielsen1994thinkAloud}.
+Na začátku každé relace byl participant seznámen s~účelem testování, podepsal informovaný souhlas a obdržel instrukce k~verbalizaci myšlenek.
+
+Každá testovací relace měla odhadovanou délku 75 až 90~minut a sestávala ze čtyř fází, jejichž přehled je uveden v~tabulce~\ref{tab:strukturaRelace}.
+V~úvodní fázi (přibližně 5~minut) byl participant seznámen s~průběhem testu a instrukcemi k~metodě \emph{think aloud}.
+Hlavní fáze testování (60 až 70~minut) zahrnovala plnění třinácti testovacích úloh, přičemž po dokončení každé úlohy participant vyplnil dotazník SEQ.
+Třetí fáze (přibližně 10~minut) byla věnována vyplnění standardizovaných dotazníků SUS a UEQ-S hodnotících celkovou zkušenost s~aplikací.
+Závěrečná fáze (5 až 10~minut) sestávala z~polostrukturovaného debriefingu s~šesti otevřenými otázkami zaměřenými na celkový dojem, pozitivní a negativní aspekty aplikace, srovnání s~konkurenčními řešeními a ochotu k~pravidelnému používání.
+
+\begin{table}[ht]
+	\centering
+	\caption{Struktura testovací relace.}
+	\label{tab:strukturaRelace}
+	\begin{tabular}{lll}
+		\toprule
+		\textbf{Fáze} & \textbf{Délka} & \textbf{Obsah} \\
+		\midrule
+		Úvod & 5~min & Představení, souhlas, instrukce k~\emph{think aloud} \\
+		Testovací úlohy & 60--70~min & Plnění úloh T1--T13 s~SEQ po každé úloze \\
+		Dotazníky & 10~min & SUS a UEQ-S \\
+		Debriefing & 5--10~min & Otevřené otázky, celkový dojem \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+Na základě přípravy testovacího prostředí byla na zařízení nainstalována čistá verze aplikace bez předchozích dat, čímž byl simulován stav prvního spuštění.
+Do galerie zařízení byly nahrány připravené fotografie jídel pro úlohu T3, na stůl bylo připraveno reálné jídlo pro úlohu T2 a balený produkt s~čárovým kódem pro úlohu T6.
+Průběh testování byl zaznamenáván formou záznamu obrazovky a zvukového záznamu pro následnou analýzu verbalizací.
+
+\subsection{Testovací úlohy}
+\label{subsec:testovaciUlohy}
+
+Testovací úlohy byly navrženy tak, aby pokrývaly klíčové funkční požadavky a případy užití definované v~kapitole~\ref{ch:navrh} (viz sekce~\ref{sec:uzivatelskaStudie}).
+Úlohy jsou seřazeny v~pořadí, které simuluje přirozený průchod aplikací od prvního spuštění přes různé způsoby záznamu jídla až po přehledy a export dat.
+Celkem bylo definováno třináct testovacích úloh, jejichž přehled včetně vazby na funkční požadavky a případy užití je uveden v~tabulce~\ref{tab:ulohy}.
+
+\begin{table}[ht]
+	\centering
+	\caption{Přehled testovacích úloh s~vazbou na funkční požadavky a případy užití.}
+	\label{tab:ulohy}
+	\begin{tabular}{cll}
+		\toprule
+		\textbf{Úloha} & \textbf{Název} & \textbf{Pokryté FR / UC} \\
+		\midrule
+		T1 & Onboarding a nastavení profilu & FR-03, FR-04, FR-20, UC07 \\
+		T2 & Záznam jídla z~fotografie & FR-06, FR-07, FR-08, FR-09, UC01 \\
+		T3 & Import fotografie z~galerie & FR-12 \\
+		T4 & Oprava výsledku rozpoznání a re-analýza & FR-11, FR-13, UC02 \\
+		T5 & Záznam jídla hlasem & FR-14 \\
+		T6 & Skenování čárového kódu & FR-16, UC04 \\
+		T7 & Ruční přidání záznamu & FR-01, FR-15, UC03 \\
+		T8 & Oblíbené a duplikace jídla & FR-17, FR-18, UC05 \\
+		T9 & Záznam cvičení hlasem & --- \\
+		T10 & Zaznamenání váhy & --- \\
+		T11 & Denní přehled a smazání záznamu & FR-02, FR-05, FR-22 \\
+		T12 & Týdenní přehled a Ask AI & FR-24, FR-27, UC08 \\
+		T13 & Export dat & FR-25 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+Úloha T1 zahrnovala kompletní onboarding flow aplikace, v~rámci kterého participant zadal základní údaje (váha, výška, věk), nastavil kalorický cíl a zvolil případné dietní preference.
+Úlohy T2 až T6 pokrývaly jednotlivé vstupní modality pro záznam jídla, konkrétně fotografii z~kamery (T2), import z~galerie (T3), opravu a re-analýzu výsledku rozpoznání (T4), hlasový vstup (T5) a skenování čárového kódu (T6).
+Úloha T7 testovala ruční přidání záznamu bez využití umělé inteligence, zatímco úloha T8 ověřovala práci s~oblíbenými položkami a funkcí kopírování jídla na jiný den.
+
+V~rámci úloh T9 a T10 bylo testováno rozšíření aplikace nad rámec původní specifikace, konkrétně záznam cvičení hlasovým vstupem a zaznamenání tělesné váhy.
+Úlohy T11 až T13 se zaměřovaly na přehledové a analytické funkce aplikace, včetně denního přehledu se smazáním záznamu (T11), týdenního přehledu s~funkcí Ask AI pro dotazy v~přirozeném jazyce (T12) a exportu dat (T13).
+
+Z~celkového počtu třiceti funkčních požadavků definovaných v~kapitole~\ref{ch:navrh} je testovacími úlohami přímo pokryto dvacet dva požadavků, což představuje 73~\% specifikace.
+Všech osm případů užití (UC01 až UC08) je pokryto alespoň jednou úlohou.
+Zbývajících osm funkčních požadavků nebylo zahrnuto do testování z~důvodů, které jsou shrnuty v~tabulce~\ref{tab:nepokrytaFR}.
+
+\begin{table}[ht]
+	\centering
+	\caption{Funkční požadavky nepokryté testovacími úlohami s~uvedením důvodu.}
+	\label{tab:nepokrytaFR}
+	\small
+	\begin{tabular}{p{1.1cm}p{4.5cm}p{8cm}}
+		\toprule
+		\textbf{FR} & \textbf{Název} & \textbf{Důvod vynechání} \\
+		\midrule
+		FR-10 & Rozlišení chyb rozpoznávání a aplikace & Nelze spolehlivě vyvolat v~kontrolovaném prostředí \\
+		FR-19 & Našeptávání názvů & Implicitně pokryto vyhledáváním v~úlohách T7 a T8 \\
+		FR-21 & Porušení diet v~kalendáři & Vyžaduje historická data s~porušeními, obtížné simulovat \\
+		FR-23 & Nastavení integrace výdeje & Pouze přepínač v~nastavení, nízká interakční hodnota \\
+		FR-26 & Offline tolerance & Vyžaduje odpojení od sítě během testu \\
+		FR-28 & Motivační souhrn & Vyžaduje dlouhodobý cyklus (denní, týdenní, měsíční) \\
+		FR-29 & Konfigurovatelné notifikace & Efekt vyžaduje časový odstup \\
+		FR-30 & Zobrazení a skrytí pokročilých funkcí & Pouze přepínače v~nastavení, nízká interakční hodnota \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+Během plnění vybraných úloh bylo současně pozorováním ověřováno plnění nefunkčních požadavků.
+V~rámci úlohy T2 byla měřena latence rozpoznávání umělou inteligencí (NFR-02, limit 20~s) časem od odeslání fotografie do zobrazení výsledku.
+Počet kroků potřebných pro zápis jídla (NFR-03, limit 6~kroků) byl zaznamenáván při úlohách T2, T5, T6 a T7.
+Čas zápisu (NFR-04) byl měřen pro nový záznam v~úloze T2 (limit 5~minut) a pro opakovaný záznam v~úloze T8 (limit 1~minuta).
+
+\subsection{Použité dotazníky a metriky}
+\label{subsec:dotazniky}
+
+Pro kvantitativní hodnocení použitelnosti a uživatelské zkušenosti byly v~rámci testování použity tři standardizované dotazníky.
+Výběr nástrojů pokrývá hodnocení na úrovni jednotlivých úloh (SEQ), celkovou použitelnost systému (SUS) a uživatelskou zkušenost v~pragmatické i hedonické dimenzi (UEQ-S).
+Společné použití těchto tří dotazníků umožňuje triangulaci výsledků a poskytuje komplexní pohled na kvalitu interakce uživatele s~aplikací.
+
+Bezprostředně po dokončení každé testovací úlohy participant vyplnil dotazník \emph{Single Ease Question} (SEQ), který sestává z~jediné otázky hodnotící subjektivní obtížnost úlohy na sedmibodové škále, kde 1 znamená „velmi obtížná" a 7 „velmi snadná"~\cite{sauro2009seq}.
+Výhodou SEQ je minimální zatížení participanta a možnost okamžitého zachycení dojmu z~právě dokončené úlohy, aniž by byl narušen průběh testování.
+Na základě dostupných benchmarků je za dobré hodnocení považován průměr SEQ skóre 5,5 a vyšší.
+
+Po dokončení všech testovacích úloh participant vyplnil dotazník \emph{System Usability Scale} (SUS), který představuje standardizovaný nástroj pro hodnocení celkové použitelnosti systému~\cite{brooke1996sus}.
+Dotazník SUS sestává z~deseti položek hodnocených na pětibodové Likertově škále (1~--~rozhodně nesouhlasím, 5~--~rozhodně souhlasím), přičemž liché položky jsou formulovány pozitivně a sudé negativně.
+Výsledné skóre se pohybuje v~rozsahu 0 až 100~bodů a vypočítá se podle vzorce~(\ref{eq:sus}).
+V~kontextu dostupných benchmarků odpovídá průměrné SUS skóre napříč studiemi přibližně 68~bodům, přičemž skóre nad 80,3~bodu řadí systém mezi horních 10~\% hodnocených aplikací~\cite{bangor2008susAdjective}.
+
+\begin{equation}
+	\mathrm{SUS} = \bigl((S_L - 5) + (25 - S_S)\bigr) \cdot 2{,}5,
+	\label{eq:sus}
+\end{equation}
+
+\noindent kde $S_L$ je součet odpovědí na lichých položkách (1, 3, 5, 7, 9) a $S_S$ je součet odpovědí na sudých položkách (2, 4, 6, 8, 10).
+
+Jako doplňkový nástroj pro hodnocení uživatelské zkušenosti byl použit dotazník \emph{User Experience Questionnaire Short} (UEQ-S), který měří pragmatickou a hedonickou kvalitu systému prostřednictvím osmi položek~\cite{schrepp2017ueqs}.
+Každá položka má formu sémantického diferenciálu na sedmibodové škále ($-3$ až $+3$), přičemž záporný pól je vždy umístěn na levé straně.
+Položky 1 až 4 (bránící/podporující, složitý/jednoduchý, neefektivní/efektivní, matoucí/jasný) měří pragmatickou kvalitu a položky 5 až 8 (nudný/vzrušující, nezajímavý/zajímavý, obvyklý/vynalézavý, tradiční/moderní) měří hedonickou kvalitu.
+Pragmatická kvalita se vypočítá jako průměr položek 1 až 4, hedonická kvalita jako průměr položek 5 až 8 a celkové skóre jako průměr všech osmi položek.
+Byla použita oficiální česká verze dotazníku validovaná a dostupná na stránkách projektu UEQ.
+
+\section{Výsledky testování}
+\label{sec:vysledkyTestovani}
+
+Následující podkapitoly prezentují výsledky uživatelského testování v~členění na kvantitativní údaje o~plnění jednotlivých úloh, hodnocení SEQ a výstupy standardizovaných dotazníků SUS a UEQ-S.
+Výsledky jsou doplněny o~kvalitativní poznatky získané analýzou verbalizací participantů v~průběhu metody \emph{think aloud} a z~odpovědí debriefingových rozhovorů.
+
+\subsection{Plnění úloh a hodnocení SEQ}
+\label{subsec:plneniUloh}
+
+% TODO: pro každou úlohu T1--T13 uvést v průvodním textu:
+%   --- míra dokončení (kolik ze 4 participantů úspěšně dokončilo)
+%   --- průměrný čas plnění
+%   --- počet kritických chyb (participant nedokázal pokračovat bez pomoci moderátora)
+%   --- průměrné SEQ skóre
+%   --- reprezentativní pozorování z think aloud (parafráze, ne přímé citáty)
+% Doporučený rozsah: 1--2 odstavce na úlohu; výrazné nálezy rozepsat (T2, T4, T5, T8),
+% bezproblémové úlohy lze sloučit do souhrnného odstavce.
+
+\begin{table}[ht]
+	\centering
+	\caption{Výsledky plnění testovacích úloh a hodnocení SEQ.}
+	\label{tab:vysledkyUloh}
+	\begin{tabular}{cccccc}
+		\toprule
+		\textbf{Úloha} & \textbf{Dokončení (n/4)} & \textbf{$\varnothing$ čas (s)} & \textbf{Kritické chyby} & \textbf{$\varnothing$ SEQ (1--7)} \\
+		\midrule
+		T1 & TODO & TODO & TODO & TODO \\
+		T2 & TODO & TODO & TODO & TODO \\
+		T3 & TODO & TODO & TODO & TODO \\
+		T4 & TODO & TODO & TODO & TODO \\
+		T5 & TODO & TODO & TODO & TODO \\
+		T6 & TODO & TODO & TODO & TODO \\
+		T7 & TODO & TODO & TODO & TODO \\
+		T8 & TODO & TODO & TODO & TODO \\
+		T9 & TODO & TODO & TODO & TODO \\
+		T10 & TODO & TODO & TODO & TODO \\
+		T11 & TODO & TODO & TODO & TODO \\
+		T12 & TODO & TODO & TODO & TODO \\
+		T13 & TODO & TODO & TODO & TODO \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+% TODO: souhrnná interpretace výsledků z tabulky:
+%   --- které úlohy měly nejvyšší a nejnižší SEQ skóre
+%   --- kde se vyskytly kritické chyby a co je způsobilo
+%   --- celkový průměr SEQ napříč úlohami a srovnání s benchmarkem 5,5
+%   --- výsledky ověření NFR-02 (latence), NFR-03 (počet kroků), NFR-04 (čas zápisu)
+%   --- shrnutí, které toky fungují dobře a které vyžadují pozornost.
+
+\subsection{Výsledky System Usability Scale}
+\label{subsec:vysledkySus}
+
+% TODO: interpretace SUS výsledků. Vzor:
+% „Průměrné SUS skóre aplikace Foody činilo X,X bodu (SD = X,X), což ji řadí do kategorie X
+% podle adjektivní stupnice Bangor a kol. Nejvyšší hodnocení získala položka č. X (průměr X,X),
+% která se týká Y. Naopak nejnižší hodnocení obdržela položka č. X (průměr X,X), což naznačuje,
+% že participanti vnímali Z jako problematický aspekt. Celkově lze konstatovat, že dosažené
+% skóre X,X odpovídá hodnocení 'X' a řadí aplikaci nad/pod průměr SUS benchmarku 68 bodů."
+
+\begin{table}[ht]
+	\centering
+	\caption{Výsledky dotazníku SUS pro jednotlivé participanty.}
+	\label{tab:vysledkySus}
+	\begin{tabular}{lc}
+		\toprule
+		\textbf{Participant} & \textbf{SUS skóre} \\
+		\midrule
+		P1 & TODO \\
+		P2 & TODO \\
+		P3 & TODO \\
+		P4 & TODO \\
+		\midrule
+		\textbf{Průměr} & TODO \\
+		\textbf{Směrodatná odchylka} & TODO \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\subsection{Výsledky User Experience Questionnaire Short}
+\label{subsec:vysledkyUeqs}
+
+% TODO: interpretace UEQ-S výsledků. Vzor:
+% „Pragmatická kvalita aplikace dosáhla průměrného skóre X,X, což podle benchmarků UEQ
+% odpovídá hodnocení 'X'. Hedonická kvalita dosáhla skóre X,X. Z jednotlivých položek získalo
+% nejvyšší hodnocení sémantické páry X/X (průměr X,X), zatímco nejnižší hodnocení obdržely
+% páry X/X (průměr X,X). Výsledky naznačují, že participanti vnímají aplikaci jako pragmaticky X,
+% avšak v hedonické dimenzi existuje prostor pro zlepšení v oblasti Y."
+
+\begin{table}[ht]
+	\centering
+	\caption{Výsledky dotazníku UEQ-S.}
+	\label{tab:vysledkyUeqs}
+	\begin{tabular}{clc}
+		\toprule
+		\textbf{\#} & \textbf{Položka} & \textbf{Průměr} \\
+		\midrule
+		1 & bránící / podporující & TODO \\
+		2 & složitý / jednoduchý & TODO \\
+		3 & neefektivní / efektivní & TODO \\
+		4 & matoucí / jasný & TODO \\
+		5 & nudný / vzrušující & TODO \\
+		6 & nezajímavý / zajímavý & TODO \\
+		7 & obvyklý / vynalézavý & TODO \\
+		8 & tradiční / moderní & TODO \\
+		\midrule
+		--- & \textbf{Pragmatická kvalita} & TODO \\
+		--- & \textbf{Hedonická kvalita} & TODO \\
+		--- & \textbf{Celkové skóre} & TODO \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\section{Identifikované problémy}
+\label{sec:identifikovaneProblemy}
+
+Na základě analýzy pozorování z~metody \emph{think aloud}, výsledků dotazníků a debriefingových rozhovorů byly identifikovány problémy použitelnosti.
+Každý problém je klasifikován podle závažnosti na jedné ze tří úrovní: kritický (participant nebyl schopen úlohu dokončit bez pomoci moderátora), závažný (participant úlohu dokončil, ale s~výrazným zdržením nebo zmateností) a kosmetický (participant si všiml nedostatku, avšak ten neovlivnil plnění úlohy).
+Přehled identifikovaných problémů je uveden v~tabulce~\ref{tab:problemy}.
+
+\begin{table}[ht]
+	\centering
+	\caption{Identifikované problémy použitelnosti s~klasifikací závažnosti.}
+	\label{tab:problemy}
+	\begin{tabular}{p{1cm}p{6cm}p{2.4cm}p{1.5cm}p{1.5cm}}
+		\toprule
+		\textbf{\#} & \textbf{Problém} & \textbf{Závažnost} & \textbf{Úloha} & \textbf{FR / NFR} \\
+		\midrule
+		% TODO: doplnit identifikované problémy (5--12 dle skutečných nálezů).
+		% Vzor:
+		% P1 & Nízká viditelnost indikátoru spolehlivosti rozpoznání & Závažný & T2 & FR-08 \\
+		% P2 & Obtížná nalezitelnost funkce kopírování jídla & Závažný & T8 & FR-18 \\
+		TODO & TODO & TODO & TODO & TODO \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+% TODO: za tabulkou popsat každý problém 2--3 větami. Vzor:
+% „V rámci úlohy T2 dva ze čtyř participantů nepovšimli barevného indikátoru spolehlivosti
+% výsledku (confidence badge). Participanti tak neměli povědomí o míře spolehlivosti rozpoznání,
+% což snižuje efektivitu funkčního požadavku FR-08. Problém se pravděpodobně týká vizuálního
+% návrhu badge, který splývá s okolním rozhraním."
+
+\section{Doporučení pro další iteraci}
+\label{sec:doporuceni}
+
+Na základě identifikovaných problémů a výsledků standardizovaných dotazníků lze formulovat doporučení pro další vývojovou iteraci aplikace.
+Doporučení jsou řazena podle priority, která vychází ze závažnosti příslušného problému a počtu dotčených participantů.
+Každé doporučení se váže ke konkrétnímu identifikovanému problému z~kapitoly~\ref{sec:identifikovaneProblemy}.
+
+% TODO: doporučení organizovaná do odstavců (4--8 dle počtu závažných a kritických problémů).
+% Každé doporučení obsahuje:
+%   --- odkaz na číslo problému z 5.3
+%   --- konkrétní návrh řešení
+%   --- dotčené FR/NFR
+%   --- očekávaný dopad na použitelnost
+% Vzor:
+% „V návaznosti na problém P1 (nízká viditelnost indikátoru spolehlivosti) je doporučeno zvýšit
+% vizuální prominenci confidence badge zvětšením jeho rozměrů a přidáním textového popisku
+% vedle barevného indikátoru. Tato úprava by měla zvýšit povědomí uživatelů o míře spolehlivosti
+% výsledku v souladu s požadavkem FR-08."
+
+% TODO: závěrečný odstavec kapitoly. Vzor:
+% „Z výsledků testování vyplývá, že aplikace Foody dosáhla X,X bodů v dotazníku SUS a průměrného
+% SEQ skóre X,X napříč všemi úlohami. Pragmatická kvalita dle UEQ-S byla hodnocena jako 'X',
+% což naznačuje, že základní interakční toky aplikace jsou pro uživatele srozumitelné a efektivní.
+% Identifikované problémy se soustředí především na X, přičemž navržená doporučení jsou
+% realizovatelná v rámci další vývojové iterace bez zásadních architektonických změn. Celkově lze
+% konstatovat, že výsledky testování potvrzují životaschopnost zvoleného přístupu k rozpoznávání
+% potravin pomocí umělé inteligence s transparentní indikací nejistoty, avšak poukazují na konkrétní
+% oblasti, kde je třeba zlepšit viditelnost klíčových prvků rozhraní a nalezitelnost sekundárních funkcí."

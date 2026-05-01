@@ -1,0 +1,30 @@
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
+
+# Bibliography
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+
+# Index
+*.idx
+*.ind
+*.ilg
+
+# Output PDF
+main.pdf
+
+# Editor / OS
+.DS_Store
+*.swp
+.vscode/

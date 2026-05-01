@@ -1,0 +1,7 @@
+$pdf_mode = 1;
+$pdflatex = 'pdflatex -synctex=1 -interaction=nonstopmode -file-line-error %O %S';
+$bibtex_use = 2;
+$makeindex = 'makeindex -s ctuthesis.ist %O -o %D %S';
+
+# Vyčistit i finální PDF a aux soubory přes `latexmk -C`
+$clean_ext = 'synctex.gz acn acr alg glg glo gls ist nlo nls thm';

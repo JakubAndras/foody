@@ -1,0 +1,288 @@
+\chapter{Analýza}
+\label{ch:analyza}
+
+\section{Obezita, nadváha a význam sledování stravy}
+\label{sec:obezita}
+
+Obezita a nadváha patří mezi klíčové determinanty morbidity a mortality v rozvinutých i rozvojových zemích.
+Dlouhodobě zvýšená tělesná hmotnost je spojena se zvýšeným rizikem kardiovaskulárních onemocnění, diabetu 2.~typu, některých nádorových onemocnění a zhoršenou kvalitou života.
+Epidemiologická data ukazují, že Česká republika patří v rámci Evropské unie k zemím s nejvyšším podílem osob s nadváhou a obezitou.
+Podle analýzy Evropa v datech má nadváhu nebo obezitu přibližně 55,4~\% české populace, což Českou republiku řadí na čtvrté místo v Evropě~\cite{evropskaMapaObezity2019}.
+Tato čísla podtrhují potřebu účinných strategií prevence a léčby.
+
+\subsection{Index tělesné hmotnosti a jeho interpretace}
+\label{subsec:bmi}
+
+Základním orientačním ukazatelem pro posouzení tělesné hmotnosti je index tělesné hmotnosti (Body Mass Index, BMI).
+BMI se vypočítá jako podíl tělesné hmotnosti v~kilogramech a druhé mocniny tělesné výšky v~metrech:
+
+\begin{equation}
+	\mathrm{BMI} = \frac{m}{h^{2}},
+	\label{eq:bmi}
+\end{equation}
+
+\noindent kde $m$ je tělesná hmotnost v~kilogramech a $h$ tělesná výška v~metrech.
+Na základě hodnoty BMI se rozlišují jednotlivé kategorie výživového stavu, které jsou shrnuty v~tabulce~\ref{tab:bmi}.
+
+% TODO: doplnit obsah tabulky podle WHO klasifikace (podváha, normální váha, nadváha I/II/III).
+\begin{table}[ht]
+	\centering
+	\caption{Hodnoty BMI a jejich interpretace.}
+	\label{tab:bmi}
+	\begin{tabular}{ll}
+		\toprule
+		\textbf{BMI (kg/m\textsuperscript{2})} & \textbf{Kategorie} \\
+		\midrule
+		TODO & TODO \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+BMI je pro populační studie a rychlé screeningové hodnocení velmi užitečné, protože umožňuje jednoduché srovnání mezi jedinci i populacemi.
+Současně má však významná omezení.
+Nezohledňuje rozložení tuku v~těle, podíl svalové hmoty ani individuální rozdíly v~tělesném složení.
+U sportovců nebo lidí s~vysokým podílem svalové hmoty může proto docházet k~systematické klasifikaci do nadváhy či obezity, ačkoli jejich zdravotní riziko tomu neodpovídá~\cite{theodorakis2025humanEnergyBalance}.
+BMI by tak měl být v~klinické i praktické práci vnímán jako orientační ukazatel, který je vhodné doplnit dalšími měřeními (obvod pasu, složení těla, laboratorní ukazatele).
+
+\subsection{Životní styl, energetická bilance a rozvoj obezity}
+\label{subsec:zivotniStyl}
+
+Současné konceptuální modely chápou obezitu jako dlouhodobý důsledek pozitivní energetické bilance, kdy energetický příjem převyšuje energetický výdej.
+Theodorakis a~Nikolaou popisují, že do energetické bilance vstupuje řada vzájemně provázaných proměnných, například bazální metabolismus, termický efekt potravy, spontánní pohyb, strukturovaná fyzická aktivita a adaptivní metabolické změny~\cite{theodorakis2025humanEnergyBalance}.
+To znamená, že dvě osoby se stejným kalorickým příjmem a podobnou tělesnou hmotností mohou mít odlišný dlouhodobý vývoj hmotnosti v~závislosti na rozdílech v~energetickém výdeji a hormonální regulaci.
+
+Drenowatz a~Greier zdůrazňují, že efektivní řízení tělesné hmotnosti vyžaduje současnou práci se stravou i fyzickou aktivitou.
+Izolované intervence zaměřené pouze na dietní omezení nebo pouze na cvičení dosahují obvykle menšího a hůře udržitelného efektu než integrované přístupy, které systematicky pracují s~oběma složkami energetické bilance~\cite{drenowatz2025integrating}.
+Z~hlediska návrhu digitálních nástrojů je proto důležité uvažovat tělesnou hmotnost v~širším kontextu životního stylu, nikoli jen jako mechanický výsledek krátkodobého kalorického deficitu.
+
+\section{Self monitoring jako nástroj řízení hmotnosti}
+\label{sec:selfMonitoring}
+
+Jedním z~klíčových behaviorálních principů používaných v~programech redukce hmotnosti je self monitoring, tedy systematické sledování vlastního chování.
+V~oblasti výživy se self monitoring nejčastěji projevuje jako pravidelný záznam konzumovaných jídel, sledování tělesné hmotnosti a zaznamenávání fyzické aktivity.
+Cílem je zvýšit povědomí o~vlastních návycích a umožnit uživateli, aby své chování průběžně upravoval v~souladu s~doporučeními.
+
+Systematické přehledy ukazují, že pravidelný self monitoring příjmu potravy a tělesné hmotnosti je spojen s~větším úbytkem hmotnosti a lepším udržením dosažených změn než situace, kdy je sledování nepravidelné nebo zcela chybí.
+Zároveň se ukazuje, že self monitoring lze realizovat různými způsoby od papírových deníků až po digitální nástroje a mobilní aplikace, přičemž forma záznamu ovlivňuje jak přesnost dat, tak dlouhodobou udržitelnost celého procesu.
+Detailní přehled digitálních nástrojů pro sledování výživy a jejich charakteristik je proto věnován samostatné podkapitole~\ref{sec:digitalniNastroje}~\cite{ang2021efficacy,raber2021systematicReview}.
+
+Souhrnně lze říci, že obezita a nadváha představují významný zdravotní problém v~České republice i celosvětově a že self monitoring patří mezi hlavní behaviorální nástroje pro redukci a udržení tělesné hmotnosti.
+Jeho dlouhodobá účinnost je však omezená tím, že pravidelné zaznamenávání jídel a souvisejících údajů je časově i kognitivně náročné, což vede u~řady uživatelů k~postupnému poklesu frekvence záznamů a k~oslabení efektu jinak dobře nastavených intervencí.
+Tento kontext vytváří přímou motivaci pro hledání nástrojů, které sníží zátěž spojenou se sledováním stravy a tím zvýší pravděpodobnost, že uživatelé budou nástroj využívat konzistentně i v~delším časovém horizontu~\cite{pujia2025roleMobileApps,crane2023patterns,theodorakis2025humanEnergyBalance}.
+
+\section{Energetická bilance a nutriční základy}
+\label{sec:energetickaBilance}
+
+Pochopení principu energetické bilance je zásadní pro interpretaci výstupů z~každé aplikace, která pracuje s~kalorickým příjmem a výdejem.
+Tato podkapitola shrnuje základní pojmy z~oblasti energetického metabolismu a nutričních základů, na nichž bude dále stavět návrh a implementace aplikace.
+
+\subsection{Kalorie a energetická hodnota potravin}
+\label{subsec:kalorie}
+
+V~nutriční praxi se jako jednotka energie používá kilokalorie (kcal), případně kilojoule (kJ).
+Jedna kilokalorie odpovídá množství energie potřebné ke zvýšení teploty jednoho kilogramu vody o~jeden stupeň Celsia.
+V~běžné komunikaci se pojem „kalorie" používá téměř vždy ve významu kilokalorie.
+Energetická hodnota potravin vyjadřuje množství energie, které organismus může z~dané potraviny získat.
+Základní makroživiny se liší i svou energetickou hodnotou.
+Sacharidy a bílkoviny poskytují přibližně 4~kcal na gram, zatímco tuky zhruba 9~kcal na gram, tedy více než dvojnásobek~\cite{theodorakis2025humanEnergyBalance}.
+
+Pro udržení tělesné hmotnosti v~rovnováze musí být dlouhodobě energetický příjem z~potravin v~rovnováze s~energetickým výdejem.
+Systematické odchylky v~podobě chronického kalorického deficitu nebo nadbytku vedou k~postupné změně tělesné hmotnosti~\cite{theodorakis2025humanEnergyBalance}.
+
+\subsection{Složky energetického výdeje}
+\label{subsec:slozkyVydeje}
+
+Celkový denní energetický výdej (TEE) se obvykle rozděluje na několik složek:
+
+\begin{itemize}
+	\item bazální metabolismus (BMR),
+	\item termický efekt potravy (TEF),
+	\item energetický výdej na fyzickou aktivitu, který zahrnuje jak strukturované cvičení, tak běžný denní pohyb.
+\end{itemize}
+
+Theodorakis a~Nikolaou uvádějí, že u~většiny dospělé populace tvoří bazální metabolismus přibližně 60 až 75~\% celkového energetického výdeje.
+Zbývající část připadá na termický efekt potravy a fyzickou aktivitu, přičemž jejich relativní význam se může výrazně lišit v~závislosti na životním stylu~\cite{theodorakis2025humanEnergyBalance}.
+
+Bazální metabolismus představuje množství energie, které organismus potřebuje v~klidových podmínkách pro udržení základních životních funkcí, jako je činnost srdce a plic, udržování tělesné teploty a syntéza tkání.
+Je ovlivněn především:
+
+\begin{itemize}
+	\item množstvím a složením tělesné hmoty (zejména podílem beztukové hmoty),
+	\item věkem,
+	\item pohlavím,
+	\item genetickými faktory a hormonálním stavem.
+\end{itemize}
+
+\subsection{Prediktivní rovnice pro odhad bazálního metabolismu}
+\label{subsec:bmrRovnice}
+
+Přímé měření energetického výdeje prostřednictvím nepřímé kalorimetrie není v~běžné praxi ani v~uživatelských aplikacích reálně dostupné.
+Proto se využívají empirické prediktivní rovnice, které odhadují BMR na základě snadno měřitelných parametrů, jako jsou hmotnost, výška, věk a pohlaví.
+Mezi nejpoužívanější patří Harris-Benedictova a Mifflin-St~Jeorova rovnice.
+
+Harris-Benedictova rovnice byla publikována již v~roce 1919 a patří k~historicky nejpoužívanějším metodám odhadu bazálního metabolismu.
+V~revidované podobě má následující tvar:
+
+\begin{align}
+	\mathrm{BMR}_{\text{muži}} &= 66 + (13{,}7 \cdot m) + (5 \cdot v) - (6{,}8 \cdot a), \label{eq:hb-muzi} \\
+	\mathrm{BMR}_{\text{ženy}} &= 655 + (9{,}6 \cdot m) + (1{,}8 \cdot v) - (4{,}7 \cdot a), \label{eq:hb-zeny}
+\end{align}
+
+\noindent kde $m$ je hmotnost v~kilogramech, $v$ výška v~centimetrech a $a$ věk v~letech.
+
+Mifflin-St~Jeorova rovnice byla navržena v~roce 1990 a řada novějších studií ji hodnotí jako přesnější pro běžnou dospělou populaci.
+Její tvar je~\cite{frankenfield2005comparison}:
+
+\begin{align}
+	\mathrm{BMR}_{\text{muži}} &= (10 \cdot m) + (6{,}25 \cdot v) - (5 \cdot a) + 5,   \label{eq:msj-muzi} \\
+	\mathrm{BMR}_{\text{ženy}} &= (10 \cdot m) + (6{,}25 \cdot v) - (5 \cdot a) - 161. \label{eq:msj-zeny}
+\end{align}
+
+Pro ilustraci lze uvést třicetiletého muže s~hmotností 80~kg a výškou 180~cm.
+Harris-Benedictova rovnice odhadne jeho BMR přibližně na 1\,858~kcal za den, zatímco Mifflin-St~Jeorova na zhruba 1\,780~kcal.
+Rozdíl mezi rovnicemi ukazuje, že i relativně malé odchylky v~odhadu BMR mohou při dlouhodobém použití vést k~významným rozdílům v~odhadované energetické bilanci.
+Novější systematické přehledy navíc ukazují, že přesnost prediktivních rovnic se liší mezi populacemi a že u~některých skupin mohou běžně používané rovnice BMR systematicky podhodnocovat nebo nadhodnocovat.
+Typickým příkladem takové skupiny jsou sportovci nebo obecně lidé s~nadprůměrným množstvím svalové hmoty~\cite{frankenfield2005comparison}.
+
+V~uživatelských aplikacích je přesto použití těchto rovnic praktickým kompromisem mezi dostupností dat a požadavkem na rychlý odhad energetického výdeje.
+Pro návrh aplikace je důležité nejen vybrat vhodnou rovnici, ale také uživateli srozumitelně sdělit, že jde pouze o~odhad s~určitou nejistotou.
+
+\subsection{Energetická bilance a energetická nerovnováha}
+\label{subsec:nerovnovaha}
+
+Energetickou bilanci lze zjednodušeně vyjádřit rovnicí:
+
+\begin{equation}
+	\Delta E_{\text{zásoby}} = E_{\text{příjem}} - E_{\text{výdej}}.
+	\label{eq:bilance}
+\end{equation}
+
+Pokud je energetický příjem dlouhodobě nižší než energetický výdej, organismus čerpá chybějící energii z~uložených zásob, především z~tukové tkáně.
+Tento stav se označuje jako kalorický deficit a vede k~postupnému snižování tělesné hmotnosti.
+Příliš výrazný a dlouhodobý deficit však může kromě tukové tkáně ohrožovat i svalovou hmotu a vést k~nedostatku živin, únavě a zhoršení zdravotního stavu~\cite{theodorakis2025humanEnergyBalance,drenowatz2025integrating}.
+
+Naopak při chronickém kalorickém nadbytku převyšuje energetický příjem výdej.
+Přebytečná energie se ukládá ve formě tukových zásob a dochází k~postupnému zvyšování tělesné hmotnosti a rizika metabolických onemocnění.
+Drenowatz a~Greier zdůrazňují, že významnou roli hraje nejen absolutní množství energie, ale také struktura stravy, rozložení příjmu během dne a míra fyzické aktivity.
+Účinné strategie řízení hmotnosti proto kombinují dietní úpravy s~podporou pohybové aktivity~\cite{drenowatz2025integrating}.
+
+\subsection{Zdroje chyb v~odhadu příjmu a výdeje energie}
+\label{subsec:zdrojeChyb}
+
+Praktické využití energetické bilance v~každodenním životě naráží na zásadní problém, kterým je nepřesnost odhadů jak na straně příjmu, tak na straně výdeje.
+Uživatelé běžně podhodnocují množství a energetickou hodnotu zkonzumovaných potravin, zapomínají zaznamenávat některá jídla nebo špatně odhadují velikost porcí.
+Li a~kol. například prokázali, že výstupy nutričních aplikací se mohou významně lišit od referenčních metod, a to jak při manuálním zapisování, tak při využití rozpoznávání obrazu~\cite{li2024evaluating}.
+
+Na straně energetického výdeje může docházet k~nadhodnocování spálené energie, zejména pokud uživatel spoléhá na obecné tabulky nebo méně přesná zařízení.
+Theodorakis a~Nikolaou upozorňují, že organismus navíc na energetický deficit adaptivně reaguje snížením bazálního metabolismu a spontánního pohybu, což dále komplikuje přesnou predikci změn tělesné hmotnosti~\cite{theodorakis2025humanEnergyBalance}.
+
+Pro návrh digitálního nástroje to znamená, že:
+
+\begin{itemize}
+	\item nelze spoléhat na absolutní přesnost jednoho konkrétního čísla energetického příjmu nebo výdeje,
+	\item je vhodné pracovat s~konceptem odhadu s~nejistotou,
+	\item design rozhraní by měl uživatele motivovat ke konzistentnímu zapisování a zároveň usilovat o~minimalizaci zátěže.
+\end{itemize}
+
+Právě tato snaha o~snížení uživatelské zátěže při zachování dostatečné přesnosti odhadu energetické bilance je jedním z~hlavních důvodů, proč tato práce zkoumá možnosti využití umělé inteligence a rozpoznávání potravin z~fotografie.
+
+\section{Makroživiny a mikroživiny ve výživě}
+\label{sec:zivoiny}
+
+Při hodnocení kvality stravy je vedle celkového energetického příjmu zásadní také její složení.
+To určují především makroživiny, které dodávají energii a stavební materiál, a mikroživiny, jež umožňují správný průběh metabolických a regulačních procesů.
+Přehledové studie ukazují, že jak poměr makroživin, tak dostatečný příjem klíčových mikroživin mají významný vliv na tělesné zdraví, riziko chronických onemocnění i subjektivní pohodu~\cite{venn2020macronutrients,farag2021dietaryMicronutrients}.
+
+\subsection{Makroživiny}
+\label{subsec:makrozivny}
+
+Makroživiny jsou živiny přijímané ve větším množství, které tvoří hlavní zdroj energie ve stravě.
+Mezi ně patří sacharidy, tuky a bílkoviny.
+
+Sacharidy představují primární zdroj energie pro většinu buněk, zejména pro centrální nervový systém a pracující sval.
+Zahrnují jednoduché cukry (glukóza, fruktóza), škrob a vlákninu.
+Strava s~dostatečným zastoupením komplexních sacharidů a vlákniny je spojována s~lepší kontrolou glykemie, nižším rizikem kardiometabolických onemocnění a vyšším pocitem sytosti.
+Naopak vysoký příjem přidaných cukrů zvyšuje energetický příjem bez odpovídající nutriční hodnoty.
+
+Tuky slouží jako koncentrovaný zdroj energie, jsou nezbytné pro vstřebávání lipofilních vitamínů (A, D, E, K) a jako součást buněčných membrán a signálních molekul.
+Významnou roli hraje kvalitativní složení tuků.
+Vyšší podíl nenasycených mastných kyselin (například z~rostlinných olejů, ryb a ořechů) je spojován s~příznivým vlivem na kardiovaskulární zdraví, zatímco nadměrný příjem nasycených a transmastných kyselin naopak zvyšuje kardiometabolické riziko~\cite{venn2020macronutrients}.
+
+Bílkoviny jsou základním stavebním materiálem tkání, enzymů a hormonů.
+Dostatečný příjem bílkovin je klíčový pro udržení svalové hmoty, zejména při redukci tělesné hmotnosti, a může zvyšovat pocit sytosti.
+% TODO: ověřit citaci [18] -- text odkazuje na Seol a kol., ale [18] je Ang et al. o mobilních aplikacích.
+Seol a~kol. například ukazují, že vyšší příjem bílkovin a vlákniny souvisí s~příznivějšími parametry životního stylu, včetně lepší kvality spánku~\cite{ang2021efficacy}.
+
+Venn shrnuje, že hlavním energetickým zdrojem stravy jsou typicky sacharidy a tuky, zatímco bílkoviny vedle energetické funkce zajišťují především stavební a regulační úlohu v~organismu.
+Z~praktického hlediska je důležité nejen celkové množství energie, ale také kvalita jednotlivých makroživin, například:
+
+\begin{itemize}
+	\item upřednostnění komplexních sacharidů a vyššího příjmu vlákniny před jednoduchými cukry,
+	\item vyšší zastoupení nenasycených mastných kyselin v~porovnání s~nasycenými,
+	\item dostatečný příjem bílkovin pro udržení svalové hmoty, zejména při redukci hmotnosti.
+\end{itemize}
+
+Současná literatura upozorňuje, že různé dietní přístupy (například s~vyšším podílem sacharidů nebo tuků) mohou vést ke srovnatelným změnám tělesné hmotnosti, pokud je zachován celkový energetický deficit.
+Pro běžného uživatele je proto vedle poměru makroživin zásadní především dlouhodobá udržitelnost zvoleného stravovacího režimu~\cite{venn2020macronutrients}.
+
+\subsection{Mikroživiny}
+\label{subsec:mikrozivny}
+
+Mikroživiny zahrnují vitaminy a minerální látky.
+Na rozdíl od makroživin nepřinášejí významné množství energie, ale podílejí se na mnoha enzymatických a regulačních procesech v~organismu.
+Farag a~kol. zdůrazňují, že adekvátní příjem mikroživin je důležitý v~průběhu celého životního cyklu a že jejich nedostatek či nadbytek může ovlivnit vývoj, imunitu, kognitivní funkce i riziko chronických onemocnění~\cite{farag2021dietaryMicronutrients}.
+
+Z~hlediska funkce a vlastností lze mikroživiny přehledně rozdělit do několika skupin:
+
+\begin{itemize}
+	\item vitamíny rozpustné ve vodě (například vitaminy skupiny B, vitamin C),
+	\item vitaminy rozpustné v~tucích (A, D, E, K),
+	\item makrominerály (například vápník, hořčík, sodík, draslík, fosfor),
+	\item mikrominerály a stopové prvky (například železo, zinek, selen, jód, měď).
+\end{itemize}
+
+Farag a~kol. uvádějí, že v~populaci se často vyskytuje kombinace vysokého energetického příjmu a současného nedostatečného příjmu některých mikroživin.
+Tento stav bývá označován jako „skrytá malnutrice" a zdůrazňuje potřebu sledovat vedle energie také kvalitu stravy~\cite{farag2021dietaryMicronutrients}.
+
+\section{Digitální nástroje pro sledování výživy a tělesné hmotnosti}
+\label{sec:digitalniNastroje}
+
+Digitální nástroje pro podporu změny životního stylu dnes obvykle netvoří izolované aplikace, ale propojený ekosystém.
+Jádrem tohoto ekosystému bývá chytrý telefon, který slouží jako centrální uzel pro sběr a vizualizaci dat, k~němuž se připojují nositelná zařízení a chytré domácí přístroje.
+Tato zařízení automaticky zaznamenávají různé aspekty chování a tělesného stavu uživatele, včetně fyzické aktivity, srdeční frekvence, spánku, tělesné hmotnosti a složení těla.
+V~kontextu řízení hmotnosti tak mohou výrazně snížit potřebu manuálního zadávání údajů a zvýšit frekvenci i přesnost self monitoringu~\cite{lugonesSanchez2020effectiveness}.
+
+\subsection{Chytré hodinky a náramky}
+\label{subsec:hodinky}
+
+Chytré hodinky a fitness náramky kontinuálně zaznamenávají počet kroků, objem a intenzitu fyzické aktivity, srdeční frekvenci a často také délku a strukturu spánku.
+Tato data jsou obvykle v~téměř reálném čase synchronizována s~mobilní aplikací, která uživateli poskytuje zpětnou vazbu a motivační prvky, jako jsou denní cíle, notifikace nebo gamifikace.
+
+Systematická review a metaanalýza Wang a~kol. zahrnula 12 randomizovaných studií s~celkem 3\,227 dětmi a adolescenty, u~nichž byly nositelná zařízení použita jako nástroj k~podpoře fyzické aktivity v~prevenci a léčbě obezity.
+V~porovnání s~kontrolními skupinami vedly intervence založené na nositelných zařízeních k~malému, ale statisticky významnému snížení tělesné hmotnosti (průměrný rozdíl $-1{,}08$~kg) a BMI (průměrný rozdíl $-0{,}23$~bodu BMI), stejně jako k~poklesu tělesného tuku (průměrný rozdíl $-0{,}72$~procentního bodu tělesného tuku).
+Tyto efekty ukazují, že samotné zavedení kontinuálního monitoringu pohybové aktivity a jednoduché zpětné vazby může mít měřitelný dopad na antropometrické ukazatele, i když nejde o~dramatické změny~\cite{wang2022effectiveness}.
+
+Konkrétně u~dospělých s~nadváhou a obezitou hodnotila studie EVIDENT~3 přínos kombinace mobilní aplikace a chytrého náramku (Mi~Band~2) oproti samotnému dietnímu a pohybovému poradenství.
+Do randomizované multicentrické studie bylo zařazeno 440 sedavých dospělých, z~nichž 231 bylo v~intervenční skupině s~aplikací a náramkem a 209 v~kontrolní skupině.
+Po třech měsících trvání intervence dosáhla intervenční skupina průměrného poklesu tělesné hmotnosti o~1,97~kg, zatímco kontrolní skupina zhubla v~průměru o~1,13~kg.
+Rozdíl mezi skupinami tedy činil 0,84~kg ve prospěch kombinace aplikace a nositelného zařízení.
+Současně došlo v~intervenční skupině ke snížení tukové hmoty o~1,84~kg a poklesu procenta tělesného tuku o~1,22~procentního bodu, zatímco v~kontrolní skupině se tyto parametry významně neměnily.
+Efekt byl nejvýraznější u~žen s~BMI pod 30~kg/m\textsuperscript{2} a u~osob s~alespoň střední úrovní fyzické aktivity, což ukazuje, že přínos nositelných zařízení může být závislý na charakteristikách uživatele a jeho počátečním chování~\cite{lugonesSanchez2020effectiveness}.
+
+Z~pohledu návrhu ekosystému je důležité, že v~těchto studiích se data z~chytrých náramků nevyužívají izolovaně, ale jako vstup pro mobilní aplikaci, která kombinuje self monitoring, automaticky měřenou aktivitu a behaviorální doporučení.
+Tato integrace umožňuje zjednodušit sběr dat a zároveň zvyšovat frekvenci a pravidelnost monitoringu bez zásadního zvýšení kognitivní zátěže uživatele.
+
+\subsection{Chytré váhy a analyzátory složení těla}
+\label{subsec:vahy}
+
+Chytré osobní váhy a komerční analyzátory složení těla využívají nejčastěji bioelektrickou impedanční analýzu a dokáží kromě tělesné hmotnosti odhadovat parametry jako procento tělesného tuku, množství beztukové hmoty nebo segmentové rozložení svalové hmoty.
+Naměřené hodnoty jsou prostřednictvím Bluetooth nebo Wi-Fi automaticky přenášeny do mobilní aplikace a často i do cloudového úložiště, což odstraňuje potřebu ručního zapisování hmotnosti a umožňuje velmi časté vážení.
+
+Huang a~kol. analyzovali data více než 46 tisíc čínských uživatelů chytrých tělesných vah, kteří byli v~době pandemie COVID-19 sledováni po dobu nejméně jednoho roku.
+Mezi obézními účastníky (podle BMI) vedlo samostatně řízené používání chytré váhy a navázané aplikace k~průměrnému ročnímu poklesu hmotnosti o~3,90~kg u~mužů a 4,74~kg u~žen, což odpovídalo snížení BMI o~1,42 a 1,80 bodu.
+Autoři zároveň rozdělili uživatele podle četnosti měření a zjistili, že skupina s~nejvyšší frekvencí vážení (medián přibližně 130 měření za rok) dosahovala významně větších změn hmotnosti, BMI i procenta tělesného tuku než skupiny s~nízkou a střední frekvencí.
+Multivariační logistická regrese potvrdila, že vysoká frekvence měření byla nejsilnějším nezávislým prediktorem úspěšného úbytku hmotnosti, s~odds ratio přibližně 2,1 pro dosažení alespoň 5\% redukce hmotnosti oproti výchozímu stavu~\cite{huang2022selfManaged}.
+
+Výsledky této studie ukazují dva podstatné aspekty.
+Zaprvé, chytré váhy umožňují prakticky denní self monitoring hmotnosti bez dodatečné práce uživatele, což by v~klasickém režimu ručního zapisování bylo jen obtížně udržitelné.
+Zadruhé, vysoká frekvence měření souvisí nejen s~větší pravděpodobností dosažení významného úbytku hmotnosti, ale také s~příznivými změnami složení těla, včetně většího poklesu procenta tělesného tuku a nárůstu svalové hmoty~\cite{huang2022selfManaged}.
