@@ -36,7 +36,14 @@
       "Bash(latexmk -pdf main.tex)",
       "Bash(pdfinfo main.pdf)",
       "WebFetch(domain:www.mdpi.com)",
-      "WebFetch(domain:pmc.ncbi.nlm.nih.gov)"
+      "WebFetch(domain:pmc.ncbi.nlm.nih.gov)",
+      "Bash(rm -f main.aux main.out main.toc main.lof main.lot main.bbl main.blg main.idx main.ilg main.ind chapters/*.aux)",
+      "Bash(pdflatex -interaction=nonstopmode main.tex)",
+      "Bash(bibtex main *)",
+      "Bash(makeindex -s ctuthesis main)",
+      "Read(//tmp/**)",
+      "Read(//private/tmp/**)",
+      "Bash(rm -f main.aux main.out main.toc main.lof main.lot main.bbl main.blg main.idx main.ilg main.ind)"
     ]
   }
 }

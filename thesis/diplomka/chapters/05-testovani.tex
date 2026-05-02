@@ -381,6 +381,93 @@ Schrepp a~kol. provozují referenční datovou sadu sestavenou z~přibližně 21
 Pragmatická kvalita 1,667 i hedonická kvalita 2,167 dosažené aplikací Foody spadají v~této klasifikaci do horního pásma, přičemž hedonická kvalita zřetelně překračuje typickou hraniční hodnotu pro kategorii \uv{excellent}.
 Stejně jako v~případě SUS dotazníku platí, že přímé kvantitativní srovnání s~konkrétními aplikacemi pro sledování stravy v~recenzované literatuře je omezené, neboť dostupné přehledy v~této oblasti zpravidla nereferují standardizované hodnoty UEQ-S na úrovni jednotlivých produktů.
 
+\subsection{Indikativní validace přesnosti odhadu kalorické hodnoty}
+\label{subsec:benchmarkPresnost}
+
+Krátkodobá relace s~třemi participanty popsaná v~předchozích podsekcích neumožňuje ověřit druhou polovinu hypotézy formulované v~kapitole~\ref{ch:uvod}, podle níž odhad energetické hodnoty zůstává v~přijatelné odchylce od referenčních metod.
+Z~tohoto důvodu byl proveden doplňkový kvantitativní experiment, který porovnal výstupy pipeline pro umělou inteligenci s~hodnotami \emph{ground truth} z~veřejně dostupného datasetu, v~němž byly nutriční hodnoty fyzicky zváženy.
+Tento experiment je indikativní validací nefunkčního požadavku NFR-01 a doplňuje výsledky uživatelského testování o~rovinu přesnosti, kterou \emph{think aloud} relace svým charakterem nemohou pokrýt.
+
+\paragraph{Dataset a výběr.}
+V~rámci experimentu byl využit dataset \emph{Nutrition5k} (Thames a~kol., CVPR 2021)~\cite{thames2021nutrition5k}, jenž obsahuje 5\,006 reálných talířů z~kalifornské cafeterie spolu s~\emph{ground truth} nutričními hodnotami odvozenými z~per-gram referenčních tabulek USDA pro každou fyzicky zváženou ingredienci.
+Z~validní podmnožiny 4\,759 talířů bylo vybráno padesát talířů stratifikovaných podle pěti kalorických pásem (od \emph{very\_low} pod 100~kcal po \emph{very\_high} nad 600~kcal), s~preferencí talířů obsahujících dvě a~více ingrediencí.
+Stratifikovaný výběr s~pevným seedem zajišťuje reprodukovatelnost a pokrytí celého rozsahu kalorického obsahu, na který aplikace v~praxi naráží.
+
+\paragraph{Postup.}
+V~průběhu testování byl každý talíř odeslán jako overhead fotografie do API rozhraní tří modelů: GPT-5.4, GPT-5.4-mini a GPT-5.5 (vydaný 23.~4.~2026).
+V~experimentu byl použit shodný systémový kontext a prompt jako v~produkční verzi aplikace.
+Pro každý talíř byly provedeny tři nezávislé běhy, jejichž výstupy byly agregovány mediánem.
+Na úrovni celého talíře probíhalo porovnání pro celkové kalorie, makroživiny (bílkoviny, tuky, sacharidy) a hmotnost; jako primární metriky byly zvoleny průměrná absolutní procentuální odchylka (MAPE) a podíl odhadů v~tolerančních pásmech $\pm$10~\%, $\pm$20~\% a $\pm$30~\%.
+
+Aby byl změřen efekt prompt engineeringu, který je v~literatuře identifikován jako významný faktor přesnosti odhadu~\cite{hua2025nutribench,coburn2025multimodalNutrition}, byly provedeny dvě iterace promptu.
+Verze \emph{baseline} obsahuje výchozí instrukce pro identifikaci ingrediencí a odhad porce, zatímco verze \emph{improved v2} byla přepracována na základě akademických studií~\cite{fridolfsson2025llmNutrition,hua2025nutribench,coburn2025multimodalNutrition} a oficiální dokumentace OpenAI: byla zavedena expert persona (registrovaný dietolog), pětikrokový \emph{Chain-of-Thought reasoning}, obohacené schema descriptions a anti-bias instrukce pro malé porce.
+Mezikrok \emph{improved v1}, který spočíval v~prostém přidání čtyř pravidel k~baseline, je vykazován pro úplnost a ilustruje, že více pravidel nemusí přinést lepší výsledek~\cite{ase2025structuredPrompts}.
+
+\paragraph{Výsledky.}
+Souhrn výsledků pro klíčovou metriku \emph{calorie MAPE} napříč modely a iteracemi promptu je uveden v~tabulce~\ref{tab:benchmarkMape}.
+V~tabulce~\ref{tab:benchmarkRozsah} jsou pak uvedeny detailní výsledky podle kalorického pásma pro nejlepší konfiguraci, kterou tvoří model GPT-5.5 v~kombinaci s~promptem improved v2.
+
+\begin{table}[ht]
+	\centering
+	\caption{Calorie MAPE napříč modely a iteracemi promptu (50 talířů, medián ze tří běhů).}
+	\label{tab:benchmarkMape}
+	\small
+	\begin{tabular}{lccc}
+		\toprule
+		\textbf{Konfigurace} & \textbf{Calorie MAPE} & \textbf{Within $\pm$20~\%} & \textbf{$\varnothing$ doba odpovědi} \\
+		\midrule
+		GPT-5.4 baseline & 45,84~\% & 32~\% & ---* \\
+		GPT-5.4-mini baseline & 51,12~\% & 32~\% & ---* \\
+		GPT-5.5 baseline & 44,94~\% & 40~\% & ---* \\
+		GPT-5.5 improved v1 & 50,64~\% & 44~\% & ---* \\
+		GPT-5.4-mini improved v2 & 45,32~\% & 38~\% & 4,06~s \\
+		GPT-5.4 improved v2 & 38,27~\% & 46~\% & 6,03~s \\
+		\textbf{GPT-5.5 improved v2} & \textbf{32,12~\%} & 44~\% & 27,93~s \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\noindent *~Doba odpovědi nebyla v~prvních kolech měřena; měření bylo doplněno až s~iterací improved v2 po pozorování zvýšené latence u~modelu GPT-5.5.
+
+\begin{table}[ht]
+	\centering
+	\caption{Calorie MAPE podle kalorického pásma talíře (improved v2 prompt).}
+	\label{tab:benchmarkRozsah}
+	\small
+	\begin{tabular}{lccc}
+		\toprule
+		\textbf{Pásmo (kcal)} & \textbf{GPT-5.5} & \textbf{GPT-5.4} & \textbf{GPT-5.4-mini} \\
+		\midrule
+		very\_low (0--100) & 74,92~\% & 76,25~\% & 128,44~\% \\
+		low (100--250) & 20,39~\% & 30,73~\% & 27,38~\% \\
+		medium (250--400) & 22,54~\% & 19,67~\% & 28,55~\% \\
+		high (400--600) & 29,46~\% & 38,46~\% & 28,43~\% \\
+		very\_high (600+) & 24,64~\% & 39,25~\% & 35,42~\% \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\paragraph{Interpretace.}
+Nejlepší dosažená hodnota 32,12~\% \emph{calorie MAPE} pro GPT-5.5 s~promptem improved v2 se přibližuje referenční hodnotě 26,1~\%, kterou v~původní publikaci Nutrition5k uvádějí Thames a~kol. pro specializovaný model trénovaný na shodném prostředí robotického rigu~\cite{thames2021nutrition5k}.
+Toto srovnání je nutné interpretovat s~rezervou, protože referenční model byl trénován i testován na snímcích ze shodného prostředí, kdežto v~aplikaci využívaný obecný multimodální model nikdy neviděl tento dataset a musí v~jednom kroku provést identifikaci jídla, odhad porce i výpočet nutričních hodnot.
+Pro kalorické pásmo 100--400~kcal, které odpovídá typickému použití aplikace na běžných pokrmech, dosahuje GPT-5.5 hodnoty 20 až 23~\% MAPE, což lze považovat za srovnatelné nebo lepší než zmíněná referenční hodnota.
+
+Z~výsledků vyplývají tři pozorování relevantní pro design aplikace.
+Zaprvé, prompt engineering má měřitelný dopad na přesnost: přechod z~baseline na improved v2 přinesl zlepšení MAPE o~11 až 29~procentních bodů napříč modely, přičemž větší modely lépe využily strukturu \emph{Chain-of-Thought reasoning}.
+Zadruhé, prosté přidání pravidel k~baseline (improved v1) celkovou MAPE zhoršilo, což odpovídá zjištění studie Ase a~kol. v~časopise \emph{Nutrients}, podle které strukturovanější prompt nemusí být vždy lepší a existuje trade-off mezi striktností a alignmentem s~lidským úsudkem~\cite{ase2025structuredPrompts}.
+Zatřetí se ukazuje, že model umělé inteligence systematicky nadhodnocuje velmi malé porce (pod 100~kcal s~75 až 128~\% MAPE), protože defaultuje na typické velikosti porce; jedná se o~inherentní omezení vizuálního odhadu z~jednotlivé fotografie bez hloubkové informace, které autoři Nutrition5k potvrzují přidáním hloubkového senzoru, jež snížilo MAPE na 16,5~\%~\cite{thames2021nutrition5k}.
+
+Z~hlediska produkčního nasazení se ukazuje výrazný kompromis mezi přesností a dobou odpovědi.
+Model GPT-5.5 dosahuje nejlepší přesnosti, avšak průměrná doba odpovědi 27,93~s je na hranici přijatelnosti pro mobilní aplikaci a překračuje limit nefunkčního požadavku NFR-02 (20~s) změřený v~uživatelském testování s~modelem GPT-5.4 (7,67~s, sekce~\ref{subsec:plneniUloh}).
+Jako nejlepší kompromis se proto jeví GPT-5.4 s~promptem improved v2: hodnota 38,27~\% MAPE při průměrné době odpovědi 6,03~s, a tento model je v~aktuální verzi aplikace nasazen jako výchozí.
+
+\paragraph{Omezení.}
+V~současné podobě má validace charakter indikativní studie a interpretovat ji je třeba s~ohledem na několik omezení.
+Vzorek padesáti talířů sice pokrývá pět stratifikovaných kalorických pásem, ale neodráží plné spektrum jídel a vizuálních kontextů, na které aplikace v~reálném použití naráží (různé osvětlení, úhly, pozadí, regionální pokrmy mimo americkou cafeterii).
+Hodnoty ground truth pocházejí z~odhadů per-gram USDA tabulek pro fyzicky zvážené ingredience, což představuje nejbližší dostupný standard, avšak samotné per-gram hodnoty nesou inherentní variabilitu (například obsah tuku v~mase závisí na konkrétním kusu).
+V~produkčním použití aplikace navíc využívá sebraný kontext (předchozí jídla uživatele, dietní preference) a iterativní opravu výsledků uživatelem (FR-13), které tento dataset neumožňuje vyhodnotit.
+Z~uvedených důvodů je dlouhodobá validační studie s~heterogenním reálným vzorkem stravy formulována v~kapitole~\ref{ch:zaver} jako klíčový další krok.
+
 \section{Identifikované problémy}
 \label{sec:identifikovaneProblemy}
 
@@ -482,12 +569,25 @@ V~návaznosti na zpětnou vazbu od P3 a obecná zjištění U6 a U7 je doporuče
 Konkrétními kroky jsou zvětšení tělového textu, posílení barevného kontrastu u~tlačítek typu ,,Back to today'' a doplnění nastavení velikosti písma do profilu uživatele.
 Dále je vhodné odstranit dvojité scrollovatelné oblasti v~onboardingu (U12), opravit poskakování onboardingového kroku u~volby ,,Maintain'' (U13) a rozšířit databázi čárových kódů o~lokální produkty (U11).
 
+\paragraph{Stav opravy identifikovaných problémů.}
+
+V~navazující implementační iteraci provedené bezprostředně po skončení testovací relace bylo zpracováno celkem 25 z~27 identifikovaných problémů.
+Všech jedenáct implementačních chyb (B1 až B11) bylo opraveno, přičemž kritická chyba B2 projevující se pádem aplikace při kopírování záznamu s~extrémními hodnotami byla řešena přednostně doplněním validace horních mezí vstupních hodnot v~bottom sheetu pro kopírování záznamu a oprava byla pokryta regresním testem.
+Z~šestnácti problémů uživatelského rozhraní bylo čtrnáct vyřešeno; bez úpravy zůstaly dva problémy s~nižší prioritou, jejichž ponechání je odůvodněno níže.
+
+Problém U1 (nedostatečně viditelná ikona pro import fotografie z~galerie) se projevuje primárně při prvním seznámení uživatele s~ikonografií rozhraní, kdežto v~dlouhodobém scénáři opakovaného používání, který tvoří primární cílový kontext aplikace, jeho dopad prakticky vymizí.
+Komplexnější řešení tohoto problému spadá spíše do širšího redesignu onboardingu, který přesahuje rozsah aktuální implementační iterace.
+
+Problém U9 (chybějící potvrzovací krok před spuštěním rozpoznávání umělou inteligencí) byl identifikován pouze jedním participantem (P2) a jeho přijetí by znamenalo přidání jednoho kroku do nejčastěji používaného toku zápisu jídla.
+Vyhodnocení vztahu mezi přínosem (snížení rizika neúmyslného odeslání fotografie) a nákladem (prodloužení doby zápisu, které by negativně ovlivnilo splnění NFR-03 a NFR-04 prokázané v~uživatelském testování) hovoří pro zachování stávajícího jednokrokového toku, a problém byl proto ponechán bez úpravy s~možností revize na základě dat z~širšího vzorku uživatelů.
+
 \paragraph{Návrhy na rozšíření funkcionality.}
 
 Z~debriefingových rozhovorů vyplynula sada návrhů na rozšíření, které již nejsou opravou současného stavu, ale rozšířením rozsahu aplikace.
 Úplný seznam zaznamenaných návrhů uspořádaný podle počtu participantů, kteří jej formulovali, je uveden v~tabulce~\ref{tab:navrhyFunkce}.
 Mezi nejčastější patří podpora hlasového vstupu i v~modulu cvičení a v~rozhraní ,,Fix issue'' (navrženo všemi třemi participanty), podpora hlasového vstupu v~rozhraní Ask AI (P3), možnost nahrání vlastní fotografie do detailu jídla pomocí dlouhého stisku na výchozí placeholder (P1) a doplnění příkladu klíčových slov pro nastavení vlastní diety (P1).
-Tyto návrhy budou zváženy v~rámci dalších vývojových iterací po vyřešení prioritních chyb a problémů s~uživatelským rozhraním.
+V~navazující implementační iteraci bylo z~patnácti návrhů přijato pět (N1, N3, N7, N13 a N14), zaměřených především na rozšíření hlasového vstupu do dalších rozhraní (modul cvičení, rozhraní ,,Fix issue'' a Ask AI), zjednodušení onboardingu a interakci v~detailu jídla.
+Zbývajících deset návrhů bylo ponecháno jako kandidáti pro další vývojové iterace nebo pro navazující rozvoj aplikace, neboť představují rozšíření přesahující rozsah aktuální iterace nebo úpravy vyžadující hlubší designový průzkum (například redesign zvýraznění dnů v~kalendáři, přesun rozhraní Ask AI mezi záložkami nebo doplnění nastavení velikosti písma).
 
 \begin{table}[ht]
 	\centering
@@ -531,3 +631,9 @@ Provedené testování má charakter kvalitativní studie s~malým vzorkem a je 
 Vzorek tří participantů je v~souladu s~doporučeními pro detekci hlavních problémů použitelnosti~\cite{nielsen2000fiveUsers}, neumožňuje však statistické zobecnění hodnot SUS, SEQ a UEQ-S na širší populaci uživatelů.
 Všichni participanti pracovali na shodném zařízení iPhone~16~Pro v~kontrolovaném prostředí, takže potenciální problémy specifické pro jiné modely zařízení, operační systém Android nebo méně příznivé technické podmínky (slabá konektivita, nízké osvětlení při pořizování fotografie) nebyly v~rámci studie ověřeny.
 Délka relace v~rozsahu 85 až 95~minut zachycuje krátkodobou interakci s~aplikací, ale neposkytuje data o~dlouhodobé retenci, dodržování nutričních cílů ani o~přesnosti odhadu energie v~reálných stravovacích vzorcích, jejichž ověření je formulováno jako doporučení pro budoucí validační studii v~kapitole~\ref{ch:zaver}.
+
+Z~metodologického hlediska je nutné zdůraznit, že studie nezahrnovala kontrolní podmínku v~podobě \emph{within-subjects} srovnání s~existující metodou ručního zápisu (například s~aplikací Kalorické Tabulky), která by umožnila přímé kvantitativní vyhodnocení rozdílu v~uživatelské zátěži a~čase zápisu mezi navrženým a~referenčním řešením.
+Tvrzení o~snížení uživatelské zátěze záznamu se proto opírá nepřímo o~srovnání dosaženého SUS skóre s~publikovanou meta-analýzou subkategorie aplikací pro výživu (průměr 71,06~bodu, viz~\cite{hyzy2022susDigitalHealth}) a~o~srovnání skóre UEQ-S s~referenční datovou sadou Schreppa a~kol.~\cite{schrepp2017ueqs}, nikoliv o~přímé měření vůči konkrétní existující aplikaci.
+Návrh \emph{within-subjects} experimentu s~kontrolní podmínkou je formulován jako součást doporučované navazující validační studie v~kapitole~\ref{ch:zaver}.
+
+% TODO
