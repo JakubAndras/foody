@@ -1,14 +1,53 @@
 \chapter{Závěr}
 \label{ch:zaver}
 
-% TODO: napsat Závěr (cca 1--2 stránky).
-% Doporučená struktura:
-%   1. Rekapitulace cíle práce (stručně z Úvodu).
-%   2. Co bylo provedeno: rešerše literatury, analýza existujících řešení, uživatelská studie,
-%      návrh prototypu, implementace aplikace Foody, uživatelské testování.
-%   3. Hlavní zjištění a přínosy: klíčové výsledky testování, pokrytí FR-01 až FR-30,
-%      identifikovaná omezení a navržená doporučení.
-%   4. Naplnění cílů práce (vrátit se k cílům formulovaným v Úvodu a explicitně okomentovat).
-%   5. Možnosti dalšího rozvoje: dlouhodobá validační studie, rozšíření o granulární metriky,
-%      cloudová synchronizace, další jazykové mutace, atd.
-% V Závěru se NEPÍŠÍ nové informace ani citace, pouze syntéza a reflexe.
+Cílem této diplomové práce bylo navrhnout, implementovat a otestovat mobilní aplikaci, která využívá pokročilé modely umělé inteligence pro odhad nutričních hodnot z~fotografie, hlasového popisu nebo textového záznamu jídla, a tím snižuje časovou a kognitivní bariéru spojenou s~manuální evidencí stravy.
+Východiskem byla hypotéza formulovaná v~kapitole~\ref{ch:uvod}, podle níž nasazení multimodálních jazykových modelů do uživatelského rozhraní mobilní aplikace umožňuje udržet zátěž záznamu v~mezích, které uživatelé v~rozhovorech označili za udržitelné, a současně udržet odhad energetické hodnoty v~přijatelné odchylce od referenčních metod.
+
+V~rámci práce byla nejprve provedena rešerše odborné literatury v~oblasti energetické bilance, self monitoringu, nutričních základů a digitálních nástrojů pro výživu (kapitola~\ref{ch:analyza}).
+Analýza existujících mobilních aplikací identifikovala MyFitnessPal a Kalorické Tabulky jako reprezentativní řešení pokrývající globální i lokální kontext a vymezila prostor pro inovaci v~oblasti automatizace záznamu.
+Strukturované rozhovory se čtyřmi respondenty (R1--R4) přinesly podklad pro formulaci osmi případů užití, třiceti funkčních požadavků (FR-01 až FR-30) a pěti nefunkčních požadavků (kapitola~\ref{ch:navrh}).
+Na tomto návrhu byla postavena implementace funkčního prototypu aplikace Foody (kapitola~\ref{ch:implementace}), která pokrývá více vstupních modalit (fotografie, hlas, text, čárový kód, manuální zápis) a integruje multimodální model prostřednictvím provider-agnostické architektury s~transparentní indikací nejistoty výstupu.
+Funkčnost a použitelnost aplikace byla následně ověřena uživatelským testováním se třemi participanty (P1--P3) podle metody \emph{think aloud} s~doplňkovými dotazníky SEQ, SUS a UEQ-S (kapitola~\ref{ch:testovani}).
+
+\section*{Hlavní zjištění a přínosy}
+
+Z~uživatelského testování vyplynulo několik klíčových zjištění.
+
+\begin{enumerate}
+	\item Aplikace dosáhla průměrného SUS skóre 85,83~bodu, což ji řadí do horních 10~\% hodnocených systémů a výrazně překračuje obecný benchmark 68~bodů.
+	\item Průměrné SEQ skóre 6,25 napříč všemi šestnácti úlohami překročilo benchmark 5,5 pro dobré hodnocení a indikuje, že většina úloh byla pro participanty subjektivně snadno řešitelná.
+	\item Celkové skóre UEQ-S 1,917 odpovídá pozitivnímu hodnocení, přičemž hedonická kvalita (2,167) byla vnímána výše než pragmatická (1,667), což odráží zaujetí participantů moderním designem.
+	\item Všechny měřené nefunkční požadavky byly splněny: latence rozpoznávání umělou inteligencí činila v~průměru 7,67~s (limit 20~s), čas zápisu nového záznamu 22~s (limit 5~min) a počet kroků pro zápis jednoduché položky se pohyboval mezi 2 (čárový kód) a 5 (foto, hlas) v~rámci limitu 6 kroků.
+	\item Z~třiceti funkčních požadavků bylo 25 implementováno v~plném rozsahu a 5 částečně; podrobnosti jsou uvedeny v~tabulce~\ref{tab:fr-status}.
+	\item Z~testovací relace bylo identifikováno celkem 27 problémů (11 implementačních chyb a 16 problémů uživatelského rozhraní), které byly seřazeny do tří prioritních úrovní jako vstup pro další vývojovou iteraci.
+	\item Hlasový vstup byl participanty nezávisle označen za jednu z~nejvíce oceněných funkcí a v~debriefingu byl opakovaně navrhován k~rozšíření i do dalších rozhraní (modul cvičení, funkce úprav výsledku, dotazy v~přirozeném jazyce).
+\end{enumerate}
+
+Hlavním přínosem práce je funkční prototyp ověřující, že kombinace více vstupních modalit s~multimodálním jazykovým modelem dokáže významně snížit uživatelskou zátěž záznamu stravy při zachování srozumitelnosti výstupu, a to při využití cloudového API bez nutnosti vlastního backendu nebo trénovaného modelu.
+Konkrétními sekundárními přínosy jsou architektura komunikační vrstvy připravená na výměnu poskytovatele modelu, vícevrstvá ochrana proti útokům typu \emph{prompt injection}, transparentní tříúrovňová indikace nejistoty výstupu a strukturovaná sada uživatelských zjištění s~přímou trasovatelností od rozhovorů přes požadavky až po výsledky testování.
+
+\section*{Naplnění cílů práce}
+
+Vzhledem k~dílčím cílům formulovaným v~úvodu lze konstatovat následující.
+Rešerše odborné literatury v~oblasti digitálních nástrojů pro výživu a využití umělé inteligence byla provedena s~důrazem na zdroje z~peer-reviewed databází.
+Existující řešení byla analyzována na příkladu globální aplikace MyFitnessPal a regionálně dominantních Kalorických Tabulek a byly identifikovány jejich silné a slabé stránky.
+Uživatelský výzkum formou strukturovaných rozhovorů byl realizován se čtyřmi respondenty pokrývajícími odlišné cíle a kontext používání a vyústil ve formulaci sady případů užití a požadavků.
+Softwarová architektura a uživatelské rozhraní byly navrženy s~přímou návazností na zjištění z~rozhovorů, dokumentovány v~HiFi prototypu a převedeny do funkčního produktu.
+Implementační fáze pokryla v~plném nebo částečném rozsahu všech třicet funkčních požadavků a pět nefunkčních požadavků definovaných v~návrhu.
+Použitelnost a kvalita výstupů aplikace byly ověřeny uživatelským testováním, jehož výsledky potvrdily přijatelnost zvoleného přístupu pro cílovou skupinu.
+Doporučení pro další vývoj byla formulována jak na úrovni opravy identifikovaných problémů, tak na úrovni rozšíření funkcionality.
+
+Z~uvedeného vyplývá, že hlavní cíl práce, tedy návrh, implementace a otestování aplikace pro rozpoznávání potravin pomocí umělé inteligence a sledování kalorického příjmu, byl naplněn.
+
+\section*{Omezení a možnosti dalšího rozvoje}
+
+Provedená studie má kvalitativní charakter s~malým vzorkem a kontrolovaným prostředím, takže její výsledky nelze přímo zobecnit na širší populaci uživatelů ani na dlouhodobé používání aplikace v~reálném životě.
+Implementace dále spočívá na cloudovém poskytovateli modelu, je vázána na aktivní internetové připojení pro funkce umělé inteligence a v~několika dílčích bodech (mazání účtu, granulární rozlišení chyb v~AI pipeline, klasický autocomplete, granulární multiplikátory výdeje) nedosahuje plného rozsahu navržených požadavků.
+Tato omezení vytvářejí přirozené pole pro další rozvoj.
+
+Z~pohledu validace je nejvýznamnějším následujícím krokem dlouhodobá uživatelská studie s~větším a heterogennějším vzorkem participantů a delším časovým horizontem, která by ověřila retenci uživatelů, přesnost odhadu energie v~reálných stravovacích vzorcích a vliv aplikace na splnění zdravotních cílů.
+Z~pohledu funkcionality je vhodné rozšířit hlasový vstup do dalších rozhraní podle návrhů participantů, doplnit aplikaci o~granulární rozlišení chybových stavů v~AI pipeline, podporu mikronutrientů, automatický fallback mezi poskytovateli modelu a granulární multiplikátory pro různé typy fyzické aktivity.
+Z~pohledu architektury je možné zvážit doplnění volitelné cloudové synchronizace pro uživatele používající více zařízení a rozšíření o~další jazykové mutace, jejichž potřeba se projevila již v~průběhu lokalizační fáze.
+
+Aplikace Foody představuje východisko pro tyto navazující kroky a ve svém současném rozsahu pokrývá většinu navržených funkčních požadavků s~nadprůměrnou úrovní subjektivně hodnocené použitelnosti.

@@ -13,6 +13,7 @@ Závěrečná sekce~\ref{sec:shrnutiNavrhu} shrnuje výstupy návrhové fáze a 
 
 V~návrhu aplikací se používají jak narativní popisy situací z~praxe, tak případy užití jako formální popis interakce aktéra se systémem.
 V~této práci byly narativní situace využity při analýze rozhovorů, ale pro formální popis systému je dále uvedena pouze sada scénářů případů užití, aby nedocházelo k~duplicitě a aby byl výstup přímo použitelný pro návrh prototypu a testování.
+Pro každý případ užití je v~textu uveden hlavní scénář, který popisuje očekávaný průběh interakce; doplňující informace o~předpokladech, alternativních tocích a chybových stavech jsou součástí samostatné specifikace v~příloze této práce.
 
 \paragraph{UC01: Záznam jídla z~fotografie.}
 \textbf{Charakteristika:} Uživatel chce rychle zapsat jídlo pomocí fotografie a následně výsledek zkontrolovat.
@@ -190,7 +191,7 @@ Funkční požadavky na aplikaci jsou následující.
 
 \paragraph{Nefunkční požadavky.}
 \begin{description}[style=nextline]
-	\item[NFR-01] Akceptovatelná nepřesnost odhadu energie a makroživin nejvýše 10~\%.
+	\item[NFR-01] Akceptovatelná nepřesnost odhadu energie a makroživin nejvýše 10~\%. Hodnota představuje pracovní cíl odvozený jako střed pásma toleranci nepřesnosti, jež respondenti uvedli v~rozhovorech (R1 přibližně 20~\%, R2 jednotky procent), a slouží jako orientační kritérium pro vyhodnocení kvality výstupu, nikoli jako absolutní mez.
 	\item[NFR-02] Latence rozpoznání umělou inteligencí, výsledek nejvýše do 20~vteřin za běžných podmínek.
 	\item[NFR-03] Počet kroků pro zápis jednoduché položky nejvýše 6 kroků bez dodatečné editace.
 	\item[NFR-04] Časová náročnost zápisu, opakované jídlo do 1~minuty, nové jídlo do 5~minut.
@@ -210,7 +211,7 @@ Tato sekce se proto soustředí na popis návrhových východisek a klíčových
 \subsection{Návrhová východiska}
 \label{subsec:navrhVychodiska}
 
-Vizuální i interakční stránka aplikace vychází ze zásad systému Material Design upraveného o~vlastní vizuální linii, která vznikala iterativně v~průběhu prototypování.
+Vizuální i interakční stránka aplikace vychází z~výchozího systému Material Design jako designové báze, na níž byla iterativně vystavěna vlastní vizuální linie aplikace.
 Hlavním cílem bylo vytvořit minimalistické a přehledné rozhraní bez rušivých prvků v~souladu s~nefunkčním požadavkem NFR-05 a zároveň zachovat konzistentní vizuální identitu mezi jednotlivými moduly aplikace (záznam jídel, cvičení, přehledy, profil).
 
 Sémantické barvy hrají v~návrhu specifickou roli, neboť se uplatňují při indikaci nejistoty výstupu rozpoznání umělou inteligencí (zelená, žlutá, červená), upozornění na překročení cílových kalorických hodnot a varování při porušení dietních omezení.
