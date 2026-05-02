@@ -2,7 +2,7 @@
 \label{ch:implementace}
 
 Tato kapitola popisuje realizaci mobilní aplikace Foody, která navazuje na analytickou a návrhovou fázi představenou v~kapitolách~\ref{ch:analyza} a~\ref{ch:navrh}.
-Na základě HiFi prototypu a funkčních požadavků definovaných v~sekci~\ref{subsec:pozadavky} byla provedena implementace vybraných funkcí aplikace s~cílem ověřit, do jaké míry je navržený koncept technicky realizovatelný.
+Na základě HiFi prototypu a funkčních požadavků definovaných v~sekci~\ref{sec:pozadavky} byla provedena implementace vybraných funkcí aplikace s~cílem ověřit, do jaké míry je navržený koncept technicky realizovatelný.
 V~úvodu kapitoly je provedena rešerše přístupů k~vývoji mobilních aplikací a srovnání relevantních technologických frameworků, na jejímž základě byly zvoleny konkrétní technologie popsané v~sekci~\ref{sec:vyberTechnologii}.
 Následuje popis softwarové architektury, datového modelu a integrace modelu umělé inteligence pro rozpoznávání potravin.
 Dále jsou představeny vstupní modality, klíčové implementované funkce a vybrané obrazovky aplikace.
@@ -92,7 +92,7 @@ Konkrétní zdůvodnění volby frameworku Flutter a dalších technologií je p
 \label{sec:vyberTechnologii}
 
 Na základě analytického srovnání přístupů k~vývoji mobilních aplikací provedeného v~sekci~\ref{sec:pristupyVyvoj} byly pro implementaci aplikace Foody zvoleny konkrétní technologie a knihovny.
-Tato sekce zdůvodňuje výběr jednotlivých technologických komponent s~ohledem na specifické požadavky projektu definované funkčními a nefunkčními požadavky v~sekci~\ref{subsec:pozadavky}.
+Tato sekce zdůvodňuje výběr jednotlivých technologických komponent s~ohledem na specifické požadavky projektu definované funkčními a nefunkčními požadavky v~sekci~\ref{sec:pozadavky}.
 Nejprve je v~podsekci~\ref{subsec:vyvojovaPlatforma} popsána zvolená vývojová platforma, následuje volba databázové vrstvy a mechanismu perzistence dat (\ref{subsec:databaze}), integrace modelu umělé inteligence a komunikace s~externím API (\ref{subsec:aiApi}) a přehled dalších klíčových knihoven třetích stran (\ref{subsec:dalsiKnihovny}).
 
 \subsection{Vývojová platforma}
@@ -252,13 +252,9 @@ Pro vyhledávání nutričních údajů produktů na základě čárového kódu
 Veškerá síťová komunikace probíhá prostřednictvím HTTP klienta Dio, který zajišťuje jednotné zpracování časových limitů, chybových odpovědí a autorizačních hlaviček.
 Schéma celkové architektury zahrnující mobilního klienta, lokální databázi a externí služby je znázorněno na obrázku~\ref{fig:architektura}.
 
-% TODO: doplnit schéma architektury -- vrstvený mobilní klient (UI, Controllers, Services, Network, Database),
-% lokální SQLite databáze a tři externí API (OpenAI Chat Completions, Google Gemini, Open Food Facts)
-% s naznačenými směry komunikace a typem přenášených dat (Base64 obrázky, JSON prompty, JSON odpovědi,
-% HTTP GET požadavky na barcode endpoint).
 \begin{figure}[ht]
 	\centering
-	\framebox{\parbox[c][6cm][c]{0.8\textwidth}{\centering \emph{TODO: Schéma celkové architektury aplikace Foody}}}
+	\input{figures/diagrams/architektura}
 	\caption{Schéma celkové architektury aplikace Foody -- vrstvený mobilní klient, lokální SQLite databáze a komunikace s~externími službami (OpenAI, Google Gemini, Open Food Facts).}
 	\label{fig:architektura}
 \end{figure}
@@ -348,7 +344,7 @@ Skupina jídel a ingrediencí sdružuje 8~obrazovek a modálních listů pro edi
 Skupina logování obsahuje 7~obrazovek pro hlasový vstup, záznam a detail cvičení a evidenci hmotnosti.
 Skupina profilu je s~18~obrazovkami nejrozsáhlejší a pokrývá osobní údaje, nutriční cíle, historii hmotnosti, export dat, integraci se zdravotními platformami, nastavení notifikací a dotazy v~přirozeném jazyce prostřednictvím funkce Ask AI.
 
-Pro hlavní scénáře záznamu jídla prostřednictvím fotografie je typický vícekrokový navigační tok, který odpovídá případu užití UC01 definovanému v~sekci~\ref{subsec:pripadyUziti}.
+Pro hlavní scénáře záznamu jídla prostřednictvím fotografie je typický vícekrokový navigační tok, který odpovídá případu užití UC01 definovanému v~sekci~\ref{sec:pripadyUziti}.
 Uživatel zahájí tok aktivací akce skenování z~panelu rychlých akcí, čímž je navigován na obrazovku kamery, kde pořídí fotografii jídla.
 Po odeslání fotografie k~analýze pomocí umělé inteligence je zobrazen náhled výsledku s~barevnou indikací míry nejistoty rozpoznání v~souladu s~funkčním požadavkem FR-08.
 V~případě potvrzení výsledku je záznam uložen a uživatel je vrácen na hlavní obrazovku, v~případě potřeby korekce je navigován na editační obrazovku, kde může upravit jednotlivé ingredience, gramáže a nutriční hodnoty.
@@ -397,10 +393,9 @@ Přehled všech entit, jejich klíčových atributů a vztahu k~nadřazené enti
 	\end{tabular}
 \end{table}
 
-% TODO: doplnit ER diagram databázového schématu (devět entit, transakční vs. šablonové, cizí klíče, kardinality, kaskádové mazání).
 \begin{figure}[ht]
 	\centering
-	\framebox{\parbox[c][6cm][c]{0.8\textwidth}{\centering \emph{TODO: ER diagram databázového schématu}}}
+	\resizebox{\textwidth}{!}{\input{figures/diagrams/er-diagram}}
 	\caption{ER diagram databázového schématu aplikace Foody -- transakční a šablonové entity s~vyznačenými cizími klíči, kardinalitami a kaskádovým chováním při mazání.}
 	\label{fig:erDiagram}
 \end{figure}
@@ -481,11 +476,9 @@ Vyšší vrstvy aplikace, zejména kontrolery a doménové služby, přistupují
 	\end{tabular}
 \end{table}
 
-% TODO: doplnit schéma repozitářové vrstvy (5 repozitářů jako fasáda nad DAO,
-% transformace entita -> doménový model, reaktivní propagace dat ke kontrolerům).
 \begin{figure}[ht]
 	\centering
-	\framebox{\parbox[c][6cm][c]{0.8\textwidth}{\centering \emph{TODO: Schéma repozitářové vrstvy}}}
+	\resizebox{\textwidth}{!}{\input{figures/diagrams/repozitare}}
 	\caption{Schéma repozitářové vrstvy aplikace Foody -- pět repozitářů jako fasáda nad DAO, transformace databázových entit na doménové agregáty a reaktivní propagace dat do prezentační vrstvy.}
 	\label{fig:repozitare}
 \end{figure}
@@ -514,25 +507,190 @@ Tento návrh je vhodný pro datové sady, jejichž velikost se pohybuje v~řádu
 Celkově lze konstatovat, že repozitářová vrstva uzavírá datovou architekturu aplikace tím, že odděluje fyzické úložiště od doménového pohledu, centralizuje transformaci entit na agregáty a poskytuje vyšším vrstvám reaktivní rozhraní pro odběr aktuálních dat.
 Konkrétní způsob, jakým je tato datová vrstva využívána při integraci s~modelem umělé inteligence pro rozpoznávání jídel a cvičení, je popsán v~následující sekci~\ref{sec:integraceAi}.
 
+\section{Klíčové obrazovky aplikace}
+\label{sec:klicoveObrazovky}
+
+Tato sekce představuje hlavní obrazovky implementované aplikace, které tvoří uživatelskou tvář systému a ilustrují klíčové interakční toky odvozené z~případů užití v~sekci~\ref{sec:pripadyUziti}.
+Pro každou obrazovku je uveden snímek z~reálného běhu aplikace na operačním systému iOS, popis její role a vazba na příslušné funkční požadavky.
+Obrazovky, které ve své práci obsahují více navzájem souvisejících stavů (například hlavní obrazovka s~otevřeným kalendářem versus stav během rozpoznávání jídla), jsou prezentovány jako skupiny snímků v~jediném obrázku, aby čtenář viděl variabilitu jedné funkce vedle sebe.
+
+\paragraph{Hlavní obrazovka -- Dashboard.}
+Hlavní obrazovka aplikace (\texttt{DashboardScreen}) zobrazuje denní přehled kalorického příjmu (FR-02) a slouží jako rozcestník pro všechny vstupní modality záznamu.
+V~horní části je umístěn scrollovatelný kalendář s~vizualizací plnění cílů pomocí barevných kruhů (\texttt{CalendarDayRingPainter}), pod ním souhrn kalorií vůči stanovenému cíli, vizualizace makroživin a seznam zaznamenaných jídel a cvičení.
+V~dolní části je primární akční tlačítko otevírající panel rychlých akcí pro záznam jídla nebo cvičení.
+Obrázek~\ref{fig:screenDashboard} zachycuje obrazovku ve třech typických stavech: ve výchozím zobrazení denního přehledu, se zobrazenou kartou rozpoznávání jídla v~průběhu volání pipeline umělé inteligence a s~otevřeným bottom sheetem kalendáře pro výběr dne.
+
+\begin{figure}[ht]
+	\centering
+	\begin{minipage}[t]{0.31\textwidth}
+		\centering
+		\screenshot[width=\textwidth]{figures/screens/DashboardScreen_Main.png}
+		\\(a)~Výchozí zobrazení
+	\end{minipage}\hfill
+	\begin{minipage}[t]{0.31\textwidth}
+		\centering
+		\screenshot[width=\textwidth]{figures/screens/DashboardScreen_RecognisingMeal.png}
+		\\(b)~Stav během rozpoznávání jídla
+	\end{minipage}\hfill
+	\begin{minipage}[t]{0.31\textwidth}
+		\centering
+		\screenshot[width=\textwidth]{figures/screens/DashboardScreen_CalendarBottomSheet.png}
+		\\(c)~Otevřený kalendář pro výběr dne
+	\end{minipage}
+	\caption{Hlavní obrazovka aplikace (\texttt{DashboardScreen}) -- denní přehled kalorického příjmu, kalendář, makroživiny a seznam záznamů ve třech typických stavech.}
+	\label{fig:screenDashboard}
+\end{figure}
+
+\paragraph{Skenování jídla -- ScanCamera.}
+Obrazovka kamery (\texttt{ScanCameraScreen}) slouží k~pořízení fotografie jídla pro rozpoznání umělou inteligencí (FR-06).
+Rozhraní je úmyslně minimalistické, aby uživatele nerozptylovalo při focení.
+Pro alternativní vstup z~galerie je k~dispozici samostatné tlačítko (FR-12).
+
+\begin{figure}[ht]
+	\centering
+	\screenshot[width=0.42\textwidth]{figures/screens/ScanCameraScreen.png}
+	\caption{Obrazovka skenování jídla (\texttt{ScanCameraScreen}) -- pořízení fotografie pro rozpoznání umělou inteligencí.}
+	\label{fig:screenScanCamera}
+\end{figure}
+
+\paragraph{Editace záznamu jídla -- EditMeal.}
+Editační obrazovka (\texttt{EditMealScreen}) slouží jako náhled výsledku rozpoznání pomocí umělé inteligence i jako rozhraní pro ruční úpravu nebo plně manuální vytvoření záznamu (FR-01).
+Po dokončení rozpoznání obsahuje seznam navržených ingrediencí a barevnou indikaci nejistoty výstupu ve formě confidence badge (FR-08): zelená pro spolehlivost $\geq$~75~\%, žlutá pro $\geq$~50~\% a červená pro nižší hodnoty.
+Uživatel může jednotlivé ingredience upravit, přidat nebo odebrat, změnit gramáž nebo počet kusů (FR-15) a v~případě potřeby vyvolat opakované rozpoznání pomocí funkce ,,Fix with AI'' (FR-13).
+
+\begin{figure}[ht]
+	\centering
+	\screenshot[width=0.42\textwidth]{figures/screens/EditMealScreen.png}
+	\caption{Editace záznamu jídla (\texttt{EditMealScreen}) -- náhled výsledku rozpoznání s~confidence badge, úprava ingrediencí, gramáže a opakované rozpoznání.}
+	\label{fig:screenEditMeal}
+\end{figure}
+
+\paragraph{Výběr a záznam jídla -- MealLog a ManualAddNewMeal.}
+Obrazovka záznamu jídla (\texttt{MealLogScreen}) sjednocuje vyhledávání v~historii (FR-19), oblíbené položky (FR-17), šablony jídel a duplikaci dříve uložených záznamů (FR-18) do jediného rozhraní.
+Slouží jako vstupní bod pro rychlý ruční zápis i jako navigační uzel pro pokročilé varianty záznamu (skenování čárového kódu, hlasový vstup).
+V~případě, že uživatel chce vytvořit zcela nové jídlo, které dosud v~historii ani ve sdílených databázích neexistuje, pokračuje z~obrazovky \texttt{MealLogScreen} na navazující obrazovku \texttt{ManualAddNewMealScreen}, která je popsána detailněji v~sekci~\ref{subsec:manualniVstup}.
+
+\begin{figure}[ht]
+	\centering
+	\begin{minipage}[t]{0.42\textwidth}
+		\centering
+		\screenshot[width=\textwidth]{figures/screens/MealLogScreen.png}
+		\\(a)~MealLog -- výběr z~historie a~oblíbených
+	\end{minipage}\hfill
+	\begin{minipage}[t]{0.42\textwidth}
+		\centering
+		\screenshot[width=\textwidth]{figures/screens/ManualAddNewMealScreen.png}
+		\\(b)~ManualAddNewMeal -- ruční vytvoření nového jídla
+	\end{minipage}
+	\caption{Tok záznamu jídla bez asistence umělé inteligence -- (a) sjednocené rozhraní \texttt{MealLogScreen} pro vyhledávání v~historii, výběr oblíbených položek a šablon, a (b) navazující obrazovka \texttt{ManualAddNewMealScreen} pro ruční vytvoření zcela nového jídla.}
+	\label{fig:screenMealLog}
+\end{figure}
+
+\paragraph{Hlasový vstup -- VoiceLog.}
+Hlasový vstup (\texttt{VoiceLogScreen}) umožňuje uživateli popsat jídlo přirozeným jazykem, přičemž rozpoznávání řeči probíhá v~reálném čase (FR-14).
+Po dokončení nahrávání je text odeslán do pipeline pro umělou inteligenci, která vrátí strukturované rozpoznání ingrediencí.
+Hlasový vstup byl ve výsledcích uživatelského testování označen jako jedna z~nejvíce oceněných funkcí aplikace.
+
+\begin{figure}[ht]
+	\centering
+	\screenshot[width=0.42\textwidth]{figures/screens/VoiceLogScreen.png}
+	\caption{Hlasový vstup (\texttt{VoiceLogScreen}) -- nahrávání popisu jídla a real-time transkripce řeči.}
+	\label{fig:screenVoiceLog}
+\end{figure}
+
+\paragraph{Sledování cvičení -- ExerciseLog.}
+Modul cvičení (\texttt{ExerciseLogScreen}) nabízí čtyři vstupní modality pro záznam aktivity: rozpoznání pomocí umělé inteligence z~textového popisu, hlasový vstup, ruční zadání a výběr ze šablon.
+Obrazovka navazuje na hlavní funkcionalitu sledování příjmu energie a doplňuje ji o~výdejovou stranu energetické bilance (FR-22).
+
+\begin{figure}[ht]
+	\centering
+	\screenshot[width=0.42\textwidth]{figures/screens/ExerciseLogScreen.png}
+	\caption{Modul sledování cvičení (\texttt{ExerciseLogScreen}) -- vstupní modality pro záznam fyzické aktivity.}
+	\label{fig:screenExerciseLog}
+\end{figure}
+
+\paragraph{Profil a nastavení -- Profile.}
+Profilová obrazovka (\texttt{ProfileScreen}) slouží jako rozcestník pro správu osobních údajů (FR-04), nutričních cílů (FR-03), dietních preferencí (FR-20), připomínek (FR-29) a integrace se zdravotními platformami.
+Detailní podobrazovky jsou ilustrovány v~příslušných sekcích~\ref{sec:klicoveFunkce}.
+
+\begin{figure}[ht]
+	\centering
+	\screenshot[width=0.42\textwidth]{figures/screens/ProfileScreen.png}
+	\caption{Obrazovka profilu (\texttt{ProfileScreen}) -- rozcestník pro správu osobních údajů, nutričních cílů, dietních preferencí, notifikací a integrací.}
+	\label{fig:screenProfile}
+\end{figure}
+
+\paragraph{Dotazy v~přirozeném jazyce -- Ask AI.}
+Obrazovka Ask AI (\texttt{AskAiScreen}) umožňuje uživateli klást dotazy nad svými historickými nutričními daty v~přirozeném jazyce (FR-27).
+Implementace využívá dvouprůchodový systém: první volání modelu identifikuje časový rozsah dotazu, druhé pak generuje analytickou odpověď nad odpovídajícími daty z~lokální databáze.
+Obrázek~\ref{fig:screenAskAi} zachycuje obrazovku ve třech typických stavech: výchozí prázdný stav, stav s~ukázkovými otázkami a stav s~vygenerovanou odpovědí.
+
+\begin{figure}[ht]
+	\centering
+	\begin{minipage}[t]{0.31\textwidth}
+		\centering
+		\screenshot[width=\textwidth]{figures/screens/AskAIScreen.png}
+		\\(a)~Výchozí stav
+	\end{minipage}\hfill
+	\begin{minipage}[t]{0.31\textwidth}
+		\centering
+		\screenshot[width=\textwidth]{figures/screens/AskAIScreenExamples.png}
+		\\(b)~Ukázkové otázky
+	\end{minipage}\hfill
+	\begin{minipage}[t]{0.31\textwidth}
+		\centering
+		\screenshot[width=\textwidth]{figures/screens/AskAIScreenResponse.png}
+		\\(c)~Odpověď AI
+	\end{minipage}
+	\caption{Dotazy v~přirozeném jazyce (\texttt{AskAiScreen}) -- typické stavy obrazovky od výchozího prostředí přes nabídku ukázkových otázek po vygenerovanou analytickou odpověď.}
+	\label{fig:screenAskAi}
+\end{figure}
+
+\paragraph{Týdenní a měsíční přehledy -- Progress.}
+Obrazovka přehledů (\texttt{ProgressScreen}) vizualizuje trendy kalorického příjmu, hmotnosti a plnění cílů na týdenní a měsíční úrovni (FR-24).
+Součástí je také kalendář s~vizualizací porušení dietních omezení (FR-21) a karta s~aktuální tělesnou hmotností a indexem BMI.
+Vzhledem k~tomu, že obrazovka je delší než výška displeje, je v~obrázku~\ref{fig:screenProgress} prezentována ve dvou snímcích zachycujících střední a spodní část.
+
+\begin{figure}[ht]
+	\centering
+	\begin{minipage}[t]{0.42\textwidth}
+		\centering
+		\screenshot[width=\textwidth]{figures/screens/ProgressScreen_MidPart.png}
+		\\(a)~Střední část obrazovky
+	\end{minipage}\hfill
+	\begin{minipage}[t]{0.42\textwidth}
+		\centering
+		\screenshot[width=\textwidth]{figures/screens/ProgressScreen_BottomPart.png}
+		\\(b)~Spodní část obrazovky
+	\end{minipage}
+	\caption{Obrazovka přehledů (\texttt{ProgressScreen}) -- vizualizace trendů kalorického příjmu, hmotnosti a~plnění cílů na týdenní a~měsíční úrovni.}
+	\label{fig:screenProgress}
+\end{figure}
+
 \section{Integrace modelu umělé inteligence}
 \label{sec:integraceAi}
 
-% TODO: scope paragraph -- popis pipeline pro UI rozpoznávání jídel a cvičení, struktura promptů,
-% mechanismus práce s nejistotou, zabezpečení vstupu, podpora více poskytovatelů.
-% Odkaz na FR-06, FR-07, FR-08, FR-10, FR-11.
+Tato sekce popisuje implementaci pipeline pro rozpoznávání jídel a cvičení pomocí externího modelu umělé inteligence, která naplňuje funkční požadavky FR-06, FR-07, FR-08, FR-10 a FR-11.
+Postupně je představena celková architektura datového toku, struktura promptů a formát odpovědí, mechanismus práce s~nejistotou výstupu, vrstvená ochrana proti prompt injection a podpora více poskytovatelů modelu.
 
 \subsection{Architektura pipeline}
 \label{subsec:aiPipeline}
 
-% TODO: tok dat v pipeline -- vstup (foto + text / samotný text) -> PromptSanitizer -> AiService (OpenAI/Gemini)
-% -> REST klient -> strukturovaná JSON odpověď -> parsování -> confidence gate
-% -> AiAnalysisResult (success / lowConfidence / failure).
-% Samostatný tok pro cvičení a pro výpočet nutričních cílů (Mifflin-St Jeor přes prompt).
+Pipeline pro umělou inteligenci je centralizována ve službě \texttt{AiPipelineService}, která zastřešuje celý tok od uživatelského vstupu po finální výsledek prezentovaný v~uživatelském rozhraní.
+Vstupem může být fotografie jídla doplněná o~volitelný textový popis, samostatný textový popis jídla nebo hlasově nadiktovaný popis transkribovaný službou \texttt{VoiceTranscriptionService}.
+Pipeline tento vstup nejprve předává třídě \texttt{PromptSanitizer}, která provede sanitizaci textu a detekci pokusů o~prompt injection (viz sekce~\ref{subsec:promptInjection}), a následně sestavuje strukturovaný JSON prompt podle definice v~souboru \texttt{prompt.dart}.
 
-% TODO: doplnit sekvenční diagram pipeline.
+Sestavený prompt je odeslán prostřednictvím abstraktního rozhraní \texttt{AiService}, jehož konkrétní implementace (\texttt{OpenAiService} nebo \texttt{GeminiService}) je volena spravujícím komponentem \texttt{AiServiceManager}.
+Odpověď modelu je očekávána ve strukturovaném JSON formátu, který je následně parsován do typovaného objektu \texttt{AiResponse} pomocí knihovny \texttt{json\_serializable}.
+Parsovaný výsledek prochází takzvaným confidence gate, který na základě hodnoty \texttt{confidence} vrací jednu ze tří forem výsledku: \texttt{success} (rozpoznání s~vysokou jistotou), \texttt{lowConfidence} (rozpoznání s~varováním o~nízké jistotě, ale použitelná data) a \texttt{failure} (selhání rozpoznání bez použitelného výstupu).
+
+Vedle hlavní pipeline pro rozpoznávání jídel implementuje aplikace samostatné toky pro analýzu cvičení a pro výpočet nutričních cílů.
+Tok pro cvičení vychází z~textového popisu aktivity a vrací strukturu obsahující název, dobu trvání a odhadovanou energetickou hodnotu, přičemž využívá víceúrovňovou validaci popsanou v~sekci~\ref{subsec:confidence}.
+Tok pro výpočet nutričních cílů využívá model k~aplikaci Mifflin-St~Jeorovy rovnice (viz rovnice~(\ref{eq:msj-muzi}) a~(\ref{eq:msj-zeny})) na základě údajů o~uživatelově hmotnosti, výšce, věku, pohlaví a cíli, čímž vrací doporučené denní hodnoty kalorií a makroživin.
+
 \begin{figure}[ht]
 	\centering
-	\framebox{\parbox[c][6cm][c]{0.8\textwidth}{\centering \emph{TODO: Sekvenční diagram pipeline pro rozpoznání jídla z~fotografie}}}
+	\resizebox{\textwidth}{!}{\input{figures/diagrams/ai-pipeline}}
 	\caption{Sekvenční diagram pipeline umělé inteligence pro rozpoznání jídla z~fotografie -- od vstupu po zobrazení výsledku s~indikací nejistoty.}
 	\label{fig:aiPipeline}
 \end{figure}
@@ -540,198 +698,357 @@ Konkrétní způsob, jakým je tato datová vrstva využívána při integraci s
 \subsection{Struktura promptů a formát odpovědí}
 \label{subsec:prompty}
 
-% TODO: struktura JSON promptu (prompt.dart): pole task, expected_output, schema.rules
-% (amount = COUNT, confidence 0-1).
-% Injekce uživatelského kontextu: dietní typ, customDietPreferences, jazykové preference.
-% Formát odpovědi pro jídlo: valid, answer (name, confidence, amount, nutritional_values, ingredients[]).
-% Formát odpovědi pro cvičení: name, duration, caloriesPerMinute, confidence.
-% XML wrapping uživatelského vstupu (<user_input>) pro oddělení dat od instrukcí.
+Strukturované prompty pro model umělé inteligence jsou centralizovány v~souboru \texttt{lib/utils/prompt.dart}, který definuje šablony pro jednotlivé scénáře (rozpoznání jídla z~obrazu, rozpoznání jídla z~textu, analýza cvičení, výpočet nutričních cílů, dotazy v~přirozeném jazyce).
+Každý prompt je sestaven jako JSON dokument se třemi hlavními poli: \texttt{task} popisuje instrukci pro model, \texttt{expected\_output} definuje očekávané schéma odpovědi a \texttt{schema.rules} stanovuje doplňková omezení (například že hodnota \texttt{amount} reprezentuje počet kusů a nikoli hmotnost, nebo že \texttt{confidence} musí být v~rozsahu 0~až 1).
+
+Do promptu je systematicky injektován kontext uživatele, který modelu umožňuje přizpůsobit výstup individuálnímu profilu.
+Mezi injektované atributy patří dietní typ (\texttt{SessionManager.dietType}), uživatelské dietní preference (\texttt{customDietPreferences}) a jazykové preference, na jejichž základě model vrací názvy jídel a popisy v~odpovídajícím jazyce.
+Konkrétní kontext jídla je sestavován v~metodě \texttt{\_buildMealUserAttributes()}, která ze \texttt{SessionManager} a profilu uživatele extrahuje pouze atributy relevantní pro aktuální dotaz.
+
+Formát odpovědi pro analýzu jídla obsahuje pole \texttt{valid} (boolean platnosti), \texttt{answer} se strukturou \texttt{name}, \texttt{confidence}, \texttt{amount}, \texttt{nutritional\_values} a \texttt{ingredients[]}, kde každá ingredience nese vlastní název, hmotnost a nutriční hodnoty.
+Pro analýzu cvičení vrací model strukturu se jménem aktivity, dobou trvání, odhadem spálených kalorií za minutu a hodnotou \texttt{confidence}.
+Odpověď je následně automaticky deserializována do typovaného objektu pomocí knihovny \texttt{json\_serializable}.
+Z~bezpečnostních důvodů popsaných v~sekci~\ref{subsec:promptInjection} je uživatelský vstup před vložením do promptu obalen do XML delimitérů \texttt{<user\_input>...</user\_input>}, což strukturálně odděluje data od systémových instrukcí a snižuje riziko jejich záměny modelem.
 
 \subsection{Práce s~nejistotou a confidence gate}
 \label{subsec:confidence}
 
-% TODO: implementace FR-08. Confidence thresholds: jídlo >= 0,50, cvičení >= 0,50.
-% Tříúrovňová indikace nejistoty v UI: zelená (>= 75 %), žlutá (>= 50 %), červená (< 50 %).
-% Logika: pokud confidence < threshold -> lowConfidence (uživatel vidí varování, ale data lze potvrdit/opravit).
-% Víceúrovňová validace cvičení: hard failure (valid=false + prázdný název + confidence < 0,50) vs. low confidence.
+Funkční požadavek FR-08 stanovuje, že uživatel musí mít zpětnou vazbu o~spolehlivosti rozpoznání pomocí umělé inteligence.
+Implementace tento požadavek naplňuje prostřednictvím takzvaného confidence gate ve službě \texttt{AiPipelineService}, který klasifikuje hodnotu \texttt{confidence} z~odpovědi modelu do tří úrovní a propaguje ji do uživatelského rozhraní.
+Prahová hodnota pro úspěšné rozpoznání je nastavena na 0,50 jak pro analýzu jídel, tak pro analýzu cvičení.
+
+V~uživatelském rozhraní je nejistota vizualizována tříúrovňovou škálou v~rámci confidence badge na obrazovce \texttt{EditMealScreen} (viz obrázek~\ref{fig:screenEditMeal}).
+Hodnoty $\geq$~75~\% jsou zobrazeny zeleně, hodnoty v~rozsahu 50~\% až 75~\% žlutě a hodnoty pod 50~\% červeně.
+Tato barevná konvence prostupuje celou aplikaci a v~uživatelském testování ji všichni participanti pochopili bez vysvětlování (viz sekce~\ref{sec:vysledkyTestovani}).
+
+Logika rozhodování v~confidence gate rozlišuje tři výsledné stavy.
+Stav \texttt{success} odpovídá hodnotě \texttt{confidence} nad prahem a značí, že výsledek je možné prezentovat uživateli bez zvláštního varování.
+Stav \texttt{lowConfidence} odpovídá hodnotě pod prahem 0,50, ale s~platným strukturovaným výstupem, přičemž data jsou stále zobrazena, ale s~viditelným varováním a doporučením kontroly.
+Stav \texttt{failure} reprezentuje selhání rozpoznání, kdy model vrátí \texttt{valid=false}, prázdný výsledek nebo neparsovatelnou odpověď, a aplikace v~tomto případě nabízí uživateli textový fallback (FR-11) nebo opakování pokusu.
+Pro analýzu cvičení je validace doplněna o~kontrolu prázdného názvu, čímž je odlišeno tvrdé selhání (\texttt{valid=false} a prázdný název a \texttt{confidence}~$<$~0,50) od pouhé nízké jistoty.
 
 \subsection{Zabezpečení vstupu a ochrana proti prompt injection}
 \label{subsec:promptInjection}
 
-% TODO: PromptSanitizer pipeline: trim whitespace -> strip control characters (\x00-\x1F, \x7F)
-% -> odstranění literálních <user_input> tagů -> truncation (descriptions 500, preferences 200, queries 500).
-% Regex-based pre-screening (6 vzorů). Volitelný LLM-based pre-screening (GPT-4o-mini).
-% Anti-injection direktiva v systémových promptech.
-% Důvody pro vícevrstvý přístup k zabezpečení.
+Vstup uživatele do pipeline pro umělou inteligenci představuje potenciální vektor útoku známý jako \emph{prompt injection}, kdy záměrně formulovaný vstup může změnit nebo přepsat původní systémové instrukce zaslané modelu.
+Implementace adresuje toto riziko vícevrstvou ochranou v~třídě \texttt{PromptSanitizer}, která je volána před každým odesláním vstupu do pipeline.
+
+První vrstva sanitizace provádí mechanické úpravy textu: odstranění bílých znaků na okrajích, odstranění řídících znaků v~rozsazích \texttt{0x00}--\texttt{0x1F} a \texttt{0x7F}, odstranění případných literálních značek \texttt{<user\_input>} pokus uživatele o~předčasné uzavření delimitéru, a oříznutí textu na maximální povolenou délku (500~znaků pro popisy jídel, 200~znaků pro dietní preference, 500~znaků pro dotazy v~přirozeném jazyce).
+Druhá vrstva tvoří regulárně-výrazové předzkoušení textu proti šesti typickým vzorům naznačujícím pokus o~injekci, jako je instrukce „ignore previous instructions" v~různých variantách nebo přepis systémové role.
+
+Třetí, volitelnou vrstvou je takzvaný LLM-based pre-screening, který v~případě podezřelého vstupu předá text menšímu modelu (GPT-4o-mini) s~jediným úkolem ohodnotit, zda se jedná o~legitimní popis jídla nebo o~pokus o~injekci.
+Tato vrstva je aktivována pouze v~případě, že první dvě vrstvy zachytí slabé signály, a slouží jako finální kontrola před plným voláním hlavního modelu.
+Doplňkově obsahují všechny systémové prompty explicitní anti-injekční direktivu, která modelu zakazuje interpretovat obsah \texttt{<user\_input>} bloku jako instrukce.
+Vícevrstvý přístup byl zvolen na základě obecné praxe v~oblasti zabezpečení LLM aplikací, kde žádná jednotlivá vrstva neposkytuje úplnou ochranu, ale jejich kombinace významně snižuje pravděpodobnost úspěšného útoku.
 
 \subsection{Podpora více poskytovatelů}
 \label{subsec:vicePoskytovatelu}
 
-% TODO: abstraktní rozhraní AiService. Implementace OpenAiService a GeminiService.
-% AiServiceManager pro přepínání (switchService). OpenAI jako výchozí poskytovatel.
-% Gemini využívá OpenAI-kompatibilní endpoint (generativelanguage.googleapis.com/v1beta/openai/).
-% Architektonické rozhodnutí: provider-agnostic design.
-% Omezení: cvičení a nutriční cíle vázány přímo na OpenAI (nepřepínatelné).
-% Modely: GPT-4o pro analýzu jídel/cvičení, GPT-4o-mini pro detekci injekcí.
+Architektura komunikační vrstvy je navržena jako agnostická vůči poskytovateli modelu prostřednictvím abstraktního rozhraní \texttt{AiService}, které definuje jednotný kontrakt pro generování odpovědí bez ohledu na konkrétní backend.
+V~projektu jsou implementovány dvě konkrétní třídy: \texttt{OpenAiService} pro komunikaci s~OpenAI Chat Completions API a \texttt{GeminiService} pro Google Gemini Generative Language API.
+Třída \texttt{AiServiceManager} spravuje aktuálně zvoleného poskytovatele a metodou \texttt{switchService} umožňuje za běhu přepínat mezi implementacemi.
+
+OpenAI je v~aplikaci nastaven jako výchozí poskytovatel pro analýzu jídel, neboť poskytuje stabilní podporu strukturovaného JSON výstupu a multimodálního vstupu kombinujícího text a obraz.
+Gemini je integrován prostřednictvím OpenAI-kompatibilního koncového bodu (\texttt{generative\-language.googleapis.com/v1beta/openai/}), což umožňuje sdílet většinu kódu pro konstrukci promptu a parsing odpovědi.
+Pro hlavní analytické scénáře aplikace používá pipeline model GPT-4o, zatímco pro detekci injekcí v~rámci LLM-based pre-screeningu (viz sekce~\ref{subsec:promptInjection}) je používán menší model GPT-4o-mini z~důvodu nižší latence a nákladů.
+
+Provider-agnostický návrh umožňuje rozšíření o~další poskytovatele bez zásahu do vyšších vrstev aplikace.
+Současně však nese omezení v~podobě toho, že některé funkce (analýza cvičení a výpočet nutričních cílů) jsou v~aktuální implementaci vázány přímo na OpenAI a nepřepínají se spolu s~hlavním poskytovatelem analýzy jídel.
+Důvodem je odlišný formát promptů a dosud neověřená kompatibilita Gemini API pro tyto specifické scénáře, jejíž ověření je ponecháno jako námět pro budoucí práci.
 
 \section{Vstupní modality pro záznam stravy}
 \label{sec:vstupniModality}
 
-% TODO: scope paragraph -- aplikace implementuje šest různých vstupních modalit pro záznam jídla
-% (foto + AI, hlas, text + AI, manuální, čárový kód, skenování etiket).
-% Odkaz na FR-01, FR-06, FR-11, FR-12, FR-14, FR-16.
-% Diverzita vychází z uživatelské studie (kap. 3.2).
+V~návaznosti na výsledky uživatelské studie (sekce~\ref{sec:uzivatelskaStudie}), která identifikovala potřebu rychlého a flexibilního zápisu jídel v~různých kontextech, implementuje aplikace celkem šest vstupních modalit pro záznam stravy.
+Jednotlivé modality jsou volány z~panelu rychlých akcí na hlavní obrazovce a pokrývají funkční požadavky FR-01, FR-06, FR-11, FR-12, FR-14 a FR-16.
+Tato sekce postupně popisuje implementaci každé z~nich, od plně automatizovaného fotografického vstupu přes hlasový a textový vstup s~podporou umělé inteligence až po manuální zadání bez asistence umělé inteligence.
 
 \subsection{Fotografický vstup a rozpoznání jídla}
 \label{subsec:fotoVstup}
 
-% TODO: implementace FR-06 a FR-12. Dva zdroje: kamera (ScanCameraScreen) a galerie (image_picker).
-% ScanMode.scanMeal: foto -> volitelný textový popis -> AI pipeline -> ScanPreviewScreen.
-% Scan onboarding (5 stránek s tipy, FR-09). Crop a úpravy fotografie.
+Fotografický vstup naplňuje funkční požadavky FR-06 a FR-12 a představuje hlavní inovační prvek aplikace.
+Implementace podporuje dva zdroje fotografií: živý vstup z~kamery prostřednictvím obrazovky \texttt{ScanCameraScreen} (viz obrázek~\ref{fig:screenScanCamera}) a import existujících fotografií z~galerie zařízení pomocí knihovny \texttt{image\_picker}.
+Po pořízení nebo výběru fotografie aplikace umožňuje uživateli volitelně přidat krátký textový popis (například „kuřecí salát s~rýží"), který je společně s~obrazem odeslán do pipeline umělé inteligence v~režimu \texttt{ScanMode.scanMeal}.
+Výsledek rozpoznání je následně prezentován na editační obrazovce \texttt{EditMealScreen} (viz obrázek~\ref{fig:screenEditMeal}), která slouží zároveň jako náhled výsledku rozpoznání i jako rozhraní pro úpravy.
+
+Pro nové uživatele je při prvním použití fotografického vstupu zobrazena pětistránková onboardingová sekvence (\texttt{ScanOnboardingScreen}), která naplňuje funkční požadavek FR-09 a vysvětluje limity rozpoznávání pomocí umělé inteligence a tipy pro pořízení kvalitního snímku (například osvětlení, úhel pohledu, oddělení složek na talíři).
+Tato instruktážní vrstva přispívá ke snížení frustrace v~situacích, kdy by jinak uživatel získal nízkou hodnotu \texttt{confidence} kvůli chybě ve vstupu, a explicitně rozlišuje mezi limitem modelu a technickou chybou aplikace v~souladu s~funkčním požadavkem FR-10.
 
 \subsection{Hlasový vstup}
 \label{subsec:hlasovyVstup}
 
-% TODO: implementace FR-14 (voice). VoiceTranscriptionService: speech_to_text + locale-aware (cs/en).
-% VoiceLogScreen. Tok: nahrávání -> real-time transkripce -> potvrzení -> AI pipeline.
-% Podpora pro jídla i cvičení.
+Hlasový vstup je implementován prostřednictvím služby \texttt{VoiceTranscriptionService}, která zapouzdřuje knihovnu \texttt{speech\_to\_text} a zajišťuje transkripci v~jazyce odpovídajícímu aktuální lokalizaci aplikace (čeština nebo angličtina).
+Uživatelské rozhraní je realizováno na obrazovce \texttt{VoiceLogScreen} (viz obrázek~\ref{fig:screenVoiceLog}), kde uživatel zahájí nahrávání jediným stiskem tlačítka, vidí real-time transkripci své promluvy a po dokončení nahrávání ji potvrdí nebo upraví před odesláním do pipeline pro umělou inteligenci.
+
+Hlasový tok pokrývá nejen záznam jídla (FR-14), ale i analogický scénář pro záznam cvičení.
+V~uživatelském testování byl hlasový vstup označen za jednu z~nejvíce oceněných funkcí aplikace, přičemž participanti nezávisle navrhovali jeho rozšíření i do dalších rozhraní (například funkce ,,Fix issue'' a Ask AI), což je popsáno v~doporučení pro další iteraci v~sekci~\ref{sec:doporuceni}.
 
 \subsection{Textový vstup s~podporou umělé inteligence}
 \label{subsec:textovyVstup}
 
-% TODO: implementace FR-14 (text) a FR-11 (fallback po selhání foto).
-% Volný textový popis -> AI pipeline -> rozpoznání ingrediencí a nutričních hodnot.
-% Přístup přes QuickActionSheet z hlavní obrazovky.
+Textový vstup naplňuje funkční požadavek FR-14 v~jeho textové variantě a zároveň slouží jako záložní cesta při selhání fotografického rozpoznání (FR-11).
+Uživatel zde popíše jídlo libovolným způsobem v~přirozeném jazyce (například ,,kuřecí prsa s~rýží a brokolicí, asi 250~gramů") a tento vstup prochází stejnou pipeline pro umělou inteligenci jako fotografický nebo hlasový vstup.
+Výsledek je opět prezentován na editační obrazovce \texttt{EditMealScreen} včetně barevné indikace nejistoty.
+
+Textový vstup je dostupný z~panelu rychlých akcí na hlavní obrazovce a slouží jako přirozený nástupce v~situacích, kdy fotografický vstup selže nebo není praktický (například jídlo již zkonzumované, nebo situace s~omezenou možností focení).
+Z~hlediska implementace sdílí veškerou infrastrukturu s~ostatními modalitami a liší se pouze typem vstupu předávaného do pipeline.
 
 \subsection{Manuální zadání bez umělé inteligence}
 \label{subsec:manualniVstup}
 
-% TODO: implementace FR-01. Plně manuální záznam bez AI asistence.
-% Uživatel vyplní název, ingredience, nutriční hodnoty, gramáž.
-% EditMealScreen, EditIngredientScreen. SelectMealScreen pro výběr z historie/šablon/oblíbených.
-% Klíčové pro situace s přesnou znalostí složení (domácí vaření, balené potraviny).
-% Propojení s FR-15 (jednotky 1g, 100g, vlastní, zlomky).
+Manuální vstup naplňuje funkční požadavek FR-01 a je určen pro situace, kdy uživatel přesně zná složení jídla a nepotřebuje asistenci umělé inteligence (například domácí vaření s~váhou, balené potraviny s~nutriční etiketou nebo offline režim, kdy není dostupné připojení k~poskytovateli umělé inteligence).
+Tok začíná na obrazovce \texttt{MealLogScreen}, která slouží jako sjednocený rozcestník pro výběr existujícího jídla z~historie nebo vytvoření nového záznamu.
+V~případě nového záznamu pokračuje uživatel na obrazovku \texttt{ManualAddNewMealScreen} (viz obrázek~\ref{fig:screenMealLog}), kde vyplní název jídla a postupně přidává jednotlivé ingredience.
+
+Pro každou ingredienci uživatel zadává nutriční hodnoty (kalorie, bílkoviny, sacharidy, tuky) a hmotnost v~gramech nebo počet kusů (FR-15).
+Implementace podporuje předvolby porcí (například 100~g, 1~ks, vlastní jednotky) a zobrazování zlomkových hodnot (například 1/2 porce), čímž zjednodušuje zápis běžných situací.
+Detail editace ingrediencí probíhá na obrazovkách \texttt{EditIngredientScreen} a \texttt{IngredientDetailScreen}, které sdílí komponenty s~rozhraním pro úpravu výsledku rozpoznání umělou inteligencí.
 
 \subsection{Čtečka čárových kódů}
 \label{subsec:carovyKod}
 
-% TODO: implementace FR-16. mobile_scanner pro EAN-8, EAN-13, UPC-A, UPC-E, Code128.
-% BarcodeLookupService -> OpenFoodFactsClient. BarcodeLookupResult: nutriční hodnoty.
-% 6 typů chyb (FR-10). Omezení: závislost na kompletnosti databáze.
+Čtečka čárových kódů naplňuje funkční požadavek FR-16 a je realizována pomocí knihovny \texttt{mobile\_scanner} podporující formáty EAN-8, EAN-13, UPC-A, UPC-E a Code-128.
+Po naskenování kódu volá služba \texttt{BarcodeLookupService} klienta \texttt{OpenFoodFactsClient}, který se dotazuje veřejné databáze Open Food Facts a vrací strukturovaný výsledek typu \texttt{BarcodeLookupResult} obsahující název produktu, výrobce a kompletní nutriční hodnoty na 100~g.
+Koordinaci skenování, vyhledávání a zobrazení výsledku zajišťuje \texttt{BarcodeScanController}.
+
+V~návaznosti na funkční požadavek FR-10 (rozlišení limitu umělé inteligence a technické chyby aplikace) je v~rámci čárových kódů implementováno šest typů chyb pokrývajících situace jako neexistující kód, produkt nenalezen v~databázi, nepřipojení k~síti, časový limit dotazu, neplatný formát kódu a poškození čtečky.
+Každý typ chyby je uživateli prezentován s~konkrétním vysvětlením a doporučením dalšího kroku.
+Hlavním omezením této modality je závislost na kompletnosti databáze Open Food Facts, kterou v~uživatelském testování dva ze tří participantů identifikovali jako problematickou pro některé lokální české produkty (viz sekce~\ref{subsec:uiProblemyTesting}).
 
 \subsection{Skenování nutričních etiket}
 \label{subsec:nutricniEtikety}
 
-% TODO: ScanMode.foodLabel. Multimodální AI model pro extrakci nutričních hodnot z fotografie etikety.
-% Aktuální stav implementace a omezení.
+Skenování nutričních etiket představuje doplňkovou modalitu zaměřenou na situace, kdy uživatel má v~ruce balený produkt s~nutriční tabulkou, ale jeho čárový kód není dostupný v~databázi Open Food Facts.
+Implementace využívá multimodální schopnosti hlavního modelu umělé inteligence prostřednictvím režimu \texttt{ScanMode.foodLabel}, kdy je obrazovka \texttt{ScanCameraScreen} přepnuta do specializovaného režimu pro fotografování etikety a získaný obraz je odeslán do pipeline s~upraveným promptem zaměřeným na extrakci nutričních hodnot z~tabulky.
+
+Aktuální stav implementace pokrývá základní extrakci hodnot pro 100~g produktu (kalorie, bílkoviny, sacharidy, tuky), zatímco rozšířené atributy jako vláknina, sůl nebo vybrané mikronutrienty jsou ponechány jako námět pro budoucí iteraci.
+Hlavním omezením modality je rozmanitost vizuálních formátů nutričních etiket napříč značkami a zeměmi, která může vést k~nižší úspěšnosti rozpoznání u~atypicky řešených tabulek.
 
 \section{Implementace klíčových funkcí}
 \label{sec:klicoveFunkce}
 
-% TODO: scope paragraph -- popis hlavních funkčních celků nad rámec vstupních modalit.
-% Každá podsekce odkazuje na příslušné FR z kapitoly 3.2.
+Tato sekce popisuje implementaci hlavních funkčních celků aplikace, které doplňují vstupní modality popsané v~sekci~\ref{sec:vstupniModality} o~přehledové, analytické, motivační a konfigurační funkce.
+Každá podsekce odkazuje na příslušné funkční požadavky z~kapitoly~\ref{ch:navrh} a popisuje konkrétní implementační detaily včetně příslušných obrazovek aplikace.
 
 \subsection{Denní přehled a správa nutričních cílů}
 \label{subsec:dennPrehled}
 
-% TODO: implementace FR-02, FR-03. DashboardScreen, DashboardController, DayRecordController.
-% NutritionGoalsService (Mifflin-St Jeor). Rollover calories (max 500 kcal).
-% CalendarDayRingService, CalendarDayRingPainter. Scrollable calendar.
+Denní přehled (FR-02) je centrálním prvkem aplikace, který je realizován na hlavní obrazovce \texttt{DashboardScreen} (viz obrázek~\ref{fig:screenDashboard}) prostřednictvím dvojice kontrolerů \texttt{DashboardController} a \texttt{DayRecordController}.
+Kontrolery společně spravují aktuálně vybraný den, načítají odpovídající denní záznam včetně všech jídel a cvičení a propagují agregované nutriční hodnoty do reaktivních proměnných sledovaných uživatelským rozhraním.
+
+Správa nutričních cílů (FR-03) je centralizována ve službě \texttt{NutritionGoalsService}, která vychází z~Mifflin-St~Jeorovy rovnice (viz rovnice~(\ref{eq:msj-muzi}) a~(\ref{eq:msj-zeny})) doplněné o~uživatelovu úroveň aktivity a cíl (hubnutí, udržení, nabírání).
+Cíle jsou perzistovány prostřednictvím \texttt{DayRecordRepository.upsertDayRecord()} a propagovány na aktuální i budoucí dny.
+Konfigurace cílů probíhá na obrazovce \texttt{NutritionGoalsScreen} (viz obrázek~\ref{fig:screenNutritionGoals}), která je dostupná z~profilové sekce aplikace.
+
+\begin{figure}[ht]
+	\centering
+	\screenshot[width=0.42\textwidth]{figures/screens/ProfileScreen_NutritionGoalsScreen.png}
+	\caption{Obrazovka nastavení nutričních cílů (\texttt{NutritionGoalsScreen}) -- konfigurace kalorického cíle a rozdělení makroživin.}
+	\label{fig:screenNutritionGoals}
+\end{figure}
+
+Doplňkovými funkcemi denního přehledu jsou systém přenosu nevyčerpaných kalorií do následujícího dne (rollover calories, omezený na nejvýše 500~kcal) a vizualizace plnění cílů v~kalendáři pomocí barevných kruhů (\texttt{CalendarDayRingService}, \texttt{CalendarDayRingPainter}).
+Kalendář na hlavní obrazovce je horizontálně scrollovatelný a umožňuje rychlou navigaci mezi dny bez ztráty kontextu denního přehledu.
 
 \subsection{Správa jídel a ingrediencí}
 \label{subsec:spravaJidel}
 
-% TODO: implementace FR-01, FR-13, FR-15. EditMealScreen, IngredientDetailScreen, EditIngredientScreen.
-% FR-15: jednotky (1g, 100g, vlastní, zlomky).
-% FR-13: "Fix with AI" -> FixResultScreen.
-% MealCopyToSheet, MealDatePickerSheet (FR-18).
+Správa jídel a ingrediencí (FR-01, FR-13, FR-15) je realizována především na obrazovkách \texttt{EditMealScreen}, \texttt{EditIngredientScreen} a \texttt{IngredientDetailScreen}.
+Tyto obrazovky sdílí společnou logiku editace mezi rozpoznanými jídly z~pipeline umělé inteligence i čistě manuálně vytvořenými záznamy, čímž je zajištěna jednotnost uživatelského rozhraní.
+
+Funkce ,,Fix with AI'' (FR-13) umožňuje z~editační obrazovky znovu vyvolat rozpoznání pomocí umělé inteligence s~doplněným kontextem, který uživatel mezitím přidal (například upřesnění typu pokrmu, korekce gramáže nebo poznámka k~jídlu).
+Tok je realizován přes obrazovku \texttt{FixResultScreen}, která zobrazuje porovnání původního a nového výsledku a umožňuje uživateli zvolit, který verzi přijmout.
+
+Pro funkci duplikace záznamu jídla na jiný den (FR-18) je implementován bottom sheet \texttt{MealCopyToSheet} s~kalendářovým výběrem dne (\texttt{MealDatePickerSheet}).
+Tento tok byl explicitně požadován respondenty uživatelské studie pro situace, kdy uživatel jí podobné jídlo opakovaně v~průběhu týdne.
+Podpora jednotek (FR-15) zahrnuje gramy, 100-gramové porce, vlastní pojmenované jednotky a zobrazení zlomků (například 1/2 porce, 3/4 šálku).
 
 \subsection{Sledování cvičení}
 \label{subsec:sledovaniCviceni}
 
-% TODO: implementace FR-22 (částečně FR-23). ExerciseLogHomeScreen, AddExerciseScreen.
-% AI rozpoznávání cvičení (text/hlas) -> AiPipelineService.analyzeExercise().
-% ExerciseTemplate. ExerciseDetailScreen, ExerciseDetailOptionsSheet.
-% Vizualizace výdeje na dashboard.
+Modul cvičení naplňuje funkční požadavek FR-22 (částečně FR-23) a je realizován obrazovkou \texttt{ExerciseLogScreen} (viz obrázek~\ref{fig:screenExerciseLog}), která sjednocuje čtyři způsoby záznamu fyzické aktivity: rozpoznání pomocí umělé inteligence z~textového popisu, hlasový vstup, ruční zadání a výběr ze šablon dříve zaznamenaných cvičení.
+Konkrétní vstup probíhá na obrazovce \texttt{AddExerciseScreen}, která využívá služby \texttt{AiPipelineService.analyzeExercise()} pro automatickou analýzu textových nebo hlasových popisů.
+
+Detail jednotlivého záznamu cvičení je dostupný na obrazovce \texttt{ExerciseDetailScreen}, doplněné o~modální list \texttt{ExerciseDetailOptionsSheet} pro pokročilé akce (úprava, odstranění, převedení do šablon).
+Šablony cvičení jsou modelovány samostatnou entitou \texttt{ExerciseTemplate} v~datovém modelu (viz sekce~\ref{subsec:sablony}) a poskytují uživateli rychlý přístup k~opakovaně používaným aktivitám bez nutnosti opětovného volání umělé inteligence.
+
+Energetický výdej spočítaný z~rozpoznaného nebo zadaného cvičení je propagován do hlavního denního přehledu, kde je zobrazen vedle příjmu energie pro splnění funkčního požadavku FR-22 (příjem versus výdej v~jednom pohledu).
 
 \subsection{Sledování hmotnosti}
 \label{subsec:sledovaniHmotnosti}
 
-% TODO: WeightLogSheet, WeightHistoryScreen, WeightHistoryEditEntryScreen.
-% WeightEntryRepository. BmiCard. WeightProgressCard.
-% Propojení s onboarding flow.
+Sledování tělesné hmotnosti je realizováno samostatným podsystémem nezávislým na denním nutričním cyklu.
+Záznam hmotnosti probíhá v~modálním listu \texttt{WeightLogSheet} (viz obrázek~\ref{fig:screenWeightSheet}), který umožňuje zadání aktuální hodnoty s~volitelnou fotografií dokumentující progress.
+Historie záznamů a jejich úprava jsou dostupné na obrazovkách \texttt{WeightHistoryScreen} a \texttt{WeightHistoryEditEntryScreen}.
+
+\begin{figure}[ht]
+	\centering
+	\screenshot[width=0.42\textwidth]{figures/screens/ProgressScreen_WeightBottomSheet.png}
+	\caption{Bottom sheet pro záznam hmotnosti (\texttt{WeightLogSheet}) -- rychlé zadání aktuální hmotnosti s~volitelnou fotografií.}
+	\label{fig:screenWeightSheet}
+\end{figure}
+
+Perzistenci a reaktivní aktualizace dat zajišťuje \texttt{WeightEntryRepository}, který poskytuje vyšším vrstvám aplikace stream záznamů hmotnosti pro vizualizaci.
+Komponenty \texttt{BmiCard} a \texttt{WeightProgressCard} v~rámci obrazovky \texttt{ProgressScreen} (viz obrázek~\ref{fig:screenProgress}) prezentují aktuální index BMI vypočtený podle rovnice~(\ref{eq:bmi}) a graf vývoje hmotnosti za zvolené období.
+Modul je propojený s~onboardingem aplikace, kde uživatel zadává počáteční a cílovou hmotnost a rychlost hubnutí nebo nabírání.
 
 \subsection{Oblíbené položky, šablony a historie}
 \label{subsec:oblibene}
 
-% TODO: implementace FR-17, FR-18, FR-19. isFavorite na Meal, Ingredient, Exercise.
-% SelectMealScreen + Favorites tab. Systém šablon (4.4.2).
-% FR-18: MealCopyToSheet. FR-19: vyhledávání s debounce. Řazení dle usageCount.
+Funkční požadavky FR-17, FR-18 a FR-19 řeší rychlost zápisu opakovaných jídel a cvičení, která byla v~uživatelské studii identifikována jako klíčový faktor dlouhodobé udržitelnosti.
+Implementace pokrývá tři komplementární mechanismy: oblíbené položky, šablony a fulltextové vyhledávání v~historii.
+
+Oblíbené položky jsou modelovány atributem \texttt{isFavorite} na entitách \texttt{Meal}, \texttt{Ingredient} a \texttt{Exercise}.
+Označení oblíbené položky je možné z~detailní obrazovky a takto označené položky jsou prezentovány v~záložce ,,Oblíbené'' obrazovky \texttt{MealLogScreen} (viz obrázek~\ref{fig:screenMealLog}).
+Systém šablon, popsaný detailně v~sekci~\ref{subsec:sablony}, doplňuje oblíbené položky o~automaticky udržovanou kanonickou verzi jednotlivých opakovaně používaných položek s~atributem \texttt{usageCount} pro řazení podle frekvence.
+
+Pro funkční požadavek FR-19 (našeptávání podle historie) je implementováno fulltextové vyhledávání s~debounce na obrazovce \texttt{MealLogScreen}, které prochází historii záznamů a šablony.
+Funkce duplikace záznamu jídla na jiný den (FR-18) využívá bottom sheet \texttt{MealCopyToSheet} popsaný v~sekci~\ref{subsec:spravaJidel}.
 
 \subsection{Dietní omezení a vizualizace porušení}
 \label{subsec:dietniOmezeni}
 
-% TODO: implementace FR-20, FR-21. SessionManager.dietType + customDietPreferences.
-% PersonalDetailsDietScreen, PersonalDetailsCustomDietScreen.
-% Injekce do AI promptů přes _buildMealUserAttributes().
-% DietaryViolationService. DietaryViolationsCalendarCard (FR-21).
+Dietní kontext (FR-20) je v~aplikaci spravován prostřednictvím služby \texttt{SessionManager} s~dvěma typy nastavení: předdefinovaný typ diety (\texttt{dietType}, například vegetariánská, veganská, bezlepková) a uživatelské vlastní omezení (\texttt{customDietPreferences}, libovolný textový seznam).
+Konfigurace probíhá na obrazovkách \texttt{PersonalDetailsDietScreen} a \texttt{PersonalDetailsCustomDietScreen} v~rámci profilové sekce.
+
+Dietní kontext je systematicky injektován do promptů pro umělou inteligenci prostřednictvím metody \texttt{\_buildMealUserAttributes()}, čímž model při analýze jídel zohledňuje uživatelova omezení a může explicitně označit potenciální porušení.
+Detekce porušení je v~aplikaci centralizována ve službě \texttt{DietaryViolationService}, která prochází záznamy a klasifikuje je podle aktuálního dietního kontextu.
+
+Vizualizace porušení v~kalendáři (FR-21) je realizována komponentou \texttt{DietaryViolationsCalendarCard} v~obrazovce \texttt{ProgressScreen}, která zobrazuje měsíční mřížku s~barevně odlišenými dny obsahujícími porušení.
+Kliknutím na konkrétní den uživatel přejde na detailní pohled.
 
 \subsection{Dotazy v~přirozeném jazyce}
 \label{subsec:askAi}
 
-% TODO: implementace FR-27. AskAiController, AskAiScreen.
-% Two-pass systém: 1. pass určí časový rozsah, 2. pass analyzuje data a generuje odpověď.
-% Typy dotazů: trendy, srovnání, doporučení, vzorce stravování.
+Dotazy v~přirozeném jazyce (FR-27) jsou realizovány prostřednictvím komponenty \texttt{AskAiController} a obrazovky \texttt{AskAiScreen} (viz obrázek~\ref{fig:screenAskAi}), která poskytuje uživateli analytické rozhraní nad jeho historickými nutričními daty.
+
+Implementace využívá dvouprůchodový systém pro snížení nákladů a zlepšení kvality odpovědí.
+V~prvním průchodu volá pipeline menší instanci modelu s~úkolem identifikovat časový rozsah dotazu a typ analytické operace (například „minulý týden", „leden 2026", „období bez logování").
+Ve druhém průchodu je hlavnímu modelu předán pouze relevantní výřez dat z~lokální databáze pomocí \texttt{DayRecordRepository}, čímž se snižuje velikost kontextu a zlepšuje přesnost odpovědi.
+Tento návrh umožňuje uživateli pokládat různorodé dotazy od trendů a srovnání období přes detekci vzorců stravování až po doporučení pro úpravu jídelníčku.
 
 \subsection{Notifikace a motivační souhrny}
 \label{subsec:notifikace}
 
-% TODO: implementace FR-28, FR-29. TrackingReminderService (flutter_local_notifications, zonedSchedule).
-% 5 typů připomínek (snídaně, oběd, svačina, večeře, konec dne). Perzistence přes SharedPreferences.
-% TrackingRemindersController (FR-29). MotivationalSummaryService (denní/týdenní/měsíční).
+Implementace nástroje pro připomínky stravování (FR-28, FR-29) je realizována službou \texttt{TrackingReminderService}, která využívá knihovnu \texttt{flutter\_local\_notifications} a metodu \texttt{zonedSchedule()} pro plánování notifikací s~ohledem na aktuální časové pásmo zařízení.
+Aplikace plánuje pět typů připomínek (snídaně, svačina, oběd, odpolední svačina, večeře, případně závěrečné shrnutí dne), jejichž časy a aktivace jsou uloženy v~\texttt{SharedPreferences}.
+
+Konfigurace připomínek probíhá na obrazovce \texttt{TrackingRemindersScreen} (viz obrázek~\ref{fig:screenReminders}), kde uživatel volí jednotlivé typy a jejich časy v~bottom sheetu \texttt{TrackingRemindersBottomSheet}.
+
+\begin{figure}[ht]
+	\centering
+	\begin{minipage}[t]{0.42\textwidth}
+		\centering
+		\screenshot[width=\textwidth]{figures/screens/ProfileScreen_TrackingRemindersScreen.png}
+		\\(a)~Přehled připomínek
+	\end{minipage}\hfill
+	\begin{minipage}[t]{0.42\textwidth}
+		\centering
+		\screenshot[width=\textwidth]{figures/screens/ProfileScreen_TrackingReminders_BottomSheet.png}
+		\\(b)~Bottom sheet pro nastavení času
+	\end{minipage}
+	\caption{Konfigurace připomínek (\texttt{TrackingRemindersScreen}) -- výběr typů připomínek a~konfigurace jejich času.}
+	\label{fig:screenReminders}
+\end{figure}
+
+Doplňkovou funkcí je generování motivačních souhrnů (FR-28) ve službě \texttt{MotivationalSummaryService}, která periodicky (denně, týdně, měsíčně) analyzuje data uživatele a prostřednictvím modelu umělé inteligence generuje krátké personalizované shrnutí.
+Souhrny jsou zobrazovány v~modálním listu \texttt{MotivationalSummaryBottomSheet} (viz obrázek~\ref{fig:screenMotivationalSummary}) a slouží jako pozitivní reinforcement pro uživatele, který se v~aplikaci snaží dosáhnout dlouhodobých cílů.
+
+\begin{figure}[ht]
+	\centering
+	\screenshot[width=0.42\textwidth]{figures/screens/MotivationalSummaryScreen_BottomSheet.png}
+	\caption{Motivační souhrn (\texttt{MotivationalSummaryBottomSheet}) -- personalizované shrnutí pokroku generované modelem umělé inteligence.}
+	\label{fig:screenMotivationalSummary}
+\end{figure}
 
 \subsection{Export dat a sdílení}
 \label{subsec:exportDat}
 
-% TODO: implementace FR-25. ExportService, ExportController.
-% CSV export (tabulkový formát). PDF export (formátovaný report, ExportPdfIntroScreen, ExportPdfDateRangeScreen).
-% MealShareBuilder, AppShareService.
+Export dat (FR-25) je realizován službou \texttt{ExportService} a kontrolerem \texttt{ExportController}, které společně podporují dva výstupní formáty: tabulkový CSV pro další zpracování v~externích nástrojích a formátovaný PDF report pro archivaci nebo sdílení s~odborníkem na výživu.
+Tok exportu začíná na úvodní obrazovce \texttt{ExportSummaryReportScreen} (viz obrázek~\ref{fig:screenExport}), kde uživatel zvolí formát, časový rozsah a obsah exportu, a pokračuje na obrazovkách \texttt{ExportPdfIntroScreen} a \texttt{ExportPdfDateRangeScreen} pro detailní konfiguraci.
+
+\begin{figure}[ht]
+	\centering
+	\begin{minipage}[t]{0.42\textwidth}
+		\centering
+		\screenshot[width=\textwidth]{figures/screens/ExportSummaryReportScreen.png}
+		\\(a)~Konfigurace exportu
+	\end{minipage}\hfill
+	\begin{minipage}[t]{0.42\textwidth}
+		\centering
+		\screenshot[width=\textwidth]{figures/screens/ExportSummaryReportScreenExport.png}
+		\\(b)~Vygenerovaný export
+	\end{minipage}
+	\caption{Tok exportu dat (\texttt{ExportSummaryReportScreen}) -- konfigurace formátu a~rozsahu exportu a~výsledný vygenerovaný PDF nebo CSV soubor.}
+	\label{fig:screenExport}
+\end{figure}
+
+Sdílení individuálních záznamů jídla je doplňkově realizováno komponentou \texttt{MealShareBuilder} a službou \texttt{AppShareService}, která využívá knihovnu \texttt{share\_plus} pro distribuci snímku jídla nebo strukturovaného textového záznamu prostřednictvím systémového dialogu sdílení.
 
 \subsection{Integrace se zdravotními platformami}
 \label{subsec:zdravotniIntegrace}
 
-% TODO: částečná implementace FR-23. HealthIntegrationService (Apple Health / Health Connect).
-% HealthIntegrationController, HealthIntegrationScreen.
-% Exercise.source: rozlišení manuální vs. importované.
-% Přepínače burnedCaloriesEnabled, rolloverCaloriesEnabled.
-% Omezení: bez granulárních multiplikátorů.
+Integrace s~platformami Apple Health (iOS) a Health Connect (Android) je realizována službou \texttt{HealthIntegrationService} prostřednictvím knihovny \texttt{health}, která poskytuje jednotné API pro čtení a zápis zdravotních dat napříč oběma platformami.
+Konfigurace integrace probíhá na obrazovce \texttt{HealthIntegrationScreen}, dostupné z~profilové sekce (viz obrázek~\ref{fig:screenHealthIntegration}).
+
+\begin{figure}[ht]
+	\centering
+	\screenshot[width=0.42\textwidth]{figures/screens/ProfileScreen_SyncAppleHealthScreen.png}
+	\caption{Konfigurace integrace s~Apple Health (\texttt{HealthIntegrationScreen}) -- udělení oprávnění a nastavení směrů synchronizace zdravotních dat.}
+	\label{fig:screenHealthIntegration}
+\end{figure}
+
+Načtené údaje o~spálených kaloriích z~externích aktivit jsou v~aplikaci promítány do denního přehledu, přičemž atribut \texttt{Exercise.source} odlišuje manuálně zadaná cvičení od importovaných ze zdravotních platforem.
+Uživatel má prostřednictvím přepínačů \texttt{burnedCaloriesEnabled} a \texttt{rolloverCaloriesEnabled} kontrolu nad tím, zda a jak se importovaný energetický výdej promítá do denního kalorického limitu.
+Aktuální omezení implementace nezahrnuje granulární multiplikátory pro různé typy aktivit (FR-23 částečně), což je popsáno v~sekci~\ref{sec:omezeniImplementace}.
 
 \subsection{Lokalizace, onboarding a profil uživatele}
 \label{subsec:lokalizaceOnboarding}
 
-% TODO: implementace FR-04, FR-09 (částečně FR-30). easy_localization (en, cs).
-% Onboarding flow: 12+ obrazovek (welcome, DOB, height/weight, gender, goal, ...).
-% FR-04: PersonalDetailsScreen. SessionManager + SharedPreferencesService.
-% FR-09: ScanOnboardingScreen (5 stránek).
-% FR-30: individuální přepínače (burnedCalories, rollover, autoAdjust).
+Lokalizace aplikace je realizována prostřednictvím knihovny \texttt{easy\_localization} s~podporou angličtiny a češtiny.
+Klíče překladů jsou centralizovány v~automaticky generovaném souboru \texttt{lib/generated/locale\_keys.g.dart} a samotné překlady v~JSON souborech v~adresáři \texttt{assets/translations/}.
+
+Onboardingový tok aplikace (FR-04, částečně FR-09 a FR-30) zahrnuje více než dvanáct obrazovek, které postupně provází nového uživatele od přivítání přes zadání základních údajů (datum narození, výška, hmotnost, pohlaví), volbu cíle (hubnutí, udržení, nabírání), výpočet doporučených kalorií až po finalizaci profilu a uložení prvního denního záznamu.
+Obrazovky \texttt{PersonalDetailsScreen} a \texttt{PreferencesScreen} (viz obrázek~\ref{fig:screenPersonalDetailsAndPrefs}) slouží jako primární rozhraní pro pozdější úpravu profilu a doplňková nastavení aplikace.
+
+\begin{figure}[ht]
+	\centering
+	\begin{minipage}[t]{0.42\textwidth}
+		\centering
+		\screenshot[width=\textwidth]{figures/screens/ProfileScreen_PersonalDetailsScreen.png}
+		\\(a)~Osobní údaje
+	\end{minipage}\hfill
+	\begin{minipage}[t]{0.42\textwidth}
+		\centering
+		\screenshot[width=\textwidth]{figures/screens/ProfileScreen_Preferences.png}
+		\\(b)~Předvolby aplikace
+	\end{minipage}
+	\caption{Profilové obrazovky aplikace -- (a) osobní údaje uživatele a (b) předvolby aplikace pro pokročilé funkce.}
+	\label{fig:screenPersonalDetailsAndPrefs}
+\end{figure}
+
+Atributy ze \texttt{SessionManager} jsou perzistovány prostřednictvím \texttt{SharedPreferencesService}.
+Funkční požadavek FR-30 (skrytí nebo zobrazení pokročilých funkcí) je implementován prostřednictvím individuálních přepínačů (\texttt{burnedCaloriesEnabled}, \texttt{rolloverCaloriesEnabled}, \texttt{autoAdjustEnabled}) na obrazovce \texttt{PreferencesScreen} bez explicitního režimu basic versus advanced.
+Při prvním použití fotografického vstupu je uživateli zobrazena pětistránková onboardingová sekvence \texttt{ScanOnboardingScreen} naplňující funkční požadavek FR-09.
+
+Protože vlastní pseudonyma a další vlastní názvy aliasy jsou v~kódu uvedeny zde i ve dvou nejstarších profilových obrazovkách \texttt{PersonalDetailsScreen} a starší \texttt{PreferencesScreen}, jsou některé starší identifikátory v~kódu ponechány pro zachování zpětné kompatibility datového úložiště.
 
 \subsection{Další implementované funkce}
 \label{subsec:dalsiFunkce}
 
-% TODO: doplňkové funkce nad rámec FR. StreakService, StreakController, StreakDialog.
-% Home widget (WidgetSyncService, WidgetActionRouter, WidgetConstants).
-% CalendarDayRingService, CalendarDayRingPainter.
-% ReportMealScreen. Auto-adjust makroživin.
-% FR-05: mazání jídel/cvičení (částečně, bez mazání účtu).
-% FR-26: offline tolerance (SQLite local-first).
+Vedle hlavních funkcí pokrývajících funkční požadavky obsahuje aplikace několik doplňkových mechanismů, které vznikly v~průběhu implementace na základě praktických potřeb a zpětné vazby z~průběžného testování.
 
-\section{Klíčové obrazovky aplikace}
-\label{sec:klicoveObrazovky}
+Sledování série po sobě jdoucích dnů se záznamy je realizováno službou \texttt{StreakService} a kontrolerem \texttt{StreakController}, který udržuje aktuální a nejdelší dosaženou sérii a zobrazuje je v~motivačním dialogu \texttt{StreakDialog} při dosažení významných milníků.
+Tato funkce slouží jako pozitivní reinforcement v~návaznosti na zjištění z~uživatelské studie, kde respondenti opakovaně zmiňovali význam motivačních prvků pro dlouhodobou udržitelnost.
 
-% TODO: scope paragraph -- vybrané obrazovky ilustrují klíčové interakční toky z kapitoly 3.2.
-% 8 až 10 snímků (Dashboard, ScanCamera, ScanPreview, EditMeal, SelectMeal, VoiceLog, ExerciseLog, Profile, AskAi, Progress).
+Aplikace dále podporuje widgety na domovské obrazovce zařízení prostřednictvím služeb \texttt{WidgetSyncService} a \texttt{WidgetActionRouter}, které umožňují uživateli vidět denní souhrn kalorií bez nutnosti otevření aplikace.
+Vizualizace plnění cílů v~kalendáři (\texttt{CalendarDayRingService}, \texttt{CalendarDayRingPainter}) využívá vlastní renderování kruhových indikátorů pro každý den, kde tloušťka jednotlivých kruhů odráží podíl jednotlivých makroživin na cíli.
 
-% TODO: doplnit snímky obrazovek (10 obrazovek).
+Pro zlepšování kvality rozpoznávání pomocí umělé inteligence je k~dispozici funkce hlášení nesprávně rozpoznaného jídla na obrazovce \texttt{ReportMealScreen}, která sbírá uživatelskou zpětnou vazbu pro budoucí ladění promptů.
+Funkce automatické úpravy makroživin (auto-adjust) proporcionálně přepočítává cíle pro bílkoviny, sacharidy a tuky při změně kalorického cíle, čímž odstiňuje uživatele od ručního dopočítávání podílů.
+
+Z~hlediska funkčních požadavků FR-05 (kontrola nad daty) aplikace umožňuje mazání jednotlivých záznamů jídel a cvičení, ale nezahrnuje úplné mazání uživatelského účtu.
+Funkční požadavek FR-26 (offline tolerance) je naplněn lokálně-prvotním přístupem k~ukládání dat v~SQLite databázi (viz sekce~\ref{sec:datovyModel}), který zajišťuje plnou funkčnost aplikace bez internetového připojení s~výjimkou modalit závislých na cloudovém modelu umělé inteligence.
 
 \section{Přehled implementovaných funkčních požadavků}
 \label{sec:prehledFR}

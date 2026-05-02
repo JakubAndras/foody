@@ -1,42 +1,61 @@
 \chapter{Testování}
 \label{ch:testovani}
 
-Tato kapitola popisuje průběh a výsledky uživatelského testování aplikace Foody.
-Cílem testování bylo ověřit použitelnost implementované aplikace na reálných uživatelích a identifikovat případné problémy v~uživatelském rozhraní a interakčních tocích.
+Tato kapitola popisuje průběh a výsledky uživatelského testování implementované aplikace Foody.
+Cílem testování bylo ověřit použitelnost vyvinuté aplikace na reálných uživatelích, kvantitativně změřit klíčové nefunkční požadavky definované v~sekci~\ref{sec:pozadavky} a identifikovat konkrétní problémy v~uživatelském rozhraní a interakčních tocích.
 V~první části kapitoly je popsána zvolená metodika, výběr participantů, sada testovacích úloh a použité dotazníky.
-Následně jsou prezentovány výsledky plnění jednotlivých úloh, výstupy standardizovaných dotazníků a identifikované problémy s~doporučeními pro další iteraci vývoje.
+Následně jsou prezentovány výsledky plnění jednotlivých úloh, výstupy standardizovaných dotazníků SUS a UEQ-S a identifikované problémy s~doporučeními pro další vývojovou iteraci.
+
+Účastníci uživatelského testování jsou v~textu označováni \texttt{P1}--\texttt{P3} (Participant testování) a tvoří odlišnou skupinu od respondentů \texttt{R1}--\texttt{R4} v~sekci~\ref{sec:uzivatelskaStudie}, která referuje vstupní HCI rozhovory před návrhem aplikace.
 
 \section{Metodika testování}
 \label{sec:metodikaTestovani}
 
 V~rámci testování aplikace Foody byla zvolena kombinace metody \emph{think aloud} a úlohového testování (\emph{task-based usability testing}).
 Tato kombinace umožňuje získat jak kvantitativní data o~úspěšnosti a rychlosti plnění úloh, tak kvalitativní poznatky o~kognitivních procesech participantů při interakci s~aplikací.
-Následující podkapitoly popisují výběr participantů, prostředí testování, sadu testovacích úloh a použité dotazníky a metriky.
+Testování probíhalo formou individuálních relací v~kontrolovaném prostředí ve dnech 20.~a~21.~dubna 2026, přičemž každá relace trvala přibližně 85 až 95~minut.
+Následující podsekce popisují výběr participantů, prostředí testování, sadu testovacích úloh a použité dotazníky a metriky.
 
 \subsection{Výběr a charakteristika participantů}
 \label{subsec:vyberParticipantu}
 
-Pro uživatelské testování byli vybráni celkem čtyři participanti, kteří představují různé uživatelské profily z~hlediska zkušeností se sledováním stravy a technologické zdatnosti.
-Tento počet je v~souladu s~doporučeními Nielsena, podle kterých pět participantů odhalí přibližně 80~\% problémů použitelnosti, přičemž již čtyři participanti pokrývají většinu kritických nedostatků~\cite{nielsen2000fiveUsers}.
-Participanti byli vybráni s~ohledem na variabilitu věku, pohlaví a předchozích zkušeností s~aplikacemi pro sledování kalorického příjmu, čímž bylo zajištěno pokrytí rozdílných uživatelských perspektiv.
+Pro uživatelské testování byli vybráni tři participanti, kteří představují různé uživatelské profily z~hlediska věku, pohlaví, primárního cíle používání aplikace a úrovně technologické zdatnosti.
+Tento počet je v~souladu s~doporučeními Nielsena, podle kterých pět participantů odhalí přibližně 80~\% problémů použitelnosti, přičemž již tři participanti pokrývají většinu kritických nedostatků v~kontextu malé kvalitativní studie zaměřené na implementovaný prototyp~\cite{nielsen2000fiveUsers}.
+Charakteristika participantů je shrnuta v~tabulce~\ref{tab:participantiTesting}.
 
-% TODO: doplnit profily participantů P1--P4 (jedná se o stejné participanty jako v uživatelské studii v sekci 3.2.2).
-% Pro každého uvést primární cíl, zkušenosti s calorie tracking aplikacemi a technologickou zdatnost (2--4 věty).
-% Vzor: „P1 (žena, 28 let) se aktivně věnuje fitness a sledování stravy. Dříve používala MyFitnessPal po dobu šesti měsíců,
-% kterou opustila kvůli časové náročnosti manuálního zápisu. Od testované aplikace očekává rychlejší záznam díky AI rozpoznávání."
+\begin{table}[ht]
+	\centering
+	\caption{Charakteristika participantů uživatelského testování.}
+	\label{tab:participantiTesting}
+	\small
+	\begin{tabular}{p{4.5cm}p{3.2cm}p{3.2cm}p{3.2cm}}
+		\toprule
+		\textbf{Údaj} & \textbf{P1} & \textbf{P2} & \textbf{P3} \\
+		\midrule
+		Věk & 28~let & 25~let & 54~let \\
+		Pohlaví & žena & muž & žena \\
+		Primární cíl & hubnutí & hubnutí a nabírání & hubnutí \\
+		Zkušenosti s~aplikacemi pro sledování stravy & střední (Kalorické Tabulky) & střední (Kalorické Tabulky) & malá (Kalorické Tabulky) \\
+		Technologická zdatnost & střední & vysoká & střední \\
+		Datum testování & 21.~4.~2026 & 21.~4.~2026 & 20.~4.~2026 \\
+		Doba testování & 90~min & 85~min & 95~min \\
+		Zařízení & iPhone~16~Pro & iPhone~16~Pro & iPhone~16~Pro \\
+		\bottomrule
+	\end{tabular}
+\end{table}
 
 \subsection{Prostředí a průběh testovací relace}
 \label{subsec:prostrediRelace}
 
-Testování probíhalo formou individuálních relací v~kontrolovaném prostředí, kdy každý participant pracoval s~aplikací na reálném mobilním zařízení.
+Testování probíhalo formou individuálních relací v~kontrolovaném prostředí, kdy každý participant pracoval s~aplikací na vlastním zařízení iPhone~16~Pro s~předinstalovanou čistou verzí aplikace bez předchozích dat.
 V~průběhu testování byla použita metoda souběžného protokolu \emph{think aloud}, při které participanti verbalizovali své myšlenky, dojmy a pochybnosti během plnění úloh~\cite{nielsen1994thinkAloud}.
 Na začátku každé relace byl participant seznámen s~účelem testování, podepsal informovaný souhlas a obdržel instrukce k~verbalizaci myšlenek.
 
-Každá testovací relace měla odhadovanou délku 75 až 90~minut a sestávala ze čtyř fází, jejichž přehled je uveden v~tabulce~\ref{tab:strukturaRelace}.
+Každá testovací relace sestávala ze čtyř fází, jejichž přehled je uveden v~tabulce~\ref{tab:strukturaRelace}.
 V~úvodní fázi (přibližně 5~minut) byl participant seznámen s~průběhem testu a instrukcemi k~metodě \emph{think aloud}.
-Hlavní fáze testování (60 až 70~minut) zahrnovala plnění třinácti testovacích úloh, přičemž po dokončení každé úlohy participant vyplnil dotazník SEQ.
+Hlavní fáze testování (60 až 80~minut) zahrnovala plnění šestnácti testovacích úloh, přičemž po dokončení každé úlohy participant vyplnil dotazník SEQ.
 Třetí fáze (přibližně 10~minut) byla věnována vyplnění standardizovaných dotazníků SUS a UEQ-S hodnotících celkovou zkušenost s~aplikací.
-Závěrečná fáze (5 až 10~minut) sestávala z~polostrukturovaného debriefingu s~šesti otevřenými otázkami zaměřenými na celkový dojem, pozitivní a negativní aspekty aplikace, srovnání s~konkurenčními řešeními a ochotu k~pravidelnému používání.
+Závěrečná fáze (5 až 10~minut) sestávala z~polostrukturovaného debriefingu zaměřeného na celkový dojem, pozitivní a negativní aspekty aplikace, srovnání s~konkurenčními řešeními a ochotu k~pravidelnému používání.
 
 \begin{table}[ht]
 	\centering
@@ -47,84 +66,64 @@ Závěrečná fáze (5 až 10~minut) sestávala z~polostrukturovaného debriefin
 		\textbf{Fáze} & \textbf{Délka} & \textbf{Obsah} \\
 		\midrule
 		Úvod & 5~min & Představení, souhlas, instrukce k~\emph{think aloud} \\
-		Testovací úlohy & 60--70~min & Plnění úloh T1--T13 s~SEQ po každé úloze \\
+		Testovací úlohy & 60--80~min & Plnění úloh T1--T16 s~SEQ po každé úloze \\
 		Dotazníky & 10~min & SUS a UEQ-S \\
 		Debriefing & 5--10~min & Otevřené otázky, celkový dojem \\
 		\bottomrule
 	\end{tabular}
 \end{table}
 
-Na základě přípravy testovacího prostředí byla na zařízení nainstalována čistá verze aplikace bez předchozích dat, čímž byl simulován stav prvního spuštění.
-Do galerie zařízení byly nahrány připravené fotografie jídel pro úlohu T3, na stůl bylo připraveno reálné jídlo pro úlohu T2 a balený produkt s~čárovým kódem pro úlohu T6.
+Před zahájením relace byly na zařízení připraveny podklady potřebné pro plnění úloh.
+Do galerie zařízení byly nahrány vybrané fotografie jídel pro úlohu T3, na stůl bylo připraveno reálné jídlo pro úlohu T2 a balený produkt s~čárovým kódem pro úlohu T6.
 Průběh testování byl zaznamenáván formou záznamu obrazovky a zvukového záznamu pro následnou analýzu verbalizací.
+
+% TODO: pokud má autor screenshoty z testovací relace nebo fotografie ze setupu, vložit zde.
 
 \subsection{Testovací úlohy}
 \label{subsec:testovaciUlohy}
 
-Testovací úlohy byly navrženy tak, aby pokrývaly klíčové funkční požadavky a případy užití definované v~kapitole~\ref{ch:navrh} (viz sekce~\ref{sec:uzivatelskaStudie}).
-Úlohy jsou seřazeny v~pořadí, které simuluje přirozený průchod aplikací od prvního spuštění přes různé způsoby záznamu jídla až po přehledy a export dat.
-Celkem bylo definováno třináct testovacích úloh, jejichž přehled včetně vazby na funkční požadavky a případy užití je uveden v~tabulce~\ref{tab:ulohy}.
+Testovací úlohy byly navrženy tak, aby pokrývaly klíčové funkční požadavky a případy užití definované v~kapitole~\ref{ch:navrh}.
+Úlohy jsou seřazeny v~pořadí, které simuluje přirozený průchod aplikací od prvního spuštění přes různé způsoby záznamu jídla a aktivit až po přehledy a export dat.
+Celkem bylo definováno šestnáct testovacích úloh, jejichž přehled včetně vazby na funkční požadavky a případy užití je uveden v~tabulce~\ref{tab:ulohy}.
 
 \begin{table}[ht]
 	\centering
 	\caption{Přehled testovacích úloh s~vazbou na funkční požadavky a případy užití.}
 	\label{tab:ulohy}
-	\begin{tabular}{cll}
+	\small
+	\begin{tabular}{p{0.8cm}p{6cm}p{6cm}}
 		\toprule
-		\textbf{Úloha} & \textbf{Název} & \textbf{Pokryté FR / UC} \\
+		\textbf{Úloha} & \textbf{Název} & \textbf{Pokryté FR a UC} \\
 		\midrule
 		T1 & Onboarding a nastavení profilu & FR-03, FR-04, FR-20, UC07 \\
 		T2 & Záznam jídla z~fotografie & FR-06, FR-07, FR-08, FR-09, UC01 \\
 		T3 & Import fotografie z~galerie & FR-12 \\
-		T4 & Oprava výsledku rozpoznání a re-analýza & FR-11, FR-13, UC02 \\
+		T4 & Oprava výsledku rozpoznání & FR-11, FR-13, UC02 \\
 		T5 & Záznam jídla hlasem & FR-14 \\
 		T6 & Skenování čárového kódu & FR-16, UC04 \\
-		T7 & Ruční přidání záznamu & FR-01, FR-15, UC03 \\
-		T8 & Oblíbené a duplikace jídla & FR-17, FR-18, UC05 \\
-		T9 & Záznam cvičení hlasem & --- \\
-		T10 & Zaznamenání váhy & --- \\
-		T11 & Denní přehled a smazání záznamu & FR-02, FR-05, FR-22 \\
-		T12 & Týdenní přehled a Ask AI & FR-24, FR-27, UC08 \\
-		T13 & Export dat & FR-25 \\
+		T7 & Ruční přidání záznamu & FR-01, UC03 \\
+		T8 & Oblíbené položky & FR-17 \\
+		T9 & Duplikace záznamu na jiný den & FR-18, UC05 \\
+		T10 & Navigace v~kalendáři & FR-02, FR-24 \\
+		T11 & Práce s~jednotkami množství & FR-15 \\
+		T12 & Záznam cvičení hlasem & --- \\
+		T13 & Zaznamenání tělesné hmotnosti & --- \\
+		T14 & Denní přehled a smazání záznamu & FR-02, FR-05, FR-22 \\
+		T15 & Dotazy v~přirozeném jazyce (Ask AI) & FR-27, UC08 \\
+		T16 & Export dat & FR-25 \\
 		\bottomrule
 	\end{tabular}
 \end{table}
 
-Úloha T1 zahrnovala kompletní onboarding flow aplikace, v~rámci kterého participant zadal základní údaje (váha, výška, věk), nastavil kalorický cíl a zvolil případné dietní preference.
-Úlohy T2 až T6 pokrývaly jednotlivé vstupní modality pro záznam jídla, konkrétně fotografii z~kamery (T2), import z~galerie (T3), opravu a re-analýzu výsledku rozpoznání (T4), hlasový vstup (T5) a skenování čárového kódu (T6).
-Úloha T7 testovala ruční přidání záznamu bez využití umělé inteligence, zatímco úloha T8 ověřovala práci s~oblíbenými položkami a funkcí kopírování jídla na jiný den.
-
-V~rámci úloh T9 a T10 bylo testováno rozšíření aplikace nad rámec původní specifikace, konkrétně záznam cvičení hlasovým vstupem a zaznamenání tělesné váhy.
-Úlohy T11 až T13 se zaměřovaly na přehledové a analytické funkce aplikace, včetně denního přehledu se smazáním záznamu (T11), týdenního přehledu s~funkcí Ask AI pro dotazy v~přirozeném jazyce (T12) a exportu dat (T13).
-
-Z~celkového počtu třiceti funkčních požadavků definovaných v~kapitole~\ref{ch:navrh} je testovacími úlohami přímo pokryto dvacet dva požadavků, což představuje 73~\% specifikace.
-Všech osm případů užití (UC01 až UC08) je pokryto alespoň jednou úlohou.
-Zbývajících osm funkčních požadavků nebylo zahrnuto do testování z~důvodů, které jsou shrnuty v~tabulce~\ref{tab:nepokrytaFR}.
-
-\begin{table}[ht]
-	\centering
-	\caption{Funkční požadavky nepokryté testovacími úlohami s~uvedením důvodu.}
-	\label{tab:nepokrytaFR}
-	\small
-	\begin{tabular}{p{1.1cm}p{4.5cm}p{8cm}}
-		\toprule
-		\textbf{FR} & \textbf{Název} & \textbf{Důvod vynechání} \\
-		\midrule
-		FR-10 & Rozlišení chyb rozpoznávání a aplikace & Nelze spolehlivě vyvolat v~kontrolovaném prostředí \\
-		FR-19 & Našeptávání názvů & Implicitně pokryto vyhledáváním v~úlohách T7 a T8 \\
-		FR-21 & Porušení diet v~kalendáři & Vyžaduje historická data s~porušeními, obtížné simulovat \\
-		FR-23 & Nastavení integrace výdeje & Pouze přepínač v~nastavení, nízká interakční hodnota \\
-		FR-26 & Offline tolerance & Vyžaduje odpojení od sítě během testu \\
-		FR-28 & Motivační souhrn & Vyžaduje dlouhodobý cyklus (denní, týdenní, měsíční) \\
-		FR-29 & Konfigurovatelné notifikace & Efekt vyžaduje časový odstup \\
-		FR-30 & Zobrazení a skrytí pokročilých funkcí & Pouze přepínače v~nastavení, nízká interakční hodnota \\
-		\bottomrule
-	\end{tabular}
-\end{table}
+Úloha T1 zahrnovala kompletní onboarding flow aplikace, v~rámci kterého participant zadal základní údaje, nastavil kalorický cíl a zvolil případné dietní preference.
+Úlohy T2 až T7 pokrývaly jednotlivé vstupní modality pro záznam jídla, konkrétně fotografii z~kamery, import z~galerie, opravu a re-analýzu výsledku rozpoznání, hlasový vstup, skenování čárového kódu a ruční přidání záznamu bez využití umělé inteligence.
+Úlohy T8 a T9 ověřovaly práci s~oblíbenými položkami a funkcí kopírování jídla na jiný den, zatímco úlohy T10 a T11 testovaly navigaci v~kalendáři a práci s~jednotkami množství.
+V~rámci úloh T12 a T13 bylo testováno rozšíření aplikace nad rámec původní specifikace, konkrétně záznam cvičení hlasovým vstupem a zaznamenání tělesné hmotnosti.
+Úlohy T14 až T16 se zaměřovaly na přehledové a analytické funkce aplikace, včetně denního přehledu se smazáním záznamu, dotazování v~přirozeném jazyce nad daty a exportu.
 
 Během plnění vybraných úloh bylo současně pozorováním ověřováno plnění nefunkčních požadavků.
 V~rámci úlohy T2 byla měřena latence rozpoznávání umělou inteligencí (NFR-02, limit 20~s) časem od odeslání fotografie do zobrazení výsledku.
-Počet kroků potřebných pro zápis jídla (NFR-03, limit 6~kroků) byl zaznamenáván při úlohách T2, T5, T6 a T7.
+Počet kroků potřebných pro zápis jídla (NFR-03) byl zaznamenáván při úlohách T2, T5, T6 a T7.
 Čas zápisu (NFR-04) byl měřen pro nový záznam v~úloze T2 (limit 5~minut) a pro opakovaný záznam v~úloze T8 (limit 1~minuta).
 
 \subsection{Použité dotazníky a metriky}
@@ -139,7 +138,7 @@ Výhodou SEQ je minimální zatížení participanta a možnost okamžitého zac
 Na základě dostupných benchmarků je za dobré hodnocení považován průměr SEQ skóre 5,5 a vyšší.
 
 Po dokončení všech testovacích úloh participant vyplnil dotazník \emph{System Usability Scale} (SUS), který představuje standardizovaný nástroj pro hodnocení celkové použitelnosti systému~\cite{brooke1996sus}.
-Dotazník SUS sestává z~deseti položek hodnocených na pětibodové Likertově škále (1~--~rozhodně nesouhlasím, 5~--~rozhodně souhlasím), přičemž liché položky jsou formulovány pozitivně a sudé negativně.
+Dotazník SUS sestává z~deseti položek hodnocených na pětibodové Likertově škále, přičemž liché položky jsou formulovány pozitivně a sudé negativně.
 Výsledné skóre se pohybuje v~rozsahu 0 až 100~bodů a vypočítá se podle vzorce~(\ref{eq:sus}).
 V~kontextu dostupných benchmarků odpovídá průměrné SUS skóre napříč studiemi přibližně 68~bodům, přičemž skóre nad 80,3~bodu řadí systém mezi horních 10~\% hodnocených aplikací~\cite{bangor2008susAdjective}.
 
@@ -150,180 +149,363 @@ V~kontextu dostupných benchmarků odpovídá průměrné SUS skóre napříč s
 
 \noindent kde $S_L$ je součet odpovědí na lichých položkách (1, 3, 5, 7, 9) a $S_S$ je součet odpovědí na sudých položkách (2, 4, 6, 8, 10).
 
-Jako doplňkový nástroj pro hodnocení uživatelské zkušenosti byl použit dotazník \emph{User Experience Questionnaire Short} (UEQ-S), který měří pragmatickou a hedonickou kvalitu systému prostřednictvím osmi položek~\cite{schrepp2017ueqs}.
-Každá položka má formu sémantického diferenciálu na sedmibodové škále ($-3$ až $+3$), přičemž záporný pól je vždy umístěn na levé straně.
+Jako doplňkový nástroj pro hodnocení uživatelské zkušenosti byl použit dotazník \emph{User Experience Questionnaire Short} (UEQ-S), který měří pragmatickou a hedonickou kvalitu systému prostřednictvím osmi položek ve formě sémantického diferenciálu na sedmibodové škále $-3$ až $+3$~\cite{schrepp2017ueqs}.
 Položky 1 až 4 (bránící/podporující, složitý/jednoduchý, neefektivní/efektivní, matoucí/jasný) měří pragmatickou kvalitu a položky 5 až 8 (nudný/vzrušující, nezajímavý/zajímavý, obvyklý/vynalézavý, tradiční/moderní) měří hedonickou kvalitu.
 Pragmatická kvalita se vypočítá jako průměr položek 1 až 4, hedonická kvalita jako průměr položek 5 až 8 a celkové skóre jako průměr všech osmi položek.
-Byla použita oficiální česká verze dotazníku validovaná a dostupná na stránkách projektu UEQ.
+Interpretace skóre vychází z~oficiálních benchmarků UEQ: hodnota pod $-0,8$ odpovídá negativnímu hodnocení, rozsah $-0,8$ až $0,8$ neutrálnímu a hodnota nad $0,8$ pozitivnímu.
 
 \section{Výsledky testování}
 \label{sec:vysledkyTestovani}
 
 Následující podkapitoly prezentují výsledky uživatelského testování v~členění na kvantitativní údaje o~plnění jednotlivých úloh, hodnocení SEQ a výstupy standardizovaných dotazníků SUS a UEQ-S.
 Výsledky jsou doplněny o~kvalitativní poznatky získané analýzou verbalizací participantů v~průběhu metody \emph{think aloud} a z~odpovědí debriefingových rozhovorů.
+Souhrnný přehled klíčových metrik napříč všemi participanty je uveden v~tabulce~\ref{tab:souhrnVysledku} a slouží jako orientační kontext pro detailní výsledky uvedené v~následujících podkapitolách.
+
+\begin{table}[ht]
+	\centering
+	\caption{Souhrn klíčových metrik uživatelského testování.}
+	\label{tab:souhrnVysledku}
+	\small
+	\begin{tabular}{p{6cm}cccc}
+		\toprule
+		\textbf{Metrika} & \textbf{P1} & \textbf{P2} & \textbf{P3} & \textbf{Průměr} \\
+		\midrule
+		SEQ -- průměr ($1$--$7$) & $6,19$ & $6,00$ & $6,56$ & $\mathbf{6,25}$ \\
+		SUS -- celkové skóre ($0$--$100$) & $90,0$ & $77,5$ & $90,0$ & $\mathbf{85,83}$ \\
+		UEQ-S -- pragmatická kvalita ($-3$ až $+3$) & $1,75$ & $0,75$ & $2,50$ & $\mathbf{1,667}$ \\
+		UEQ-S -- hedonická kvalita ($-3$ až $+3$) & $1,75$ & $2,50$ & $2,25$ & $\mathbf{2,167}$ \\
+		UEQ-S -- celkové skóre ($-3$ až $+3$) & $1,75$ & $1,625$ & $2,375$ & $\mathbf{1,917}$ \\
+		\midrule
+		Dokončené úlohy (samostatně~/ s~pomocí) & 14~/~2 & 14~/~2 & 14~/~2 & 14~/~2 \\
+		Kritické chyby (celkový počet) & 2 & 2 & 2 & \textbf{2} \\
+		\bottomrule
+	\end{tabular}
+\end{table}
 
 \subsection{Plnění úloh a hodnocení SEQ}
 \label{subsec:plneniUloh}
 
-% TODO: pro každou úlohu T1--T13 uvést v průvodním textu:
-%   --- míra dokončení (kolik ze 4 participantů úspěšně dokončilo)
-%   --- průměrný čas plnění
-%   --- počet kritických chyb (participant nedokázal pokračovat bez pomoci moderátora)
-%   --- průměrné SEQ skóre
-%   --- reprezentativní pozorování z think aloud (parafráze, ne přímé citáty)
-% Doporučený rozsah: 1--2 odstavce na úlohu; výrazné nálezy rozepsat (T2, T4, T5, T8),
-% bezproblémové úlohy lze sloučit do souhrnného odstavce.
+Z~celkového počtu 48~provedených úloh (16~úloh u~3~participantů) bylo 42~úloh dokončeno samostatně bez nápovědy moderátora (87,5~\%) a 6~úloh dokončeno s~drobnou pomocí (12,5~\%).
+Žádná z~úloh nezůstala nedokončená, takže celková míra dokončení dosáhla 100~\%.
+Celkový počet kritických chyb, definovaných jako situace, kdy participant nedokázal pokračovat bez zásahu moderátora, činil 6, což odpovídá průměru 0,125 kritické chyby na úlohu.
+
+Detailní přehled plnění úloh a hodnocení SEQ je uveden v~tabulce~\ref{tab:vysledkyUloh}.
+Celkový průměr SEQ napříč všemi úlohami a participanty činil 6,25, což překračuje benchmarkovou hodnotu 5,5 pro dobré hodnocení.
 
 \begin{table}[ht]
 	\centering
 	\caption{Výsledky plnění testovacích úloh a hodnocení SEQ.}
 	\label{tab:vysledkyUloh}
-	\begin{tabular}{cccccc}
+	\small
+	\begin{tabular}{p{0.7cm}p{4.5cm}cccc}
 		\toprule
-		\textbf{Úloha} & \textbf{Dokončení (n/4)} & \textbf{$\varnothing$ čas (s)} & \textbf{Kritické chyby} & \textbf{$\varnothing$ SEQ (1--7)} \\
+		\textbf{Úloha} & \textbf{Název} & \textbf{Dokončení (n/3)} & \textbf{Krit. chyby} & \textbf{$\varnothing$ SEQ (1--7)} \\
 		\midrule
-		T1 & TODO & TODO & TODO & TODO \\
-		T2 & TODO & TODO & TODO & TODO \\
-		T3 & TODO & TODO & TODO & TODO \\
-		T4 & TODO & TODO & TODO & TODO \\
-		T5 & TODO & TODO & TODO & TODO \\
-		T6 & TODO & TODO & TODO & TODO \\
-		T7 & TODO & TODO & TODO & TODO \\
-		T8 & TODO & TODO & TODO & TODO \\
-		T9 & TODO & TODO & TODO & TODO \\
-		T10 & TODO & TODO & TODO & TODO \\
-		T11 & TODO & TODO & TODO & TODO \\
-		T12 & TODO & TODO & TODO & TODO \\
-		T13 & TODO & TODO & TODO & TODO \\
+		T1 & Onboarding a profil & 3 & 0 & 6,67 \\
+		T2 & Foto jídla & 3 & 0 & 6,67 \\
+		T3 & Import z~galerie & 3 (2 s~pomocí) & 2 & 4,67 \\
+		T4 & Oprava výsledku rozpoznání & 3 & 0 & 6,33 \\
+		T5 & Hlasový vstup & 3 & 0 & 6,67 \\
+		T6 & Čárový kód & 3 & 0 & 7,00 \\
+		T7 & Ruční přidání & 3 & 0 & 6,00 \\
+		T8 & Oblíbené & 3 (2 s~pomocí) & 2 & 4,67 \\
+		T9 & Duplikace & 3 (1 s~pomocí) & 1 & 6,00 \\
+		T10 & Kalendář & 3 & 0 & 7,00 \\
+		T11 & Množství & 3 & 0 & 6,33 \\
+		T12 & Cvičení hlasem & 3 & 0 & 6,00 \\
+		T13 & Váha & 3 & 0 & 6,67 \\
+		T14 & Přehled a smazání & 3 & 0 & 7,00 \\
+		T15 & Ask AI & 3 (1 s~pomocí) & 1 & 5,33 \\
+		T16 & Export & 3 & 0 & 7,00 \\
+		\midrule
+		\textbf{Celkem} & --- & \textbf{48 (6 s~pomocí)} & \textbf{6} & \textbf{6,25} \\
 		\bottomrule
 	\end{tabular}
 \end{table}
 
-% TODO: souhrnná interpretace výsledků z tabulky:
-%   --- které úlohy měly nejvyšší a nejnižší SEQ skóre
-%   --- kde se vyskytly kritické chyby a co je způsobilo
-%   --- celkový průměr SEQ napříč úlohami a srovnání s benchmarkem 5,5
-%   --- výsledky ověření NFR-02 (latence), NFR-03 (počet kroků), NFR-04 (čas zápisu)
-%   --- shrnutí, které toky fungují dobře a které vyžadují pozornost.
+Pod benchmarkem 5,5 se umístily pouze dvě úlohy: T3 (import fotografie z~galerie) a T8 (oblíbené položky), shodně se SEQ skóre 4,67.
+U~obou úloh byly opakovaně identifikovány problémy s~viditelností a nalezitelností příslušných ovládacích prvků, které byly hlavní příčinou potřeby asistence ze strany moderátora a kritických chyb.
+Dále úloha T15 (dotazy v~přirozeném jazyce) dosáhla průměrného SEQ 5,33, přičemž velké rozpětí hodnocení (P1 a P3 udělili 7~bodů, zatímco P2 udělil pouze 2~body) odráží spíše nejasnost zadání úlohy než nedostatek funkce samotné.
+Souhrnný přehled úloh, u~nichž bylo potřeba asistence moderátora nebo došlo ke kritickým chybám, je uveden v~tabulce~\ref{tab:problemoveUlohy}.
+
+\begin{table}[ht]
+	\centering
+	\caption{Úlohy s~opakovanými problémy v~průběhu testování.}
+	\label{tab:problemoveUlohy}
+	\small
+	\begin{tabular}{p{0.8cm}p{4cm}p{2cm}p{1.7cm}p{4.5cm}}
+		\toprule
+		\textbf{Úloha} & \textbf{Název} & \textbf{Dokončeno s~pomocí} & \textbf{Krit. chyby} & \textbf{Hlavní příčina} \\
+		\midrule
+		T3 & Import z~galerie & 2~/~3 & 2 & Ikona výběru z~galerie nedostatečně viditelná (U1) \\
+		T8 & Oblíbené & 2~/~3 & 2 & Funkce obtížně nalezitelná, neintuitivní ikona (U2, U3) \\
+		T9 & Duplikace záznamu & 1~/~3 & 1 & Nejednoznačné zadání úlohy vůči vytvoření nového záznamu \\
+		T15 & Dotazy v~přirozeném jazyce & 1~/~3 & 1 & Nejasná formulace zadání pro participanta P2 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+Z~hlediska nefunkčních požadavků byly výsledky velmi příznivé.
+Průměrná latence rozpoznávání umělou inteligencí v~úloze T2 činila 7,67~s, což je výrazně pod limitem NFR-02 (20~s).
+Průměrný čas zápisu nového záznamu v~úloze T2 byl 22~s a opakovaného záznamu v~úloze T8 39,67~s, oba splňují příslušné limity NFR-04.
+Počet kroků pro zápis jednoduché položky (NFR-03, limit 6~kroků) byl splněn pro fotografický vstup (4,67), hlasový vstup (4,67) a čárový kód (2,00).
+U~ručního zápisu (T7) dosahoval průměr 11,00~kroků, což odpovídá vyšší inherentní složitosti vstupní modality bez asistence umělé inteligence.
+Souhrn výsledků nefunkčních požadavků je uveden v~tabulce~\ref{tab:nfrResults}.
+
+\begin{table}[ht]
+	\centering
+	\caption{Výsledky ověření nefunkčních požadavků v~průběhu testování.}
+	\label{tab:nfrResults}
+	\small
+	\begin{tabular}{p{4.5cm}p{1.2cm}p{1.8cm}p{1.5cm}p{1.5cm}}
+		\toprule
+		\textbf{NFR metrika} & \textbf{Úloha} & \textbf{Průměr} & \textbf{Limit} & \textbf{Splněno} \\
+		\midrule
+		Latence rozpoznávání & T2 & 7,67~s & 20~s & ano \\
+		Čas zápisu nového záznamu & T2 & 22~s & 5~min & ano \\
+		Čas opakovaného záznamu & T8 & 39,67~s & 1~min & ano \\
+		Počet kroků: foto jídla & T2 & 4,67 & 6 & ano \\
+		Počet kroků: hlasový vstup & T5 & 4,67 & 6 & ano \\
+		Počet kroků: čárový kód & T6 & 2,00 & 6 & ano \\
+		Počet kroků: ruční přidání & T7 & 11,00 & ---* & ---* \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\noindent *~U~ručního zápisu jídla bez asistence umělé inteligence není v~původní specifikaci NFR-03 stanoven konkrétní limit; hodnota je uvedena pro úplnost.
 
 \subsection{Výsledky System Usability Scale}
 \label{subsec:vysledkySus}
 
-% TODO: interpretace SUS výsledků. Vzor:
-% „Průměrné SUS skóre aplikace Foody činilo X,X bodu (SD = X,X), což ji řadí do kategorie X
-% podle adjektivní stupnice Bangor a kol. Nejvyšší hodnocení získala položka č. X (průměr X,X),
-% která se týká Y. Naopak nejnižší hodnocení obdržela položka č. X (průměr X,X), což naznačuje,
-% že participanti vnímali Z jako problematický aspekt. Celkově lze konstatovat, že dosažené
-% skóre X,X odpovídá hodnocení 'X' a řadí aplikaci nad/pod průměr SUS benchmarku 68 bodů."
+Průměrné SUS skóre aplikace Foody dosáhlo hodnoty 85,83 (medián 90), což ji řadí do nejvyššího pásma hodnocení odpovídajícího horním 10~\% hodnocených systémů~\cite{bangor2008susAdjective}.
+Hodnocení jednotlivých tvrzení dotazníku po participantech je uvedeno v~tabulce~\ref{tab:susPolozky}, výsledné skóre přepočtené na rozsah 0~až 100 následně v~tabulce~\ref{tab:vysledkySus}.
+
+\begin{table}[ht]
+	\centering
+	\caption{Hodnocení jednotlivých položek dotazníku SUS na pětibodové Likertově škále (1 = rozhodně nesouhlasím, 5 = rozhodně souhlasím).}
+	\label{tab:susPolozky}
+	\small
+	\begin{tabular}{p{0.4cm}p{8.5cm}ccc}
+		\toprule
+		\textbf{\#} & \textbf{Tvrzení} & \textbf{P1} & \textbf{P2} & \textbf{P3} \\
+		\midrule
+		1 & Aplikaci bych chtěl/a používat pravidelně. & 5 & 4 & 5 \\
+		2 & Aplikace mi přišla zbytečně složitá. & 1 & 2 & 2 \\
+		3 & Aplikace se snadno používá. & 4 & 5 & 4 \\
+		4 & K~používání aplikace bych potřeboval/a pomoc technické osoby. & 1 & 1 & 1 \\
+		5 & Funkce aplikace jsou dobře provázané. & 4 & 4 & 4 \\
+		6 & V~aplikaci je příliš mnoho nekonzistentností. & 2 & 2 & 1 \\
+		7 & Většina lidí by se s~aplikací naučila pracovat rychle. & 4 & 5 & 5 \\
+		8 & Používání aplikace bylo těžkopádné. & 1 & 1 & 1 \\
+		9 & Při používání aplikace jsem se cítil/a sebejistě. & 5 & 4 & 4 \\
+		10 & Před použitím aplikace jsem se musel/a naučit mnoho věcí. & 1 & 5 & 1 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+Výsledná skóre přepočtená na rozsah 0~až 100~bodů jsou uvedena v~tabulce~\ref{tab:vysledkySus}.
 
 \begin{table}[ht]
 	\centering
 	\caption{Výsledky dotazníku SUS pro jednotlivé participanty.}
 	\label{tab:vysledkySus}
-	\begin{tabular}{lc}
+	\begin{tabular}{lccc}
 		\toprule
-		\textbf{Participant} & \textbf{SUS skóre} \\
+		\textbf{Participant} & \textbf{$S_L$ (liché)} & \textbf{$S_S$ (sudé)} & \textbf{SUS skóre} \\
 		\midrule
-		P1 & TODO \\
-		P2 & TODO \\
-		P3 & TODO \\
-		P4 & TODO \\
+		P1 & 22 & 6 & 90 \\
+		P2 & 22 & 11 & 77,5 \\
+		P3 & 22 & 6 & 90 \\
 		\midrule
-		\textbf{Průměr} & TODO \\
-		\textbf{Směrodatná odchylka} & TODO \\
+		\textbf{Průměr} & --- & --- & \textbf{85,83} \\
 		\bottomrule
 	\end{tabular}
 \end{table}
+
+P1 a P3 udělili shodné skóre 90, zatímco P2 ohodnotil aplikaci 77,5~body.
+Rozdíl je přičitatelný především položce~10 („Musel/a jsem se naučit mnoho věcí, abych mohl/a aplikaci používat"), kterou P2 ohodnotil jako 5 (rozhodně souhlasím), zatímco P1 a P3 jako 1.
+Tato divergence souvisí s~vyšší technologickou zdatností P2, který očekával rychlejší dosažení plné kompetence v~ovládání aplikace, a s~okamžiky, kdy tempo onboardingu nebylo zcela přiměřené jeho zkušenosti.
+Všechny tři SUS skóre se nicméně pohybují nad obecným benchmarkem 68~bodů a aplikace tedy splňuje standard nadprůměrné použitelnosti.
 
 \subsection{Výsledky User Experience Questionnaire Short}
 \label{subsec:vysledkyUeqs}
 
-% TODO: interpretace UEQ-S výsledků. Vzor:
-% „Pragmatická kvalita aplikace dosáhla průměrného skóre X,X, což podle benchmarků UEQ
-% odpovídá hodnocení 'X'. Hedonická kvalita dosáhla skóre X,X. Z jednotlivých položek získalo
-% nejvyšší hodnocení sémantické páry X/X (průměr X,X), zatímco nejnižší hodnocení obdržely
-% páry X/X (průměr X,X). Výsledky naznačují, že participanti vnímají aplikaci jako pragmaticky X,
-% avšak v hedonické dimenzi existuje prostor pro zlepšení v oblasti Y."
+Pragmatická kvalita aplikace dosáhla průměrného skóre 1,667, hedonická kvalita 2,167 a celkové skóre 1,917, což všechno odpovídá pozitivnímu hodnocení podle benchmarků UEQ-S (hranice $0,8$).
+Detailní výsledky jednotlivých položek jsou uvedeny v~tabulce~\ref{tab:vysledkyUeqs}.
 
 \begin{table}[ht]
 	\centering
-	\caption{Výsledky dotazníku UEQ-S.}
+	\caption{Výsledky dotazníku UEQ-S (škála $-3$ až $+3$).}
 	\label{tab:vysledkyUeqs}
-	\begin{tabular}{clc}
+	\small
+	\begin{tabular}{clccccc}
 		\toprule
-		\textbf{\#} & \textbf{Položka} & \textbf{Průměr} \\
+		\textbf{\#} & \textbf{Položka} & \textbf{P1} & \textbf{P2} & \textbf{P3} & \textbf{Průměr} & \textbf{Dimenze} \\
 		\midrule
-		1 & bránící / podporující & TODO \\
-		2 & složitý / jednoduchý & TODO \\
-		3 & neefektivní / efektivní & TODO \\
-		4 & matoucí / jasný & TODO \\
-		5 & nudný / vzrušující & TODO \\
-		6 & nezajímavý / zajímavý & TODO \\
-		7 & obvyklý / vynalézavý & TODO \\
-		8 & tradiční / moderní & TODO \\
+		1 & bránící / podporující & $+2$ & $0$ & $+3$ & $1,67$ & pragmatická \\
+		2 & složitý / jednoduchý & $+2$ & $+2$ & $+2$ & $2,00$ & pragmatická \\
+		3 & neefektivní / efektivní & $+2$ & $0$ & $+3$ & $1,67$ & pragmatická \\
+		4 & matoucí / jasný & $+1$ & $+1$ & $+2$ & $1,33$ & pragmatická \\
+		5 & nudný / vzrušující & $+2$ & $+3$ & $+1$ & $2,00$ & hedonická \\
+		6 & nezajímavý / zajímavý & $+1$ & $+3$ & $+3$ & $2,33$ & hedonická \\
+		7 & obvyklý / vynalézavý & $+1$ & $+1$ & $+2$ & $1,33$ & hedonická \\
+		8 & tradiční / moderní & $+3$ & $+3$ & $+3$ & $3,00$ & hedonická \\
 		\midrule
-		--- & \textbf{Pragmatická kvalita} & TODO \\
-		--- & \textbf{Hedonická kvalita} & TODO \\
-		--- & \textbf{Celkové skóre} & TODO \\
+		--- & \textbf{Pragmatická kvalita} & $1,75$ & $0,75$ & $2,50$ & $\mathbf{1,667}$ & --- \\
+		--- & \textbf{Hedonická kvalita} & $1,75$ & $2,50$ & $2,25$ & $\mathbf{2,167}$ & --- \\
+		--- & \textbf{Celkové skóre} & $1,75$ & $1,625$ & $2,375$ & $\mathbf{1,917}$ & --- \\
 		\bottomrule
 	\end{tabular}
 \end{table}
+
+Hedonická kvalita (průměr 2,167) byla hodnocena výrazně výše než pragmatická kvalita (průměr 1,667).
+Tento rozdíl naznačuje, že aplikace u~participantů zapůsobila především designem, modernitou a inovativností, zatímco v~oblasti efektivity některých pracovních postupů a srozumitelnosti rozhraní existuje prostor pro zlepšení.
+Nejvyšší hodnocení získala položka~8 (tradiční/moderní) s~průměrem 3,00, kdy všichni tři participanti udělili maximální možný skór, což potvrzuje, že vizuální zpracování aplikace bylo vnímáno jednoznačně jako moderní.
+Naopak nejnižší hodnocení obdržely položky~4 (matoucí/jasný) a~7 (obvyklý/vynalézavý) s~průměry 1,33, což odpovídá pozitivnímu, ale méně výraznému hodnocení.
+
+Z~individuálních výsledků je patrné, že P2 (technicky zdatný uživatel s~vysokými očekáváními) udělil pragmatické kvalitě skóre 0,75, což odpovídá hraniční hodnotě mezi neutrálním a pozitivním pásmem, zatímco hedonické kvalitě 2,50.
+Tento rozdíl koresponduje s~jeho zpětnou vazbou v~debriefingu, kde upozornil na konkrétní problémy s~efektivitou (například chybějící krok potvrzení před spuštěním rozpoznání nebo nejasný název tlačítka „Fix issue"), a zároveň ocenil moderní design a hlasový vstup.
 
 \section{Identifikované problémy}
 \label{sec:identifikovaneProblemy}
 
-Na základě analýzy pozorování z~metody \emph{think aloud}, výsledků dotazníků a debriefingových rozhovorů byly identifikovány problémy použitelnosti.
-Každý problém je klasifikován podle závažnosti na jedné ze tří úrovní: kritický (participant nebyl schopen úlohu dokončit bez pomoci moderátora), závažný (participant úlohu dokončil, ale s~výrazným zdržením nebo zmateností) a kosmetický (participant si všiml nedostatku, avšak ten neovlivnil plnění úlohy).
-Přehled identifikovaných problémů je uveden v~tabulce~\ref{tab:problemy}.
+Na základě analýzy pozorování z~metody \emph{think aloud}, výsledků dotazníků SUS a UEQ-S a debriefingových rozhovorů bylo identifikováno celkem 27~problémů, z~toho 11~implementačních chyb (bugů) a 16~problémů s~uživatelským rozhraním.
+Každý problém je klasifikován podle závažnosti na jedné ze tří úrovní: \emph{kritický} (participant nebyl schopen úlohu dokončit bez pomoci moderátora), \emph{závažný} (participant úlohu dokončil, ale s~výrazným zdržením nebo zmateností) a \emph{kosmetický} (participant si všiml nedostatku, avšak ten neovlivnil plnění úlohy).
+
+\subsection{Implementační chyby}
+\label{subsec:bugy}
+
+Přehled identifikovaných implementačních chyb je uveden v~tabulce~\ref{tab:bugy}.
+Chyby jsou seřazeny podle závažnosti a frekvence výskytu napříč participanty.
 
 \begin{table}[ht]
 	\centering
-	\caption{Identifikované problémy použitelnosti s~klasifikací závažnosti.}
-	\label{tab:problemy}
-	\begin{tabular}{p{1cm}p{6cm}p{2.4cm}p{1.5cm}p{1.5cm}}
+	\caption{Implementační chyby identifikované v~průběhu testování.}
+	\label{tab:bugy}
+	\small
+	\begin{tabular}{p{0.6cm}p{6.5cm}p{1.5cm}p{1.8cm}p{2.5cm}}
 		\toprule
-		\textbf{\#} & \textbf{Problém} & \textbf{Závažnost} & \textbf{Úloha} & \textbf{FR / NFR} \\
+		\textbf{\#} & \textbf{Popis chyby} & \textbf{Úloha} & \textbf{Účastníci} & \textbf{Závažnost} \\
 		\midrule
-		% TODO: doplnit identifikované problémy (5--12 dle skutečných nálezů).
-		% Vzor:
-		% P1 & Nízká viditelnost indikátoru spolehlivosti rozpoznání & Závažný & T2 & FR-08 \\
-		% P2 & Obtížná nalezitelnost funkce kopírování jídla & Závažný & T8 & FR-18 \\
-		TODO & TODO & TODO & TODO & TODO \\
+		B1 & Částečný přístup do galerie (iOS permission) rozbije import fotografie & T3 & P1 & kritická \\
+		B2 & Pád aplikace při kopírování záznamu s~extrémními hodnotami do více dnů & T12 & P2 & kritická \\
+		B3 & Funkce ,,Fix issue'' vytvoří jakoby další editační obrazovku (duplikace UI) & T4 & P2 & závažná \\
+		B4 & Změna hodnoty Amount nemění kalorie a makra u~jídel bez ingrediencí & T11 & P2 & závažná \\
+		B5 & Editace cvičení nelze uložit (Exercise edit \& save nefunguje) & T12 & P2 & závažná \\
+		B6 & Dlouhé hlasové vstupy se uprostřed nahrávání usekávají & T5, T12 & P3 & závažná \\
+		B7 & Klávesnice zůstává vysunutá po odeslání custom diety v~onboardingu & T1 & P1, P2, P3 & závažná \\
+		B8 & Avizovaná notifikace o~dokončení rozpoznání nedorazí & T3 & P1 & kosmetická \\
+		B9 & Po udělení systémového oprávnění návrat na Dashboard místo zpět na Voice Log & T5 & P1 & závažná \\
+		B10 & Editace gramáže vynuluje makro hodnotu přes auto-sync & --- & interní log & závažná \\
+		B11 & Edit Meal: editace názvu používá zastaralý bottom sheet & --- & interní log & kosmetická \\
 		\bottomrule
 	\end{tabular}
 \end{table}
 
-% TODO: za tabulkou popsat každý problém 2--3 větami. Vzor:
-% „V rámci úlohy T2 dva ze čtyř participantů nepovšimli barevného indikátoru spolehlivosti
-% výsledku (confidence badge). Participanti tak neměli povědomí o míře spolehlivosti rozpoznání,
-% což snižuje efektivitu funkčního požadavku FR-08. Problém se pravděpodobně týká vizuálního
-% návrhu badge, který splývá s okolním rozhraním."
+\subsection{Problémy uživatelského rozhraní}
+\label{subsec:uiProblemyTesting}
+
+Vedle implementačních chyb byly identifikovány problémy s~uživatelským rozhraním, které neodpovídají chybnému chování implementace, ale designovým rozhodnutím vedoucím ke snížené použitelnosti.
+Přehled je uveden v~tabulce~\ref{tab:uiProblemy}.
+
+\begin{table}[ht]
+	\centering
+	\caption{Problémy uživatelského rozhraní identifikované v~průběhu testování.}
+	\label{tab:uiProblemy}
+	\small
+	\begin{tabular}{p{0.6cm}p{8cm}p{1.5cm}p{2.4cm}}
+		\toprule
+		\textbf{\#} & \textbf{Popis problému} & \textbf{Úloha} & \textbf{Závažnost} \\
+		\midrule
+		U1 & Ikona pro import z~galerie příliš schovaná a vizuálně nevýrazná & T3 & závažná \\
+		U2 & Funkce oblíbených obtížně nalezitelná, neintuitivní ikona & T8 & závažná \\
+		U3 & Ikona oblíbených -- participanti shodně preferovali srdíčko nebo hvězdičku & T8 & závažná \\
+		U4 & Ikona záložky Personal Details vizuálně neodpovídá obsahu (karta místo profilu) & T13 & závažná \\
+		U5 & Zlomky u~množství matoucí, malý font, neoptimální řazení & T11 & závažná \\
+		U6 & Některé texty malé a špatně čitelné, zejména pro starší uživatele & celá relace & závažná \\
+		U7 & Tlačítko ,,Back to today'' je vizuálně potlačené & T10 & kosmetická \\
+		U8 & Bottom sheet pro výběr Mealtime nemá potvrzovací tlačítko & T2, T6 & závažná \\
+		U9 & Chybějící krok potvrzení před spuštěním rozpoznání umělou inteligencí & T2 & kosmetická \\
+		U10 & Název tlačítka ,,Fix issue'' je nejasný a tlačítko vizuálně schované & T4 & závažná \\
+		U11 & Databáze čárových kódů nedostatečně pokrývá běžné lokální produkty & T6 & závažná \\
+		U12 & Dva vertikálně scrollovatelné prvky na jedné obrazovce & T1 & závažná \\
+		U13 & Onboarding krok ,,poskakuje'' při volbě „Maintain'' u~váhy & T1 & kosmetická \\
+		U14 & Chybí zpětná vazba (snackbar) při přidání jídla do oblíbených & T8 & kosmetická \\
+		U15 & Nedostatečná signalizace ukončení nahrávání hlasového vstupu & T5 & závažná \\
+		U16 & Toggle hlasového vstupu si nepamatuje poslední nastavení & T12 & závažná \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+Jak je patrné, dva z~problémů (U1 a U2) přímo způsobily kritické chyby v~úlohách T3 a T8 a jsou zodpovědné za jejich nízké hodnocení SEQ (4,67 oproti celkovému průměru 6,25).
+U2 a U3 současně tvoří dvojici problémů týkajících se funkce oblíbených, kterou všichni tři participanti shodně označili za neintuitivní.
 
 \section{Doporučení pro další iteraci}
 \label{sec:doporuceni}
 
-Na základě identifikovaných problémů a výsledků standardizovaných dotazníků lze formulovat doporučení pro další vývojovou iteraci aplikace.
-Doporučení jsou řazena podle priority, která vychází ze závažnosti příslušného problému a počtu dotčených participantů.
-Každé doporučení se váže ke konkrétnímu identifikovanému problému z~kapitoly~\ref{sec:identifikovaneProblemy}.
+Na základě identifikovaných problémů a výsledků standardizovaných dotazníků byla formulována doporučení pro další vývojovou iteraci aplikace.
+Doporučení jsou seřazena podle priority, která vychází ze závažnosti příslušného problému a počtu dotčených participantů.
+Doplňkově jsou v~závěru uvedeny návrhy na nové funkce, které vzešly z~debriefingových rozhovorů.
 
-% TODO: doporučení organizovaná do odstavců (4--8 dle počtu závažných a kritických problémů).
-% Každé doporučení obsahuje:
-%   --- odkaz na číslo problému z 5.3
-%   --- konkrétní návrh řešení
-%   --- dotčené FR/NFR
-%   --- očekávaný dopad na použitelnost
-% Vzor:
-% „V návaznosti na problém P1 (nízká viditelnost indikátoru spolehlivosti) je doporučeno zvýšit
-% vizuální prominenci confidence badge zvětšením jeho rozměrů a přidáním textového popisku
-% vedle barevného indikátoru. Tato úprava by měla zvýšit povědomí uživatelů o míře spolehlivosti
-% výsledku v souladu s požadavkem FR-08."
+\paragraph{Priorita 1 -- kritické chyby a nejvíce zatěžující UI problémy.}
 
-% TODO: závěrečný odstavec kapitoly. Vzor:
-% „Z výsledků testování vyplývá, že aplikace Foody dosáhla X,X bodů v dotazníku SUS a průměrného
-% SEQ skóre X,X napříč všemi úlohami. Pragmatická kvalita dle UEQ-S byla hodnocena jako 'X',
-% což naznačuje, že základní interakční toky aplikace jsou pro uživatele srozumitelné a efektivní.
-% Identifikované problémy se soustředí především na X, přičemž navržená doporučení jsou
-% realizovatelná v rámci další vývojové iterace bez zásadních architektonických změn. Celkově lze
-% konstatovat, že výsledky testování potvrzují životaschopnost zvoleného přístupu k rozpoznávání
-% potravin pomocí umělé inteligence s transparentní indikací nejistoty, avšak poukazují na konkrétní
-% oblasti, kde je třeba zlepšit viditelnost klíčových prvků rozhraní a nalezitelnost sekundárních funkcí."
+V~návaznosti na chyby B1 a B2 je nezbytné upravit zpracování uživatelských oprávnění (B1: ošetřit částečný přístup do galerie na iOS jako validní stav, který nepřeruší tok importu fotografie) a zajistit, aby kopírování záznamů s~extrémními hodnotami do více dnů nezpůsobilo pád aplikace (B2: validace hodnot a ošetření zobrazovacích grafů na Dashboardu).
+V~návaznosti na problémy U1 a U2 je doporučeno zvýraznit ikonu pro import z~galerie (například výraznější vizuální symbol fotoaparátu se znakem galerie) a přepracovat funkci oblíbených, včetně nahrazení neintuitivní ikony srdíčkem nebo hvězdičkou (U3) a doplnění zpětné vazby formou snackbaru (U14).
+
+\paragraph{Priorita 2 -- závažné chyby vedoucí ke ztrátě dat nebo zmatení uživatele.}
+
+Chyby B3, B4 a B5 přímo ohrožují funkční dokončení úkolů, a je proto nutné je opravit přednostně.
+B3 (duplikace editační obrazovky při použití funkce ,,Fix issue'') vyžaduje přepracování návratu z~výsledku rozpoznání tak, aby nedocházelo ke kumulaci instancí.
+B4 (změna množství u~jídel bez ingrediencí nepřepočítá makra) odráží chybu v~datovém modelu, kterou je třeba ošetřit i pro hraniční případy.
+B5 (nelze uložit upravené cvičení) je třeba ověřit a opravit, jelikož funkce je v~současné podobě nepoužitelná.
+
+V~oblasti uživatelského rozhraní je doporučeno doplnit potvrzovací tlačítko do bottom sheetu výběru Mealtime (U8), přepracovat název tlačítka ,,Fix issue'' na srozumitelnější označení (například ,,Upravit pomocí AI'', U10) a sjednotit signalizaci stavu hlasového vstupu (U15, U16).
+
+\paragraph{Priorita 3 -- problémy s~přístupností a méně frekventované drobnosti.}
+
+V~návaznosti na zpětnou vazbu od P3 a obecná zjištění U6 a U7 je doporučeno revidovat typografickou škálu a kontrast tak, aby byly aplikace lépe použitelná i pro starší uživatele.
+Konkrétními kroky jsou zvětšení tělového textu, posílení barevného kontrastu u~tlačítek typu ,,Back to today'' a doplnění nastavení velikosti písma do profilu uživatele.
+Dále je vhodné odstranit dvojité scrollovatelné oblasti v~onboardingu (U12), opravit poskakování onboardingového kroku u~volby ,,Maintain'' (U13) a rozšířit databázi čárových kódů o~lokální produkty (U11).
+
+\paragraph{Návrhy na rozšíření funkcionality.}
+
+Z~debriefingových rozhovorů vyplynula sada návrhů na rozšíření, které již nejsou opravou současného stavu, ale rozšířením rozsahu aplikace.
+Úplný seznam zaznamenaných návrhů uspořádaný podle počtu participantů, kteří jej formulovali, je uveden v~tabulce~\ref{tab:navrhyFunkce}.
+Mezi nejčastější patří podpora hlasového vstupu i v~modulu cvičení a v~rozhraní ,,Fix issue'' (navrženo všemi třemi participanty), podpora hlasového vstupu v~rozhraní Ask AI (P3), možnost nahrání vlastní fotografie do detailu jídla pomocí dlouhého stisku na výchozí placeholder (P1) a doplnění příkladu klíčových slov pro nastavení vlastní diety (P1).
+Tyto návrhy budou zváženy v~rámci dalších vývojových iterací po vyřešení prioritních chyb a problémů s~uživatelským rozhraním.
+
+\begin{table}[ht]
+	\centering
+	\caption{Návrhy na rozšíření funkcionality vzešlé z~debriefingových rozhovorů.}
+	\label{tab:navrhyFunkce}
+	\small
+	\begin{tabular}{p{0.6cm}p{10cm}p{2.4cm}}
+		\toprule
+		\textbf{\#} & \textbf{Návrh} & \textbf{Účastníci} \\
+		\midrule
+		N1 & Podpora hlasového vstupu v~modulu cvičení a v~rozhraní ,,Fix issue'' & P1, P2, P3 \\
+		N2 & Vizuální zvýraznění dnů s~existujícími záznamy v~měsíčním kalendáři & P2, P3 \\
+		N3 & Podpora hlasového vstupu v~rozhraní Ask AI & P3 \\
+		N4 & Přesun rozhraní Ask AI ze záložky Profil do záložky Progress & P3 \\
+		N5 & Deaktivace odesílacího tlačítka u~prázdného vstupního pole v~Ask AI & P1 \\
+		N6 & Nastavení velikosti písma v~uživatelských preferencích & P3 \\
+		N7 & Nahrání vlastní fotografie přes dlouhý stisk na výchozí placeholder v~detailu jídla & P1 \\
+		N8 & Zadávání hmotnosti přímo z~klávesnice jako alternativa k~posuvníku & P2 \\
+		N9 & Omezení rozsahu let v~kalendáři (vzdálené minulé a budoucí roky) & P2 \\
+		N10 & Kontextová nápověda při prvním přidání položky do oblíbených & P1 \\
+		N11 & Sdílení dotazu Ask AI včetně přiloženého snímku obrazovky & P2 \\
+		N12 & Po dokončení exportu návrat na obrazovku profilu doplněný snackbarem & P3 \\
+		N13 & Automatické nastavení doporučených hodnot bez samostatné obrazovky v~onboardingu & P1 \\
+		N14 & Doplnění klíčových slov k~textovým příkladům při nastavení vlastní diety & P1 \\
+		N15 & Tvorba receptu z~hlasového vstupu jako budoucí rozšíření modulu jídel & P3 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\paragraph{Závěrečné shrnutí výsledků testování.}
+
+Z~výsledků testování vyplývá, že aplikace Foody dosáhla SUS skóre 85,83~bodu, průměrného SEQ skóre 6,25 napříč všemi šestnácti úlohami a celkového UEQ-S skóre 1,917 v~pozitivním pásmu.
+Pragmatická kvalita dle UEQ-S byla hodnocena jako pozitivní (1,667), hedonická kvalita rovněž pozitivní s~vyšší hodnotou 2,167, což naznačuje, že základní interakční toky aplikace jsou pro uživatele srozumitelné a aplikace zároveň zaujme designem a modernitou.
+Identifikované problémy se soustředí především na viditelnost a nalezitelnost vybraných UI prvků (zejména import z~galerie a funkce oblíbených), na typografickou přístupnost pro starší uživatele a na sadu konkrétních implementačních chyb.
+Navržená doporučení jsou realizovatelná v~rámci další vývojové iterace bez zásadních architektonických změn a jejich implementace by měla zlepšit zejména pragmatickou dimenzi UEQ-S a SEQ skóre u~úloh T3 a T8.
+Celkově lze konstatovat, že výsledky testování potvrzují životaschopnost zvoleného přístupu k~rozpoznávání potravin pomocí umělé inteligence s~transparentní indikací nejistoty a poukazují na konkrétní oblasti, jejichž zlepšení posune aplikaci k~vyšší úrovni použitelnosti a uživatelské spokojenosti.

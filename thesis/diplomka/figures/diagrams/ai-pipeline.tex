@@ -1,0 +1,93 @@
+% Sekvenční diagram pipeline umělé inteligence pro rozpoznání jídla z fotografie.
+% Aktéři: UI -- AiPipelineService -- PromptSanitizer -- AiService -- Externí API.
+\begin{tikzpicture}[
+	font=\scriptsize\sffamily,
+	x=1cm, y=1cm,
+	actor/.style={
+		draw,
+		rounded corners=1.5pt,
+		minimum height=8mm,
+		minimum width=24mm,
+		align=center,
+		fill=black!8,
+	},
+	lifeline/.style={dashed, black!50},
+	msg/.style={-{Latex[length=2mm]}, thick},
+	ret/.style={-{Latex[length=2mm]}, thick, densely dashed},
+	mlbl/.style={font=\scriptsize\sffamily, midway, above, sloped=false, fill=white, inner sep=1pt},
+	selfnote/.style={
+		draw,
+		rounded corners=1pt,
+		fill=black!4,
+		font=\scriptsize\sffamily,
+		align=left,
+		inner sep=2pt,
+	},
+]
+
+% --- Aktéři ---
+\node[actor] (a1) at (0,0)   {Uživatelské\\rozhraní};
+\node[actor] (a2) at (3.4,0) {\texttt{AiPipeline}\\\texttt{Service}};
+\node[actor] (a3) at (6.8,0) {\texttt{Prompt}\\\texttt{Sanitizer}};
+\node[actor] (a4) at (10.2,0){\texttt{AiService}\\(OpenAI / Gemini)};
+\node[actor] (a5) at (13.4,0){Externí API\\(REST)};
+
+% --- Lifelines ---
+\foreach \a in {a1,a2,a3,a4,a5}
+	\draw[lifeline] (\a.south) -- ($(\a.south)+(0,-10.5)$);
+
+% --- Sekvence zpráv ---
+% 1. UI -> Pipeline: vstup
+\draw[msg] ($(a1.south)+(0,-0.5)$) -- ($(a2.south)+(0,-0.5)$)
+	node[mlbl] {\texttt{analyzeFoodPhoto(photo, text)}};
+
+% 2. Pipeline -> Sanitizer: sanitize(text)
+\draw[msg] ($(a2.south)+(0,-1.4)$) -- ($(a3.south)+(0,-1.4)$)
+	node[mlbl] {\texttt{sanitize(text)}};
+
+% 3. Sanitizer -> Pipeline: cleanedText (návratová)
+\draw[ret] ($(a3.south)+(0,-2.2)$) -- ($(a2.south)+(0,-2.2)$)
+	node[mlbl] {\texttt{cleanedText} (regex screening, limit délky)};
+
+% 4. Pipeline self-loop: sestavení JSON promptu
+\node[selfnote, anchor=west] at ($(a2.south)+(0.3,-3.2)$) {
+	\textbf{sestavení JSON promptu}\\
+	(\texttt{lib/utils/prompt.dart}):\\
+	\texttt{task} + \texttt{expected\_output} + \texttt{schema.rules}\\
+	+ kontext uživatele (dieta, jazyk)
+};
+\draw[msg] ($(a2.south)+(0,-2.95)$) .. controls +(0.6,0) and +(0.6,0) .. ($(a2.south)+(0,-3.55)$);
+
+% 5. Pipeline -> AiService: generate(prompt + image)
+\draw[msg] ($(a2.south)+(0,-4.1)$) -- ($(a4.south)+(0,-4.1)$)
+	node[mlbl] {\texttt{generate(prompt, imageBase64)}};
+
+% 6. AiService -> External: HTTPS POST
+\draw[msg] ($(a4.south)+(0,-4.9)$) -- ($(a5.south)+(0,-4.9)$)
+	node[mlbl] {\texttt{HTTPS POST /chat/completions}};
+
+% 7. External -> AiService: JSON response
+\draw[ret] ($(a5.south)+(0,-6.4)$) -- ($(a4.south)+(0,-6.4)$)
+	node[mlbl] {JSON odpověď modelu};
+
+% 8. AiService -> Pipeline
+\draw[ret] ($(a4.south)+(0,-7.2)$) -- ($(a2.south)+(0,-7.2)$)
+	node[mlbl] {\texttt{AiResponse} (deserializace)};
+
+% 9. Pipeline self-loop: confidence gate
+\node[selfnote, anchor=west] at ($(a2.south)+(0.3,-8.2)$) {
+	\textbf{confidence gate} (práh 0,50):\\
+	\(\Rightarrow\) \texttt{success} \(\mid\) \texttt{lowConfidence} \(\mid\) \texttt{failure}
+};
+\draw[msg] ($(a2.south)+(0,-7.95)$) .. controls +(0.6,0) and +(0.6,0) .. ($(a2.south)+(0,-8.55)$);
+
+% 10. Pipeline -> UI: výsledek
+\draw[ret] ($(a2.south)+(0,-9.3)$) -- ($(a1.south)+(0,-9.3)$)
+	node[mlbl] {\texttt{AiAnalysisResult}};
+
+% --- Spodní rámečky aktérů (pro ukončení lifeline) ---
+\foreach \a/\lbl in {a1/{},a2/{},a3/{},a4/{},a5/{}}
+	\node[draw, fill=black!8, minimum height=2mm, minimum width=24mm]
+		at ($(\a.south)+(0,-10.5)$) {};
+
+\end{tikzpicture}

@@ -1,0 +1,93 @@
+% Schéma repozitářové vrstvy aplikace Foody.
+% 5 repozitářů jako fasáda nad DAO + transformace entit na doménové agregáty.
+\begin{tikzpicture}[
+	font=\scriptsize\sffamily,
+	node distance=4mm,
+	consumer/.style={
+		draw,
+		rounded corners=1.5pt,
+		minimum height=8mm,
+		minimum width=24mm,
+		align=center,
+		fill=black!4,
+	},
+	repo/.style={
+		draw,
+		rounded corners=1.5pt,
+		minimum height=14mm,
+		minimum width=27mm,
+		align=center,
+		fill=black!8,
+	},
+	dao/.style={
+		draw,
+		rounded corners=1pt,
+		minimum height=7mm,
+		minimum width=27mm,
+		align=center,
+		fill=black!4,
+	},
+	db/.style={
+		draw,
+		cylinder,
+		shape border rotate=90,
+		aspect=0.2,
+		minimum height=11mm,
+		minimum width=30mm,
+		align=center,
+		fill=black!6,
+	},
+	layerlbl/.style={font=\scriptsize\sffamily\itshape, anchor=east},
+	arr/.style={-{Latex[length=2mm]}, thick},
+	flow/.style={font=\scriptsize\sffamily, midway, fill=white, inner sep=1pt},
+	groupbox/.style={draw, dashed, rounded corners=2pt, inner sep=2.5mm},
+]
+
+% =============== HORNÍ VRSTVA: konzumenti ===============
+\node[consumer] (c1) {Kontrolery};
+\node[consumer, right=of c1] (c2) {Doménové\\služby};
+\node[consumer, right=of c2] (c3) {Widgety\\(\texttt{Obx})};
+\node[groupbox, fit=(c1)(c2)(c3),
+      label={[font=\scriptsize\sffamily\bfseries, anchor=south west, xshift=2mm]north west:Konzumenti dat (kontrolery, služby, widgety)}] (consumers) {};
+
+% =============== STŘEDNÍ VRSTVA: 5 repozitářů ===============
+\node[repo, below=18mm of c1] (rDay) {\textbf{DayRecord}\\\textbf{Repository}\\\scriptsize stream agregátů};
+\node[repo, right=of rDay] (rWeight) {\textbf{WeightEntry}\\\textbf{Repository}\\\scriptsize stream záznamů};
+\node[repo, right=of rWeight] (rMealT) {\textbf{MealTemplate}\\\textbf{Repository}\\\scriptsize \texttt{RxList} cache};
+\node[repo, right=of rMealT] (rIngrT) {\textbf{Ingredient}\\\textbf{TemplateRepo.}\\\scriptsize \texttt{RxList} cache};
+\node[repo, right=of rIngrT] (rExT) {\textbf{Exercise}\\\textbf{TemplateRepo.}\\\scriptsize \texttt{RxList} cache};
+
+\node[groupbox, fit=(rDay)(rWeight)(rMealT)(rIngrT)(rExT)] (repos) {};
+\node[font=\scriptsize\sffamily\bfseries, anchor=south east] at ($(repos.north east)+(-2mm,-1mm)$) {Repozitářová vrstva (\emph{Repository})};
+
+% =============== SPODNÍ VRSTVA: DAO ===============
+\node[dao, below=18mm of rDay] (dDay) {\texttt{DayRecordDao}\\\texttt{MealDao}, \texttt{IngrDao}\\\texttt{ExerciseDao}};
+\node[dao, below=18mm of rWeight] (dW) {\texttt{WeightEntryDao}};
+\node[dao, below=18mm of rMealT] (dMT) {\texttt{MealTemplateDao}};
+\node[dao, below=18mm of rIngrT] (dIT) {\texttt{IngredientTemplateDao}};
+\node[dao, below=18mm of rExT] (dET) {\texttt{ExerciseTemplateDao}};
+
+\node[groupbox, fit=(dDay)(dW)(dMT)(dIT)(dET),
+      label={[font=\scriptsize\sffamily\bfseries, anchor=south west, xshift=2mm]north west:Datová přístupová vrstva (DAO -- Floor ORM)}] (daos) {};
+
+% =============== DATABÁZE ===============
+\node[db, below=10mm of daos.south] (sqlite) {SQLite (\texttt{lib/database/})};
+
+% =============== ŠIPKY: konzumenti ↔ repozitáře ===============
+\draw[arr] (rDay.north) -- (c1.south)
+	node[flow, pos=0.5] {\texttt{Stream<DayRecord>}};
+\draw[arr] (rWeight.north) -- (c2.south)
+	node[flow, pos=0.5] {\texttt{Stream<...>}};
+\draw[arr] (rMealT.north) -- (c3.south)
+	node[flow, pos=0.5] {\texttt{RxList}};
+
+% =============== ŠIPKY: repozitáře ↔ DAO ===============
+\foreach \r/\d in {rDay/dDay, rWeight/dW, rMealT/dMT, rIngrT/dIT, rExT/dET} {
+	\draw[arr, <->] (\r) -- (\d);
+}
+
+% =============== ŠIPKY: DAO ↔ databáze ===============
+\draw[arr, <->] (daos.south) -- (sqlite.north)
+	node[flow, pos=0.5] {SQL};
+
+\end{tikzpicture}

@@ -1,313 +1,15 @@
 \chapter{Návrh aplikace}
 \label{ch:navrh}
 
-% TODO: úvodní odstavec, který stručně nastíní nadcházející kapitoly v Návrhu aplikace,
-% což bude Existující řešení, Uživatelská studie (strukturované rozhovory),
-% z nich vyplynou Use cases, FR/NFR, případy užití,
-% a na jejichž základě bude zkonstruován HiFi prototyp aplikace.
-
-\section{Existující řešení}
-\label{sec:existujici}
-
-Mobilní aplikace pro sledování stravy a tělesné hmotnosti patří v~současnosti k~nejčastěji používaným nástrojům v~oblasti digitálního zdraví.
-Přehledové studie ukazují, že nutriční a dietní aplikace jsou běžnou součástí změny životního stylu a mohou přispět k~lepší kontrole stravovacích návyků a k~mírné redukci hmotnosti~\cite{nogueira2024mobileApplications}.
-
-Současné analýzy trhu s~digitálními nástroji pro výživu potvrzují, že v~hlavních mobilních obchodech existují desítky až stovky aplikací zaměřených na sledování příjmu potravy, plánování jídelníčku a takzvanou precision nutrition.
-Abeltino a~kol. ve svém přehledu shrnují, že pro běžné uživatele i odborníky je k~dispozici široké spektrum aplikací pro monitorování stravy a tvorbu jídelních plánů~\cite{abeltino2025digitalApplications}.
-Samad a~kol. při systematickém průzkumu tří velkých obchodů s~aplikacemi identifikovali 473 aplikací souvisejících se sledováním příjmu potravy a doporučováním jídel, z~nichž 80 podrobně analyzovali~\cite{samad2022smartphoneApps}.
-To dokládá, že i v~jedné poměrně úzce vymezené kategorii existují desítky až stovky vzájemně konkurujících aplikací.
-
-Přehledy výživových aplikací ukazují, že většina z~nich staví na velmi podobném jádru a liší se spíše v~uživatelském rozhraní a doplňkových funkcích než v~samotné logice sledování stravy~\cite{nogueira2024mobileApplications,abeltino2025digitalApplications}.
-Typická aplikace pro sledování stravy nabízí zejména:
-
-\begin{itemize}
-	\item potravinový deník pro každodenní záznam jídel,
-	\item databázi potravin s~nutričními hodnotami a fulltextovým vyhledáváním,
-	\item možnost ukládat vlastní recepty a oblíbená jídla,
-	\item nastavení cílového energetického příjmu a sledování makroživin,
-	\item základní zpětnou vazbu ve formě grafů a statistik~\cite{gioia2023mobileApps}.
-\end{itemize}
-
-Z~hlediska interakce s~uživatelem je klíčové zadávání dat.
-Většina komerčních aplikací stále vyžaduje manuální zapisování jídel prostřednictvím vyhledávání v~databázi nebo zadávání receptů.
-Částečnou automatizaci přinášejí:
-
-\begin{itemize}
-	\item skenování čárových kódů balených potravin,
-	\item předvyplněné šablony jídel a možnost kopírovat dříve zapsaná jídla,
-	\item notifikace připomínající záznam jednotlivých jídel~\cite{abeltino2025digitalApplications}.
-\end{itemize}
-
-Systematické studie zároveň upozorňují, že ruční zapisování je časově náročné a v~praxi často vede k~nekompletním či zkresleným záznamům.
-Li a~kol. ukazují, že výstupy nutričních aplikací se mohou od referenčních metod významně lišit, a to jak u~manuálního zapisování, tak u~řešení s~podporou rozpoznání obrazu.
-Energetický příjem bývá v~závislosti na typu stravy nadhodnocen nebo podhodnocen o~stovky kilodžaulů až kilokalorií denně~\cite{li2024evaluating}.
-
-V~reakci na omezení manuálního sběru dat se začíná prosazovat využití umělé inteligence a počítačového vidění.
-Samad a~kol. ukazují, že pouze malá část komerčních aplikací nabízí pokročilé funkce automatického rozpoznávání jídel z~fotografie a odhadu porce, a že v~souboru 80 hodnocených aplikací byla jen jedna, která dokázala z~fotografie automaticky určit druh jídla i velikost porce~\cite{samad2022smartphoneApps}.
-Aburub a~kol. ve svém přehledu food scanning aplikací shrnují, že skenování čárových kódů je dnes běžnou funkcí, zatímco plně automatické rozpoznávání talíře zůstává výjimkou a typicky vyžaduje potvrzení a korekci ze strany uživatele~\cite{aburub2025foodScanning}.
-
-Nogueira-Rio a~kol. zdůrazňují, že současná generace výživových aplikací stojí na kombinaci tradičního self monitoringu a nových AI nástrojů, přičemž zásadní výzvou je skloubit vyšší míru automatizace s~přijatelnou přesností a použitelností v~každodenním životě~\cite{nogueira2024mobileApplications}.
-
-Pro tuto práci jsou reprezentativní zejména dvě aplikace, které pokrývají globální i lokální kontext.
-První je mezinárodní aplikace MyFitnessPal a druhou jsou československé Kalorické Tabulky (Dine4Fit).
-Následující podkapitoly je stručně představují a vymezují jejich silné a slabé stránky ve vztahu k~cíli této diplomové práce.
-
-\subsection{MyFitnessPal}
-\label{subsec:myfitnesspal}
-
-MyFitnessPal patří mezi nejznámější a nejrozšířenější aplikace pro sledování stravy a tělesné hmotnosti na světě.
-Je dostupná pro Android, iOS i webové rozhraní a dlouhodobě se pohybuje na předních příčkách kategorií Health \& Fitness v~hlavních mobilních obchodech~\cite{myFitnessPal2025}.
-
-\subsubsection*{Hlavní funkcionalita}
-
-Základem MyFitnessPal je potravinový deník navázaný na rozsáhlou databázi potravin.
-Oficiální materiály uvádějí databázi s~miliony položek včetně běžných potravin, značkových výrobků i restaurací.
-Uživatel může zapisovat jídelníček několika způsoby:
-
-\begin{itemize}
-	\item vyhledáváním v~databázi podle názvu potraviny,
-	\item výběrem z~historie a často používaných jídel,
-	\item skenováním čárového kódu u~balených potravin,
-	\item zadáváním vlastních receptů a pokrmů.
-\end{itemize}
-
-Aplikace průběžně počítá celkový denní energetický příjem a zobrazuje rozložení makroživin, jako jsou sacharidy, tuky a bílkoviny.
-V~placené verzi umožňuje sledovat i další nutriční parametry, například vlákninu, cukr, sůl nebo vybrané mikronutrienty.
-Součástí systému je také záznam fyzických aktivit, sledování tělesné hmotnosti a integrace s~externími zařízeními a službami, jako jsou Apple Health nebo fitness náramky~\cite{myFitnessPal2025}.
-
-Obchodní model aplikace odpovídá freemium přístupu.
-Základní funkce potravinového deníku a databáze potravin jsou dostupné zdarma, rozšířené analytické nástroje, pokročilé nastavení cílů, detailnější nutriční přehledy a některé zrychlené způsoby zadávání jídel jsou součástí placeného předplatného MyFitnessPal Premium~\cite{myFitnessPal2025}.
-
-\subsubsection*{Rozpoznávání jídel z~fotografie}
-
-MyFitnessPal je jedním z~prvních velkých komerčních produktů, které nasadily ve větším měřítku foto rozpoznávání jídel.
-Funkce Meal Scan umožňuje uživateli namířit fotoaparát na talíř a aplikace na základě obrazu navrhne odpovídající položky z~databáze.
-Podle oficiální dokumentace jde o~funkci dostupnou v~rámci předplatného Premium a aktuálně podporovanou pro vybrané verze iOS a Androidu~\cite{myFitnessPal2025}.
-
-Výrobce uvádí, že Meal Scan využívá metody počítačového vidění a strojového učení k~identifikaci více položek na jednom talíři a jejich propojení s~interní databází.
-V~praxi funguje Meal Scan jako asistovaná funkce: uživatel dostane seznam odpovídajících jídel, zvolí nejbližší položku a případně upraví velikost porce~\cite{myFitnessPal2025}.
-
-\subsubsection*{Silné stránky a omezení}
-
-Z~hlediska této práce jsou klíčové následující výhody MyFitnessPal:
-
-\begin{itemize}
-	\item rozsáhlá databáze potravin pokrývající globální trh, včetně restaurací a značkových výrobků~\cite{myFitnessPal2025},
-	\item kombinace více vstupních metod (vyhledávání, historie, čárový kód, foto rozpoznávání)~\cite{myFitnessPal2025},
-	\item dlouhodobá přítomnost na trhu, díky níž existuje řada nezávislých hodnocení této kategorie nástrojů, včetně studií zaměřených na kvalitu a funkce aplikací pro sledování stravy~\cite{samad2022smartphoneApps}.
-\end{itemize}
-
-Současná literatura i uživatelské zkušenosti ale upozorňují na několik omezení:
-
-\begin{itemize}
-	\item část databáze tvoří uživateli přidané položky, což může vést k~chybám v~nutričních údajích a nutnosti ruční korekce, například po skenování čárového kódu~\cite{li2024evaluating},
-	\item i přes použití foto rozpoznávání zůstává nutnost ruční kontroly a úprav, zejména u~složitějších jídel a kombinovaných receptů~\cite{li2024evaluating},
-	\item aplikace je navržena primárně pro globální trh, a proto nemusí dostatečně pokrývat některé lokální produkty nebo značky, zejména ve středoevropském kontextu.
-\end{itemize}
-
-Pro návrh vlastního řešení je MyFitnessPal důležitým referenčním příkladem robustního ekosystému, který kombinuje manuální self monitoring s~prvky umělé inteligence.
-Současně ukazuje, že i jedna z~nejrozšířenějších aplikací využívá umělou inteligenci primárně jako doplněk, nikoli jako plnou náhradu manuálního zadávání.
-
-\subsection{Kalorické Tabulky}
-\label{subsec:kalorickeTabulky}
-
-Kalorické Tabulky, vyvíjené společností Dine4Fit~a.s., představují nejpoužívanější aplikaci pro sledování stravy v~českém a slovenském prostředí.
-Podle oficiálních informací firmy se stala nejpopulárnější aplikací na hlídání stravy v~Česku i na Slovensku a měsíčně ji používá více než jeden milion uživatelů~\cite{dine4fit2025}.
-Tyto údaje potvrzuje také nezávislá reportáž na serveru CzechCrunch, která uvádí více než 1,5~milionu aktivních uživatelů a několik milionů registrací~\cite{houska2024kalorickeTabulky}.
-
-Aplikace je dostupná na webu i jako mobilní aplikace pro Android a iOS a podporuje také vybrané chytré hodinky, například Garmin nebo Apple Watch~\cite{dine4fit2025}.
-
-\subsubsection*{Hlavní funkcionalita}
-
-Základní princip Kalorických Tabulek se podobá globálním aplikacím pro sledování stravy, je však výrazně přizpůsoben specifikům českého a slovenského trhu.
-Klíčové funkce jsou:
-
-\begin{itemize}
-	\item databáze potravin zaměřená na produkty dostupné v~Česku a na Slovensku, včetně značkových výrobků, restaurací a uživatelských receptů~\cite{dine4fit2025},
-	\item potravinový deník s~možností zapisovat jednotlivá jídla v~průběhu dne a sledovat energetický příjem v~kcal nebo kJ,
-	\item přehled denního příjmu a výdeje energie, sledování pitného režimu a tělesné hmotnosti~\cite{dine4fit2025},
-	\item podpora záznamu fyzických aktivit a jejich vlivu na energetickou bilanci.
-\end{itemize}
-
-Významnou součástí ekosystému je i kalorická kalkulačka, která odvozuje doporučený energetický příjem z~tělesných parametrů a cílů uživatele.
-Dine4Fit uvádí, že nastavení poměru makroživin vychází z~odborných doporučení a umožňuje zvolit různé cíle, jako je udržení hmotnosti, hubnutí nebo nárůst svalové hmoty~\cite{dine4fit2025}.
-
-Aplikace používá freemium model.
-Základní funkcionalita, tedy deník, výpočet energie a základní nutriční hodnoty, je dostupná zdarma, zatímco detailnější analýzy, rozšířené sledování mikronutrientů, speciální jídelníčky a pokročilé statistiky jsou součástí placeného předplatného Premium~\cite{dine4fit2025,houska2024kalorickeTabulky}.
-
-\subsubsection*{Rozpoznávání jídel z~fotografie}
-
-Novější verze Kalorických Tabulek integrují funkci rozpoznávání jídel z~fotografie pomocí umělé inteligence.
-Podle popisu aplikace v~Google Play může uživatel jídlo vyfotit a aplikace navrhne odpovídající potraviny a jejich přibližnou gramáž, čímž automaticky spočítá kalorie a živiny~\cite{dine4fit2025}.
-Dine4Fit tuto funkci dále popisuje na svém webu a blogu jako prémiovou novinku využívající umělou inteligenci pro rozpoznání jídel a odhad hmotnosti na základě fotografie~\cite{dine4fit2025}.
-
-Technologické detaily implementace nejsou veřejně detailně popsány, mediální články nicméně zmiňují, že aplikace využívá detekci potravin pomocí umělé inteligence ve velkém objemu zaznamenaných jídel a že funkce je nasazována postupně s~důrazem na praktické využití v~běžném hubnutí~\cite{houska2024kalorickeTabulky}.
-
-Stejně jako u~MyFitnessPal nejde o~plně autonomní systém.
-Uživatelé musí výsledek zkontrolovat, případně upravit typ jídla nebo velikost porce.
-Odborná literatura zatím neobsahuje nezávislou kvantitativní studii přesnosti této konkrétní funkce, což odpovídá obecnějšímu trendu, kdy detailní vědecká validace komerčních AI funkcí obvykle následuje s~časovým odstupem za jejich praktickým nasazením~\cite{samad2022smartphoneApps,li2024evaluating,aburub2025foodScanning}.
-
-\subsubsection*{Silné stránky a omezení}
-
-V~českém a slovenském kontextu mají Kalorické Tabulky několik výrazných výhod:
-
-\begin{itemize}
-	\item silná lokalizace databáze potravin na regionální produkty, včetně běžných značek a lokálních jídel~\cite{dine4fit2025},
-	\item dostupnost webového rozhraní i mobilních aplikací, což usnadňuje zapisování v~různých situacích~\cite{dine4fit2025},
-	\item velká uživatelská základna, která přispívá k~rozšiřování databáze a komunitním receptům~\cite{houska2024kalorickeTabulky}.
-\end{itemize}
-
-Současně však z~uživatelských recenzí a odborných diskusí vyplývá několik slabších míst relevantních pro návrh této práce:
-
-\begin{itemize}
-	\item práce se složitějšími recepty může být časově náročná a vyžaduje manuální sestavování položek,
-	\item podobně jako u~jiných komunitně rozšiřovaných databází se mohou vyskytnout chyby v~nutričních údajích, pokud uživatelé zadávají data nepřesně~\cite{li2024evaluating},
-	\item funkce rozpoznávání jídel pomocí umělé inteligence je relativně nová a dostupné informace ji popisují jako doplněk k~tradičnímu zadávání, nikoli jako plnou náhradu manuálního zápisu~\cite{dine4fit2025,houska2024kalorickeTabulky}.
-\end{itemize}
-
-Pro navrhovanou aplikaci jsou Kalorické Tabulky cenným vzorem z~hlediska lokalizace, práce s~regionálně specifickou databází a integrace funkcí umělé inteligence do jinak klasického stravovacího deníku.
-
-\subsection{Shrnutí aplikací na trhu}
-\label{subsec:shrnutiTrhu}
-
-Odborná literatura a analýzy komerčního trhu ukazují, že výživové a dietní aplikace tvoří velmi početnou a relativně homogenní kategorii digitálních nástrojů.
-Přehledy trhu a analýzy obchodů s~aplikacemi naznačují, že v~globálním měřítku existují desítky až stovky aplikací zaměřených na sledování stravy, které si vzájemně konkurují v~rámci několika málo funkčních podkategorií, například calorie tracker, nutrition tracker, diet planner nebo food scanning aplikace~\cite{abeltino2025digitalApplications,samad2022smartphoneApps}.
-
-Samad a~kol. identifikovali 473 aplikací souvisejících s~příjmem potravy a doporučováním jídel a 80 z~nich podrobili detailnímu hodnocení~\cite{samad2022smartphoneApps}.
-Gioia a~kol. pak ve svém přehledu vybrali reprezentativní soubor dietních aplikací a analyzovali jejich funkcionalitu a vhodnost pro výzkum stravovacích návyků~\cite{gioia2023mobileApps}.
-Přestože se metodiky liší, obě práce ukazují, že ve sledované kategorii se vyskytují desítky až stovky aplikací, které sdílejí velmi podobnou základní funkcionalitu.
-
-Napříč těmito aplikacemi se opakují zejména tyto prvky:
-
-\begin{itemize}
-	\item potravinový deník pro každodenní záznam jídel,
-	\item databáze potravin s~nutričními hodnotami,
-	\item ruční nebo poloautomatické zadávání pomocí čárového kódu a šablon,
-	\item přehledy o~denním příjmu energie a makroživin, někdy doplněné o~motivační prvky a připomenutí,
-	\item napojení na sledování tělesné hmotnosti a často i na fyzickou aktivitu~\cite{abeltino2025digitalApplications,gioia2023mobileApps}.
-\end{itemize}
-
-Rozdíly mezi jednotlivými aplikacemi se proto často týkají spíše míry propracovanosti uživatelského rozhraní a motivace, kvality a lokalizace potravinové databáze, míry integrace s~nositelnou elektronikou a rozsahu využití umělé inteligence pro automatizaci záznamu~\cite{nogueira2024mobileApplications,abeltino2025digitalApplications}.
-
-Studie zaměřené na přesnost a uživatelskou zátěž potvrzují, že ruční zapisování stravy je pro mnoho lidí dlouhodobě obtížné a že dietní aplikace mohou energetický příjem podhodnocovat nebo nadhodnocovat, někdy i o~stovky kilokalorií denně~\cite{li2024evaluating}.
-To vytváří prostor pro inovace v~oblasti automatizace sběru dat, především prostřednictvím obrazového rozpoznávání a dalších metod umělé inteligence.
-Současně však scoping a systematické přehledy upozorňují, že plně automatické foto rozpoznávání je zatím spíše výjimkou a že i pokročilé funkce vyžadují aktivní roli uživatele~\cite{samad2022smartphoneApps,aburub2025foodScanning}.
-
-MyFitnessPal a Kalorické Tabulky představují dva výrazné příklady této situace.
-Na jedné straně ukazují vyspělost trhu, tedy rozsáhlé databáze, škálu vstupních metod, robustní ekosystém a milionové uživatelské základny~\cite{myFitnessPal2025,dine4fit2025,houska2024kalorickeTabulky}.
-Na straně druhé potvrzují, že základní model zůstává obdobný jako v~počátcích mobilních dietních aplikací.
-Uživatel stále primárně ručně zapisuje jídla do deníku a funkce foto rozpoznávání slouží jako doplněk, nikoli jako plná náhrada manuálního sběru dat~\cite{li2024evaluating,aburub2025foodScanning}.
-
-Pro návrh aplikace v~této diplomové práci z~toho vyplývají tři hlavní závěry:
-
-\begin{enumerate}
-	\item Trh již nabízí velké množství aplikací se srovnatelnou základní funkcionalitou, takže inovace by měla cílit na konkrétní slabá místa, například uživatelskou zátěž při zadávání nebo kvalitu a lokalizaci databáze.
-	\item Zvýšení míry automatizace pomocí počítačového vidění a umělé inteligence je slibnou cestou, ale vyžaduje pečlivé řešení otázky přesnosti a transparentní komunikaci nejistot vůči uživateli.
-	\item Lokální kontext a kvalita potravinové databáze mohou být v~českém prostředí stejně důležité jako samotná technická vyspělost modelu rozpoznávání.
-\end{enumerate}
-
-\section{Uživatelská studie}
-\label{sec:uzivatelskaStudie}
-
-Uživatelská studie představuje soubor metod, jejichž cílem je porozumět potřebám, motivacím a kontextu cílových uživatelů a tyto poznatky následně převést do návrhu systému.
-V~oblasti mobilního zdraví je uživatelsky orientovaný přístup považován za důležitý, protože ovlivňuje použitelnost, důvěru, dlouhodobou adherenci a tím i reálný dopad aplikace~\cite{cornet2020untoldStories}.
-
-V~této práci byla uživatelská studie použita jako hlavní vstup pro návrh aplikace pro rozpoznávání potravin pomocí umělé inteligence a pro sledování kalorického příjmu.
-Cílem bylo identifikovat situace, ve kterých je ruční zapisování pro uživatele překážkou, jaká míra nepřesnosti je akceptovatelná, jak uživatelé vnímají selhání umělé inteligence a jaké podpůrné funkce zvyšují pravděpodobnost dlouhodobého používání.
-
-\subsection{Metodika}
-\label{subsec:metodika}
-
-Jako metoda sběru dat byly zvoleny strukturované rozhovory s~uživateli z~cílové skupiny.
-Rozhovory byly vedeny tak, aby pokryly současnou praxi zapisování jídel, očekávání od rozpoznávání pomocí umělé inteligence a také preference v~oblasti přehledů, motivace, práce s~daty a integrací.
-Tento postup odpovídá doporučením v~literatuře, kde jsou kvalitativní techniky typu rozhovorů nebo skupinových diskusí uváděny jako vhodný zdroj požadavků pro návrh aplikací v~oblasti zdraví~\cite{molina2020proposalUserCentered}.
-
-Rozhovory byly zpracovány do samostatných reportů a dále analyzovány tematickým způsobem.
-V~této kapitole jsou výsledky shrnuty do hlavních témat a následně formalizovány do scénářů případů užití a do sady funkčních a nefunkčních požadavků.
-Reporty v~plném znění jsou součástí příloh této práce.
-
-\subsection{Charakteristika participantů}
-\label{subsec:participanti}
-
-Pro rozhovory byli vybráni čtyři participanti, kteří reprezentují rozdílné cíle a kontext používání.
-V~textu jsou uváděni anonymizovaně jako P1 až P4.
-
-\begin{description}
-	\item[P1] muž ve věku 27~let, jehož cílem je nabírání svalové hmoty.
-		Cvičí přibližně třikrát týdně a preferuje sledování makroživin.
-		V~minulosti aplikaci pro zapisování využíval, ale přestal, když dosáhl cíle.
-		Je ochoten tolerovat určitou míru nepřesnosti, pokud mu aplikace ušetří práci.
-	\item[P2] muž ve věku 24~let, intenzivně cvičí a cíleně udržuje kalorický nadbytek.
-		U~zapisování klade důraz na přesnost a důvěryhodnost, preferuje rychlé metody zadávání u~balených potravin, typicky čárové kódy.
-		U~jídel z~restaurace akceptuje typicky vyšší nepřesnost při zápisu než u~jiných pokrmů.
-	\item[P3] žena ve věku 54~let, dlouhodobě se snaží zhubnout a zohledňuje zdravotní souvislosti.
-		Zkoušela existující aplikace, ale odradila ji časová náročnost, časté chybění položek v~databázi a nutnost odhadovat gramáž, zejména u~domácího vaření.
-	\item[P4] žena ve věku 28~let, která dříve své jídlo pravidelně vážila, nyní častěji zapisuje odhadem a upřednostňuje jednoduché předvolby porcí.
-		Má jasnou preferenci, aby fotografie byla primárním vstupem, ale současně požaduje kvalitní záložní cestu při selhání.
-		Zásadní je pro ni transparentnost umělé inteligence a rozlišení běžných limitů modelu od technické chyby aplikace.
-\end{description}
-
-\subsection{Výsledky rozhovorů}
-\label{subsec:vysledkyRozhovoru}
-
-\paragraph{Rychlost zápisu a dlouhodobá udržitelnost.}
-Opakovaným tématem napříč rozhovory je, že dlouhodobé používání je přímo podmíněno rychlostí a jednoduchostí.
-P1 zmiňuje cílový stav rychlého zápisu jednoduché položky přibližně do šesti kliknutí bez dodatečné editace.
-P2 uvádí podobnou hranici pro rychlé položky.
-P4 toleruje pomalejší zpracování zejména na začátku, ale očekává postupné zrychlení a udržení zápisu v~přiměřeném čase.
-Zcela klíčové je to pro P3, která z~důvodů pomalosti procesu zápisu pokaždé přestala aplikaci používat, a to ještě před dosažením svých zdravotních cílů.
-
-\paragraph{Akceptovatelná nepřesnost a důvěra v~umělou inteligenci.}
-Participanti se liší v~toleranci nepřesnosti, což je klíčové pro definici cílových metrik přesnosti.
-P1 je ochoten tolerovat přibližnou odchylku do dvaceti procent, pokud mu aplikace výrazně zjednoduší proces.
-Naopak P2 požaduje nepřesnost pouze v~řádu jednotek procent a bez důvěryhodného výsledku považuje funkci za málo užitečnou.
-P3 chápe omezení vysoké přesnosti, nicméně požaduje, aby výstup byl srozumitelný a kontrolovatelný, zejména u~domácích jídel.
-
-\paragraph{Selhání rozpoznání.}
-Pro praktickou použitelnost funkce rozpoznávání je kritické eliminovat situace, kdy se uživatel ocitne ve slepé uličce.
-P4 požaduje, aby při selhání fotografie bylo možné plynule přejít na textový popis a aby bylo možné rozpoznání znovu vyvolat z~rozpracovaného záznamu bez zakládání nového záznamu.
-P1 zároveň navrhuje možnost doplnit k~fotografii krátkou doplňující informaci pro lepší výsledek.
-Důležitým aspektem je také rozlišení, zda jde o~limit rozpoznání, nebo o~technickou chybu aplikace, a nabídnutí vhodného dalšího kroku.
-
-\paragraph{Oblíbená jídla, historie a zkratky.}
-Všichni participanti popisují situace, kdy jedí opakovaně podobná jídla, případně používají stejné ingredience.
-P2 označuje oblíbené položky, historii a čtečku kódů za zásadní funkce.
-P4 uvádí, že využívá oblíbené a duplikaci předešlého záznamu a ocení našeptávání dříve zadaných názvů.
-P1 doplňuje potřebu rychlých zkratek, které umožní udržet zápis v~nízkém počtu kroků.
-
-\paragraph{Domácí vaření a odhad množství.}
-Domácí vaření se ukazuje jako jeden z~možných důvodů, proč uživatelé zapisování opouštějí.
-P3 popisuje, že vaření od oka ztěžuje odhad gramáže a že největší bariéra nastává, když položka chybí v~databázi a je nutné ji vytvořit manuálně.
-P2 zdůrazňuje potřebu práce s~plánovanými ingrediencemi a následnou jednoduchou úpravou skutečně použitých množství, včetně drobných ingrediencí typu olej nebo koření.
-To vede k~požadavku na funkcionalitu, která podporuje plánování a následné rychlé dorovnání skutečně použitých množství surovin.
-
-\paragraph{Kategorie jídel a práce se zpětným zápisem.}
-Participanti se liší v~tom, zda zapisují před jídlem nebo zpětně.
-P2 u~jídel z~restaurace preferuje doplnění až doma mimo sociální situaci.
-P3 uvádí, že zapisovala i večer, případně plánovala dopředu, ale nedodržení plánů vedlo ke zdvojení práce.
-Z~toho vyplývá potřeba podporovat jak okamžitý zápis, tak zpětný zápis z~galerie, a zároveň nevnucovat automatické zařazování kategorií podle času zadání.
-
-\paragraph{Přehledy, motivace a dotazování nad daty.}
-Základem je pro všechny denní přehled, tedy rychlá kontrola kalorií a makroživin.
-P1 požaduje jednoduché přehledy po dnech, týdnech a měsících a možnost pokládat dotazy typu porovnání období podle makroživin.
-P4 vnímá týdenní souhrn jako užitečné doplnění a navrhuje dotazování přirozeným jazykem s~personalizovanými doporučeními.
-P2 uvádí, že motivační měsíční souhrny formou notifikace nebo e-mailu by mu pomohly udržet rutinu.
-P3 klade důraz na dietní omezení a schopnost odpovědět, kolikrát došlo k~porušení diety s~proklikem na konkrétní dny.
-
-\paragraph{Soukromí, ukládání dat a kontrola.}
-Otázka soukromí se objevuje ve smyslu kontroly nad daty a transparentností práce s~nimi.
-P1 požaduje jasné funkce pro mazání a informace o~tom, co se s~daty děje.
-P4 je ochotna akceptovat automatické promazávání nejstarších záznamů mimo oblíbené položky.
-P3 považuje za důležité mít možnost smazat jednotlivé záznamy, i když je pro ni umístění dat méně podstatné.
-
-\paragraph{Integrace aktivity.}
-Integrace se sportovními službami a hodinkami se opakuje u~všech participantů, byť s~rozdílnou hloubkou.
-P1 chce jednoduché propojení a zobrazení příjmu versus výdeje.
-P2 očekává přebírání spálených kalorií s~možností nastavit, zda a jak se výdej promítne do denního limitu.
-P4 zmiňuje zájem o~integraci s~Garmin a zdůrazňuje, že ji zajímá zejména promítnutí spálených kalorií do denního přehledu.
-
-\subsection{Scénáře případů užití}
-\label{subsec:pripadyUziti}
+Návrh aplikace navazuje na zjištění z~uživatelské studie shrnutá v~sekci~\ref{sec:uzivatelskaStudie} a na analýzu existujících mobilních aplikací v~sekci~\ref{sec:existujici}.
+Tato kapitola formalizuje vstupy z~uživatelského výzkumu do podoby, kterou je možné přímo použít pro implementaci a následné ověření.
+Nejprve jsou v~sekci~\ref{sec:pripadyUziti} popsány scénáře případů užití (UC01--UC08), které vymezují klíčové interakce uživatele se systémem.
+Sekce~\ref{sec:pozadavky} představuje sadu funkčních a nefunkčních požadavků odvozenou z~rozhovorů a ze zadání práce.
+V~sekci~\ref{sec:prototyp} je popsán návrh uživatelského rozhraní a HiFi prototyp, který případy užití a požadavky převádí do konkrétní vizuální a interakční podoby.
+Závěrečná sekce~\ref{sec:shrnutiNavrhu} shrnuje výstupy návrhové fáze a vymezuje, co bude implementováno v~kapitole~\ref{ch:implementace}.
+
+\section{Případy užití}
+\label{sec:pripadyUziti}
 
 V~návrhu aplikací se používají jak narativní popisy situací z~praxe, tak případy užití jako formální popis interakce aktéra se systémem.
 V~této práci byly narativní situace využity při analýze rozhovorů, ale pro formální popis systému je dále uvedena pouze sada scénářů případů užití, aby nedocházelo k~duplicitě a aby byl výstup přímo použitelný pro návrh prototypu a testování.
@@ -416,8 +118,8 @@ Hlavní scénář:
 	\item \emph{Uživatel} volitelně spustí export dat do tabulkového formátu.
 \end{enumerate}
 
-\subsection{Funkční a nefunkční požadavky}
-\label{subsec:pozadavky}
+\section{Funkční a nefunkční požadavky}
+\label{sec:pozadavky}
 
 Z~rozhovorů a ze zadání práce byla sestavena sada funkčních a nefunkčních požadavků.
 Požadavky jsou v~této kapitole uvedeny ve zkrácené podobě, aby byly použitelné jako přehledný podklad pro návrh prototypu a následnou implementaci.
@@ -495,89 +197,73 @@ Funkční požadavky na aplikaci jsou následující.
 	\item[NFR-05] Minimalistické a přehledné uživatelské rozhraní bez rušivých prvků.
 \end{description}
 
-\subsection{Shrnutí kapitoly}
-\label{subsec:shrnutiUS}
-
-Uživatelská studie ukázala, že hlavní bariérou dlouhodobého zapisování je kombinace časové náročnosti, nejistoty výsledků a slabé podpory pro opakované situace, zejména opakovaná jídla, balené produkty, domácí vaření a pokrmy z~restaurací.
-Rozpoznávání pomocí umělé inteligence je vnímáno jako přínosné, ale pouze za předpokladu, že uživatel má kontrolu nad výsledkem a rozumí nejistotě spojené s~vyhodnocením.
-Výstupy rozhovorů byly formulovány do scénářů případů užití a do sady požadavků, které tvoří přímý podklad pro návrh a realizaci prototypu.
-
-\section{Prototyp aplikace}
+\section{Návrh uživatelského rozhraní a HiFi prototyp}
 \label{sec:prototyp}
 
-Prototyp představuje zjednodušenou reprezentaci budoucího systému, která umožňuje ověřovat návrhová rozhodnutí dříve, než dojde k~nákladné implementaci.
-V~praxi jde o~iterativní artefakt, jehož míra detailu se postupně zvyšuje a který slouží jak k~interní validaci návrhu, tak k~získání zpětné vazby od uživatelů~\cite{joyner2022lowFidelity,flohr2023contextBased}.
+Návrh uživatelského rozhraní převádí případy užití a požadavky z~předchozích sekcí do konkrétní vizuální a interakční podoby, která slouží jako přímý podklad pro implementaci popsanou v~kapitole~\ref{ch:implementace}.
+HiFi prototyp byl realizován v~nástroji Figma jako graficky a interakčně plnohodnotný model mobilní aplikace primárně pro operační systém iOS, přičemž zvolená vizuální linie byla později přenesena i na platformu Android s~respektem k~platformním konvencím obou systémů.
 
-\subsection{Prototyp a související pojmy}
-\label{subsec:pojmy}
+Vzhledem k~tomu, že implementovaná aplikace věrně navazuje na navržený prototyp, jsou jednotlivé obrazovky prezentovány vizuálně až v~sekci~\ref{sec:klicoveObrazovky} formou snímků z~reálného běhu aplikace, čímž se zamezí duplicitnímu zobrazení téhož rozhraní v~prototypové i implementované podobě.
+Kompletní HiFi prototyp ve své navržené formě je k~dispozici jako součást příloh této práce (viz příloha~A).
+Tato sekce se proto soustředí na popis návrhových východisek a klíčových interakčních toků, které propojují definované případy užití do souvislých uživatelských scénářů.
 
-Pojem prototyp v~kontextu návrhu uživatelského rozhraní zahrnuje různé formy reprezentace, od statických náčrtů a wireframů až po interaktivní prototypy.
-Společným cílem je simulovat očekávané chování systému v~takovém rozsahu, aby bylo možné posoudit srozumitelnost toku obrazovek a kvalitu interakce~\cite{joyner2022lowFidelity,flohr2023contextBased}.
+\subsection{Návrhová východiska}
+\label{subsec:navrhVychodiska}
 
-Fidelita (anglicky fidelity) vyjadřuje míru podobnosti prototypu s~finálním produktem, zejména z~hlediska vizuálního zpracování, interakčních detailů a kontextu použití.
-Nízká fidelita typicky podporuje rychlé hledání směru a levné iterace, vysoká fidelita naopak umožňuje realistické testování, protože se blíží skutečné zkušenosti uživatele~\cite{joyner2022lowFidelity,flohr2023contextBased}.
+Vizuální i interakční stránka aplikace vychází ze zásad systému Material Design upraveného o~vlastní vizuální linii, která vznikala iterativně v~průběhu prototypování.
+Hlavním cílem bylo vytvořit minimalistické a přehledné rozhraní bez rušivých prvků v~souladu s~nefunkčním požadavkem NFR-05 a zároveň zachovat konzistentní vizuální identitu mezi jednotlivými moduly aplikace (záznam jídel, cvičení, přehledy, profil).
 
-LoFi prototyp v~této práci označuje ranou variantu návrhu s~omezenými vizuálními detaily, často založenou na jednoduchých rozvrženích a základní navigaci.
-HiFi prototyp odpovídá pokročilejší variantě s~definovanými komponentami, typografií a chováním prvků, čímž se stává vhodným podkladem pro ověřování použitelnosti i pro navazující implementaci~\cite{joyner2022lowFidelity,flohr2023contextBased}.
+Sémantické barvy hrají v~návrhu specifickou roli, neboť se uplatňují při indikaci nejistoty výstupu rozpoznání umělou inteligencí (zelená, žlutá, červená), upozornění na překročení cílových kalorických hodnot a varování při porušení dietních omezení.
+Tato barevná konvence prostupuje všemi obrazovkami a tvoří jeden z~pilířů srozumitelnosti rozhraní pro uživatele.
 
-\subsection{Cíl prototypu v~kontextu práce}
-\label{subsec:cilProtoypu}
+Konkrétní hodnoty barev, typografických stylů, rozestupů a stínů nebyly v~prototypové fázi formálně specifikovány předem, ale postupně se vyvíjely při tvorbě jednotlivých obrazovek.
+Jejich finální podoba byla teprve v~implementační fázi sjednocena do centralizovaného souboru zdrojového kódu \texttt{lib/app\_theme.dart}, který je popsán v~sekci~\ref{subsec:vyvojovaPlatforma}.
+Toto pořadí (od prototypování k~formalizaci) odpovídá iterativní povaze návrhové fáze, ve které je vizuální linie zpřesňována podle vznikajících obrazovek a požadavků jednotlivých případů užití.
 
-Cílem HiFi prototypu bylo převést výstupy uživatelské studie, scénáře případů užití a sadu požadavků do konzistentního návrhu mobilní aplikace.
-Prototyp měl ověřit, zda navržené způsoby zapisování jídel, práce s~rozpoznáním a následná úprava výsledku odpovídají očekáváním uživatelů, a současně vytvořit jednoznačný podklad pro implementační část práce~\cite{cornet2020untoldStories,molina2020proposalUserCentered}.
+\subsection{Klíčové interakční toky}
+\label{subsec:interakcniToky}
 
-\subsection{Rozsah a obsah HiFi prototypu}
-\label{subsec:rozsahProtoypu}
+Hlavní obrazovky tvoří uzly grafu interakčních toků, které propojují případy užití do souvislých uživatelských scénářů.
+Tato podsekce stručně popisuje tok pro nejčastější případy užití identifikované v~uživatelské studii.
+Snímky jednotlivých obrazovek z~implementované aplikace jsou uvedeny v~sekci~\ref{sec:klicoveObrazovky}.
 
-HiFi prototyp byl vytvořen jako graficky plnohodnotný model mobilní aplikace a pokrývá jak klíčové toky pro zaznamenávání jídel, správu uživatelských dat a nutriční přehledy, tak i pokročilé funkce jako dotazování v~přirozeném jazyce nad daty a personalizované nastavení dietních omezení a intolerancí.
-V~kapitole implementace jsou následně prezentovány konkrétní obrazovky, zatímco tato kapitola shrnuje záměr a rozsah prototypu jako výstupu návrhové fáze.
+\paragraph{Tok záznamu jídla z~fotografie (UC01 a UC02).}
+Tok začíná na hlavní obrazovce (viz obrázek~\ref{fig:screenDashboard}), kde uživatel aktivuje skenování z~panelu rychlých akcí.
+Po pořízení nebo importu fotografie je vyvoláno rozpoznání umělou inteligencí a uživatel je přesměrován na obrazovku náhledu výsledku, která zobrazuje rozpoznané ingredience včetně barevné indikace nejistoty (FR-08, viz obrázek~\ref{fig:screenEditMeal}).
+Pokud výsledek odpovídá realitě, uživatel jej potvrdí a vrátí se na hlavní obrazovku s~aktualizovaným denním přehledem.
+V~opačném případě pokračuje na editační obrazovku (viz obrázek~\ref{fig:screenEditMeal}), kde výsledek upraví, případně znovu vyvolá rozpoznání s~doplněným textovým popisem (FR-11, FR-13).
 
-\subsection{Testování prototypu}
-\label{subsec:testovaniProtoypu}
+\paragraph{Tok záznamu balené potraviny pomocí čárového kódu (UC04).}
+Uživatel z~panelu rychlých akcí aktivuje čtečku čárových kódů (FR-16).
+Po naskenování kódu systém vyhledá produkt v~databázi nutričních hodnot Open Food Facts a zobrazí nalezenou položku s~předvyplněnými údaji.
+Uživatel zvolí množství a jednotku a potvrdí uložení záznamu.
+Pokud produkt v~databázi není nalezen nebo dojde k~chybě, je uživatel informován o~konkrétním důvodu (FR-10) a nabídnuta mu cesta k~ručnímu zápisu nebo skenování nutriční etikety.
 
-Testování prototypu je v~této práci pojato jako formativní ověřování použitelnosti, jehož cílem je odhalit problémy v~toku úloh, ve srozumitelnosti ovládání a v~porozumění výsledkům rozpoznání.
-Formativní přístup je vhodný zejména v~rané fázi, protože umožňuje cíleně upravovat návrh ještě před implementací a tím snížit riziko nákladných změn v~pozdějších fázích~\cite{weichbroth2024usabilityTesting}.
+\paragraph{Tok ručního zápisu jídla (UC03).}
+Uživatel zvolí v~panelu rychlých akcí možnost ručního zápisu, čímž otevře obrazovku výběru jídla z~historie a oblíbených (viz obrázek~\ref{fig:screenMealLog}).
+Pokud již dříve podobné jídlo zapsal, využije našeptávání podle historie (FR-19), oblíbené položky (FR-17) nebo duplikaci dřívějšího záznamu (FR-18) na konkrétní den (UC05).
+V~opačném případě vytvoří nové jídlo na editační obrazovce (viz obrázek~\ref{fig:screenEditMeal}) a zadá ingredience včetně gramáže nebo počtu kusů (FR-15).
 
-Pro realizaci testování je vhodná úlohová metoda doplněná o~verbalizaci postupu typu think aloud, která poskytuje detailní vhled do mentálního modelu uživatele a do důvodů jednotlivých rozhodnutí během práce s~prototypem.
-V~literatuře je think aloud běžně využíván při hodnocení mobilních zdravotních aplikací a umožňuje zachytit konkrétní bariéry v~interakci~\cite{lunde2023thinkAloud,weichbroth2024usabilityTesting}.
+\paragraph{Tok hlasového a textového záznamu (UC01 alternativa).}
+Pro situace, kdy fotografování není praktické nebo selže, je k~dispozici alternativní vstup hlasem nebo textovým popisem (FR-14, FR-11), zachycený obrazovkou na obrázku~\ref{fig:screenVoiceLog}.
+Uživatel popíše jídlo přirozeným jazykem a systém zpracuje vstup stejnou pipeline pro umělou inteligenci jako fotografický vstup.
+Tento tok vyžaduje internetové připojení, ostatní funkce jsou plně dostupné v~režimu offline (FR-26).
 
-Testovací úlohy byly sestaveny jako zjednodušené varianty již definovaných scénářů případů užití.
-Tím se eliminuje duplicitní popis funkcionalit a současně se zachovává přímá návaznost mezi analýzou potřeb, návrhem prototypu a ověřením použitelnosti~\cite{weichbroth2024usabilityTesting}.
-
-% TODO: doplnit popisy testovacích úloh T1--T7.
-\begin{description}[style=nextline]
-	\item[T1] TODO
-	\item[T2] TODO
-	\item[T3] TODO
-	\item[T4] TODO
-	\item[T5] TODO
-	\item[T6] TODO
-	\item[T7] TODO
-\end{description}
-
-Hodnocení lze opřít o~kombinaci kvalitativních pozorování a jednoduchých kvantitativních ukazatelů, například úspěšnost dokončení úlohy, počet chyb nebo potřebu nápovědy.
-Pro subjektivní hodnocení použitelnosti lze využít standardizovaný dotazník System Usability Scale, který je v~mHealth studiích běžně používán pro rychlé srovnání vnímané použitelnosti~\cite{weichbroth2024usabilityTesting,wang2022measuringMobileApp}.
-
-Výstupem testování je seznam identifikovaných problémů a doporučení pro úpravy prototypu, ideálně seřazený podle závažnosti a dopadu na klíčové toky.
-Tato struktura umožňuje transparentně propojit výsledky ověřování s~následnými designovými úpravami a s~implementačními prioritami.
+\paragraph{Tok přehledů a dotazování nad daty (UC08).}
+Tok začíná na záložce přehledů (viz obrázek~\ref{fig:screenProgress}), kde uživatel zvolí časové období (týden, měsíc).
+Systém zobrazí souhrny a trendy a uživatel může pokládat dotazy v~přirozeném jazyce (viz obrázek~\ref{fig:screenAskAi}), jako například porovnání kalorického příjmu mezi obdobími nebo detekce dnů s~překročením dietních omezení (FR-21, FR-24, FR-27).
+Volitelně lze data exportovat do tabulkového formátu pro další zpracování (FR-25).
 
 \section{Shrnutí návrhu aplikace}
 \label{sec:shrnutiNavrhu}
 
-% TODO: přeformulovat, odstranit významové duplicity.
+Návrhová fáze této práce vychází z~analytických zjištění shrnutých v~kapitole~\ref{ch:analyza}, zejména z~přehledu existujících mobilních aplikací (sekce~\ref{sec:existujici}) a z~výsledků uživatelské studie založené na strukturovaných rozhovorech se čtyřmi respondenty (sekce~\ref{sec:uzivatelskaStudie}).
+Z~uvedených vstupů byla sestavena sada osmi případů užití (sekce~\ref{sec:pripadyUziti}) a třiceti funkčních a pěti nefunkčních požadavků (sekce~\ref{sec:pozadavky}), které vymezují rozsah cílového řešení.
 
-Tato práce se zaměřuje na návrh mobilní aplikace pro rozpoznávání potravin pomocí umělé inteligence a pro sledování kalorického příjmu.
-Volba tématu vychází z~potřeby zjednodušit a zrychlit zapisování jídel, které je v~existujících řešeních často časově náročné a dlouhodobě obtížně udržitelné.
+Případy užití pokrývají všechny klíčové uživatelské scénáře identifikované v~rozhovorech, od rychlého záznamu jídla z~fotografie přes ruční zápis a skenování čárového kódu až po přehledy a dotazování v~přirozeném jazyce nad daty.
+Funkční požadavky operacionalizují tyto scénáře do konkrétních ověřitelných vlastností aplikace, zatímco nefunkční požadavky stanovují měřitelné cílové parametry, jako jsou maximální latence rozpoznávání nebo počet kroků pro zápis jednoduché položky.
 
-Zásadním vstupem byla uživatelská studie realizovaná strukturovanými rozhovory.
-Získaná zpětná vazba byla pro návrh aplikace velmi přínosná, protože přinesla nové pohledy na problematiku, vyvrátila některé předpoklady a jiné naopak potvrdila.
+HiFi prototyp v~sekci~\ref{sec:prototyp} převádí požadavky a případy užití do konkrétní vizuální a interakční podoby a tvoří přímý podklad pro implementaci popsanou v~kapitole~\ref{ch:implementace}.
+Návrhová východiska a interakční toky jsou popsány v~textu, zatímco vizuální stránka jednotlivých obrazovek je prezentována na snímcích reálné implementace v~sekci~\ref{sec:klicoveObrazovky}; samostatný HiFi prototyp ve své navržené formě je k~dispozici jako příloha~A.
 
-Na základě rozhovorů byly vytvořeny scénáře případů užití, které formulují klíčové interakce uživatele se systémem a propojují kvalitativní zjištění s~návrhem aplikace.
-Současně byly zpracovány funkční a nefunkční požadavky, které vymezují rozsah návrhu a cílové charakteristiky.
-
-HiFi prototyp slouží jako konsolidovaný výstup návrhové fáze, který propojuje zjištění z~uživatelského výzkumu, formalizované scénáře případů užití a specifikované požadavky.
-V~další části práce je prototyp využit jako reference pro implementaci a pro ověřování, zda výsledná aplikace naplňuje zamýšlené toky a očekávanou použitelnost.
-
-Výstupem návrhové části je HiFi prototyp, který převádí případy užití a požadavky do konkrétní podoby uživatelského rozhraní.
-Prototyp slouží jako ověřitelný podklad pro implementaci a pro testování navázané na definované případy užití.
-V~další fázi práce bude cílem navázat implementací vybraných funkcí, které ověří, do jaké míry návrh naplňuje cíle definované uživatelskou studií.
+V~následující kapitole je popsána implementace vybraných funkcí navrženého řešení, včetně zvolených technologií, softwarové architektury, datového modelu a integrace modelu umělé inteligence pro rozpoznávání potravin.

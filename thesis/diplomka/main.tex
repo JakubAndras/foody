@@ -9,6 +9,29 @@
 % enumitem: rozšířené možnosti formátování seznamů (např. style=nextline u description).
 \usepackage{enumitem}
 
+% TikZ pro vlastní schémata (architektura, ER diagram, repozitářová vrstva, sekvenční diagram pipeline).
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,shapes.geometric,fit,calc,backgrounds,shapes.multipart}
+
+% =========================================================================
+% LADITELNÝ PARAMETR: zaoblení rohů iOS screenshotů (zlomek šířky obrázku).
+%   0.04 = jemné, 0.06 = střední, 0.08-0.10 = výrazné, 0.13 = iOS spec.
+% Změnou této hodnoty se přepočte zaoblení u všech 25 snímků v dokumentu.
+\newcommand{\screenshotRadius}{0.13}
+% =========================================================================
+
+% Makro \screenshot pro zaoblené iOS snímky obrazovek.
+% Použití: \screenshot[width=0.42\textwidth]{figures/screens/Foo.png}
+\newsavebox{\screenshotbox}
+\newcommand{\screenshot}[2][width=\textwidth]{%
+	\savebox{\screenshotbox}{\includegraphics[#1]{#2}}%
+	\begin{tikzpicture}
+		\path[clip, rounded corners=\screenshotRadius\wd\screenshotbox]
+			(0,0) rectangle (\wd\screenshotbox, \ht\screenshotbox);
+		\node[inner sep=0pt, outer sep=0pt, anchor=south west] at (0,0) {\usebox{\screenshotbox}};
+	\end{tikzpicture}%
+}
+
 \ctusetup{
 	preprint = \ctuverlog,
 	mainlanguage = czech,
@@ -50,7 +73,10 @@
 	\end{twocolumnfrontmatterpage}
 }
 
-\setlength{\parskip}{5ex plus 0.2ex minus 0.2ex}
+% Drobná svislá mezera mezi odstavci pro lepší čitelnost dlouhého technického textu.
+% 0.5\baselineskip = cca 7 bodů (polovina řádku), kombinováno s odsazením prvního řádku.
+% Pro hutnější (čistě indentovaný) styl: zakomentovat. Pro vzdušnější: zvýšit na 1\baselineskip.
+\setlength{\parskip}{0.5\baselineskip plus 0.2ex minus 0.2ex}
 
 % Český abstrakt
 \begin{abstract-czech}

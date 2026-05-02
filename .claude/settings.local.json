@@ -33,7 +33,8 @@
       "Bash(ln -s ../../shared/blueprint.md /Users/jakubandras/StudioProjects/diplomka/.claude/skills/diplomka-write/references/blueprint.md)",
       "Bash(ln -s ../../shared/blueprint.md /Users/jakubandras/StudioProjects/diplomka/.claude/skills/diplomka-refactor/references/blueprint.md)",
       "Bash(rm -f main.aux main.log main.out main.toc main.bbl main.blg main.idx main.ind main.ilg main.fls main.fdb_latexmk main.synctex.gz main.bcf main.run.xml)",
-      "Bash(latexmk -pdf main.tex)"
+      "Bash(latexmk -pdf main.tex)",
+      "Bash(pdfinfo main.pdf)"
     ]
   }
 }

@@ -1,0 +1,78 @@
+% Schéma celkové architektury aplikace Foody.
+% Vrstvený mobilní klient (5 vrstev) + lokální SQLite + 3 externí API.
+\begin{tikzpicture}[
+	font=\small\sffamily,
+	node distance=4mm,
+	layer/.style={
+		draw,
+		rounded corners=1.5pt,
+		minimum height=8mm,
+		minimum width=58mm,
+		align=center,
+		fill=black!4,
+	},
+	clientbox/.style={
+		draw,
+		thick,
+		rounded corners=3pt,
+		inner sep=4mm,
+		fill=black!2,
+	},
+	ext/.style={
+		draw,
+		rounded corners=1.5pt,
+		minimum height=11mm,
+		minimum width=32mm,
+		align=center,
+		fill=black!6,
+	},
+	db/.style={
+		draw,
+		cylinder,
+		shape border rotate=90,
+		aspect=0.25,
+		minimum height=14mm,
+		minimum width=28mm,
+		align=center,
+		fill=black!6,
+	},
+	arr/.style={-{Latex[length=2mm]}, thick},
+	dataflow/.style={font=\scriptsize\sffamily, midway, sloped, above, inner sep=1pt},
+]
+
+% Vrstvy mobilního klienta
+\node[layer] (view) {Prezentační vrstva (View)\\\scriptsize \texttt{lib/screens/}, \texttt{lib/widgets/}};
+\node[layer, below=of view] (ctrl) {Kontrolery (ViewModel)\\\scriptsize \texttt{lib/controller/} -- GetX};
+\node[layer, below=of ctrl] (svc) {Služby a repozitáře\\\scriptsize \texttt{lib/services/}, \texttt{Repository}};
+\node[layer, below=of svc] (data) {Datová vrstva\\\scriptsize \texttt{lib/database/} (Floor) -- \texttt{lib/network/} (Dio)};
+\node[layer, below=of data] (model) {Modely\\\scriptsize \texttt{lib/model/} -- \texttt{json\_serializable}};
+
+% Obal mobilního klienta -- kreslíme na background layer, aby nezakryl vnitřní vrstvy
+\begin{scope}[on background layer]
+\node[clientbox, fit=(view)(ctrl)(svc)(data)(model), label={[font=\small\sffamily\bfseries, anchor=south]north:Mobilní klient (Flutter)}] (client) {};
+\end{scope}
+
+% Lokální databáze pod klientem
+\node[db, below=10mm of client] (sqlite) {Lokální\\databáze\\\scriptsize SQLite};
+
+% Externí služby (vpravo) -- větší odsazení pro čitelné popisky šipek
+\node[ext, right=38mm of view] (openai) {OpenAI\\\scriptsize Chat Completions API};
+\node[ext, below=of openai] (gemini) {Google Gemini\\\scriptsize Generative Language API};
+\node[ext, below=of gemini] (off) {Open Food Facts\\\scriptsize REST API};
+
+% Šipky: mobilní klient ↔ SQLite (start zespodu klienta, popisek vpravo)
+\draw[arr, <->] (client.south -| sqlite.north) -- (sqlite.north)
+	node[pos=0.5, right=1mm, font=\scriptsize\sffamily] {SQL / DAO};
+
+% Šipky: vrstva služeb / sítě → externí API (sběrnice ven z klienta)
+\coordinate (busTop) at ($(client.east)+(6mm,0)$);
+\coordinate (busOpenai) at (busTop |- openai.west);
+\coordinate (busGemini) at (busTop |- gemini.west);
+\coordinate (busOff)    at (busTop |- off.west);
+
+% Popisek umístíme blíže ke sběrnici (dál od API boxu) -- pos=0.35 zleva
+\draw[arr] (svc.east) -- (svc.east -| busTop) -- (busOpenai) -- node[pos=0.35, above, font=\scriptsize\sffamily] {JSON prompt + obraz} (openai.west);
+\draw[arr] (svc.east) -- (svc.east -| busTop) -- (busGemini) -- node[pos=0.35, above, font=\scriptsize\sffamily] {JSON prompt} (gemini.west);
+\draw[arr] (svc.east) -- (svc.east -| busTop) -- (busOff)    -- node[pos=0.35, above, font=\scriptsize\sffamily] {HTTP GET (čárový kód)} (off.west);
+
+\end{tikzpicture}
