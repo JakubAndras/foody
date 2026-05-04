@@ -13,7 +13,8 @@ Závěrečná sekce~\ref{sec:shrnutiNavrhu} shrnuje výstupy návrhové fáze a 
 
 V~návrhu aplikací se používají jak narativní popisy situací z~praxe, tak případy užití jako formální popis interakce aktéra se systémem.
 V~této práci byly narativní situace využity při analýze rozhovorů, ale pro formální popis systému je dále uvedena pouze sada scénářů případů užití, aby nedocházelo k~duplicitě a aby byl výstup přímo použitelný pro návrh prototypu a testování.
-Pro každý případ užití je v~textu uveden hlavní scénář, který popisuje očekávaný průběh interakce; doplňující informace o~předpokladech, alternativních tocích a chybových stavech jsou součástí samostatné specifikace v~příloze této práce.
+Pro každý případ užití je v~textu uveden hlavní scénář, který popisuje očekávaný průběh interakce.
+Doplňující informace o~předpokladech, alternativních tocích a~chybových stavech jsou diskutovány v~rámci jednotlivých scénářů a~v~popisu pokrytých funkčních požadavků v~sekci~\ref{sec:pozadavky}.
 
 \paragraph{UC01: Záznam jídla z~fotografie.}
 \textbf{Charakteristika:} Uživatel chce rychle zapsat jídlo pomocí fotografie a následně výsledek zkontrolovat.
@@ -122,81 +123,93 @@ Hlavní scénář:
 \section{Funkční a nefunkční požadavky}
 \label{sec:pozadavky}
 
-Z~rozhovorů a ze zadání práce byla sestavena sada funkčních a nefunkčních požadavků.
-Požadavky jsou v~této kapitole uvedeny ve zkrácené podobě, aby byly použitelné jako přehledný podklad pro návrh prototypu a následnou implementaci.
-Plné znění, včetně zdůvodnění a metody ověření, je uvedeno v~samostatném dokumentu specifikace, který je součástí příloh této práce.
-Funkční požadavky na aplikaci jsou následující.
+Sada funkčních a nefunkčních požadavků byla sestavena ze dvou navzájem se doplňujících zdrojů: zjištění ze strukturovaných rozhovorů s~respondenty R1--R4 (sekce~\ref{subsec:vysledkyRozhovoru}) a doménové opory tvořené zadáním práce a doménovou logikou kalorické aplikace.
+Funkční požadavky jsou shrnuty v~tabulce~\ref{tab:trasovatelnostFR}, která zároveň slouží jako matice trasovatelnosti -- pro každý požadavek dokládá, ze kterého zdroje jeho motivace pochází, a tím vylučuje, že by některý požadavek vznikl bez podkladu.
+Nefunkční požadavky jsou uvedeny v~samostatném seznamu doplněném o~měřitelné kritérium pro vyhodnocení.
 
-\paragraph{Základní evidence a denní přehled.}
-\begin{description}[style=nextline]
-	\item[FR-02] Denní přehled pro kalorie a makroživiny.
-	\item[FR-03] Nastavení cílových hodnot, minimálně kalorie, volitelně makroživiny.
-	\item[FR-04] Správa profilu uživatele.
-	\item[FR-05] Kontrola nad daty a mazání jednotlivých záznamů, případně účtu.
-\end{description}
+\begin{footnotesize}
+\rowcolors{2}{gray!10}{white}
+\begin{longtable}{@{}lp{9.4cm}p{2.2cm}@{}}
+	\caption{Trasovatelnost funkčních požadavků na zdroje motivace. Sloupec Zdroj odkazuje na rozhovory s~respondenty R1--R4 (sekce~\ref{subsec:vysledkyRozhovoru}) a na Z, tedy zadání práce nebo doménovou logiku kalorické aplikace.} \label{tab:trasovatelnostFR} \\
+	\toprule
+	\rowcolor{white}\textbf{Kód} & \textbf{Popis} & \textbf{Zdroj} \\
+	\midrule
+	\endfirsthead
+	\toprule
+	\rowcolor{white}\textbf{Kód} & \textbf{Popis} & \textbf{Zdroj} \\
+	\midrule
+	\endhead
+	\multicolumn{3}{@{}l}{\textit{Základní evidence a denní přehled}} \\
+	FR-02 & Denní přehled pro kalorie a makroživiny.                              & R1--R4 \\
+	FR-03 & Nastavení cílových hodnot (kalorie, volitelně makroživiny).           & Z \\
+	FR-04 & Správa profilu uživatele.                                             & Z \\
+	FR-05 & Kontrola nad daty a mazání záznamů, případně účtu.                    & R1, R3, R4, Z \\
+	\addlinespace
+	\multicolumn{3}{@{}l}{\textit{Vstupy pro záznam jídla}} \\
+	FR-01 & Ruční přidání záznamu jídla bez umělé inteligence.                    & R3, Z \\
+	FR-06 & Pořízení fotografie jako vstup pro rozpoznání.                        & Z \\
+	FR-12 & Import fotografie z~galerie.                                          & R3 \\
+	FR-14 & Záznam jídla bez fotografie (hlas, text).                             & Z \\
+	\addlinespace
+	\multicolumn{3}{@{}l}{\textit{Rozpoznávání AI a práce s~nejistotou}} \\
+	FR-07 & Návrh položek a porcí pomocí umělé inteligence.                       & Z \\
+	FR-08 & Indikace nejistoty výstupu.                                           & R2, R3, Z \\
+	FR-09 & Vysvětlení limitů umělé inteligence a doporučení pro vstup.           & R3, Z \\
+	FR-10 & Rozlišení limitu umělé inteligence a technické chyby aplikace.        & Z \\
+	FR-11 & Textový fallback při selhání rozpoznání.                              & R4, Z \\
+	FR-13 & Opakování rozpoznání z~editační obrazovky.                            & R1, R4 \\
+	\addlinespace
+	\multicolumn{3}{@{}l}{\textit{Množství a jednotky}} \\
+	FR-15 & Jednotky množství v~gramech i kusech, předvolby porcí.                & R2, R3, R4 \\
+	\addlinespace
+	\multicolumn{3}{@{}l}{\textit{Rychlé zkratky a práce s~historií}} \\
+	FR-16 & Čtečka čárových kódů pro balené potraviny.                            & R2 \\
+	FR-17 & Oblíbené položky.                                                     & R2, R4 \\
+	FR-18 & Duplikace předchozího záznamu.                                        & R4 \\
+	FR-19 & Našeptávání názvů podle historie.                                     & R4 \\
+	\addlinespace
+	\multicolumn{3}{@{}l}{\textit{Dietní kontext}} \\
+	FR-20 & Dietní omezení a intolerance.                                         & R3 \\
+	FR-21 & Zobrazení porušení dietních omezení v~kalendáři.                      & R3 \\
+	\addlinespace
+	\multicolumn{3}{@{}l}{\textit{Aktivita, přehledy a motivace}} \\
+	FR-22 & Příjem versus výdej v~jednom pohledu.                                 & R1, R2, R4 \\
+	FR-23 & Nastavení integrace výdeje energie a jeho vlivu na limit.             & R2 \\
+	FR-24 & Týdenní a měsíční přehledy.                                           & R1, R4 \\
+	FR-27 & Dotazy v~přirozeném jazyce nad daty.                                  & R1, R3, R4 \\
+	FR-28 & Měsíční motivační souhrn (notifikace, e-mail).                        & R2 \\
+	FR-29 & Nastavitelné notifikace.                                              & Z \\
+	\addlinespace
+	\multicolumn{3}{@{}l}{\textit{Data a provozní vlastnosti}} \\
+	FR-25 & Export dat (například ve formátu CSV).                                & Z \\
+	FR-26 & Offline tolerance, koncept záznamu, dokončení později.                & Z \\
+	FR-30 & Skrytí nebo zobrazení pokročilých funkcí v~rozhraní.                  & Z \\
+	\bottomrule
+\end{longtable}
+\end{footnotesize}
 
-\paragraph{Vstupy pro záznam jídla.}
-\begin{description}[style=nextline]
-	\item[FR-01] Ruční přidání záznamu jídla bez použití umělé inteligence.
-	\item[FR-06] Pořízení fotografie jako vstup pro rozpoznání.
-	\item[FR-12] Import fotografie z~galerie.
-	\item[FR-14] Záznam jídla bez fotografie, například hlasem nebo textovým popisem.
-\end{description}
+Nefunkční požadavky jsou shrnuty v~tabulce~\ref{tab:nfr}, která pro každý požadavek uvádí měřitelné kritérium pro vyhodnocení a zdroj motivace ve stejné notaci jako tabulka~\ref{tab:trasovatelnostFR}.
 
-\paragraph{Rozpoznávání pomocí umělé inteligence a práce s~nejistotou.}
-\begin{description}[style=nextline]
-	\item[FR-07] Návrh položek a porcí pomocí umělé inteligence.
-	\item[FR-08] Indikace nejistoty výstupu.
-	\item[FR-09] Vysvětlení limitů umělé inteligence a doporučení pro zlepšení vstupu.
-	\item[FR-10] Rozlišení limitu umělé inteligence a technické chyby aplikace.
-	\item[FR-11] Textový fallback při selhání rozpoznání.
-	\item[FR-13] Opakování rozpoznání z~editační obrazovky.
-\end{description}
-
-\paragraph{Množství a jednotky.}
-\begin{description}[style=nextline]
-	\item[FR-15] Jednotky množství v~gramech i kusech, včetně předvoleb porcí.
-\end{description}
-
-\paragraph{Rychlé zkratky a práce s~historií.}
-\begin{description}[style=nextline]
-	\item[FR-16] Čtečka čárových kódů pro balené potraviny.
-	\item[FR-17] Oblíbené položky.
-	\item[FR-18] Duplikace předchozího záznamu.
-	\item[FR-19] Našeptávání názvů podle historie.
-\end{description}
-
-\paragraph{Dietní kontext.}
-\begin{description}[style=nextline]
-	\item[FR-20] Dietní omezení a intolerance.
-	\item[FR-21] Zobrazení porušení dietních omezení v~kalendáři.
-\end{description}
-
-\paragraph{Aktivita, přehledy a motivace.}
-\begin{description}[style=nextline]
-	\item[FR-22] Příjem versus výdej v~jednom pohledu.
-	\item[FR-23] Nastavení integrace výdeje energie a jeho vlivu na limit.
-	\item[FR-24] Týdenní a měsíční přehledy.
-	\item[FR-27] Dotazy v~přirozeném jazyce nad daty.
-	\item[FR-28] Měsíční motivační souhrn, notifikace nebo e-mail.
-	\item[FR-29] Nastavitelné notifikace.
-\end{description}
-
-\paragraph{Data a provozní vlastnosti.}
-\begin{description}[style=nextline]
-	\item[FR-25] Export dat, například ve formátu CSV.
-	\item[FR-26] Offline tolerance, koncept záznamu, dokončení později.
-	\item[FR-30] Skrytí nebo zobrazení pokročilých funkcí v~uživatelském rozhraní.
-\end{description}
-
-\paragraph{Nefunkční požadavky.}
-\begin{description}[style=nextline]
-	\item[NFR-01] Akceptovatelná nepřesnost odhadu energie a makroživin nejvýše 10~\%. Hodnota představuje pracovní cíl odvozený ze dvou vzájemně se doplňujících zdrojů: ze středu pásma tolerance nepřesnosti, které respondenti uvedli v~rozhovorech (R1 přibližně 20~\%, R2 jednotky procent), a z~referenční opory v~recenzované literatuře, kde Li a~kol. ve srovnávací studii kvality manuálního zápisu a AI-asistovaného rozpoznávání v~aplikacích pro výživu identifikují přibližně desetiprocentní odchylku jako prakticky relevantní hranici pro nutriční rozhodování~\cite{li2024evaluating}. Cíl slouží jako orientační kritérium pro vyhodnocení kvality výstupu, nikoliv jako absolutní mez.
-	\item[NFR-02] Latence rozpoznání umělou inteligencí, výsledek nejvýše do 20~vteřin za běžných podmínek.
-	\item[NFR-03] Počet kroků pro zápis jednoduché položky nejvýše 6 kroků bez dodatečné editace.
-	\item[NFR-04] Časová náročnost zápisu, opakované jídlo do 1~minuty, nové jídlo do 5~minut.
-	\item[NFR-05] Minimalistické a přehledné uživatelské rozhraní bez rušivých prvků.
-\end{description}
+\begin{footnotesize}
+\rowcolors{2}{gray!10}{white}
+\begin{longtable}{@{}lp{5.8cm}p{3.6cm}p{2.2cm}@{}}
+	\caption{Nefunkční požadavky a zdroje jejich motivace. Sloupec Kritérium uvádí měřitelnou hodnotu pro vyhodnocení požadavku, sloupec Zdroj odkazuje shodně s~tabulkou~\ref{tab:trasovatelnostFR}: kódy R1--R4 odkazují na výroky respondentů (sekce~\ref{subsec:vysledkyRozhovoru}), Z na zadání práce nebo doménovou logiku kalorické aplikace.} \label{tab:nfr} \\
+	\toprule
+	\rowcolor{white}\textbf{Kód} & \textbf{Požadavek} & \textbf{Kritérium} & \textbf{Zdroj} \\
+	\midrule
+	\endfirsthead
+	\toprule
+	\rowcolor{white}\textbf{Kód} & \textbf{Požadavek} & \textbf{Kritérium} & \textbf{Zdroj} \\
+	\midrule
+	\endhead
+	NFR-01 & Přesnost odhadu energie a makroživin.\footnote{Hodnota 10~\% představuje pracovní cíl odvozený ze dvou doplňujících úvah. Respondenti R1 a~R2 ohraničili akceptovatelnou nepřesnost shora přibližně 20~\% (R1) a zdola jednotkami procent (R2); 10~\% leží uvnitř tohoto rozpětí. Druhou oporou je srovnávací studie Li a~kol.~\cite{li2024evaluating} v~časopise \emph{Nutrients}, která zkoumá kvalitu manuálního zápisu a~AI asistovaného rozpoznávání ve výživových aplikacích a poskytuje empirický kontext pro řád akceptovatelné odchylky v~tomto typu nasazení. Cíl slouží jako orientační kritérium pro vyhodnocení kvality výstupu, nikoliv jako absolutní mez.} & $\leq$ 10~\% odchylky od referenčních hodnot & R1, R2, Z \\
+	NFR-02 & Latence rozpoznání umělou inteligencí. & $\leq$ 20~s za běžných podmínek & R3, R4, Z \\
+	NFR-03 & Počet kroků pro zápis jednoduché položky. & $\leq$ 6 kroků bez dodatečné editace & R1, R2 \\
+	NFR-04 & Časová náročnost zápisu jídla. & opakované $\leq$ 1~min, nové $\leq$ 5~min & R1--R4, Z \\
+	NFR-05 & Minimalistické a přehledné uživatelské rozhraní. & bez rušivých prvků & Z \\
+	\bottomrule
+\end{longtable}
+\end{footnotesize}
 
 \section{Návrh uživatelského rozhraní a HiFi prototyp}
 \label{sec:prototyp}
@@ -205,7 +218,7 @@ Návrh uživatelského rozhraní převádí případy užití a požadavky z~př
 HiFi prototyp byl realizován v~nástroji Figma jako graficky a interakčně plnohodnotný model mobilní aplikace primárně pro operační systém iOS, přičemž zvolená vizuální linie byla později přenesena i na platformu Android s~respektem k~platformním konvencím obou systémů.
 
 Vzhledem k~tomu, že implementovaná aplikace věrně navazuje na navržený prototyp, jsou jednotlivé obrazovky prezentovány vizuálně až v~sekci~\ref{sec:klicoveObrazovky} formou snímků z~reálného běhu aplikace, čímž se zamezí duplicitnímu zobrazení téhož rozhraní v~prototypové i implementované podobě.
-Kompletní HiFi prototyp ve své navržené formě je k~dispozici jako součást příloh této práce (viz příloha~A).
+Kompletní HiFi prototyp ve své navržené formě je k~dispozici jako součást příloh této práce (viz příloha~\ref{app:hifi}).
 Tato sekce se proto soustředí na popis návrhových východisek a klíčových interakčních toků, které propojují definované případy užití do souvislých uživatelských scénářů.
 
 \subsection{Návrhová východiska}
@@ -265,6 +278,7 @@ Případy užití pokrývají všechny klíčové uživatelské scénáře ident
 Funkční požadavky operacionalizují tyto scénáře do konkrétních ověřitelných vlastností aplikace, zatímco nefunkční požadavky stanovují měřitelné cílové parametry, jako jsou maximální latence rozpoznávání nebo počet kroků pro zápis jednoduché položky.
 
 HiFi prototyp v~sekci~\ref{sec:prototyp} převádí požadavky a případy užití do konkrétní vizuální a interakční podoby a tvoří přímý podklad pro implementaci popsanou v~kapitole~\ref{ch:implementace}.
-Návrhová východiska a interakční toky jsou popsány v~textu, zatímco vizuální stránka jednotlivých obrazovek je prezentována na snímcích reálné implementace v~sekci~\ref{sec:klicoveObrazovky}; samostatný HiFi prototyp ve své navržené formě je k~dispozici jako příloha~A.
+Návrhová východiska a interakční toky jsou popsány v~textu, zatímco vizuální stránka jednotlivých obrazovek je prezentována na snímcích reálné implementace v~sekci~\ref{sec:klicoveObrazovky}.
+Samostatný HiFi prototyp ve své navržené formě je k~dispozici jako příloha~\ref{app:hifi}.
 
 V~následující kapitole je popsána implementace vybraných funkcí navrženého řešení, včetně zvolených technologií, softwarové architektury, datového modelu a integrace modelu umělé inteligence pro rozpoznávání potravin.

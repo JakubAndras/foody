@@ -1,0 +1,89 @@
+% Stavový diagram průchodu uživatelského vstupu vícevrstvou ochranou proti prompt injection.
+% Tři vrstvy (L1 deterministická sanitizace, L2 LLM pre-screening, L3 anti-injection directive),
+% tři rozhodovací body, dva terminální stavy (Odmítnuto, Hlavní AI model).
+\begin{tikzpicture}[
+	font=\small\sffamily,
+	node distance=7mm,
+	state/.style={
+		draw,
+		rounded corners=1.5pt,
+		minimum height=11mm,
+		minimum width=58mm,
+		align=center,
+		fill=black!4,
+	},
+	process/.style={
+		draw,
+		rounded corners=1.5pt,
+		minimum height=12mm,
+		minimum width=66mm,
+		align=center,
+		fill=black!6,
+	},
+	decision/.style={
+		draw,
+		diamond,
+		aspect=2.2,
+		minimum height=10mm,
+		minimum width=34mm,
+		align=center,
+		fill=black!6,
+		inner sep=1pt,
+	},
+	rejectbox/.style={state, fill=red!10, draw=red!50!black, minimum width=30mm},
+	successbox/.style={state, fill=green!12, draw=green!50!black},
+	arr/.style={-{Latex[length=2mm]}, thick},
+	lbl/.style={font=\scriptsize\sffamily, midway, fill=white, inner sep=1pt},
+]
+
+% --- Hlavní vertikální řetězec ---
+\node[state] (input) {Uživatelský vstup\\\scriptsize text / přepis hlasu / popis fotografie};
+
+\node[process, below=of input] (l1) {%
+	\textbf{L1: deterministická sanitizace}\\
+	{\scriptsize ořez délky, odstranění řídících znaků, regex screening}%
+};
+
+\node[decision, below=of l1] (d1) {Match\\injekčního vzoru?};
+
+\node[decision, below=12mm of d1] (d2) {Slabé\\signály?};
+
+\node[process, below=12mm of d2] (l2) {%
+	\textbf{L2: LLM pre-screening}\\
+	{\scriptsize klasifikace menším modelem (GPT-4o-mini)}%
+};
+
+\node[decision, below=of l2] (d3) {Legitimní\\popis jídla?};
+
+\node[process, below=12mm of d3] (l3) {%
+	\textbf{L3: anti-injection directive}\\
+	{\scriptsize obalení v~XML delimitérech, systémový prompt}%
+};
+
+\node[successbox, below=of l3] (model) {Hlavní AI model\\\scriptsize zpracování analytického dotazu};
+
+% --- Terminální stavy "Odmítnuto" (vlevo) ---
+\node[rejectbox, left=18mm of d1] (rej1) {Odmítnuto};
+\node[rejectbox, left=18mm of d3] (rej3) {Odmítnuto};
+
+% --- Šipky hlavního toku ---
+\draw[arr] (input) -- (l1);
+\draw[arr] (l1) -- (d1);
+\draw[arr] (d1.south) -- node[lbl] {ne} (d2.north);
+\draw[arr] (d2.south) -- node[lbl] {ano} (l2.north);
+\draw[arr] (l2.south) -- (d3.north);
+\draw[arr] (d3.south) -- node[lbl] {ano} (l3.north);
+\draw[arr] (l3.south) -- (model.north);
+
+% --- Reject šipky ---
+\draw[arr] (d1.west) -- node[lbl] {ano} (rej1.east);
+\draw[arr] (d3.west) -- node[lbl] {ne} (rej3.east);
+
+% --- Bypass L2: ne z D2 přeskočí přímo na L3 (vpravo) ---
+\coordinate (bypassTop) at ($(d2.east)+(22mm,0)$);
+\coordinate (bypassBot) at (bypassTop |- l3.east);
+\draw[arr] (d2.east) -- (bypassTop) -- (bypassBot) -- (l3.east);
+\node[font=\scriptsize\sffamily, fill=white, inner sep=1pt, above]
+	at ($(d2.east)!0.5!(bypassTop)$) {ne};
+
+\end{tikzpicture}

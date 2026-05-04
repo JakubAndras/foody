@@ -1,0 +1,81 @@
+\chapter{Zdrojový kód aplikace}
+\label{app:kod}
+
+% TODO: Vložit URL Git repozitáře (případně commit hash odpovídající stavu odevzdané verze)
+% a stručný popis, jak repozitář klonovat a sestavit aplikaci.
+%
+% Doporučená struktura:
+%   - URL Git repozitáře a referenční commit (tag nebo SHA odpovídající odevzdané verzi)
+%   - Licence
+%   - Stručný návod na sestavení (Flutter SDK, build_runner, .env, flutter run)
+%   - Adresářová struktura (odkaz na CLAUDE.md / README repozitáře)
+
+\textit{Tato příloha bude doplněna o~odkaz na Git repozitář se zdrojovým kódem aplikace, referenční commit odpovídající odevzdané verzi a~stručný návod na sestavení.}
+
+\paragraph{Orientace v~repozitáři.}
+Pro účely reprodukovatelnosti experimentů popsaných v~kapitole~\ref{ch:testovani} jsou klíčové části kódu lokalizovány následovně:
+\begin{itemize}
+	\item \textbf{Systémové prompty pro model umělé inteligence} (sekce~\ref{subsec:prompty}) -- soubor \texttt{lib/utils/prompt.dart}, který obsahuje plný text šablon pro všechny scénáře (rozpoznání jídla z~obrazu i textu, analýza cvičení, výpočet nutričních cílů a dotazy v~přirozeném jazyce) včetně použité verze \emph{improved v2} vyhodnocené v~benchmarku v~sekci~\ref{subsec:benchmarkPresnost}.
+	\item \textbf{Sanitizace vstupu a ochrana proti prompt injection} (sekce~\ref{subsec:promptInjection}) -- soubor \texttt{lib/utils/prompt\_sanitizer.dart}.
+	\item \textbf{Pipeline pro umělou inteligenci a confidence gate} (sekce~\ref{subsec:confidence}) -- adresář \texttt{lib/services/ai\_feature/}.
+\end{itemize}
+
+\chapter{HiFi prototyp uživatelského rozhraní}
+\label{app:hifi}
+
+% TODO: Vložit odkaz na archiv s exportovanými snímky HiFi prototypu z nástroje Figma
+% (PDF nebo PNG, případně samostatný odkaz na sdílený Figma soubor v read-only režimu).
+% Tato příloha odpovídá odkazu v sekci 3.3.
+%
+% Doporučená struktura:
+%   1. Stručný popis prototypu (rozsah, použité styly, navigace).
+%   2. Snímky obrazovek seskupené podle hlavních toků (onboarding, záznam jídla, přehledy, profil).
+%   3. Odkaz na sdílený Figma soubor.
+
+\textit{Tato příloha bude doplněna o~exportovaný HiFi prototyp z~nástroje Figma a~odkaz na sdílený zdrojový soubor.}
+
+\chapter{Anonymizované reporty z~uživatelských rozhovorů}
+\label{app:rozhovory}
+
+% TODO: Vložit anonymizované reporty ze čtyř strukturovaných rozhovorů (R1 až R4).
+% Tato příloha odpovídá odkazu v sekci 2.6.1 (chapters/02-analyza.tex).
+%
+% Doporučená struktura pro každého respondenta:
+%   - Profil respondenta (anonymizováno: věk, pohlaví, primární cíl, zkušenosti s aplikacemi)
+%   - Datum a délka rozhovoru
+%   - Klíčové výroky a citace
+%   - Identifikované potřeby a frustrace
+%   - Mapování na případy užití a požadavky
+
+\textit{Tato příloha bude doplněna o~anonymizované reporty ze čtyř strukturovaných rozhovorů (R1--R4) provedených v~rámci uživatelského výzkumu.}
+
+\chapter{Doprovodné materiály k~uživatelskému testování}
+\label{app:testovani}
+
+% TODO: Vložit odkazy na archiv s doprovodnými materiály z krátkodobého uživatelského testování
+% (P1-P3, sekce 5.1-5.4).
+%
+% Doporučená struktura:
+%   - Sada testovacích úloh T1-T16 v plném znění (zadání pro participanty, kritéria úspěchu)
+%   - Vyplněné dotazníky SUS, SEQ a UEQ-S (anonymizované, individuální skóre)
+%   - Souhrnná tabulka výsledků a SUS/SEQ/UEQ-S výpočtů
+%   - Záznamy z debriefingových rozhovorů (přepisy nebo poznámky moderátora)
+%   - Souhlasy s účastí (template, nikoli individuální podpisy)
+
+\textit{Tato příloha bude doplněna o~úplnou sadu doprovodných materiálů z~krátkodobého uživatelského testování s~participanty P1--P3, včetně testovacích úloh, vyplněných dotazníků SUS, SEQ a~UEQ-S, souhrnných tabulek výsledků a~záznamů z~debriefingových rozhovorů.}
+
+\chapter{Doprovodné materiály k~dlouhodobému testování}
+\label{app:dlouhodobeTestovani}
+
+% TODO: Vložit odkazy na archiv s doprovodnými materiály z dlouhodobého uživatelského testování
+% (LP1..LPN, viz TODO sekce v chapters/05-testovani.tex).
+%
+% Doporučená struktura:
+%   - Vstupní instrukce a souhlas s účastí (template)
+%   - Šablona výstupního dotazníku (SUS, NASA-TLX, NPS, kvalitativní reflexe)
+%   - Vyplněné dotazníky (anonymizované)
+%   - Export telemetrie z aplikace (CSV, agregované metriky: acceptance rate,
+%     edit magnitude, distribuce confidence, modality usage)
+%   - Souhrnná tabulka výsledků
+
+\textit{Tato příloha bude doplněna o~doprovodné materiály z~dlouhodobého uživatelského testování (účastníci LP1--LP\textit{N}), zahrnující šablonu výstupního dotazníku, anonymizované vyplněné odpovědi, exporty telemetrie a~souhrnné výsledky.}

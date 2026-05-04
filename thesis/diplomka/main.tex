@@ -4,10 +4,20 @@
 % arara: pdflatex
 % arara: pdflatex
 
+% Předání volby [table] balíku xcolor (loadovaný ctuthesis), aby fungovala střídavá barva řádků v~longtable.
+\PassOptionsToPackage{table}{xcolor}
+
 \documentclass[twoside]{ctuthesis}
 
 % enumitem: rozšířené možnosti formátování seznamů (např. style=nextline u description).
 \usepackage{enumitem}
+
+% longtable: dlouhé tabulky s automatickým zalomením přes více stran (matice trasovatelnosti FR).
+\usepackage{longtable}
+
+% pifont: Zapf Dingbats pro symbol pokrytí v~matici trasovatelnosti FR (plný kruh \ding{108}).
+\usepackage{pifont}
+\newcommand{\yes}{\ding{108}}
 
 % TikZ pro vlastní schémata (architektura, ER diagram, repozitářová vrstva, sekvenční diagram pipeline).
 \usepackage{tikz}
@@ -60,17 +70,6 @@
 \addto\ctucaptionsczech{%
 	\def\supervisorname{Vedoucí}%
 	\def\subfieldofstudyname{Studijní program}%
-}
-
-\ctutemplateset{maketitle twocolumn default}{
-	\begin{twocolumnfrontmatterpage}
-		\ctutemplate{twocolumn.thanks}
-		\ctutemplate{twocolumn.declaration}
-		\ctutemplate{twocolumn.abstract.in.titlelanguage}
-		\ctutemplate{twocolumn.abstract.in.secondlanguage}
-		\ctutemplate{twocolumn.tableofcontents}
-		\ctutemplate{twocolumn.listoffigures}
-	\end{twocolumnfrontmatterpage}
 }
 
 % Drobná svislá mezera mezi odstavci pro lepší čitelnost dlouhého technického textu.
@@ -132,14 +131,9 @@
 \include{chapters/06-zaver}
 
 % Bibliografie
-% Numerický styl v pořadí citování ([1], [2], ...). Odpovídá ČSN ISO 690 numerické variantě.
-% TODO: před odevzdáním přepnout na styl `iso690` pro plnou shodu s ČSN ISO 690.
-%   Krok 1: sudo tlmgr install biblatex-iso690 (případně czech-iso690-bibtex-style z CTAN).
-%   Krok 2: \bibliographystyle{iso690} a překompilovat (pdflatex -> bibtex -> pdflatex x2).
-%   Pozn.: současný `unsrt` produkuje numerický seznam v pořadí citování,
-%   což je s normou kompatibilní; přepnutí na iso690 zajistí formátování záznamů
-%   (pořadí prvků, interpunkce) přesně dle normy.
-\bibliographystyle{unsrt}
+% Numerický styl v~pořadí citování ([1], [2], ...) podle IEEE Transactions formátu,
+% který je de facto standardem v inženýrských a~CS publikacích.
+\bibliographystyle{IEEEtran}
 \bibliography{bibliography}
 
 \appendix

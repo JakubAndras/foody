@@ -1,7 +1,7 @@
 % Sekvenční diagram pipeline umělé inteligence pro rozpoznání jídla z fotografie.
 % Aktéři: UI -- AiPipelineService -- PromptSanitizer -- AiService -- Externí API.
 \begin{tikzpicture}[
-	font=\scriptsize\sffamily,
+	font=\small\sffamily,
 	x=1cm, y=1cm,
 	actor/.style={
 		draw,
@@ -14,23 +14,15 @@
 	lifeline/.style={dashed, black!50},
 	msg/.style={-{Latex[length=2mm]}, thick},
 	ret/.style={-{Latex[length=2mm]}, thick, densely dashed},
-	mlbl/.style={font=\scriptsize\sffamily, midway, above, sloped=false, fill=white, inner sep=1pt},
-	selfnote/.style={
-		draw,
-		rounded corners=1pt,
-		fill=black!4,
-		font=\scriptsize\sffamily,
-		align=left,
-		inner sep=2pt,
-	},
+	mlbl/.style={font=\small\sffamily, midway, above, sloped=false, fill=white, inner sep=1pt},
 ]
 
 % --- Aktéři ---
 \node[actor] (a1) at (0,0)   {Uživatelské\\rozhraní};
-\node[actor] (a2) at (3.4,0) {\texttt{AiPipeline}\\\texttt{Service}};
-\node[actor] (a3) at (6.8,0) {\texttt{Prompt}\\\texttt{Sanitizer}};
-\node[actor] (a4) at (10.2,0){\texttt{AiService}\\(OpenAI / Gemini)};
-\node[actor] (a5) at (13.4,0){Externí API\\(REST)};
+\node[actor] (a2) at (3.0,0) {\texttt{AiPipeline}\\\texttt{Service}};
+\node[actor] (a3) at (6.0,0) {\texttt{Prompt}\\\texttt{Sanitizer}};
+\node[actor] (a4) at (9.0,0) {\texttt{AiService}\\(OpenAI / Gemini)};
+\node[actor] (a5) at (12.0,0){Externí API\\(REST)};
 
 % --- Lifelines ---
 \foreach \a in {a1,a2,a3,a4,a5}
@@ -49,14 +41,10 @@
 \draw[ret] ($(a3.south)+(0,-2.2)$) -- ($(a2.south)+(0,-2.2)$)
 	node[mlbl] {\texttt{cleanedText} (regex screening, limit délky)};
 
-% 4. Pipeline self-loop: sestavení JSON promptu
-\node[selfnote, anchor=west] at ($(a2.south)+(0.3,-3.2)$) {
-	\textbf{sestavení JSON promptu}\\
-	(\texttt{lib/utils/prompt.dart}):\\
-	\texttt{task} + \texttt{expected\_output} + \texttt{schema.rules}\\
-	+ kontext uživatele (dieta, jazyk)
-};
+% 4. Pipeline self-loop: sestavení JSON promptu (detaily v~textu sekce 4.5.2)
 \draw[msg] ($(a2.south)+(0,-2.95)$) .. controls +(0.6,0) and +(0.6,0) .. ($(a2.south)+(0,-3.55)$);
+\node[anchor=west, font=\small\sffamily, fill=white, inner sep=1pt]
+	at ($(a2.south)+(0.65,-3.25)$) {sestavení JSON promptu};
 
 % 5. Pipeline -> AiService: generate(prompt + image)
 \draw[msg] ($(a2.south)+(0,-4.1)$) -- ($(a4.south)+(0,-4.1)$)
@@ -74,12 +62,10 @@
 \draw[ret] ($(a4.south)+(0,-7.2)$) -- ($(a2.south)+(0,-7.2)$)
 	node[mlbl] {\texttt{AiResponse} (deserializace)};
 
-% 9. Pipeline self-loop: confidence gate
-\node[selfnote, anchor=west] at ($(a2.south)+(0.3,-8.2)$) {
-	\textbf{confidence gate} (práh 0,50):\\
-	\(\Rightarrow\) \texttt{success} \(\mid\) \texttt{lowConfidence} \(\mid\) \texttt{failure}
-};
+% 9. Pipeline self-loop: confidence gate (detaily v~textu sekce 4.5.3)
 \draw[msg] ($(a2.south)+(0,-7.95)$) .. controls +(0.6,0) and +(0.6,0) .. ($(a2.south)+(0,-8.55)$);
+\node[anchor=west, font=\small\sffamily, fill=white, inner sep=1pt]
+	at ($(a2.south)+(0.65,-8.25)$) {confidence gate};
 
 % 10. Pipeline -> UI: výsledek
 \draw[ret] ($(a2.south)+(0,-9.3)$) -- ($(a1.south)+(0,-9.3)$)

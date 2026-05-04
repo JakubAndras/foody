@@ -21,11 +21,11 @@ BMI se vypočítá jako podíl tělesné hmotnosti v~kilogramech a druhé mocnin
 \end{equation}
 
 \noindent kde $m$ je tělesná hmotnost v~kilogramech a $h$ tělesná výška v~metrech.
-Na základě hodnoty BMI se rozlišují jednotlivé kategorie výživového stavu, které jsou shrnuty v~tabulce~\ref{tab:bmi}.
+Na základě hodnoty BMI se rozlišují jednotlivé kategorie výživového stavu definované Světovou zdravotnickou organizací, které jsou shrnuty v~tabulce~\ref{tab:bmi}.
 
 \begin{table}[ht]
 	\centering
-	\caption{Hodnoty BMI a jejich interpretace podle Světové zdravotnické organizace.}
+	\caption{Hodnoty BMI a jejich interpretace.}
 	\label{tab:bmi}
 	\begin{tabular}{ll}
 		\toprule
@@ -119,36 +119,17 @@ Je ovlivněn především:
 \subsection{Prediktivní rovnice pro odhad bazálního metabolismu}
 \label{subsec:bmrRovnice}
 
-Přímé měření energetického výdeje prostřednictvím nepřímé kalorimetrie není v~běžné praxi ani v~uživatelských aplikacích reálně dostupné.
-Proto se využívají empirické prediktivní rovnice, které odhadují BMR na základě snadno měřitelných parametrů, jako jsou hmotnost, výška, věk a pohlaví.
-Mezi nejpoužívanější patří Harris-Benedictova a Mifflin-St~Jeorova rovnice.
-
-Harris-Benedictova rovnice byla publikována již v~roce 1919 a patří k~historicky nejpoužívanějším metodám odhadu bazálního metabolismu.
-V~revidované podobě má následující tvar:
+Přímé měření energetického výdeje pomocí nepřímé kalorimetrie není v~běžné praxi ani v~uživatelských aplikacích reálně dostupné.
+Místo něj se využívají empirické prediktivní rovnice odhadující BMR ze snadno měřitelných parametrů (hmotnost, výška, věk, pohlaví); historicky nejrozšířenější je Harris-Benedictova rovnice z~roku 1919, novější Mifflin-St~Jeorova rovnice z~roku 1990 však bývá řadou novějších studií hodnocena jako přesnější pro běžnou dospělou populaci~\cite{frankenfield2005comparison} a má tvar:
 
 \begin{align}
-	\mathrm{BMR}_{\text{muži}} &= 66 + (13{,}7 \cdot m) + (5 \cdot v) - (6{,}8 \cdot a), \label{eq:hb-muzi} \\
-	\mathrm{BMR}_{\text{ženy}} &= 655 + (9{,}6 \cdot m) + (1{,}8 \cdot v) - (4{,}7 \cdot a), \label{eq:hb-zeny}
+	\mathrm{BMR}_{\text{muži}} &= (10 \cdot m) + (6{,}25 \cdot h) - (5 \cdot a) + 5,   \label{eq:msj-muzi} \\
+	\mathrm{BMR}_{\text{ženy}} &= (10 \cdot m) + (6{,}25 \cdot h) - (5 \cdot a) - 161, \label{eq:msj-zeny}
 \end{align}
 
-\noindent kde $m$ je hmotnost v~kilogramech, $v$ výška v~centimetrech a $a$ věk v~letech.
-
-Mifflin-St~Jeorova rovnice byla navržena v~roce 1990 a řada novějších studií ji hodnotí jako přesnější pro běžnou dospělou populaci.
-Její tvar je~\cite{frankenfield2005comparison}:
-
-\begin{align}
-	\mathrm{BMR}_{\text{muži}} &= (10 \cdot m) + (6{,}25 \cdot v) - (5 \cdot a) + 5,   \label{eq:msj-muzi} \\
-	\mathrm{BMR}_{\text{ženy}} &= (10 \cdot m) + (6{,}25 \cdot v) - (5 \cdot a) - 161. \label{eq:msj-zeny}
-\end{align}
-
-Pro ilustraci lze uvést třicetiletého muže s~hmotností 80~kg a výškou 180~cm.
-Harris-Benedictova rovnice odhadne jeho BMR přibližně na 1\,858~kcal za den, zatímco Mifflin-St~Jeorova na zhruba 1\,780~kcal.
-Rozdíl mezi rovnicemi ukazuje, že i relativně malé odchylky v~odhadu BMR mohou při dlouhodobém použití vést k~významným rozdílům v~odhadované energetické bilanci.
-Novější systematické přehledy navíc ukazují, že přesnost prediktivních rovnic se liší mezi populacemi a že u~některých skupin mohou běžně používané rovnice BMR systematicky podhodnocovat nebo nadhodnocovat.
-Typickým příkladem takové skupiny jsou sportovci nebo obecně lidé s~nadprůměrným množstvím svalové hmoty~\cite{frankenfield2005comparison}.
-
-V~uživatelských aplikacích je přesto použití těchto rovnic praktickým kompromisem mezi dostupností dat a požadavkem na rychlý odhad energetického výdeje.
-Pro návrh aplikace je důležité nejen vybrat vhodnou rovnici, ale také uživateli srozumitelně sdělit, že jde pouze o~odhad s~určitou nejistotou.
+\noindent kde $m$ je hmotnost v~kilogramech, $h$ výška v~centimetrech a $a$ věk v~letech.
+Systematické přehledy zároveň ukazují, že přesnost prediktivních rovnic se liší mezi populacemi a u~některých skupin (zejména sportovci a lidé s~nadprůměrným podílem svalové hmoty) mohou běžně používané rovnice BMR systematicky podhodnocovat nebo nadhodnocovat~\cite{frankenfield2005comparison}.
+V~uživatelských aplikacích je proto použití těchto rovnic praktickým kompromisem mezi dostupností dat a požadavkem na rychlý odhad energetického výdeje, doprovázeným srozumitelnou komunikací nejistoty výsledku směrem k~uživateli.
 
 \subsection{Energetická bilance a energetická nerovnováha}
 \label{subsec:nerovnovaha}
@@ -199,44 +180,18 @@ Přehledové studie ukazují, že jak poměr makroživin, tak dostatečný pří
 \subsection{Makroživiny}
 \label{subsec:makrozivny}
 
-Makroživiny jsou živiny přijímané ve větším množství, které tvoří hlavní zdroj energie ve stravě.
-Mezi ně patří sacharidy, tuky a bílkoviny.
+Makroživiny tvoří hlavní zdroj energie ve stravě a zahrnují sacharidy, tuky a bílkoviny.
+Sacharidy (jednoduché cukry, škrob, vláknina) jsou primárním zdrojem energie pro většinu buněk, přičemž strava s~vyšším zastoupením komplexních sacharidů a vlákniny je spojována s~lepší kontrolou glykemie a vyšším pocitem sytosti.
+Tuky představují koncentrovaný zdroj energie a jsou nezbytné pro vstřebávání lipofilních vitamínů; významnou roli hraje kvalitativní složení, neboť vyšší podíl nenasycených mastných kyselin je spojován s~příznivým vlivem na kardiovaskulární zdraví~\cite{venn2020macronutrients}.
+Bílkoviny jsou základním stavebním materiálem tkání a hormonů, přičemž jejich dostatečný příjem je klíčový zejména pro udržení svalové hmoty při redukci tělesné hmotnosti~\cite{venn2020macronutrients}.
 
-Sacharidy představují primární zdroj energie pro většinu buněk, zejména pro centrální nervový systém a pracující sval.
-Zahrnují jednoduché cukry (glukóza, fruktóza), škrob a vlákninu.
-Strava s~dostatečným zastoupením komplexních sacharidů a vlákniny je spojována s~lepší kontrolou glykemie, nižším rizikem kardiometabolických onemocnění a vyšším pocitem sytosti.
-Naopak vysoký příjem přidaných cukrů zvyšuje energetický příjem bez odpovídající nutriční hodnoty.
-
-Tuky slouží jako koncentrovaný zdroj energie, jsou nezbytné pro vstřebávání lipofilních vitamínů (A, D, E, K) a jako součást buněčných membrán a signálních molekul.
-Významnou roli hraje kvalitativní složení tuků.
-Vyšší podíl nenasycených mastných kyselin (například z~rostlinných olejů, ryb a ořechů) je spojován s~příznivým vlivem na kardiovaskulární zdraví, zatímco nadměrný příjem nasycených a transmastných kyselin naopak zvyšuje kardiometabolické riziko~\cite{venn2020macronutrients}.
-
-Bílkoviny jsou základním stavebním materiálem tkání, enzymů a hormonů.
-Dostatečný příjem bílkovin je klíčový pro udržení svalové hmoty, zejména při redukci tělesné hmotnosti, a může zvyšovat pocit sytosti~\cite{venn2020macronutrients}.
-
-Venn shrnuje, že hlavním energetickým zdrojem stravy jsou typicky sacharidy a tuky, zatímco bílkoviny vedle energetické funkce zajišťují především stavební a regulační úlohu v~organismu.
-Z~praktického hlediska je důležité nejen celkové množství energie, ale také kvalita jednotlivých makroživin: upřednostnění komplexních sacharidů a vyššího příjmu vlákniny před jednoduchými cukry, vyšší zastoupení nenasycených mastných kyselin v~porovnání s~nasycenými a dostatečný příjem bílkovin pro udržení svalové hmoty, zejména při redukci hmotnosti.
-Současná literatura upozorňuje, že různé dietní přístupy (například s~vyšším podílem sacharidů nebo tuků) mohou vést ke srovnatelným změnám tělesné hmotnosti, pokud je zachován celkový energetický deficit.
-Pro běžného uživatele je proto vedle poměru makroživin zásadní především dlouhodobá udržitelnost zvoleného stravovacího režimu~\cite{venn2020macronutrients}.
+Z~praktického hlediska je vedle celkového energetického příjmu důležitá i kvalita jednotlivých makroživin a dlouhodobá udržitelnost stravovacího režimu, protože různé dietní přístupy mohou vést ke srovnatelným změnám hmotnosti, pokud je zachován celkový energetický deficit~\cite{venn2020macronutrients}.
 
 \subsection{Mikroživiny}
 \label{subsec:mikrozivny}
 
-Mikroživiny zahrnují vitaminy a minerální látky.
-Na rozdíl od makroživin nepřinášejí významné množství energie, ale podílejí se na mnoha enzymatických a regulačních procesech v~organismu.
-Farag a~kol. zdůrazňují, že adekvátní příjem mikroživin je důležitý v~průběhu celého životního cyklu a že jejich nedostatek či nadbytek může ovlivnit vývoj, imunitu, kognitivní funkce i riziko chronických onemocnění~\cite{farag2021dietaryMicronutrients}.
-
-Z~hlediska funkce a vlastností lze mikroživiny přehledně rozdělit do několika skupin:
-
-\begin{itemize}
-	\item vitamíny rozpustné ve vodě (například vitaminy skupiny B, vitamin C),
-	\item vitaminy rozpustné v~tucích (A, D, E, K),
-	\item makrominerály (například vápník, hořčík, sodík, draslík, fosfor),
-	\item mikrominerály a stopové prvky (například železo, zinek, selen, jód, měď).
-\end{itemize}
-
-Farag a~kol. uvádějí, že v~populaci se často vyskytuje kombinace vysokého energetického příjmu a současného nedostatečného příjmu některých mikroživin.
-Tento stav bývá označován jako „skrytá malnutrice" a zdůrazňuje potřebu sledovat vedle energie také kvalitu stravy~\cite{farag2021dietaryMicronutrients}.
+Mikroživiny (vitaminy a minerální látky) na rozdíl od makroživin nepřinášejí významné množství energie, ale podílejí se na enzymatických a regulačních procesech v~organismu a jejich nedostatek může ovlivnit imunitu, kognitivní funkce i riziko chronických onemocnění~\cite{farag2021dietaryMicronutrients}.
+V~aktuální verzi navrhované aplikace se sledování mikroživin neuvažuje, neboť přesahuje rámec primárního cíle (snížení bariéry kalorického záznamu); jejich začlenění je však relevantním kandidátem pro budoucí rozšíření aplikace o~kvalitativní hodnocení stravy, zejména v~kontextu fenoménu \uv{skryté malnutrice}, kdy vysoký energetický příjem může být doprovázen nedostatečným příjmem některých mikroživin~\cite{farag2021dietaryMicronutrients}.
 
 \section{Existující mobilní aplikace pro sledování stravy}
 \label{sec:existujici}
@@ -247,11 +202,21 @@ Systematické průzkumy hlavních mobilních obchodů identifikují v~této kate
 Přehledy výživových aplikací ukazují, že většina z~nich staví na velmi podobném jádru a liší se spíše v~uživatelském rozhraní a doplňkových funkcích než v~samotné logice sledování stravy~\cite{nogueira2024mobileApplications,abeltino2025digitalApplications}.
 Společné jádro typicky zahrnuje potravinový deník, databázi potravin s~fulltextovým vyhledáváním, ukládání vlastních receptů a oblíbených jídel, nastavení cílového energetického příjmu a základní vizualizaci výsledků formou grafů a statistik~\cite{gioia2023mobileApps}.
 Z~hlediska zadávání dat většina komerčních aplikací nadále spoléhá na manuální zapisování doplněné o~částečně automatizované zkratky, zejména skenování čárových kódů, šablony jídel s~možností duplikace dříve zapsaných záznamů a připomenutí ve formě notifikací~\cite{abeltino2025digitalApplications}.
+Empirickou oporu pro popis silných a slabých stránek této kategorie aplikací poskytuje analýza Zečević a~kol., kteří metodou \emph{topic modelingu} zpracovali 72\,084 recenzí z~Google Play Store pro patnáct nejpoužívanějších aplikací pro sledování stravy a identifikovali jedenáct opakujících se témat~\cite{zecevic2021userPerspectives}.
+Mezi nejhůře hodnocené patří netransparentní účtování předplatného (průměrné hodnocení 2,32 z~5) a technická stabilita (2,85 z~5), zatímco kladně jsou vnímány jednoduchost ovládání, samotná funkce zápisu kalorií a integrace čtečky čárových kódů~\cite{zecevic2021userPerspectives}.
 
 Systematické studie zároveň upozorňují, že ruční zapisování je časově náročné a v~praxi často vede k~nekompletním či zkresleným záznamům.
 Li a~kol. ukazují, že výstupy nutričních aplikací se mohou od referenčních metod významně lišit jak u~manuálního zapisování, tak u~řešení s~podporou rozpoznání obrazu, přičemž energetický příjem bývá podle typu stravy nadhodnocen nebo podhodnocen o~stovky kilokalorií denně~\cite{li2024evaluating}.
 V~reakci na tato omezení se prosazuje využití umělé inteligence a počítačového vidění, avšak Samad a~kol. ve svém vzorku 80 aplikací identifikovali pouze jedinou, která dokázala z~fotografie automaticky určit druh jídla i velikost porce~\cite{samad2022smartphoneApps}.
 Aburub a~kol. shrnují, že plně automatické rozpoznávání talíře zůstává výjimkou a typicky vyžaduje potvrzení a korekci uživatele, zatímco skenování čárových kódů se mezitím stalo běžným standardem~\cite{aburub2025foodScanning}.
+
+Chotwanvirat a~kol. ve své rešerši 84 prací publikovaných do roku 2021 dokumentují, že po roce 2015 vystřídaly ruční extrakci příznaků konvoluční neuronové sítě překračující 80~\% přesnosti na datasetech FOOD-101 a UEC FOOD-256~\cite{chotwanvirat2024scoping}.
+Tatáž rešerše upozorňuje, že většina takto trénovaných systémů zůstává omezena na curated datasety, hůře se vyrovnává s~reálnými podmínkami snímání a postrádá vysvětlitelnost svých rozhodnutí, což ztěžuje jejich přijetí v~klinické praxi~\cite{chotwanvirat2024scoping}.
+Liu a~kol. tento závěr kvantifikují i na novější transformerové architektuře CBiAFormer, jejíž přesnost klesá z~92,40~\% na západním datasetu ETHZ Food-101 na 72,92~\% na smíšeném ISIA Food-200, což ilustruje obecnější obtíž specializovaných modelů zobecnit napříč kuchyněmi~\cite{liu2025deepLearning}.
+
+Po roce 2022 nastupuje v~oboru třetí vlna v~podobě multimodálních velkých jazykových modelů, které dokáží v~jediném volání zpracovat obraz, text i hlasový přepis a vrátit strukturovaný odhad nutričních hodnot bez nutnosti vlastního trénování na potravinovém datasetu~\cite{wang2026visionLanguageFood,fridolfsson2025llmNutrition}.
+Recentní studie z~let 2025 a 2026 ukazují, že tyto modely při vhodném prompt engineeringu dosahují srovnatelné nebo lepší přesnosti odhadu kalorické hodnoty než dříve nasazované specializované sítě~\cite{hua2025nutribench,coburn2025multimodalNutrition}.
+Tento posun zároveň přesouvá těžiště přesnosti z~architektury a tréninkových dat směrem k~designu promptu a postprocessingu odpovědi modelu, čemuž je v~rámci této práce věnována experimentální validace popsaná v~kapitole~\ref{ch:testovani}~\cite{ase2025structuredPrompts}.
 
 Pro tuto práci jsou reprezentativní zejména dvě aplikace, které pokrývají globální i lokální kontext.
 První je mezinárodní MyFitnessPal a druhou jsou československé Kalorické Tabulky (Dine4Fit).
@@ -260,132 +225,35 @@ Následující podkapitoly je stručně představují a vymezují jejich silné 
 \subsection{MyFitnessPal}
 \label{subsec:myfitnesspal}
 
-MyFitnessPal patří mezi nejznámější a nejrozšířenější aplikace pro sledování stravy a tělesné hmotnosti na světě.
-Je dostupná pro Android, iOS i webové rozhraní a dlouhodobě se pohybuje na předních příčkách kategorií Health \& Fitness v~hlavních mobilních obchodech~\cite{myFitnessPal2025}.
+MyFitnessPal patří mezi nejznámější a nejrozšířenější aplikace pro sledování stravy a tělesné hmotnosti na světě, je dostupný pro Android, iOS i webové rozhraní a dlouhodobě se pohybuje na předních příčkách kategorií Health \& Fitness v~hlavních mobilních obchodech~\cite{myFitnessPal2025}.
+Základem aplikace je potravinový deník navázaný na rozsáhlou databázi potravin obsahující miliony položek včetně značkových výrobků a restaurací.
+Uživatel zapisuje jídla vyhledáváním v~databázi, výběrem z~historie, skenováním čárového kódu nebo zadáním vlastních receptů.
+Aplikace průběžně počítá denní energetický příjem a rozložení makroživin, podporuje záznam fyzických aktivit, sledování hmotnosti a integraci s~externími zařízeními (Apple Health, fitness náramky); pokročilé funkce jako sledování mikronutrientů a detailnější nutriční přehledy jsou součástí placeného předplatného Premium~\cite{myFitnessPal2025}.
 
-\subsubsection*{Hlavní funkcionalita}
-
-Základem MyFitnessPal je potravinový deník navázaný na rozsáhlou databázi potravin.
-Oficiální materiály uvádějí databázi s~miliony položek včetně běžných potravin, značkových výrobků i restaurací.
-Uživatel může zapisovat jídelníček několika způsoby:
-
-\begin{itemize}
-	\item vyhledáváním v~databázi podle názvu potraviny,
-	\item výběrem z~historie a často používaných jídel,
-	\item skenováním čárového kódu u~balených potravin,
-	\item zadáváním vlastních receptů a pokrmů.
-\end{itemize}
-
-Aplikace průběžně počítá celkový denní energetický příjem a zobrazuje rozložení makroživin, jako jsou sacharidy, tuky a bílkoviny.
-V~placené verzi umožňuje sledovat i další nutriční parametry, například vlákninu, cukr, sůl nebo vybrané mikronutrienty.
-Součástí systému je také záznam fyzických aktivit, sledování tělesné hmotnosti a integrace s~externími zařízeními a službami, jako jsou Apple Health nebo fitness náramky~\cite{myFitnessPal2025}.
-
-Obchodní model aplikace odpovídá freemium přístupu.
-Základní funkce potravinového deníku a databáze potravin jsou dostupné zdarma, rozšířené analytické nástroje, pokročilé nastavení cílů, detailnější nutriční přehledy a některé zrychlené způsoby zadávání jídel jsou součástí placeného předplatného MyFitnessPal Premium~\cite{myFitnessPal2025}.
-
-\subsubsection*{Rozpoznávání jídel z~fotografie}
-
-MyFitnessPal je jedním z~prvních velkých komerčních produktů, které nasadily ve větším měřítku foto rozpoznávání jídel.
-Funkce Meal Scan umožňuje uživateli namířit fotoaparát na talíř a aplikace na základě obrazu navrhne odpovídající položky z~databáze.
-Podle oficiální dokumentace jde o~funkci dostupnou v~rámci předplatného Premium a aktuálně podporovanou pro vybrané verze iOS a Androidu~\cite{myFitnessPal2025}.
-
-Výrobce uvádí, že Meal Scan využívá metody počítačového vidění a strojového učení k~identifikaci více položek na jednom talíři a jejich propojení s~interní databází.
-V~praxi funguje Meal Scan jako asistovaná funkce: uživatel dostane seznam odpovídajících jídel, zvolí nejbližší položku a případně upraví velikost porce~\cite{myFitnessPal2025}.
-
-\subsubsection*{Silné stránky a omezení}
-
-Z~hlediska této práce jsou klíčové následující výhody MyFitnessPal:
-
-\begin{itemize}
-	\item rozsáhlá databáze potravin pokrývající globální trh, včetně restaurací a značkových výrobků~\cite{myFitnessPal2025},
-	\item kombinace více vstupních metod (vyhledávání, historie, čárový kód, foto rozpoznávání)~\cite{myFitnessPal2025},
-	\item dlouhodobá přítomnost na trhu, díky níž existuje řada nezávislých hodnocení této kategorie nástrojů, včetně studií zaměřených na kvalitu a funkce aplikací pro sledování stravy~\cite{samad2022smartphoneApps}.
-\end{itemize}
-
-Současná literatura i uživatelské zkušenosti ale upozorňují na několik omezení:
-
-\begin{itemize}
-	\item část databáze tvoří uživateli přidané položky, což může vést k~chybám v~nutričních údajích a nutnosti ruční korekce, například po skenování čárového kódu~\cite{li2024evaluating},
-	\item i přes použití foto rozpoznávání zůstává nutnost ruční kontroly a úprav, zejména u~složitějších jídel a kombinovaných receptů~\cite{li2024evaluating},
-	\item aplikace je navržena primárně pro globální trh, a proto nemusí dostatečně pokrývat některé lokální produkty nebo značky, zejména ve středoevropském kontextu.
-\end{itemize}
-
-Pro návrh vlastního řešení je MyFitnessPal důležitým referenčním příkladem robustního ekosystému, který kombinuje manuální self monitoring s~prvky umělé inteligence.
-Současně ukazuje, že i jedna z~nejrozšířenějších aplikací využívá umělou inteligenci primárně jako doplněk, nikoli jako plnou náhradu manuálního zadávání.
+MyFitnessPal je jedním z~prvních velkých komerčních produktů, které nasadily ve větším měřítku foto rozpoznávání jídel — funkce Meal Scan umožňuje uživateli namířit fotoaparát na talíř, přičemž aplikace pomocí počítačového vidění navrhne odpovídající položky a velikosti porcí z~interní databáze, které uživatel potvrdí nebo upraví~\cite{myFitnessPal2025}.
+Klíčovými přednostmi z~hlediska této práce jsou rozsáhlá globální databáze, kombinace více vstupních metod a dlouhodobá přítomnost na trhu doložená nezávislými studiemi~\cite{samad2022smartphoneApps}; mezi omezeními naopak figuruje proměnlivá kvalita uživatelsky přidaných položek vedoucí k~chybám v~nutričních údajích~\cite{li2024evaluating}, nutnost ruční kontroly výsledků foto rozpoznávání~\cite{li2024evaluating} a nedostatečné pokrytí lokálních středoevropských produktů.
+MyFitnessPal je tak referenčním příkladem robustního ekosystému, který umělou inteligenci využívá primárně jako doplněk manuálního zápisu, nikoli jako jeho plnou náhradu.
 
 \subsection{Kalorické Tabulky}
 \label{subsec:kalorickeTabulky}
 
-Kalorické Tabulky, vyvíjené společností Dine4Fit~a.s., představují nejpoužívanější aplikaci pro sledování stravy v~českém a slovenském prostředí.
-Podle oficiálních informací firmy se stala nejpopulárnější aplikací na hlídání stravy v~Česku i na Slovensku a měsíčně ji používá více než jeden milion uživatelů~\cite{dine4fit2025}.
-Tyto údaje potvrzuje také nezávislá reportáž na serveru CzechCrunch, která uvádí více než 1,5~milionu aktivních uživatelů a několik milionů registrací~\cite{houska2024kalorickeTabulky}.
+Kalorické Tabulky, vyvíjené společností Dine4Fit~a.s., představují nejpoužívanější aplikaci pro sledování stravy v~českém a slovenském prostředí; podle oficiálních údajů firmy ji měsíčně používá více než jeden milion uživatelů~\cite{dine4fit2025}, nezávislá reportáž serveru CzechCrunch uvádí přes 1,5~milionu aktivních uživatelů a několik milionů registrací~\cite{houska2024kalorickeTabulky}.
+Aplikace je dostupná jako web i mobilní aplikace pro Android a iOS, podporuje vybrané chytré hodinky (Garmin, Apple Watch) a její základní princip se podobá globálním nástrojům — potravinový deník navázaný na databázi výrazně přizpůsobenou regionálnímu trhu, sledování pitného režimu a hmotnosti, záznam fyzických aktivit a kalorická kalkulačka odvozující doporučený příjem z~tělesných parametrů a cílů uživatele~\cite{dine4fit2025}.
+Stejně jako MyFitnessPal funguje aplikace ve freemium modelu, kde rozšířené analýzy, mikronutrienty a pokročilé statistiky jsou součástí placeného Premium~\cite{dine4fit2025,houska2024kalorickeTabulky}.
 
-Aplikace je dostupná na webu i jako mobilní aplikace pro Android a iOS a podporuje také vybrané chytré hodinky, například Garmin nebo Apple Watch~\cite{dine4fit2025}.
-
-\subsubsection*{Hlavní funkcionalita}
-
-Základní princip Kalorických Tabulek se podobá globálním aplikacím pro sledování stravy, je však výrazně přizpůsoben specifikům českého a slovenského trhu.
-Klíčové funkce jsou:
-
-\begin{itemize}
-	\item databáze potravin zaměřená na produkty dostupné v~Česku a na Slovensku, včetně značkových výrobků, restaurací a uživatelských receptů~\cite{dine4fit2025},
-	\item potravinový deník s~možností zapisovat jednotlivá jídla v~průběhu dne a sledovat energetický příjem v~kcal nebo kJ,
-	\item přehled denního příjmu a výdeje energie, sledování pitného režimu a tělesné hmotnosti~\cite{dine4fit2025},
-	\item podpora záznamu fyzických aktivit a jejich vlivu na energetickou bilanci.
-\end{itemize}
-
-Významnou součástí ekosystému je i kalorická kalkulačka, která odvozuje doporučený energetický příjem z~tělesných parametrů a cílů uživatele.
-Dine4Fit uvádí, že nastavení poměru makroživin vychází z~odborných doporučení a umožňuje zvolit různé cíle, jako je udržení hmotnosti, hubnutí nebo nárůst svalové hmoty~\cite{dine4fit2025}.
-
-Aplikace používá freemium model.
-Základní funkcionalita, tedy deník, výpočet energie a základní nutriční hodnoty, je dostupná zdarma, zatímco detailnější analýzy, rozšířené sledování mikronutrientů, speciální jídelníčky a pokročilé statistiky jsou součástí placeného předplatného Premium~\cite{dine4fit2025,houska2024kalorickeTabulky}.
-
-\subsubsection*{Rozpoznávání jídel z~fotografie}
-
-Novější verze Kalorických Tabulek integrují funkci rozpoznávání jídel z~fotografie pomocí umělé inteligence.
-Podle popisu aplikace v~Google Play může uživatel jídlo vyfotit a aplikace navrhne odpovídající potraviny a jejich přibližnou gramáž, čímž automaticky spočítá kalorie a živiny~\cite{dine4fit2025}.
-Dine4Fit tuto funkci dále popisuje na svém webu a blogu jako prémiovou novinku využívající umělou inteligenci pro rozpoznání jídel a odhad hmotnosti na základě fotografie~\cite{dine4fit2025}.
-
-Technologické detaily implementace nejsou veřejně detailně popsány, mediální články nicméně zmiňují, že aplikace využívá detekci potravin pomocí umělé inteligence ve velkém objemu zaznamenaných jídel a že funkce je nasazována postupně s~důrazem na praktické využití v~běžném hubnutí~\cite{houska2024kalorickeTabulky}.
-
-Stejně jako u~MyFitnessPal nejde o~plně autonomní systém.
-Uživatelé musí výsledek zkontrolovat, případně upravit typ jídla nebo velikost porce.
-Odborná literatura zatím neobsahuje nezávislou kvantitativní studii přesnosti této konkrétní funkce, což odpovídá obecnějšímu trendu, kdy detailní vědecká validace komerčních funkcí postavených na umělé inteligenci obvykle následuje s~časovým odstupem za jejich praktickým nasazením~\cite{samad2022smartphoneApps,li2024evaluating,aburub2025foodScanning}.
-
-\subsubsection*{Silné stránky a omezení}
-
-V~českém a slovenském kontextu mají Kalorické Tabulky několik výrazných výhod:
-
-\begin{itemize}
-	\item silná lokalizace databáze potravin na regionální produkty, včetně běžných značek a lokálních jídel~\cite{dine4fit2025},
-	\item dostupnost webového rozhraní i mobilních aplikací, což usnadňuje zapisování v~různých situacích~\cite{dine4fit2025},
-	\item velká uživatelská základna, která přispívá k~rozšiřování databáze a komunitním receptům~\cite{houska2024kalorickeTabulky}.
-\end{itemize}
-
-Současně však z~uživatelských recenzí a odborných diskusí vyplývá několik slabších míst relevantních pro návrh této práce:
-
-\begin{itemize}
-	\item práce se složitějšími recepty může být časově náročná a vyžaduje manuální sestavování položek,
-	\item podobně jako u~jiných komunitně rozšiřovaných databází se mohou vyskytnout chyby v~nutričních údajích, pokud uživatelé zadávají data nepřesně~\cite{li2024evaluating},
-	\item funkce rozpoznávání jídel pomocí umělé inteligence je relativně nová a dostupné informace ji popisují jako doplněk k~tradičnímu zadávání, nikoli jako plnou náhradu manuálního zápisu~\cite{dine4fit2025,houska2024kalorickeTabulky}.
-\end{itemize}
-
-Pro navrhovanou aplikaci jsou Kalorické Tabulky cenným vzorem z~hlediska lokalizace, práce s~regionálně specifickou databází a integrace funkcí umělé inteligence do jinak klasického stravovacího deníku.
+Novější verze Kalorických Tabulek integrují funkci rozpoznávání jídel z~fotografie pomocí umělé inteligence: uživatel jídlo vyfotí a aplikace navrhne odpovídající potraviny a přibližnou gramáž~\cite{dine4fit2025,houska2024kalorickeTabulky}.
+Stejně jako u~MyFitnessPal nejde o~plně autonomní systém, nezávislá kvantitativní studie přesnosti této konkrétní funkce v~recenzované literatuře zatím chybí, což odpovídá obecnějšímu trendu opožděné akademické validace komerčních AI funkcí~\cite{samad2022smartphoneApps,li2024evaluating,aburub2025foodScanning}.
+Hlavními přednostmi v~českém kontextu jsou silná lokalizace databáze, dostupnost webového i mobilního rozhraní a velká uživatelská základna přispívající ke komunitním receptům~\cite{dine4fit2025,houska2024kalorickeTabulky}; mezi limity patří časová náročnost při práci se složitějšími recepty, riziko nepřesností v~komunitně rozšiřovaných databázích~\cite{li2024evaluating} a stále spíše doplňková role AI rozpoznávání vůči manuálnímu zápisu.
 
 \subsection{Shrnutí aplikací na trhu}
 \label{subsec:shrnutiTrhu}
 
-MyFitnessPal a Kalorické Tabulky představují dvě reprezentativní vyústění trendu popsaného v~úvodu této sekce.
-Na jedné straně demonstrují vyspělost trhu (rozsáhlé databáze, škálu vstupních metod, robustní ekosystém a milionové uživatelské základny), na straně druhé potvrzují, že základní model zůstává obdobný jako v~počátcích mobilních dietních aplikací~\cite{myFitnessPal2025,dine4fit2025,houska2024kalorickeTabulky}.
-Uživatel stále primárně ručně zapisuje jídla do deníku a funkce foto rozpoznávání slouží jako doplněk, nikoli jako plná náhrada manuálního sběru dat~\cite{li2024evaluating,aburub2025foodScanning}.
-
-Pro návrh aplikace v~této diplomové práci z~toho vyplývají tři hlavní závěry:
-
-\begin{enumerate}
-	\item Trh již nabízí velké množství aplikací se srovnatelnou základní funkcionalitou, takže inovace by měla cílit na konkrétní slabá místa, například uživatelskou zátěž při zadávání nebo kvalitu a lokalizaci databáze.
-	\item Zvýšení míry automatizace pomocí počítačového vidění a umělé inteligence je slibnou cestou, ale vyžaduje pečlivé řešení otázky přesnosti a transparentní komunikaci nejistot vůči uživateli.
-	\item Lokální kontext a kvalita potravinové databáze mohou být v~českém prostředí stejně důležité jako samotná technická vyspělost modelu rozpoznávání.
-\end{enumerate}
+MyFitnessPal a Kalorické Tabulky reprezentují vyspělost trhu (rozsáhlé databáze, škálu vstupních metod, milionové uživatelské základny), zároveň však potvrzují, že uživatel v~obou případech stále primárně ručně zapisuje jídla a funkce foto rozpoznávání slouží jako doplněk, nikoli jako plná náhrada manuálního sběru dat~\cite{li2024evaluating,aburub2025foodScanning}.
+Pro návrh aplikace v~této diplomové práci z~toho vyplývají tři závěry.
+Inovace by měla cílit na konkrétní slabá místa stávajících řešení, zejména na uživatelskou zátěž zadávání a lokalizaci databáze.
+Zvýšení míry automatizace pomocí umělé inteligence je slibnou cestou, vyžaduje však transparentní komunikaci nejistoty výstupu vůči uživateli.
+Lokální kontext a kvalita databáze mohou být v~českém prostředí stejně důležité jako samotná technická vyspělost modelu rozpoznávání.
+Tyto závěry korespondují s~kvantitativní analýzou Zečević a~kol., podle níž se nejčastější stížnosti uživatelů týkají úplnosti databáze, technické stability a transparentnosti účtování, nikoli technické přesnosti rozpoznávání~\cite{zecevic2021userPerspectives}.
 
 \section{Uživatelská studie}
 \label{sec:uzivatelskaStudie}
