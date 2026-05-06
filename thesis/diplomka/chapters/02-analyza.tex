@@ -6,7 +6,7 @@
 
 Obezita a nadváha patří mezi klíčové determinanty morbidity a mortality v rozvinutých i rozvojových zemích.
 Dlouhodobě zvýšená tělesná hmotnost je spojena se zvýšeným rizikem kardiovaskulárních onemocnění, diabetu 2.~typu, některých nádorových onemocnění a zhoršenou kvalitou života.
-Epidemiologická data ukazují, že Česká republika patří v~rámci Evropské unie k~zemím s~nejvyšším podílem osob s~nadváhou a obezitou; konkrétní podíl byl uveden v~kapitole~\ref{ch:uvod}~\cite{evropskaMapaObezity2019}.
+Epidemiologická data Eurostatu (zjišťování EU-SILC, referenční rok 2022) ukazují, že Česká republika patří v~rámci Evropské unie k~zemím s~vyšším podílem obézních dospělých; konkrétní hodnoty byly uvedeny v~kapitole~\ref{ch:uvod}~\cite{eurostatBmi2022}.
 Tato data podtrhují potřebu účinných strategií prevence a léčby.
 
 \subsection{Index tělesné hmotnosti a jeho interpretace}
@@ -185,7 +185,7 @@ Sacharidy (jednoduché cukry, škrob, vláknina) jsou primárním zdrojem energi
 Tuky představují koncentrovaný zdroj energie a jsou nezbytné pro vstřebávání lipofilních vitamínů; významnou roli hraje kvalitativní složení, neboť vyšší podíl nenasycených mastných kyselin je spojován s~příznivým vlivem na kardiovaskulární zdraví~\cite{venn2020macronutrients}.
 Bílkoviny jsou základním stavebním materiálem tkání a hormonů, přičemž jejich dostatečný příjem je klíčový zejména pro udržení svalové hmoty při redukci tělesné hmotnosti~\cite{venn2020macronutrients}.
 
-Z~praktického hlediska je vedle celkového energetického příjmu důležitá i kvalita jednotlivých makroživin a dlouhodobá udržitelnost stravovacího režimu, protože různé dietní přístupy mohou vést ke srovnatelným změnám hmotnosti, pokud je zachován celkový energetický deficit~\cite{venn2020macronutrients}.
+Z~praktického hlediska je vedle celkového energetického příjmu důležitá i kvalita jednotlivých makroživin a dlouhodobá udržitelnost stravovacího režimu, protože různé dietní přístupy mohou vést ke srovnatelným změnám hmotnosti, pokud je zachován celkový energetický deficit~\cite{theodorakis2025humanEnergyBalance,drenowatz2025integrating}.
 
 \subsection{Mikroživiny}
 \label{subsec:mikrozivny}
@@ -215,7 +215,7 @@ Tatáž rešerše upozorňuje, že většina takto trénovaných systémů zůst
 Liu a~kol. tento závěr kvantifikují i na novější transformerové architektuře CBiAFormer, jejíž přesnost klesá z~92,40~\% na západním datasetu ETHZ Food-101 na 72,92~\% na smíšeném ISIA Food-200, což ilustruje obecnější obtíž specializovaných modelů zobecnit napříč kuchyněmi~\cite{liu2025deepLearning}.
 
 Po roce 2022 nastupuje v~oboru třetí vlna v~podobě multimodálních velkých jazykových modelů, které dokáží v~jediném volání zpracovat obraz, text i hlasový přepis a vrátit strukturovaný odhad nutričních hodnot bez nutnosti vlastního trénování na potravinovém datasetu~\cite{wang2026visionLanguageFood,fridolfsson2025llmNutrition}.
-Recentní studie z~let 2025 a 2026 ukazují, že tyto modely při vhodném prompt engineeringu dosahují srovnatelné nebo lepší přesnosti odhadu kalorické hodnoty než dříve nasazované specializované sítě~\cite{hua2025nutribench,coburn2025multimodalNutrition}.
+Recentní studie a preprinty z~let 2025 a 2026 ukazují, že tyto modely při vhodném prompt engineeringu dosahují srovnatelné nebo lepší přesnosti odhadu kalorické hodnoty než dříve nasazované specializované sítě~\cite{hua2025nutribench,coburn2025multimodalNutrition}.
 Tento posun zároveň přesouvá těžiště přesnosti z~architektury a tréninkových dat směrem k~designu promptu a postprocessingu odpovědi modelu, čemuž je v~rámci této práce věnována experimentální validace popsaná v~kapitole~\ref{ch:testovani}~\cite{ase2025structuredPrompts}.
 
 Pro tuto práci jsou reprezentativní zejména dvě aplikace, které pokrývají globální i lokální kontext.

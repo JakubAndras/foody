@@ -70,18 +70,18 @@
 \node[extInactive, below=of openai] (gemini) {Google Gemini\\\scriptsize\itshape (alternativní)};
 \node[ext, below=of gemini] (off) {Open Food Facts\\\scriptsize Product API};
 
-% Šipky: mobilní klient ↔ SQLite (start zespodu klienta, popisek vpravo)
-\draw[arr, <->] (client.south -| sqlite.north) -- (sqlite.north)
-	node[pos=0.5, right=1mm, font=\scriptsize\sffamily] {DAO (SQL)};
+% Šipky: mobilní klient ↔ SQLite (start zespodu klienta)
+\draw[arr, <->] (client.south -| sqlite.north) -- (sqlite.north);
 
-% Šipky: vrstva služeb / sítě → externí API (sběrnice ven z klienta)
+% Šipky: vrstva služeb / sítě ↔ externí API (sběrnice ven z klienta)
 \coordinate (busTop) at ($(client.east)+(6mm,0)$);
 \coordinate (busOpenai) at (busTop |- openai.west);
 \coordinate (busGemini) at (busTop |- gemini.west);
 \coordinate (busOff)    at (busTop |- off.west);
 
-\draw[arr] (svc.east) -- (svc.east -| busTop) -- (busOpenai) -- (openai.west);
-\draw[arrInactive] (svc.east) -- (svc.east -| busTop) -- (busGemini) -- (gemini.west);
-\draw[arr] (svc.east) -- (svc.east -| busTop) -- (busOff)    -- (off.west);
+\draw[arr, <-] (client.east |- gemini.west) -- (busTop |- gemini.west);
+\draw[arr] (busTop |- gemini.west) -- (busOpenai) -- (openai.west);
+\draw[arrInactive] (busTop |- gemini.west) -- (busGemini) -- (gemini.west);
+\draw[arr] (busTop |- gemini.west) -- (busOff)    -- (off.west);
 
 \end{tikzpicture}

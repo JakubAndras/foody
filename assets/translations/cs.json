@@ -677,6 +677,7 @@
   "error_ai_exercise_no_result": "Analýza cvičení nevrátila platný výsledek.",
   "error_ai_exercise_missing": "V analýze cvičení chybí povinná pole.",
   "error_ai_exercise_low_confidence": "Výsledek cvičení s nízkou spolehlivostí. Zkontrolujte prosím hodnoty.",
+  "error_ai_input_rejected": "Váš vstup nelze zpracovat. Zkuste prosím popsat jídlo jiným způsobem.",
   "error_barcode_unsupported": "Nepodporovaný formát čárového kódu.",
   "error_barcode_not_found": "Produkt nebyl nalezen v Open Food Facts.",
   "error_barcode_no_name": "Data produktu neobsahují použitelný název.",

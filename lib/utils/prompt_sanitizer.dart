@@ -3,14 +3,16 @@ import 'package:flutter/foundation.dart';
 import 'package:diplomka/network/openai_rest_client.dart';
 import 'package:diplomka/utils/app_limits.dart';
 
-class PromptSanitizer {
-  /// Max character limits per input type (delegates to AppLimits as single source of truth)
-  static const int maxQueryLength = AppLimits.aiQueryMaxLength;
-  static const int maxDescriptionLength = AppLimits.aiDescriptionMaxLength;
-  static const int maxDietPreferencesLength = AppLimits.aiDietPreferencesMaxLength;
+/// Three-state result of regex pattern classification.
+/// - [clean]: no suspicious patterns detected
+/// - [ambiguous]: pattern could be a false positive (escalate to LLM pre-screen)
+/// - [explicitAttack]: pattern is unambiguously adversarial (hard reject)
+enum InjectionClassification { clean, ambiguous, explicitAttack }
 
-  /// Sanitize user input: trim, truncate to maxLength, strip control characters
-  static String sanitize(String input, {int maxLength = maxDescriptionLength}) {
+class PromptSanitizer {
+  /// Sanitize user input: trim, truncate to AppLimits.aiInputMaxLength, strip control characters
+  static String sanitize(String input) {
+    const int maxLength = AppLimits.aiInputMaxLength;
     String cleaned = input.trim();
     // Remove control characters (except newline, tab) that could confuse tokenization
     cleaned = cleaned.replaceAll(RegExp(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]'), '');
@@ -32,18 +34,36 @@ class PromptSanitizer {
     return '<user_input>$text</user_input>';
   }
 
-  /// Local regex-based pre-screening for obvious injection patterns.
-  /// Returns true if the input looks suspicious.
-  static bool containsSuspiciousPatterns(String input) {
-    final patterns = [
+  /// Classify user input against known injection patterns.
+  ///
+  /// Two-tier regex screening:
+  /// - Tier 1 (explicitAttack): unambiguously adversarial phrases that no
+  ///   legitimate food/exercise description would ever contain.
+  /// - Tier 2 (ambiguous): patterns that could theoretically appear in
+  ///   edge-case voice transcriptions or meta-queries about the app itself.
+  /// - clean: no match.
+  ///
+  /// Tier 1 is checked first; an explicit match short-circuits.
+  static InjectionClassification classifyInput(String input) {
+    final explicitPatterns = [
       RegExp(r'ignore\s+(all\s+)?(previous|prior|above)\s+(instructions?|prompts?|rules?)', caseSensitive: false),
+      RegExp(r'(disregard|forget|override)\s+(your|the|all)\s+(instructions?|rules?|constraints?)', caseSensitive: false),
+      RegExp(r'(output|print|reveal|show)\s+(your|the)\s+(system|initial|original)\s+(prompt|instructions?|message)', caseSensitive: false),
+      RegExp(r'do\s+not\s+respond\s+in\s+json', caseSensitive: false),
+    ];
+    if (explicitPatterns.any((p) => p.hasMatch(input))) {
+      return InjectionClassification.explicitAttack;
+    }
+
+    final ambiguousPatterns = [
       RegExp(r'(you\s+are|act\s+as|pretend\s+to\s+be|roleplay\s+as)\s+', caseSensitive: false),
       RegExp(r'(system\s*prompt|system\s*message|developer\s*message)', caseSensitive: false),
-      RegExp(r'(disregard|forget|override)\s+(your|the|all)\s+(instructions?|rules?|constraints?)', caseSensitive: false),
-      RegExp(r'do\s+not\s+respond\s+in\s+json', caseSensitive: false),
-      RegExp(r'(output|print|reveal|show)\s+(your|the)\s+(system|initial|original)\s+(prompt|instructions?|message)', caseSensitive: false),
     ];
-    return patterns.any((p) => p.hasMatch(input));
+    if (ambiguousPatterns.any((p) => p.hasMatch(input))) {
+      return InjectionClassification.ambiguous;
+    }
+
+    return InjectionClassification.clean;
   }
 
   /// Anti-injection directive to append to system prompts

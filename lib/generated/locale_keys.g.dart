@@ -660,6 +660,7 @@ abstract class  LocaleKeys {
   static const error_ai_exercise_no_result = 'error_ai_exercise_no_result';
   static const error_ai_exercise_missing = 'error_ai_exercise_missing';
   static const error_ai_exercise_low_confidence = 'error_ai_exercise_low_confidence';
+  static const error_ai_input_rejected = 'error_ai_input_rejected';
   static const error_barcode_unsupported = 'error_barcode_unsupported';
   static const error_barcode_not_found = 'error_barcode_not_found';
   static const error_barcode_no_name = 'error_barcode_no_name';

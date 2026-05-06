@@ -32,10 +32,26 @@ class AiPipelineService extends GetxService {
     String? modality,
   }) async {
     try {
-      final sanitizedDescription = description != null ? PromptSanitizer.sanitize(description, maxLength: PromptSanitizer.maxDescriptionLength) : null;
-      if (sanitizedDescription != null && PromptSanitizer.containsSuspiciousPatterns(sanitizedDescription)) {
-        print('[AiPipeline] INJECTION DETECTED in meal description: "${sanitizedDescription.substring(0, sanitizedDescription.length.clamp(0, 80))}..."');
+      final sanitizedDescription = description != null ? PromptSanitizer.sanitize(description) : null;
+
+      if (sanitizedDescription != null) {
+        final classification = PromptSanitizer.classifyInput(sanitizedDescription);
+        if (classification == InjectionClassification.explicitAttack) {
+          print('[AiPipeline] EXPLICIT INJECTION REJECTED in meal description: "${sanitizedDescription.substring(0, sanitizedDescription.length.clamp(0, 80))}..."');
+          _logMealAttempt(modality: modality, status: AiAttemptStatus.injectionRejected, errorMessage: 'explicit_attack');
+          return AiAnalysisResult.failure(message: tr(LocaleKeys.error_ai_input_rejected));
+        }
+        if (classification == InjectionClassification.ambiguous) {
+          print('[AiPipeline] AMBIGUOUS PATTERN — LLM pre-screening meal description');
+          final isInjection = await PromptSanitizer.preScreenWithLlm(sanitizedDescription);
+          if (isInjection) {
+            print('[AiPipeline] LLM PRE-SCREEN REJECTED meal description');
+            _logMealAttempt(modality: modality, status: AiAttemptStatus.injectionRejected, errorMessage: 'llm_prescreen_rejected');
+            return AiAnalysisResult.failure(message: tr(LocaleKeys.error_ai_input_rejected));
+          }
+        }
       }
+
       final AiService service = Get.isRegistered<AiService>() ? Get.find<AiService>() : OpenAiService();
       final mealUserAttributes = _buildMealUserAttributes();
       final response = await service.generateResponse(
@@ -112,10 +128,24 @@ class AiPipelineService extends GetxService {
   Future<AiExerciseAnalysisResult> analyzeExercise({
     required String description,
   }) async {
-    final trimmedDescription = PromptSanitizer.sanitize(description, maxLength: PromptSanitizer.maxDescriptionLength);
-    if (PromptSanitizer.containsSuspiciousPatterns(trimmedDescription)) {
-      print('[AiPipeline] INJECTION DETECTED in exercise description: "${trimmedDescription.substring(0, trimmedDescription.length.clamp(0, 80))}..."');
+    final trimmedDescription = PromptSanitizer.sanitize(description);
+
+    final classification = PromptSanitizer.classifyInput(trimmedDescription);
+    if (classification == InjectionClassification.explicitAttack) {
+      print('[AiPipeline] EXPLICIT INJECTION REJECTED in exercise description: "${trimmedDescription.substring(0, trimmedDescription.length.clamp(0, 80))}..."');
+      _logExerciseAttempt(status: AiAttemptStatus.injectionRejected, errorMessage: 'explicit_attack');
+      return AiExerciseAnalysisResult.failure(message: tr(LocaleKeys.error_ai_input_rejected));
     }
+    if (classification == InjectionClassification.ambiguous) {
+      print('[AiPipeline] AMBIGUOUS PATTERN — LLM pre-screening exercise description');
+      final isInjection = await PromptSanitizer.preScreenWithLlm(trimmedDescription);
+      if (isInjection) {
+        print('[AiPipeline] LLM PRE-SCREEN REJECTED exercise description');
+        _logExerciseAttempt(status: AiAttemptStatus.injectionRejected, errorMessage: 'llm_prescreen_rejected');
+        return AiExerciseAnalysisResult.failure(message: tr(LocaleKeys.error_ai_input_rejected));
+      }
+    }
+
     if (trimmedDescription.isEmpty) {
       return AiExerciseAnalysisResult.failure(
         message: tr(LocaleKeys.error_ai_exercise_empty),
@@ -283,9 +313,10 @@ class AiPipelineService extends GetxService {
     final rawDietPreferences = session.customDietPreferences.value?.trim();
     String? customDietPreferences;
     if (rawDietPreferences != null && rawDietPreferences.isNotEmpty) {
-      customDietPreferences = PromptSanitizer.sanitize(rawDietPreferences, maxLength: PromptSanitizer.maxDietPreferencesLength);
-      if (PromptSanitizer.containsSuspiciousPatterns(customDietPreferences)) {
-        print('[AiPipeline] INJECTION DETECTED in goals diet preferences: "${customDietPreferences.substring(0, customDietPreferences.length.clamp(0, 80))}..."');
+      customDietPreferences = PromptSanitizer.sanitize(rawDietPreferences);
+      final classification = PromptSanitizer.classifyInput(customDietPreferences);
+      if (classification != InjectionClassification.clean) {
+        print('[AiPipeline] Suspicious pattern in goals diet preferences (${classification.name}): "${customDietPreferences.substring(0, customDietPreferences.length.clamp(0, 80))}..."');
       }
       customDietPreferences = PromptSanitizer.wrapUserInput(customDietPreferences);
     }
@@ -361,9 +392,10 @@ class AiPipelineService extends GetxService {
     final rawPreferences = session.customDietPreferences.value?.trim();
     String? customPreferences;
     if (rawPreferences != null && rawPreferences.isNotEmpty) {
-      customPreferences = PromptSanitizer.sanitize(rawPreferences, maxLength: PromptSanitizer.maxDietPreferencesLength);
-      if (PromptSanitizer.containsSuspiciousPatterns(customPreferences)) {
-        print('[AiPipeline] INJECTION DETECTED in meal diet preferences: "${customPreferences.substring(0, customPreferences.length.clamp(0, 80))}..."');
+      customPreferences = PromptSanitizer.sanitize(rawPreferences);
+      final classification = PromptSanitizer.classifyInput(customPreferences);
+      if (classification != InjectionClassification.clean) {
+        print('[AiPipeline] Suspicious pattern in meal diet preferences (${classification.name}): "${customPreferences.substring(0, customPreferences.length.clamp(0, 80))}..."');
       }
       customPreferences = PromptSanitizer.wrapUserInput(customPreferences);
     }

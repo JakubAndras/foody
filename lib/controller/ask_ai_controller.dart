@@ -29,15 +29,30 @@ class AskAiController extends GetxController {
   static const int _detailThresholdDays = 14;
 
   Future<AskAiQueryResponse?> submitQuery(String query) async {
-    final trimmed = PromptSanitizer.sanitize(query, maxLength: PromptSanitizer.maxQueryLength);
+    final trimmed = PromptSanitizer.sanitize(query);
     if (trimmed.isEmpty) return null;
-    if (PromptSanitizer.containsSuspiciousPatterns(trimmed)) {
-      print('[AskAi] INJECTION DETECTED in query: "${trimmed.substring(0, trimmed.length.clamp(0, 80))}..."');
-    }
 
     isLoading.value = true;
     errorMessage.value = null;
     response.value = null;
+
+    final classification = PromptSanitizer.classifyInput(trimmed);
+    if (classification == InjectionClassification.explicitAttack) {
+      print('[AskAi] EXPLICIT INJECTION REJECTED in query: "${trimmed.substring(0, trimmed.length.clamp(0, 80))}..."');
+      errorMessage.value = tr(LocaleKeys.error_ai_input_rejected);
+      isLoading.value = false;
+      return null;
+    }
+    if (classification == InjectionClassification.ambiguous) {
+      print('[AskAi] AMBIGUOUS PATTERN — LLM pre-screening query');
+      final isInjection = await PromptSanitizer.preScreenWithLlm(trimmed);
+      if (isInjection) {
+        print('[AskAi] LLM PRE-SCREEN REJECTED query');
+        errorMessage.value = tr(LocaleKeys.error_ai_input_rejected);
+        isLoading.value = false;
+        return null;
+      }
+    }
 
     try {
       final records = await DayRecordRepository.to.getAllDayRecords();

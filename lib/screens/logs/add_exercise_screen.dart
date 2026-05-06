@@ -137,7 +137,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
                   controller: _nameController,
                   textCapitalization: TextCapitalization.sentences,
                   cursorColor: AppColors.onPrimary,
-                  maxLength: AppLimits.aiDescriptionMaxLength,
+                  maxLength: AppLimits.aiInputMaxLength,
                   style: AppTextStyles.h2.copyWith(color: AppColors.onPrimary),
                   decoration: InputDecoration(
                     hintText: tr(LocaleKeys.common_name),

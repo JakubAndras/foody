@@ -1,5 +1,6 @@
 % ER diagram databázového schématu aplikace Foody.
-% 9 entit ve dvou skupinách: transakční (vlevo) a šablonové (vpravo).
+% Zobrazuje pouze transakční entity (DayRecord, Meal, Ingredient, Exercise, WeightEntry).
+% Šablonové (kmenové) entity jsou popsány v textu kapitoly v podsekci o systému šablon.
 \begin{tikzpicture}[
 	font=\scriptsize\sffamily,
 	entity/.style={
@@ -21,10 +22,8 @@
 		inner sep=2pt,
 		outer sep=0pt,
 	},
-	grouplbl/.style={font=\small\sffamily\bfseries, anchor=north, outer sep=0pt},
 ]
 
-% =================== TRANSAKČNÍ ENTITY (vlevo) ===================
 \node[entity] (day) {
 	\textbf{DayRecord}
 	\nodepart{two}
@@ -72,74 +71,16 @@
 	\texttt{photoPath}
 };
 
-% Vztahy v transakční skupině -- kardinality posunuté dovnitř lajny (pos 0.25/0.75),
+% Vztahy -- kardinality posunuté dovnitř lajny (pos 0.25/0.75),
 % aby nezasahovaly do hlaviček entit.
 \draw[rel] (day.south west) -- (meal.north)
 	node[card, pos=0.25] {1}
-	node[card, pos=0.75] {N};
+	node[card, pos=0.75] {0..N};
 \draw[rel] (day.south east) -- (exercise.north)
 	node[card, pos=0.25] {1}
-	node[card, pos=0.75] {N};
+	node[card, pos=0.75] {0..N};
 \draw[rel] (meal.south) -- (ingredient.north)
 	node[card, pos=0.25] {1}
-	node[card, pos=0.75] {N};
-
-% Popisek skupiny
-\node[grouplbl, above=4mm of day] (lblTrans) {Transakční entity};
-
-% =================== ŠABLONOVÉ ENTITY (vpravo) ===================
-\node[entity, right=24mm of day] (mealT) {
-	\textbf{MealTemplate}
-	\nodepart{two}
-	\textit{PK} \texttt{id}\\
-	\texttt{name}, \texttt{normalizedName} (U)\\
-	\texttt{photoPath}, \texttt{isFavorite}\\
-	\texttt{lastUsedAt}, \texttt{usageCount}
-};
-
-\node[entity, below=16mm of mealT] (mealTI) {
-	\textbf{MealTemplateIngredient}
-	\nodepart{two}
-	\textit{PK} \texttt{id}\\
-	\textit{FK} \texttt{templateId}\\
-	\texttt{name}, \texttt{weight}\\
-	\texttt{calories}, \texttt{proteins}\\
-	\texttt{carbs}, \texttt{fats}
-};
-
-\node[entity, below=16mm of mealTI] (ingrT) {
-	\textbf{IngredientTemplate}
-	\nodepart{two}
-	\textit{PK} \texttt{id}\\
-	\texttt{name}, \texttt{normalizedName} (U)\\
-	\texttt{weight}, \texttt{amount}, makroživiny\\
-	\texttt{usageCount}
-};
-
-\node[entity, below=16mm of ingrT] (exT) {
-	\textbf{ExerciseTemplate}
-	\nodepart{two}
-	\textit{PK} \texttt{id}\\
-	\texttt{name}, \texttt{normalizedName} (U)\\
-	\texttt{durationMinutes}\\
-	\texttt{caloriesBurned}, \texttt{usageCount}
-};
-
-% Vztah v šablonové skupině
-\draw[rel] (mealT.south) -- (mealTI.north)
-	node[card, pos=0.25] {1}
-	node[card, pos=0.75] {N};
-
-% Popisek skupiny
-\node[grouplbl, above=4mm of mealT] {Šablonové entity};
-
-% Legenda úplně dole (kotvená pod ExerciseTemplate, která je nejnižším bodem diagramu)
-\coordinate (legendAnchor) at ($(exT.south east)+(0,-10mm)$);
-\node[draw, dashed, rounded corners=1pt, inner sep=2mm,
-      anchor=north east, text width=150mm, align=left,
-      font=\scriptsize\sffamily] (legend) at (legendAnchor) {
-	\textbf{Legenda:} \textit{PK} -- primární klíč; \textit{FK} -- cizí klíč; (U) -- unikátní index;
-	všechny vazby \textit{1:N} s~kaskádovým mazáním \mbox{(\texttt{ON DELETE CASCADE})}.
-};
+	node[card, pos=0.75] {0..N};
 
 \end{tikzpicture}

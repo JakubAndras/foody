@@ -677,6 +677,7 @@
   "error_ai_exercise_no_result": "Exercise analysis failed to return a valid result.",
   "error_ai_exercise_missing": "Exercise analysis is missing required fields.",
   "error_ai_exercise_low_confidence": "Low confidence exercise result. Please review values.",
+  "error_ai_input_rejected": "Your input could not be processed. Please try describing your meal differently.",
   "error_barcode_unsupported": "Unsupported barcode format.",
   "error_barcode_not_found": "Product was not found in Open Food Facts.",
   "error_barcode_no_name": "Product payload is missing a usable name.",

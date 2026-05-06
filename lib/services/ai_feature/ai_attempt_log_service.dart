@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 
 enum AiAttemptKind { meal, exercise, goals }
 
-enum AiAttemptStatus { success, lowConfidence, invalidResponse, error }
+enum AiAttemptStatus { success, lowConfidence, invalidResponse, error, injectionRejected }
 
 class AiAttemptLogService extends GetxService {
   static AiAttemptLogService get to => Get.find();
@@ -73,6 +73,8 @@ class AiAttemptLogService extends GetxService {
         return 'invalid_response';
       case AiAttemptStatus.error:
         return 'error';
+      case AiAttemptStatus.injectionRejected:
+        return 'injection_rejected';
     }
   }
 

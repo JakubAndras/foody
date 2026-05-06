@@ -22,8 +22,6 @@ class AppLimits {
   static const double weightMinKg = 20;
   static const double weightMaxKg = 500;
 
-  // AI input limits
-  static const int aiQueryMaxLength = 500;
-  static const int aiDescriptionMaxLength = 200;
-  static const int aiDietPreferencesMaxLength = 300;
+  // AI input limits — single uniform cap for any user-supplied text reaching the AI pipeline
+  static const int aiInputMaxLength = 500;
 }

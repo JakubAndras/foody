@@ -207,8 +207,8 @@ Závěrečná podsekce~\ref{subsec:repozitare} popisuje repozitářovou vrstvu, 
 \label{subsec:schemaDb}
 
 V~rámci datového modelu aplikace Foody je definováno celkem devět entit, které lze rozdělit do dvou logických skupin podle účelu uložených dat.
-Transakční skupinu tvoří pět entit zachycujících konkrétní časově vázané záznamy uživatele (denní záznam, jídlo, ingredience, cvičení, hmotnost), zatímco šablonová skupina sdružuje čtyři entity pro opakovaně používané položky, jejichž role je podrobně rozebrána v~podsekci~\ref{subsec:sablony}.
-Přehled všech entit, jejich klíčových atributů a vztahu k~nadřazené entitě je uveden v~tabulce~\ref{tab:entity}, vizuální znázornění schématu s~naznačenými cizími klíči a kardinalitami je zachyceno na obrázku~\ref{fig:erDiagram}.
+Transakční skupinu tvoří pět entit zachycujících konkrétní časově vázané záznamy uživatele (denní záznam, jídlo, ingredience, cvičení, hmotnost), zatímco kmenovou skupinu sdružují čtyři entity tvořící osobní knihovnu opakovaně používaných jídel, ingrediencí a cvičení daného uživatele, dále v~textu označované jako šablony, jejichž struktura a role jsou podrobně rozebrány v~samostatné podsekci~\ref{subsec:sablony}.
+Přehled všech entit, jejich klíčových atributů a vztahu k~nadřazené entitě je uveden v~tabulce~\ref{tab:entity}, vizuální znázornění schématu transakční skupiny s~naznačenými cizími klíči a kardinalitami je zachyceno na obrázku~\ref{fig:erDiagram}; kmenové entity jsou z~důvodu přehlednosti v~obrázku vynechány, neboť netvoří relační vazby s~transakční skupinou a jejich vzájemné vztahy jsou popsány v~odpovídající podsekci.
 
 \begin{table}[ht]
 	\centering
@@ -239,7 +239,7 @@ Přehled všech entit, jejich klíčových atributů a vztahu k~nadřazené enti
 	\label{fig:erDiagram}
 \end{figure}
 
-Transakční entity tvoří dvouúrovňovou hierarchii s~\texttt{DayRecord} v~kořeni: \texttt{Meal} je k~dennímu záznamu připojeno vztahem 1:N, \texttt{Ingredient} je obdobně připojena k~\texttt{Meal}, a \texttt{Exercise} tvoří paralelní podstrom přímo pod \texttt{DayRecord}.
+Transakční entity tvoří dvouúrovňovou hierarchii s~\texttt{DayRecord} v~kořeni: \texttt{Meal} je k~dennímu záznamu připojeno vztahem 1:0..N, \texttt{Ingredient} je obdobně připojena k~\texttt{Meal}, a \texttt{Exercise} tvoří paralelní podstrom přímo pod \texttt{DayRecord}.
 Záznamy hmotnosti jsou modelovány jako samostatná entita bez vazby na denní záznam, což odpovídá jejich povaze nezávislého časového zápisu.
 Veškeré cizí klíče jsou deklarovány s~pravidlem kaskádového mazání, které zajišťuje referenční integritu na úrovni SQLite a eliminuje riziko osiřelých záznamů při uživatelském mazání denního záznamu nebo přechodu mezi profily.
 
@@ -255,10 +255,17 @@ Sloupec \texttt{normalizedName} ve všech třech šablonových entitách je rovn
 \subsection{Systém šablon pro opakovaně používané položky}
 \label{subsec:sablony}
 
-Jednou z~opakujících se úloh při dlouhodobém sledování stravy je opětovný zápis identických nebo téměř identických položek, ať už se jedná o~pravidelně konzumovaná jídla, často používané ingredience nebo opakované cvičební aktivity.
-Pro adresování této potřeby, vyplývající z~funkčních požadavků FR-17 (oblíbené položky), FR-18 (duplikace dřívějších záznamů) a FR-19 (našeptávání názvů z~historie), zavádí datový model aplikace Foody samostatný subsystém šablon.
-Subsystém je tvořen třemi šablonovými entitami pro jídla, ingredience a cvičení, které paralelně k~transakčním entitám uchovávají kanonické verze opakovaně používaných položek.
+Stěžejním rysem dlouhodobého sledování stravy je skutečnost, že se v~záznamech každého uživatele přirozeně utváří relativně stabilní okruh pravidelně konzumovaných jídel, opakovaně používaných ingrediencí a typických cvičebních aktivit.
+Pro zachycení této opakovatelnosti zavádí datový model aplikace Foody samostatný subsystém šablon, jehož primárním účelem je sloužit jako osobní knihovna uživatele uchovávající kanonické verze jeho opakovaně používaných položek.
+Tato knihovna je technicky tvořena třemi šablonovými entitami pro jídla, ingredience a cvičení, které jsou udržovány paralelně k~transakčním entitám a které si uživatel přirozeně buduje samotným používáním aplikace, bez nutnosti samostatné správy.
+Na této knihovně pak stojí implementace funkčních požadavků FR-17 (oblíbené položky), FR-18 (duplikace dřívějších záznamů) a FR-19 (našeptávání názvů z~historie).
 Každá šablona slouží jako zdroj dat při vytváření nového transakčního záznamu, aniž by byla s~tímto záznamem trvale relačně vázána, což umožňuje editovat pozdější výskyt bez vlivu na šablonu samotnou.
+
+Vědomá absence cizího klíče mezi transakčními a kmenovými entitami implementuje vzor uložení samostatné kopie hodnot v~okamžiku zápisu: při použití šablony jsou její atributy zkopírovány do nově vytvářeného transakčního záznamu, ale žádný odkaz mezi oběma řádky se trvale neukládá.
+Tento návrh přináší tři vlastnosti, na kterých datový model stojí.
+Pozdější editace šablony nemění historické záznamy, takže oprava názvu nebo nutričních hodnot v~knihovně neovlivní čísla v~již uložených dnech.
+Smazání šablony nevyvolá kaskádové smazání transakčních záznamů, takže uživatel může kmenovou knihovnu pročistit bez rizika ztráty historie.
+A každý transakční záznam je samonosný v~tom smyslu, že obsahuje všechny hodnoty potřebné k~výpočtu denních součtů, aniž by jeho zobrazení vyžadovalo dohledání odpovídající šablony.
 
 Společným rysem všech tří šablonových entit je dvojice atributů \texttt{name} a \texttt{normalizedName}.
 Atribut \texttt{name} uchovává název v~podobě, ve které jej uživatel zapsal, včetně velkých písmen, diakritiky a případných mezer na okrajích, čímž je v~uživatelském rozhraní zachována původní vizuální podoba zápisu.
@@ -275,6 +282,11 @@ Specifickým prvkem entity \texttt{MealTemplate} je její vazba na podřízenou 
 Vazba je realizována cizím klíčem \texttt{templateId} s~pravidlem kaskádového mazání, čímž je odstranění šablony jídla doprovázeno odstraněním všech příslušných šablonových ingrediencí.
 Tento návrh umožňuje uložit u~šablony jídla nejen jeho název, ale i kompletní rozpis ingrediencí včetně hmotností a nutričních hodnot, takže opětovné použití šablony obnovuje celé jídlo včetně jeho podrobností bez nutnosti dotazu na model umělé inteligence nebo manuálního zápisu.
 U~šablon ingrediencí a cvičení analogická vazba na podřízené entity neexistuje, neboť tyto položky jsou modelovány jako atomární bez vnitřní hierarchie.
+
+V~datovém modelu jsou tak vědomě přítomny dvě podobně pojmenované, ale odlišné entity reprezentující ingredienci na úrovni kmenových dat.
+Entita \texttt{MealTemplateIngredient} představuje pevnou složku konkrétní šablony jídla a existuje výhradně v~kontextu mateřské \texttt{MealTemplate}, jejíž rozpis nutričních hodnot zachycuje v~podobě platné v~okamžiku uložení šablony.
+Entita \texttt{IngredientTemplate} oproti tomu reprezentuje samostatnou položku knihovny ingrediencí napříč celou aplikací a slouží zejména k~našeptávání při ručním přidání ingredience k~libovolnému jídlu.
+Obě entity jsou v~datovém modelu nutné, protože plní rozdílnou roli: první definuje skladbu konkrétní šablony, druhá udržuje globální seznam zaznamenaných ingrediencí pro vyhledávání a doplňování.
 
 Mechanismus naplňování šablon je realizován v~aplikační vrstvě v~okamžiku ukládání nového transakčního záznamu.
 Při uložení záznamu jídla je v~kontroleru denního záznamu vyvolána operace převzetí položky do šablon nad odpovídajícím repozitářem, která podle normalizovaného názvu vyhledá existující šablonu: pokud existuje, inkrementuje její \texttt{usageCount} a aktualizuje cestu k~fotografii, pokud neexistuje, založí nový záznam včetně vložení skladby ingrediencí.
@@ -543,17 +555,28 @@ Pro analýzu cvičení je validace doplněna o~kontrolu prázdného názvu, čí
 \subsection{Zabezpečení vstupu a ochrana proti prompt injection}
 \label{subsec:promptInjection}
 
-Vstup uživatele do pipeline pro umělou inteligenci představuje potenciální vektor útoku známý jako \emph{prompt injection}, kdy záměrně formulovaný vstup může změnit nebo přepsat původní systémové instrukce zaslané modelu.
+Vstup uživatele do pipeline pro umělou inteligenci představuje potenciální vektor útoku známý jako \emph{prompt injection}, kdy záměrně formulovaný vstup může změnit nebo přepsat původní systémové instrukce zaslané modelu~\cite{greshake2023indirect, owasp2025llm01}.
 Implementace adresuje toto riziko vícevrstvou ochranou v~rámci dedikovaného sanitizačního modulu (\texttt{PromptSanitizer}), který je volán před každým odesláním vstupu do pipeline.
 
-První vrstva provádí mechanické úpravy textu: odstranění bílých znaků na okrajích, odstranění řídících znaků a literálních značek vstupního delimitéru a oříznutí textu na maximální povolenou délku, která se pohybuje v~rozsahu 200 až 500~znaků v~závislosti na typu vstupu.
-Druhá vrstva tvoří předzkoušení textu pomocí regulárních výrazů proti šesti typickým vzorům naznačujícím pokus o~injekci, jako jsou instrukce typu \uv{ignore previous instructions} v~různých variantách nebo přepis systémové role.
+První vrstva (L1) provádí deterministické mechanické úpravy textu: odstranění bílých znaků na okrajích, odstranění řídících znaků a literálních značek vstupního delimitéru a oříznutí textu na maximální povolenou délku 500~znaků.
+Druhá vrstva (L2) provádí klasifikaci vstupu pomocí šesti regulárních výrazů a vrací jeden ze tří stavů: \emph{čistý}, \emph{ambivalentní} nebo \emph{explicitní útok}.
+Čtyři vzory jsou označeny jako \emph{explicitní útok} a zachycují fráze, které jsou jednoznačně adversariální (například \uv{ignore previous instructions}, \uv{disregard your instructions}, \uv{reveal the system prompt} nebo \uv{do not respond in json}); takový vstup je odmítnut okamžitě, bez dalšího volání modelu.
+Zbývající dva vzory jsou označeny jako \emph{ambivalentní} (například \uv{you are}, \uv{act as} nebo zmínky o~systémovém promptu); u~nich nelze vyloučit benigní výskyt v~přepisu hlasového vstupu nebo v~meta-dotazu na rozhraní Ask AI.
+Vstup, který nezachytí žádný ze vzorů, je klasifikován jako \emph{čistý} a postupuje dále bez dodatečných kontrol.
 
-Třetí, volitelnou vrstvou je takzvaný \emph{LLM-based pre-screening}, který v~případě podezřelého vstupu předá text menšímu modelu s~jediným úkolem ohodnotit, zda se jedná o~legitimní popis jídla nebo o~pokus o~injekci.
-Tato vrstva je aktivována pouze tehdy, pokud první dvě vrstvy zachytí slabé signály, a slouží jako finální kontrola před plným voláním hlavního modelu.
-Doplňkově obsahují všechny systémové prompty explicitní anti-injekční direktivu, která modelu zakazuje interpretovat obsah uživatelského bloku jako instrukce.
-Vícevrstvý přístup vychází z~obecné praxe v~oblasti zabezpečení aplikací postavených na velkých jazykových modelech, kde žádná jednotlivá vrstva neposkytuje úplnou ochranu, ale jejich kombinace významně snižuje pravděpodobnost úspěšného útoku.
-Schematické zobrazení tří vrstev a~jejich vzájemného uspořádání je uvedeno na obrázku~\ref{fig:promptInjection}.
+Pro ambivalentní vstupy je aktivována třetí vrstva (L3), takzvaný \emph{LLM-based pre-screening}, který předá text menšímu modelu (GPT-5.4-mini) s~jediným úkolem rozhodnout, zda se jedná o~legitimní popis nebo o~pokus o~injekci.
+Pokud LLM klasifikuje vstup jako útok, aplikace jej odmítne stejným způsobem jako u~explicitního vzoru; jinak vstup pokračuje do hlavního modelu.
+LLM pre-screening je navržen jako \emph{fail-open}: v~případě chyby sítě nebo nedostupnosti API je vstup považován za legitimní, čímž se předchází blokování uživatele kvůli přechodným technickým problémům.
+
+Nezávisle na výsledku klasifikace prochází každý legitimní vstup mířící do modelu závěrečnou transformací: obalením do XML delimitéru \texttt{<user\_input>} pro strukturální izolaci od systémových instrukcí a doplněním explicitní anti-injekční direktivy do systémového promptu, která modelu zakazuje interpretovat obsah uživatelského bloku jako instrukce.
+Tato direktiva tvoří průřezovou ochranu, která se uplatňuje vždy, a slouží jako poslední linie obrany pro případ, že by adversariální vstup obě předchozí vrstvy obešel.
+Vícevrstvý přístup vychází z~doporučení OWASP pro aplikace postavené na velkých jazykových modelech~\cite{owasp2025llm01} a z~empirických zjištění Liu et al.~\cite{liu2024formalizing}, podle nichž žádná jednotlivá vrstva neposkytuje úplnou ochranu, ale jejich kombinace významně snižuje pravděpodobnost úspěšného útoku.
+
+Detekce založená na regulárních výrazech má z~principu nenulovou míru jak falešně pozitivních, tak falešně negativních klasifikací~\cite{liu2024formalizing}; cílený útočník dokáže prosté vzory obejít obfuskací, překlepy nebo kódováním v~Unicode.
+V~kontextu této aplikace je toto riziko přijatelné pro úroveň \emph{explicitního útoku}, protože žádný legitimní popis jídla ani záznam cvičení v~přirozeném jazyce neobsahuje fráze typu \uv{ignore previous instructions} nebo \uv{reveal the system prompt}; očekávaná míra falešně pozitivních klasifikací u~reálných uživatelských vstupů je proto blízká nule.
+Falešně negativní případy (obfuskovaný útok, který obejde regex) jsou důvodem pro zařazení druhé úrovně klasifikace a LLM pre-screeningu pro ambivalentní vstupy a pro průřezovou anti-injekční direktivu, která modelu poskytuje sémantickou ochranu i tehdy, pokud regex selže.
+
+Schematické zobrazení vrstev L1--L3, dvou rozhodovacích bodů a~průřezové fáze \emph{prompt assembly} je uvedeno na obrázku~\ref{fig:promptInjection}.
 
 \begin{figure}[!ht]
 	\centering
@@ -571,7 +594,7 @@ V~projektu jsou pro tuto pipeline implementovány dvě konkrétní strategie, a~
 
 Jako výchozí poskytovatel pro analýzu jídel je v~aplikaci nastaven OpenAI, neboť poskytuje stabilní podporu strukturovaného JSON výstupu a multimodálního vstupu kombinujícího text a obraz.
 Gemini je integrován prostřednictvím OpenAI-kompatibilního koncového bodu, což umožňuje sdílet většinu kódu pro konstrukci promptu a parsing odpovědi.
-Pro hlavní analytické scénáře aplikace je používán model GPT-4o, zatímco pro detekci injekcí v~rámci pre-screeningu (viz sekce~\ref{subsec:promptInjection}) je nasazen menší model GPT-4o-mini z~důvodu nižší latence a nákladů.
+Pro hlavní analytické scénáře aplikace je používán model GPT-4o, zatímco pro detekci injekcí v~rámci pre-screeningu (viz sekce~\ref{subsec:promptInjection}) je nasazen menší model GPT-5.4-mini z~důvodu nižší latence a nákladů.
 
 Mimo pipeline pro analýzu jídel zůstávají další scénáře využívající jazykový model (analýza cvičení, výpočet nutričních cílů a~rozhraní Ask AI) v~aktuální implementaci přímo vázány na OpenAI a~neprocházejí přes provider-agnostickou abstrakci.
 Důvodem je odlišný formát promptů a~dosud neověřená kompatibilita modelu Gemini pro tyto specifické scénáře.

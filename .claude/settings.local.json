@@ -57,7 +57,27 @@
       "WebFetch(domain:books.google.com)",
       "WebFetch(domain:books.google.cz)",
       "WebFetch(domain:www.jmir.org)",
-      "WebFetch(domain:www.researchgate.net)"
+      "WebFetch(domain:www.researchgate.net)",
+      "WebFetch(domain:linkinghub.elsevier.com)",
+      "WebFetch(domain:www.sciencedirect.com)",
+      "WebFetch(domain:ieeexplore.ieee.org)",
+      "WebFetch(domain:academic.oup.com)",
+      "WebFetch(domain:formative.jmir.org)",
+      "WebFetch(domain:mhealth.jmir.org)",
+      "WebFetch(domain:www.evropavdatech.cz)",
+      "WebFetch(domain:www.myfitnesspal.com)",
+      "WebFetch(domain:www.kaloricketabulky.cz)",
+      "WebFetch(domain:ai.google.dev)",
+      "WebFetch(domain:cc.cz)",
+      "WebFetch(domain:pubmed.ncbi.nlm.nih.gov)",
+      "WebFetch(domain:openaccess.thecvf.com)",
+      "WebFetch(domain:ec.europa.eu)",
+      "WebFetch(domain:www.cambridge.org)",
+      "WebFetch(domain:openreview.net)",
+      "WebFetch(domain:paahjournal.com)",
+      "WebFetch(domain:dl.acm.org)",
+      "WebFetch(domain:www.tandfonline.com)",
+      "WebFetch(domain:www.ijimai.org)"
     ]
   }
 }
