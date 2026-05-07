@@ -4,21 +4,15 @@
 \section{Motivace}
 \label{sec:motivace}
 
-Udržování zdravého životního stylu a optimální tělesné kondice představuje klíčový aspekt kvality života.
-Tento význam je zdůrazněn nejen individuálními cíli, jako je zvýšení energetické pohody či osobní spokojenosti, ale také aktuálními zdravotními trendy populace.
-Podle dat Eurostatu z~roku 2022 (zjišťování EU-SILC) dosáhl podíl obézních dospělých (BMI~$\geq$~30) v~České republice hodnoty 17,4~\%, čímž ČR překračuje průměr EU\,27 (14,6~\%) téměř o~tři procentní body a řadí se mezi deset členských států s~nejvyšším výskytem obezity~\cite{eurostatBmi2022}.
-Vyšší podíl obézních vykazovaly pouze Malta (25,8~\%), Lotyšsko (22,8~\%), Maďarsko (21,8~\%), Estonsko (21,7~\%), Finsko (21,0~\%), Litva (20,3~\%), Irsko (19,4~\%), Dánsko (18,6~\%) a Polsko (18,4~\%).
+Obezita patří mezi nejvýznamnější rizikové faktory civilizačních onemocnění v~Evropě.
+Podle dat Eurostatu z~roku 2022 dosáhl podíl obézních dospělých v~České republice hodnoty 17,4~\%, čímž ČR překračuje průměr EU\,27 (14,6~\%) téměř o~tři procentní body a řadí se mezi deset členských států s~nejvyšším výskytem obezity~\cite{eurostatBmi2022}.
 
-Motivace k osvojování udržitelných stravovacích a pohybových návyků je proto naléhavá a různorodá, od prevence civilizačních chorob až po snahu o zlepšení celkové fyzické kondice a životní pohody.
-Dosažení těchto cílů však vyžaduje systematický a informovaný přístup, který přesahuje pouhé počáteční odhodlání a opírá se o vědecké poznatky o výživě, energetickém příjmu a výdeji, stejně jako o praktické nástroje pro monitorování a optimalizaci životního stylu.
-
-Základním principem regulace tělesné hmotnosti je energetická bilance.
-Tento koncept definuje vztah mezi kaloriemi přijatými ve stravě a energií, kterou tělo spotřebuje na svůj provoz a fyzickou aktivitu.
+Základním principem regulace tělesné hmotnosti je energetická bilance, tedy vztah mezi kaloriemi přijatými ve stravě a energií, kterou tělo spotřebuje na svůj provoz a fyzickou aktivitu.
 Ačkoliv je tato myšlenka ve své podstatě jednoduchá, její praktická aplikace naráží na řadu překážek.
-Mnoho uživatelů své úsilí vzdává, protože manuální evidence stravy je vnímána jako zdlouhavá a nepraktická pro každodenní použití.
-Bez systematického přehledu se uživatelé snadno uchylují k neefektivním dietním zkratkám, které nevedou k dlouhodobým výsledkům.
+Hlavní bariérou dlouhodobé udržitelnosti je manuální evidence stravy, která je v~každodenním kontextu vnímána jako zdlouhavá a nepraktická, jak vyplynulo i~z~provedeného uživatelského výzkumu (sekce~\ref{sec:uzivatelskaStudie}).
+Bez systematického přehledu se uživatelé snadno uchylují k~neefektivním dietním zkratkám, které nevedou k~dlouhodobým výsledkům.
 
-Mobilní aplikace se staly rozšířeným nástrojem, který dokáže uživatele provázet jejich snahou, poskytovat okamžitou zpětnou vazbu a uchovávat data potřebná pro kvalifikovaná rozhodnutí o jídelníčku a pohybové aktivitě.
+V~tomto kontextu představují mobilní aplikace přirozený nástroj pro záznam stravy a poskytování okamžité zpětné vazby v~každodenním kontextu, jejich dlouhodobá retence však zůstává nízká právě kvůli časové náročnosti manuálního záznamu.
 Souběžný rozvoj multimodálních jazykových modelů a metod počítačového vidění otevírá prostor pro automatizaci dosud manuálních úloh, jako je odhad složení jídla z~fotografie nebo z~přirozeně formulovaného popisu~\cite{wang2026visionLanguageFood}.
 
 \section{Cíle práce}
@@ -30,25 +24,15 @@ Hlavním cílem práce je proto navrhnout, implementovat a otestovat mobilní ap
 Pro naplnění hlavního cíle jsou stanoveny následující dílčí cíle:
 
 \begin{enumerate}
-	\item provést rešerši odborné literatury v oblasti digitálních nástrojů pro výživu a využití umělé inteligence v této doméně;
-	\item analyzovat existující řešení na trhu, identifikovat jejich silné a slabé stránky a vymezit prostor pro inovaci;
-	\item provést uživatelský výzkum (strukturované rozhovory) a z jeho zjištění odvodit funkční a nefunkční požadavky;
-	\item navrhnout softwarovou architekturu a uživatelské rozhraní, jejichž návaznost je doložena případy užití;
-	\item implementovat funkční prototyp aplikace pokrývající stanovené požadavky;
-	\item ověřit použitelnost a kvalitu výstupů aplikace prostřednictvím uživatelského testování s reálnými účastníky;
-	\item formulovat doporučení pro další rozvoj aplikace a její dlouhodobou validaci.
+	\item Provést rešerši odborné literatury v~oblasti digitálních nástrojů pro výživu a využití umělé inteligence v~této doméně.
+	\item Analyzovat existující řešení na trhu, identifikovat jejich silné a slabé stránky a vymezit prostor pro inovaci.
+	\item Provést uživatelský výzkum formou strukturovaných rozhovorů a z~jeho zjištění odvodit funkční a nefunkční požadavky.
+	\item Navrhnout softwarovou architekturu a uživatelské rozhraní, jejichž návaznost je doložena případy užití.
+	\item Implementovat funkční prototyp aplikace pokrývající stanovené požadavky.
+	\item Ověřit použitelnost a kvalitu výstupů aplikace prostřednictvím uživatelského testování s~reálnými účastníky.
+	\item Formulovat doporučení pro další rozvoj aplikace a její dlouhodobou validaci.
 \end{enumerate}
 
-Práce si neklade za cíl vyvíjet vlastní model počítačového vidění.
+Práce si neklade za cíl vyvíjet vlastní model umělé inteligence.
 Zaměřuje se na orchestraci existujících modelů třetích stran a jejich integraci do uživatelsky přijatelného produktu.
 
-\section{Struktura práce}
-\label{sec:struktura}
-
-Práce kombinuje rešerši odborné literatury, kvalitativní uživatelský výzkum formou strukturovaných rozhovorů se čtyřmi respondenty (anonymizovanými jako R1--R4 a~podrobně popsanými v~sekci~\ref{sec:uzivatelskaStudie}), návrh a~implementaci funkčního prototypu a~následné uživatelské testování se třemi participanty (anonymizovanými jako P1--P3 a~popsanými v~sekci~\ref{subsec:vyberParticipantu}) podle metody \emph{think aloud} doplněné o~standardizované dotazníky.
-Práce je členěna do šesti kapitol.
-Kapitola~\ref{ch:analyza} obsahuje rešerši odborných zdrojů, analýzu existujících aplikací pro sledování stravy a syntézu zjištění z uživatelských rozhovorů, ze kterých vyplývají funkční a nefunkční požadavky.
-Kapitola~\ref{ch:navrh} představuje návrh softwarové architektury, datového modelu a uživatelského rozhraní, včetně případů užití propojujících uživatelská zjištění s navrženým řešením.
-Kapitola~\ref{ch:implementace} popisuje implementaci aplikace, použité technologie a klíčová technická rozhodnutí.
-Kapitola~\ref{ch:testovani} dokumentuje metodiku a výsledky uživatelského testování, včetně dotazníků SUS a UEQ-S.
-Kapitola~\ref{ch:zaver} shrnuje dosažené výsledky vůči stanoveným cílům, identifikovaná omezení a možnosti dalšího rozvoje.

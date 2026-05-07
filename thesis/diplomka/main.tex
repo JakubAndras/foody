@@ -55,9 +55,9 @@
 	author = {Bc. Jakub Sebastian Andráš},
 	supervisor = {Ing. Ivo Malý, Ph.D.},
 	fieldofstudy-czech = {Otevřená informatika},
-	subfieldofstudy-czech = {Software Engineering},
+	subfieldofstudy-czech = {Interakce člověka s počítačem},
 	fieldofstudy-english = {Open Informatics},
-	subfieldofstudy-english = {Software Engineering},
+	subfieldofstudy-english = {Human-Computer Interaction},
 	keywords-czech = {umělá inteligence, rozpoznávání potravin, sledování kalorií, mobilní aplikace, Flutter, OpenAI},
 	keywords-english = {artificial intelligence, food recognition, calorie tracking, mobile application, Flutter, OpenAI},
 	day = 1,
@@ -79,35 +79,19 @@
 
 % Český abstrakt
 \begin{abstract-czech}
-	Práce se zabývá návrhem, implementací a otestováním mobilní aplikace Foody pro sledování kalorického příjmu, která pomocí multimodálních jazykových modelů snižuje časovou a kognitivní zátěž záznamu stravy.
-	Východiskem byla rešerše odborné literatury, analýza existujících aplikací a strukturované rozhovory se čtyřmi respondenty, ze kterých vzešlo osm případů užití, třicet funkčních a pět nefunkčních požadavků.
-	Aplikace byla vyvinuta na platformě Flutter pro iOS a Android a nabízí pět vstupních modalit (fotografie, hlas, text, čárový kód, ruční zápis), provider-agnostickou integraci modelu OpenAI a tříúrovňovou indikaci nejistoty výstupu.
-	Z~třiceti funkčních požadavků bylo dvacet pět implementováno v~plném rozsahu a pět částečně.
-	Použitelnost byla ověřena uživatelským testováním se třemi participanty podle metody \emph{think aloud} doplněné o~standardizované dotazníky.
-	Aplikace dosáhla průměrného SUS skóre 85,83 (horních 10~\% systémů), průměrného SEQ skóre 6,25 napříč šestnácti úlohami a celkového skóre UEQ-S 1,917 v~pozitivním pásmu.
-	Doplňková kvantitativní validace přesnosti odhadu kalorické hodnoty na padesáti talířích z~referenčního datasetu Nutrition5k vykázala u~optimalizovaného promptu a modelu GPT-5.5 hodnotu 32,12~\% \emph{calorie MAPE}, která se blíží referenční hodnotě dosažené specializovaným modelem v~původní publikaci.
-	Identifikováno bylo dvacet sedm konkrétních problémů s~prioritizovanými doporučeními pro další iteraci.
-	Hlavními omezeními jsou malý vzorek, krátká testovací relace a chybějící dlouhodobá validační studie.
+	% TODO: Doplnit český abstrakt po dokončení dlouhodobého testování (sekce~\ref{sec:dlouhodobeTestovani}).
 \end{abstract-czech}
 
 % Anglický abstrakt
 \begin{abstract-english}
-	This thesis presents the design, implementation and evaluation of a mobile calorie tracking application called Foody, which leverages multimodal large language models to reduce the time and cognitive burden of dietary self-monitoring.
-	The work is grounded in a literature review, an analysis of existing apps and structured interviews with four respondents, which yielded eight use cases, thirty functional and five non-functional requirements.
-	The application was developed in Flutter for iOS and Android and supports five input modalities (photo, voice, text, barcode, manual entry), a provider-agnostic integration with OpenAI models, and a three-level confidence indicator for AI output.
-	Twenty-five of the thirty functional requirements were fully implemented and five partially.
-	Usability was evaluated with three participants using the think-aloud method complemented by standardised questionnaires.
-	The application achieved an average SUS score of 85.83 (top 10~\% of evaluated systems), an average SEQ of 6.25 across sixteen tasks, and an overall UEQ-S score of 1.917 in the positive band.
-	A supplementary quantitative validation of calorie estimation accuracy on fifty dishes from the Nutrition5k dataset reported a 32.12~\% calorie MAPE for the optimised prompt with GPT-5.5, approaching the reference figure of a custom-trained model from the original paper.
-	Twenty-seven concrete usability and implementation issues were identified together with prioritised recommendations for the next iteration.
-	The principal limitations are the short session, small sample and the absence of a longitudinal validation study.
+	% TODO: Add English abstract once long-term testing is finalised (see~\ref{sec:dlouhodobeTestovani}).
 \end{abstract-english}
 
 % Poděkování
 \begin{thanks}
-	Rád bych poděkoval vedoucímu práce Ing. Ivu Malému, Ph.D. za odborné vedení, věcné připomínky a~ochotu pravidelně diskutovat metodologii i průběh implementace.
+	Rád bych poděkoval vedoucímu práce Ing. Ivu Malému, Ph.D. za odborné vedení, věcné připomínky a~ochotu pravidelně diskutovat průběh práce.
 	Poděkování patří také všem respondentům uživatelské studie a~participantům uživatelského testování za jejich čas, otevřenost a~konstruktivní zpětnou vazbu, bez níž by návrhová a~evaluační část této práce nemohla vzniknout.
-	Děkuji rovněž rodině a~blízkým za podporu během celého studia a~za trpělivost v~průběhu závěrečné fáze přípravy textu této práce.
+	Děkuji rovněž rodině a~blízkým za podporu během celého studia.
 \end{thanks}
 
 % Prohlášení

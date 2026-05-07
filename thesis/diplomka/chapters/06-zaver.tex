@@ -20,28 +20,14 @@ Z~provedeného uživatelského testování a doplňkové kvantitativní validace
 	\item Průměrné SEQ skóre 6,25 napříč všemi šestnácti úlohami překročilo benchmark 5,5 pro dobré hodnocení a indikuje, že většina úloh byla pro participanty subjektivně snadno řešitelná.
 	\item Celkové skóre UEQ-S 1,917 odpovídá pozitivnímu hodnocení, přičemž hedonická kvalita (2,167) byla vnímána výše než pragmatická (1,667), což odráží zaujetí participantů moderním designem.
 	\item Všechny měřené nefunkční požadavky vázané na uživatelskou zátěž byly splněny: latence rozpoznávání umělou inteligencí činila v~průměru 7,67~s (limit NFR-02 je 20~s), čas zápisu nového záznamu 22~s (limit 5~min) a počet kroků pro zápis jednoduché položky se pohyboval mezi 2 (čárový kód) a 5 (foto, hlas) v~rámci limitu 6~kroků.
-	\item Druhá polovina hypotézy formulované v~úvodu, vázaná na požadavek NFR-01 a týkající se přesnosti odhadu energetické hodnoty, byla doplňkově ověřena indikativní validací pipeline pro umělou inteligenci na padesáti talířích z~referenčního datasetu Nutrition5k; nejlepší konfigurace (model GPT-5.5 s~promptem improved v2) dosáhla 32,12~\% \emph{calorie MAPE}, na pásmu 100--400~kcal odpovídajícímu typickému použití aplikace pak 20 až 23~\% MAPE, což se přibližuje referenční hodnotě 26,1~\% specializovaného modelu z~původní publikace Nutrition5k.
-	\item Z~třiceti funkčních požadavků bylo 25 implementováno v~plném rozsahu a 5 částečně; podrobnosti jsou uvedeny v~tabulce~\ref{tab:fr-status}.
-	\item Z~testovací relace bylo identifikováno celkem 27 problémů (11 implementačních chyb a 16 problémů uživatelského rozhraní), z~nichž 25 bylo v~navazující iteraci opraveno; bez úpravy zůstaly s~explicitním odůvodněním v~sekci~\ref{sec:doporuceni} pouze dva problémy s~nižší prioritou (U1 a U9).
+	\item Druhá polovina hypotézy formulované v~úvodu, vázaná na požadavek NFR-01 a týkající se přesnosti odhadu energetické hodnoty, byla doplňkově ověřena indikativní validací pipeline pro umělou inteligenci na padesáti talířích z~referenčního datasetu Nutrition5k. Nejlepší konfigurace (model GPT-5.5 s~promptem improved v2) dosáhla 32,12~\% \emph{calorie MAPE}, na pásmu 100--400~kcal odpovídajícímu typickému použití aplikace pak 20 až 23~\% MAPE, což se přibližuje referenční hodnotě 26,1~\% specializovaného modelu z~původní publikace Nutrition5k.
+	\item Z~třiceti funkčních požadavků bylo 25 implementováno v~plném rozsahu a 5 částečně. Podrobnosti jsou uvedeny v~tabulce~\ref{tab:fr-status}.
+	\item Z~testovací relace bylo identifikováno celkem 27 problémů (11 implementačních chyb a 16 problémů uživatelského rozhraní), z~nichž 25 bylo v~navazující iteraci opraveno. Bez úpravy zůstaly s~explicitním odůvodněním v~sekci~\ref{sec:doporuceni} pouze dva problémy s~nižší prioritou (U1 a U9).
 	\item Hlasový vstup byl participanty nezávisle označen za jednu z~nejvíce oceněných funkcí a v~debriefingu byl opakovaně navrhován k~rozšíření i do dalších rozhraní (modul cvičení, funkce úprav výsledku, dotazy v~přirozeném jazyce).
 \end{enumerate}
 
 Hlavním přínosem práce je funkční prototyp ověřující, že kombinace více vstupních modalit s~multimodálním jazykovým modelem dokáže významně snížit uživatelskou zátěž záznamu stravy při zachování srozumitelnosti výstupu, a to při využití cloudového API bez nutnosti vlastního backendu nebo trénovaného modelu.
 Konkrétními sekundárními přínosy jsou architektura komunikační vrstvy připravená na výměnu poskytovatele modelu, vícevrstvá ochrana proti útokům typu \emph{prompt injection}, transparentní tříúrovňová indikace nejistoty výstupu a strukturovaná sada uživatelských zjištění s~přímou trasovatelností od rozhovorů přes požadavky až po výsledky testování.
-
-\phantomsection
-\section*{Naplnění cílů práce}
-
-Vzhledem k~dílčím cílům formulovaným v~úvodu lze konstatovat následující.
-Rešerše odborné literatury v~oblasti digitálních nástrojů pro výživu a využití umělé inteligence byla provedena s~důrazem na zdroje z~peer-reviewed databází.
-Existující řešení byla analyzována na příkladu globální aplikace MyFitnessPal a regionálně dominantních Kalorických Tabulek a byly identifikovány jejich silné a slabé stránky.
-Uživatelský výzkum formou strukturovaných rozhovorů byl realizován se čtyřmi respondenty pokrývajícími odlišné cíle a kontext používání a vyústil ve formulaci sady případů užití a požadavků.
-Softwarová architektura a uživatelské rozhraní byly navrženy s~přímou návazností na zjištění z~rozhovorů, dokumentovány v~HiFi prototypu a převedeny do funkčního produktu.
-Implementační fáze pokryla v~plném nebo částečném rozsahu všech třicet funkčních požadavků a pět nefunkčních požadavků definovaných v~návrhu.
-Použitelnost a kvalita výstupů aplikace byly ověřeny uživatelským testováním, jehož výsledky potvrdily přijatelnost zvoleného přístupu pro cílovou skupinu.
-Doporučení pro další vývoj byla formulována jak na úrovni opravy identifikovaných problémů, tak na úrovni rozšíření funkcionality.
-
-Z~uvedeného vyplývá, že hlavní cíl práce, tedy návrh, implementace a otestování aplikace pro rozpoznávání potravin pomocí umělé inteligence a sledování kalorického příjmu, byl naplněn.
 
 \phantomsection
 \section*{Omezení a možnosti dalšího rozvoje}

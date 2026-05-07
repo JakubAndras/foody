@@ -124,13 +124,13 @@ Hlavní scénář:
 \label{sec:pozadavky}
 
 Sada funkčních a nefunkčních požadavků byla sestavena ze dvou navzájem se doplňujících zdrojů: zjištění ze strukturovaných rozhovorů s~respondenty R1--R4 (sekce~\ref{subsec:vysledkyRozhovoru}) a doménové opory tvořené zadáním práce a doménovou logikou kalorické aplikace.
-Funkční požadavky jsou shrnuty v~tabulce~\ref{tab:trasovatelnostFR}, která zároveň slouží jako matice trasovatelnosti -- pro každý požadavek dokládá, ze kterého zdroje jeho motivace pochází, a tím vylučuje, že by některý požadavek vznikl bez podkladu.
+Funkční požadavky jsou shrnuty v~tabulce~\ref{tab:trasovatelnostFR}, která zároveň slouží jako matice trasovatelnosti: pro každý požadavek dokládá, ze kterého zdroje jeho motivace pochází, a tím vylučuje, že by některý požadavek vznikl bez podkladu.
 Nefunkční požadavky jsou uvedeny v~samostatném seznamu doplněném o~měřitelné kritérium pro vyhodnocení.
 
 \begin{footnotesize}
 \rowcolors{2}{gray!10}{white}
 \begin{longtable}{@{}lp{9.4cm}p{2.2cm}@{}}
-	\caption{Trasovatelnost funkčních požadavků na zdroje motivace. Sloupec Zdroj odkazuje na rozhovory s~respondenty R1--R4 (sekce~\ref{subsec:vysledkyRozhovoru}) a na Z, tedy zadání práce nebo doménovou logiku kalorické aplikace.} \label{tab:trasovatelnostFR} \\
+	\caption[Trasovatelnost funkčních požadavků na zdroje motivace.]{Trasovatelnost funkčních požadavků na zdroje motivace. Sloupec Zdroj odkazuje na rozhovory s~respondenty R1--R4 (sekce~\ref{subsec:vysledkyRozhovoru}) a na Z, tedy zadání práce nebo doménovou logiku kalorické aplikace.} \label{tab:trasovatelnostFR} \\
 	\toprule
 	\rowcolor{white}\textbf{Kód} & \textbf{Popis} & \textbf{Zdroj} \\
 	\midrule
@@ -192,8 +192,9 @@ Nefunkční požadavky jsou shrnuty v~tabulce~\ref{tab:nfr}, která pro každý 
 
 \begin{footnotesize}
 \rowcolors{2}{gray!10}{white}
-\begin{longtable}{@{}lp{5.8cm}p{3.6cm}p{2.2cm}@{}}
-	\caption{Nefunkční požadavky a zdroje jejich motivace. Sloupec Kritérium uvádí měřitelnou hodnotu pro vyhodnocení požadavku, sloupec Zdroj odkazuje shodně s~tabulkou~\ref{tab:trasovatelnostFR}: kódy R1--R4 odkazují na výroky respondentů (sekce~\ref{subsec:vysledkyRozhovoru}), Z na zadání práce nebo doménovou logiku kalorické aplikace.} \label{tab:nfr} \\
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}lp{5.5cm}p{3.2cm}p{1.7cm}@{}}
+	\caption[Nefunkční požadavky a zdroje jejich motivace.]{Nefunkční požadavky a zdroje jejich motivace. Sloupec Kritérium uvádí měřitelnou hodnotu pro vyhodnocení požadavku, sloupec Zdroj odkazuje shodně s~tabulkou~\ref{tab:trasovatelnostFR}: kódy R1--R4 odkazují na výroky respondentů (sekce~\ref{subsec:vysledkyRozhovoru}), Z na zadání práce nebo doménovou logiku kalorické aplikace.} \label{tab:nfr} \\
 	\toprule
 	\rowcolor{white}\textbf{Kód} & \textbf{Požadavek} & \textbf{Kritérium} & \textbf{Zdroj} \\
 	\midrule
@@ -202,7 +203,7 @@ Nefunkční požadavky jsou shrnuty v~tabulce~\ref{tab:nfr}, která pro každý 
 	\rowcolor{white}\textbf{Kód} & \textbf{Požadavek} & \textbf{Kritérium} & \textbf{Zdroj} \\
 	\midrule
 	\endhead
-	NFR-01 & Přesnost odhadu energie a makroživin.\footnote{Hodnota 10~\% představuje pracovní cíl, který je výsledkem autorského rozhodnutí informovaného dvěma doplňujícími úvahami. Respondenti R1 a~R2 ohraničili akceptovatelnou nepřesnost shora přibližně 20~\% (R1) a zdola jednotkami procent (R2); 10~\% leží uvnitř tohoto rozpětí. Empirickým kontextem je srovnávací studie Li a~kol.~\cite{li2024evaluating} v~časopise \emph{Nutrients}, která pro nutriční aplikace dokumentuje odchylky v~řádu stovek kilojoulů denně oproti referenčním metodám; přesný práh 10~\% z~této studie přímo neplyne, slouží však jako orientační kritérium konzistentní s~jejími zjištěními. Cíl je proto chápán jako orientační vodítko pro vyhodnocení kvality výstupu, nikoliv jako absolutní mez.} & $\leq$ 10~\% odchylky od referenčních hodnot & R1, R2, Z \\
+	NFR-01 & Přesnost odhadu energie a makroživin.\footnote{Hodnota 10~\% představuje pracovní cíl, který je výsledkem autorského rozhodnutí informovaného dvěma doplňujícími úvahami. Respondenti R1 a~R2 ohraničili akceptovatelnou nepřesnost shora přibližně 20~\% (R1) a zdola jednotkami procent (R2). Hodnota 10~\% leží uvnitř tohoto rozpětí. Empirickým kontextem je srovnávací studie Li a~kol.~\cite{li2024evaluating} v~časopise \emph{Nutrients}, která pro nutriční aplikace dokumentuje odchylky v~řádu stovek kilojoulů denně oproti referenčním metodám. Přesný práh 10~\% z~této studie přímo neplyne, slouží však jako orientační kritérium konzistentní s~jejími zjištěními. Cíl je proto chápán jako orientační vodítko pro vyhodnocení kvality výstupu, nikoliv jako absolutní mez.} & $\leq$ 10~\% odchylky od referenčních hodnot & R1, R2, Z \\
 	NFR-02 & Latence rozpoznání umělou inteligencí. & $\leq$ 20~s za běžných podmínek & R3, R4, Z \\
 	NFR-03 & Počet kroků pro zápis jednoduché položky. & $\leq$ 6 kroků bez dodatečné editace & R1, R2 \\
 	NFR-04 & Časová náročnost zápisu jídla. & opakované $\leq$ 1~min, nové $\leq$ 5~min & R1--R4, Z \\
