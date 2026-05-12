@@ -229,7 +229,6 @@ class ScanModeTile extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: AppSizes.scanModeButtonWidth,
         height: AppSizes.scanModeButtonHeight,
         decoration: BoxDecoration(
           color: bg,
@@ -242,7 +241,16 @@ class ScanModeTile extends StatelessWidget {
           children: [
             Icon(icon, size: AppSizes.scanIconSize, color: fg),
             const SizedBox(height: 4),
-            Text(label, style: AppTextStyles.label12.copyWith(color: fg)),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxs),
+              child: Text(
+                label,
+                style: AppTextStyles.label12.copyWith(color: fg),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+              ),
+            ),
           ],
         ),
       ),

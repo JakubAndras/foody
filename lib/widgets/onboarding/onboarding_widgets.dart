@@ -309,7 +309,7 @@ class OnboardingPillChipBig extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextStyle? style = Theme.of(context).textTheme.titleLarge?.copyWith(color: textColor ?? AppColors.textPrimary);
+    final TextStyle? style = Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700, color: textColor ?? AppColors.textPrimary);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.xs),
       decoration: BoxDecoration(color: backgroundColor ?? AppColors.surfaceChip, borderRadius: BorderRadius.circular(AppRadii.l)),
@@ -317,7 +317,13 @@ class OnboardingPillChipBig extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (leading != null) ...[leading!, const SizedBox(width: AppSpacing.xxs)],
-          Text(label, style: style),
+          Flexible(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.center,
+              child: Text(label, style: style, maxLines: 1, softWrap: false),
+            ),
+          ),
         ],
       ),
     );
@@ -430,7 +436,7 @@ class OnboardingRingChart extends StatelessWidget {
                         ),
                         TextSpan(
                           text: unit,
-                          style: textTheme.titleSmall?.copyWith(color: AppColors.textMuted),
+                          style: textTheme.titleSmall?.copyWith(color: AppColors.textPrimary),
                         ),
                       ],
                     ),

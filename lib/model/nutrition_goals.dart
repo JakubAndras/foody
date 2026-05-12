@@ -34,13 +34,14 @@ class NutritionGoals {
   }) {
     final int age = DateTime.now().difference(dateOfBirth).inDays ~/ 365;
 
-    // Mifflin-St Jeor BMR
-    double bmr;
-    if (sex == ProfileSex.male) {
-      bmr = 10 * weightKg + 6.25 * heightCm - 5 * age + 5;
-    } else {
-      bmr = 10 * weightKg + 6.25 * heightCm - 5 * age - 161;
-    }
+    // Mifflin-St Jeor BMR. For ProfileSex.other we average the male (+5) and
+    // female (-161) constants to avoid silently biasing the goal either way.
+    final double sexConstant = switch (sex) {
+      ProfileSex.male => 5,
+      ProfileSex.female => -161,
+      ProfileSex.other => -78,
+    };
+    double bmr = 10 * weightKg + 6.25 * heightCm - 5 * age + sexConstant;
 
     // Activity multiplier
     final double activityMultiplier = switch (workoutsPerWeek) {

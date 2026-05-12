@@ -13,6 +13,7 @@ import 'package:diplomka/screens/scan/scan_widgets.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:diplomka/services/barcode_lookup_service.dart';
 import 'package:diplomka/services/selected_date_service.dart';
+import 'package:diplomka/utils/photo_cropper.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -25,10 +26,7 @@ import 'package:permission_handler/permission_handler.dart';
 enum ScanMode { scanMeal, barcode, foodLabel }
 
 class ScanCameraScreen extends StatefulWidget {
-  const ScanCameraScreen({
-    super.key,
-    this.initialMode = ScanMode.scanMeal,
-  });
+  const ScanCameraScreen({super.key, this.initialMode = ScanMode.scanMeal});
 
   final ScanMode initialMode;
 
@@ -40,13 +38,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
   final GlobalKey _previewBoundaryKey = GlobalKey();
   final BarcodeLookupService _barcodeLookupService = BarcodeLookupService.to;
   final MobileScannerController _barcodeScannerController = MobileScannerController(
-    formats: const <BarcodeFormat>[
-      BarcodeFormat.ean8,
-      BarcodeFormat.ean13,
-      BarcodeFormat.upcA,
-      BarcodeFormat.upcE,
-      BarcodeFormat.code128,
-    ],
+    formats: const <BarcodeFormat>[BarcodeFormat.ean8, BarcodeFormat.ean13, BarcodeFormat.upcA, BarcodeFormat.upcE, BarcodeFormat.code128],
     detectionSpeed: DetectionSpeed.noDuplicates,
     facing: CameraFacing.back,
     autoStart: false,
@@ -190,10 +182,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
     await _initCameraWithPreferredBackCamera();
   }
 
-  Future<void> _initCameraWithPreferredBackCamera({
-    CameraDescription? preferredBackCamera,
-    bool preserveFlash = false,
-  }) async {
+  Future<void> _initCameraWithPreferredBackCamera({CameraDescription? preferredBackCamera, bool preserveFlash = false}) async {
     if (_mode == ScanMode.barcode) return;
     if (mounted) {
       setState(() {
@@ -214,12 +203,10 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
       CameraDescription? ultraWideBackCamera;
       for (final camera in backCameras) {
         final cameraName = camera.name.toLowerCase();
-        if (wideBackCamera == null &&
-            (camera.lensType == CameraLensType.wide || (camera.lensType == CameraLensType.unknown && cameraName.contains('wide')))) {
+        if (wideBackCamera == null && (camera.lensType == CameraLensType.wide || (camera.lensType == CameraLensType.unknown && cameraName.contains('wide')))) {
           wideBackCamera = camera;
         }
-        if (ultraWideBackCamera == null &&
-            (camera.lensType == CameraLensType.ultraWide || (camera.lensType == CameraLensType.unknown && cameraName.contains('ultra')))) {
+        if (ultraWideBackCamera == null && (camera.lensType == CameraLensType.ultraWide || (camera.lensType == CameraLensType.unknown && cameraName.contains('ultra')))) {
           ultraWideBackCamera = camera;
         }
       }
@@ -227,11 +214,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
       final isSelectingNormal = preferredBackCamera == null ? _isZoomed : preferredBackCamera != ultraWideBackCamera;
       final targetBackCamera = preferredBackCamera ?? (isSelectingNormal ? wideBackCamera : (ultraWideBackCamera ?? wideBackCamera));
 
-      final controller = CameraController(
-        targetBackCamera,
-        ResolutionPreset.high,
-        enableAudio: false,
-      );
+      final controller = CameraController(targetBackCamera, ResolutionPreset.high, enableAudio: false);
 
       await controller.initialize();
       final minZoom = await controller.getMinZoomLevel();
@@ -269,14 +252,28 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
 
   Future<void> _capturePhoto() async {
     if (_mode == ScanMode.barcode) return;
-    if (_cameraController == null || !_cameraController!.value.isInitialized) {
+    final controller = _cameraController;
+    if (controller == null || !controller.value.isInitialized) {
       return;
     }
 
+    // Read the on-screen viewport rectangle before awaiting `takePicture()` so
+    // the crop matches the exact rectangle the user saw when pressing the
+    // shutter, even if the screen rotates during the capture.
+    final boundary = _previewBoundaryKey.currentContext?.findRenderObject() as RenderBox?;
+    final viewportSize = boundary?.size;
+
     try {
-      final file = await _cameraController!.takePicture();
+      final file = await controller.takePicture();
       if (!mounted) return;
-      Get.to(() => ScanPreviewScreen(imagePath: file.path));
+
+      String finalPath = file.path;
+      if (viewportSize != null && viewportSize.width > 0 && viewportSize.height > 0) {
+        final targetAspect = viewportSize.height / viewportSize.width;
+        finalPath = await PhotoCropper.cropCenterCoverToAspect(sourcePath: file.path, targetAspectRatio: targetAspect);
+      }
+      if (!mounted) return;
+      Get.to(() => ScanPreviewScreen(imagePath: finalPath));
     } catch (_) {}
   }
 
@@ -374,10 +371,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
       final targetBackCamera = isNormalZoom ? wideBackCamera : ultraWideBackCamera;
       if (_activeBackCamera != targetBackCamera) {
         await _capturePreviewFreezeFrame();
-        await _initCameraWithPreferredBackCamera(
-          preferredBackCamera: targetBackCamera,
-          preserveFlash: true,
-        );
+        await _initCameraWithPreferredBackCamera(preferredBackCamera: targetBackCamera, preserveFlash: true);
         return;
       }
     }
@@ -446,19 +440,14 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
     return null;
   }
 
-  Future<void> _startUnifiedBarcodeFlow({
-    required String barcode,
-  }) async {
+  Future<void> _startUnifiedBarcodeFlow({required String barcode}) async {
     if (_isBarcodeRecognitionTriggered) return;
     _isBarcodeRecognitionTriggered = true;
     _pauseBarcodeScanner();
     if (!mounted) return;
 
     final selectedDate = SelectedDateService.to.selectedDate.value;
-    DashboardController.to.analyzeMealFromBarcode(
-      selectedDate: selectedDate,
-      barcode: barcode,
-    );
+    DashboardController.to.analyzeMealFromBarcode(selectedDate: selectedDate, barcode: barcode);
 
     if (Get.isRegistered<MainScreenController>()) {
       MainScreenController.to.showDashboardTab();
@@ -469,10 +458,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
   @override
   Widget build(BuildContext context) {
     if (!_hasPermission) {
-      return ScanPermissionScreen(
-        isPermanentlyDenied: _permissionPermanentlyDenied,
-        onRequestPermission: _initPermissionAndCamera,
-      );
+      return ScanPermissionScreen(isPermanentlyDenied: _permissionPermanentlyDenied, onRequestPermission: _initPermissionAndCamera);
     }
 
     return Scaffold(
@@ -483,15 +469,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
           Column(
             children: [
               SizedBox(height: AppSpacing.xl),
-              Expanded(
-                child: Stack(
-                  children: [
-                    _buildCameraTopBar(),
-                    if (!_showTip) _buildScanFrame(),
-                    _buildZoomToggle(),
-                  ],
-                ),
-              ),
+              Expanded(child: Stack(children: [_buildCameraTopBar(), if (!_showTip) _buildScanFrame(), _buildZoomToggle()])),
               _buildBottomBar(),
             ],
           ),
@@ -512,10 +490,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
     return Stack(
       children: [
         if (hasLivePreview)
-          RepaintBoundary(
-            key: _previewBoundaryKey,
-            child: _buildLiveCameraPreview(_cameraController!),
-          )
+          RepaintBoundary(key: _previewBoundaryKey, child: _buildLiveCameraPreview(_cameraController!))
         else if (hasFrozenPreview)
           _buildFrozenPreview()
         else
@@ -523,21 +498,11 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
             decoration: BoxDecoration(gradient: AppGradients.scanCameraSurface),
             child: !_isInitializing
                 ? Center(
-                    child: Text(
-                      tr(LocaleKeys.scan_camera_unavailable),
-                      style: AppTextStyles.body14Regular.copyWith(color: AppColors.textSecondary),
-                    ),
+                    child: Text(tr(LocaleKeys.scan_camera_unavailable), style: AppTextStyles.body14Regular.copyWith(color: AppColors.textSecondary)),
                   )
-                : Center(
-                    child: CircularProgressIndicator(color: AppColors.onPrimary),
-                  ),
+                : Center(child: CircularProgressIndicator(color: AppColors.onPrimary)),
           ),
-        if (hasFrozenPreview)
-          Positioned.fill(
-            child: IgnorePointer(
-              child: _buildFrozenPreview(),
-            ),
-          ),
+        if (hasFrozenPreview) Positioned.fill(child: IgnorePointer(child: _buildFrozenPreview())),
       ],
     );
   }
@@ -546,11 +511,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
     return Stack(
       fit: StackFit.expand,
       children: [
-        MobileScanner(
-          controller: _barcodeScannerController,
-          fit: BoxFit.cover,
-          onDetect: _onBarcodeDetected,
-        ),
+        MobileScanner(controller: _barcodeScannerController, fit: BoxFit.cover, onDetect: _onBarcodeDetected),
         Positioned.fill(
           child: IgnorePointer(
             child: DecoratedBox(
@@ -558,11 +519,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
                 gradient: const LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: <Color>[
-                    AppColors.overlayDark40,
-                    Colors.transparent,
-                    AppColors.overlayDark40,
-                  ],
+                  colors: <Color>[AppColors.overlayDark40, Colors.transparent, AppColors.overlayDark40],
                 ),
               ),
             ),
@@ -577,24 +534,14 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
     return SizedBox.expand(
       child: FittedBox(
         fit: BoxFit.cover,
-        child: SizedBox(
-          width: previewSize.height,
-          height: previewSize.width,
-          child: CameraPreview(controller),
-        ),
+        child: SizedBox(width: previewSize.height, height: previewSize.width, child: CameraPreview(controller)),
       ),
     );
   }
 
   Widget _buildFrozenPreview() {
     return SizedBox.expand(
-      child: FittedBox(
-        fit: BoxFit.cover,
-        child: Image.memory(
-          _frozenPreviewBytes!,
-          gaplessPlayback: true,
-        ),
-      ),
+      child: FittedBox(fit: BoxFit.cover, child: Image.memory(_frozenPreviewBytes!, gaplessPlayback: true)),
     );
   }
 
@@ -602,19 +549,11 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
     return SafeArea(
       top: false,
       child: Padding(
-        padding: const EdgeInsets.only(
-          left: AppSpacing.m,
-          right: AppSpacing.m,
-          top: AppSpacing.xl,
-        ),
+        padding: const EdgeInsets.only(left: AppSpacing.m, right: AppSpacing.m, top: AppSpacing.xl),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            ScanCircleButton(
-              icon: CupertinoIcons.xmark,
-              onPressed: () => Get.back(),
-              child: GlassStrokeIcon.close(),
-            ),
+            ScanCircleButton(icon: CupertinoIcons.xmark, onPressed: () => Get.back(), child: GlassStrokeIcon.close()),
             ScanCircleButton(
               icon: CupertinoIcons.info,
               onPressed: () {
@@ -631,31 +570,40 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
   }
 
   Widget _buildScanFrame() {
-    double frameWidth;
-    double frameHeight;
-    Color frameColor;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final double availableW = constraints.maxWidth;
+        final double availableH = constraints.maxHeight;
 
-    switch (_mode) {
-      case ScanMode.barcode:
-        frameWidth = 340;
-        frameHeight = 200;
-        frameColor = AppColors.primary;
-        break;
-      case ScanMode.foodLabel:
-        frameWidth = 288;
-        frameHeight = 458;
-        frameColor = AppColors.primary;
-        break;
-      case ScanMode.scanMeal:
-        frameWidth = 340;
-        frameHeight = 400;
-        frameColor = AppColors.primary;
-        break;
-    }
+        double frameWidth;
+        double frameHeight;
 
-    return Align(
-      alignment: const Alignment(0, -0.1),
-      child: ScanFrameCorners(width: frameWidth, height: frameHeight, color: frameColor),
+        // Width/height are sized as a fraction of the camera preview area
+        // (LayoutBuilder constraints), clamped to a max matching the original
+        // iPhone-tuned dimensions. On taller iPhones the max wins and looks
+        // identical to before; on Android phones with a shorter preview area
+        // (status bar + bottom bar eat more vertical room) the fraction wins
+        // and the frame shrinks to fit instead of pushing corners off-screen.
+        switch (_mode) {
+          case ScanMode.barcode:
+            frameWidth = (availableW * 0.85).clamp(240.0, 340.0);
+            frameHeight = (availableH * 0.30).clamp(140.0, 200.0);
+            break;
+          case ScanMode.foodLabel:
+            frameWidth = (availableW * 0.78).clamp(220.0, 288.0);
+            frameHeight = (availableH * 0.70).clamp(320.0, 458.0);
+            break;
+          case ScanMode.scanMeal:
+            frameWidth = (availableW * 0.85).clamp(240.0, 340.0);
+            frameHeight = (availableH * 0.60).clamp(280.0, 400.0);
+            break;
+        }
+
+        return Align(
+          alignment: const Alignment(0, -0.1),
+          child: ScanFrameCorners(width: frameWidth, height: frameHeight, color: AppColors.primary),
+        );
+      },
     );
   }
 
@@ -692,40 +640,53 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
   Widget _buildBottomBar() {
     return Container(
       height: AppSizes.scanBottomBarHeight,
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        boxShadow: AppShadows.button,
-      ),
+      decoration: BoxDecoration(color: AppColors.surface, boxShadow: AppShadows.button),
       child: Column(
         children: [
           const SizedBox(height: AppSpacing.l),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ScanModeTile(
-                label: tr(LocaleKeys.scan_scan_meal),
-                icon: CupertinoIcons.viewfinder,
-                isActive: _mode == ScanMode.scanMeal,
-                onTap: () => _toggleMode(ScanMode.scanMeal),
-                activeColor: AppColors.primary,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
+            child: Center(
+              child: ConstrainedBox(
+                // Cap row width on tablets so tiles stay compact; on narrow phones
+                // Expanded lets them shrink to fit.
+                constraints: BoxConstraints(maxWidth: AppSizes.scanModeButtonWidth * 3 + AppSpacing.s * 2),
+                child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: ScanModeTile(
+                      label: tr(LocaleKeys.scan_scan_meal),
+                      icon: CupertinoIcons.viewfinder,
+                      isActive: _mode == ScanMode.scanMeal,
+                      onTap: () => _toggleMode(ScanMode.scanMeal),
+                      activeColor: AppColors.primary,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.s),
+                  Expanded(
+                    child: ScanModeTile(
+                      label: tr(LocaleKeys.scan_barcode),
+                      icon: CupertinoIcons.qrcode_viewfinder,
+                      isActive: _mode == ScanMode.barcode,
+                      onTap: () => _toggleMode(ScanMode.barcode),
+                      activeColor: AppColors.textHeading,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.s),
+                  Expanded(
+                    child: ScanModeTile(
+                      label: tr(LocaleKeys.scan_food_label),
+                      icon: CupertinoIcons.doc_text,
+                      isActive: _mode == ScanMode.foodLabel,
+                      onTap: () => _toggleMode(ScanMode.foodLabel),
+                      activeColor: AppColors.textHeading,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: AppSpacing.s),
-              ScanModeTile(
-                label: tr(LocaleKeys.scan_barcode),
-                icon: CupertinoIcons.qrcode_viewfinder,
-                isActive: _mode == ScanMode.barcode,
-                onTap: () => _toggleMode(ScanMode.barcode),
-                activeColor: AppColors.textHeading,
-              ),
-              const SizedBox(width: AppSpacing.s),
-              ScanModeTile(
-                label: tr(LocaleKeys.scan_food_label),
-                icon: CupertinoIcons.doc_text,
-                isActive: _mode == ScanMode.foodLabel,
-                onTap: () => _toggleMode(ScanMode.foodLabel),
-                activeColor: AppColors.textHeading,
-              ),
-            ],
+            ),
+          ),
           ),
           const SizedBox(height: AppSpacing.l),
           Padding(
@@ -768,27 +729,27 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
     return SizedBox(
       height: AppSizes.scanShutterSize,
       child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        ScanCircleButton(
-          icon: _isFlashOn ? Icons.flash_on : CupertinoIcons.bolt_slash,
-          onPressed: _toggleFlash,
-          backgroundColor: _isFlashOn ? AppColors.primary : AppColors.surfaceMuted,
-          shadow: const <BoxShadow>[],
-          size: AppSizes.scanAuxButtonSize,
-          iconSize: AppSizes.scanIconSize,
-          iconColor: _isFlashOn ? AppColors.onPrimary : AppColors.textEmphasis,
-        ),
-        ScanCircleButton(
-          icon: CupertinoIcons.arrow_clockwise,
-          onPressed: _restartBarcodeScan,
-          backgroundColor: AppColors.surfaceMuted,
-          shadow: const <BoxShadow>[],
-          size: AppSizes.scanAuxButtonSize,
-          iconSize: AppSizes.scanIconSize,
-          iconColor: AppColors.textEmphasis,
-        ),
-      ],
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          ScanCircleButton(
+            icon: _isFlashOn ? Icons.flash_on : CupertinoIcons.bolt_slash,
+            onPressed: _toggleFlash,
+            backgroundColor: _isFlashOn ? AppColors.primary : AppColors.surfaceMuted,
+            shadow: const <BoxShadow>[],
+            size: AppSizes.scanAuxButtonSize,
+            iconSize: AppSizes.scanIconSize,
+            iconColor: _isFlashOn ? AppColors.onPrimary : AppColors.textEmphasis,
+          ),
+          ScanCircleButton(
+            icon: CupertinoIcons.arrow_clockwise,
+            onPressed: _restartBarcodeScan,
+            backgroundColor: AppColors.surfaceMuted,
+            shadow: const <BoxShadow>[],
+            size: AppSizes.scanAuxButtonSize,
+            iconSize: AppSizes.scanIconSize,
+            iconColor: AppColors.textEmphasis,
+          ),
+        ],
       ),
     );
   }
@@ -837,12 +798,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
               alignment: const Alignment(0, -0.2),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl),
-                child: ScanTipOverlay(
-                  title: title,
-                  body: body,
-                  onDismiss: () => setState(() => _showTip = false),
-                  child: child,
-                ),
+                child: ScanTipOverlay(title: title, body: body, onDismiss: () => setState(() => _showTip = false), child: child),
               ),
             ),
           ),
@@ -851,4 +807,3 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
     );
   }
 }
-

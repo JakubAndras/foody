@@ -21,8 +21,8 @@ class MotivationalSummaryService extends GetxService {
   Future<void> _createAndroidChannel() async {
     final channel = AndroidNotificationChannel(
       motivationalSummaryChannelId,
-      tr(LocaleKeys.motivational_summary_channel_name),
-      description: tr(LocaleKeys.motivational_summary_channel_desc),
+      _safeTr(LocaleKeys.motivational_summary_channel_name),
+      description: _safeTr(LocaleKeys.motivational_summary_channel_desc),
       importance: Importance.high,
     );
     final androidImpl = _plugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
@@ -40,10 +40,9 @@ class MotivationalSummaryService extends GetxService {
   Future<void> rescheduleAllFromStorage() async {
     final settings = await loadSettingsFromStorage();
     for (final setting in settings) {
+      await cancelNotification(setting.type);
       if (setting.enabled) {
         await scheduleNotification(setting);
-      } else {
-        await cancelNotification(setting.type);
       }
     }
   }
@@ -53,28 +52,25 @@ class MotivationalSummaryService extends GetxService {
     final notificationDetails = NotificationDetails(
       android: AndroidNotificationDetails(
         motivationalSummaryChannelId,
-        tr(LocaleKeys.motivational_summary_channel_name),
-        channelDescription: tr(LocaleKeys.motivational_summary_channel_desc),
+        _safeTr(LocaleKeys.motivational_summary_channel_name),
+        channelDescription: _safeTr(LocaleKeys.motivational_summary_channel_desc),
         importance: Importance.high,
         priority: Priority.high,
       ),
-      iOS: const DarwinNotificationDetails(
-        presentAlert: true,
-        presentBadge: true,
-        presentSound: true,
-      ),
+      iOS: const DarwinNotificationDetails(presentAlert: true, presentBadge: true, presentSound: true),
     );
 
+    final scheduleMode = await TrackingReminderService.to.resolveAndroidScheduleMode();
     await _plugin.zonedSchedule(
       setting.type.notificationId,
-      tr(LocaleKeys.motivational_summary_notification_title),
+      _safeTr(LocaleKeys.motivational_summary_notification_title),
       _notificationBody(setting.type),
       scheduledDate,
       notificationDetails,
       payload: 'motivational_${setting.type.code}',
       matchDateTimeComponents: setting.type.dateTimeComponents,
       uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      androidScheduleMode: scheduleMode,
     );
   }
 
@@ -116,11 +112,23 @@ class MotivationalSummaryService extends GetxService {
   String _notificationBody(MotivationalSummaryType type) {
     switch (type) {
       case MotivationalSummaryType.daily:
-        return tr(LocaleKeys.motivational_summary_body_daily);
+        return _safeTr(LocaleKeys.motivational_summary_body_daily);
       case MotivationalSummaryType.weekly:
-        return tr(LocaleKeys.motivational_summary_body_weekly);
+        return _safeTr(LocaleKeys.motivational_summary_body_weekly);
       case MotivationalSummaryType.monthly:
-        return tr(LocaleKeys.motivational_summary_body_monthly);
+        return _safeTr(LocaleKeys.motivational_summary_body_monthly);
     }
+  }
+
+  String _safeTr(String key) {
+    final resolved = tr(key);
+    assert(() {
+      if (resolved == key) {
+        // ignore: avoid_print
+        print('[Notifications] WARNING: tr() returned the raw key "$key" — EasyLocalization not ready.');
+      }
+      return true;
+    }());
+    return resolved;
   }
 }

@@ -1,5 +1,6 @@
 import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/model/meal.dart';
+import 'package:diplomka/model/nutrition_goals.dart';
 import 'package:diplomka/services/streak_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -110,6 +111,10 @@ DayRecord _dayRecord(
   return DayRecord(
     date: date,
     meals: hasMeal ? <Meal>[_mealAt(date)] : <Meal>[],
+    calorieGoal: NutritionGoals.defaults.calorieGoal,
+    proteinGoal: NutritionGoals.defaults.proteinGoal,
+    carbsGoal: NutritionGoals.defaults.carbsGoal,
+    fatGoal: NutritionGoals.defaults.fatGoal,
   );
 }
 

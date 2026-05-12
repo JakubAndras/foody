@@ -42,14 +42,26 @@ class VoiceLogToggle extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: onSelectMeals,
-          child: Text(tr(LocaleKeys.common_meals), style: AppTextStyles.title18.copyWith(color: isExercise ? AppColors.textMutedLight : AppColors.textPrimary, fontWeight: FontWeight.w600)),
+          child: Text(
+            tr(LocaleKeys.common_meals),
+            style: AppTextStyles.title18.copyWith(color: isExercise ? AppColors.textMutedLight : AppColors.textPrimary, fontWeight: FontWeight.w600),
+          ),
         ),
         const SizedBox(width: AppSpacing.m),
-        GlassSwitch(value: isExercise, onChanged: (_) => isExercise ? onSelectMeals() : onSelectExercise(), useOwnLayer: true, activeColor: AppColors.primary, inactiveColor: AppColors.primary),
+        GlassSwitch(
+          value: isExercise,
+          onChanged: (_) => isExercise ? onSelectMeals() : onSelectExercise(),
+          useOwnLayer: true,
+          activeColor: AppColors.exerciseOrange,
+          inactiveColor: AppColors.primary,
+        ),
         const SizedBox(width: AppSpacing.m),
         GestureDetector(
           onTap: onSelectExercise,
-          child: Text(tr(LocaleKeys.common_exercise), style: AppTextStyles.title18.copyWith(color: isExercise ? AppColors.textPrimary : AppColors.textMutedLight, fontWeight: FontWeight.w600)),
+          child: Text(
+            tr(LocaleKeys.common_exercise),
+            style: AppTextStyles.title18.copyWith(color: isExercise ? AppColors.textPrimary : AppColors.textMutedLight, fontWeight: FontWeight.w600),
+          ),
         ),
       ],
     );

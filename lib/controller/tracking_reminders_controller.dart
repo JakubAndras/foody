@@ -58,6 +58,9 @@ class TrackingRemindersController extends GetxController {
       if (!granted) {
         return;
       }
+      // Best-effort: ask for exact alarms so reminders fire on time. If the
+      // user declines, scheduleReminder falls back to inexact mode.
+      await trackingReminderService.ensureExactAlarmsPermission();
     }
 
     final updated = current.copyWith(enabled: enabled);

@@ -568,7 +568,9 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with WidgetsBindingObse
                     const SizedBox(height: AppSpacing.m),
                     Row(
                       children: [
-                        Expanded(child: Text(tr(LocaleKeys.language_settings_voice_language_title), style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700))),
+                        Expanded(
+                          child: Text(tr(LocaleKeys.language_settings_voice_language_title), style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700)),
+                        ),
                         GestureDetector(
                           onTap: () => Navigator.of(sheetContext).pop(),
                           child: Container(
@@ -643,20 +645,20 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with WidgetsBindingObse
           ),
           padding: const EdgeInsets.fromLTRB(AppSpacing.l, AppSpacing.xxs, AppSpacing.l, AppSpacing.xl),
           child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SheetDragHandle(color: AppColors.textTertiary.withValues(alpha: 0.3)),
-            const SizedBox(height: AppSpacing.l),
-            Text(tr(LocaleKeys.voice_tips_title), style: AppTextStyles.title18.copyWith(fontWeight: FontWeight.w700)),
-            const SizedBox(height: AppSpacing.m),
-            _VoiceTipRow(icon: CupertinoIcons.mic, text: tr(LocaleKeys.voice_tips_speak_clearly)),
-            _VoiceTipRow(icon: CupertinoIcons.flame, text: tr(LocaleKeys.voice_tips_one_meal)),
-            _VoiceTipRow(icon: CupertinoIcons.speedometer, text: tr(LocaleKeys.voice_tips_include_portions)),
-            _VoiceTipRow(icon: CupertinoIcons.slider_horizontal_3, text: tr(LocaleKeys.voice_tips_be_specific)),
-            _VoiceTipRow(icon: CupertinoIcons.pause_circle, text: tr(LocaleKeys.voice_tips_pause_resume)),
-            _VoiceTipRow(icon: CupertinoIcons.pencil, text: tr(LocaleKeys.voice_tips_edit_text)),
-            _VoiceTipRow(icon: CupertinoIcons.globe, text: tr(LocaleKeys.voice_tips_languages)),
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SheetDragHandle(color: AppColors.textTertiary.withValues(alpha: 0.3)),
+              const SizedBox(height: AppSpacing.l),
+              Text(tr(LocaleKeys.voice_tips_title), style: AppTextStyles.title18.copyWith(fontWeight: FontWeight.w700)),
+              const SizedBox(height: AppSpacing.m),
+              _VoiceTipRow(icon: CupertinoIcons.mic, text: tr(LocaleKeys.voice_tips_speak_clearly)),
+              _VoiceTipRow(icon: CupertinoIcons.flame, text: tr(LocaleKeys.voice_tips_one_meal)),
+              _VoiceTipRow(icon: CupertinoIcons.speedometer, text: tr(LocaleKeys.voice_tips_include_portions)),
+              _VoiceTipRow(icon: CupertinoIcons.slider_horizontal_3, text: tr(LocaleKeys.voice_tips_be_specific)),
+              _VoiceTipRow(icon: CupertinoIcons.pause_circle, text: tr(LocaleKeys.voice_tips_pause_resume)),
+              _VoiceTipRow(icon: CupertinoIcons.pencil, text: tr(LocaleKeys.voice_tips_edit_text)),
+              _VoiceTipRow(icon: CupertinoIcons.globe, text: tr(LocaleKeys.voice_tips_languages)),
             ],
           ),
         ),
@@ -709,7 +711,11 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with WidgetsBindingObse
                         child: Column(
                           children: [
                             const SizedBox(height: AppSpacing.xl),
-                            VoiceLogToggle(isExercise: isExercise, onSelectMeals: () => _toggleMode(VoiceLogMode.meals), onSelectExercise: () => _toggleMode(VoiceLogMode.exercise)),
+                            VoiceLogToggle(
+                              isExercise: isExercise,
+                              onSelectMeals: () => _toggleMode(VoiceLogMode.meals),
+                              onSelectExercise: () => _toggleMode(VoiceLogMode.exercise),
+                            ),
                             const SizedBox(height: AppSpacing.l),
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
@@ -769,12 +775,9 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with WidgetsBindingObse
                                     (_showAnalyzeHint
                                         ? tr(LocaleKeys.voice_tap_analyze)
                                         : (_isAnalyzing
-                                            ? tr(LocaleKeys.voice_analyzing)
-                                            : (_isPaused
-                                                ? tr(LocaleKeys.voice_paused)
-                                                : (_isListening ? tr(LocaleKeys.voice_listening) : tr(LocaleKeys.voice_resuming))))),
-                                style: AppTextStyles.body14.copyWith(
-                                    color: _speechErrorMessage == null ? AppColors.textPrimary : AppColors.error, fontWeight: FontWeight.w600),
+                                              ? tr(LocaleKeys.voice_analyzing)
+                                              : (_isPaused ? tr(LocaleKeys.voice_paused) : (_isListening ? tr(LocaleKeys.voice_listening) : tr(LocaleKeys.voice_resuming))))),
+                                style: AppTextStyles.body14.copyWith(color: _speechErrorMessage == null ? AppColors.textPrimary : AppColors.error, fontWeight: FontWeight.w600),
                                 textAlign: TextAlign.center,
                               ),
                             const SizedBox(height: AppSpacing.xl),
@@ -839,7 +842,9 @@ class _VoiceLanguageRow extends StatelessWidget {
           children: [
             Text(flag, style: const TextStyle(fontSize: 24)),
             const SizedBox(width: AppSpacing.m),
-            Expanded(child: Text(label, style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w500))),
+            Expanded(
+              child: Text(label, style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w500)),
+            ),
             if (selected)
               Container(
                 width: AppSizes.iconMd + 4,

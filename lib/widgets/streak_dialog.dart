@@ -95,7 +95,7 @@ class StreakSheet extends StatelessWidget {
                         child: Container(
                           width: double.infinity,
                           padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
-                          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(AppRadii.l)),
+                          decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l)),
                           child: Column(
                             children: [
                               const Icon(CupertinoIcons.flame, size: 56, color: Colors.orange),
@@ -148,7 +148,7 @@ class StreakSheet extends StatelessWidget {
                         child: Container(
                           width: double.infinity,
                           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m, vertical: AppSpacing.m),
-                          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(AppRadii.l)),
+                          decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l)),
                           child: Row(
                             children: [
                               Icon(CupertinoIcons.star_circle, size: 24, color: Colors.orange),
@@ -160,7 +160,7 @@ class StreakSheet extends StatelessWidget {
                                     Text(tr(LocaleKeys.streak_your_record), style: AppTextStyles.body13.copyWith(color: AppColors.calendarDarkMuted)),
                                     Text(
                                       tr(LocaleKeys.streak_days, namedArgs: {'count': info.longestStreak.toString()}),
-                                      style: AppTextStyles.body16.copyWith(color: AppColors.black, fontWeight: FontWeight.w700),
+                                      style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w700),
                                     ),
                                   ],
                                 ),

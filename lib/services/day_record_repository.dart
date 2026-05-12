@@ -11,6 +11,7 @@ import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/model/exercise.dart';
 import 'package:diplomka/model/ingredient.dart';
 import 'package:diplomka/model/meal.dart';
+import 'package:diplomka/model/nutrition_goals.dart';
 import 'package:diplomka/utils/media_storage.dart';
 import 'package:get/get.dart';
 
@@ -22,8 +23,11 @@ class DayRecordRepository extends GetxService {
   final AppDatabase _database;
 
   DayRecordDao get _dayRecordDao => _database.dayRecordDao;
+
   MealDao get _mealDao => _database.mealDao;
+
   IngredientDao get _ingredientDao => _database.ingredientDao;
+
   ExerciseDao get _exerciseDao => _database.exerciseDao;
 
   Stream<List<DayRecord>> watchDayRecords() {
@@ -67,21 +71,10 @@ class DayRecordRepository extends GetxService {
     DayRecordEntity entity;
 
     if (existing != null) {
-      entity = existing.copyWith(
-        calorieGoal: record.calorieGoal,
-        proteinGoal: record.proteinGoal,
-        carbsGoal: record.carbsGoal,
-        fatGoal: record.fatGoal,
-      );
+      entity = existing.copyWith(calorieGoal: record.calorieGoal, proteinGoal: record.proteinGoal, carbsGoal: record.carbsGoal, fatGoal: record.fatGoal);
       await _dayRecordDao.updateDayRecord(entity);
     } else {
-      entity = DayRecordEntity(
-        date: normalizedDate,
-        calorieGoal: record.calorieGoal,
-        proteinGoal: record.proteinGoal,
-        carbsGoal: record.carbsGoal,
-        fatGoal: record.fatGoal,
-      );
+      entity = DayRecordEntity(date: normalizedDate, calorieGoal: record.calorieGoal, proteinGoal: record.proteinGoal, carbsGoal: record.carbsGoal, fatGoal: record.fatGoal);
       final id = await _dayRecordDao.insertDayRecord(entity);
       entity = entity.copyWith(id: id);
     }
@@ -99,7 +92,8 @@ class DayRecordRepository extends GetxService {
     bool mealEditedNow = meal.wasEditedByUser;
     DateTime? mealEditedAt = meal.editedAt;
     if (mealHasAiSnapshot && !meal.wasEditedByUser) {
-      final divergent = (meal.name != (meal.aiOriginalName ?? meal.name)) ||
+      final divergent =
+          (meal.name != (meal.aiOriginalName ?? meal.name)) ||
           _diverges(meal.totalCalories, meal.aiOriginalCalories) ||
           _diverges(meal.totalProteins, meal.aiOriginalProteins) ||
           _diverges(meal.totalCarbs, meal.aiOriginalCarbs) ||
@@ -151,7 +145,8 @@ class DayRecordRepository extends GetxService {
       final bool ingHasSnapshot = ingredient.aiOriginalCalories != null;
       bool ingEdited = ingredient.wasEditedByUser;
       if (ingHasSnapshot && !ingredient.wasEditedByUser) {
-        final divergent = (ingredient.name != (ingredient.aiOriginalName ?? ingredient.name)) ||
+        final divergent =
+            (ingredient.name != (ingredient.aiOriginalName ?? ingredient.name)) ||
             _diverges(ingredient.weight, ingredient.aiOriginalWeight) ||
             _diverges(ingredient.amount, ingredient.aiOriginalAmount) ||
             _diverges(ingredient.calories, ingredient.aiOriginalCalories) ||
@@ -199,6 +194,7 @@ class DayRecordRepository extends GetxService {
     if (original == null) return false;
     return (current - original).abs() > _editTolerance;
   }
+
   // RESEARCH-ONLY: end
 
   Future<void> deleteMeal(Meal meal) async {
@@ -362,16 +358,27 @@ class DayRecordRepository extends GetxService {
       return existing.id!;
     }
 
+    final seed = await _resolveSeedGoalsForNewRecord(normalizedDate);
     final id = await _dayRecordDao.insertDayRecord(
-      DayRecordEntity(date: normalizedDate),
+      DayRecordEntity(date: normalizedDate, calorieGoal: seed.calorieGoal, proteinGoal: seed.proteinGoal, carbsGoal: seed.carbsGoal, fatGoal: seed.fatGoal),
     );
     return id;
   }
 
+  Future<NutritionGoals> _resolveSeedGoalsForNewRecord(DateTime normalizedDate) async {
+    final prior = await _dayRecordDao.findMostRecentDayRecordBefore(normalizedDate.millisecondsSinceEpoch);
+    if (prior != null) {
+      return NutritionGoals(calorieGoal: prior.calorieGoal, proteinGoal: prior.proteinGoal, carbsGoal: prior.carbsGoal, fatGoal: prior.fatGoal);
+    }
+    final anyExisting = await _dayRecordDao.findMostRecentDayRecord();
+    if (anyExisting != null) {
+      return NutritionGoals(calorieGoal: anyExisting.calorieGoal, proteinGoal: anyExisting.proteinGoal, carbsGoal: anyExisting.carbsGoal, fatGoal: anyExisting.fatGoal);
+    }
+    return NutritionGoals.defaults;
+  }
+
   Future<DayRecord> _buildDayRecordFromEntity(DayRecordEntity entity, {bool includeDeleted = false}) async {
-    final mealEntities = includeDeleted
-        ? await _mealDao.findAllMealsForDayRecordIncludingDeleted(entity.id!)
-        : await _mealDao.findMealsForDayRecord(entity.id!);
+    final mealEntities = includeDeleted ? await _mealDao.findAllMealsForDayRecordIncludingDeleted(entity.id!) : await _mealDao.findMealsForDayRecord(entity.id!);
     final exerciseEntities = await _exerciseDao.findExercisesForDayRecord(entity.id!);
     final meals = await Future.wait(mealEntities.map((m) => _buildMealFromEntity(m, includeDeleted: includeDeleted)));
     final exercises = exerciseEntities.map(_buildExerciseFromEntity).toList();

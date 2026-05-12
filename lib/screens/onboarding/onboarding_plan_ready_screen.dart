@@ -22,7 +22,7 @@ class OnboardingPlanReadyScreen extends StatelessWidget {
     return value.toStringAsFixed(1);
   }
 
-  String _buildGoalSummaryLabel() {
+  String _buildGoalSummaryLabel(BuildContext context) {
     final double? currentWeightKg = SessionManager.to.weightKg.value;
     final double? desiredWeightKg = SessionManager.to.goalWeightKg.value;
     final double speedKgPerWeek = (SessionManager.to.weightChangeRateKgPerWeek.value ?? 0.8).clamp(0.1, 1.5);
@@ -40,29 +40,22 @@ class OnboardingPlanReadyScreen extends StatelessWidget {
     final double weeksToGoal = deltaKg / speedKgPerWeek;
     final int daysToGoal = (weeksToGoal * 7).ceil();
     final DateTime targetDate = DateTime.now().add(Duration(days: daysToGoal));
-    final String formattedDate = DateFormat('MMMM d, y').format(targetDate);
+    final String localeTag = context.locale.toString();
+    final String datePattern = context.locale.languageCode == 'cs' ? 'd. MMMM y' : 'MMMM d, y';
+    final String formattedDate = DateFormat(datePattern, localeTag).format(targetDate);
     final String action = isLosingWeight ? tr(LocaleKeys.onboarding_action_lose) : tr(LocaleKeys.onboarding_action_gain);
 
-    return '$action ${_formatKg(deltaKg)} kg by $formattedDate';
-  }
-
-  String _buildGoalHeading() {
-    final double? currentWeightKg = SessionManager.to.weightKg.value;
-    final double? desiredWeightKg = SessionManager.to.goalWeightKg.value;
-    if (currentWeightKg == null || desiredWeightKg == null) {
-      return tr(LocaleKeys.onboarding_your_goal);
-    }
-    if ((currentWeightKg - desiredWeightKg).abs() < 0.1) {
-      return tr(LocaleKeys.onboarding_you_should_maintain);
-    }
-    return desiredWeightKg < currentWeightKg ? tr(LocaleKeys.onboarding_you_should_lose) : tr(LocaleKeys.onboarding_you_should_gain);
+    return tr(LocaleKeys.onboarding_goal_by_date, namedArgs: {
+      'action': action,
+      'amount': _formatKg(deltaKg),
+      'date': formattedDate,
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
-    final String goalSummaryLabel = _buildGoalSummaryLabel();
-    final String goalHeading = _buildGoalHeading();
+    final String goalSummaryLabel = _buildGoalSummaryLabel(context);
     final NutritionGoals goals = NutritionGoalsService.to.goalsForDate(DateTime.now());
 
     return OnboardingPage(
@@ -79,8 +72,6 @@ class OnboardingPlanReadyScreen extends StatelessWidget {
             style: textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: AppSpacing.l),
-          Text(goalHeading, style: textTheme.bodyLarge),
-          const SizedBox(height: AppSpacing.xs),
           OnboardingPillChipBig(label: goalSummaryLabel, backgroundColor: AppColors.surfacePill),
           const SizedBox(height: AppSpacing.xl),
           Align(

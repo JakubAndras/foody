@@ -54,7 +54,13 @@ class SessionManager extends GetxService {
       return;
     }
     final age = DateTime.now().difference(dob).inDays ~/ 365;
-    bmr.value = s == ProfileSex.male ? 10 * w + 6.25 * h - 5 * age + 5 : 10 * w + 6.25 * h - 5 * age - 161;
+    // ProfileSex.other averages the male (+5) and female (-161) constants.
+    final double sexConstant = switch (s) {
+      ProfileSex.male => 5,
+      ProfileSex.female => -161,
+      ProfileSex.other => -78,
+    };
+    bmr.value = 10 * w + 6.25 * h - 5 * age + sexConstant;
   }
 
   Future<void> onAppInit() async {

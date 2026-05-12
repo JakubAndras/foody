@@ -313,6 +313,33 @@ class _$DayRecordDao extends DayRecordDao {
   }
 
   @override
+  Future<DayRecordEntity?> findMostRecentDayRecordBefore(int beforeMs) async {
+    return _queryAdapter.query(
+        'SELECT * FROM DayRecord WHERE date < ?1 ORDER BY date DESC LIMIT 1',
+        mapper: (Map<String, Object?> row) => DayRecordEntity(
+            id: row['id'] as int?,
+            date: _dateTimeConverter.decode(row['date'] as int),
+            calorieGoal: row['calorieGoal'] as double,
+            proteinGoal: row['proteinGoal'] as double,
+            carbsGoal: row['carbsGoal'] as double,
+            fatGoal: row['fatGoal'] as double),
+        arguments: [beforeMs]);
+  }
+
+  @override
+  Future<DayRecordEntity?> findMostRecentDayRecord() async {
+    return _queryAdapter.query(
+        'SELECT * FROM DayRecord ORDER BY date DESC LIMIT 1',
+        mapper: (Map<String, Object?> row) => DayRecordEntity(
+            id: row['id'] as int?,
+            date: _dateTimeConverter.decode(row['date'] as int),
+            calorieGoal: row['calorieGoal'] as double,
+            proteinGoal: row['proteinGoal'] as double,
+            carbsGoal: row['carbsGoal'] as double,
+            fatGoal: row['fatGoal'] as double));
+  }
+
+  @override
   Future<int> insertDayRecord(DayRecordEntity dayRecord) {
     return _dayRecordEntityInsertionAdapter.insertAndReturnId(
         dayRecord, OnConflictStrategy.replace);

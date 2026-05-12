@@ -70,7 +70,7 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
       final updated = _buildExercise();
 
       if (widget.openedFromLogScreen) {
-        final normalized = ExerciseTemplate.normalize(updated.name);
+        final normalized = ExerciseTemplate.normalize(widget.exercise.name);
         final template = ExerciseTemplateRepository.to.allTemplates.firstWhereOrNull((t) => t.normalizedName == normalized);
         if (template != null) {
           await ExerciseTemplateRepository.to.updateTemplateValues(

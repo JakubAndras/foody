@@ -27,13 +27,16 @@ class _OnboardingHeightWeightScreenState extends State<OnboardingHeightWeightScr
   late final List<int> _weightKgValues;
   late final List<int> _heightInchValues;
   late final List<int> _weightLbValues;
-  int _selectedHeightCm = 175;
-  int _selectedWeightKg = 80;
+  int _selectedHeightCm = _otherDefaultHeightCm;
+  int _selectedWeightKg = _otherDefaultWeightKg;
 
   static const int _maleDefaultHeightCm = 175;
   static const int _maleDefaultWeightKg = 80;
   static const int _femaleDefaultHeightCm = 160;
   static const int _femaleDefaultWeightKg = 60;
+  // ProfileSex.other averages male and female defaults.
+  static const int _otherDefaultHeightCm = 168;
+  static const int _otherDefaultWeightKg = 70;
 
   @override
   void initState() {
@@ -49,22 +52,20 @@ class _OnboardingHeightWeightScreenState extends State<OnboardingHeightWeightScr
     if (storedHeight != null) {
       _selectedHeightCm = storedHeight.round();
     } else {
-      final sex = SessionManager.to.sex.value;
-      if (sex == ProfileSex.female) {
-        _selectedHeightCm = _femaleDefaultHeightCm;
-      } else if (sex == ProfileSex.male) {
-        _selectedHeightCm = _maleDefaultHeightCm;
-      }
+      _selectedHeightCm = switch (SessionManager.to.sex.value) {
+        ProfileSex.male => _maleDefaultHeightCm,
+        ProfileSex.female => _femaleDefaultHeightCm,
+        ProfileSex.other || null => _otherDefaultHeightCm,
+      };
     }
     if (storedWeight != null) {
       _selectedWeightKg = storedWeight.round();
     } else {
-      final sex = SessionManager.to.sex.value;
-      if (sex == ProfileSex.female) {
-        _selectedWeightKg = _femaleDefaultWeightKg;
-      } else if (sex == ProfileSex.male) {
-        _selectedWeightKg = _maleDefaultWeightKg;
-      }
+      _selectedWeightKg = switch (SessionManager.to.sex.value) {
+        ProfileSex.male => _maleDefaultWeightKg,
+        ProfileSex.female => _femaleDefaultWeightKg,
+        ProfileSex.other || null => _otherDefaultWeightKg,
+      };
     }
 
     _selectedHeightCm = _selectedHeightCm.clamp(_heightCmValues.first, _heightCmValues.last);

@@ -15,6 +15,12 @@ abstract class DayRecordDao {
   @Query('''SELECT * FROM DayRecord ORDER BY date DESC''')
   Future<List<DayRecordEntity>> getAllDayRecords();
 
+  @Query('SELECT * FROM DayRecord WHERE date < :beforeMs ORDER BY date DESC LIMIT 1')
+  Future<DayRecordEntity?> findMostRecentDayRecordBefore(int beforeMs);
+
+  @Query('SELECT * FROM DayRecord ORDER BY date DESC LIMIT 1')
+  Future<DayRecordEntity?> findMostRecentDayRecord();
+
   @Insert(onConflict: OnConflictStrategy.replace)
   Future<int> insertDayRecord(DayRecordEntity dayRecord);
 

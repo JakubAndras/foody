@@ -55,6 +55,7 @@ class MotivationalSummaryController extends GetxController {
       final granted = await trackingReminderService.ensureNotificationPermission();
       notificationPermissionDenied.value = !granted;
       if (!granted) return;
+      await trackingReminderService.ensureExactAlarmsPermission();
     }
 
     final updated = current.copyWith(enabled: enabled);

@@ -1,5 +1,6 @@
 import 'package:diplomka/model/meal.dart';
 import 'package:diplomka/model/exercise.dart';
+import 'package:diplomka/model/nutrition_goals.dart';
 
 class DayRecord {
   final int? id;
@@ -16,10 +17,10 @@ class DayRecord {
     required this.date,
     required this.meals,
     this.exercises = const [],
-    this.calorieGoal = 2000, // Default calorie goal
-    this.proteinGoal = 150, // Default protein goal
-    this.carbsGoal = 250, // Default carbs goal
-    this.fatGoal = 70, // Default fat goal
+    required this.calorieGoal,
+    required this.proteinGoal,
+    required this.carbsGoal,
+    required this.fatGoal,
   });
 
   factory DayRecord.initial(DateTime date) {
@@ -27,6 +28,10 @@ class DayRecord {
       date: date,
       meals: [],
       exercises: const [],
+      calorieGoal: NutritionGoals.defaults.calorieGoal,
+      proteinGoal: NutritionGoals.defaults.proteinGoal,
+      carbsGoal: NutritionGoals.defaults.carbsGoal,
+      fatGoal: NutritionGoals.defaults.fatGoal,
     );
   }
 

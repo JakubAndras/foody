@@ -1,8 +1,6 @@
-import 'package:diplomka/services/motivational_summary_service.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/services/home_widget/widget_sync_service.dart';
 import 'package:diplomka/services/language_settings_service.dart';
-import 'package:diplomka/services/tracking_reminder_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -21,18 +19,7 @@ Future<void> main() async {
   await setupServices();
   await SessionManager.to.onAppInit();
   await LanguageSettingsService.to.load();
-  await TrackingReminderService.to.initialize();
-  await TrackingReminderService.to.rescheduleAllFromStorage();
-  await MotivationalSummaryService.to.initialize();
-  await MotivationalSummaryService.to.rescheduleAllFromStorage();
   await WidgetSyncService.to.initialize();
-  if (SessionManager.to.onboardingComplete.value) {
-    print('[Notifications] Requesting permission at startup...');
-    final granted = await TrackingReminderService.to.ensureNotificationPermission();
-    print('[Notifications] Permission result: $granted');
-  } else {
-    print('[Notifications] Skipping permission request (onboarding not complete)');
-  }
 
   runApp(
     EasyLocalization(
@@ -47,8 +34,5 @@ Future<void> main() async {
 
 class InitUtils {
   static String localizationPath = 'assets/translations';
-  static List<Locale> supportedLocales = [
-    const Locale('en'),
-    const Locale('cs'),
-  ];
+  static List<Locale> supportedLocales = [const Locale('en'), const Locale('cs')];
 }

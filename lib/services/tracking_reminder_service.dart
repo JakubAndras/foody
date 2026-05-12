@@ -30,17 +30,10 @@ class TrackingReminderService extends GetxService {
 
     const initializationSettings = InitializationSettings(
       android: AndroidInitializationSettings('@mipmap/ic_launcher'),
-      iOS: DarwinInitializationSettings(
-        requestAlertPermission: true,
-        requestBadgePermission: true,
-        requestSoundPermission: true,
-      ),
+      iOS: DarwinInitializationSettings(requestAlertPermission: true, requestBadgePermission: true, requestSoundPermission: true),
     );
 
-    await notificationsPlugin.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse: _onNotificationTap,
-    );
+    await notificationsPlugin.initialize(initializationSettings, onDidReceiveNotificationResponse: _onNotificationTap);
     await _createAndroidChannel();
     _initialized = true;
     print('[Notifications] Plugin initialized');
@@ -60,13 +53,42 @@ class TrackingReminderService extends GetxService {
   Future<void> _createAndroidChannel() async {
     final channel = AndroidNotificationChannel(
       trackingRemindersChannelId,
-      tr(LocaleKeys.tracking_reminders_channel_name),
-      description: tr(LocaleKeys.tracking_reminders_channel_desc),
+      _safeTr(LocaleKeys.tracking_reminders_channel_name),
+      description: _safeTr(LocaleKeys.tracking_reminders_channel_desc),
       importance: Importance.high,
     );
 
     final AndroidFlutterLocalNotificationsPlugin? androidImplementation = notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
     await androidImplementation?.createNotificationChannel(channel);
+  }
+
+  /// Whether the OS permits scheduling exact alarms. Always true on iOS.
+  /// On Android < 12 exact alarms work without runtime grant; permission_handler
+  /// resolves those cases as already-granted.
+  Future<bool> hasExactAlarmsPermission() async {
+    if (!Platform.isAndroid) return true;
+    final granted = await Permission.scheduleExactAlarm.isGranted;
+    print('[Notifications] hasExactAlarms (Android): $granted');
+    return granted;
+  }
+
+  /// Opens the system "Alarms & reminders" page (Android 12+) so the user can
+  /// allow exact alarms. Returns the resulting grant state. Falls back to
+  /// inexact scheduling automatically when the user declines.
+  Future<bool> ensureExactAlarmsPermission() async {
+    if (!Platform.isAndroid) return true;
+    if (await Permission.scheduleExactAlarm.isGranted) return true;
+    final status = await Permission.scheduleExactAlarm.request();
+    print('[Notifications] Exact alarms permission requested: $status');
+    return status.isGranted;
+  }
+
+  /// Picks `exactAllowWhileIdle` when the OS permits, otherwise falls back to
+  /// `inexactAllowWhileIdle`. Inexact alarms may be delayed by Doze; exact ones
+  /// fire on time.
+  Future<AndroidScheduleMode> resolveAndroidScheduleMode() async {
+    if (!Platform.isAndroid) return AndroidScheduleMode.exactAllowWhileIdle;
+    return await hasExactAlarmsPermission() ? AndroidScheduleMode.exactAllowWhileIdle : AndroidScheduleMode.inexactAllowWhileIdle;
   }
 
   Future<bool> hasNotificationPermission() async {
@@ -104,11 +126,7 @@ class TrackingReminderService extends GetxService {
     if (Platform.isIOS) {
       final IOSFlutterLocalNotificationsPlugin? iosImplementation = notificationsPlugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>();
       print('[Notifications] iOS plugin resolved: ${iosImplementation != null}');
-      final bool? granted = await iosImplementation?.requestPermissions(
-        alert: true,
-        badge: true,
-        sound: true,
-      );
+      final bool? granted = await iosImplementation?.requestPermissions(alert: true, badge: true, sound: true);
       print('[Notifications] iOS permission requested: $granted');
       return granted ?? false;
     }
@@ -128,10 +146,9 @@ class TrackingReminderService extends GetxService {
     await initialize();
     final settings = await loadSettingsFromStorage();
     for (final setting in settings) {
+      await cancelReminder(setting.type);
       if (setting.enabled) {
         await scheduleReminder(setting);
-      } else {
-        await cancelReminder(setting.type);
       }
     }
   }
@@ -143,18 +160,15 @@ class TrackingReminderService extends GetxService {
     final notificationDetails = NotificationDetails(
       android: AndroidNotificationDetails(
         trackingRemindersChannelId,
-        tr(LocaleKeys.tracking_reminders_channel_name),
-        channelDescription: tr(LocaleKeys.tracking_reminders_channel_desc),
+        _safeTr(LocaleKeys.tracking_reminders_channel_name),
+        channelDescription: _safeTr(LocaleKeys.tracking_reminders_channel_desc),
         importance: Importance.high,
         priority: Priority.high,
       ),
-      iOS: const DarwinNotificationDetails(
-        presentAlert: true,
-        presentBadge: true,
-        presentSound: true,
-      ),
+      iOS: const DarwinNotificationDetails(presentAlert: true, presentBadge: true, presentSound: true),
     );
 
+    final scheduleMode = await resolveAndroidScheduleMode();
     try {
       await notificationsPlugin.zonedSchedule(
         setting.type.notificationId,
@@ -165,9 +179,9 @@ class TrackingReminderService extends GetxService {
         payload: setting.type.code,
         matchDateTimeComponents: DateTimeComponents.time,
         uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        androidScheduleMode: scheduleMode,
       );
-      print('[Notifications] Scheduled ${setting.type.code} for $scheduledDate (id=${setting.type.notificationId})');
+      print('[Notifications] Scheduled ${setting.type.code} for $scheduledDate (id=${setting.type.notificationId}, mode=$scheduleMode)');
     } catch (e) {
       print('[Notifications] ERROR scheduling ${setting.type.code}: $e');
     }
@@ -190,22 +204,34 @@ class TrackingReminderService extends GetxService {
   }
 
   String _notificationTitle() {
-    return tr(LocaleKeys.tracking_reminders_notification_title);
+    return _safeTr(LocaleKeys.tracking_reminders_notification_title);
   }
 
   String _notificationBody(TrackingReminderType type) {
     switch (type) {
       case TrackingReminderType.breakfast:
-        return tr(LocaleKeys.tracking_reminders_body_breakfast);
+        return _safeTr(LocaleKeys.tracking_reminders_body_breakfast);
       case TrackingReminderType.lunch:
-        return tr(LocaleKeys.tracking_reminders_body_lunch);
+        return _safeTr(LocaleKeys.tracking_reminders_body_lunch);
       case TrackingReminderType.snack:
-        return tr(LocaleKeys.tracking_reminders_body_snack);
+        return _safeTr(LocaleKeys.tracking_reminders_body_snack);
       case TrackingReminderType.dinner:
-        return tr(LocaleKeys.tracking_reminders_body_dinner);
+        return _safeTr(LocaleKeys.tracking_reminders_body_dinner);
       case TrackingReminderType.endOfDay:
-        return tr(LocaleKeys.tracking_reminders_body_end_of_day);
+        return _safeTr(LocaleKeys.tracking_reminders_body_end_of_day);
     }
+  }
+
+  String _safeTr(String key) {
+    final resolved = tr(key);
+    assert(() {
+      if (resolved == key) {
+        // ignore: avoid_print
+        print('[Notifications] WARNING: tr() returned the raw key "$key" — EasyLocalization not ready.');
+      }
+      return true;
+    }());
+    return resolved;
   }
 
   static void _onNotificationTap(NotificationResponse response) {

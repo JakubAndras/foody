@@ -1,6 +1,7 @@
 import 'package:diplomka/screens/main_screen.dart';
 import 'package:diplomka/screens/onboarding/onboarding_flow_screen.dart';
 import 'package:diplomka/services/home_widget/widget_sync_service.dart';
+import 'package:diplomka/services/notification_bootstrap.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,9 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      NotificationBootstrap.run();
+    });
   }
 
   @override

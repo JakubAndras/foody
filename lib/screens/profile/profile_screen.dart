@@ -194,8 +194,13 @@ class ProfileScreen extends StatelessWidget {
                         label: tr(LocaleKeys.language_settings_option_english),
                         selected: current == AppLanguage.english,
                         onTap: () async {
-                          await sheetContext.setLocale(AppLanguage.english.locale);
+                          if (current == AppLanguage.english) {
+                            Navigator.of(sheetContext).pop();
+                            return;
+                          }
                           controller.setAppLanguage(AppLanguage.english);
+                          await sheetContext.setLocale(AppLanguage.english.locale);
+                          await Get.updateLocale(AppLanguage.english.locale);
                           if (sheetContext.mounted) Navigator.of(sheetContext).pop();
                         },
                       ),
@@ -205,8 +210,13 @@ class ProfileScreen extends StatelessWidget {
                         label: tr(LocaleKeys.language_settings_option_czech),
                         selected: current == AppLanguage.czech,
                         onTap: () async {
-                          await sheetContext.setLocale(AppLanguage.czech.locale);
+                          if (current == AppLanguage.czech) {
+                            Navigator.of(sheetContext).pop();
+                            return;
+                          }
                           controller.setAppLanguage(AppLanguage.czech);
+                          await sheetContext.setLocale(AppLanguage.czech.locale);
+                          await Get.updateLocale(AppLanguage.czech.locale);
                           if (sheetContext.mounted) Navigator.of(sheetContext).pop();
                         },
                       ),

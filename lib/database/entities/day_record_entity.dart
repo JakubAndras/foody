@@ -18,10 +18,10 @@ class DayRecordEntity {
   DayRecordEntity({
     this.id,
     required this.date,
-    this.calorieGoal = 2000,
-    this.proteinGoal = 150,
-    this.carbsGoal = 250,
-    this.fatGoal = 70,
+    required this.calorieGoal,
+    required this.proteinGoal,
+    required this.carbsGoal,
+    required this.fatGoal,
   });
 
   DayRecordEntity copyWith({

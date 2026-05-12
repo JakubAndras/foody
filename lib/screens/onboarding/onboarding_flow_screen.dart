@@ -129,15 +129,10 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
     final bool showDesiredWeight = !_isGoalMaintain;
     final bool showCustomDiet = _showCustomDiet;
 
-    // Total screens in list:
-    //   1 (welcome) + 1 (gender) + 1 (workouts) + 1 (height/weight) + 1 (dob)
-    //   + 1 (goal) + (1 if desired weight) + 1 (diet) + (1 if custom diet)
-    //   + 1 (loading) + 1 (plan ready)
-    // = 10 + (1 if desired weight) + (1 if custom diet)
-    final int totalScreens = 10 + (showDesiredWeight ? 1 : 0) + (showCustomDiet ? 1 : 0);
-
-    // Progress screens = totalScreens - 2 (minus welcome and loading)
-    final int progressScreenCount = totalScreens - 2;
+    // Screens that render the top progress bar: Gender, Workouts, Height/Weight,
+    // DOB, Goal, (Desired Weight if shown), Diet, Plan Ready. Welcome, Custom
+    // Diet, and Loading intentionally omit it.
+    final int progressScreenCount = 7 + (showDesiredWeight ? 1 : 0);
 
     int progressIndex = 0;
 
