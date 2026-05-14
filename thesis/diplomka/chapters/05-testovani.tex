@@ -585,7 +585,256 @@ Mezní přínos opakované laboratorní studie je za situace, kdy první kolo sk
 Zadruhé, hlavní deklarovaný cíl aplikace, tedy snížení časové a kognitivní zátěže záznamu stravy a podpora dlouhodobé udržitelnosti self monitoringu (viz sekce~\ref{sec:selfMonitoring}), nelze v~rámci 90minutové laboratorní relace adekvátně ověřit.
 Ten se projevuje až v~horizontu dnů a týdnů, kdy se mění míra motivace uživatele, ustaluje se rutina zapisování a vystupují do popředí situace, jež laboratorní úlohy ze své povahy nepokrývají (zápis při běžné stravovací rutině, opakovaná jídla, jídla mimo domov, technické podmínky reálných zařízení a sítí).
 
-Dlouhodobá studie tak doplňuje krátkodobé laboratorní testování o~komplementární rovinu dat: tam, kde \emph{think aloud} relace s~předem připravenými úlohami umožnila identifikovat konkrétní problémy s~použitelností rozhraní, dlouhodobý test cílí na otázky retence, frekvence a struktury reálného používání, vnímané užitečnosti v~delším časovém horizontu a na problémy, které se v~kontrolovaném prostředí neprojeví.
-Návazné podsekce popisují metodiku, výběr a profil participantů, sledované metriky a výsledky této studie.
+Dlouhodobá studie tak doplňuje krátkodobé laboratorní testování o~komplementární rovinu dat: tam, kde \emph{think aloud} relace s~předem připravenými úlohami umožnila identifikovat konkrétní problémy s~použitelností rozhraní, dlouhodobý test cílí na otázky retence, frekvence a~struktury reálného používání, vnímané užitečnosti v~delším časovém horizontu a~na problémy, které se v~kontrolovaném prostředí neprojeví.
+Návazné podsekce popisují metodiku, sledované metriky, profil dosud zařazených účastníků, předběžné výsledky telemetrie, problémy identifikované v~reálném provozu a~omezení dosavadních dat.
 
-% TODO: doplnit obsah dlouhodobého testování (metodika, participanti, sledované metriky, výsledky)
+\subsection{Metodika dlouhodobé studie}
+\label{subsec:metodikaDlouhodobe}
+
+Dlouhodobá uživatelská studie je navržena jako naturalistický \emph{in-the-wild} test, ve kterém každý účastník používá aplikaci na vlastním zařízení v~rámci své běžné stravovací rutiny po dobu dvou týdnů.
+Tento metodologický rámec navazuje na zavedenou tradici terénních studií v~oblasti interakce člověka s~počítačem~\cite{brown2011intoTheWild, rogers2017researchInWild}, jejichž společným rysem je sledování chování uživatele v~přirozeném kontextu po delší časové období, ve kterém krátkodobá laboratorní relace nemůže zachytit stabilizovanou rutinu, motivační dynamiku a~hraniční technické podmínky reálných zařízení.
+Po skončení testovacího období účastník vyplňuje výstupní dotazník zachycující subjektivní hodnocení použitelnosti, kognitivní zátěž a~otevřenou kvalitativní reflexi, jehož struktura je popsána v~sekci~\ref{subsec:metrikyDlouhodobe}.
+Celkový plánovaný vzorek činí šest účastníků; v~době přípravy tohoto textu dva z~nich dvoutýdenní testovací období dokončili a~čtyři další jsou v~průběhu studie.
+
+Studie sleduje dvě komplementární linie dat.
+První linií jsou objektivní behaviorální údaje sbírané přímo aplikací prostřednictvím vyhrazených telemetrických sloupců v~databázi a~odděleného logu pokusů o~rozpoznání pomocí umělé inteligence; jejich struktura a~způsob exportu jsou popsány v~sekci~\ref{subsec:metrikyDlouhodobe}.
+Druhou linií je výstupní dotazník vyplňovaný do dvaceti čtyř hodin po skončení testovacího období, který doplňuje telemetrii o~hodnocení nemožné rekonstruovat z~chování v~aplikaci, zejména subjektivní vnímání použitelnosti a~kognitivní zátěže.
+
+% TODO: doplnit popis recruitmentu účastníků, formy informovaného souhlasu a~nakládání
+% s~exportovanými telemetrickými daty (3--5 vět). Tento odstavec byl v~oponentském posudku
+% označen jako kritický nález (II.2). Umístit za tento komentář, před označení účastníků níže.
+
+Účastníci dlouhodobé studie jsou v~textu označováni dvouznakovým kódem z~příjmení následovaným suffixem, konkrétně \texttt{Ev\_P} a~\texttt{Ku\_P}.
+% TODO: zvážit přejmenování na LP1--LP6 před finálním odevzdáním; opponent (Pavlovec)
+% by formálně preferoval sekvenční anonymní kódy. Aktuální rozhodnutí: ponecháno per
+% pokyn autora; příloha E neprozrazuje původ kódu.
+Tato skupina je distinktní od respondentů strukturovaných rozhovorů (\texttt{R1}--\texttt{R4} v~sekci~\ref{sec:uzivatelskaStudie}) i~od participantů krátkodobého laboratorního testování (\texttt{P1}--\texttt{P3} v~sekci~\ref{subsec:vyberParticipantu}); případné překryvy mezi těmito třemi skupinami budou doplněny po dokončení celé studie.
+
+\subsection{Sledované metriky a~sběr dat}
+\label{subsec:metrikyDlouhodobe}
+
+Sledované metriky se dělí do dvou skupin podle zdroje.
+Behaviorální telemetrie je sbírána automaticky aplikací po celou dobu testovacího období, výstupní dotazník je vyplněn jednorázově po jeho skončení.
+
+Telemetrie využívá vyhrazených sloupců databázových entit \texttt{Meal} a~\texttt{Ingredient} (vstupní modalita, poskytovatel a~verze modelu, případný čárový kód, hodnota spolehlivosti rozpoznání, příznak editace uživatelem a~časová značka odstranění) v~kombinaci s~odděleným logem všech pokusů o~rozpoznání pomocí umělé inteligence, který pro každý pokus zaznamenává časovou značku, modalitu, poskytovatele, model, výsledný stav, hodnotu spolehlivosti a~případnou chybovou hlášku.
+Tyto údaje umožňují odvodit šest skupin metrik: frekvenci a~rozložení záznamů v~čase, distribuci použitých vstupních modalit, rozložení hodnot spolehlivosti AI návrhů, podíl AI návrhů přijatých uživatelem bez další úpravy (\emph{acceptance rate}), poměr úspěšných a~neúspěšných pokusů o~rozpoznání a~rozsah využití integrace s~platformou Apple Health.
+Data jsou exportována do strukturovaného CSV souboru přes mechanismus popsaný v~sekci~\ref{subsec:exportDat} a~slouží jako vstup pro deskriptivní analýzu v~sekci~\ref{subsec:vysledkyDlouhodobe}.
+
+Výstupní dotazník kombinuje dva standardizované nástroje a~tři otevřené otázky.
+Jeho úplné znění a~předpisy pro výpočet skóre jsou uvedeny v~příloze~\ref{app:dlouhodobeTestovani}, stručný přehled obsahu je shrnut v~tabulce~\ref{tab:dotaznikDlouhodobe}.
+
+\begin{table}[ht]
+	\centering
+	\caption{Struktura výstupního dotazníku dlouhodobé studie.}
+	\label{tab:dotaznikDlouhodobe}
+	\small
+	\setlength{\tabcolsep}{4pt}
+	\begin{tabular}{p{0.7cm}p{4.6cm}p{7.6cm}}
+		\toprule
+		\textbf{Sekce} & \textbf{Nástroj} & \textbf{Účel a~očekávaný výstup} \\
+		\midrule
+		A & Identifikace a~demografie & Popis vzorku v~textu práce (věk, pohlaví, hlavní cíl, předchozí zkušenost s~tracking aplikacemi, zdravotní omezení nebo dieta). \\
+		B & System Usability Scale~\cite{brooke1996sus}, 10~položek, škála 1--5 & Standardizované skóre použitelnosti v~rozsahu 0--100 srovnatelné s~výsledkem krátkodobé fáze v~sekci~\ref{subsec:vysledkySus} a~s~referenční hodnotou meta-analýzy aplikací pro výživu~\cite{hyzy2022susDigitalHealth}. \\
+		C & Raw NASA-TLX~\cite{hart1988nasaTlx}, 5~dimenzí, škála 0--20 & Přímé měření kognitivní a~časové zátěže záznamu stravy; reportováno per-dimenze i~jako aritmetický průměr. \\
+		H & Tři otevřené otázky & Kvalitativní podklad pro Závěr a~doporučení pro další rozvoj. \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+Volba nástrojů reflektuje rozdíl mezi krátkodobou a~dlouhodobou fází.
+Dotazník SEQ použitý v~laboratorní fázi měří subjektivní obtížnost vázanou na konkrétní úlohu zadanou moderátorem a~v~naturalistickém scénáři bez předdefinovaných úloh nemá smysluplnou referenci.
+Dotazník UEQ-S byl v~krátkodobé fázi již sebrán a~jeho opětovné nasazení by za jinak shodných podmínek nepřineslo komplementární informaci; namísto toho byl zařazen NASA-TLX, který přímo měří hlavní hypotézu o~snížení kognitivní a~časové zátěže záznamu stravy formulovanou v~sekci~\ref{sec:cile}.
+Net Promoter Score nebylo zařazeno z~důvodu nízké rozlišovací schopnosti jednopoložkové škály při plánovaném vzorku šesti účastníků.
+
+\subsection{Účastníci}
+\label{subsec:ucastniciDlouhodobe}
+
+Pro dosud dokončenou část studie byli zařazeni dva účastníci, jejichž demografický a~motivační profil je shrnut v~tabulce~\ref{tab:ucastniciDlouhodobe}.
+Vstupní údaje pocházejí z~profilu uživatele zaznamenaného v~aplikaci na počátku testovacího období, zbývající čtyři účastníci budou doplněni po skončení svých testovacích období.
+Vzhledem k~tomu, že předkládaná analýza pracuje pouze s~daty od dvou účastníků, jsou výsledky v~sekci~\ref{subsec:vysledkyDlouhodobe} prezentovány jako předběžné a~mají indikativní povahu.
+
+\begin{table}[ht]
+	\centering
+	\caption{Profil účastníků dosud dokončené části dlouhodobé studie.}
+	\label{tab:ucastniciDlouhodobe}
+	\small
+	\setlength{\tabcolsep}{4pt}
+	\begin{tabular}{p{3.6cm}p{4cm}p{4cm}}
+		\toprule
+		\textbf{Údaj} & \textbf{Ev\_P} & \textbf{Ku\_P} \\
+		\midrule
+		Věk & 28~let & 28~let \\
+		Pohlaví & žena & muž \\
+		Výška & 160~cm & 182~cm \\
+		Vstupní hmotnost & 60,0~kg & 89,0~kg \\
+		Cílová hmotnost & 57,0~kg & 85,0~kg \\
+		Hlavní cíl & hubnutí (0,5~kg/týden) & hubnutí (0,7~kg/týden) \\
+		Dietní omezení & bezlepkové; další vlastní omezení v~profilu & žádné \\
+		Délka testovacího období & 18~dní & 17~dní \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+Oba účastníci si jako primární cíl stanovili redukci tělesné hmotnosti při různé deklarované rychlosti hubnutí, profil Ev\_P navíc obsahuje specifická dietní omezení.
+Tato heterogenita motivace a~dietního kontextu je z~hlediska návrhu studie žádoucí, neboť představuje dvě odlišné zátěžové situace pro AI rozpoznávání (běžná strava versus strava s~omezeními) i~pro plánování energetického příjmu.
+
+\subsection{Předběžné výsledky z~telemetrie}
+\label{subsec:vysledkyDlouhodobe}
+
+Následující předběžná analýza vychází výhradně z~telemetrických dat od dvou účastníků dokončené části studie a~je proto deskriptivní povahy.
+Hodnoty výstupního dotazníku (SUS, NASA-TLX, kvalitativní reflexe) budou doplněny po skončení testovacích období všech šesti účastníků a~v~tomto okamžiku nejsou součástí analýzy.
+Souhrn základních deskriptivních ukazatelů je uveden v~tabulce~\ref{tab:telemetrieSouhrn}.
+
+\begin{table}[ht]
+	\centering
+	\caption{Souhrn deskriptivních ukazatelů telemetrie od dvou účastníků dlouhodobé studie.}
+	\label{tab:telemetrieSouhrn}
+	\small
+	\setlength{\tabcolsep}{4pt}
+	\begin{tabular}{p{6cm}p{3.2cm}p{3.2cm}}
+		\toprule
+		\textbf{Ukazatel} & \textbf{Ev\_P} & \textbf{Ku\_P} \\
+		\midrule
+		Aktivní dny záznamu jídla & 15 & 14 \\
+		Počet jídel celkem & 63 & 58 \\
+		Průměrný počet jídel na aktivní den & 4,2 & 4,1 \\
+		Počet ingrediencí celkem & 194 & 201 \\
+		Průměrný denní energetický příjem & 1\,397~kcal\textsuperscript{\textdagger} & 1\,664~kcal\textsuperscript{\textdagger} \\
+		Pokusy o~AI rozpoznání (celkem) & 59 & 56 \\
+		Úspěšnost AI pipeline & 100,0~\% & 89,3~\% \\
+		Počet zaznamenaných cvičení & 22 & 4 \\
+		Z~toho Apple Health / manuálně & 18 / 4 & 0 / 4 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\noindent\textsuperscript{\textdagger}\,Průměr přes aktivní dny, tedy dny s~alespoň jedním zaznamenaným jídlem.
+
+\paragraph{Aktivita a~frekvence záznamu.}
+Ev\_P zaznamenala alespoň jedno jídlo na 15 z~18 dní v~datasetu (od 29.~dubna do 13.~května 2026), Ku\_P na 14 z~17 dní (od 30.~dubna do 13.~května 2026).
+Ve dnech s~alespoň jedním záznamem činí průměrná frekvence záznamu 4,2 jídla za den u~Ev\_P a~4,1 jídla za den u~Ku\_P, což odpovídá očekávané frekvenci jídel běžné dospělé populace s~kombinací hlavních jídel a~svačin.
+Distribuce počtu jídel přes den se mezi účastníky liší v~rozptylu denního energetického příjmu: u~Ku\_P se v~testovacím období vyskytly dva dny s~přijatým objemem 3\,021~kcal a~2\,729~kcal výrazně překračujícím deklarovaný denní limit 2\,000~kcal, u~Ev\_P se denní příjem pohyboval v~užším pásmu.
+
+\paragraph{Distribuce vstupních modalit.}
+Z~hlediska volby vstupní modality se profily obou účastníků liší, jak ukazuje tabulka~\ref{tab:modalityDlouhodobe}.
+Ev\_P kombinuje foto vstup s~hlasovým záznamem v~poměru přibližně 1{,}5\,:\,1 a~doplňuje je o~deset záznamů přes čárový kód (z~toho dva přes \emph{barcode-AI fallback} aktivovaný při neznámém kódu).
+Ku\_P naproti tomu zaznamenává jídla převážně fotograficky (79,3~\% záznamů) a~ostatní modality využívá jen okrajově.
+
+\begin{table}[ht]
+	\centering
+	\caption{Rozložení záznamů jídla podle vstupní modality (počet jídel a~podíl z~celku).}
+	\label{tab:modalityDlouhodobe}
+	\small
+	\setlength{\tabcolsep}{4pt}
+	\begin{tabular}{p{4.5cm}p{2.8cm}p{2.8cm}}
+		\toprule
+		\textbf{Modalita} & \textbf{Ev\_P} & \textbf{Ku\_P} \\
+		\midrule
+		Fotografie + AI            & 27 (42,9~\%) & 46 (79,3~\%) \\
+		Hlas + AI                  & 18 (28,6~\%) & 7 (12,1~\%) \\
+		Čárový kód                 & 9 (14,3~\%)  & 1 (1,7~\%) \\
+		Čárový kód + AI fallback   & 2 (3,2~\%)   & 2 (3,4~\%) \\
+		Opakování rozpoznání       & 4 (6,3~\%)   & 1 (1,7~\%) \\
+		Ruční zápis                & 2 (3,2~\%)   & 1 (1,7~\%) \\
+		\midrule
+		\textbf{Celkem}            & \textbf{63}  & \textbf{58} \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\paragraph{Hodnoty spolehlivosti AI návrhů.}
+Z~celkového počtu 59 úspěšných pokusů u~Ev\_P a~50 úspěšných pokusů u~Ku\_P padla většina hodnot spolehlivosti do pásma odpovídajícího zelené úrovni \emph{confidence gate} popsaného v~sekci~\ref{subsec:confidence}.
+Konkrétně 52 ze 59 pokusů u~Ev\_P (88,1~\%) a~49 z~50 úspěšných pokusů u~Ku\_P (98,0~\%) překročilo prahovou hodnotu 0,75.
+Hodnota spolehlivosti v~žlutém pásmu 0,50--0,75 se objevila u~7 pokusů u~Ev\_P a~u~1 pokusu u~Ku\_P; pod prahem úspěchu 0,50 se neobjevila žádná z~úspěšně dokončených odpovědí, neboť tento práh slouží jako přepínač do stavu \emph{nízká jistota}.
+Předběžně se tak ukazuje, že v~reálném používání aplikace generuje model převážně odpovědi s~vysokou deklarovanou jistotou, což je konzistentní se zelenou indikací v~uživatelském rozhraní.
+
+\paragraph{Acceptance rate AI návrhů.}
+Podíl AI návrhů uložených bez následné editace uživatelem byl spočítán per modalitu na úrovni celého jídla a~je shrnut v~tabulce~\ref{tab:acceptanceDlouhodobe}.
+U~fotografického vstupu dosahuje acceptance rate 77,8~\% u~Ev\_P a~87,0~\% u~Ku\_P, u~hlasového vstupu se obě hodnoty rozcházejí v~83,3~\% u~Ev\_P a~28,6~\% u~Ku\_P, přičemž posledně uvedená hodnota je zatížena malým absolutním vzorkem 7 hlasových záznamů.
+Tato rozcházející se hodnota acceptance rate u~hlasového vstupu naznačuje, že vliv vstupní modality na nutnost editace AI návrhu se v~předběžných datech mísí s~individuální preferencí účastníka, a~spolehlivější rozhodnutí o~směru efektu vyžaduje větší vzorek.
+
+\begin{table}[ht]
+	\centering
+	\caption{\emph{Acceptance rate} AI návrhů na úrovni jídla podle modality (podíl jídel uložených bez editace).}
+	\label{tab:acceptanceDlouhodobe}
+	\small
+	\setlength{\tabcolsep}{4pt}
+	\begin{tabular}{p{4.5cm}p{3cm}p{3cm}}
+		\toprule
+		\textbf{Modalita} & \textbf{Ev\_P} & \textbf{Ku\_P} \\
+		\midrule
+		Fotografie + AI            & 77,8~\% (21/27) & 87,0~\% (40/46) \\
+		Hlas + AI                  & 83,3~\% (15/18) & 28,6~\% (2/7)$^\ast$ \\
+		Opakování rozpoznání       & 50,0~\% (2/4)$^\ast$   & 100,0~\% (1/1)$^\ast$ \\
+		Čárový kód + AI fallback   & 0,0~\% (0/2)$^\ast$    & 100,0~\% (2/2)$^\ast$ \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\noindent\textsuperscript{\ast}\,Hodnoty u~modalit s~malým absolutním vzorkem (méně než 10 záznamů) je nutné interpretovat s~odpovídající opatrností.
+Jmenovatel zlomku označuje počet jídel vytvořených danou modalitou, tedy pokusy o~rozpoznání, které skončily stavem \emph{success} a~vedly k~uloženému záznamu; pokusy se stavem \emph{invalid\_response} nebo \emph{low\_confidence} do tabulky nevstupují, neboť nevedou k~vytvoření jídla.
+
+Komplementární obraz k~acceptance rate poskytuje počet \emph{soft-deleted} záznamů, tedy záznamů, které uživatel po vytvoření označil k~odstranění.
+U~Ev\_P bylo takto odstraněno 6 jídel a~160 ingrediencí, u~Ku\_P 13 jídel a~68 ingrediencí.
+Vyšší počet odstraněných ingrediencí u~Ev\_P při srovnatelném počtu uložených jídel může souviset s~dietním kontextem účastnice; rovnocenně přípustnými vysvětleními jsou individuální editační styl, dostupný čas pro záznam nebo míra znalosti nutriční databáze, jejichž odlišení vyžaduje větší vzorek.
+
+\paragraph{Robustnost AI pipeline.}
+Z~celkového počtu 59 pokusů Ev\_P o~rozpoznání pomocí umělé inteligence skončily všechny stavem \emph{success}, tedy odpovědí s~platným strukturovaným výstupem a~spolehlivostí nad prahem 0,50.
+U~Ku\_P z~56 pokusů skončilo 50 stavem \emph{success}, 5 stavem \emph{invalid\_response} s~prázdnou nebo neparsovatelnou odpovědí modelu (čtyři z~nich se vyskytly v~rámci jedné desetiminutové epizody dne 8.~května) a~1 pokus stavem \emph{low\_confidence} s~hodnotou spolehlivosti 0,23.
+Celková úspěšnost AI pipeline tak činí 100,0~\% u~Ev\_P a~89,3~\% u~Ku\_P; rozdíl je nutné interpretovat s~vědomím odlišného absolutního počtu pokusů a~odlišného mixu modalit.
+Pokles úspěšnosti u~Ku\_P je koncentrován do jediné epizody; bližší příčina by si vyžádala dodatečné diagnostické záznamy, které v~současné implementaci telemetrie nejsou sbírány.
+Při doplnění zbývajících účastníků bude vhodné sledovat, zda se podobné epizody opakují.
+
+\paragraph{Integrace Apple Health a~záznam cvičení.}
+Z~22 záznamů cvičení u~Ev\_P připadá 18 na automatický denní záznam ze zdravotní platformy Apple Health a~4 na manuálně zadané aktivity (nohejbal, tenis).
+U~Ku\_P byla zaznamenána 4 cvičení, všechna manuálně, integrace s~Apple Health nebyla v~jeho profilu aktivována.
+Vzorek dvou účastníků obsahuje obě konfigurace, s~aktivní integrací Apple Health i~bez ní, a~ilustruje, že volba této integrace zásadně mění úplnost zachycení výdejové stránky energetické bilance, neboť bez ní zůstává záznam výdeje plně závislý na aktivním zapsání aktivity uživatelem.
+
+\subsection{Identifikované problémy v~reálném provozu}
+\label{subsec:problemyDlouhodobe}
+
+Během testovacího období bylo na základě verbální zpětné vazby účastníků a~revize telemetrie identifikováno devět nálezů, které se v~kontrolovaném prostředí krátkodobé studie neprojevily.
+Přehled je uveden v~tabulce~\ref{tab:problemyDlouhodobe} včetně vazby na funkční požadavky definované v~sekci~\ref{sec:pozadavky}.
+Každý nález je klasifikován podle typu jako implementační chyba (\emph{bug}) nebo problém uživatelského rozhraní (\emph{UX}), podle závažnosti jako \emph{závažná}, \emph{střední} nebo \emph{kosmetická}, a~podle stavu jako \emph{naplánováno} pro nálezy s~připravenou implementační opravou nebo \emph{otevřeno} pro problémy a~designové otázky ponechané pro pozdější rozhodnutí.
+
+\begin{table}[ht]
+	\centering
+	\caption{Problémy a~otevřené designové otázky identifikované v~průběhu dlouhodobé studie.}
+	\label{tab:problemyDlouhodobe}
+	\small
+	\setlength{\tabcolsep}{3pt}
+	\begin{tabular}{p{0.4cm}p{0.6cm}p{7.6cm}p{1.4cm}p{1.6cm}p{1.4cm}}
+		\toprule
+		\textbf{\#} & \textbf{Typ} & \textbf{Popis} & \textbf{Závažnost} & \textbf{Stav} & \textbf{Vazba} \\
+		\midrule
+		L1 & bug & Denní kalorický limit se v~následujícím dni vrací na hodnotu 2\,000~kcal nezávisle na uživatelově cíli & závažná & naplánováno & FR-03 \\
+		L2 & UX & Hlasový záznam slouží i~jako čistě textový vstup, název \emph{Voice Log} tuto skutečnost nevystihuje a~uživatelé hledali textový vstup pod položkou \emph{Log Meal} & střední & naplánováno & FR-14 \\
+		L3 & UX & Přepínač \emph{Meal/Exercise} na obrazovce hlasového záznamu používá stejnou barvu pro obě varianty a~znesnadňuje vizuální orientaci & kosmetická & naplánováno & FR-14 \\
+		L4 & UX & AI vyhodnotí scénu obsahující jídlo a~nápoj jako jeden záznam s~amount~=~2; v~případě, že uživatel sní jen polovinu jídla a~vypije celý nápoj, není proporcionální editace přímočará & střední & otevřeno & FR-07, FR-15 \\
+		L5 & bug & Texty notifikací o~mealtime se nepřekládají a~místo přeloženého textu se zobrazují jména jazykových klíčů & závažná & naplánováno & FR-29 \\
+		L6 & UX & Rámeček náhledu kamery neodpovídá výslednému oříznutí pořízené fotografie, což vede k~nečekaným kompozičním rozdílům mezi tím, co uživatel vidí v~náhledu, a~uloženou fotografií & střední & naplánováno & FR-06 \\
+		L7 & bug & Změna názvu cvičení v~uživatelské knihovně cvičení se neuloží & závažná & naplánováno & mimo FR \\
+		L8 & UX & Pokud uživatel zadá hlasovým vstupem tři odlišné položky, AI vytvoří jeden záznam s~amount~=~3 namísto tří samostatných záznamů s~amount~=~1; otevřenou otázkou zůstává, který návrh je z~uživatelského hlediska přirozenější & střední & otevřeno & FR-07, FR-14 \\
+		L9 & bug & Den se zápornou kalorickou bilancí (spáleno více, než snědeno) se v~týdenním a~měsíčním přehledu zobrazuje jako den bez záznamu a~přerušuje sérii \emph{streak} & střední & naplánováno & FR-22, FR-24 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\noindent Označení \emph{mimo FR} u~L7 odráží, že úprava názvu cvičení v~uživatelské knihovně cvičení patří do rozšířeného modulu cvičení nad rámec původní specifikace funkčních požadavků FR-01 až FR-30.
+
+Charakter problémů identifikovaných v~dlouhodobé studii se kvalitativně liší od problémů zjištěných v~krátkodobé laboratorní fázi (sekce~\ref{sec:identifikovaneProblemy}).
+Krátkodobé testování s~předem připravenými úlohami se soustředilo na nalezitelnost prvků v~rozhraní a~na koherenci jednotlivých interakčních toků, zatímco dlouhodobé testování v~přirozeném prostředí odhalilo především okrajové stavy a~chyby v~dlouhodobém datovém toku, které se v~rámci 90minutové relace na čistém profilu neprojeví (L1, L9), nedostatečnou srozumitelnost pojmů a~vizuálních konvencí v~situaci, kdy uživatel nemá k~dispozici moderátora (L2, L3, L6) a~hraniční případy AI rozpoznávání spojené s~kompoziční nejednoznačností scény (L4, L8).
+Problémy L1, L2, L3, L5, L6, L7 a~L9 mají připravenou implementační opravu a~jsou plánovány k~zahrnutí do navazující vývojové iterace; problémy L4 a~L8 jsou ponechány jako otevřené, neboť jejich uspokojivé řešení vyžaduje hlubší designové rozhodnutí přesahující rámec aktuální iterace.
+
+\subsection{Omezení dosavadních dat a~další kroky}
+\label{subsec:omezeniDlouhodobe}
+
+Prezentovaná analýza pracuje s~dvojicí účastníků a~deskriptivní povahou výsledků, což výrazně omezuje rozsah závěrů, které lze z~dat odvodit.
+Dvouvzorková telemetrie neumožňuje statistické zobecnění na širší populaci, neumožňuje srovnání mezi podskupinami (například podle pohlaví, věku nebo dietních omezení) a~neumožňuje robustně oddělit individuální preferenci od systematického efektu vstupní modality.
+Kromě malého vzorku je nutné brát v~úvahu i~specifická zkreslení dlouhodobé naturalistické studie: efekt prvních dnů (\emph{novelty effect}) může nadhodnocovat frekvenci záznamu na začátku testovacího období, vědomí účasti ve studii (\emph{Hawthorne effect}) může vést k~pečlivějšímu zápisu, než jaký by účastník praktikoval bez sledování, a~dobrovolná účast přináší riziko samovýběru účastníků s~vyšší motivací než průměrný uživatel cílové skupiny.
+Chybějící výstupní dotazníky brání kvantitativnímu porovnání subjektivně vnímané použitelnosti a~kognitivní zátěže s~výsledky krátkodobé fáze i~s~referenčními benchmarky uvedenými v~sekcích~\ref{subsec:dotazniky} a~\ref{subsec:vysledkySus}.
+Předběžné numerické ukazatele uvedené v~tabulkách~\ref{tab:telemetrieSouhrn}, \ref{tab:modalityDlouhodobe} a~\ref{tab:acceptanceDlouhodobe} je proto nutné chápat jako orientační kontext a~nikoli jako finální zjištění studie.
+
+Plánovaným pokračováním je dokončení testovacích období zbývajících čtyř účastníků a~následné doplnění analýzy o~výsledky výstupního dotazníku v~rozsahu sekcí B, C a~H z~tabulky~\ref{tab:dotaznikDlouhodobe}.
+V~okamžiku, kdy budou všechna data k~dispozici, bude doplněna souhrnná tabulka SUS skóre a~per-dimenze hodnot NASA-TLX napříč všemi šesti účastníky, srovnání s~výsledky krátkodobé fáze a~tematický souhrn odpovědí na tři otevřené otázky.
+Telemetrické metriky popsané v~sekci~\ref{subsec:vysledkyDlouhodobe} budou přepočítány na úplném vzorku a~doplněny o~analýzu rozptylu mezi účastníky, čímž bude umožněno spolehlivější odlišení individuálních vzorců používání od systematických jevů.

@@ -265,16 +265,21 @@ class _MealCopyToSheetState extends State<MealCopyToSheet> {
   }
 
   Widget _buildDayCell(DateTime date) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final isCurrent = _isCurrentDate(date);
     final isSelected = _isDateSelected(date);
 
+    Color bgColor;
     Color textColor;
     if (isSelected) {
-      textColor = AppColors.white1;
+      bgColor = isDark ? Colors.white : AppColors.calendarDarkSurface;
+      textColor = isDark ? AppColors.black : AppColors.white1;
     } else if (isCurrent) {
+      bgColor = AppColors.calendarDarkMuted.withValues(alpha: 0.15);
       textColor = AppColors.calendarDarkMuted;
     } else {
-      textColor = AppColors.black;
+      bgColor = Colors.transparent;
+      textColor = isDark ? Colors.white : AppColors.black;
     }
 
     return GestureDetector(
@@ -284,14 +289,7 @@ class _MealCopyToSheetState extends State<MealCopyToSheet> {
         child: Container(
           width: 38,
           height: 38,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: isSelected
-                ? AppColors.calendarDarkSurface
-                : isCurrent
-                ? AppColors.calendarDarkMuted.withValues(alpha: 0.15)
-                : Colors.transparent,
-          ),
+          decoration: BoxDecoration(shape: BoxShape.circle, color: bgColor),
           alignment: Alignment.center,
           child: Text(
             '${date.day}',
@@ -350,14 +348,6 @@ class _CopyToGlassSheetPainter extends CustomPainter {
     );
 
     canvas.drawRRect(rrect, Paint()..color = AppColors.pickerGlassSolid);
-
-    final highlightRect = Rect.fromLTWH(size.width * 0.1, 0, size.width * 0.8, size.height * 0.12);
-    canvas.drawRRect(
-      RRect.fromRectAndCorners(highlightRect, topLeft: Radius.circular(AppRadii.xxl), topRight: Radius.circular(AppRadii.xxl)),
-      Paint()
-        ..shader = const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x30FFFFFF), Color(0x00FFFFFF)]).createShader(highlightRect)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2.0),
-    );
 
     canvas.drawRRect(
       rrect.deflate(0.4),

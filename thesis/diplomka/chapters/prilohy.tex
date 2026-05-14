@@ -67,14 +67,79 @@ Pro účely reprodukovatelnosti experimentů popsaných v~kapitole~\ref{ch:testo
 \chapter{Doprovodné materiály k~dlouhodobému testování}
 \label{app:dlouhodobeTestovani}
 
-% TODO: Vložit odkazy na archiv s doprovodnými materiály z dlouhodobého uživatelského testování
-% (LP1..LPN, viz TODO sekce v chapters/05-testovani.tex).
-%
-% Doporučená struktura:
-%   - Vstupní instrukce a souhlas s účastí (template)
-%   - Šablona výstupního dotazníku (SUS, NASA-TLX, NPS, kvalitativní reflexe)
-%   - Vyplněné dotazníky (anonymizované)
-%   - Export telemetrie z aplikace (CSV, agregované metriky: acceptance rate,
-%     edit magnitude, distribuce confidence, modality usage)
-%   - Souhrnná tabulka výsledků
+Tato příloha obsahuje úplné znění výstupního dotazníku pro dlouhodobou uživatelskou studii popsanou v~sekci~\ref{sec:dlouhodobeTestovani} a~předpisy pro výpočet skóre standardizovaných nástrojů SUS a~Raw NASA-TLX.
+Po skončení testovacích období všech šesti účastníků budou do přílohy doplněny anonymizované vyplněné dotazníky, souhrnná tabulka výsledků a~úplný export telemetrie ve formátu CSV.
+
+\paragraph{Úvodní informace pro účastníka.}
+Dotazník doplňuje data exportovaná z~aplikace o~subjektivní hodnocení účastníka.
+Vyplňuje se jednorázově do dvaceti čtyř hodin po skončení dvoutýdenního testovacího období.
+Odpovědi jsou anonymizovány identifikátorem účastníka (v~textu práce například \texttt{Ev\_P}, \texttt{Ku\_P}) a~nebudou propojovány s~konkrétní osobou.
+Předpokládaná délka vyplnění činí přibližně deset minut.
+
+\section*{Sekce A -- Identifikace a~demografie}
+
+Účelem sekce je sběr údajů pro popis vzorku v~textu práce a~kalibraci interpretace odpovědí.
+
+\begin{description}[style=nextline, leftmargin=*]
+	\item[Identifikátor účastníka] anonymizovaný kód přidělený autorem práce.
+	\item[Datum vyplnění] DD.\,MM.\,RRRR.
+	\item[Délka testovacího období (dny)] celé číslo.
+	\item[Hlavní cíl stanovený na počátku] jedna z~možností: hubnutí, přibírání, udržování hmotnosti, pouze zaznamenávání bez konkrétního cíle, jiné (volný popis). V~analýze slouží odpověď účastníka jako autoritativní zdroj cíle a~doplňuje hodnotu zadanou v~profilu aplikace na začátku testovacího období.
+	\item[Věk] celé číslo v~letech.
+	\item[Pohlaví] muž, žena, jiné, nechci uvádět.
+	\item[Předchozí zkušenost s~tracking aplikacemi] žádná, krátkodobě jsem zkoušel/a, dlouhodobě používám nebo jsem používal/a.
+	\item[Zdravotní omezení nebo dietní preference] volný text (například alergie, intolerance, vegetariánství, jiné).
+\end{description}
+
+\section*{Sekce B -- System Usability Scale}
+
+\paragraph{Instrukce.} U~každého z~deseti výroků účastník zaznamená míru souhlasu na pětibodové škále, kde 1 znamená \uv{zcela nesouhlasím} a~5 znamená \uv{zcela souhlasím}.
+Liché výroky jsou formulovány pozitivně, sudé negativně.
+
+\begin{enumerate}
+	\item Myslím, že bych aplikaci chtěl/a používat často.
+	\item Aplikace mi přišla zbytečně složitá.
+	\item Aplikace se používala snadno.
+	\item Myslím, že bych potřeboval/a pomoc technika, abych aplikaci dokázal/a používat.
+	\item Jednotlivé funkce aplikace jsou dobře integrované.
+	\item V~aplikaci je příliš mnoho nekonzistencí.
+	\item Většina lidí se podle mě naučí aplikaci používat velmi rychle.
+	\item Aplikace mi přišla nepřehledná a~těžko ovladatelná.
+	\item Při používání aplikace jsem se cítil/a sebejistě.
+	\item Než jsem aplikaci dokázal/a používat, musel/a jsem se naučit hodně věcí.
+\end{enumerate}
+
+\paragraph{Výpočet skóre.} Pro liché výroky je příspěvek položky roven hodnotě odpovědi mínus jedna, pro sudé výroky pět mínus hodnota odpovědi.
+Součet všech deseti příspěvků se vynásobí 2,5; výsledné skóre leží v~rozsahu 0 až~100~bodů (viz vzorec~(\ref{eq:sus}) v~sekci~\ref{subsec:dotazniky}).
+
+\section*{Sekce C -- Raw NASA-TLX}
+
+\paragraph{Instrukce.} U~každé z~pěti dimenzí účastník ohodnotí, do jaké míry dimenzi pociťoval při běžném používání aplikace během testovacího období.
+Hodnoty jsou zadávány na celočíselné škále 0 až~20, kde 0 odpovídá velmi nízké úrovni dimenze a~20 velmi vysoké~\cite{hart1988nasaTlx}.
+
+\begin{description}[style=nextline, leftmargin=*]
+	\item[C.1 Mentální zátěž] Jak mentálně náročné bylo zaznamenat jídlo nebo aktivitu (přemýšlení, rozhodování, vyhledávání)?
+	\item[C.2 Časová zátěž] Cítil/a jste, že zaznamenávání jídla představuje časový tlak nebo zdržení?
+	\item[C.3 Úsilí] Jak velké úsilí (mentální i~fyzické) jste musel/a vynaložit, abyste dosáhl/a požadovaného výsledku?
+	\item[C.4 Vlastní výkon (reverzní)] Jak nespokojený/á jste byl/a s~tím, jak se vám dařilo aplikaci využívat? Pro tuto dimenzi platí 0 = velmi spokojen, 20 = velmi nespokojen.
+	\item[C.5 Frustrace] Jak často jste se cítil/a zmaten/a, podrážděn/a nebo otráven/a?
+\end{description}
+
+\paragraph{Reportování.} Hodnoty jsou primárně reportovány per dimenzi (vektor pěti hodnot).
+Souhrnné skóre se počítá jako aritmetický průměr pěti dimenzí.
+Dimenze C.4 (Vlastní výkon) má reverzní směr již zakódovaný přímo v~textu otázky (0 = velmi spokojen, 20 = velmi nespokojen), takže vyšší hodnota odpovídá horšímu vnímanému výkonu stejně jako u~ostatních dimenzí a~žádná dodatečná transformace při sčítání není potřeba.
+Pro publikační srovnání lze průměr ze škály 0--20 převést na konvenční škálu 0--100 vynásobením koeficientem 5.
+
+\section*{Sekce H -- Kvalitativní reflexe}
+
+Účastník odpoví na následující tři otázky volným textem v~rozsahu jedné až~tří vět:
+
+\begin{description}[style=nextline, leftmargin=*]
+	\item[H.1] Co jste na aplikaci nejvíce ocenil/a? Funkce nebo moment, který vám během testování dával největší hodnotu.
+	\item[H.2] Co vás nejvíce zklamalo nebo zlobilo? Konkrétní situace, kdy aplikace nezvládla, co jste od ní očekával/a.
+	\item[H.3] Pokud byste si měl/a vybrat jedinou věc, kterou by autor měl zlepšit přednostně, co by to bylo?
+\end{description}
+
+\paragraph{Doplnění po skončení studie.}
+Po dokončení testovacích období všech šesti účastníků bude do této přílohy doplněn úplný soubor anonymizovaných vyplněných dotazníků, souhrnná tabulka SUS skóre a~per-dimenze hodnot NASA-TLX, tematický souhrn odpovědí na otevřené otázky a~kompletní telemetrický export v~CSV formátu sloužící jako vstup pro analýzu v~sekci~\ref{subsec:vysledkyDlouhodobe}.
 

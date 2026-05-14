@@ -1,0 +1,10 @@
+# Poznamky z dlouhodobeho testu:
+- [ANO] bug, kde se kazdemu nastavi v nasledujicim dnu kaloricky limit na 2000 .. nehlede zda predchozi den mel mene ci vice
+- [ANO] UI/UX issue, kdy Voice Log slouzi i jako ciste textovy vstup pro AI, ale nikde to neni napsany, nazev Voice Log na to nepokukazuje -> user sel intuitinve do Log Meal/Zaznamet jidlo
+- [ANO] UI/UX issue, kdy Voice Log prepinac pro Meal/Exercise ma stale stejnou barvu a to je matouci -> Exercise nastavit oranzovy gradient jako ma exercise record card
+- [NE] UI/UX issue, kdy meal's amount se nastavi na 2, kdy user vyfoti talir s jidlem a sklenici s pitim vedle nej -> AI to vylozi jako 2 kusy, coz je ale problem, kdyz sni jenom polovinu jidla, ale vypije cele piti a podobne. Otazka jak by se to optimalne melo vlastne chovat a jestli to ojde udelat pres lepsi prompt nebo ne. (To ted fixovat nebudeme, ale v praci o tom musi byt zminka).
+- [ANO] bug, meal time notifikace texty se neprekladaji, zobrazi se jmena promennych (summary notifications jsou ok, zkonstolvoat vsechny pro jistotu).
+- [ANO] UI/UX issue, ramecek/oriznuti fotky v dynamickem preview pred vyfocenim neodpovida vyfocene fotce. Kdyz si jidlo v preview zaroven na vertikalni a horizontalni stred, tak mam jidla na vysledne fotce nehezky v horni casti fotky a zaroven mam vyfocen i spodni prostor pod jidlem, ktery jsem v preview vubec nevidel.
+- [ANO] bug, kde history cvičení (user database of his exercises in Exercise Log) úprava názvu nefunguje, tj po zmene a ulozeni nedojde k ulozeni
+- navrh na upravu -> kdyz user zada napr 3 ruzne veci (banan, jablko, hruska), tak je mu vytvoren jeden zaznam s amount 3 -> alternativa by bylo pro takovy vstup vytvorit 3 samostatne zaznamy, kazdy s amount 1
+- bug, kdyz user je za den z zaporne kcal balanci (spalil vic nez snedl), tak to v prehledu tydennim/mesicnim prehledu vypada, jakoby nic nelogoval a zaroven se mu tim prerusi jeho streaks serie. (prehledu tydennim/mesicnim prehledu vypada, jakoby nic nelogoval -> mozna nejak graficky zvyraznit? nevim, priorita to neni .. prerusi jeho streaks serie -> tohle je bug, potrebuje fix)
