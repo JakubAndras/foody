@@ -117,6 +117,7 @@ class Meal {
         carbs: clampedCarbs,
         fats: clampedFats,
         confidence: ingResponse.confidence,
+        dietaryViolation: ingResponse.dietaryViolation,
         aiOriginalName: ingResponse.name,
         aiOriginalWeight: weight,
         aiOriginalAmount: snappedAmount,

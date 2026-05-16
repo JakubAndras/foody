@@ -295,7 +295,9 @@ class AppSizes {
   static const double actionRowHeight = 28;
   static const double ingredientRowHeight = 80;
   static const double ingredientRowAlertHeight = 100;
-  static const double alertCardHeight = 80;
+  // Matches macroCardSize so the AllergyAlertCard aligns visually with the
+  // Protein / Carbs / Fats row on the EditMealScreen detail.
+  static const double alertCardHeight = 72;
   static const double editFormRowHeight = 48;
   static const double datePickerCell = 48;
   static const double datePickerCellSelected = 50;

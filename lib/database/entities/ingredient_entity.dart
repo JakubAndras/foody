@@ -27,6 +27,11 @@ class IngredientEntity {
   final double? confidence;
   final bool isFavorite;
 
+  // Dietary violation reason flagged by AI at log time, or null if not flagged.
+  // Free-text in user locale; recomputed only on Fix-with-AI.
+  // Legacy rows pre-migration v1→v2 are null and fall back to keyword matching.
+  final String? dietaryViolation;
+
   // RESEARCH-ONLY: all fields below are research-only. Drop columns
   // (`aiOriginal*`, `wasEditedByUser`, `deletedAtMs`) and constructor params
   // before production. See RESEARCH_ONLY.md.
@@ -54,6 +59,7 @@ class IngredientEntity {
     required this.fats,
     this.confidence,
     this.isFavorite = false,
+    this.dietaryViolation,
     // RESEARCH-ONLY: research-only ctor params below
     this.aiOriginalName,
     this.aiOriginalWeight,
@@ -79,6 +85,7 @@ class IngredientEntity {
     double? fats,
     double? confidence,
     bool? isFavorite,
+    String? dietaryViolation,
     // RESEARCH-ONLY: research-only copyWith params below
     String? aiOriginalName,
     double? aiOriginalWeight,
@@ -103,6 +110,7 @@ class IngredientEntity {
       fats: fats ?? this.fats,
       confidence: confidence ?? this.confidence,
       isFavorite: isFavorite ?? this.isFavorite,
+      dietaryViolation: dietaryViolation ?? this.dietaryViolation,
       aiOriginalName: aiOriginalName ?? this.aiOriginalName,
       aiOriginalWeight: aiOriginalWeight ?? this.aiOriginalWeight,
       aiOriginalAmount: aiOriginalAmount ?? this.aiOriginalAmount,

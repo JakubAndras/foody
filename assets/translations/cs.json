@@ -373,7 +373,7 @@
   "meal_validation_calories_required": "Kalorie musí být větší než nula.",
   "meal_add_ingredient": "Přidejte alespoň jednu ingredienci.",
   "meal_calories_positive": "Kalorie musí být větší než 0.",
-  "meal_allergy_alert": "Upozornění na alergii",
+  "meal_allergy_alert": "Dietní varování",
   "meal_sync_macros_prompt": "Kalorie se změnily. Synchronizovat makra?",
   "meal_sync_calories_prompt": "Makra se změnila. Synchronizovat kalorie?",
   "meal_sync": "Synchronizovat",
@@ -840,7 +840,7 @@
   "meal_date": "Datum",
   "meal_move_date_title": "Jídlo bude přesunuto ze záznamu aktuálního dne do záznamu vybraného dne.",
   "common_move": "Přesunout",
-  "meal_allergy_contains": "Toto jídlo obsahuje: {allergen}",
+  "meal_allergy_contains": "{allergen}",
 
   "scan_camera_access": "Přístup ke kameře",
   "scan_camera_disabled_message": "Přístup ke kameře je zakázán. Povolte ho v Nastavení pro skenování jídel.",

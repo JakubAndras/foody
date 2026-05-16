@@ -16,6 +16,7 @@ class Prompt {
             "Step 3: LOOK UP the nutritional values per 100g for each identified food in its observed form (cooked, fried, raw, etc.) based on your knowledge of food composition databases.\n"
             "Step 4: CALCULATE the total nutritional values by multiplying per-100g values by the estimated weight.\n"
             "Step 5: VERIFY that total calories approximately equal (protein × 4) + (carbs × 4) + (fat × 9). Adjust if inconsistent.\n"
+            "Step 6: EVALUATE dietary compatibility — for each ingredient, check whether it violates the user's diet_type and diet_custom_preferences (passed in user attributes). If it violates, set dietary_violation to a brief reason in the user's locale; otherwise null.\n"
             "If no photo is provided, infer the meal from text description only and follow the same steps. Return the result as JSON only.",
     "expected_output": {
       "format": "json",
@@ -42,7 +43,8 @@ class Prompt {
                 "proteins": "double - grams for this ingredient only",
                 "fats": "double - grams for this ingredient only",
                 "carbs": "double - grams for this ingredient only"
-              }
+              },
+              "dietary_violation": "string or null - brief reason in the user's locale if this ingredient violates the user's diet_type or diet_custom_preferences (passed via user attributes); otherwise null"
             }
           ]
         }
@@ -62,7 +64,9 @@ class Prompt {
         "COOKING STATE: Food is most likely cooked/prepared. Use COOKED nutritional values: cooked rice ~130 kcal/100g (not raw ~360), cooked pasta ~130-160 kcal/100g (not raw ~350). However, if the food visually appears raw (raw meat, dry pasta, whole unpeeled produce), use raw values.",
         "COOKING METHOD: Fried/sautéed food absorbs oil → more fat and calories (+30-50% vs grilled/baked). Look for visual cues: shiny/oily surface, crispy coating = fried. Matte surface, grill marks = lower-fat method.",
         "SANITY CHECK: Cross-check each ingredient's calories against your knowledge of typical per-100g nutritional values for that food in its observed form. If your estimate deviates significantly from known values, reconsider either the estimated weight or the nutritional values.",
-        "MACRO CONSISTENCY: Verify calories ≈ (protein × 4) + (carbs × 4) + (fat × 9) for each ingredient and the total. Adjust macros if inconsistent."
+        "MACRO CONSISTENCY: Verify calories ≈ (protein × 4) + (carbs × 4) + (fat × 9) for each ingredient and the total. Adjust macros if inconsistent.",
+        "DIETARY VIOLATION: For each ingredient, evaluate compatibility with the user's diet_type and diet_custom_preferences provided via user attributes. Supported diet_type values include but are not limited to: classic (no restrictions), vegetarian, vegan, pescatarian, kosher, halal, low-FODMAP. diet_custom_preferences is free-text and may include allergies (peanuts, gluten, shellfish, ...) or other restrictions (no added sugar, no eggplant, ...). If the ingredient violates ANY of these, set dietary_violation to a brief reason written in the user's locale (e.g. 'Obsahuje rybu', 'Contains gluten', 'Not vegan: contains honey'). If the ingredient is fully compatible OR no diet is set, set dietary_violation to null. Be conservative on hidden ingredients — a dish like 'carbonara' contains eggs, dairy and gluten even if not visible. Be precise — do not flag clearly compatible foods. Use the SAME locale for dietary_violation as the rest of the response.",
+        "When user attributes contain no diet_type and no diet_custom_preferences, set dietary_violation to null for every ingredient."
       ]
     }
   };

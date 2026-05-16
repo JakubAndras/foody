@@ -19,6 +19,7 @@ import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 import 'package:diplomka/widgets/glass_popup.dart';
 import 'package:diplomka/services/share/app_share_service.dart';
 import 'package:diplomka/services/share/meal_share_builder.dart';
+import 'package:diplomka/services/dietary_violation_service.dart';
 import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/utils/app_limits.dart';
@@ -46,7 +47,6 @@ class EditMealScreen extends StatefulWidget {
   final bool isNewMeal;
   final bool openedFromLogScreen;
   final DateTime? selectedDate;
-  final bool showAllergyAlert;
   final bool showCaloriesDelta;
   final String caloriesDelta;
   final MatchBadgeVariant matchBadgeVariant;
@@ -63,7 +63,6 @@ class EditMealScreen extends StatefulWidget {
     this.isNewMeal = false,
     this.openedFromLogScreen = false,
     this.selectedDate,
-    this.showAllergyAlert = false,
     this.showCaloriesDelta = false,
     this.caloriesDelta = '+125',
     this.matchBadgeVariant = MatchBadgeVariant.good,
@@ -205,6 +204,19 @@ class _EditMealScreenState extends State<EditMealScreen> {
   double get _totalFats => _ingredients.fold(0, (sum, item) => sum + item.fats);
 
   double get _totalWeight => _ingredients.fold(0, (sum, item) => sum + item.weight);
+
+  // Unique dietary violation reasons across current (possibly-edited) ingredients.
+  // Used both for showing the AllergyAlertCard banner and composing its subtitle.
+  List<String> get _mealViolationsList {
+    final service = DietaryViolationService.to;
+    final seen = <String>{};
+    final ordered = <String>[];
+    for (final ing in _ingredients) {
+      final reason = service.checkIngredient(ing);
+      if (reason != null && seen.add(reason)) ordered.add(reason);
+    }
+    return ordered;
+  }
 
   String? get _weightLabelText {
     final w = _totalWeight;
@@ -1224,11 +1236,11 @@ class _EditMealScreenState extends State<EditMealScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            if (widget.showAllergyAlert)
+                            if (_mealViolationsList.isNotEmpty)
                               Column(
                                 children: [
                                   SizedBox(
-                                    height: AppSizes.mealHeroHeight + AppSizes.alertCardHeight - heroOverlap,
+                                    height: AppSizes.mealHeroHeight + (Platform.isAndroid ? AppSizes.alertCardHeight + 10 : AppSizes.alertCardHeight) - heroOverlap,
                                     child: Stack(
                                       children: [
                                         MealHeroHeader(
@@ -1245,7 +1257,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                           top: AppSizes.mealHeroHeight - heroOverlap,
                                           child: AllergyAlertCard(
                                             title: tr(LocaleKeys.meal_allergy_alert),
-                                            subtitle: tr(LocaleKeys.meal_allergy_contains, namedArgs: {'allergen': 'Fish'}),
+                                            subtitle: tr(LocaleKeys.meal_allergy_contains, namedArgs: {'allergen': _mealViolationsList.join(', ')}),
                                           ),
                                         ),
                                       ],
@@ -1451,11 +1463,15 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                 child: Column(
                                   children: List.generate(_ingredients.length, (index) {
                                     final ingredient = _ingredients[index];
+                                    final violationReason = DietaryViolationService.to.checkIngredient(ingredient);
+                                    final isViolation = violationReason != null;
                                     if (!_isEditMode) {
                                       return Padding(
                                         padding: const EdgeInsets.only(bottom: AppSpacing.s),
                                         child: IngredientRow(
                                           ingredient: ingredient,
+                                          highlighted: isViolation,
+                                          alertText: violationReason,
                                           onTap: _isInteractionDisabled
                                               ? null
                                               : () {
@@ -1477,6 +1493,8 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                       padding: const EdgeInsets.only(bottom: AppSpacing.s),
                                       child: EditIngredientRow(
                                         ingredient: ingredient,
+                                        highlighted: isViolation,
+                                        alertText: violationReason,
                                         onTap: _isInteractionDisabled ? null : () => _editIngredient(index),
                                         onFavorite: _isInteractionDisabled ? null : () => _toggleIngredientFavorite(index),
                                         onEdit: _isInteractionDisabled ? null : () => _editIngredient(index),

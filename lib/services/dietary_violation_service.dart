@@ -1,5 +1,7 @@
 import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/model/dietary_violation.dart';
+import 'package:diplomka/model/ingredient.dart';
+import 'package:diplomka/model/meal.dart';
 import 'package:diplomka/model/user_profile.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -167,42 +169,59 @@ class DietaryViolationService {
     }
   }
 
-  bool hasDietaryViolations(DayRecord dayRecord) {
-    final dietType = SessionManager.to.dietType.value;
-    if (dietType == null || dietType == ProfileDietType.classic) return false;
-    final keywords = _getRestrictionKeywords(dietType, SessionManager.to.customDietPreferences.value);
-    if (keywords.isEmpty) return false;
+  // Returns the violation reason for a single ingredient or null.
+  // Resolution order: (1) AI flag persisted on the ingredient, (2) legacy keyword match against name
+  // (covers pre-migration data and manually-entered ingredients that never went through AI).
+  String? checkIngredient(Ingredient ingredient) {
+    final aiFlag = ingredient.dietaryViolation;
+    if (aiFlag != null && aiFlag.trim().isNotEmpty) return aiFlag;
+    return _legacyKeywordReason(ingredient.name);
+  }
 
+  // Unique violation reasons across a meal's ingredients (preserves order of first occurrence).
+  List<String> mealViolations(Meal meal) {
+    final seen = <String>{};
+    final ordered = <String>[];
+    for (final ingredient in meal.ingredients) {
+      final reason = checkIngredient(ingredient);
+      if (reason != null && seen.add(reason)) ordered.add(reason);
+    }
+    return ordered;
+  }
+
+  // Legacy keyword fallback: same logic as before, but translated reason returned instead of key.
+  String? _legacyKeywordReason(String ingredientName) {
+    final dietType = SessionManager.to.dietType.value;
+    if (dietType == null || dietType == ProfileDietType.classic) return null;
+    final keywords = _getRestrictionKeywords(dietType, SessionManager.to.customDietPreferences.value);
+    if (keywords.isEmpty) return null;
+    final nameLower = ingredientName.toLowerCase();
+    for (final entry in keywords.entries) {
+      if (nameLower.contains(entry.key)) return tr(entry.value);
+    }
+    return null;
+  }
+
+  bool hasDietaryViolations(DayRecord dayRecord) {
     for (final meal in dayRecord.meals) {
       for (final ingredient in meal.ingredients) {
-        final nameLower = ingredient.name.toLowerCase();
-        for (final keyword in keywords.keys) {
-          if (nameLower.contains(keyword)) return true;
-        }
+        if (checkIngredient(ingredient) != null) return true;
       }
     }
     return false;
   }
 
   List<DietaryViolation> checkDayRecord(DayRecord dayRecord) {
-    final dietType = SessionManager.to.dietType.value;
-    if (dietType == null || dietType == ProfileDietType.classic) return [];
-    final keywords = _getRestrictionKeywords(dietType, SessionManager.to.customDietPreferences.value);
-    if (keywords.isEmpty) return [];
-
     final violations = <DietaryViolation>[];
     for (final meal in dayRecord.meals) {
       for (final ingredient in meal.ingredients) {
-        final nameLower = ingredient.name.toLowerCase();
-        for (final entry in keywords.entries) {
-          if (nameLower.contains(entry.key)) {
-            violations.add(DietaryViolation(
-              mealName: meal.name,
-              ingredientName: ingredient.name,
-              reason: tr(entry.value),
-            ));
-            break;
-          }
+        final reason = checkIngredient(ingredient);
+        if (reason != null) {
+          violations.add(DietaryViolation(
+            mealName: meal.name,
+            ingredientName: ingredient.name,
+            reason: reason,
+          ));
         }
       }
     }

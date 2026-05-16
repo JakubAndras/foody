@@ -27,7 +27,7 @@ import 'dao/meal_dao.dart';
 
 part 'app_database.g.dart';
 
-const _databaseVersion = 1;
+const _databaseVersion = 2;
 
 @TypeConverters([DateTimeConverter])
 @Database(

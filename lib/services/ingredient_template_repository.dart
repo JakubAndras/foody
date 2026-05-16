@@ -41,6 +41,7 @@ class IngredientTemplateRepository extends GetxService {
         carbs: ingredient.carbs,
         fats: ingredient.fats,
         usageCount: existing.usageCount + 1,
+        dietaryViolation: ingredient.dietaryViolation,
       ));
     } else {
       await _templateDao.insertTemplate(IngredientTemplateEntity(
@@ -54,6 +55,7 @@ class IngredientTemplateRepository extends GetxService {
         fats: ingredient.fats,
         isFavorite: ingredient.isFavorite,
         lastUsedAt: DateTime.now(),
+        dietaryViolation: ingredient.dietaryViolation,
       ));
     }
     await refreshTemplates();

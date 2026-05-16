@@ -373,7 +373,7 @@
   "meal_validation_calories_required": "Calories must be greater than zero.",
   "meal_add_ingredient": "Add at least one ingredient.",
   "meal_calories_positive": "Calories must be greater than 0.",
-  "meal_allergy_alert": "Allergy Alert",
+  "meal_allergy_alert": "Dietary Warning",
   "meal_sync_macros_prompt": "Calories changed. Sync macros to match?",
   "meal_sync_calories_prompt": "Macros changed. Sync calories to match?",
   "meal_sync": "Sync",
@@ -840,7 +840,7 @@
   "meal_date": "Date",
   "meal_move_date_title": "This will move the meal from its current date log to the selected date log.",
   "common_move": "Move",
-  "meal_allergy_contains": "This meal contains: {allergen}",
+  "meal_allergy_contains": "{allergen}",
 
   "scan_camera_access": "Camera access",
   "scan_camera_disabled_message": "Camera access is disabled. Enable it in Settings to scan meals.",

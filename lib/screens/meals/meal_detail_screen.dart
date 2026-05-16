@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 
 class MealDetailScreen extends StatelessWidget {
   final Meal? meal;
-  final bool showAllergyAlert;
   final bool showCaloriesDelta;
   final MatchBadgeVariant matchBadgeVariant;
   final bool openedFromLogScreen;
@@ -16,7 +15,6 @@ class MealDetailScreen extends StatelessWidget {
   const MealDetailScreen({
     super.key,
     this.meal,
-    this.showAllergyAlert = false,
     this.showCaloriesDelta = false,
     this.matchBadgeVariant = MatchBadgeVariant.good,
     this.openedFromLogScreen = false,
@@ -31,7 +29,6 @@ class MealDetailScreen extends StatelessWidget {
       initialMode: MealScreenMode.view,
       openedFromLogScreen: openedFromLogScreen,
       selectedDate: selectedDate,
-      showAllergyAlert: showAllergyAlert,
       showCaloriesDelta: showCaloriesDelta,
       matchBadgeVariant: matchBadgeVariant,
       isPreview: isPreview,

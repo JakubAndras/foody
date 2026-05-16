@@ -98,7 +98,7 @@ class _$AppDatabase extends AppDatabase {
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 1,
+      version: 2,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -118,7 +118,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Meal` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `dayRecordId` INTEGER NOT NULL, `name` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `photoPath` TEXT, `isFavorite` INTEGER NOT NULL, `confidence` REAL, `barcode` TEXT, `inputSource` TEXT, `aiProvider` TEXT, `aiModel` TEXT, `aiOriginalName` TEXT, `aiOriginalCalories` REAL, `aiOriginalProteins` REAL, `aiOriginalCarbs` REAL, `aiOriginalFats` REAL, `aiOriginalConfidence` REAL, `wasEditedByUser` INTEGER NOT NULL, `editedAtMs` INTEGER, `deletedAtMs` INTEGER, FOREIGN KEY (`dayRecordId`) REFERENCES `DayRecord` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Ingredient` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `mealId` INTEGER NOT NULL, `name` TEXT NOT NULL, `weight` REAL NOT NULL, `amount` REAL, `calories` REAL NOT NULL, `proteins` REAL NOT NULL, `carbs` REAL NOT NULL, `fats` REAL NOT NULL, `confidence` REAL, `isFavorite` INTEGER NOT NULL, `aiOriginalName` TEXT, `aiOriginalWeight` REAL, `aiOriginalAmount` REAL, `aiOriginalCalories` REAL, `aiOriginalProteins` REAL, `aiOriginalCarbs` REAL, `aiOriginalFats` REAL, `aiOriginalConfidence` REAL, `wasEditedByUser` INTEGER NOT NULL, `deletedAtMs` INTEGER, FOREIGN KEY (`mealId`) REFERENCES `Meal` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `Ingredient` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `mealId` INTEGER NOT NULL, `name` TEXT NOT NULL, `weight` REAL NOT NULL, `amount` REAL, `calories` REAL NOT NULL, `proteins` REAL NOT NULL, `carbs` REAL NOT NULL, `fats` REAL NOT NULL, `confidence` REAL, `isFavorite` INTEGER NOT NULL, `dietaryViolation` TEXT, `aiOriginalName` TEXT, `aiOriginalWeight` REAL, `aiOriginalAmount` REAL, `aiOriginalCalories` REAL, `aiOriginalProteins` REAL, `aiOriginalCarbs` REAL, `aiOriginalFats` REAL, `aiOriginalConfidence` REAL, `wasEditedByUser` INTEGER NOT NULL, `deletedAtMs` INTEGER, FOREIGN KEY (`mealId`) REFERENCES `Meal` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `WeightEntry` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` INTEGER NOT NULL, `weight` REAL NOT NULL, `photoPath` TEXT)');
         await database.execute(
@@ -126,11 +126,11 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `MealTemplate` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `normalizedName` TEXT NOT NULL, `photoPath` TEXT, `isFavorite` INTEGER NOT NULL, `lastUsedAt` INTEGER NOT NULL, `usageCount` INTEGER NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `MealTemplateIngredient` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `templateId` INTEGER NOT NULL, `name` TEXT NOT NULL, `weight` REAL NOT NULL, `calories` REAL NOT NULL, `proteins` REAL NOT NULL, `carbs` REAL NOT NULL, `fats` REAL NOT NULL, FOREIGN KEY (`templateId`) REFERENCES `MealTemplate` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `MealTemplateIngredient` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `templateId` INTEGER NOT NULL, `name` TEXT NOT NULL, `weight` REAL NOT NULL, `calories` REAL NOT NULL, `proteins` REAL NOT NULL, `carbs` REAL NOT NULL, `fats` REAL NOT NULL, `dietaryViolation` TEXT, FOREIGN KEY (`templateId`) REFERENCES `MealTemplate` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `ExerciseTemplate` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `normalizedName` TEXT NOT NULL, `durationMinutes` INTEGER, `caloriesBurned` REAL NOT NULL, `isFavorite` INTEGER NOT NULL, `lastUsedAt` INTEGER NOT NULL, `usageCount` INTEGER NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `IngredientTemplate` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `normalizedName` TEXT NOT NULL, `weight` REAL NOT NULL, `amount` REAL NOT NULL, `calories` REAL NOT NULL, `proteins` REAL NOT NULL, `carbs` REAL NOT NULL, `fats` REAL NOT NULL, `isFavorite` INTEGER NOT NULL, `lastUsedAt` INTEGER NOT NULL, `usageCount` INTEGER NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `IngredientTemplate` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `normalizedName` TEXT NOT NULL, `weight` REAL NOT NULL, `amount` REAL NOT NULL, `calories` REAL NOT NULL, `proteins` REAL NOT NULL, `carbs` REAL NOT NULL, `fats` REAL NOT NULL, `isFavorite` INTEGER NOT NULL, `lastUsedAt` INTEGER NOT NULL, `usageCount` INTEGER NOT NULL, `dietaryViolation` TEXT)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `AiAttempt` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `timestampMs` INTEGER NOT NULL, `kind` TEXT NOT NULL, `modality` TEXT, `provider` TEXT, `model` TEXT, `status` TEXT NOT NULL, `confidence` REAL, `errorMessage` TEXT)');
         await database.execute(
@@ -600,6 +600,7 @@ class _$IngredientDao extends IngredientDao {
                   'fats': item.fats,
                   'confidence': item.confidence,
                   'isFavorite': item.isFavorite ? 1 : 0,
+                  'dietaryViolation': item.dietaryViolation,
                   'aiOriginalName': item.aiOriginalName,
                   'aiOriginalWeight': item.aiOriginalWeight,
                   'aiOriginalAmount': item.aiOriginalAmount,
@@ -627,6 +628,7 @@ class _$IngredientDao extends IngredientDao {
                   'fats': item.fats,
                   'confidence': item.confidence,
                   'isFavorite': item.isFavorite ? 1 : 0,
+                  'dietaryViolation': item.dietaryViolation,
                   'aiOriginalName': item.aiOriginalName,
                   'aiOriginalWeight': item.aiOriginalWeight,
                   'aiOriginalAmount': item.aiOriginalAmount,
@@ -654,6 +656,7 @@ class _$IngredientDao extends IngredientDao {
                   'fats': item.fats,
                   'confidence': item.confidence,
                   'isFavorite': item.isFavorite ? 1 : 0,
+                  'dietaryViolation': item.dietaryViolation,
                   'aiOriginalName': item.aiOriginalName,
                   'aiOriginalWeight': item.aiOriginalWeight,
                   'aiOriginalAmount': item.aiOriginalAmount,
@@ -694,6 +697,7 @@ class _$IngredientDao extends IngredientDao {
             fats: row['fats'] as double,
             confidence: row['confidence'] as double?,
             isFavorite: (row['isFavorite'] as int) != 0,
+            dietaryViolation: row['dietaryViolation'] as String?,
             aiOriginalName: row['aiOriginalName'] as String?,
             aiOriginalWeight: row['aiOriginalWeight'] as double?,
             aiOriginalAmount: row['aiOriginalAmount'] as double?,
@@ -723,6 +727,7 @@ class _$IngredientDao extends IngredientDao {
             fats: row['fats'] as double,
             confidence: row['confidence'] as double?,
             isFavorite: (row['isFavorite'] as int) != 0,
+            dietaryViolation: row['dietaryViolation'] as String?,
             aiOriginalName: row['aiOriginalName'] as String?,
             aiOriginalWeight: row['aiOriginalWeight'] as double?,
             aiOriginalAmount: row['aiOriginalAmount'] as double?,
@@ -1120,7 +1125,8 @@ class _$MealTemplateIngredientDao extends MealTemplateIngredientDao {
                   'calories': item.calories,
                   'proteins': item.proteins,
                   'carbs': item.carbs,
-                  'fats': item.fats
+                  'fats': item.fats,
+                  'dietaryViolation': item.dietaryViolation
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -1145,7 +1151,8 @@ class _$MealTemplateIngredientDao extends MealTemplateIngredientDao {
             calories: row['calories'] as double,
             proteins: row['proteins'] as double,
             carbs: row['carbs'] as double,
-            fats: row['fats'] as double),
+            fats: row['fats'] as double,
+            dietaryViolation: row['dietaryViolation'] as String?),
         arguments: [templateId]);
   }
 
@@ -1296,7 +1303,8 @@ class _$IngredientTemplateDao extends IngredientTemplateDao {
                   'fats': item.fats,
                   'isFavorite': item.isFavorite ? 1 : 0,
                   'lastUsedAt': _dateTimeConverter.encode(item.lastUsedAt),
-                  'usageCount': item.usageCount
+                  'usageCount': item.usageCount,
+                  'dietaryViolation': item.dietaryViolation
                 }),
         _ingredientTemplateEntityUpdateAdapter = UpdateAdapter(
             database,
@@ -1314,7 +1322,8 @@ class _$IngredientTemplateDao extends IngredientTemplateDao {
                   'fats': item.fats,
                   'isFavorite': item.isFavorite ? 1 : 0,
                   'lastUsedAt': _dateTimeConverter.encode(item.lastUsedAt),
-                  'usageCount': item.usageCount
+                  'usageCount': item.usageCount,
+                  'dietaryViolation': item.dietaryViolation
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -1345,7 +1354,8 @@ class _$IngredientTemplateDao extends IngredientTemplateDao {
             fats: row['fats'] as double,
             isFavorite: (row['isFavorite'] as int) != 0,
             lastUsedAt: _dateTimeConverter.decode(row['lastUsedAt'] as int),
-            usageCount: row['usageCount'] as int));
+            usageCount: row['usageCount'] as int,
+            dietaryViolation: row['dietaryViolation'] as String?));
   }
 
   @override
@@ -1365,7 +1375,8 @@ class _$IngredientTemplateDao extends IngredientTemplateDao {
             fats: row['fats'] as double,
             isFavorite: (row['isFavorite'] as int) != 0,
             lastUsedAt: _dateTimeConverter.decode(row['lastUsedAt'] as int),
-            usageCount: row['usageCount'] as int),
+            usageCount: row['usageCount'] as int,
+            dietaryViolation: row['dietaryViolation'] as String?),
         arguments: [normalizedName]);
   }
 
@@ -1385,7 +1396,8 @@ class _$IngredientTemplateDao extends IngredientTemplateDao {
             fats: row['fats'] as double,
             isFavorite: (row['isFavorite'] as int) != 0,
             lastUsedAt: _dateTimeConverter.decode(row['lastUsedAt'] as int),
-            usageCount: row['usageCount'] as int));
+            usageCount: row['usageCount'] as int,
+            dietaryViolation: row['dietaryViolation'] as String?));
   }
 
   @override

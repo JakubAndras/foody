@@ -59,6 +59,7 @@ class MealTemplateRepository extends GetxService {
                     proteins: i.proteins,
                     carbs: i.carbs,
                     fats: i.fats,
+                    dietaryViolation: i.dietaryViolation,
                   ))
               .toList(),
         );
@@ -91,6 +92,7 @@ class MealTemplateRepository extends GetxService {
               proteins: e.proteins,
               carbs: e.carbs,
               fats: e.fats,
+              dietaryViolation: e.dietaryViolation,
             ))
         .toList();
     return MealTemplate(

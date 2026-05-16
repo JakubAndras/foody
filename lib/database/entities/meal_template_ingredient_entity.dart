@@ -23,6 +23,7 @@ class MealTemplateIngredientEntity {
   final double proteins;
   final double carbs;
   final double fats;
+  final String? dietaryViolation;
 
   MealTemplateIngredientEntity({
     this.id,
@@ -33,5 +34,6 @@ class MealTemplateIngredientEntity {
     required this.proteins,
     required this.carbs,
     required this.fats,
+    this.dietaryViolation,
   });
 }

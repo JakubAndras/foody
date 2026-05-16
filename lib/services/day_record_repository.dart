@@ -166,6 +166,7 @@ class DayRecordRepository extends GetxService {
         fats: ingredient.fats,
         confidence: ingredient.confidence,
         isFavorite: ingredient.isFavorite,
+        dietaryViolation: ingredient.dietaryViolation,
         // RESEARCH-ONLY: research-only fields below
         aiOriginalName: ingredient.aiOriginalName,
         aiOriginalWeight: ingredient.aiOriginalWeight,
@@ -279,6 +280,7 @@ class DayRecordRepository extends GetxService {
       fats: ingredient.fats,
       confidence: ingredient.confidence,
       isFavorite: isFavorite,
+      dietaryViolation: ingredient.dietaryViolation,
       // RESEARCH-ONLY: research-only fields below
       aiOriginalName: ingredient.aiOriginalName,
       aiOriginalWeight: ingredient.aiOriginalWeight,
@@ -412,6 +414,7 @@ class DayRecordRepository extends GetxService {
             fats: ingredient.fats,
             confidence: ingredient.confidence,
             isFavorite: ingredient.isFavorite,
+            dietaryViolation: ingredient.dietaryViolation,
             // RESEARCH-ONLY: research-only fields below
             aiOriginalName: ingredient.aiOriginalName,
             aiOriginalWeight: ingredient.aiOriginalWeight,

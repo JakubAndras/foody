@@ -44,6 +44,7 @@ IngredientResponse _$IngredientResponseFromJson(Map<String, dynamic> json) =>
       weightGrams: (json['weight_grams'] as num?)?.toDouble(),
       nutritionalValues: NutritionalValues.fromJson(
           json['nutritional_values'] as Map<String, dynamic>),
+      dietaryViolation: json['dietary_violation'] as String?,
     );
 
 Map<String, dynamic> _$IngredientResponseToJson(IngredientResponse instance) =>
@@ -53,6 +54,7 @@ Map<String, dynamic> _$IngredientResponseToJson(IngredientResponse instance) =>
       'quantity': instance.quantity,
       'weight_grams': instance.weightGrams,
       'nutritional_values': instance.nutritionalValues,
+      'dietary_violation': instance.dietaryViolation,
     };
 
 NutritionalValues _$NutritionalValuesFromJson(Map<String, dynamic> json) =>

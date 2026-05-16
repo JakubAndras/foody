@@ -17,6 +17,7 @@ class IngredientTemplateEntity {
   final bool isFavorite;
   final DateTime lastUsedAt;
   final int usageCount;
+  final String? dietaryViolation;
 
   IngredientTemplateEntity({
     this.id,
@@ -31,6 +32,7 @@ class IngredientTemplateEntity {
     this.isFavorite = false,
     required this.lastUsedAt,
     this.usageCount = 1,
+    this.dietaryViolation,
   });
 
   IngredientTemplateEntity copyWith({
@@ -46,6 +48,7 @@ class IngredientTemplateEntity {
     bool? isFavorite,
     DateTime? lastUsedAt,
     int? usageCount,
+    String? dietaryViolation,
   }) {
     return IngredientTemplateEntity(
       id: id ?? this.id,
@@ -60,6 +63,7 @@ class IngredientTemplateEntity {
       isFavorite: isFavorite ?? this.isFavorite,
       lastUsedAt: lastUsedAt ?? this.lastUsedAt,
       usageCount: usageCount ?? this.usageCount,
+      dietaryViolation: dietaryViolation ?? this.dietaryViolation,
     );
   }
 }

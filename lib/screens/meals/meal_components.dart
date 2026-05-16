@@ -605,7 +605,8 @@ class AllergyAlertCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: margin,
-      height: AppSizes.alertCardHeight,
+      // Mirror MacroStatCard height behavior so the banner aligns with the Protein/Carbs/Fats row.
+      height: Platform.isAndroid ? AppSizes.alertCardHeight + 10 : AppSizes.alertCardHeight,
       padding: const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.s, AppSpacing.m, AppSpacing.s),
       decoration: BoxDecoration(
         color: AppColors.warningSurface,
@@ -619,6 +620,7 @@ class AllergyAlertCard extends StatelessWidget {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   title,

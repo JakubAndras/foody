@@ -210,7 +210,8 @@ U~všech čtyř úloh dosáhla míra dokončení 100~\%. Sloupec \uv{Dokončeno 
 \end{table}
 
 Měření nefunkčních požadavků prokázalo, že všechny metriky vázané na uživatelskou zátěž záznamu byly v~rámci stanovených limitů: latence rozpoznávání u~úlohy T2 dosáhla průměru 7,67~s (limit 20~s), čas zápisu nového záznamu u~T2 činil 22~s (limit 5~min), čas opakovaného záznamu u~T8 byl 39,67~s (limit 1~min) a počet kroků u~scénářů s~asistencí umělé inteligence se pohyboval v~rozmezí 2,00–4,67 (limit 6).
-U~ručního zápisu (T7) dosahoval průměr 11,00~kroků, což odpovídá vyšší inherentní složitosti vstupní modality bez asistence umělé inteligence; pro tento scénář není v~původní specifikaci NFR-03 stanoven konkrétní limit.
+U~ručního zápisu (T7) dosahoval průměr 11,00~kroků, což odpovídá vyšší inherentní složitosti vstupní modality bez asistence umělé inteligence.
+Pro tento scénář není v~původní specifikaci NFR-03 stanoven konkrétní limit.
 
 \subsection{Výsledky System Usability Scale}
 \label{subsec:vysledkySus}
@@ -572,7 +573,8 @@ Návazné podsekce popisují metodiku, sledované metriky, profil dosud zařazen
 Dlouhodobá uživatelská studie je navržena jako naturalistický \emph{in-the-wild} test, ve kterém každý účastník používá aplikaci na vlastním zařízení v~rámci své běžné stravovací rutiny po dobu dvou týdnů.
 Tento metodologický rámec navazuje na zavedenou tradici terénních studií v~oblasti interakce člověka s~počítačem~\cite{brown2011intoTheWild, rogers2017researchInWild}, jejichž společným rysem je sledování chování uživatele v~přirozeném kontextu po delší časové období, ve kterém krátkodobá laboratorní relace nemůže zachytit stabilizovanou rutinu, motivační dynamiku a~hraniční technické podmínky reálných zařízení.
 Po skončení testovacího období účastník vyplňuje výstupní dotazník zachycující subjektivní hodnocení použitelnosti, kognitivní zátěž a~otevřenou kvalitativní reflexi, jehož struktura je popsána v~sekci~\ref{subsec:metrikyDlouhodobe}.
-Celkový plánovaný vzorek činí šest účastníků; v~době přípravy tohoto textu dva z~nich dvoutýdenní testovací období dokončili a~čtyři další jsou v~průběhu studie.
+Celkový plánovaný vzorek činí šest účastníků.
+V~době přípravy tohoto textu dva z~nich dvoutýdenní testovací období dokončili a~čtyři další jsou v~průběhu studie.
 
 Studie sleduje dvě komplementární linie dat.
 První linií jsou objektivní behaviorální údaje sbírané přímo aplikací prostřednictvím vyhrazených databázových sloupců a~odděleného logu pokusů o~rozpoznání pomocí umělé inteligence. Jejich struktura a~způsob exportu jsou popsány v~sekci~\ref{subsec:metrikyDlouhodobe}.
@@ -586,7 +588,8 @@ Druhou linií je výstupní dotazník vyplňovaný do dvaceti čtyř hodin po sk
 % TODO: zvážit přejmenování na LP1--LP6 před finálním odevzdáním; opponent (Pavlovec)
 % by formálně preferoval sekvenční anonymní kódy. Aktuální rozhodnutí: ponecháno per
 % pokyn autora; příloha E neprozrazuje původ kódu.
-Tato skupina je distinktní od respondentů strukturovaných rozhovorů (\texttt{R1}--\texttt{R4} v~sekci~\ref{sec:uzivatelskaStudie}) i~od participantů krátkodobého laboratorního testování (\texttt{P1}--\texttt{P3} v~sekci~\ref{subsec:vyberParticipantu}); případné překryvy mezi těmito třemi skupinami budou doplněny po dokončení celé studie.
+Tato skupina je distinktní od respondentů strukturovaných rozhovorů (\texttt{R1}--\texttt{R4} v~sekci~\ref{sec:uzivatelskaStudie}) i~od participantů krátkodobého laboratorního testování (\texttt{P1}--\texttt{P3} v~sekci~\ref{subsec:vyberParticipantu}).
+Případné překryvy mezi těmito třemi skupinami budou doplněny po dokončení celé studie.
 
 \subsection{Sledované metriky a~sběr dat}
 \label{subsec:metrikyDlouhodobe}
@@ -620,7 +623,8 @@ Jeho úplné znění a~předpisy pro výpočet skóre jsou uvedeny v~příloze~\
 
 Volba nástrojů reflektuje rozdíl mezi krátkodobou a~dlouhodobou fází.
 Dotazník SEQ použitý v~laboratorní fázi měří subjektivní obtížnost vázanou na konkrétní úlohu zadanou moderátorem a~v~naturalistickém scénáři bez předdefinovaných úloh nemá smysluplnou referenci.
-Dotazník UEQ-S byl v~krátkodobé fázi již sebrán a~jeho opětovné nasazení by za jinak shodných podmínek nepřineslo komplementární informaci; namísto toho byl zařazen NASA-TLX, který přímo měří hlavní hypotézu o~snížení kognitivní a~časové zátěže záznamu stravy formulovanou v~sekci~\ref{sec:cile}.
+Dotazník UEQ-S byl v~krátkodobé fázi již sebrán a~jeho opětovné nasazení by za jinak shodných podmínek nepřineslo komplementární informaci.
+Namísto toho byl zařazen NASA-TLX, který přímo měří hlavní hypotézu o~snížení kognitivní a~časové zátěže záznamu stravy formulovanou v~sekci~\ref{sec:cile}.
 Net Promoter Score nebylo zařazeno z~důvodu nízké rozlišovací schopnosti jednopoložkové škály při plánovaném vzorku šesti účastníků.
 
 Nástroj NASA-TLX je v~rámci studie použit v~upravené pětidimenzionální variantě, ze které je vynechána dimenze fyzické zátěže (\emph{physical demand}).
@@ -651,7 +655,7 @@ Vzhledem k~tomu, že předkládaná analýza pracuje pouze s~daty od dvou účas
 		Vstupní hmotnost & 60,0~kg & 89,0~kg \\
 		Cílová hmotnost & 57,0~kg & 85,0~kg \\
 		Hlavní cíl & hubnutí (0,5~kg/týden) & hubnutí (0,7~kg/týden) \\
-		Dietní omezení & bezlepkové; další vlastní omezení v~profilu & žádné \\
+		Dietní omezení & bezlepkové, další vlastní omezení v~profilu & žádné \\
 		Délka testovacího období & 18~dní & 17~dní \\
 		\bottomrule
 	\end{tabular}
@@ -730,7 +734,8 @@ Ku\_P naproti tomu zaznamenává jídla převážně fotograficky (79,3~\% zázn
 \paragraph{Hodnoty spolehlivosti AI návrhů.}
 Z~celkového počtu 59 úspěšných pokusů u~Ev\_P a~50 úspěšných pokusů u~Ku\_P padla většina hodnot spolehlivosti do pásma odpovídajícího zelené úrovni \emph{confidence gate} popsaného v~sekci~\ref{subsec:confidence}.
 Konkrétně 52 ze 59 pokusů u~Ev\_P (88,1~\%) a~49 z~50 úspěšných pokusů u~Ku\_P (98,0~\%) překročilo prahovou hodnotu 0,75.
-Hodnota spolehlivosti v~žlutém pásmu 0,50--0,75 se objevila u~7 pokusů u~Ev\_P a~u~1 pokusu u~Ku\_P; pod prahem úspěchu 0,50 se neobjevila žádná z~úspěšně dokončených odpovědí, neboť tento práh slouží jako přepínač do stavu \emph{nízká jistota}.
+Hodnota spolehlivosti v~žlutém pásmu 0,50--0,75 se objevila u~7 pokusů u~Ev\_P a~u~1 pokusu u~Ku\_P.
+Pod prahem úspěchu 0,50 se neobjevila žádná z~úspěšně dokončených odpovědí, neboť tento práh slouží jako přepínač do stavu \emph{nízká jistota}.
 Předběžně se tak ukazuje, že v~reálném používání aplikace generuje model převážně odpovědi s~vysokou deklarovanou jistotou, což je konzistentní se zelenou indikací v~uživatelském rozhraní.
 
 \paragraph{Acceptance rate AI návrhů.}
@@ -757,16 +762,19 @@ Tato rozcházející se hodnota acceptance rate u~hlasového vstupu naznačuje, 
 \end{table}
 
 \noindent\textsuperscript{*}\,Hodnoty u~modalit s~malým absolutním vzorkem (méně než 10 záznamů) je nutné interpretovat s~odpovídající opatrností.
-Jmenovatel zlomku označuje počet jídel vytvořených danou modalitou, tedy pokusy o~rozpoznání, které skončily stavem \emph{success} a~vedly k~uloženému záznamu; pokusy se stavem \emph{invalid\_response} nebo \emph{low\_confidence} do tabulky nevstupují, neboť nevedou k~vytvoření jídla.
+Jmenovatel zlomku označuje počet jídel vytvořených danou modalitou, tedy pokusy o~rozpoznání, které skončily stavem \emph{success} a~vedly k~uloženému záznamu.
+Pokusy se stavem \emph{invalid\_response} nebo \emph{low\_confidence} do tabulky nevstupují, neboť nevedou k~vytvoření jídla.
 
 Komplementární obraz k~acceptance rate poskytuje počet \emph{soft-deleted} záznamů, tedy záznamů, které uživatel po vytvoření označil k~odstranění.
 U~Ev\_P bylo takto odstraněno 6 jídel a~160 ingrediencí, u~Ku\_P 13 jídel a~68 ingrediencí.
-Vyšší počet odstraněných ingrediencí u~Ev\_P při srovnatelném počtu uložených jídel může souviset s~dietním kontextem účastnice; rovnocenně přípustnými vysvětleními jsou individuální editační styl, dostupný čas pro záznam nebo míra znalosti nutriční databáze, jejichž odlišení vyžaduje větší vzorek.
+Vyšší počet odstraněných ingrediencí u~Ev\_P při srovnatelném počtu uložených jídel může souviset s~dietním kontextem účastnice.
+Rovnocenně přípustnými vysvětleními jsou individuální editační styl, dostupný čas pro záznam nebo míra znalosti nutriční databáze, jejichž odlišení vyžaduje větší vzorek.
 
 \paragraph{Robustnost AI pipeline.}
 Z~celkového počtu 59 pokusů Ev\_P o~rozpoznání pomocí umělé inteligence skončily všechny stavem \emph{success}, tedy odpovědí s~platným strukturovaným výstupem a~spolehlivostí nad prahem 0,50.
 U~Ku\_P z~56 pokusů skončilo 50 stavem \emph{success}, 5 stavem \emph{invalid\_response} s~prázdnou nebo neparsovatelnou odpovědí modelu (čtyři z~nich se vyskytly v~rámci jedné desetiminutové epizody dne 8.~května) a~1 pokus stavem \emph{low\_confidence} s~hodnotou spolehlivosti 0,23.
-Celková úspěšnost AI pipeline tak činí 100,0~\% u~Ev\_P a~89,3~\% u~Ku\_P; rozdíl je nutné interpretovat s~vědomím odlišného absolutního počtu pokusů a~odlišného mixu modalit.
+Celková úspěšnost AI pipeline tak činí 100,0~\% u~Ev\_P a~89,3~\% u~Ku\_P.
+Rozdíl je nutné interpretovat s~vědomím odlišného absolutního počtu pokusů a~odlišného mixu modalit.
 Pokles úspěšnosti u~Ku\_P je koncentrován do jediné epizody. Bližší příčina by si vyžádala dodatečné diagnostické záznamy, které v~současné implementaci behaviorálního záznamu nejsou sbírány.
 Při doplnění zbývajících účastníků bude vhodné sledovat, zda se podobné epizody opakují.
 

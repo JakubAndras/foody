@@ -10,6 +10,8 @@ class Ingredient {
   final double fats;
   final double? confidence;
   final bool isFavorite;
+  // Dietary violation reason set by AI at log time, or null. See IngredientEntity.
+  final String? dietaryViolation;
 
   // RESEARCH-ONLY: all fields below are research-only. Mirror
   // IngredientEntity telemetry. See RESEARCH_ONLY.md.
@@ -37,6 +39,7 @@ class Ingredient {
     required this.fats,
     this.confidence,
     this.isFavorite = false,
+    this.dietaryViolation,
     // RESEARCH-ONLY: research-only ctor params below
     this.aiOriginalName,
     this.aiOriginalWeight,
@@ -64,6 +67,7 @@ class Ingredient {
       fats: (json['fats'] as num).toDouble(),
       confidence: (json['confidence'] as num?)?.toDouble(),
       isFavorite: json['isFavorite'] == true || json['isFavorite'] == 1,
+      dietaryViolation: json['dietaryViolation'] as String?,
       // RESEARCH-ONLY: research-only fromJson fields below
       aiOriginalName: json['aiOriginalName'] as String?,
       aiOriginalWeight: (json['aiOriginalWeight'] as num?)?.toDouble(),
@@ -92,6 +96,7 @@ class Ingredient {
       'fats': fats,
       'confidence': confidence,
       'isFavorite': isFavorite,
+      'dietaryViolation': dietaryViolation,
       // RESEARCH-ONLY: research-only toJson fields below
       'aiOriginalName': aiOriginalName,
       'aiOriginalWeight': aiOriginalWeight,
@@ -119,6 +124,7 @@ class Ingredient {
     double? fats,
     double? confidence,
     bool? isFavorite,
+    String? dietaryViolation,
     // RESEARCH-ONLY: research-only copyWith params below
     String? aiOriginalName,
     double? aiOriginalWeight,
@@ -143,6 +149,7 @@ class Ingredient {
       fats: fats ?? this.fats,
       confidence: confidence ?? this.confidence,
       isFavorite: isFavorite ?? this.isFavorite,
+      dietaryViolation: dietaryViolation ?? this.dietaryViolation,
       aiOriginalName: aiOriginalName ?? this.aiOriginalName,
       aiOriginalWeight: aiOriginalWeight ?? this.aiOriginalWeight,
       aiOriginalAmount: aiOriginalAmount ?? this.aiOriginalAmount,
