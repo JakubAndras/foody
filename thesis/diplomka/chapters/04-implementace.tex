@@ -34,26 +34,26 @@ API klíče pro externí služby OpenAI a Google Gemini jsou načítány ze soub
 \label{subsec:aiApi}
 
 V~rámci návrhu aplikace Foody bylo jako klíčová technologická komponenta identifikováno propojení s~externím modelem umělé inteligence, který zajišťuje automatické rozpoznávání jídel z~fotografií, analýzu cvičení z~textových popisů a generování nutričních doporučení.
-Tato podsekce popisuje výběr konkrétního poskytovatele modelu, zdůvodnění přístupu založeného na vzdáleném cloudovém API a základní komunikační vzor mezi mobilním klientem a API koncovým bodem.
+Tato podsekce popisuje výběr konkrétního poskytovatele modelu, zdůvodnění přístupu založeného na vzdáleném cloudovém API a~základní komunikační vzor mezi mobilním klientem a~koncovým bodem poskytovatele.
 
 Jako primární poskytovatel byl zvolen multimodální jazykový model od společnosti OpenAI, přístupný prostřednictvím rozhraní Chat Completions API.
-Tento model podporuje vstup kombinující textové instrukce s~obrazovými daty kódovanými ve formátu Base64, což umožňuje předat mu fotografii jídla společně se strukturovaným promptem a kontextem uživatelského profilu v~rámci jediného API požadavku.
+Tento model podporuje vstup kombinující textové instrukce s~obrazovými daty kódovanými ve formátu Base64, což umožňuje předat mu fotografii jídla společně se strukturovaným promptem a~kontextem uživatelského profilu v~rámci jediného požadavku.
 Odpověď modelu je strukturována ve formátu JSON definovaném v~rámci systémového promptu, přičemž obsahuje identifikaci jídla, odhad nutričních hodnot jednotlivých ingrediencí, numerickou míru nejistoty a celkový výsledek analýzy.
-Pro implementaci HTTP komunikace s~API koncovým bodem je využita knihovna Dio, která poskytuje podporu pro konfiguraci hlaviček, nastavení časových limitů a strukturované zpracování chybových odpovědí~\cite{openAiApi}.
+Pro implementaci HTTP komunikace je využita knihovna Dio, která poskytuje podporu pro konfiguraci hlaviček, nastavení časových limitů a strukturované zpracování chybových odpovědí~\cite{openAiApi}.
 
 Jako alternativní poskytovatel byl do architektury aplikace integrován model Google Gemini, přístupný prostřednictvím rozhraní Generative Language API.
 Architektura komunikační vrstvy je navržena tak, aby byla nezávislá na konkrétním poskytovateli, a to prostřednictvím jednotného abstraktního rozhraní pro generování odpovědí, které musí všechny implementace dodržet.
 Zastřešující komponenta spravuje aktuálně zvoleného poskytovatele a umožňuje za běhu přepínat mezi implementacemi pro OpenAI a pro Gemini, přičemž obě tyto implementace splňují totéž rozhraní.
 Tento návrh umožňuje rozšíření o~další poskytovatele bez zásahu do vyšších vrstev aplikace~\cite{geminiApi}.
 
-Na straně bezpečnosti komunikace je vstup uživatele před odesláním do API ošetřen sanitizační vrstvou, která provádí sanitizaci vstupního textu (odstranění řídících znaků, ořez na maximální povolenou délku), detekci podezřelých vzorů naznačujících pokus o~\emph{prompt injection} a obalení uživatelského textu do XML delimitérů pro strukturální izolaci od systémových instrukcí (podrobněji v~sekci~\ref{subsec:promptInjection}).
+Na straně bezpečnosti komunikace je uživatelský vstup před odesláním poskytovateli ošetřen sanitizační vrstvou, která provádí sanitizaci vstupního textu (odstranění řídících znaků, ořez na maximální povolenou délku), detekci podezřelých vzorů naznačujících pokus o~\emph{prompt injection} a obalení uživatelského textu do XML delimitérů pro strukturální izolaci od systémových instrukcí (podrobněji v~sekci~\ref{subsec:promptInjection}).
 Systémové prompty obsahují explicitní direktivu zakazující modelu interpretovat obsah uživatelského vstupu jako instrukce.
 Tato vícevrstvá ochrana snižuje riziko manipulace chování modelu prostřednictvím záměrně formulovaných vstupů.
 
-Přístup založený na cloudovém API s~sebou nese rovněž omezení, která je třeba zohlednit.
+Přístup založený na vzdáleném modelu s~sebou nese rovněž omezení, která je třeba zohlednit.
 Aplikace vyžaduje pro funkci rozpoznávání pomocí umělé inteligence aktivní internetové připojení, přičemž zbývající funkcionality (manuální záznam, prohlížení historie, export dat) jsou plně dostupné v~režimu offline.
-Latence API požadavku se v~závislosti na velikosti odesílaného obrázku a vytížení poskytovatele pohybuje řádově v~jednotkách sekund, což vyžaduje vhodný návrh uživatelského rozhraní s~indikací probíhajícího zpracování.
-V~neposlední řadě je každý API požadavek zpoplatněn dle cenového modelu poskytovatele, což představuje provozní náklad, jehož výše je úměrná frekvenci používání funkcí postavených na umělé inteligenci.
+Latence odpovědi se v~závislosti na velikosti odesílaného obrázku a vytížení poskytovatele pohybuje řádově v~jednotkách sekund, což vyžaduje vhodný návrh uživatelského rozhraní s~indikací probíhajícího zpracování.
+V~neposlední řadě je každé volání modelu zpoplatněno dle cenového modelu poskytovatele, což představuje provozní náklad, jehož výše je úměrná frekvenci používání funkcí postavených na umělé inteligenci.
 Podrobný popis architektury pipeline pro umělou inteligenci, struktury promptů a mechanismu práce s~nejistotou výstupu je uveden v~sekci~\ref{sec:integraceAi}.
 
 \subsection{Další klíčové knihovny}
@@ -350,7 +350,7 @@ Vzhledem k~tomu, že obrazovka je delší než výška displeje, je v~obrázku~\
 Tato sekce popisuje implementaci pipeline pro rozpoznávání jídel a cvičení pomocí externího modelu umělé inteligence, která naplňuje funkční požadavky FR-06, FR-07, FR-08, FR-10 a FR-11.
 Postupně je představena celková architektura datového toku, struktura promptů a formát odpovědí, mechanismus práce s~nejistotou výstupu, vrstvená ochrana proti prompt injection a podpora více poskytovatelů modelu.
 Volba multimodálního jazykového modelu místo specializované konvoluční sítě trénované na potravinovém datasetu vychází z~vývoje oboru po roce 2022, kdy multimodální modely umožnily v~jediném volání zpracovat obraz i textový popis bez nutnosti vlastního trénování~\cite{wang2026visionLanguageFood}.
-Tento přístup současně obchází generalizační limit specializovaných modelů napříč různými kuchyněmi, který na transformerové architektuře CBiAFormer doložili Liu a~kol. propadem přesnosti z~92,40~\% na západním datasetu na 72,92~\% na smíšeném datasetu~\cite{liu2025deepLearning}, a~přebírá širší pokrytí trénovací distribuce dostupné u~obecných modelů~\cite{chotwanvirat2024scoping}.
+Tento přístup současně obchází generalizační limit specializovaných modelů napříč různými kuchyněmi, který je na transformerové architektuře CBiAFormer doložen propadem přesnosti z~92,40~\% na západním datasetu na 72,92~\% na smíšeném datasetu~\cite{liu2025deepLearning}, a~přebírá širší pokrytí trénovací distribuce dostupné u~obecných modelů~\cite{chotwanvirat2024scoping}.
 
 \subsection{Architektura pipeline}
 \label{subsec:aiPipeline}
@@ -741,48 +741,53 @@ Pro shrnutí míry pokrytí návrhové specifikace je v~tabulce~\ref{tab:fr-stat
 Každý požadavek je klasifikován do jedné ze tří kategorií, kterými jsou implementováno, částečně implementováno a neimplementováno, doplněných o~stručné zdůvodnění a odkaz na příslušné komponenty aplikace.
 Tato klasifikace tvoří přímý podklad pro vyhodnocení splnění návrhových cílů v~kapitole~\ref{ch:zaver} a pro identifikaci oblastí, jejichž ověření je předmětem uživatelského testování v~kapitole~\ref{ch:testovani}.
 
-\begin{table}[ht]
-	\centering
-	\caption{Stav implementace funkčních požadavků.}
-	\label{tab:fr-status}
-	\small
-	\begin{tabular}{p{1.1cm}p{5.5cm}p{2.6cm}p{5cm}}
-		\toprule
-		\textbf{FR} & \textbf{Název} & \textbf{Stav} & \textbf{Poznámka} \\
-		\midrule
-		FR-01 & Ruční přidání záznamu jídla bez umělé inteligence & Implementováno & Editační obrazovka jídla, manuální vstup ingrediencí \\
-		FR-02 & Denní přehled kalorií a makroživin & Implementováno & Hlavní obrazovka s~kontrolery denního záznamu \\
-		FR-03 & Nastavení cílových hodnot & Implementováno & Služba nutričních cílů s~obrazovkou nastavení \\
-		FR-04 & Správa profilu uživatele & Implementováno & Profilové obrazovky, služba uživatelské relace \\
-		FR-05 & Kontrola nad daty a mazání & Částečně implementováno & Mazání jídel a cvičení funkční, mazání účtu chybí \\
-		FR-06 & Fotografie jako vstup pro rozpoznání & Implementováno & Obrazovka kamery, pipeline umělé inteligence \\
-		FR-07 & Návrh položek a porcí umělou inteligencí & Implementováno & \texttt{AiPipelineService}, strukturovaný JSON prompt \\
-		FR-08 & Indikace nejistoty výstupu & Implementováno & Barevný badge (zelená $\geq$ 75~\%, žlutá $\geq$ 50~\%, červená $<$ 50~\%) \\
-		FR-09 & Vysvětlení limitů umělé inteligence & Implementováno & Pětistránková onboardingová sekvence s~tipy \\
-		FR-10 & Rozlišení limitu umělé inteligence a technické chyby & Částečně implementováno & Čárový kód: 6 typů chyb, AI pipeline: generické selhání \\
-		FR-11 & Textový fallback po selhání rozpoznání & Implementováno & Textový popis $\to$ pipeline umělé inteligence \\
-		FR-12 & Import fotografie z~galerie & Implementováno & Integrace knihovny \texttt{image\_picker} \\
-		FR-13 & Opakování rozpoznání z~editace & Implementováno & \uv{Fix with AI} a samostatná obrazovka porovnání verzí \\
-		FR-14 & Záznam bez fotografie (hlas, text) & Implementováno & Hlasový vstup, textový popis, manuální vstup \\
-		FR-15 & Jednotky množství (gramy, kusy) & Implementováno & 1~g, 100~g, vlastní jednotky, zlomky \\
-		FR-16 & Čtečka čárových kódů & Implementováno & Knihovna \texttt{mobile\_scanner}, klient Open Food Facts \\
-		FR-17 & Oblíbené položky & Implementováno & Příznak na jídlech, ingrediencích a cvičeních \\
-		FR-18 & Duplikace předchozího záznamu & Implementováno & Modální list s~výběrem data \\
-		FR-19 & Našeptávání podle historie & Částečně implementováno & Fulltextové vyhledávání s~debounce, bez klasického dropdown \\
-		FR-20 & Dietní omezení a intolerance & Implementováno & Předdefinovaný typ diety + uživatelská omezení \\
-		FR-21 & Porušení dietních omezení v~kalendáři & Implementováno & Karta s~měsíční mřížkou na obrazovce přehledů \\
-		FR-22 & Příjem versus výdej v~jednom pohledu & Implementováno & Hlavní obrazovka s~kalorickým příjmem a výdajem \\
-		FR-23 & Nastavení integrace výdeje & Částečně implementováno & Přepínače pro výdej a rollover, bez granulárních multiplikátorů \\
-		FR-24 & Týdenní a měsíční přehledy & Implementováno & Obrazovka přehledů s~kartou týdenní energie \\
-		FR-25 & Export dat (CSV, PDF) & Implementováno & Dedikovaná služba exportu s~výběrem období \\
-		FR-26 & Offline tolerance & Implementováno & Lokální SQLite, umělá inteligence vyžaduje připojení \\
-		FR-27 & Dotazy v~přirozeném jazyce & Implementováno & Obrazovka Ask AI, dvouprůchodový systém \\
-		FR-28 & Měsíční motivační souhrn & Implementováno & Periodicky generované shrnutí (denně, týdně, měsíčně) \\
-		FR-29 & Nastavitelné notifikace & Implementováno & Pět typů připomínek s~knihovnou \texttt{flutter\_local\_notifications} \\
-		FR-30 & Skrytí a zobrazení pokročilých funkcí & Částečně implementováno & Individuální přepínače, bez režimu basic versus advanced \\
-		\bottomrule
-	\end{tabular}
-\end{table}
+\begin{footnotesize}
+\renewcommand{\arraystretch}{1.35}
+\rowcolors{2}{gray!10}{white}
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}l>{\raggedright\arraybackslash}p{4.4cm}>{\raggedright\arraybackslash}p{2.2cm}>{\raggedright\arraybackslash}p{4.4cm}@{}}
+	\toprule
+	\rowcolor{white}\textbf{FR} & \textbf{Název} & \textbf{Stav} & \textbf{Poznámka} \\
+	\midrule
+	\endfirsthead
+	\toprule
+	\rowcolor{white}\textbf{FR} & \textbf{Název} & \textbf{Stav} & \textbf{Poznámka} \\
+	\midrule
+	\endhead
+	FR-01 & Ruční přidání záznamu jídla bez umělé inteligence & Implementováno & Editační obrazovka jídla, manuální vstup ingrediencí \\
+	FR-02 & Denní přehled kalorií a makroživin & Implementováno & Hlavní obrazovka s~kontrolery denního záznamu \\
+	FR-03 & Nastavení cílových hodnot & Implementováno & Služba nutričních cílů s~obrazovkou nastavení \\
+	FR-04 & Správa profilu uživatele & Implementováno & Profilové obrazovky, služba uživatelské relace \\
+	FR-05 & Kontrola nad daty a mazání & Částečně implementováno & Mazání jídel a cvičení funkční, mazání účtu chybí \\
+	FR-06 & Fotografie jako vstup pro rozpoznání & Implementováno & Obrazovka kamery, pipeline umělé inteligence \\
+	FR-07 & Návrh položek a porcí umělou inteligencí & Implementováno & \texttt{AiPipelineService}, strukturovaný JSON prompt \\
+	FR-08 & Indikace nejistoty výstupu & Implementováno & Barevný badge (zelená $\geq$ 75~\%, žlutá $\geq$ 50~\%, červená $<$ 50~\%) \\
+	FR-09 & Vysvětlení limitů umělé inteligence & Implementováno & Pětistránková onboardingová sekvence s~tipy \\
+	FR-10 & Rozlišení limitu umělé inteligence a technické chyby & Částečně implementováno & Čárový kód: 6 typů chyb, AI pipeline: generické selhání \\
+	FR-11 & Textový fallback po selhání rozpoznání & Implementováno & Textový popis $\to$ pipeline umělé inteligence \\
+	FR-12 & Import fotografie z~galerie & Implementováno & Integrace knihovny \texttt{image\_picker} \\
+	FR-13 & Opakování rozpoznání z~editace & Implementováno & \uv{Fix with AI} a samostatná obrazovka porovnání verzí \\
+	FR-14 & Záznam bez fotografie (hlas, text) & Implementováno & Hlasový vstup, textový popis, manuální vstup \\
+	FR-15 & Jednotky množství (gramy, kusy) & Implementováno & 1~g, 100~g, vlastní jednotky, zlomky \\
+	FR-16 & Čtečka čárových kódů & Implementováno & Knihovna \texttt{mobile\_scanner}, klient Open Food Facts \\
+	FR-17 & Oblíbené položky & Implementováno & Příznak na jídlech, ingrediencích a cvičeních \\
+	FR-18 & Duplikace předchozího záznamu & Implementováno & Modální list s~výběrem data \\
+	FR-19 & Našeptávání podle historie & Částečně implementováno & Fulltextové vyhledávání s~debounce, bez klasického dropdown \\
+	FR-20 & Dietní omezení a intolerance & Implementováno & Předdefinovaný typ diety + uživatelská omezení \\
+	FR-21 & Porušení dietních omezení v~kalendáři & Implementováno & Karta s~měsíční mřížkou na obrazovce přehledů \\
+	FR-22 & Příjem versus výdej v~jednom pohledu & Implementováno & Hlavní obrazovka s~kalorickým příjmem a výdajem \\
+	FR-23 & Nastavení integrace výdeje & Částečně implementováno & Přepínače pro výdej a rollover, bez granulárních multiplikátorů \\
+	FR-24 & Týdenní a měsíční přehledy & Implementováno & Obrazovka přehledů s~kartou týdenní energie \\
+	FR-25 & Export dat (CSV, PDF) & Implementováno & Dedikovaná služba exportu s~výběrem období \\
+	FR-26 & Offline tolerance & Implementováno & Lokální SQLite, umělá inteligence vyžaduje připojení \\
+	FR-27 & Dotazy v~přirozeném jazyce & Implementováno & Obrazovka Ask AI, dvouprůchodový systém \\
+	FR-28 & Měsíční motivační souhrn & Implementováno & Periodicky generované shrnutí (denně, týdně, měsíčně) \\
+	FR-29 & Nastavitelné notifikace & Implementováno & Pět typů připomínek s~knihovnou flutter\_local\_notifications \\
+	FR-30 & Skrytí a zobrazení pokročilých funkcí & Částečně implementováno & Individuální přepínače, bez režimu basic versus advanced \\
+	\bottomrule
+	\caption{Stav implementace funkčních požadavků.} \label{tab:fr-status} \\
+\end{longtable}
+\end{footnotesize}
 
 \section{Omezení implementace}
 \label{sec:omezeniImplementace}

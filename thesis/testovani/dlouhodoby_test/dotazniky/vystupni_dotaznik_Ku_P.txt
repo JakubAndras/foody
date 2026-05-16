@@ -1,0 +1,65 @@
+# Výstupní dotazník — dlouhodobé testování aplikace Foody
+
+**Aplikace:** Foody (diplomová práce, ČVUT FEL)
+**Autor:** Bc. Jakub Sebastian Andráš
+**Vedoucí práce:** Ing. Ivo Malý, Ph.D.
+
+---
+
+## Sekce A — System Usability Scale (SUS)
+
+> **Co to je:** SUS je standardizovaný dotazník použitelnosti, který se používá v HCI od roku 1986. Skládá se z deseti tvrzení; u každého zatrhneš, jak moc s ním souhlasíš na škále 1 až 5. Liché položky jsou formulovány pozitivně, sudé negativně — to není chyba, je to záměr (vyvažuje to tendenci automaticky souhlasit).
+>
+> **Pokyn:** U každého tvrzení zatrhni, jak moc s ním souhlasíš, kde **1 = zcela nesouhlasím** a **5 = zcela souhlasím**. Vyhodnocení skóre udělám sám.
+
+| # | Tvrzení | 1 | 2 | 3 | 4 | 5 |
+|---|---|:-:|:-:|:-:|:-:|:-:|
+| 1 | Myslím, že bych aplikaci chtěl/a používat často. |  | - 5
+| 2 | Aplikace mi přišla zbytečně složitá. |  | - 1
+| 3 | Aplikace se používala snadno. |  | - 4
+| 4 | Myslím, že bych potřeboval/a pomoc technika, abych aplikaci dokázal/a používat. |  | - 1
+| 5 | Jednotlivé funkce aplikace jsou dobře integrované. |  | - 4
+| 6 | V aplikaci je příliš mnoho nekonzistencí. |  | - 1
+| 7 | Většina lidí se podle mě naučí aplikaci používat velmi rychle. |  | - 5
+| 8 | Aplikace mi přišla nepřehledná a těžko ovladatelná. |  | - 1
+| 9 | Při používání aplikace jsem se cítil/a sebejistě. |  | - 4
+| 10 | Než jsem aplikaci dokázal/a používat, musel/a jsem se naučit hodně věcí. |  | - 1
+
+---
+
+## Sekce B — kognitivní a časová zátěž (Raw NASA-TLX)
+
+> **Co to je:** Zkrácená verze nástroje, který vyvinula NASA pro měření vnímané zátěže při práci s rozhraním. Měří, jak moc tě používání aplikace stálo úsilí, pozornosti a nervů — to je přesně to, co u dlouhodobého testování chci pochopit (na rozdíl od krátkodobých laboratorních testů, kde se měří hlavně to, jestli úloha jde dokončit).
+>
+> **Pokyn:** U každé dimenze napiš číslo od **0 do 20**, které nejlépe vystihuje, jak silně jsi ji pociťoval/a při běžném používání aplikace v testovacím období. 0 = velmi nízká, 20 = velmi vysoká. **Pozor**, jedna z dimenzí (C.4) má obrácenou škálu — je to napsané přímo v otázce.
+
+| # | Dimenze | Otázka | Hodnota (0–20) |
+|---|---|---|:-:|
+| C.1 | **Mentální zátěž** | Jak mentálně náročné bylo zaznamenat jídlo nebo aktivitu? (přemýšlení, rozhodování, hledání položek) | | - 5
+| C.2 | **Časová zátěž** | Cítil/a jsi, že tě zaznamenávání jídla zdržuje nebo na tebe vytváří časový tlak? | | - 7
+| C.3 | **Úsilí** | Jak velké úsilí (mentální i fyzické) jsi musel/a celkově vynaložit, abys dostal/a do aplikace to, co jsi chtěl/a? | | - 5
+| C.4 | **Vlastní výkon** *(obrácená škála)* | Jak nespokojený/á jsi byl/a s tím, jak se ti dařilo aplikaci využívat? **Pozor: 0 = velmi spokojen, 20 = velmi nespokojen.** | | - 5
+| C.5 | **Frustrace** | Jak často jsi se cítil/a zmaten/a, podrážděn/a nebo otráven/a? | | - 3
+
+---
+
+## Sekce C — tvůj pohled vlastními slovy
+
+> Tři otázky, odpověz prosím v rozsahu **1 až 3 vět**. Konkrétní a krátké odpovědi jsou pro analýzu cennější než dlouhé úvahy. Pokud na otázku nemáš jasný názor, klidně nech prázdné.
+
+**C.1** Co jsi na aplikaci nejvíce ocenil/a? Funkce nebo moment, který ti během testování dával největší hodnotu.
+
+> Tvoje odpověď: Rychlost záznamu, na pár kliknutí mám přes fotku zapsáno.
+
+&nbsp;
+
+**C.2** Co tě nejvíce zklamalo nebo zlobilo? Konkrétní situace, kdy aplikace nezvládla to, co jsi od ní očekával/a.
+
+> Tvoje odpověď: Při některých jídlech to podlě mě hodně netrefilo kalorie. Hlavně u větších porcích jídla jsem měl ten pocit.
+
+&nbsp;
+
+**C.3** Kdybys měl/a vybrat **jednu jedinou věc**, kterou bych měl/a přednostně zlepšit, co by to bylo?
+
+> Tvoje odpověď: Přesnost kalorií. Mít možnost aplikaci vždy věřit by bylo skvělý.
+

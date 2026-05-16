@@ -15,6 +15,12 @@
 % longtable: dlouhé tabulky s automatickým zalomením přes více stran (matice trasovatelnosti FR).
 \usepackage{longtable}
 
+% tabularx: tabulky s pružnou šířkou sloupců přesně na \textwidth.
+\usepackage{tabularx}
+
+% threeparttable: poznámky k tabulkám umístěné přímo pod tabulkou (cestují s plovoucím floatem).
+\usepackage{threeparttable}
+
 % pifont: Zapf Dingbats pro symbol pokrytí v~matici trasovatelnosti FR (plný kruh \ding{108}).
 \usepackage{pifont}
 \newcommand{\yes}{\ding{108}}
@@ -43,7 +49,7 @@
 }
 
 \ctusetup{
-	preprint = \ctuverlog,
+	preprint = {},
 	mainlanguage = czech,
 	otherlanguages = {english},
 	title-czech = {Aplikace pro rozpoznávání potravin a sledování kalorického příjmu pomocí AI},

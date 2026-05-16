@@ -3,7 +3,7 @@
 
 Návrh aplikace navazuje na zjištění z~uživatelské studie shrnutá v~sekci~\ref{sec:uzivatelskaStudie} a na analýzu existujících mobilních aplikací v~sekci~\ref{sec:existujici}.
 Tato kapitola formalizuje vstupy z~uživatelského výzkumu do podoby, kterou je možné přímo použít pro implementaci a následné ověření.
-Nejprve jsou v~sekci~\ref{sec:pripadyUziti} popsány scénáře případů užití (UC01--UC08), které vymezují klíčové interakce uživatele se systémem.
+Nejprve jsou v~sekci~\ref{sec:pripadyUziti} představeny případy užití UC01--UC08, jejichž plné hlavní scénáře jsou uvedeny v~příloze~\ref{app:pripadyUziti}.
 Sekce~\ref{sec:pozadavky} představuje sadu funkčních a nefunkčních požadavků odvozenou z~rozhovorů a ze zadání práce.
 V~sekci~\ref{sec:prototyp} je popsán návrh uživatelského rozhraní a HiFi prototyp, který případy užití a požadavky převádí do konkrétní vizuální a interakční podoby.
 Závěrečná sekce~\ref{sec:shrnutiNavrhu} shrnuje výstupy návrhové fáze a vymezuje, co bude implementováno v~kapitole~\ref{ch:implementace}.
@@ -12,125 +12,41 @@ Závěrečná sekce~\ref{sec:shrnutiNavrhu} shrnuje výstupy návrhové fáze a 
 \label{sec:pripadyUziti}
 
 V~návrhu aplikací se používají jak narativní popisy situací z~praxe, tak případy užití jako formální popis interakce aktéra se systémem.
-V~této práci byly narativní situace využity při analýze rozhovorů, ale pro formální popis systému je dále uvedena pouze sada scénářů případů užití, aby nedocházelo k~duplicitě a aby byl výstup přímo použitelný pro návrh prototypu a testování.
-Pro každý případ užití je v~textu uveden hlavní scénář, který popisuje očekávaný průběh interakce.
-Doplňující informace o~předpokladech, alternativních tocích a~chybových stavech jsou diskutovány v~rámci jednotlivých scénářů a~v~popisu pokrytých funkčních požadavků v~sekci~\ref{sec:pozadavky}.
+V~této práci byly narativní situace využity při analýze rozhovorů, pro formální popis systému je dále uvedena sada scénářů případů užití použitelná přímo pro návrh prototypu a testování.
+Přehled osmi případů užití (UC01--UC08) shrnuje tabulka~\ref{tab:pripadyUziti}, plné hlavní scénáře včetně předpokladů, alternativních toků a~chybových stavů jsou uvedeny v~příloze~\ref{app:pripadyUziti}.
 
-\paragraph{UC01: Záznam jídla z~fotografie.}
-\textbf{Charakteristika:} Uživatel chce rychle zapsat jídlo pomocí fotografie a následně výsledek zkontrolovat.
-\textbf{Primární aktér:} uživatel.
-Hlavní scénář:
-
-\begin{enumerate}
-	\item \emph{Uživatel} otevře funkci pro záznam jídla a pořídí fotografii.
-	\item \emph{Systém} spustí rozpoznání, zobrazí návrh položek a odhad množství, případně indikaci nejistoty.
-	\item \emph{Uživatel} zkontroluje návrh, upraví položky a množství, případně doplní chybějící položky.
-	\item \emph{Uživatel} potvrdí uložení záznamu.
-	\item \emph{Systém} uloží záznam a aktualizuje denní přehled.
-\end{enumerate}
-
-\paragraph{UC02: Oprava výsledku rozpoznání a opakování rozpoznání.}
-\textbf{Charakteristika:} Uživatel chce opravit rozpoznané položky a v~případě potřeby vyvolat rozpoznání znovu bez zakládání nového záznamu.
-\textbf{Primární aktér:} uživatel.
-Hlavní scénář:
-
-\begin{enumerate}
-	\item \emph{Uživatel} otevře detail rozpoznaného jídla v~editační obrazovce.
-	\item \emph{Systém} zobrazí seznam položek, množství, jednotky a souhrn živin.
-	\item \emph{Uživatel} upraví názvy, množství, odstraní nebo přidá položky.
-	\item \emph{Uživatel} zvolí možnost znovu rozpoznat, například po úpravě vstupu nebo doplnění informace.
-	\item \emph{Systém} provede nové rozpoznání a aktualizuje návrh položek, zachová možnost ruční kontroly.
-	\item \emph{Uživatel} potvrdí finální stav a uloží záznam.
-\end{enumerate}
-
-\paragraph{UC03: Ruční přidání záznamu jídla.}
-\textbf{Charakteristika:} Uživatel chce vytvořit záznam bez použití fotografie nebo umělé inteligence.
-\textbf{Primární aktér:} uživatel.
-Hlavní scénář:
-
-\begin{enumerate}
-	\item \emph{Uživatel} otevře ruční zápis jídla.
-	\item \emph{Uživatel} vyhledá položku v~databázi nebo zvolí položku z~historie.
-	\item \emph{Uživatel} zadá množství a jednotku, gramy nebo kusy, případně předvolbu porce.
-	\item \emph{Uživatel} potvrdí uložení záznamu.
-	\item \emph{Systém} uloží záznam a aktualizuje denní přehled.
-\end{enumerate}
-
-\paragraph{UC04: Přidání balené potraviny pomocí čárového kódu.}
-\textbf{Charakteristika:} Uživatel chce rychle přidat balenou potravinu načtením kódu.
-\textbf{Primární aktér:} uživatel.
-Hlavní scénář:
-
-\begin{enumerate}
-	\item \emph{Uživatel} otevře čtečku kódů a naskenuje čárový kód produktu.
-	\item \emph{Systém} vyhledá produkt v~databázi a zobrazí nalezenou položku.
-	\item \emph{Uživatel} zvolí množství a jednotku nebo předvolbu porce.
-	\item \emph{Uživatel} potvrdí vložení do denního záznamu.
-	\item \emph{Systém} uloží záznam a aktualizuje denní přehled.
-\end{enumerate}
-
-\paragraph{UC05: Přidání opakovaného jídla z~oblíbených nebo duplikací.}
-\textbf{Charakteristika:} Uživatel chce co nejrychleji přidat jídlo, které se často opakuje.
-\textbf{Primární aktér:} uživatel.
-Hlavní scénář:
-
-\begin{enumerate}
-	\item \emph{Uživatel} otevře seznam oblíbených nebo historii záznamů.
-	\item \emph{Systém} nabídne oblíbené položky, nedávné záznamy a našeptávání podle historie.
-	\item \emph{Uživatel} vybere položku nebo duplikuje celý záznam jídla.
-	\item \emph{Uživatel} případně upraví množství a potvrdí uložení.
-	\item \emph{Systém} uloží nový záznam a aktualizuje denní přehled.
-\end{enumerate}
-
-\paragraph{UC06: Vaření s~režimem plán versus realita.}
-\textbf{Charakteristika:} Uživatel chce při vaření zadat plánované ingredience a po dokončení upravit skutečně použité množství.
-\textbf{Primární aktér:} uživatel.
-Hlavní scénář:
-
-\begin{enumerate}
-	\item \emph{Uživatel} vytvoří záznam receptu nebo vaření a zadá plánované ingredience.
-	\item \emph{Systém} průběžně počítá plánované souhrnné živiny receptu.
-	\item \emph{Uživatel} po uvaření upraví skutečně použité množství, včetně drobných ingrediencí.
-	\item \emph{Systém} přepočítá souhrny a nabídne uložení finální verze.
-	\item \emph{Uživatel} uloží jídlo do denního záznamu a případně do vlastních receptů pro opakování.
-\end{enumerate}
-
-\paragraph{UC07: Nastavení profilu, cílů a dietních omezení.}
-\textbf{Charakteristika:} Uživatel chce nastavit cíle, profil a kontext, který ovlivní interpretaci a doporučení.
-\textbf{Primární aktér:} uživatel.
-Hlavní scénář:
-
-\begin{enumerate}
-	\item \emph{Uživatel} otevře nastavení profilu.
-	\item \emph{Uživatel} vyplní nebo upraví základní parametry a nastaví cílové hodnoty.
-	\item \emph{Uživatel} nastaví dietní omezení nebo intolerance.
-	\item \emph{Systém} uloží nastavení a promítne je do přehledů a upozornění.
-\end{enumerate}
-
-\paragraph{UC08: Přehledy, dotazy nad daty a export.}
-\textbf{Charakteristika:} Uživatel chce vyhodnotit svůj progres a získat odpovědi nad historií, případně data sdílet.
-\textbf{Primární aktér:} uživatel.
-Hlavní scénář:
-
-\begin{enumerate}
-	\item \emph{Uživatel} otevře přehledy a zvolí období, týden nebo měsíc.
-	\item \emph{Systém} zobrazí souhrny a trendy, případně upozorní na překročení limitů.
-	\item \emph{Uživatel} položí dotaz nad daty, například porovnání období nebo dotaz na makroživiny.
-	\item \emph{Systém} zobrazí odpověď a nabídne proklik na relevantní dny.
-	\item \emph{Uživatel} volitelně spustí export dat do tabulkového formátu.
-\end{enumerate}
+\begin{table}[!ht]
+	\centering
+	\caption{Přehled případů užití navržené aplikace.}
+	\label{tab:pripadyUziti}
+	\begin{tabularx}{\textwidth}{l >{\hsize=.7\hsize\linewidth=\hsize}X >{\hsize=1.3\hsize\linewidth=\hsize}X}
+		\toprule
+		\textbf{ID} & \textbf{Název} & \textbf{Charakteristika} \\
+		\midrule
+		UC01 & Záznam jídla z~fotografie & Rychlý zápis jídla pomocí fotografie a kontrola výsledku rozpoznání. \\
+		UC02 & Oprava výsledku rozpoznání & Korekce rozpoznaných položek a opětovné vyvolání rozpoznání bez zakládání nového záznamu. \\
+		UC03 & Ruční přidání záznamu jídla & Vytvoření záznamu bez použití fotografie nebo umělé inteligence. \\
+		UC04 & Záznam balené potraviny & Rychlé přidání balené potraviny načtením čárového kódu. \\
+		UC05 & Opakované jídlo z~oblíbených & Rychlé přidání často opakovaného jídla z~oblíbených nebo duplikací staršího záznamu. \\
+		UC06 & Vaření s~režimem plán versus realita & Zadání plánovaných ingrediencí a~úprava skutečně použitého množství po uvaření. \\
+		UC07 & Nastavení profilu a~cílů & Nastavení profilu, cílů a~dietních omezení ovlivňujících interpretaci dat. \\
+		UC08 & Přehledy a~dotazy nad daty & Vyhodnocení progresu, dotazy nad historií a~export dat. \\
+		\bottomrule
+	\end{tabularx}
+\end{table}
 
 \section{Funkční a nefunkční požadavky}
 \label{sec:pozadavky}
 
-Sada funkčních a nefunkčních požadavků byla sestavena ze dvou navzájem se doplňujících zdrojů: zjištění ze strukturovaných rozhovorů s~respondenty R1--R4 (sekce~\ref{subsec:vysledkyRozhovoru}) a doménové opory tvořené zadáním práce a doménovou logikou kalorické aplikace.
+Sada funkčních a nefunkčních požadavků byla sestavena ze dvou navzájem se doplňujících zdrojů: zjištění ze strukturovaných rozhovorů s~respondenty R1--R4 (sekce~\ref{subsec:vysledkyRozhovoru}) a doménové opory tvořené zadáním práce a doménovou logikou kalorické aplikace, která je v~následujících tabulkách označována zkratkou Z.
 Funkční požadavky jsou shrnuty v~tabulce~\ref{tab:trasovatelnostFR}, která zároveň slouží jako matice trasovatelnosti: pro každý požadavek dokládá, ze kterého zdroje jeho motivace pochází, a tím vylučuje, že by některý požadavek vznikl bez podkladu.
 Nefunkční požadavky jsou uvedeny v~samostatném seznamu doplněném o~měřitelné kritérium pro vyhodnocení.
 
 \begin{footnotesize}
+\renewcommand{\arraystretch}{1.35}
 \rowcolors{2}{gray!10}{white}
-\begin{longtable}{@{}lp{9.4cm}p{2.2cm}@{}}
-	\caption[Trasovatelnost funkčních požadavků na zdroje motivace.]{Trasovatelnost funkčních požadavků na zdroje motivace. Sloupec Zdroj odkazuje na rozhovory s~respondenty R1--R4 (sekce~\ref{subsec:vysledkyRozhovoru}) a na Z, tedy zadání práce nebo doménovou logiku kalorické aplikace.} \label{tab:trasovatelnostFR} \\
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}l>{\raggedright\arraybackslash}p{8.6cm}>{\raggedright\arraybackslash}p{2.6cm}@{}}
 	\toprule
 	\rowcolor{white}\textbf{Kód} & \textbf{Popis} & \textbf{Zdroj} \\
 	\midrule
@@ -139,19 +55,19 @@ Nefunkční požadavky jsou uvedeny v~samostatném seznamu doplněném o~měřit
 	\rowcolor{white}\textbf{Kód} & \textbf{Popis} & \textbf{Zdroj} \\
 	\midrule
 	\endhead
-	\multicolumn{3}{@{}l}{\textit{Základní evidence a denní přehled}} \\
+	\multicolumn{3}{@{}l}{\rule[-1ex]{0pt}{3.5ex}\textit{Základní evidence a denní přehled}} \\
 	FR-02 & Denní přehled pro kalorie a makroživiny.                              & R1--R4 \\
 	FR-03 & Nastavení cílových hodnot (kalorie, volitelně makroživiny).           & Z \\
 	FR-04 & Správa profilu uživatele.                                             & Z \\
 	FR-05 & Kontrola nad daty a mazání záznamů, případně účtu.                    & R1, R3, R4, Z \\
 	\addlinespace
-	\multicolumn{3}{@{}l}{\textit{Vstupy pro záznam jídla}} \\
+	\multicolumn{3}{@{}l}{\rule[-1ex]{0pt}{3.5ex}\textit{Vstupy pro záznam jídla}} \\
 	FR-01 & Ruční přidání záznamu jídla bez umělé inteligence.                    & R3, Z \\
 	FR-06 & Pořízení fotografie jako vstup pro rozpoznání.                        & Z \\
 	FR-12 & Import fotografie z~galerie.                                          & R3 \\
 	FR-14 & Záznam jídla bez fotografie (hlas, text).                             & Z \\
 	\addlinespace
-	\multicolumn{3}{@{}l}{\textit{Rozpoznávání AI a práce s~nejistotou}} \\
+	\multicolumn{3}{@{}l}{\rule[-1ex]{0pt}{3.5ex}\textit{Rozpoznávání AI a práce s~nejistotou}} \\
 	FR-07 & Návrh položek a porcí pomocí umělé inteligence.                       & Z \\
 	FR-08 & Indikace nejistoty výstupu.                                           & R2, R3, Z \\
 	FR-09 & Vysvětlení limitů umělé inteligence a doporučení pro vstup.           & R3, Z \\
@@ -159,20 +75,20 @@ Nefunkční požadavky jsou uvedeny v~samostatném seznamu doplněném o~měřit
 	FR-11 & Textový fallback při selhání rozpoznání.                              & R4, Z \\
 	FR-13 & Opakování rozpoznání z~editační obrazovky.                            & R1, R4 \\
 	\addlinespace
-	\multicolumn{3}{@{}l}{\textit{Množství a jednotky}} \\
+	\multicolumn{3}{@{}l}{\rule[-1ex]{0pt}{3.5ex}\textit{Množství a jednotky}} \\
 	FR-15 & Jednotky množství v~gramech i kusech, předvolby porcí.                & R2, R3, R4 \\
 	\addlinespace
-	\multicolumn{3}{@{}l}{\textit{Rychlé zkratky a práce s~historií}} \\
+	\multicolumn{3}{@{}l}{\rule[-1ex]{0pt}{3.5ex}\textit{Rychlé zkratky a práce s~historií}} \\
 	FR-16 & Čtečka čárových kódů pro balené potraviny.                            & R2 \\
 	FR-17 & Oblíbené položky.                                                     & R2, R4 \\
 	FR-18 & Duplikace předchozího záznamu.                                        & R4 \\
 	FR-19 & Našeptávání názvů podle historie.                                     & R4 \\
 	\addlinespace
-	\multicolumn{3}{@{}l}{\textit{Dietní kontext}} \\
+	\multicolumn{3}{@{}l}{\rule[-1ex]{0pt}{3.5ex}\textit{Dietní kontext}} \\
 	FR-20 & Dietní omezení a intolerance.                                         & R3 \\
 	FR-21 & Zobrazení porušení dietních omezení v~kalendáři.                      & R3 \\
 	\addlinespace
-	\multicolumn{3}{@{}l}{\textit{Aktivita, přehledy a motivace}} \\
+	\multicolumn{3}{@{}l}{\rule[-1ex]{0pt}{3.5ex}\textit{Aktivita, přehledy a motivace}} \\
 	FR-22 & Příjem versus výdej v~jednom pohledu.                                 & R1, R2, R4 \\
 	FR-23 & Nastavení integrace výdeje energie a jeho vlivu na limit.             & R2 \\
 	FR-24 & Týdenní a měsíční přehledy.                                           & R1, R4 \\
@@ -180,37 +96,43 @@ Nefunkční požadavky jsou uvedeny v~samostatném seznamu doplněném o~měřit
 	FR-28 & Měsíční motivační souhrn (notifikace, e-mail).                        & R2 \\
 	FR-29 & Nastavitelné notifikace.                                              & Z \\
 	\addlinespace
-	\multicolumn{3}{@{}l}{\textit{Data a provozní vlastnosti}} \\
+	\multicolumn{3}{@{}l}{\rule[-1ex]{0pt}{3.5ex}\textit{Data a provozní vlastnosti}} \\
 	FR-25 & Export dat (například ve formátu CSV).                                & Z \\
 	FR-26 & Offline tolerance, koncept záznamu, dokončení později.                & Z \\
 	FR-30 & Skrytí nebo zobrazení pokročilých funkcí v~rozhraní.                  & Z \\
 	\bottomrule
+	\caption{Trasovatelnost funkčních požadavků na zdroje motivace.} \label{tab:trasovatelnostFR} \\
 \end{longtable}
 \end{footnotesize}
 
 Nefunkční požadavky jsou shrnuty v~tabulce~\ref{tab:nfr}, která pro každý požadavek uvádí měřitelné kritérium pro vyhodnocení a zdroj motivace ve stejné notaci jako tabulka~\ref{tab:trasovatelnostFR}.
 
+\begin{table}[!htbp]
+\centering
 \begin{footnotesize}
+\renewcommand{\arraystretch}{1.35}
 \rowcolors{2}{gray!10}{white}
 \setlength{\tabcolsep}{4pt}
-\begin{longtable}{@{}lp{5.5cm}p{3.2cm}p{1.7cm}@{}}
-	\caption[Nefunkční požadavky a zdroje jejich motivace.]{Nefunkční požadavky a zdroje jejich motivace. Sloupec Kritérium uvádí měřitelnou hodnotu pro vyhodnocení požadavku, sloupec Zdroj odkazuje shodně s~tabulkou~\ref{tab:trasovatelnostFR}: kódy R1--R4 odkazují na výroky respondentů (sekce~\ref{subsec:vysledkyRozhovoru}), Z na zadání práce nebo doménovou logiku kalorické aplikace.} \label{tab:nfr} \\
+\begin{threeparttable}
+\begin{tabular}{@{}l>{\raggedright\arraybackslash}p{5.0cm}>{\raggedright\arraybackslash}p{2.9cm}>{\raggedright\arraybackslash}p{1.5cm}@{}}
 	\toprule
 	\rowcolor{white}\textbf{Kód} & \textbf{Požadavek} & \textbf{Kritérium} & \textbf{Zdroj} \\
 	\midrule
-	\endfirsthead
-	\toprule
-	\rowcolor{white}\textbf{Kód} & \textbf{Požadavek} & \textbf{Kritérium} & \textbf{Zdroj} \\
-	\midrule
-	\endhead
-	NFR-01 & Přesnost odhadu energie a makroživin.\footnote{Hodnota 10~\% představuje pracovní cíl, který je výsledkem autorského rozhodnutí informovaného dvěma doplňujícími úvahami. Respondenti R1 a~R2 ohraničili akceptovatelnou nepřesnost shora přibližně 20~\% (R1) a zdola jednotkami procent (R2). Hodnota 10~\% leží uvnitř tohoto rozpětí. Empirickým kontextem je srovnávací studie Li a~kol.~\cite{li2024evaluating} v~časopise \emph{Nutrients}, která pro nutriční aplikace dokumentuje odchylky v~řádu stovek kilojoulů denně oproti referenčním metodám. Přesný práh 10~\% z~této studie přímo neplyne, slouží však jako orientační kritérium konzistentní s~jejími zjištěními. Cíl je proto chápán jako orientační vodítko pro vyhodnocení kvality výstupu, nikoliv jako absolutní mez.} & $\leq$ 10~\% odchylky od referenčních hodnot & R1, R2, Z \\
+	NFR-01 & Přesnost odhadu energie a makroživin.\tnote{a} & $\leq$ 10~\% odchylky od referenčních hodnot & R1, R2, Z \\
 	NFR-02 & Latence rozpoznání umělou inteligencí. & $\leq$ 20~s za běžných podmínek & R3, R4, Z \\
 	NFR-03 & Počet kroků pro zápis jednoduché položky. & $\leq$ 6 kroků bez dodatečné editace & R1, R2 \\
 	NFR-04 & Časová náročnost zápisu jídla. & opakované $\leq$ 1~min, nové $\leq$ 5~min & R1--R4, Z \\
 	NFR-05 & Minimalistické a přehledné uživatelské rozhraní. & bez rušivých prvků & Z \\
 	\bottomrule
-\end{longtable}
+\end{tabular}
+\begin{tablenotes}[para,flushleft]
+\item[\textsuperscript{a}] Hodnota 10~\% představuje pracovní cíl, který je výsledkem autorského rozhodnutí informovaného dvěma doplňujícími úvahami. Respondenti R1 a~R2 ohraničili akceptovatelnou nepřesnost shora přibližně 20~\% (R1) a zdola jednotkami procent (R2). Hodnota 10~\% leží uvnitř tohoto rozpětí. Empirickým kontextem je srovnávací studie publikovaná v~časopise \emph{Nutrients}~\cite{li2024evaluating}, která pro nutriční aplikace dokumentuje odchylky v~řádu stovek kilojoulů denně oproti referenčním metodám. Přesný práh 10~\% z~této studie přímo neplyne, slouží však jako orientační kritérium konzistentní s~jejími zjištěními. Cíl je proto chápán jako orientační vodítko pro vyhodnocení kvality výstupu, nikoliv jako absolutní mez.
+\end{tablenotes}
+\end{threeparttable}
 \end{footnotesize}
+\caption{Nefunkční požadavky a zdroje jejich motivace.}
+\label{tab:nfr}
+\end{table}
 
 \section{Návrh uživatelského rozhraní a HiFi prototyp}
 \label{sec:prototyp}
@@ -238,48 +160,19 @@ Toto pořadí (od prototypování k~formalizaci) odpovídá iterativní povaze n
 \subsection{Klíčové interakční toky}
 \label{subsec:interakcniToky}
 
-Hlavní obrazovky tvoří uzly grafu interakčních toků, které propojují případy užití do souvislých uživatelských scénářů.
-Tato podsekce stručně popisuje tok pro nejčastější případy užití identifikované v~uživatelské studii.
-Snímky jednotlivých obrazovek z~implementované aplikace jsou uvedeny v~sekci~\ref{sec:klicoveObrazovky}.
+Navržené uživatelské rozhraní propojuje případy užití UC01--UC08 s~funkčními požadavky do následujících interakčních toků:
 
-\paragraph{Tok záznamu jídla z~fotografie (UC01 a UC02).}
-Tok začíná na hlavní obrazovce (viz obrázek~\ref{fig:screenDashboard}), kde uživatel aktivuje skenování z~panelu rychlých akcí.
-Po pořízení nebo importu fotografie je vyvoláno rozpoznání umělou inteligencí a uživatel je přesměrován na obrazovku náhledu výsledku, která zobrazuje rozpoznané ingredience včetně barevné indikace nejistoty (FR-08, viz obrázek~\ref{fig:screenEditMeal}).
-Pokud výsledek odpovídá realitě, uživatel jej potvrdí a vrátí se na hlavní obrazovku s~aktualizovaným denním přehledem.
-V~opačném případě pokračuje na editační obrazovku (viz obrázek~\ref{fig:screenEditMeal}), kde výsledek upraví, případně znovu vyvolá rozpoznání s~doplněným textovým popisem (FR-11, FR-13).
+\begin{itemize}
+	\item \textbf{Záznam jídla z~fotografie (UC01, UC02)}: hlavní tok začínající pořízením nebo importem snímku, pokračující obrazovkou náhledu s~barevnou indikací nejistoty a editační obrazovkou umožňující opakování rozpoznání s~doplněným textovým popisem (FR-08, FR-11, FR-13).
+	\item \textbf{Alternativní vstupy} pro situace, kdy fotografie selže nebo není praktická: hlasový a textový popis jídla (FR-14) a čtečka čárových kódů s~rozlišenými chybovými stavy (FR-10, FR-16).
+	\item \textbf{Rychlý opakovaný zápis (UC03, UC05)} se opírá o~historii záznamů, oblíbené položky a duplikaci dřívějšího jídla na zvolený den (FR-15, FR-17--FR-19).
+	\item \textbf{Přehledy a dotazy nad daty (UC08)} pokrývají týdenní a měsíční souhrny, kalendář porušení dietních omezení a dotazy v~přirozeném jazyce nad lokálně dostupnými daty. Data lze exportovat do tabulkového formátu a všechny záznamové funkce zůstávají dostupné v~režimu offline (FR-21, FR-24--FR-27).
+\end{itemize}
 
-\paragraph{Tok záznamu balené potraviny pomocí čárového kódu (UC04).}
-Uživatel z~panelu rychlých akcí aktivuje čtečku čárových kódů (FR-16).
-Po naskenování kódu systém vyhledá produkt v~databázi nutričních hodnot Open Food Facts a zobrazí nalezenou položku s~předvyplněnými údaji.
-Uživatel zvolí množství a jednotku a potvrdí uložení záznamu.
-Pokud produkt v~databázi není nalezen nebo dojde k~chybě, je uživatel informován o~konkrétním důvodu (FR-10) a nabídnuta mu cesta k~ručnímu zápisu nebo skenování nutriční etikety.
-
-\paragraph{Tok ručního zápisu jídla (UC03).}
-Uživatel zvolí v~panelu rychlých akcí možnost ručního zápisu, čímž otevře obrazovku výběru jídla z~historie a oblíbených (viz obrázek~\ref{fig:screenMealLog}).
-Pokud již dříve podobné jídlo zapsal, využije našeptávání podle historie (FR-19), oblíbené položky (FR-17) nebo duplikaci dřívějšího záznamu (FR-18) na konkrétní den (UC05).
-V~opačném případě vytvoří nové jídlo na editační obrazovce (viz obrázek~\ref{fig:screenEditMeal}) a zadá ingredience včetně gramáže nebo počtu kusů (FR-15).
-
-\paragraph{Tok hlasového a textového záznamu (UC01 alternativa).}
-Pro situace, kdy fotografování není praktické nebo selže, je k~dispozici alternativní vstup hlasem nebo textovým popisem (FR-14, FR-11), zachycený obrazovkou na obrázku~\ref{fig:screenVoiceLog}.
-Uživatel popíše jídlo přirozeným jazykem a systém zpracuje vstup stejnou pipeline pro umělou inteligenci jako fotografický vstup.
-Tento tok vyžaduje internetové připojení, ostatní funkce jsou plně dostupné v~režimu offline (FR-26).
-
-\paragraph{Tok přehledů a dotazování nad daty (UC08).}
-Tok začíná na záložce přehledů (viz obrázek~\ref{fig:screenProgress}), kde uživatel zvolí časové období (týden, měsíc).
-Systém zobrazí souhrny a trendy a uživatel může pokládat dotazy v~přirozeném jazyce (viz obrázek~\ref{fig:screenAskAi}), jako například porovnání kalorického příjmu mezi obdobími nebo detekce dnů s~překročením dietních omezení (FR-21, FR-24, FR-27).
-Volitelně lze data exportovat do tabulkového formátu pro další zpracování (FR-25).
+Kompletní interakční toky včetně přechodů mezi obrazovkami jsou dokumentovány v~HiFi prototypu v~příloze~\ref{app:hifi}, snímky odpovídajících obrazovek z~implementované aplikace jsou uvedeny v~sekci~\ref{sec:klicoveObrazovky}.
 
 \section{Shrnutí návrhu aplikace}
 \label{sec:shrnutiNavrhu}
 
-Návrhová fáze této práce vychází z~analytických zjištění shrnutých v~kapitole~\ref{ch:analyza}, zejména z~přehledu existujících mobilních aplikací (sekce~\ref{sec:existujici}) a z~výsledků uživatelské studie založené na strukturovaných rozhovorech se čtyřmi respondenty (sekce~\ref{sec:uzivatelskaStudie}).
-Z~uvedených vstupů byla sestavena sada osmi případů užití (sekce~\ref{sec:pripadyUziti}) a třiceti funkčních a pěti nefunkčních požadavků (sekce~\ref{sec:pozadavky}), které vymezují rozsah cílového řešení.
-
-Případy užití pokrývají všechny klíčové uživatelské scénáře identifikované v~rozhovorech, od rychlého záznamu jídla z~fotografie přes ruční zápis a skenování čárového kódu až po přehledy a dotazování v~přirozeném jazyce nad daty.
-Funkční požadavky operacionalizují tyto scénáře do konkrétních ověřitelných vlastností aplikace, zatímco nefunkční požadavky stanovují měřitelné cílové parametry, jako jsou maximální latence rozpoznávání nebo počet kroků pro zápis jednoduché položky.
-
-HiFi prototyp v~sekci~\ref{sec:prototyp} převádí požadavky a případy užití do konkrétní vizuální a interakční podoby a tvoří přímý podklad pro implementaci popsanou v~kapitole~\ref{ch:implementace}.
-Návrhová východiska a interakční toky jsou popsány v~textu, zatímco vizuální stránka jednotlivých obrazovek je prezentována na snímcích reálné implementace v~sekci~\ref{sec:klicoveObrazovky}.
-Samostatný HiFi prototyp ve své navržené formě je k~dispozici jako příloha~\ref{app:hifi}.
-
-V~následující kapitole je popsána implementace vybraných funkcí navrženého řešení, včetně zvolených technologií, softwarové architektury, datového modelu a integrace modelu umělé inteligence pro rozpoznávání potravin.
+Návrhová fáze převedla vstupy z~uživatelského výzkumu a analýzy konkurence do osmi případů užití (sekce~\ref{sec:pripadyUziti}), třiceti funkčních a pěti nefunkčních požadavků (sekce~\ref{sec:pozadavky}) a HiFi prototypu v~nástroji Figma (sekce~\ref{sec:prototyp}, příloha~\ref{app:hifi}).
+Tyto artefakty vymezují rozsah cílového řešení a tvoří přímý podklad pro implementaci popsanou v~kapitole~\ref{ch:implementace}.

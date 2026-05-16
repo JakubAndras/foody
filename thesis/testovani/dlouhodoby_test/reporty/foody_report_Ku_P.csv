@@ -1,0 +1,397 @@
+--- User Profile ---
+Height (cm),182
+Weight (kg),89.0
+Goal Weight (kg),85.0
+Sex,male
+Goal,lose
+Diet Type,classic
+Custom Diet Preferences,
+Weight Change Rate (kg/week),0.7
+Prefers Metric,yes
+Date of Birth,1997-12-19
+
+--- Daily Summary ---
+Date,Calories,Protein (g),Carbs (g),Fat (g),Calorie Goal,Protein Goal (g),Carbs Goal (g),Fat Goal (g),Exercise Calories,Net Calories,Meal Count,Exercise Count
+2026-04-27,0,0,0,0,2000,150,250,70,0,0,0,0
+2026-04-28,0,0,0,0,2000,150,250,70,0,0,0,0
+2026-04-29,0,0,0,0,2000,150,250,70,0,0,0,0
+2026-04-30,978,63,108,18,2560,192,256,85,0,978,2,0
+2026-05-01,3021,171,341,80,2000,150,250,70,1100,1921,4,2
+2026-05-02,1620,122,190,36,2000,150,250,70,0,1620,2,0
+2026-05-03,1230,90,80,66,2000,150,250,70,0,1230,2,0
+2026-05-04,2362,202,179,97,2000,150,250,70,534,1828,4,1
+2026-05-05,2074,122,178,90,2000,150,250,70,535,1539,4,1
+2026-05-06,1310,47,142,62,2000,150,250,70,0,1310,5,0
+2026-05-07,1034,32,126,46,2000,150,250,70,0,1034,4,0
+2026-05-08,1297,61,164,44,2000,150,250,70,0,1297,7,0
+2026-05-09,2729,82,375,91,2000,150,250,70,0,2729,9,0
+2026-05-10,1754,66,222,67,2000,150,250,70,0,1754,6,0
+2026-05-11,1475,66,178,61,2000,150,250,70,0,1475,2,0
+2026-05-12,1229,74,112,52,2000,150,250,70,0,1229,2,0
+2026-05-13,2275,135,247,85,2000,150,250,70,0,2275,5,0
+
+Consumed:,24387 kcal
+Burned:,2169 kcal
+Balance:,22218 kcal
+
+--- Meal Details ---
+Date,Meal,Meal Timestamp,Meal AI Confidence,Has Photo,input_source,ai_provider,ai_model,barcode,meal_was_edited_by_user,meal_edited_at,meal_deleted_at,meal_ai_original_name,meal_ai_original_calories,meal_ai_original_proteins,meal_ai_original_carbs,meal_ai_original_fats,meal_ai_original_confidence,Ingredients,Weight,Amount (pcs),Calories,Protein (g),Carbs (g),Fat (g),Ingredient AI Confidence,ing_was_edited_by_user,ing_deleted_at,ing_ai_original_name,ing_ai_original_weight,ing_ai_original_amount,ing_ai_original_calories,ing_ai_original_proteins,ing_ai_original_carbs,ing_ai_original_fats,ing_ai_original_confidence
+2026-04-27,Draft beer,2026-04-27 21:52,0.96,yes,photo_ai,openai,gpt-5.4,,no,,2026-05-13 14:33,Draft beer,177,2,14,0,0.96,Draft pale lager beer,450,1.0,177,2,14,0,0.96,no,2026-05-13 14:33,Draft pale lager beer,450,1.0,177,2,14,0,0.96
+2026-04-28,Draft beer,2026-04-28 21:52,0.96,yes,photo_ai,openai,gpt-5.4,,no,,2026-05-13 14:33,Draft beer,177,2,14,0,0.96,Draft pale lager beer,450,1.0,177,2,14,0,0.96,no,2026-05-13 14:33,Draft pale lager beer,450,1.0,177,2,14,0,0.96
+2026-04-29,Draft beer,2026-04-29 21:52,0.96,yes,photo_ai,openai,gpt-5.4,,no,,2026-05-13 14:33,Draft beer,177,2,14,0,0.96,Draft pale lager beer,450,1.0,177,2,14,0,0.96,no,2026-05-13 14:33,Draft pale lager beer,450,1.0,177,2,14,0,0.96
+2026-04-30,Draft beer,2026-04-30 21:49,0.96,yes,photo_ai,openai,gpt-5.4,,no,,,Draft beer,177,2,14,0,0.96,Draft pale lager beer,450,1.0,177,2,14,0,0.96,no,,Draft pale lager beer,450,1.0,177,2,14,0,0.96
+2026-04-30,Chicken rice bowl,2026-04-30 21:54,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken rice bowl,801,61,94,18,0.91,"white rice, cooked",210,1.0,273,6,59,1,0.97,no,,"white rice, cooked",210,1.0,273,6,59,1,0.97
+2026-04-30,Chicken rice bowl,2026-04-30 21:54,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken rice bowl,801,61,94,18,0.91,"chicken breast, sautéed",165,1.0,281,51,0,6,0.94,no,,"chicken breast, sautéed",165,1.0,281,51,0,6,0.94
+2026-04-30,Chicken rice bowl,2026-04-30 21:54,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken rice bowl,801,61,94,18,0.91,"sweet corn, cooked",45,1.0,43,2,10,1,0.92,no,,"sweet corn, cooked",45,1.0,43,2,10,1,0.92
+2026-04-30,Chicken rice bowl,2026-04-30 21:54,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken rice bowl,801,61,94,18,0.91,sun-dried tomatoes in oil,25,1.0,65,1,7,3,0.79,no,,sun-dried tomatoes in oil,25,1.0,65,1,7,3,0.79
+2026-04-30,Chicken rice bowl,2026-04-30 21:54,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken rice bowl,801,61,94,18,0.91,sweet chili sauce,25,1.0,60,0,15,0,0.84,no,,sweet chili sauce,25,1.0,60,0,15,0,0.84
+2026-04-30,Chicken rice bowl,2026-04-30 21:54,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken rice bowl,801,61,94,18,0.91,"cherry tomatoes, raw",90,1.0,16,1,4,0,0.98,no,,"cherry tomatoes, raw",90,1.0,16,1,4,0,0.98
+2026-04-30,Chicken rice bowl,2026-04-30 21:54,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken rice bowl,801,61,94,18,0.91,cooking oil,7,1.0,63,0,0,7,0.72,no,,cooking oil,7,1.0,63,0,0,7,0.72
+2026-05-01,Draft beer,2026-05-01 21:50,0.96,yes,photo_ai,openai,gpt-5.4,,no,,2026-05-01 22:28,Draft beer,177,2,14,0,0.96,Draft pale lager beer,450,1.0,177,2,14,0,0.96,no,2026-05-01 22:28,Draft pale lager beer,450,1.0,177,2,14,0,0.96
+2026-05-01,Draft beer,2026-05-01 17:35,0.97,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-01 18:50,,Draft beer,215,2,34,0,0.97,draft pale lager beer,425,1.0,215,2,34,0,0.97,no,2026-05-01 18:50,draft pale lager beer,425,1.0,215,2,34,0,0.97
+2026-05-01,Draft beer,2026-05-01 17:35,0.97,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-01 18:50,,Draft beer,215,2,34,0,0.97,draft pale lager beer,850,2.0,430,4,68,0,0.97,yes,2026-05-04 17:43,draft pale lager beer,425,1.0,215,2,34,0,0.97
+2026-05-01,Draft beer,2026-05-01 17:35,0.97,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-01 18:50,,Draft beer,215,2,34,0,0.97,draft pale lager beer,1275,3.0,645,6,102,0,0.97,yes,,draft pale lager beer,425,1.0,215,2,34,0,0.97
+2026-05-01,Chicken rice bowl,2026-05-01 17:37,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 11:28,,Chicken rice bowl,801,61,94,18,0.91,"white rice, cooked",210,1.0,273,6,59,1,0.97,no,2026-05-04 11:28,"white rice, cooked",210,1.0,273,6,59,1,0.97
+2026-05-01,Chicken rice bowl,2026-05-01 17:37,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 11:28,,Chicken rice bowl,801,61,94,18,0.91,"chicken breast, sautéed",165,1.0,281,51,0,6,0.94,no,2026-05-04 11:28,"chicken breast, sautéed",165,1.0,281,51,0,6,0.94
+2026-05-01,Chicken rice bowl,2026-05-01 17:37,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 11:28,,Chicken rice bowl,801,61,94,18,0.91,"sweet corn, cooked",45,1.0,43,2,10,1,0.92,no,2026-05-04 11:28,"sweet corn, cooked",45,1.0,43,2,10,1,0.92
+2026-05-01,Chicken rice bowl,2026-05-01 17:37,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 11:28,,Chicken rice bowl,801,61,94,18,0.91,sun-dried tomatoes in oil,25,1.0,65,1,7,3,0.79,no,2026-05-04 11:28,sun-dried tomatoes in oil,25,1.0,65,1,7,3,0.79
+2026-05-01,Chicken rice bowl,2026-05-01 17:37,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 11:28,,Chicken rice bowl,801,61,94,18,0.91,sweet chili sauce,25,1.0,60,0,15,0,0.84,no,2026-05-04 11:28,sweet chili sauce,25,1.0,60,0,15,0,0.84
+2026-05-01,Chicken rice bowl,2026-05-01 17:37,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 11:28,,Chicken rice bowl,801,61,94,18,0.91,"cherry tomatoes, raw",90,1.0,16,1,4,0,0.98,no,2026-05-04 11:28,"cherry tomatoes, raw",90,1.0,16,1,4,0,0.98
+2026-05-01,Chicken rice bowl,2026-05-01 17:37,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 11:28,,Chicken rice bowl,801,61,94,18,0.91,cooking oil,7,1.0,63,0,0,7,0.72,no,2026-05-04 11:28,cooking oil,7,1.0,63,0,0,7,0.72
+2026-05-01,Chicken rice bowl,2026-05-01 17:37,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 11:28,,Chicken rice bowl,801,61,94,18,0.91,"white rice, cooked",420,2.0,546,11,118,1,0.97,yes,,"white rice, cooked",210,1.0,273,6,59,1,0.97
+2026-05-01,Chicken rice bowl,2026-05-01 17:37,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 11:28,,Chicken rice bowl,801,61,94,18,0.91,"chicken breast, sautéed",330,2.0,562,102,0,12,0.94,yes,,"chicken breast, sautéed",165,1.0,281,51,0,6,0.94
+2026-05-01,Chicken rice bowl,2026-05-01 17:37,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 11:28,,Chicken rice bowl,801,61,94,18,0.91,"sweet corn, cooked",90,2.0,86,3,19,1,0.92,yes,,"sweet corn, cooked",45,1.0,43,2,10,1,0.92
+2026-05-01,Chicken rice bowl,2026-05-01 17:37,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 11:28,,Chicken rice bowl,801,61,94,18,0.91,sun-dried tomatoes in oil,50,2.0,130,3,14,7,0.79,yes,,sun-dried tomatoes in oil,25,1.0,65,1,7,3,0.79
+2026-05-01,Chicken rice bowl,2026-05-01 17:37,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 11:28,,Chicken rice bowl,801,61,94,18,0.91,sweet chili sauce,50,2.0,120,0,30,0,0.84,yes,,sweet chili sauce,25,1.0,60,0,15,0,0.84
+2026-05-01,Chicken rice bowl,2026-05-01 17:37,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 11:28,,Chicken rice bowl,801,61,94,18,0.91,"cherry tomatoes, raw",180,2.0,32,2,7,0,0.98,yes,,"cherry tomatoes, raw",90,1.0,16,1,4,0,0.98
+2026-05-01,Chicken rice bowl,2026-05-01 17:37,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 11:28,,Chicken rice bowl,801,61,94,18,0.91,cooking oil,14,2.0,126,0,0,14,0.72,yes,,cooking oil,7,1.0,63,0,0,7,0.72
+2026-05-01,Kyselice soup,2026-05-01 18:53,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Kyselice soup,206,11,20,10,0.91,sauerkraut soup base,230,1.0,104,2,12,6,0.90,no,,sauerkraut soup base,230,1.0,104,2,12,6,0.90
+2026-05-01,Kyselice soup,2026-05-01 18:53,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Kyselice soup,206,11,20,10,0.91,potato,40,1.0,35,1,8,0,0.78,no,,potato,40,1.0,35,1,8,0,0.78
+2026-05-01,Kyselice soup,2026-05-01 18:53,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Kyselice soup,206,11,20,10,0.91,smoked meat,25,1.0,53,8,0,2,0.72,no,,smoked meat,25,1.0,53,8,0,2,0.72
+2026-05-01,Kyselice soup,2026-05-01 18:53,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Kyselice soup,206,11,20,10,0.91,cooking fat/oil,2,1.0,14,0,0,2,0.66,no,,cooking fat/oil,2,1.0,14,0,0,2,0.66
+2026-05-01,Salmon with veg,2026-05-01 19:10,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Salmon with veg,568,33,31,35,0.92,grilled salmon,95,1.0,196,22,0,12,0.96,no,,grilled salmon,95,1.0,196,22,0,12,0.96
+2026-05-01,Salmon with veg,2026-05-01 19:10,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Salmon with veg,568,33,31,35,0.92,roasted potatoes,95,1.0,143,2,24,5,0.94,no,,roasted potatoes,95,1.0,143,2,24,5,0.94
+2026-05-01,Salmon with veg,2026-05-01 19:10,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Salmon with veg,568,33,31,35,0.92,sautéed green beans,55,1.0,33,1,4,1,0.92,no,,sautéed green beans,55,1.0,33,1,4,1,0.92
+2026-05-01,Salmon with veg,2026-05-01 19:10,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Salmon with veg,568,33,31,35,0.92,bacon/lardon pieces,20,1.0,108,7,0,8,0.88,no,,bacon/lardon pieces,20,1.0,108,7,0,8,0.88
+2026-05-01,Salmon with veg,2026-05-01 19:10,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Salmon with veg,568,33,31,35,0.92,mushrooms and onions,25,1.0,16,1,3,0,0.80,no,,mushrooms and onions,25,1.0,16,1,3,0,0.80
+2026-05-01,Salmon with veg,2026-05-01 19:10,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Salmon with veg,568,33,31,35,0.92,cooking oil/butter,8,1.0,72,0,0,8,0.73,no,,cooking oil/butter,8,1.0,72,0,0,8,0.73
+2026-05-01,Breakfast Croissant,2026-05-01 22:29,0.92,yes,photo_ai,openai,gpt-5.4,,no,,2026-05-04 11:28,Breakfast Croissant,954,30,53,69,0.92,croissant,85,1.0,346,7,37,19,0.98,no,2026-05-04 11:28,croissant,85,1.0,346,7,37,19,0.98
+2026-05-01,Breakfast Croissant,2026-05-01 22:29,0.92,yes,photo_ai,openai,gpt-5.4,,no,,2026-05-04 11:28,Breakfast Croissant,954,30,53,69,0.92,scrambled eggs,100,1.0,149,10,2,11,0.93,no,2026-05-04 11:28,scrambled eggs,100,1.0,149,10,2,11,0.93
+2026-05-01,Breakfast Croissant,2026-05-01 22:29,0.92,yes,photo_ai,openai,gpt-5.4,,no,,2026-05-04 11:28,Breakfast Croissant,954,30,53,69,0.92,poached egg,50,1.0,72,6,0,5,0.95,no,2026-05-04 11:28,poached egg,50,1.0,72,6,0,5,0.95
+2026-05-01,Breakfast Croissant,2026-05-01 22:29,0.92,yes,photo_ai,openai,gpt-5.4,,no,,2026-05-04 11:28,Breakfast Croissant,954,30,53,69,0.92,avocado,55,1.0,88,1,5,8,0.94,no,2026-05-04 11:28,avocado,55,1.0,88,1,5,8,0.94
+2026-05-01,Breakfast Croissant,2026-05-01 22:29,0.92,yes,photo_ai,openai,gpt-5.4,,no,,2026-05-04 11:28,Breakfast Croissant,954,30,53,69,0.92,ham or bacon,18,1.0,39,4,0,2,0.62,no,2026-05-04 11:28,ham or bacon,18,1.0,39,4,0,2,0.62
+2026-05-01,Breakfast Croissant,2026-05-01 22:29,0.92,yes,photo_ai,openai,gpt-5.4,,no,,2026-05-04 11:28,Breakfast Croissant,954,30,53,69,0.92,leafy greens,10,1.0,2,0,0,0,0.78,no,2026-05-04 11:28,leafy greens,10,1.0,2,0,0,0,0.78
+2026-05-01,Breakfast Croissant,2026-05-01 22:29,0.92,yes,photo_ai,openai,gpt-5.4,,no,,2026-05-04 11:28,Breakfast Croissant,954,30,53,69,0.92,hollandaise-style sauce,30,1.0,154,1,2,16,0.90,no,2026-05-04 11:28,hollandaise-style sauce,30,1.0,154,1,2,16,0.90
+2026-05-01,Breakfast Croissant,2026-05-01 22:29,0.92,yes,photo_ai,openai,gpt-5.4,,no,,2026-05-04 11:28,Breakfast Croissant,954,30,53,69,0.92,chives,2,1.0,1,0,0,0,0.96,no,2026-05-04 11:28,chives,2,1.0,1,0,0,0,0.96
+2026-05-01,Breakfast Croissant,2026-05-01 22:29,0.92,yes,photo_ai,openai,gpt-5.4,,no,,2026-05-04 11:28,Breakfast Croissant,954,30,53,69,0.92,butter/oil for egg cooking,6,1.0,54,0,0,6,0.74,no,2026-05-04 11:28,butter/oil for egg cooking,6,1.0,54,0,0,6,0.74
+2026-05-01,Breakfast Croissant,2026-05-01 22:29,0.92,yes,photo_ai,openai,gpt-5.4,,no,,2026-05-04 11:28,Breakfast Croissant,954,30,53,69,0.92,croissant piece,12,1.0,49,1,7,2,0.86,no,2026-05-04 11:28,croissant piece,12,1.0,49,1,7,2,0.86
+2026-05-01,Salmon with veg,2026-05-01 22:39,,yes,,,,,no,,2026-05-04 11:28,,,,,,,grilled salmon,95,1.0,196,22,0,12,,no,2026-05-04 11:28,,,,,,,,
+2026-05-01,Kyselice soup,2026-05-01 22:41,,yes,,,,,no,,2026-05-04 11:27,,,,,,,sauerkraut soup base,345,1.5,156,3,17,9,,no,2026-05-04 11:27,,,,,,,,
+2026-05-01,Kyselice soup,2026-05-01 22:41,,yes,,,,,no,,2026-05-04 11:27,,,,,,,potato,60,1.5,53,1,12,0,,no,2026-05-04 11:27,,,,,,,,
+2026-05-01,Kyselice soup,2026-05-01 22:41,,yes,,,,,no,,2026-05-04 11:27,,,,,,,smoked meat,38,1.5,80,12,0,3,,no,2026-05-04 11:27,,,,,,,,
+2026-05-01,Kyselice soup,2026-05-01 22:41,,yes,,,,,no,,2026-05-04 11:27,,,,,,,cooking fat/oil,3,1.5,21,0,0,3,,no,2026-05-04 11:27,,,,,,,,
+2026-05-01,Kyselice soup,2026-05-01 22:42,,yes,,,,,no,,2026-05-04 11:27,,,,,,,sauerkraut soup base,345,1.5,156,3,17,9,,no,2026-05-04 11:27,,,,,,,,
+2026-05-01,Kyselice soup,2026-05-01 22:42,,yes,,,,,no,,2026-05-04 11:27,,,,,,,potato,60,1.5,53,1,12,0,,no,2026-05-04 11:27,,,,,,,,
+2026-05-01,Kyselice soup,2026-05-01 22:42,,yes,,,,,no,,2026-05-04 11:27,,,,,,,smoked meat,38,1.5,80,12,0,3,,no,2026-05-04 11:27,,,,,,,,
+2026-05-01,Kyselice soup,2026-05-01 22:42,,yes,,,,,no,,2026-05-04 11:27,,,,,,,cooking fat/oil,3,1.5,21,0,0,3,,no,2026-05-04 11:27,,,,,,,,
+2026-05-01,Kyselice soup,2026-05-01 22:42,,yes,,,,,no,,2026-05-04 11:27,,,,,,,sauerkraut soup base,460,1.0,208,5,23,12,,no,2026-05-04 11:27,,,,,,,,
+2026-05-01,Kyselice soup,2026-05-01 22:42,,yes,,,,,no,,2026-05-04 11:27,,,,,,,potato,40,1.0,35,1,8,0,,no,2026-05-04 11:27,,,,,,,,
+2026-05-01,Kyselice soup,2026-05-01 22:42,,yes,,,,,no,,2026-05-04 11:27,,,,,,,smoked meat,25,1.0,53,8,0,2,,no,2026-05-04 11:27,,,,,,,,
+2026-05-01,Kyselice soup,2026-05-01 22:42,,yes,,,,,no,,2026-05-04 11:27,,,,,,,cooking fat/oil,2,1.0,14,0,0,2,,no,2026-05-04 11:27,,,,,,,,
+2026-05-01,Kyselice soup,2026-05-01 22:42,,yes,,,,,no,,2026-05-04 11:27,,,,,,,sauerkraut soup base,460,1.0,208,5,23,12,,no,2026-05-04 11:27,,,,,,,,
+2026-05-01,Kyselice soup,2026-05-01 22:42,,yes,,,,,no,,2026-05-04 11:27,,,,,,,potato,40,1.0,35,1,8,0,,no,2026-05-04 11:27,,,,,,,,
+2026-05-01,Kyselice soup,2026-05-01 22:42,,yes,,,,,no,,2026-05-04 11:27,,,,,,,smoked meat,25,1.0,53,8,0,2,,no,2026-05-04 11:27,,,,,,,,
+2026-05-01,Kyselice soup,2026-05-01 22:42,,yes,,,,,no,,2026-05-04 11:27,,,,,,,cooking fat/oil,2,1.0,14,0,0,2,,no,2026-05-04 11:27,,,,,,,,
+2026-05-02,Draft beer,2026-05-02 21:50,0.96,yes,photo_ai,openai,gpt-5.4,,no,,2026-05-01 22:27,Draft beer,177,2,14,0,0.96,Draft pale lager beer,450,1.0,177,2,14,0,0.96,no,2026-05-01 22:27,Draft pale lager beer,450,1.0,177,2,14,0,0.96
+2026-05-02,Chicken rice bowl,2026-05-02 11:28,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 11:28,,Chicken rice bowl,801,61,94,18,0.91,"white rice, cooked",420,2.0,546,11,118,1,0.97,yes,,"white rice, cooked",210,1.0,273,6,59,1,0.97
+2026-05-02,Chicken rice bowl,2026-05-02 11:28,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 11:28,,Chicken rice bowl,801,61,94,18,0.91,"chicken breast, sautéed",330,2.0,562,102,0,12,0.94,yes,,"chicken breast, sautéed",165,1.0,281,51,0,6,0.94
+2026-05-02,Chicken rice bowl,2026-05-02 11:28,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 11:28,,Chicken rice bowl,801,61,94,18,0.91,"sweet corn, cooked",90,2.0,86,3,19,1,0.92,yes,,"sweet corn, cooked",45,1.0,43,2,10,1,0.92
+2026-05-02,Chicken rice bowl,2026-05-02 11:28,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 11:28,,Chicken rice bowl,801,61,94,18,0.91,sun-dried tomatoes in oil,50,2.0,130,3,14,7,0.79,yes,,sun-dried tomatoes in oil,25,1.0,65,1,7,3,0.79
+2026-05-02,Chicken rice bowl,2026-05-02 11:28,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 11:28,,Chicken rice bowl,801,61,94,18,0.91,sweet chili sauce,50,2.0,120,0,30,0,0.84,yes,,sweet chili sauce,25,1.0,60,0,15,0,0.84
+2026-05-02,Chicken rice bowl,2026-05-02 11:28,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 11:28,,Chicken rice bowl,801,61,94,18,0.91,"cherry tomatoes, raw",180,2.0,32,2,7,0,0.98,yes,,"cherry tomatoes, raw",90,1.0,16,1,4,0,0.98
+2026-05-02,Chicken rice bowl,2026-05-02 11:28,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 11:28,,Chicken rice bowl,801,61,94,18,0.91,cooking oil,14,2.0,126,0,0,14,0.72,yes,,cooking oil,7,1.0,63,0,0,7,0.72
+2026-05-02,Káva s mlékem,2026-05-02 09:51,0.95,no,voice_ai,openai,gpt-5.4,,no,,,Káva s mlékem,18,1,2,1,0.95,Černá káva,200,1.0,2,0,0,0,0.99,no,,Černá káva,200,1.0,2,0,0,0,0.99
+2026-05-02,Káva s mlékem,2026-05-02 09:51,0.95,no,voice_ai,openai,gpt-5.4,,no,,,Káva s mlékem,18,1,2,1,0.95,Mléko,30,1.0,16,1,2,1,0.87,no,,Mléko,30,1.0,16,1,2,1,0.87
+2026-05-03,Draft beer,2026-05-03 21:50,0.96,yes,photo_ai,openai,gpt-5.4,,no,,2026-05-01 22:27,Draft beer,177,2,14,0,0.96,Draft pale lager beer,450,1.0,177,2,14,0,0.96,no,2026-05-01 22:27,Draft pale lager beer,450,1.0,177,2,14,0,0.96
+2026-05-03,Chicken corn stew,2026-05-03 11:29,0.83,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken corn stew,615,45,40,33,0.83,"Chicken pieces, pan-fried",150,1.0,315,39,0,18,0.87,no,,"Chicken pieces, pan-fried",150,1.0,315,39,0,18,0.87
+2026-05-03,Chicken corn stew,2026-05-03 11:29,0.83,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken corn stew,615,45,40,33,0.83,"Sweet corn, cooked",110,1.0,106,4,23,2,0.95,no,,"Sweet corn, cooked",110,1.0,106,4,23,2,0.95
+2026-05-03,Chicken corn stew,2026-05-03 11:29,0.83,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken corn stew,615,45,40,33,0.83,Tomato-pepper sauce,70,1.0,49,1,9,1,0.72,no,,Tomato-pepper sauce,70,1.0,49,1,9,1,0.72
+2026-05-03,Chicken corn stew,2026-05-03 11:29,0.83,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken corn stew,615,45,40,33,0.83,Cooking oil,12,1.0,108,0,0,12,0.76,no,,Cooking oil,12,1.0,108,0,0,12,0.76
+2026-05-03,Chicken corn stew,2026-05-03 11:29,0.83,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken corn stew,615,45,40,33,0.83,Bread piece,15,1.0,37,1,8,0,0.89,no,,Bread piece,15,1.0,37,1,8,0,0.89
+2026-05-03,Chicken corn stew,2026-05-03 17:44,,yes,manual,,,,no,,,,,,,,,"Chicken pieces, pan-fried",150,1.0,315,39,0,18,,no,,,,,,,,,
+2026-05-03,Chicken corn stew,2026-05-03 17:44,,yes,manual,,,,no,,,,,,,,,"Sweet corn, cooked",110,1.0,106,4,23,2,,no,,,,,,,,,
+2026-05-03,Chicken corn stew,2026-05-03 17:44,,yes,manual,,,,no,,,,,,,,,Tomato-pepper sauce,70,1.0,49,1,9,1,,no,,,,,,,,,
+2026-05-03,Chicken corn stew,2026-05-03 17:44,,yes,manual,,,,no,,,,,,,,,Cooking oil,12,1.0,108,0,0,12,,no,,,,,,,,,
+2026-05-03,Chicken corn stew,2026-05-03 17:44,,yes,manual,,,,no,,,,,,,,,Bread piece,15,1.0,37,1,8,0,,no,,,,,,,,,
+2026-05-04,Kinder Maxi,2026-05-04 17:36,0.99,yes,photo_ai,openai,gpt-5.4,,no,,,Kinder Maxi,118,2,12,7,0.99,Kinder Maxi chocolate bar,21,1.0,118,2,12,7,0.99,no,,Kinder Maxi chocolate bar,21,1.0,118,2,12,7,0.99
+2026-05-04,Chicken corn stew,2026-05-04 17:43,0.83,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 17:43,,Chicken corn stew,615,45,40,33,0.83,"Chicken pieces, pan-fried",150,1.0,315,39,0,18,0.87,no,2026-05-04 17:43,"Chicken pieces, pan-fried",150,1.0,315,39,0,18,0.87
+2026-05-04,Chicken corn stew,2026-05-04 17:43,0.83,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 17:43,,Chicken corn stew,615,45,40,33,0.83,"Sweet corn, cooked",110,1.0,106,4,23,2,0.95,no,2026-05-04 17:43,"Sweet corn, cooked",110,1.0,106,4,23,2,0.95
+2026-05-04,Chicken corn stew,2026-05-04 17:43,0.83,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 17:43,,Chicken corn stew,615,45,40,33,0.83,Tomato-pepper sauce,70,1.0,49,1,9,1,0.72,no,2026-05-04 17:43,Tomato-pepper sauce,70,1.0,49,1,9,1,0.72
+2026-05-04,Chicken corn stew,2026-05-04 17:43,0.83,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 17:43,,Chicken corn stew,615,45,40,33,0.83,Cooking oil,12,1.0,108,0,0,12,0.76,no,2026-05-04 17:43,Cooking oil,12,1.0,108,0,0,12,0.76
+2026-05-04,Chicken corn stew,2026-05-04 17:43,0.83,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 17:43,,Chicken corn stew,615,45,40,33,0.83,Bread piece,15,1.0,37,1,8,0,0.89,no,2026-05-04 17:43,Bread piece,15,1.0,37,1,8,0,0.89
+2026-05-04,Chicken corn stew,2026-05-04 17:43,0.83,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 17:43,,Chicken corn stew,615,45,40,33,0.83,"Chicken pieces, pan-fried",300,2.0,630,78,0,36,0.87,yes,,"Chicken pieces, pan-fried",150,1.0,315,39,0,18,0.87
+2026-05-04,Chicken corn stew,2026-05-04 17:43,0.83,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 17:43,,Chicken corn stew,615,45,40,33,0.83,"Sweet corn, cooked",220,2.0,212,7,46,3,0.95,yes,,"Sweet corn, cooked",110,1.0,106,4,23,2,0.95
+2026-05-04,Chicken corn stew,2026-05-04 17:43,0.83,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 17:43,,Chicken corn stew,615,45,40,33,0.83,Tomato-pepper sauce,140,2.0,98,3,18,2,0.72,yes,,Tomato-pepper sauce,70,1.0,49,1,9,1,0.72
+2026-05-04,Chicken corn stew,2026-05-04 17:43,0.83,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 17:43,,Chicken corn stew,615,45,40,33,0.83,Cooking oil,24,2.0,216,0,0,24,0.76,yes,,Cooking oil,12,1.0,108,0,0,12,0.76
+2026-05-04,Chicken corn stew,2026-05-04 17:43,0.83,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 17:43,,Chicken corn stew,615,45,40,33,0.83,Bread piece,30,2.0,74,2,16,1,0.89,yes,,Bread piece,15,1.0,37,1,8,0,0.89
+2026-05-04,Chicken Rice Bowl,2026-05-04 20:48,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 20:50,,Chicken Rice Bowl,694,61,84,17,0.91,"White rice, cooked",210,1.0,273,6,59,1,0.98,no,2026-05-04 20:50,"White rice, cooked",210,1.0,273,6,59,1,0.98
+2026-05-04,Chicken Rice Bowl,2026-05-04 20:48,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 20:50,,Chicken Rice Bowl,694,61,84,17,0.91,"Chicken breast pieces, sautéed",155,1.0,284,48,0,6,0.94,no,2026-05-04 20:50,"Chicken breast pieces, sautéed",155,1.0,284,48,0,6,0.94
+2026-05-04,Chicken Rice Bowl,2026-05-04 20:48,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 20:50,,Chicken Rice Bowl,694,61,84,17,0.91,"Sweet corn, cooked",45,1.0,43,2,10,1,0.93,no,2026-05-04 20:50,"Sweet corn, cooked",45,1.0,43,2,10,1,0.93
+2026-05-04,Chicken Rice Bowl,2026-05-04 20:48,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 20:50,,Chicken Rice Bowl,694,61,84,17,0.91,"Cherry tomatoes, raw",80,1.0,14,1,3,0,0.99,no,2026-05-04 20:50,"Cherry tomatoes, raw",80,1.0,14,1,3,0,0.99
+2026-05-04,Chicken Rice Bowl,2026-05-04 20:48,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 20:50,,Chicken Rice Bowl,694,61,84,17,0.91,Brown sauce / seasoning,20,1.0,20,1,4,0,0.66,no,2026-05-04 20:50,Brown sauce / seasoning,20,1.0,20,1,4,0,0.66
+2026-05-04,Chicken Rice Bowl,2026-05-04 20:48,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 20:50,,Chicken Rice Bowl,694,61,84,17,0.91,Cooking oil,5,1.0,45,0,0,5,0.75,no,2026-05-04 20:50,Cooking oil,5,1.0,45,0,0,5,0.75
+2026-05-04,Chicken Rice Bowl,2026-05-04 20:48,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 20:50,,Chicken Rice Bowl,694,61,84,17,0.91,Soy sauce on rice,10,1.0,15,4,9,5,0.72,no,2026-05-04 20:50,Soy sauce on rice,10,1.0,15,4,9,5,0.72
+2026-05-04,Chicken Rice Bowl,2026-05-04 20:48,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 20:50,,Chicken Rice Bowl,694,61,84,17,0.91,"White rice, cooked",210,1.0,273,6,59,1,0.98,no,,"White rice, cooked",210,1.0,273,6,59,1,0.98
+2026-05-04,Chicken Rice Bowl,2026-05-04 20:48,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 20:50,,Chicken Rice Bowl,694,61,84,17,0.91,"Chicken breast pieces, sautéed",310,1.0,568,96,0,11,0.94,yes,,"Chicken breast pieces, sautéed",155,1.0,284,48,0,6,0.94
+2026-05-04,Chicken Rice Bowl,2026-05-04 20:48,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 20:50,,Chicken Rice Bowl,694,61,84,17,0.91,"Sweet corn, cooked",45,1.0,43,2,10,1,0.93,no,,"Sweet corn, cooked",45,1.0,43,2,10,1,0.93
+2026-05-04,Chicken Rice Bowl,2026-05-04 20:48,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 20:50,,Chicken Rice Bowl,694,61,84,17,0.91,"Cherry tomatoes, raw",80,1.0,14,1,3,0,0.99,no,,"Cherry tomatoes, raw",80,1.0,14,1,3,0,0.99
+2026-05-04,Chicken Rice Bowl,2026-05-04 20:48,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 20:50,,Chicken Rice Bowl,694,61,84,17,0.91,Brown sauce / seasoning,20,1.0,20,1,4,0,0.66,no,,Brown sauce / seasoning,20,1.0,20,1,4,0,0.66
+2026-05-04,Chicken Rice Bowl,2026-05-04 20:48,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 20:50,,Chicken Rice Bowl,694,61,84,17,0.91,Cooking oil,5,1.0,45,0,0,5,0.75,no,,Cooking oil,5,1.0,45,0,0,5,0.75
+2026-05-04,Chicken Rice Bowl,2026-05-04 20:48,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 20:50,,Chicken Rice Bowl,694,61,84,17,0.91,Soy sauce on rice,10,1.0,15,4,9,5,0.72,no,,Soy sauce on rice,10,1.0,15,4,9,5,0.72
+2026-05-04,Káva s mlékem,2026-05-04 09:52,0.95,no,voice_ai,openai,gpt-5.4,,yes,2026-05-05 09:52,,Káva s mlékem,18,1,2,1,0.95,Černá káva,400,2.0,4,1,0,0,0.99,yes,,Černá káva,200,1.0,2,0,0,0,0.99
+2026-05-04,Káva s mlékem,2026-05-04 09:52,0.95,no,voice_ai,openai,gpt-5.4,,yes,2026-05-05 09:52,,Káva s mlékem,18,1,2,1,0.95,Mléko,60,2.0,32,1,3,2,0.87,yes,,Mléko,30,1.0,16,1,2,1,0.87
+2026-05-05,Káva s mlékem,2026-05-05 09:52,0.95,no,voice_ai,openai,gpt-5.4,,yes,2026-05-05 09:52,,Káva s mlékem,18,1,2,1,0.95,Černá káva,400,2.0,4,1,0,0,0.99,yes,,Černá káva,200,1.0,2,0,0,0,0.99
+2026-05-05,Káva s mlékem,2026-05-05 09:52,0.95,no,voice_ai,openai,gpt-5.4,,yes,2026-05-05 09:52,,Káva s mlékem,18,1,2,1,0.95,Mléko,60,2.0,32,1,3,2,0.87,yes,,Mléko,30,1.0,16,1,2,1,0.87
+2026-05-05,Protein pudding,2026-05-05 09:53,0.92,no,voice_ai,openai,gpt-5.4,,no,,,Protein pudding,152,20,11,3,0.92,Lidl protein pudding,200,1.0,152,20,11,3,0.92,no,,Lidl protein pudding,200,1.0,152,20,11,3,0.92
+2026-05-05,Chicken rice & soup,2026-05-05 11:57,0.87,yes,fix_with_ai_rerun,openai,gpt-5.4,,no,,,Chicken rice & soup,1057,55,82,53,0.87,Cooked white rice,190,1.0,247,5,53,1,0.96,no,2026-05-05 11:59,Cooked white rice,190,1.0,247,5,53,1,0.96
+2026-05-05,Chicken rice & soup,2026-05-05 11:57,0.87,yes,fix_with_ai_rerun,openai,gpt-5.4,,no,,,Chicken rice & soup,1057,55,82,53,0.87,Chicken pieces,110,1.0,182,34,0,4,0.92,no,2026-05-05 11:59,Chicken pieces,110,1.0,182,34,0,4,0.92
+2026-05-05,Chicken rice & soup,2026-05-05 11:57,0.87,yes,fix_with_ai_rerun,openai,gpt-5.4,,no,,,Chicken rice & soup,1057,55,82,53,0.87,Creamy mushroom sauce,180,1.0,243,4,16,18,0.88,no,2026-05-05 11:59,Creamy mushroom sauce,180,1.0,243,4,16,18,0.88
+2026-05-05,Chicken rice & soup,2026-05-05 11:57,0.87,yes,fix_with_ai_rerun,openai,gpt-5.4,,no,,,Chicken rice & soup,1057,55,82,53,0.87,Mushrooms,35,1.0,8,1,1,0,0.87,no,2026-05-05 11:59,Mushrooms,35,1.0,8,1,1,0,0.87
+2026-05-05,Chicken rice & soup,2026-05-05 11:57,0.87,yes,fix_with_ai_rerun,openai,gpt-5.4,,no,,,Chicken rice & soup,1057,55,82,53,0.87,Tomato soup,320,1.0,106,3,16,3,0.91,no,2026-05-05 11:59,Tomato soup,320,1.0,106,3,16,3,0.91
+2026-05-05,Chicken rice & soup,2026-05-05 11:57,0.87,yes,fix_with_ai_rerun,openai,gpt-5.4,,no,,,Chicken rice & soup,1057,55,82,53,0.87,Soup potatoes,70,1.0,48,1,11,0,0.82,no,2026-05-05 11:59,Soup potatoes,70,1.0,48,1,11,0,0.82
+2026-05-05,Chicken rice & soup,2026-05-05 11:57,0.87,yes,fix_with_ai_rerun,openai,gpt-5.4,,no,,,Chicken rice & soup,1057,55,82,53,0.87,Cooked white rice,180,1.0,234,5,50,1,0.96,yes,,Cooked white rice,180,2.0,234,5,50,1,0.96
+2026-05-05,Chicken rice & soup,2026-05-05 11:57,0.87,yes,fix_with_ai_rerun,openai,gpt-5.4,,no,,,Chicken rice & soup,1057,55,82,53,0.87,Chicken pieces,120,1.0,198,37,0,4,0.90,yes,,Chicken pieces,120,2.0,198,37,0,4,0.90
+2026-05-05,Chicken rice & soup,2026-05-05 11:57,0.87,yes,fix_with_ai_rerun,openai,gpt-5.4,,no,,,Chicken rice & soup,1057,55,82,53,0.87,Cream mushroom sauce,180,1.0,252,4,11,20,0.88,yes,,Cream mushroom sauce,180,2.0,252,4,11,20,0.88
+2026-05-05,Chicken rice & soup,2026-05-05 11:57,0.87,yes,fix_with_ai_rerun,openai,gpt-5.4,,no,,,Chicken rice & soup,1057,55,82,53,0.87,Frankfurt soup,330,1.0,145,3,18,7,0.94,yes,,Frankfurt soup,330,2.0,145,3,18,7,0.94
+2026-05-05,Chicken rice & soup,2026-05-05 11:57,0.87,yes,fix_with_ai_rerun,openai,gpt-5.4,,no,,,Chicken rice & soup,1057,55,82,53,0.87,Sausage in soup,35,1.0,106,5,2,8,0.90,yes,,Sausage in soup,35,2.0,106,5,2,8,0.90
+2026-05-05,Chicken rice & soup,2026-05-05 11:57,0.87,yes,fix_with_ai_rerun,openai,gpt-5.4,,no,,,Chicken rice & soup,1057,55,82,53,0.87,Oil/fat in soup,5,1.0,45,0,0,5,0.78,yes,,Oil/fat in soup,5,2.0,45,0,0,5,0.78
+2026-05-05,Chicken rice & soup,2026-05-05 11:57,0.87,yes,fix_with_ai_rerun,openai,gpt-5.4,,no,,,Chicken rice & soup,1057,55,82,53,0.87,Parsley garnish,2,1.0,1,0,1,0,0.99,yes,,Parsley garnish,2,2.0,1,0,1,0,0.99
+2026-05-05,Chicken rice & soup,2026-05-05 11:57,0.87,yes,fix_with_ai_rerun,openai,gpt-5.4,,no,,,Chicken rice & soup,1057,55,82,53,0.87,Oil/butter in sauce,8,1.0,72,0,0,8,0.75,yes,,Oil/butter in sauce,8,2.0,72,0,0,8,0.75
+2026-05-05,Chicken rice & soup,2026-05-05 11:57,0.87,yes,fix_with_ai_rerun,openai,gpt-5.4,,no,,,Chicken rice & soup,1057,55,82,53,0.87,Mushrooms,30,1.0,4,1,0,0,0.84,yes,,Mushrooms,30,2.0,4,1,0,0,0.84
+2026-05-05,Kuřecí rizoto s klobásou,2026-05-05 19:46,0.90,yes,photo_ai,openai,gpt-5.4,,no,,,Kuřecí rizoto s klobásou,829,45,82,32,0.90,vařená rýže,250,1.0,325,7,70,1,0.95,no,,vařená rýže,250,1.0,325,7,70,1,0.95
+2026-05-05,Kuřecí rizoto s klobásou,2026-05-05 19:46,0.90,yes,photo_ai,openai,gpt-5.4,,no,,,Kuřecí rizoto s klobásou,829,45,82,32,0.90,kuřecí maso,80,1.0,132,25,0,3,0.88,no,,kuřecí maso,80,1.0,132,25,0,3,0.88
+2026-05-05,Kuřecí rizoto s klobásou,2026-05-05 19:46,0.90,yes,photo_ai,openai,gpt-5.4,,no,,,Kuřecí rizoto s klobásou,829,45,82,32,0.90,klobása,50,1.0,150,6,1,13,0.90,no,,klobása,50,1.0,150,6,1,13,0.90
+2026-05-05,Kuřecí rizoto s klobásou,2026-05-05 19:46,0.90,yes,photo_ai,openai,gpt-5.4,,no,,,Kuřecí rizoto s klobásou,829,45,82,32,0.90,zelenina mix,60,1.0,30,2,5,0,0.80,no,,zelenina mix,60,1.0,30,2,5,0,0.80
+2026-05-05,Kuřecí rizoto s klobásou,2026-05-05 19:46,0.90,yes,photo_ai,openai,gpt-5.4,,no,,,Kuřecí rizoto s klobásou,829,45,82,32,0.90,strouhaný sýr,20,1.0,80,6,1,5,0.90,no,,strouhaný sýr,20,1.0,80,6,1,5,0.90
+2026-05-05,Kuřecí rizoto s klobásou,2026-05-05 19:46,0.90,yes,photo_ai,openai,gpt-5.4,,no,,,Kuřecí rizoto s klobásou,829,45,82,32,0.90,kečup nebo chilli omáčka,20,1.0,22,0,5,0,0.72,no,,kečup nebo chilli omáčka,20,1.0,22,0,5,0,0.72
+2026-05-05,Kuřecí rizoto s klobásou,2026-05-05 19:46,0.90,yes,photo_ai,openai,gpt-5.4,,no,,,Kuřecí rizoto s klobásou,829,45,82,32,0.90,olej na restování,10,1.0,90,0,0,10,0.75,no,,olej na restování,10,1.0,90,0,0,10,0.75
+2026-05-06,Káva s mlékem,2026-05-06 09:52,0.95,no,voice_ai,openai,gpt-5.4,,yes,2026-05-05 09:52,,Káva s mlékem,18,1,2,1,0.95,Černá káva,400,2.0,4,1,0,0,0.99,yes,,Černá káva,200,1.0,2,0,0,0,0.99
+2026-05-06,Káva s mlékem,2026-05-06 09:52,0.95,no,voice_ai,openai,gpt-5.4,,yes,2026-05-05 09:52,,Káva s mlékem,18,1,2,1,0.95,Mléko,60,2.0,32,1,3,2,0.87,yes,,Mléko,30,1.0,16,1,2,1,0.87
+2026-05-06,Cheese pizza slice,2026-05-06 11:56,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Cheese pizza slice,306,15,33,12,0.94,pizza crust,62,1.0,167,6,29,3,0.93,no,,pizza crust,62,1.0,167,6,29,3,0.93
+2026-05-06,Cheese pizza slice,2026-05-06 11:56,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Cheese pizza slice,306,15,33,12,0.94,mozzarella cheese,34,1.0,95,8,1,6,0.92,no,,mozzarella cheese,34,1.0,95,8,1,6,0.92
+2026-05-06,Cheese pizza slice,2026-05-06 11:56,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Cheese pizza slice,306,15,33,12,0.94,blue cheese,7,1.0,25,1,0,2,0.72,no,,blue cheese,7,1.0,25,1,0,2,0.72
+2026-05-06,Cheese pizza slice,2026-05-06 11:56,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Cheese pizza slice,306,15,33,12,0.94,pizza sauce,10,1.0,8,0,2,0,0.65,no,,pizza sauce,10,1.0,8,0,2,0,0.65
+2026-05-06,Cheese pizza slice,2026-05-06 11:56,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Cheese pizza slice,306,15,33,12,0.94,onion,5,1.0,2,0,1,0,0.58,no,,onion,5,1.0,2,0,1,0,0.58
+2026-05-06,Cheese pizza slice,2026-05-06 11:56,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Cheese pizza slice,306,15,33,12,0.94,oil,1,1.0,9,0,0,1,0.52,no,,oil,1,1.0,9,0,0,1,0.52
+2026-05-06,Sausage Egg Fried Rice,2026-05-06 12:00,0.86,yes,photo_ai,openai,gpt-5.4,,no,,,Sausage Egg Fried Rice,817,29,79,43,0.86,fried rice,240,1.0,391,9,65,11,0.89,no,,fried rice,240,1.0,391,9,65,11,0.89
+2026-05-06,Sausage Egg Fried Rice,2026-05-06 12:00,0.86,yes,photo_ai,openai,gpt-5.4,,no,,,Sausage Egg Fried Rice,817,29,79,43,0.86,sausage pieces,60,1.0,180,7,2,16,0.87,no,,sausage pieces,60,1.0,180,7,2,16,0.87
+2026-05-06,Sausage Egg Fried Rice,2026-05-06 12:00,0.86,yes,photo_ai,openai,gpt-5.4,,no,,,Sausage Egg Fried Rice,817,29,79,43,0.86,scrambled egg,50,1.0,74,6,1,5,0.84,no,,scrambled egg,50,1.0,74,6,1,5,0.84
+2026-05-06,Sausage Egg Fried Rice,2026-05-06 12:00,0.86,yes,photo_ai,openai,gpt-5.4,,no,,,Sausage Egg Fried Rice,817,29,79,43,0.86,shredded cheese,22,1.0,81,6,1,7,0.90,no,,shredded cheese,22,1.0,81,6,1,7,0.90
+2026-05-06,Sausage Egg Fried Rice,2026-05-06 12:00,0.86,yes,photo_ai,openai,gpt-5.4,,no,,,Sausage Egg Fried Rice,817,29,79,43,0.86,ketchup,25,1.0,28,0,7,0,0.93,no,,ketchup,25,1.0,28,0,7,0,0.93
+2026-05-06,Sausage Egg Fried Rice,2026-05-06 12:00,0.86,yes,photo_ai,openai,gpt-5.4,,no,,,Sausage Egg Fried Rice,817,29,79,43,0.86,mixed vegetables,35,1.0,18,1,4,0,0.74,no,,mixed vegetables,35,1.0,18,1,4,0,0.74
+2026-05-06,Sausage Egg Fried Rice,2026-05-06 12:00,0.86,yes,photo_ai,openai,gpt-5.4,,no,,,Sausage Egg Fried Rice,817,29,79,43,0.86,cooking oil,5,1.0,45,0,0,5,0.72,no,,cooking oil,5,1.0,45,0,0,5,0.72
+2026-05-06,Chocolate Wafer Bar,2026-05-06 13:14,0.54,no,barcode_ai_fallback,openai,gpt-5.4,4000078408100,no,,2026-05-06 13:14,Chocolate Wafer Bar,116,2,12,7,0.54,Chocolate wafer bar,22,1.0,116,2,12,7,0.54,no,2026-05-06 13:14,Chocolate wafer bar,22,1.0,116,2,12,7,0.54
+2026-05-06,capri sun Mystic dragon,2026-05-06 13:14,0.99,yes,barcode_ai_fallback,openai,gpt-5.4,4000177408100,yes,2026-05-06 13:14,,Capri-Sun Mystic Dragon,66,0,17,0,0.99,Capri-Sun Mystic Dragon,200,1.0,66,0,17,0,0.99,no,,Capri-Sun Mystic Dragon,200,1.0,66,0,17,0,0.99
+2026-05-06,Strawberry Ice Cream Bar,2026-05-06 13:42,0.75,yes,photo_ai,openai,gpt-5.4,,no,,,Strawberry Ice Cream Bar,85,1,10,5,0.75,Ice cream coating,18,1.0,41,1,6,2,0.67,no,,Ice cream coating,18,1.0,41,1,6,2,0.67
+2026-05-06,Strawberry Ice Cream Bar,2026-05-06 13:42,0.75,yes,photo_ai,openai,gpt-5.4,,no,,,Strawberry Ice Cream Bar,85,1,10,5,0.75,Strawberry ice cream,25,1.0,44,1,4,3,0.76,no,,Strawberry ice cream,25,1.0,44,1,4,3,0.76
+2026-05-07,Káva s mlékem,2026-05-07 09:52,0.95,no,voice_ai,openai,gpt-5.4,,yes,2026-05-05 09:52,,Káva s mlékem,18,1,2,1,0.95,Černá káva,400,2.0,4,1,0,0,0.99,yes,,Černá káva,200,1.0,2,0,0,0,0.99
+2026-05-07,Káva s mlékem,2026-05-07 09:52,0.95,no,voice_ai,openai,gpt-5.4,,yes,2026-05-05 09:52,,Káva s mlékem,18,1,2,1,0.95,Mléko,60,2.0,32,1,3,2,0.87,yes,,Mléko,30,1.0,16,1,2,1,0.87
+2026-05-07,Sausage Egg Fried Rice,2026-05-07 14:40,0.86,yes,photo_ai,openai,gpt-5.4,,no,,,Sausage Egg Fried Rice,817,29,79,43,0.86,fried rice,240,1.0,391,9,65,11,0.89,no,,fried rice,240,1.0,391,9,65,11,0.89
+2026-05-07,Sausage Egg Fried Rice,2026-05-07 14:40,0.86,yes,photo_ai,openai,gpt-5.4,,no,,,Sausage Egg Fried Rice,817,29,79,43,0.86,sausage pieces,60,1.0,180,7,2,16,0.87,no,,sausage pieces,60,1.0,180,7,2,16,0.87
+2026-05-07,Sausage Egg Fried Rice,2026-05-07 14:40,0.86,yes,photo_ai,openai,gpt-5.4,,no,,,Sausage Egg Fried Rice,817,29,79,43,0.86,scrambled egg,50,1.0,74,6,1,5,0.84,no,,scrambled egg,50,1.0,74,6,1,5,0.84
+2026-05-07,Sausage Egg Fried Rice,2026-05-07 14:40,0.86,yes,photo_ai,openai,gpt-5.4,,no,,,Sausage Egg Fried Rice,817,29,79,43,0.86,shredded cheese,22,1.0,81,6,1,7,0.90,no,,shredded cheese,22,1.0,81,6,1,7,0.90
+2026-05-07,Sausage Egg Fried Rice,2026-05-07 14:40,0.86,yes,photo_ai,openai,gpt-5.4,,no,,,Sausage Egg Fried Rice,817,29,79,43,0.86,ketchup,25,1.0,28,0,7,0,0.93,no,,ketchup,25,1.0,28,0,7,0,0.93
+2026-05-07,Sausage Egg Fried Rice,2026-05-07 14:40,0.86,yes,photo_ai,openai,gpt-5.4,,no,,,Sausage Egg Fried Rice,817,29,79,43,0.86,mixed vegetables,35,1.0,18,1,4,0,0.74,no,,mixed vegetables,35,1.0,18,1,4,0,0.74
+2026-05-07,Sausage Egg Fried Rice,2026-05-07 14:40,0.86,yes,photo_ai,openai,gpt-5.4,,no,,,Sausage Egg Fried Rice,817,29,79,43,0.86,cooking oil,5,1.0,45,0,0,5,0.72,no,,cooking oil,5,1.0,45,0,0,5,0.72
+2026-05-07,Banana,2026-05-07 14:40,0.97,no,voice_ai,openai,gpt-5.4,,no,,,Banana,105,1,27,0,0.97,Banana,118,1.0,105,1,27,0,0.97,no,,Banana,118,1.0,105,1,27,0,0.97
+2026-05-07,Twister ice cream,2026-05-07 14:40,0.92,no,voice_ai,openai,gpt-5.4,,no,,,Twister ice cream,76,1,17,1,0.92,Twister ice cream,80,1.0,76,1,17,1,0.92,no,,Twister ice cream,80,1.0,76,1,17,1,0.92
+2026-05-08,Káva s mlékem,2026-05-08 09:52,0.95,no,voice_ai,openai,gpt-5.4,,yes,2026-05-05 09:52,,Káva s mlékem,18,1,2,1,0.95,Černá káva,400,2.0,4,1,0,0,0.99,yes,,Černá káva,200,1.0,2,0,0,0,0.99
+2026-05-08,Káva s mlékem,2026-05-08 09:52,0.95,no,voice_ai,openai,gpt-5.4,,yes,2026-05-05 09:52,,Káva s mlékem,18,1,2,1,0.95,Mléko,60,2.0,32,1,3,2,0.87,yes,,Mléko,30,1.0,16,1,2,1,0.87
+2026-05-08,Ham & cheese toasts,2026-05-08 09:40,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Ham & cheese toasts,516,30,48,23,0.94,bread rolls/baguette slices,90,2.0,239,8,47,3,0.92,no,,bread rolls/baguette slices,90,2.0,239,8,47,3,0.92
+2026-05-08,Ham & cheese toasts,2026-05-08 09:40,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Ham & cheese toasts,516,30,48,23,0.94,cured ham,30,2.0,75,9,0,4,0.93,no,,cured ham,30,2.0,75,9,0,4,0.93
+2026-05-08,Ham & cheese toasts,2026-05-08 09:40,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Ham & cheese toasts,516,30,48,23,0.94,semi-hard cheese,50,2.0,172,13,1,14,0.95,no,,semi-hard cheese,50,2.0,172,13,1,14,0.95
+2026-05-08,Ham & cheese toasts,2026-05-08 09:40,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Ham & cheese toasts,516,30,48,23,0.94,mayonnaise,8,2.0,30,0,0,3,0.68,no,,mayonnaise,8,2.0,30,0,0,3,0.68
+2026-05-08,Rice cake with jam,2026-05-08 09:40,0.96,yes,photo_ai,openai,gpt-5.4,,no,,,Rice cake with jam,89,1,20,0,0.96,Rice cake,9,1.0,35,1,7,0,0.98,no,,Rice cake,9,1.0,35,1,7,0,0.98
+2026-05-08,Rice cake with jam,2026-05-08 09:40,0.96,yes,photo_ai,openai,gpt-5.4,,no,,,Rice cake with jam,89,1,20,0,0.96,Blueberry jam,16,1.0,54,0,13,0,0.93,no,,Blueberry jam,16,1.0,54,0,13,0,0.93
+2026-05-08,Mini pepperoni pizza,2026-05-08 14:10,0.82,yes,photo_ai,openai,gpt-5.4,,no,,,Mini pepperoni pizza,116,6,11,6,0.82,pizza dough crust,18,1.0,48,2,9,1,0.87,no,,pizza dough crust,18,1.0,48,2,9,1,0.87
+2026-05-08,Mini pepperoni pizza,2026-05-08 14:10,0.82,yes,photo_ai,openai,gpt-5.4,,no,,,Mini pepperoni pizza,116,6,11,6,0.82,mozzarella cheese,12,1.0,34,3,0,3,0.88,no,,mozzarella cheese,12,1.0,34,3,0,3,0.88
+2026-05-08,Mini pepperoni pizza,2026-05-08 14:10,0.82,yes,photo_ai,openai,gpt-5.4,,no,,,Mini pepperoni pizza,116,6,11,6,0.82,pepperoni,6,1.0,30,1,0,3,0.84,no,,pepperoni,6,1.0,30,1,0,3,0.84
+2026-05-08,Mini pepperoni pizza,2026-05-08 14:10,0.82,yes,photo_ai,openai,gpt-5.4,,no,,,Mini pepperoni pizza,116,6,11,6,0.82,pizza sauce,5,1.0,4,0,1,0,0.80,no,,pizza sauce,5,1.0,4,0,1,0,0.80
+2026-05-08,Dark Beer,2026-05-08 14:32,0.97,yes,photo_ai,openai,gpt-5.4,,no,,,Dark Beer,140,1,30,0,0.97,dark beer,400,1.0,140,1,30,0,0.97,no,,dark beer,400,1.0,140,1,30,0,0.97
+2026-05-08,Nixe Tuňákový salát,2026-05-08 15:40,0.98,yes,photo_ai,openai,gpt-5.4,,no,,,Nixe Tuňákový salát,220,18,26,5,0.98,Mexican tuna salad,220,1.0,220,18,26,5,0.98,no,,Mexican tuna salad,220,1.0,220,18,26,5,0.98
+2026-05-08,Packaged Snack,2026-05-08 20:10,0.23,no,barcode_ai_fallback,openai,gpt-5.4,8586000989344,no,,,Packaged Snack,180,3,26,7,0.23,Packaged savory snack,40,1.0,180,3,26,7,0.23,no,,Packaged savory snack,40,1.0,180,3,26,7,0.23
+2026-05-09,NIXO Tuna Salad,2026-05-09 09:21,0.96,yes,photo_ai,openai,gpt-5.4,,no,,,NIXO Tuna Salad,246,25,29,8,0.96,tuna,70,1.0,81,18,0,1,0.91,no,,tuna,70,1.0,81,18,0,1,0.91
+2026-05-09,NIXO Tuna Salad,2026-05-09 09:21,0.96,yes,photo_ai,openai,gpt-5.4,,no,,,NIXO Tuna Salad,246,25,29,8,0.96,sweet corn,70,1.0,67,2,15,1,0.90,no,,sweet corn,70,1.0,67,2,15,1,0.90
+2026-05-09,NIXO Tuna Salad,2026-05-09 09:21,0.96,yes,photo_ai,openai,gpt-5.4,,no,,,NIXO Tuna Salad,246,25,29,8,0.96,red kidney beans,55,1.0,70,5,13,0,0.88,no,,red kidney beans,55,1.0,70,5,13,0,0.88
+2026-05-09,NIXO Tuna Salad,2026-05-09 09:21,0.96,yes,photo_ai,openai,gpt-5.4,,no,,,NIXO Tuna Salad,246,25,29,8,0.96,red bell pepper,15,1.0,5,0,1,0,0.83,no,,red bell pepper,15,1.0,5,0,1,0,0.83
+2026-05-09,NIXO Tuna Salad,2026-05-09 09:21,0.96,yes,photo_ai,openai,gpt-5.4,,no,,,NIXO Tuna Salad,246,25,29,8,0.96,dressing/oil,10,1.0,23,0,0,6,0.70,no,,dressing/oil,10,1.0,23,0,0,6,0.70
+2026-05-09,Hello Ovocná kašička,2026-05-09 09:21,0.98,yes,photo_ai,openai,gpt-5.4,,no,,,Hello Ovocná kašička,120,1,29,0,0.98,"fruit puree pouch, raspberry",200,1.0,120,1,29,0,0.98,no,,"fruit puree pouch, raspberry",200,1.0,120,1,29,0,0.98
+2026-05-09,Haribo Tropifrutti,2026-05-09 13:55,0.98,yes,photo_ai,openai,gpt-5.4,,no,,,Haribo Tropifrutti,370,6,86,0,0.98,Haribo Tropifrutti gummies,100,1.0,370,6,86,0,0.98,no,,Haribo Tropifrutti gummies,100,1.0,370,6,86,0,0.98
+2026-05-09,Sausage in bread roll,2026-05-09 13:55,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Sausage in bread roll,307,11,31,15,0.94,white bread roll,55,1.0,146,5,28,2,0.95,no,,white bread roll,55,1.0,146,5,28,2,0.95
+2026-05-09,Sausage in bread roll,2026-05-09 13:55,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Sausage in bread roll,307,11,31,15,0.94,frankfurter sausage,45,1.0,131,5,1,12,0.95,no,,frankfurter sausage,45,1.0,131,5,1,12,0.95
+2026-05-09,Sausage in bread roll,2026-05-09 13:55,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Sausage in bread roll,307,11,31,15,0.94,mustard,8,1.0,30,1,2,1,0.72,no,,mustard,8,1.0,30,1,2,1,0.72
+2026-05-09,Twist Soft Serve Cone,2026-05-09 14:58,0.97,yes,photo_ai,openai,gpt-5.4,,no,,,Twist Soft Serve Cone,346,6,57,10,0.97,vanilla soft serve,75,1.0,141,3,23,4,0.96,no,,vanilla soft serve,75,1.0,141,3,23,4,0.96
+2026-05-09,Twist Soft Serve Cone,2026-05-09 14:58,0.97,yes,photo_ai,openai,gpt-5.4,,no,,,Twist Soft Serve Cone,346,6,57,10,0.97,chocolate soft serve,75,1.0,149,2,23,6,0.96,no,,chocolate soft serve,75,1.0,149,2,23,6,0.96
+2026-05-09,Twist Soft Serve Cone,2026-05-09 14:58,0.97,yes,photo_ai,openai,gpt-5.4,,no,,,Twist Soft Serve Cone,346,6,57,10,0.97,cake cone,12,1.0,56,1,11,0,0.99,no,,cake cone,12,1.0,56,1,11,0,0.99
+2026-05-09,Monster Ultra,2026-05-09 15:06,0.99,yes,photo_ai,openai,gpt-5.4,,no,,,Monster Ultra,14,0,4,0,0.99,Monster Energy Ultra Zero Sugar,500,1.0,14,0,4,0,0.99,no,,Monster Energy Ultra Zero Sugar,500,1.0,14,0,4,0,0.99
+2026-05-09,Rohozec draft beer,2026-05-09 17:48,0.96,yes,photo_ai,openai,gpt-5.4,,no,,,Rohozec draft beer,170,2,15,0,0.96,amber lager beer,500,1.0,170,2,15,0,0.96,no,,amber lager beer,500,1.0,170,2,15,0,0.96
+2026-05-09,Pulled Pork Fries,2026-05-09 18:04,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Pulled Pork Fries,1014,31,93,58,0.95,French fries,220,1.0,686,8,91,33,0.98,no,,French fries,220,1.0,686,8,91,33,0.98
+2026-05-09,Pulled Pork Fries,2026-05-09 18:04,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Pulled Pork Fries,1014,31,93,58,0.95,Pulled pork,110,1.0,231,23,0,14,0.96,no,,Pulled pork,110,1.0,231,23,0,14,0.96
+2026-05-09,Pulled Pork Fries,2026-05-09 18:04,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Pulled Pork Fries,1014,31,93,58,0.95,Pink mayo-based sauce,30,1.0,96,0,2,10,0.87,no,,Pink mayo-based sauce,30,1.0,96,0,2,10,0.87
+2026-05-09,Pulled Pork Fries,2026-05-09 18:04,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Pulled Pork Fries,1014,31,93,58,0.95,Parsley,3,1.0,1,0,0,0,0.99,no,,Parsley,3,1.0,1,0,0,0,0.99
+2026-05-09,Gösser NaturRadler,2026-05-09 19:49,0.99,yes,photo_ai,openai,gpt-5.4,,no,,,Gösser NaturRadler,142,1,31,0,0.99,Gösser NaturRadler,500,1.0,142,1,31,0,0.99,no,,Gösser NaturRadler,500,1.0,142,1,31,0,0.99
+2026-05-10,Pizza bagel,2026-05-10 08:55,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Pizza bagel,185,8,28,5,0.95,bagel base,48,1.0,132,5,26,1,0.94,no,,bagel base,48,1.0,132,5,26,1,0.94
+2026-05-10,Pizza bagel,2026-05-10 08:55,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Pizza bagel,185,8,28,5,0.95,tomato sauce,10,1.0,8,0,2,0,0.90,no,,tomato sauce,10,1.0,8,0,2,0,0.90
+2026-05-10,Pizza bagel,2026-05-10 08:55,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Pizza bagel,185,8,28,5,0.95,mozzarella cheese,12,1.0,34,3,0,3,0.93,no,,mozzarella cheese,12,1.0,34,3,0,3,0.93
+2026-05-10,Pizza bagel,2026-05-10 08:55,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Pizza bagel,185,8,28,5,0.95,pepperoni or ham bits,5,1.0,11,0,0,1,0.72,no,,pepperoni or ham bits,5,1.0,11,0,0,1,0.72
+2026-05-10,Seeded jam roll,2026-05-10 08:59,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Seeded jam roll,228,6,45,3,0.95,seeded bread roll,68,1.0,189,6,36,3,0.96,no,,seeded bread roll,68,1.0,189,6,36,3,0.96
+2026-05-10,Seeded jam roll,2026-05-10 08:59,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Seeded jam roll,228,6,45,3,0.95,fruit jam,23,1.0,39,0,9,0,0.92,no,,fruit jam,23,1.0,39,0,9,0,0.92
+2026-05-10,Black & vanilla cone,2026-05-10 11:52,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Black & vanilla cone,256,5,41,8,0.95,soft serve ice cream,110,1.0,191,4,33,5,0.96,no,,soft serve ice cream,110,1.0,191,4,33,5,0.96
+2026-05-10,Black & vanilla cone,2026-05-10 11:52,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Black & vanilla cone,256,5,41,8,0.95,waffle cone,20,1.0,65,1,8,3,0.98,no,,waffle cone,20,1.0,65,1,8,3,0.98
+2026-05-10,Cheese stick,2026-05-10 13:55,0.88,yes,photo_ai,openai,gpt-5.4,,no,,,Cheese stick,34,2,0,3,0.88,Processed cheese stick,8,1.0,34,2,0,3,0.88,no,,Processed cheese stick,8,1.0,34,2,0,3,0.88
+2026-05-10,HELLO Svačinka,2026-05-10 13:58,0.98,yes,photo_ai,openai,gpt-5.4,,no,,,HELLO Svačinka,122,1,29,0,0.98,Fruit puree pouch with raspberries,200,1.0,122,1,29,0,0.98,no,,Fruit puree pouch with raspberries,200,1.0,122,1,29,0,0.98
+2026-05-10,Grilled beef burrito,2026-05-10 19:22,0.90,yes,photo_ai,openai,gpt-5.4,,no,,,Grilled beef burrito,929,44,78,49,0.90,flour tortilla,85,1.0,255,7,43,6,0.95,no,,flour tortilla,85,1.0,255,7,43,6,0.95
+2026-05-10,Grilled beef burrito,2026-05-10 19:22,0.90,yes,photo_ai,openai,gpt-5.4,,no,,,Grilled beef burrito,929,44,78,49,0.90,ground beef,95,1.0,238,25,0,14,0.92,no,,ground beef,95,1.0,238,25,0,14,0.92
+2026-05-10,Grilled beef burrito,2026-05-10 19:22,0.90,yes,photo_ai,openai,gpt-5.4,,no,,,Grilled beef burrito,929,44,78,49,0.90,white rice,55,1.0,72,2,15,0,0.78,no,,white rice,55,1.0,72,2,15,0,0.78
+2026-05-10,Grilled beef burrito,2026-05-10 19:22,0.90,yes,photo_ai,openai,gpt-5.4,,no,,,Grilled beef burrito,929,44,78,49,0.90,pinto beans,45,1.0,64,4,12,0,0.88,no,,pinto beans,45,1.0,64,4,12,0,0.88
+2026-05-10,Grilled beef burrito,2026-05-10 19:22,0.90,yes,photo_ai,openai,gpt-5.4,,no,,,Grilled beef burrito,929,44,78,49,0.90,shredded lettuce,35,1.0,5,1,1,0,0.95,no,,shredded lettuce,35,1.0,5,1,1,0,0.95
+2026-05-10,Grilled beef burrito,2026-05-10 19:22,0.90,yes,photo_ai,openai,gpt-5.4,,no,,,Grilled beef burrito,929,44,78,49,0.90,tomato salsa,35,1.0,11,1,3,0,0.90,no,,tomato salsa,35,1.0,11,1,3,0,0.90
+2026-05-10,Grilled beef burrito,2026-05-10 19:22,0.90,yes,photo_ai,openai,gpt-5.4,,no,,,Grilled beef burrito,929,44,78,49,0.90,corn,18,1.0,17,1,4,0,0.82,no,,corn,18,1.0,17,1,4,0,0.82
+2026-05-10,Grilled beef burrito,2026-05-10 19:22,0.90,yes,photo_ai,openai,gpt-5.4,,no,,,Grilled beef burrito,929,44,78,49,0.90,cheddar cheese,20,1.0,81,5,0,7,0.72,no,,cheddar cheese,20,1.0,81,5,0,7,0.72
+2026-05-10,Grilled beef burrito,2026-05-10 19:22,0.90,yes,photo_ai,openai,gpt-5.4,,no,,,Grilled beef burrito,929,44,78,49,0.90,chipotle mayo sauce,22,1.0,150,0,1,17,0.70,no,,chipotle mayo sauce,22,1.0,150,0,1,17,0.70
+2026-05-10,Grilled beef burrito,2026-05-10 19:22,0.90,yes,photo_ai,openai,gpt-5.4,,no,,,Grilled beef burrito,929,44,78,49,0.90,grilling oil,4,1.0,36,0,0,4,0.65,no,,grilling oil,4,1.0,36,0,0,4,0.65
+2026-05-11,Pad Thai,2026-05-11 11:41,0.87,yes,photo_ai,openai,gpt-5.4,,no,,,Pad Thai,608,23,77,27,0.87,rice noodles,170,1.0,184,3,43,0,0.95,no,,rice noodles,170,1.0,184,3,43,0,0.95
+2026-05-11,Pad Thai,2026-05-11 11:41,0.87,yes,photo_ai,openai,gpt-5.4,,no,,,Pad Thai,608,23,77,27,0.87,beef,45,1.0,112,12,0,7,0.72,no,,beef,45,1.0,112,12,0,7,0.72
+2026-05-11,Pad Thai,2026-05-11 11:41,0.87,yes,photo_ai,openai,gpt-5.4,,no,,,Pad Thai,608,23,77,27,0.87,cabbage,35,1.0,11,1,2,0,0.82,no,,cabbage,35,1.0,11,1,2,0,0.82
+2026-05-11,Pad Thai,2026-05-11 11:41,0.87,yes,photo_ai,openai,gpt-5.4,,no,,,Pad Thai,608,23,77,27,0.87,carrot,10,1.0,4,0,1,0,0.67,no,,carrot,10,1.0,4,0,1,0,0.67
+2026-05-11,Pad Thai,2026-05-11 11:41,0.87,yes,photo_ai,openai,gpt-5.4,,no,,,Pad Thai,608,23,77,27,0.87,bean sprouts,20,1.0,6,1,1,0,0.70,no,,bean sprouts,20,1.0,6,1,1,0,0.70
+2026-05-11,Pad Thai,2026-05-11 11:41,0.87,yes,photo_ai,openai,gpt-5.4,,no,,,Pad Thai,608,23,77,27,0.87,egg,25,1.0,36,3,0,2,0.72,no,,egg,25,1.0,36,3,0,2,0.72
+2026-05-11,Pad Thai,2026-05-11 11:41,0.87,yes,photo_ai,openai,gpt-5.4,,no,,,Pad Thai,608,23,77,27,0.87,crushed peanuts,10,1.0,57,3,2,5,0.80,no,,crushed peanuts,10,1.0,57,3,2,5,0.80
+2026-05-11,Pad Thai,2026-05-11 11:41,0.87,yes,photo_ai,openai,gpt-5.4,,no,,,Pad Thai,608,23,77,27,0.87,pad thai sauce,35,1.0,84,1,20,0,0.76,no,,pad thai sauce,35,1.0,84,1,20,0,0.76
+2026-05-11,Pad Thai,2026-05-11 11:41,0.87,yes,photo_ai,openai,gpt-5.4,,no,,,Pad Thai,608,23,77,27,0.87,cooking oil,12,1.0,108,0,0,12,0.80,no,,cooking oil,12,1.0,108,0,0,12,0.80
+2026-05-11,Pad Thai,2026-05-11 11:41,0.87,yes,photo_ai,openai,gpt-5.4,,no,,,Pad Thai,608,23,77,27,0.87,fried onion/garlic bits,8,1.0,6,1,8,0,0.55,no,,fried onion/garlic bits,8,1.0,6,1,8,0,0.55
+2026-05-11,Pasta with chili,2026-05-11 21:41,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Pasta with chili,867,43,101,33,0.92,cooked rotini pasta,220,1.0,347,13,72,2,0.95,no,,cooked rotini pasta,220,1.0,347,13,72,2,0.95
+2026-05-11,Pasta with chili,2026-05-11 21:41,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Pasta with chili,867,43,101,33,0.92,beef and bean chili sauce,260,1.0,362,23,29,17,0.90,no,,beef and bean chili sauce,260,1.0,362,23,29,17,0.90
+2026-05-11,Pasta with chili,2026-05-11 21:41,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Pasta with chili,867,43,101,33,0.92,shredded cheese blend,30,1.0,113,8,1,9,0.93,no,,shredded cheese blend,30,1.0,113,8,1,9,0.93
+2026-05-11,Pasta with chili,2026-05-11 21:41,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Pasta with chili,867,43,101,33,0.92,cooking oil in sauce,5,1.0,45,0,0,5,0.61,no,,cooking oil in sauce,5,1.0,45,0,0,5,0.61
+2026-05-12,High Protein Coffee Drink,2026-05-12 08:32,,yes,barcode,,,4335619016200,no,,,,,,,,,High Protein Coffee Drink,330,1.0,162,25,14,0,,no,,,,,,,,,
+2026-05-12,Cheesy sausage pasta,2026-05-12 16:09,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Cheesy sausage pasta,1067,49,98,52,0.91,Cooked penne pasta,250,1.0,395,15,78,2,0.96,no,,Cooked penne pasta,250,1.0,395,15,78,2,0.96
+2026-05-12,Cheesy sausage pasta,2026-05-12 16:09,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Cheesy sausage pasta,1067,49,98,52,0.91,Sausage tomato sauce,180,1.0,348,16,18,23,0.89,no,,Sausage tomato sauce,180,1.0,348,16,18,23,0.89
+2026-05-12,Cheesy sausage pasta,2026-05-12 16:09,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Cheesy sausage pasta,1067,49,98,52,0.91,Shredded cheese blend,85,1.0,279,18,3,21,0.97,no,,Shredded cheese blend,85,1.0,279,18,3,21,0.97
+2026-05-12,Cheesy sausage pasta,2026-05-12 16:09,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Cheesy sausage pasta,1067,49,98,52,0.91,Cooking oil,5,1.0,45,0,0,5,0.63,no,,Cooking oil,5,1.0,45,0,0,5,0.63
+2026-05-13,Tiger Aloha,2026-05-13 14:26,0.99,yes,photo_ai,openai,gpt-5.4,,no,,,Tiger Aloha,14,0,4,0,0.99,Tiger Aloha Pineapple flavoured energy drink,500,1.0,14,0,4,0,0.99,no,,Tiger Aloha Pineapple flavoured energy drink,500,1.0,14,0,4,0,0.99
+2026-05-13,Pizza pečivo se šunkou,2026-05-13 14:26,0.83,no,voice_ai,openai,gpt-5.4,,yes,2026-05-13 14:28,,Pizza pečivo se šunkou,478,31,52,15,0.83,pizza pečivo,120,1.0,324,11,48,8,0.78,no,2026-05-13 14:28,pizza pečivo,120,1.0,324,11,48,8,0.78
+2026-05-13,Pizza pečivo se šunkou,2026-05-13 14:26,0.83,no,voice_ai,openai,gpt-5.4,,yes,2026-05-13 14:28,,Pizza pečivo se šunkou,478,31,52,15,0.83,šunka,125,1.0,145,20,1,6,0.96,no,2026-05-13 14:28,šunka,125,1.0,145,20,1,6,0.96
+2026-05-13,Pizza pečivo se šunkou,2026-05-13 14:26,0.83,no,voice_ai,openai,gpt-5.4,,yes,2026-05-13 14:28,,Pizza pečivo se šunkou,478,31,52,15,0.83,rajčata,80,1.0,9,0,2,0,0.92,no,2026-05-13 14:28,rajčata,80,1.0,9,0,2,0,0.92
+2026-05-13,Pizza pečivo se šunkou,2026-05-13 14:26,0.83,no,voice_ai,openai,gpt-5.4,,yes,2026-05-13 14:28,,Pizza pečivo se šunkou,478,31,52,15,0.83,pizza pečivo,240,2.0,648,22,96,17,0.78,yes,,pizza pečivo,120,1.0,324,11,48,8,0.78
+2026-05-13,Pizza pečivo se šunkou,2026-05-13 14:26,0.83,no,voice_ai,openai,gpt-5.4,,yes,2026-05-13 14:28,,Pizza pečivo se šunkou,478,31,52,15,0.83,šunka,250,2.0,290,40,3,13,0.96,yes,,šunka,125,1.0,145,20,1,6,0.96
+2026-05-13,Pizza pečivo se šunkou,2026-05-13 14:26,0.83,no,voice_ai,openai,gpt-5.4,,yes,2026-05-13 14:28,,Pizza pečivo se šunkou,478,31,52,15,0.83,rajčata,160,2.0,18,1,5,0,0.92,yes,,rajčata,80,1.0,9,0,2,0,0.92
+2026-05-13,Cheesy sausage pasta,2026-05-13 14:34,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-13 14:34,,Cheesy sausage pasta,1067,49,98,52,0.91,Cooked penne pasta,250,1.0,395,15,78,2,0.96,no,2026-05-13 14:34,Cooked penne pasta,250,1.0,395,15,78,2,0.96
+2026-05-13,Cheesy sausage pasta,2026-05-13 14:34,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-13 14:34,,Cheesy sausage pasta,1067,49,98,52,0.91,Sausage tomato sauce,180,1.0,348,16,18,23,0.89,no,2026-05-13 14:34,Sausage tomato sauce,180,1.0,348,16,18,23,0.89
+2026-05-13,Cheesy sausage pasta,2026-05-13 14:34,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-13 14:34,,Cheesy sausage pasta,1067,49,98,52,0.91,Shredded cheese blend,85,1.0,279,18,3,21,0.97,no,2026-05-13 14:34,Shredded cheese blend,85,1.0,279,18,3,21,0.97
+2026-05-13,Cheesy sausage pasta,2026-05-13 14:34,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-13 14:34,,Cheesy sausage pasta,1067,49,98,52,0.91,Cooking oil,5,1.0,45,0,0,5,0.63,no,2026-05-13 14:34,Cooking oil,5,1.0,45,0,0,5,0.63
+2026-05-13,Cheesy sausage pasta,2026-05-13 14:34,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-13 14:34,,Cheesy sausage pasta,1067,49,98,52,0.91,Cooked penne pasta,125,0.5,198,7,39,1,0.96,yes,,Cooked penne pasta,250,1.0,395,15,78,2,0.96
+2026-05-13,Cheesy sausage pasta,2026-05-13 14:34,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-13 14:34,,Cheesy sausage pasta,1067,49,98,52,0.91,Sausage tomato sauce,90,0.5,174,8,9,12,0.89,yes,,Sausage tomato sauce,180,1.0,348,16,18,23,0.89
+2026-05-13,Cheesy sausage pasta,2026-05-13 14:34,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-13 14:34,,Cheesy sausage pasta,1067,49,98,52,0.91,Shredded cheese blend,43,0.5,140,9,1,11,0.97,yes,,Shredded cheese blend,85,1.0,279,18,3,21,0.97
+2026-05-13,Cheesy sausage pasta,2026-05-13 14:34,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-13 14:34,,Cheesy sausage pasta,1067,49,98,52,0.91,Cooking oil,3,0.5,23,0,0,3,0.63,yes,,Cooking oil,5,1.0,45,0,0,5,0.63
+2026-05-13,High Protein Coffee Drink,2026-05-13 14:34,,yes,barcode,,,4335619016200,no,,,,,,,,,High Protein Coffee Drink,330,1.0,162,25,14,0,,no,,,,,,,,,
+2026-05-13,Pad Thai,2026-05-13 14:35,0.87,yes,photo_ai,openai,gpt-5.4,,no,,,Pad Thai,608,23,77,27,0.87,rice noodles,170,1.0,184,3,43,0,0.95,no,,rice noodles,170,1.0,184,3,43,0,0.95
+2026-05-13,Pad Thai,2026-05-13 14:35,0.87,yes,photo_ai,openai,gpt-5.4,,no,,,Pad Thai,608,23,77,27,0.87,beef,45,1.0,112,12,0,7,0.72,no,,beef,45,1.0,112,12,0,7,0.72
+2026-05-13,Pad Thai,2026-05-13 14:35,0.87,yes,photo_ai,openai,gpt-5.4,,no,,,Pad Thai,608,23,77,27,0.87,cabbage,35,1.0,11,1,2,0,0.82,no,,cabbage,35,1.0,11,1,2,0,0.82
+2026-05-13,Pad Thai,2026-05-13 14:35,0.87,yes,photo_ai,openai,gpt-5.4,,no,,,Pad Thai,608,23,77,27,0.87,carrot,10,1.0,4,0,1,0,0.67,no,,carrot,10,1.0,4,0,1,0,0.67
+2026-05-13,Pad Thai,2026-05-13 14:35,0.87,yes,photo_ai,openai,gpt-5.4,,no,,,Pad Thai,608,23,77,27,0.87,bean sprouts,20,1.0,6,1,1,0,0.70,no,,bean sprouts,20,1.0,6,1,1,0,0.70
+2026-05-13,Pad Thai,2026-05-13 14:35,0.87,yes,photo_ai,openai,gpt-5.4,,no,,,Pad Thai,608,23,77,27,0.87,egg,25,1.0,36,3,0,2,0.72,no,,egg,25,1.0,36,3,0,2,0.72
+2026-05-13,Pad Thai,2026-05-13 14:35,0.87,yes,photo_ai,openai,gpt-5.4,,no,,,Pad Thai,608,23,77,27,0.87,crushed peanuts,10,1.0,57,3,2,5,0.80,no,,crushed peanuts,10,1.0,57,3,2,5,0.80
+2026-05-13,Pad Thai,2026-05-13 14:35,0.87,yes,photo_ai,openai,gpt-5.4,,no,,,Pad Thai,608,23,77,27,0.87,pad thai sauce,35,1.0,84,1,20,0,0.76,no,,pad thai sauce,35,1.0,84,1,20,0,0.76
+2026-05-13,Pad Thai,2026-05-13 14:35,0.87,yes,photo_ai,openai,gpt-5.4,,no,,,Pad Thai,608,23,77,27,0.87,cooking oil,12,1.0,108,0,0,12,0.80,no,,cooking oil,12,1.0,108,0,0,12,0.80
+2026-05-13,Pad Thai,2026-05-13 14:35,0.87,yes,photo_ai,openai,gpt-5.4,,no,,,Pad Thai,608,23,77,27,0.87,fried onion/garlic bits,8,1.0,6,1,8,0,0.55,no,,fried onion/garlic bits,8,1.0,6,1,8,0,0.55
+
+--- Exercise Log ---
+Date,Name,Duration,Calories,Source
+2026-05-01 22:46,Fitko,60,400,manual
+2026-05-01 22:45,10km běh,60,700,manual
+2026-05-04 09:54,gym workout,90,534,manual
+2026-05-05 19:51,volleyball,90,535,manual
+
+--- Weight Progress ---
+Date,Weight (kg),Has Photo
+2026-04-30,89.0,no
+2026-05-01,88.6,no
+
+--- AI Attempts ---
+Timestamp,kind,modality,provider,model,status,confidence,error_message
+2026-04-30 21:49,meal,photo_ai,openai,gpt-5.4,success,0.96,
+2026-04-30 21:54,meal,photo_ai,openai,gpt-5.4,success,0.91,
+2026-05-01 17:35,meal,photo_ai,openai,gpt-5.4,success,0.97,
+2026-05-01 18:53,meal,photo_ai,openai,gpt-5.4,success,0.91,
+2026-05-01 19:10,meal,photo_ai,openai,gpt-5.4,success,0.92,
+2026-05-01 22:29,meal,photo_ai,openai,gpt-5.4,success,0.92,
+2026-05-04 11:29,meal,photo_ai,openai,gpt-5.4,success,0.83,
+2026-05-04 17:36,meal,photo_ai,openai,gpt-5.4,success,0.99,
+2026-05-04 20:48,meal,photo_ai,openai,gpt-5.4,success,0.91,
+2026-05-05 09:51,meal,voice_ai,openai,gpt-5.4,success,0.95,
+2026-05-05 09:53,meal,voice_ai,openai,gpt-5.4,success,0.92,
+2026-05-05 09:54,exercise,voice_ai,openai,gpt-5.4,success,0.89,
+2026-05-05 11:57,meal,photo_ai,openai,gpt-5.4,success,0.88,
+2026-05-05 11:58,meal,fix_with_ai_rerun,openai,gpt-5.4,success,0.87,
+2026-05-05 19:46,meal,photo_ai,openai,gpt-5.4,success,0.90,
+2026-05-05 19:49,exercise,voice_ai,openai,gpt-5.4,success,0.84,
+2026-05-05 19:50,exercise,voice_ai,openai,gpt-5.4,success,0.76,
+2026-05-05 19:51,exercise,voice_ai,openai,gpt-5.4,success,0.98,
+2026-05-06 11:56,meal,photo_ai,openai,gpt-5.4,success,0.94,
+2026-05-06 12:00,meal,photo_ai,openai,gpt-5.4,success,0.86,
+2026-05-06 13:14,meal,barcode_ai_fallback,openai,gpt-5.4,success,0.54,
+2026-05-06 13:14,meal,barcode_ai_fallback,openai,gpt-5.4,success,0.99,
+2026-05-06 13:42,meal,photo_ai,openai,gpt-5.4,success,0.75,
+2026-05-07 14:40,meal,voice_ai,openai,gpt-5.4,success,0.97,
+2026-05-07 14:40,meal,voice_ai,openai,gpt-5.4,success,0.92,
+2026-05-08 09:40,meal,photo_ai,openai,gpt-5.4,success,0.94,
+2026-05-08 09:40,meal,photo_ai,openai,gpt-5.4,success,0.96,
+2026-05-08 14:10,meal,photo_ai,openai,gpt-5.4,success,0.82,
+2026-05-08 14:32,meal,photo_ai,openai,gpt-5.4,success,0.97,
+2026-05-08 15:40,meal,photo_ai,openai,gpt-5.4,success,0.98,
+2026-05-08 20:10,meal,barcode_ai_fallback,openai,gpt-5.4,invalid_response,,null_response
+2026-05-08 20:10,meal,barcode_ai_fallback,openai,gpt-5.4,invalid_response,,null_response
+2026-05-08 20:10,meal,photo_ai,openai,gpt-5.4,invalid_response,,null_response
+2026-05-08 20:10,meal,barcode_ai_fallback,openai,gpt-5.4,low_confidence,0.23,
+2026-05-09 09:20,meal,photo_ai,openai,gpt-5.4,invalid_response,,null_response
+2026-05-09 09:20,meal,photo_ai,openai,gpt-5.4,invalid_response,,null_response
+2026-05-09 09:21,meal,photo_ai,openai,gpt-5.4,success,0.96,
+2026-05-09 09:21,meal,photo_ai,openai,gpt-5.4,success,0.98,
+2026-05-09 13:55,meal,photo_ai,openai,gpt-5.4,success,0.98,
+2026-05-09 13:55,meal,photo_ai,openai,gpt-5.4,success,0.94,
+2026-05-09 14:58,meal,photo_ai,openai,gpt-5.4,success,0.97,
+2026-05-09 15:06,meal,photo_ai,openai,gpt-5.4,success,0.99,
+2026-05-09 17:48,meal,photo_ai,openai,gpt-5.4,success,0.96,
+2026-05-09 18:04,meal,photo_ai,openai,gpt-5.4,success,0.95,
+2026-05-09 19:49,meal,photo_ai,openai,gpt-5.4,success,0.99,
+2026-05-10 08:55,meal,photo_ai,openai,gpt-5.4,success,0.95,
+2026-05-10 08:59,meal,photo_ai,openai,gpt-5.4,success,0.95,
+2026-05-10 11:52,meal,photo_ai,openai,gpt-5.4,success,0.95,
+2026-05-10 13:55,meal,photo_ai,openai,gpt-5.4,success,0.88,
+2026-05-10 13:58,meal,photo_ai,openai,gpt-5.4,success,0.98,
+2026-05-10 19:22,meal,photo_ai,openai,gpt-5.4,success,0.90,
+2026-05-11 11:41,meal,photo_ai,openai,gpt-5.4,success,0.87,
+2026-05-11 21:41,meal,photo_ai,openai,gpt-5.4,success,0.92,
+2026-05-12 16:09,meal,photo_ai,openai,gpt-5.4,success,0.91,
+2026-05-13 14:26,meal,photo_ai,openai,gpt-5.4,success,0.99,
+2026-05-13 14:26,meal,voice_ai,openai,gpt-5.4,success,0.83,
+
+--- Summary Statistics ---
+Total Days,17
+Total Meals,58
+Total Ingredients,201
+Total Exercises,4
+Total Weight Entries,2
+Avg Calories/Day,1435
+Avg Protein/Day (g),78
+Avg Carbs/Day (g),155
+Avg Fat/Day (g),53
+Avg Meals/Day,3.4
+Avg Exercises/Day,0.2
+Soft-deleted meals,13
+Soft-deleted ingredients,68
+AI attempts (total),56
+AI attempts (success),50
+AI attempts (invalid_response),5
+AI attempts (low_confidence),1

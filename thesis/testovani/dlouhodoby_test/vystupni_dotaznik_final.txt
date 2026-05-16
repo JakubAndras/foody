@@ -27,16 +27,16 @@ Děkuji za to, že jsi aplikaci Foody dva týdny používal/a v běžném život
 
 | # | Tvrzení | 1 | 2 | 3 | 4 | 5 |
 |---|---|:-:|:-:|:-:|:-:|:-:|
-| 1 | Myslím, že bych aplikaci chtěl/a používat často. | ☐ | ☐ | ☐ | ☐ | ☐ |
-| 2 | Aplikace mi přišla zbytečně složitá. | ☐ | ☐ | ☐ | ☐ | ☐ |
-| 3 | Aplikace se používala snadno. | ☐ | ☐ | ☐ | ☐ | ☐ |
-| 4 | Myslím, že bych potřeboval/a pomoc technika, abych aplikaci dokázal/a používat. | ☐ | ☐ | ☐ | ☐ | ☐ |
-| 5 | Jednotlivé funkce aplikace jsou dobře integrované. | ☐ | ☐ | ☐ | ☐ | ☐ |
-| 6 | V aplikaci je příliš mnoho nekonzistencí. | ☐ | ☐ | ☐ | ☐ | ☐ |
-| 7 | Většina lidí se podle mě naučí aplikaci používat velmi rychle. | ☐ | ☐ | ☐ | ☐ | ☐ |
-| 8 | Aplikace mi přišla nepřehledná a těžko ovladatelná. | ☐ | ☐ | ☐ | ☐ | ☐ |
-| 9 | Při používání aplikace jsem se cítil/a sebejistě. | ☐ | ☐ | ☐ | ☐ | ☐ |
-| 10 | Než jsem aplikaci dokázal/a používat, musel/a jsem se naučit hodně věcí. | ☐ | ☐ | ☐ | ☐ | ☐ |
+| 1 | Myslím, že bych aplikaci chtěl/a používat často. |  |
+| 2 | Aplikace mi přišla zbytečně složitá. |  |
+| 3 | Aplikace se používala snadno. |  |
+| 4 | Myslím, že bych potřeboval/a pomoc technika, abych aplikaci dokázal/a používat. |  |
+| 5 | Jednotlivé funkce aplikace jsou dobře integrované. |  |
+| 6 | V aplikaci je příliš mnoho nekonzistencí. |  |
+| 7 | Většina lidí se podle mě naučí aplikaci používat velmi rychle. |  |
+| 8 | Aplikace mi přišla nepřehledná a těžko ovladatelná. |  |
+| 9 | Při používání aplikace jsem se cítil/a sebejistě. |  |
+| 10 | Než jsem aplikaci dokázal/a používat, musel/a jsem se naučit hodně věcí. |  |
 
 ---
 
@@ -79,31 +79,3 @@ Děkuji za to, že jsi aplikaci Foody dva týdny používal/a v běžném život
 ---
 
 ## Děkuji za vyplnění!
-
-Tvoje odpovědi spolu s telemetrickým exportem z aplikace tvoří podklad pro analýzu použitelnosti, kognitivní zátěže a vnímané užitečnosti aplikace Foody v reálném používání. Bez tvé spolupráce by tato část diplomové práce nemohla vzniknout — vážím si toho.
-
-V případě jakýchkoli dotazů nebo poznámek mě klidně kontaktuj.
-
-*Jakub Andráš*
-
----
-
-### Pro mou orientaci (nemusíš číst)
-
-- **SUS skóre se počítá takto:** liché položky → hodnota − 1; sudé položky → 5 − hodnota; součet × 2,5 = výsledek 0–100. Průměr napříč produkty ≈ 68, hodnoty nad 80,3 jsou považovány za excelentní.
-- **Raw NASA-TLX:** aritmetický průměr pěti dimenzí (C.4 už má obrácenou škálu zakódovanou přímo v otázce, takže se sčítá bez transformace). Reportuje se per dimenze i jako agregát.
-
-## Sekce 0 — pár údajů o tobě
-
-| | |
-|---|---|
-| Tvůj kód (řeknu ti ho při předání dotazníku) | |
-| Datum vyplnění | |
-| Kolik dní celkem trvalo tvé testovací období? | |
-| Jaký hlavní cíl jsi měl/a na začátku testování? *(zatrhni jeden)* | ☐ Hubnutí ☐ Přibírání ☐ Udržování hmotnosti ☐ Jen jsem si chtěl/a zaznamenávat, bez konkrétního cíle ☐ Jiné: _______________ |
-| Věk | |
-| Pohlaví | ☐ Muž ☐ Žena ☐ Jiné ☐ Nechci uvádět |
-| Měl/a jsi předtím zkušenost s aplikacemi pro sledování stravy (MyFitnessPal, Yazio, Kalorické tabulky atd.)? | ☐ Žádnou ☐ Krátkodobě jsem zkoušel/a ☐ Dlouhodobě používám / jsem používal/a |
-| Máš nějaká zdravotní omezení nebo specifickou dietu (alergie, intolerance, vegetariánství, jiné)? | |
-
----

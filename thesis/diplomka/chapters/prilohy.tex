@@ -34,6 +34,116 @@ Pro účely reprodukovatelnosti experimentů popsaných v~kapitole~\ref{ch:testo
 
 \textit{Tato příloha bude doplněna o~exportovaný HiFi prototyp z~nástroje Figma a~odkaz na sdílený zdrojový soubor.}
 
+\chapter{Případy užití}
+\label{app:pripadyUziti}
+
+Tato příloha obsahuje plné hlavní scénáře osmi případů užití (UC01--UC08), jejichž souhrnný přehled je uveden v~sekci~\ref{sec:pripadyUziti} hlavního textu.
+Pro každý případ užití je popsána charakteristika, primární aktér a~hlavní scénář průběhu interakce.
+
+\paragraph{UC01: Záznam jídla z~fotografie.}
+\textbf{Charakteristika:} Uživatel chce rychle zapsat jídlo pomocí fotografie a následně výsledek zkontrolovat.
+\textbf{Primární aktér:} uživatel.
+Hlavní scénář:
+
+\begin{enumerate}
+	\item \emph{Uživatel} otevře funkci pro záznam jídla a pořídí fotografii.
+	\item \emph{Systém} spustí rozpoznání, zobrazí návrh položek a odhad množství, případně indikaci nejistoty.
+	\item \emph{Uživatel} zkontroluje návrh, upraví položky a množství, případně doplní chybějící položky.
+	\item \emph{Uživatel} potvrdí uložení záznamu.
+	\item \emph{Systém} uloží záznam a aktualizuje denní přehled.
+\end{enumerate}
+
+\paragraph{UC02: Oprava výsledku rozpoznání a opakování rozpoznání.}
+\textbf{Charakteristika:} Uživatel chce opravit rozpoznané položky a v~případě potřeby vyvolat rozpoznání znovu bez zakládání nového záznamu.
+\textbf{Primární aktér:} uživatel.
+Hlavní scénář:
+
+\begin{enumerate}
+	\item \emph{Uživatel} otevře detail rozpoznaného jídla v~editační obrazovce.
+	\item \emph{Systém} zobrazí seznam položek, množství, jednotky a souhrn živin.
+	\item \emph{Uživatel} upraví názvy, množství, odstraní nebo přidá položky.
+	\item \emph{Uživatel} zvolí možnost znovu rozpoznat, například po úpravě vstupu nebo doplnění informace.
+	\item \emph{Systém} provede nové rozpoznání a aktualizuje návrh položek, zachová možnost ruční kontroly.
+	\item \emph{Uživatel} potvrdí finální stav a uloží záznam.
+\end{enumerate}
+
+\paragraph{UC03: Ruční přidání záznamu jídla.}
+\textbf{Charakteristika:} Uživatel chce vytvořit záznam bez použití fotografie nebo umělé inteligence.
+\textbf{Primární aktér:} uživatel.
+Hlavní scénář:
+
+\begin{enumerate}
+	\item \emph{Uživatel} otevře ruční zápis jídla.
+	\item \emph{Uživatel} vyhledá položku v~databázi nebo zvolí položku z~historie.
+	\item \emph{Uživatel} zadá množství a jednotku, gramy nebo kusy, případně předvolbu porce.
+	\item \emph{Uživatel} potvrdí uložení záznamu.
+	\item \emph{Systém} uloží záznam a aktualizuje denní přehled.
+\end{enumerate}
+
+\paragraph{UC04: Přidání balené potraviny pomocí čárového kódu.}
+\textbf{Charakteristika:} Uživatel chce rychle přidat balenou potravinu načtením kódu.
+\textbf{Primární aktér:} uživatel.
+Hlavní scénář:
+
+\begin{enumerate}
+	\item \emph{Uživatel} otevře čtečku kódů a naskenuje čárový kód produktu.
+	\item \emph{Systém} vyhledá produkt v~databázi a zobrazí nalezenou položku.
+	\item \emph{Uživatel} zvolí množství a jednotku nebo předvolbu porce.
+	\item \emph{Uživatel} potvrdí vložení do denního záznamu.
+	\item \emph{Systém} uloží záznam a aktualizuje denní přehled.
+\end{enumerate}
+
+\paragraph{UC05: Přidání opakovaného jídla z~oblíbených nebo duplikací.}
+\textbf{Charakteristika:} Uživatel chce co nejrychleji přidat jídlo, které se často opakuje.
+\textbf{Primární aktér:} uživatel.
+Hlavní scénář:
+
+\begin{enumerate}
+	\item \emph{Uživatel} otevře seznam oblíbených nebo historii záznamů.
+	\item \emph{Systém} nabídne oblíbené položky, nedávné záznamy a našeptávání podle historie.
+	\item \emph{Uživatel} vybere položku nebo duplikuje celý záznam jídla.
+	\item \emph{Uživatel} případně upraví množství a potvrdí uložení.
+	\item \emph{Systém} uloží nový záznam a aktualizuje denní přehled.
+\end{enumerate}
+
+\paragraph{UC06: Vaření s~režimem plán versus realita.}
+\textbf{Charakteristika:} Uživatel chce při vaření zadat plánované ingredience a po dokončení upravit skutečně použité množství.
+\textbf{Primární aktér:} uživatel.
+Hlavní scénář:
+
+\begin{enumerate}
+	\item \emph{Uživatel} vytvoří záznam receptu nebo vaření a zadá plánované ingredience.
+	\item \emph{Systém} průběžně počítá plánované souhrnné živiny receptu.
+	\item \emph{Uživatel} po uvaření upraví skutečně použité množství, včetně drobných ingrediencí.
+	\item \emph{Systém} přepočítá souhrny a nabídne uložení finální verze.
+	\item \emph{Uživatel} uloží jídlo do denního záznamu a případně do vlastních receptů pro opakování.
+\end{enumerate}
+
+\paragraph{UC07: Nastavení profilu, cílů a dietních omezení.}
+\textbf{Charakteristika:} Uživatel chce nastavit cíle, profil a kontext, který ovlivní interpretaci a doporučení.
+\textbf{Primární aktér:} uživatel.
+Hlavní scénář:
+
+\begin{enumerate}
+	\item \emph{Uživatel} otevře nastavení profilu.
+	\item \emph{Uživatel} vyplní nebo upraví základní parametry a nastaví cílové hodnoty.
+	\item \emph{Uživatel} nastaví dietní omezení nebo intolerance.
+	\item \emph{Systém} uloží nastavení a promítne je do přehledů a upozornění.
+\end{enumerate}
+
+\paragraph{UC08: Přehledy, dotazy nad daty a export.}
+\textbf{Charakteristika:} Uživatel chce vyhodnotit svůj progres a získat odpovědi nad historií, případně data sdílet.
+\textbf{Primární aktér:} uživatel.
+Hlavní scénář:
+
+\begin{enumerate}
+	\item \emph{Uživatel} otevře přehledy a zvolí období, týden nebo měsíc.
+	\item \emph{Systém} zobrazí souhrny a trendy, případně upozorní na překročení limitů.
+	\item \emph{Uživatel} položí dotaz nad daty, například porovnání období nebo dotaz na makroživiny.
+	\item \emph{Systém} zobrazí odpověď a nabídne proklik na relevantní dny.
+	\item \emph{Uživatel} volitelně spustí export dat do tabulkového formátu.
+\end{enumerate}
+
 \chapter{Anonymizované reporty z~uživatelských rozhovorů}
 \label{app:rozhovory}
 
@@ -67,79 +177,13 @@ Pro účely reprodukovatelnosti experimentů popsaných v~kapitole~\ref{ch:testo
 \chapter{Doprovodné materiály k~dlouhodobému testování}
 \label{app:dlouhodobeTestovani}
 
-Tato příloha obsahuje úplné znění výstupního dotazníku pro dlouhodobou uživatelskou studii popsanou v~sekci~\ref{sec:dlouhodobeTestovani} a~předpisy pro výpočet skóre standardizovaných nástrojů SUS a~Raw NASA-TLX.
-Po skončení testovacích období všech šesti účastníků budou do přílohy doplněny anonymizované vyplněné dotazníky, souhrnná tabulka výsledků a~úplný export telemetrie ve formátu CSV.
+Doprovodné materiály k~dlouhodobé uživatelské studii popsané v~sekci~\ref{sec:dlouhodobeTestovani} jsou udržovány v~externím repozitáři.
+Materiály zahrnují úplné znění výstupního dotazníku (sekce profilových údajů, System Usability Scale, Raw NASA-TLX a~otevřené otázky), předpisy pro výpočet skóre standardizovaných nástrojů, anonymizované vyplněné dotazníky všech účastníků, souhrnnou tabulku SUS skóre a~per-dimenze hodnot NASA-TLX, tematický souhrn odpovědí na otevřené otázky a~kompletní telemetrický export ve formátu CSV.
 
-\paragraph{Úvodní informace pro účastníka.}
-Dotazník doplňuje data exportovaná z~aplikace o~subjektivní hodnocení účastníka.
-Vyplňuje se jednorázově do dvaceti čtyř hodin po skončení dvoutýdenního testovacího období.
-Odpovědi jsou anonymizovány identifikátorem účastníka (v~textu práce například \texttt{Ev\_P}, \texttt{Ku\_P}) a~nebudou propojovány s~konkrétní osobou.
-Předpokládaná délka vyplnění činí přibližně deset minut.
+\paragraph{Umístění repozitáře.}
+\url{https://github.com/<placeholder>/<placeholder>}
 
-\section*{Sekce A -- Identifikace a~demografie}
-
-Účelem sekce je sběr údajů pro popis vzorku v~textu práce a~kalibraci interpretace odpovědí.
-
-\begin{description}[style=nextline, leftmargin=*]
-	\item[Identifikátor účastníka] anonymizovaný kód přidělený autorem práce.
-	\item[Datum vyplnění] DD.\,MM.\,RRRR.
-	\item[Délka testovacího období (dny)] celé číslo.
-	\item[Hlavní cíl stanovený na počátku] jedna z~možností: hubnutí, přibírání, udržování hmotnosti, pouze zaznamenávání bez konkrétního cíle, jiné (volný popis). V~analýze slouží odpověď účastníka jako autoritativní zdroj cíle a~doplňuje hodnotu zadanou v~profilu aplikace na začátku testovacího období.
-	\item[Věk] celé číslo v~letech.
-	\item[Pohlaví] muž, žena, jiné, nechci uvádět.
-	\item[Předchozí zkušenost s~tracking aplikacemi] žádná, krátkodobě jsem zkoušel/a, dlouhodobě používám nebo jsem používal/a.
-	\item[Zdravotní omezení nebo dietní preference] volný text (například alergie, intolerance, vegetariánství, jiné).
-\end{description}
-
-\section*{Sekce B -- System Usability Scale}
-
-\paragraph{Instrukce.} U~každého z~deseti výroků účastník zaznamená míru souhlasu na pětibodové škále, kde 1 znamená \uv{zcela nesouhlasím} a~5 znamená \uv{zcela souhlasím}.
-Liché výroky jsou formulovány pozitivně, sudé negativně.
-
-\begin{enumerate}
-	\item Myslím, že bych aplikaci chtěl/a používat často.
-	\item Aplikace mi přišla zbytečně složitá.
-	\item Aplikace se používala snadno.
-	\item Myslím, že bych potřeboval/a pomoc technika, abych aplikaci dokázal/a používat.
-	\item Jednotlivé funkce aplikace jsou dobře integrované.
-	\item V~aplikaci je příliš mnoho nekonzistencí.
-	\item Většina lidí se podle mě naučí aplikaci používat velmi rychle.
-	\item Aplikace mi přišla nepřehledná a~těžko ovladatelná.
-	\item Při používání aplikace jsem se cítil/a sebejistě.
-	\item Než jsem aplikaci dokázal/a používat, musel/a jsem se naučit hodně věcí.
-\end{enumerate}
-
-\paragraph{Výpočet skóre.} Pro liché výroky je příspěvek položky roven hodnotě odpovědi mínus jedna, pro sudé výroky pět mínus hodnota odpovědi.
-Součet všech deseti příspěvků se vynásobí 2,5; výsledné skóre leží v~rozsahu 0 až~100~bodů (viz vzorec~(\ref{eq:sus}) v~sekci~\ref{subsec:dotazniky}).
-
-\section*{Sekce C -- Raw NASA-TLX}
-
-\paragraph{Instrukce.} U~každé z~pěti dimenzí účastník ohodnotí, do jaké míry dimenzi pociťoval při běžném používání aplikace během testovacího období.
-Hodnoty jsou zadávány na celočíselné škále 0 až~20, kde 0 odpovídá velmi nízké úrovni dimenze a~20 velmi vysoké~\cite{hart1988nasaTlx}.
-
-\begin{description}[style=nextline, leftmargin=*]
-	\item[C.1 Mentální zátěž] Jak mentálně náročné bylo zaznamenat jídlo nebo aktivitu (přemýšlení, rozhodování, vyhledávání)?
-	\item[C.2 Časová zátěž] Cítil/a jste, že zaznamenávání jídla představuje časový tlak nebo zdržení?
-	\item[C.3 Úsilí] Jak velké úsilí (mentální i~fyzické) jste musel/a vynaložit, abyste dosáhl/a požadovaného výsledku?
-	\item[C.4 Vlastní výkon (reverzní)] Jak nespokojený/á jste byl/a s~tím, jak se vám dařilo aplikaci využívat? Pro tuto dimenzi platí 0 = velmi spokojen, 20 = velmi nespokojen.
-	\item[C.5 Frustrace] Jak často jste se cítil/a zmaten/a, podrážděn/a nebo otráven/a?
-\end{description}
-
-\paragraph{Reportování.} Hodnoty jsou primárně reportovány per dimenzi (vektor pěti hodnot).
-Souhrnné skóre se počítá jako aritmetický průměr pěti dimenzí.
-Dimenze C.4 (Vlastní výkon) má reverzní směr již zakódovaný přímo v~textu otázky (0 = velmi spokojen, 20 = velmi nespokojen), takže vyšší hodnota odpovídá horšímu vnímanému výkonu stejně jako u~ostatních dimenzí a~žádná dodatečná transformace při sčítání není potřeba.
-Pro publikační srovnání lze průměr ze škály 0--20 převést na konvenční škálu 0--100 vynásobením koeficientem 5.
-
-\section*{Sekce H -- Kvalitativní reflexe}
-
-Účastník odpoví na následující tři otázky volným textem v~rozsahu jedné až~tří vět:
-
-\begin{description}[style=nextline, leftmargin=*]
-	\item[H.1] Co jste na aplikaci nejvíce ocenil/a? Funkce nebo moment, který vám během testování dával největší hodnotu.
-	\item[H.2] Co vás nejvíce zklamalo nebo zlobilo? Konkrétní situace, kdy aplikace nezvládla, co jste od ní očekával/a.
-	\item[H.3] Pokud byste si měl/a vybrat jedinou věc, kterou by autor měl zlepšit přednostně, co by to bylo?
-\end{description}
-
-\paragraph{Doplnění po skončení studie.}
-Po dokončení testovacích období všech šesti účastníků bude do této přílohy doplněn úplný soubor anonymizovaných vyplněných dotazníků, souhrnná tabulka SUS skóre a~per-dimenze hodnot NASA-TLX, tematický souhrn odpovědí na otevřené otázky a~kompletní telemetrický export v~CSV formátu sloužící jako vstup pro analýzu v~sekci~\ref{subsec:vysledkyDlouhodobe}.
+\paragraph{Stav doplnění.}
+Materiály budou do repozitáře průběžně doplňovány po skončení testovacího období jednotlivých účastníků.
+Finální verze obsahující všech šest dotazníků a~úplný telemetrický export bude k~dispozici po uzavření studie.
 

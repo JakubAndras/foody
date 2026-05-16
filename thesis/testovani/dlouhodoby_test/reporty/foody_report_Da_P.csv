@@ -1,0 +1,444 @@
+--- Profil uživatele ---
+Výška (cm),163
+Váha (kg),95.0
+Cílová váha (kg),69.0
+Pohlaví,female
+Cíl,lose
+Typ diety,custom
+Vlastní dietní preference,bez lepku a laktózy
+Rychlost změny váhy (kg/týden),0.7
+Preferuje metrické,yes
+Datum narození,1971-03-12
+
+--- Denní souhrn ---
+Datum,Kalorie,Bílkoviny (g),Sacharidy (g),Tuky (g),Kalorický cíl,Cíl bílkovin (g),Cíl sacharidů (g),Cíl tuků (g),Kalorie z cvičení,Čisté kalorie,Počet jídel,Počet cvičení
+2026-04-30,538,47,23,29,1410,106,141,47,0,538,3,0
+2026-05-01,1143,53,108,56,1410,150,250,70,0,1143,4,0
+2026-05-02,1188,68,111,51,1410,150,250,70,0,1188,6,0
+2026-05-03,1593,66,246,39,1410,150,250,70,1378,215,5,2
+2026-05-04,1140,38,165,36,1410,150,250,70,149,991,4,1
+2026-05-05,804,27,116,27,1410,150,250,70,143,661,3,1
+2026-05-06,2243,135,208,90,1410,150,250,70,618,1625,7,2
+2026-05-07,1628,67,162,81,2000,150,250,70,113,1515,3,1
+2026-05-08,1539,94,179,53,1410,150,250,70,428,1111,8,1
+2026-05-09,1150,49,109,59,1410,150,250,70,95,1055,4,1
+2026-05-10,499,23,52,22,1410,150,250,70,0,499,3,0
+2026-05-11,1158,79,132,32,1410,150,250,70,0,1158,3,0
+2026-05-12,1215,34,172,46,1410,150,250,70,0,1215,7,0
+2026-05-13,405,11,63,12,1410,150,250,70,0,405,2,0
+2026-05-14,898,62,73,40,2000,150,250,70,0,898,4,0
+
+Přijato:,17141 kcal
+Spáleno:,2924 kcal
+Bilance:,14217 kcal
+
+--- Detail jídel ---
+Datum,Jídlo,Čas jídla,AI spolehlivost jídla,Má foto,input_source,ai_provider,ai_model,barcode,meal_was_edited_by_user,meal_edited_at,meal_deleted_at,meal_ai_original_name,meal_ai_original_calories,meal_ai_original_proteins,meal_ai_original_carbs,meal_ai_original_fats,meal_ai_original_confidence,Ingredience,Váha,Množství (ks),Kalorie,Bílkoviny (g),Sacharidy (g),Tuky (g),AI spolehlivost ingredience,ing_was_edited_by_user,ing_deleted_at,ing_ai_original_name,ing_ai_original_weight,ing_ai_original_amount,ing_ai_original_calories,ing_ai_original_proteins,ing_ai_original_carbs,ing_ai_original_fats,ing_ai_original_confidence
+2026-04-30,Egg muffin,2026-04-30 15:59,0.79,yes,photo_ai,openai,gpt-5.4,,no,,2026-04-30 16:00,Egg muffin,117,8,1,9,0.79,Baked egg mixture,42,1.0,63,6,1,4,0.83,no,2026-04-30 16:00,Baked egg mixture,42,1.0,63,6,1,4,0.83
+2026-04-30,Egg muffin,2026-04-30 15:59,0.79,yes,photo_ai,openai,gpt-5.4,,no,,2026-04-30 16:00,Egg muffin,117,8,1,9,0.79,Shredded cheese topping,10,1.0,40,3,0,3,0.87,no,2026-04-30 16:00,Shredded cheese topping,10,1.0,40,3,0,3,0.87
+2026-04-30,Egg muffin,2026-04-30 15:59,0.79,yes,photo_ai,openai,gpt-5.4,,no,,2026-04-30 16:00,Egg muffin,117,8,1,9,0.79,Cooking oil,2,1.0,14,0,0,2,0.54,no,2026-04-30 16:00,Cooking oil,2,1.0,14,0,0,2,0.54
+2026-04-30,Egg ham cheese muffin,2026-04-30 16:00,0.90,yes,photo_ai,openai,gpt-5.4,,no,,,Egg ham cheese muffin,139,13,2,8,0.90,egg,42,1.0,60,5,1,4,0.98,no,,egg,42,1.0,60,5,1,4,0.98
+2026-04-30,Egg ham cheese muffin,2026-04-30 16:00,0.90,yes,photo_ai,openai,gpt-5.4,,no,,,Egg ham cheese muffin,139,13,2,8,0.90,cottage cheese,18,1.0,18,2,1,1,0.73,no,,cottage cheese,18,1.0,18,2,1,1,0.73
+2026-04-30,Egg ham cheese muffin,2026-04-30 16:00,0.90,yes,photo_ai,openai,gpt-5.4,,no,,,Egg ham cheese muffin,139,13,2,8,0.90,ham,15,1.0,22,3,0,1,0.83,no,,ham,15,1.0,22,3,0,1,0.83
+2026-04-30,Egg ham cheese muffin,2026-04-30 16:00,0.90,yes,photo_ai,openai,gpt-5.4,,no,,,Egg ham cheese muffin,139,13,2,8,0.90,cheese,12,1.0,39,3,0,2,0.93,no,,cheese,12,1.0,39,3,0,2,0.93
+2026-04-30,Vegetable soup,2026-04-30 17:19,0.89,yes,photo_ai,openai,gpt-5.4,,no,,,Vegetable soup,135,3,19,5,0.89,vegetable broth,250,1.0,18,1,2,1,0.93,no,,vegetable broth,250,1.0,18,1,2,1,0.93
+2026-04-30,Vegetable soup,2026-04-30 17:19,0.89,yes,photo_ai,openai,gpt-5.4,,no,,,Vegetable soup,135,3,19,5,0.89,"potato, boiled",70,1.0,61,1,14,0,0.95,no,,"potato, boiled",70,1.0,61,1,14,0,0.95
+2026-04-30,Vegetable soup,2026-04-30 17:19,0.89,yes,photo_ai,openai,gpt-5.4,,no,,,Vegetable soup,135,3,19,5,0.89,"carrot, boiled",20,1.0,7,0,2,0,0.90,no,,"carrot, boiled",20,1.0,7,0,2,0,0.90
+2026-04-30,Vegetable soup,2026-04-30 17:19,0.89,yes,photo_ai,openai,gpt-5.4,,no,,,Vegetable soup,135,3,19,5,0.89,"celery stalk, boiled",18,1.0,3,0,1,0,0.83,no,,"celery stalk, boiled",18,1.0,3,0,1,0,0.83
+2026-04-30,Vegetable soup,2026-04-30 17:19,0.89,yes,photo_ai,openai,gpt-5.4,,no,,,Vegetable soup,135,3,19,5,0.89,"onion/leek, boiled",12,1.0,4,0,1,0,0.73,no,,"onion/leek, boiled",12,1.0,4,0,1,0,0.73
+2026-04-30,Vegetable soup,2026-04-30 17:19,0.89,yes,photo_ai,openai,gpt-5.4,,no,,,Vegetable soup,135,3,19,5,0.89,parsley/herbs,2,1.0,1,0,0,0,0.77,no,,parsley/herbs,2,1.0,1,0,0,0,0.77
+2026-04-30,Vegetable soup,2026-04-30 17:19,0.89,yes,photo_ai,openai,gpt-5.4,,no,,,Vegetable soup,135,3,19,5,0.89,added oil,5,1.0,41,0,0,5,0.69,no,,added oil,5,1.0,41,0,0,5,0.69
+2026-04-30,Jazyk v aspiku,2026-04-30 17:20,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Jazyk v aspiku,264,31,3,15,0.95,vepřový jazyk vařený,140,1.0,238,25,0,15,0.94,no,,vepřový jazyk vařený,140,1.0,238,25,0,15,0.94
+2026-04-30,Jazyk v aspiku,2026-04-30 17:20,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Jazyk v aspiku,264,31,3,15,0.95,aspik / želatina vývar,70,1.0,26,6,3,0,0.92,no,,aspik / želatina vývar,70,1.0,26,6,3,0,0.92
+2026-05-01,Smažená vajíčka s chlebem,2026-05-01 10:45,0.78,no,voice_ai,openai,gpt-5.4,,no,,,Smažená vajíčka s chlebem,284,14,20,16,0.78,smažená vajíčka,100,1.0,144,13,1,10,0.88,no,,smažená vajíčka,100,1.0,144,13,1,10,0.88
+2026-05-01,Smažená vajíčka s chlebem,2026-05-01 10:45,0.78,no,voice_ai,openai,gpt-5.4,,no,,,Smažená vajíčka s chlebem,284,14,20,16,0.78,olej na smažení,5,1.0,45,0,0,5,0.70,no,,olej na smažení,5,1.0,45,0,0,5,0.70
+2026-05-01,Smažená vajíčka s chlebem,2026-05-01 10:45,0.78,no,voice_ai,openai,gpt-5.4,,no,,,Smažená vajíčka s chlebem,284,14,20,16,0.78,bezlepkový chléb,50,1.0,95,2,19,1,0.84,no,,bezlepkový chléb,50,1.0,95,2,19,1,0.84
+2026-05-01,Smažená vajíčka s chlebem,2026-05-01 10:53,,no,,,,,no,,,,,,,,,smažená vajíčka,100,1.0,144,13,1,10,,no,,,,,,,,,
+2026-05-01,Smažená vajíčka s chlebem,2026-05-01 10:53,,no,,,,,no,,,,,,,,,olej na smažení,5,1.0,45,0,0,5,,no,,,,,,,,,
+2026-05-01,Smažená vajíčka s chlebem,2026-05-01 10:53,,no,,,,,no,,,,,,,,,bezlepkový chléb,50,1.0,95,2,19,1,,no,,,,,,,,,
+2026-05-01,Banán a káva,2026-05-01 15:22,0.90,no,voice_ai,openai,gpt-5.4,,no,,,Banán a káva,139,2,35,0,0.90,Banán,118,2.0,105,1,27,0,0.98,no,,Banán,118,2.0,105,1,27,0,0.98
+2026-05-01,Banán a káva,2026-05-01 15:22,0.90,no,voice_ai,openai,gpt-5.4,,no,,,Banán a káva,139,2,35,0,0.90,Čierna káva,240,2.0,2,0,0,0,0.90,no,,Čierna káva,240,2.0,2,0,0,0,0.90
+2026-05-01,Banán a káva,2026-05-01 15:22,0.90,no,voice_ai,openai,gpt-5.4,,no,,,Banán a káva,139,2,35,0,0.90,Cukor do kávy,8,2.0,32,0,8,0,0.45,no,,Cukor do kávy,8,2.0,32,0,8,0,0.45
+2026-05-01,Obložený bezlepkový chléb,2026-05-01 15:24,0.81,no,voice_ai,openai,gpt-5.4,,no,,,Obložený bezlepkový chléb,436,23,34,23,0.81,bezlepkový chléb,70,1.0,182,4,32,4,0.92,no,,bezlepkový chléb,70,1.0,182,4,32,4,0.92
+2026-05-01,Obložený bezlepkový chléb,2026-05-01 15:24,0.81,no,voice_ai,openai,gpt-5.4,,no,,,Obložený bezlepkový chléb,436,23,34,23,0.81,bylinkové máslo,10,1.0,72,0,0,8,0.88,no,,bylinkové máslo,10,1.0,72,0,0,8,0.88
+2026-05-01,Obložený bezlepkový chléb,2026-05-01 15:24,0.81,no,voice_ai,openai,gpt-5.4,,no,,,Obložený bezlepkový chléb,436,23,34,23,0.81,jazykový aspik,50,1.0,55,7,1,2,0.79,no,,jazykový aspik,50,1.0,55,7,1,2,0.79
+2026-05-01,Obložený bezlepkový chléb,2026-05-01 15:24,0.81,no,voice_ai,openai,gpt-5.4,,no,,,Obložený bezlepkový chléb,436,23,34,23,0.81,eidam 30%,20,1.0,54,6,0,4,0.93,no,,eidam 30%,20,1.0,54,6,0,4,0.93
+2026-05-01,Obložený bezlepkový chléb,2026-05-01 15:24,0.81,no,voice_ai,openai,gpt-5.4,,no,,,Obložený bezlepkový chléb,436,23,34,23,0.81,vařené vejce,50,1.0,73,7,1,5,0.95,no,,vařené vejce,50,1.0,73,7,1,5,0.95
+2026-05-02,Ham egg open sandwiches,2026-05-02 07:45,0.89,yes,photo_ai,openai,gpt-5.4,,no,,,Ham egg open sandwiches,369,22,37,14,0.89,bread slices,70,2.0,175,6,35,2,0.91,no,,bread slices,70,2.0,175,6,35,2,0.91
+2026-05-02,Ham egg open sandwiches,2026-05-02 07:45,0.89,yes,photo_ai,openai,gpt-5.4,,no,,,Ham egg open sandwiches,369,22,37,14,0.89,ham,50,2.0,73,10,1,3,0.94,no,,ham,50,2.0,73,10,1,3,0.94
+2026-05-02,Ham egg open sandwiches,2026-05-02 07:45,0.89,yes,photo_ai,openai,gpt-5.4,,no,,,Ham egg open sandwiches,369,22,37,14,0.89,boiled egg,50,2.0,78,7,1,5,0.95,no,,boiled egg,50,2.0,78,7,1,5,0.95
+2026-05-02,Ham egg open sandwiches,2026-05-02 07:45,0.89,yes,photo_ai,openai,gpt-5.4,,no,,,Ham egg open sandwiches,369,22,37,14,0.89,butter or spread,6,2.0,43,0,0,4,0.43,no,,butter or spread,6,2.0,43,0,0,4,0.43
+2026-05-02,Sweet pancake slice,2026-05-02 11:34,0.80,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-02 11:46,,Sweet pancake slice,245,4,27,13,0.80,fried pancake,55,1.0,126,3,17,5,0.72,no,2026-05-02 11:46,fried pancake,55,1.0,126,3,17,5,0.72
+2026-05-02,Sweet pancake slice,2026-05-02 11:34,0.80,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-02 11:46,,Sweet pancake slice,245,4,27,13,0.80,lactose-free whipped cream,30,1.0,86,1,2,8,0.68,no,2026-05-02 11:46,lactose-free whipped cream,30,1.0,86,1,2,8,0.68
+2026-05-02,Sweet pancake slice,2026-05-02 11:34,0.80,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-02 11:46,,Sweet pancake slice,245,4,27,13,0.80,berry sauce/jam,35,1.0,33,0,8,0,0.86,no,2026-05-02 11:46,berry sauce/jam,35,1.0,33,0,8,0,0.86
+2026-05-02,Sweet pancake slice,2026-05-02 11:34,0.80,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-02 11:46,,Sweet pancake slice,245,4,27,13,0.80,fried pancake,110,2.0,252,7,33,10,0.72,yes,,fried pancake,55,1.0,126,3,17,5,0.72
+2026-05-02,Sweet pancake slice,2026-05-02 11:34,0.80,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-02 11:46,,Sweet pancake slice,245,4,27,13,0.80,lactose-free whipped cream,60,2.0,172,1,4,17,0.68,yes,,lactose-free whipped cream,30,1.0,86,1,2,8,0.68
+2026-05-02,Sweet pancake slice,2026-05-02 11:34,0.80,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-02 11:46,,Sweet pancake slice,245,4,27,13,0.80,berry sauce/jam,70,2.0,66,0,17,0,0.86,yes,,berry sauce/jam,35,1.0,33,0,8,0,0.86
+2026-05-02,Káva,2026-05-02 11:47,0.62,no,voice_ai,openai,gpt-5.4,,no,,,Káva,2,0,0,0,0.62,Čierna káva,240,1.0,2,0,0,0,0.62,no,,Čierna káva,240,1.0,2,0,0,0,0.62
+2026-05-02,Čaj a voda,2026-05-02 11:47,0.98,no,voice_ai,openai,gpt-5.4,,no,,,Čaj a voda,2,0,0,0,0.98,Nesladený čaj,250,2.0,2,0,0,0,0.97,no,,Nesladený čaj,250,2.0,2,0,0,0,0.97
+2026-05-02,Čaj a voda,2026-05-02 11:47,0.98,no,voice_ai,openai,gpt-5.4,,no,,,Čaj a voda,2,0,0,0,0.98,Voda,250,2.0,0,0,0,0,0.99,no,,Voda,250,2.0,0,0,0,0,0.99
+2026-05-02,Baked fish with veg,2026-05-02 16:58,0.88,yes,photo_ai,openai,gpt-5.4,,no,,,Baked fish with veg,291,38,11,10,0.88,"white fish fillets, baked",165,1.0,173,36,0,3,0.92,no,,"white fish fillets, baked",165,1.0,173,36,0,3,0.92
+2026-05-02,Baked fish with veg,2026-05-02 16:58,0.88,yes,photo_ai,openai,gpt-5.4,,no,,,Baked fish with veg,291,38,11,10,0.88,"mixed vegetables, cooked",70,1.0,29,1,6,0,0.81,no,,"mixed vegetables, cooked",70,1.0,29,1,6,0,0.81
+2026-05-02,Baked fish with veg,2026-05-02 16:58,0.88,yes,photo_ai,openai,gpt-5.4,,no,,,Baked fish with veg,291,38,11,10,0.88,tomato-based sauce,30,1.0,24,1,5,0,0.72,no,,tomato-based sauce,30,1.0,24,1,5,0,0.72
+2026-05-02,Baked fish with veg,2026-05-02 16:58,0.88,yes,photo_ai,openai,gpt-5.4,,no,,,Baked fish with veg,291,38,11,10,0.88,cooking oil,7,1.0,65,0,0,7,0.76,no,,cooking oil,7,1.0,65,0,0,7,0.76
+2026-05-02,Fruit tea with honey,2026-05-02 17:15,0.93,no,voice_ai,openai,gpt-5.4,,no,,,Fruit tea with honey,34,0,9,0,0.93,fruit tea,250,1.0,2,0,1,0,0.95,no,,fruit tea,250,1.0,2,0,1,0,0.95
+2026-05-02,Fruit tea with honey,2026-05-02 17:15,0.93,no,voice_ai,openai,gpt-5.4,,no,,,Fruit tea with honey,34,0,9,0,0.93,honey,10,1.0,32,0,8,0,0.94,no,,honey,10,1.0,32,0,8,0,0.94
+2026-05-03,Large pancake,2026-05-03 07:21,0.72,yes,photo_ai,openai,gpt-5.4,,no,,,Large pancake,300,8,45,10,0.72,"Pancake or crepe, plain",125,1.0,300,8,45,10,0.72,no,,"Pancake or crepe, plain",125,1.0,300,8,45,10,0.72
+2026-05-03,Jogurt s ovocem,2026-05-03 11:13,0.92,no,voice_ai,openai,gpt-5.4,,no,,,Jogurt s ovocem,455,15,87,7,0.92,Hroznové víno,100,1.0,69,1,18,0,0.99,no,,Hroznové víno,100,1.0,69,1,18,0,0.99
+2026-05-03,Jogurt s ovocem,2026-05-03 11:13,0.92,no,voice_ai,openai,gpt-5.4,,no,,,Jogurt s ovocem,455,15,87,7,0.92,Borůvky,100,1.0,57,1,15,0,0.99,no,,Borůvky,100,1.0,57,1,15,0,0.99
+2026-05-03,Jogurt s ovocem,2026-05-03 11:13,0.92,no,voice_ai,openai,gpt-5.4,,no,,,Jogurt s ovocem,455,15,87,7,0.92,Jogobella jogurt,150,1.0,132,5,20,3,0.80,no,,Jogobella jogurt,150,1.0,132,5,20,3,0.80
+2026-05-03,Jogurt s ovocem,2026-05-03 11:13,0.92,no,voice_ai,openai,gpt-5.4,,no,,,Jogurt s ovocem,455,15,87,7,0.92,Bezlepkové ovesné vločky,50,1.0,195,8,34,3,0.98,no,,Bezlepkové ovesné vločky,50,1.0,195,8,34,3,0.98
+2026-05-03,Jogurt s ovocem,2026-05-03 11:13,0.92,no,voice_ai,openai,gpt-5.4,,no,,,Jogurt s ovocem,455,15,87,7,0.92,Káva,200,1.0,2,0,1,0,0.70,no,,Káva,200,1.0,2,0,1,0,0.70
+2026-05-03,Banana,2026-05-03 11:15,0.99,no,voice_ai,openai,gpt-5.4,,no,,,Banana,105,1,27,0,0.99,Banana,118,1.0,105,1,27,0,0.99,no,,Banana,118,1.0,105,1,27,0,0.99
+2026-05-03,Chicken vegetable soup,2026-05-03 11:44,0.87,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken vegetable soup,194,13,18,8,0.87,Chicken broth,300,1.0,36,3,2,2,0.87,no,,Chicken broth,300,1.0,36,3,2,2,0.87
+2026-05-03,Chicken vegetable soup,2026-05-03 11:44,0.87,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken vegetable soup,194,13,18,8,0.87,Potatoes,70,1.0,61,1,14,0,0.88,no,,Potatoes,70,1.0,61,1,14,0,0.88
+2026-05-03,Chicken vegetable soup,2026-05-03 11:44,0.87,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken vegetable soup,194,13,18,8,0.87,Chicken meat,25,1.0,41,8,0,1,0.73,no,,Chicken meat,25,1.0,41,8,0,1,0.73
+2026-05-03,Chicken vegetable soup,2026-05-03 11:44,0.87,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken vegetable soup,194,13,18,8,0.87,Carrot and celery mix,30,1.0,10,0,2,0,0.80,no,,Carrot and celery mix,30,1.0,10,0,2,0,0.80
+2026-05-03,Chicken vegetable soup,2026-05-03 11:44,0.87,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken vegetable soup,194,13,18,8,0.87,Cooking oil,5,1.0,45,0,0,5,0.57,no,,Cooking oil,5,1.0,45,0,0,5,0.57
+2026-05-03,Chicken vegetable soup,2026-05-03 11:44,0.87,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken vegetable soup,194,13,18,8,0.87,Parsley,2,1.0,1,0,0,0,0.70,no,,Parsley,2,1.0,1,0,0,0,0.70
+2026-05-03,Chicken rice stew,2026-05-03 14:54,0.82,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken rice stew,539,29,70,15,0.82,Cooked white rice,180,1.0,234,4,50,1,0.95,no,,Cooked white rice,180,1.0,234,4,50,1,0.95
+2026-05-03,Chicken rice stew,2026-05-03 14:54,0.82,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken rice stew,539,29,70,15,0.82,"Chicken pieces, stewed",85,1.0,141,22,0,5,0.86,no,,"Chicken pieces, stewed",85,1.0,141,22,0,5,0.86
+2026-05-03,Chicken rice stew,2026-05-03 14:54,0.82,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken rice stew,539,29,70,15,0.82,Tomato-vegetable sauce,170,1.0,75,2,14,2,0.88,no,,Tomato-vegetable sauce,170,1.0,75,2,14,2,0.88
+2026-05-03,Chicken rice stew,2026-05-03 14:54,0.82,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken rice stew,539,29,70,15,0.82,Mixed vegetables in sauce,70,1.0,27,1,6,0,0.83,no,,Mixed vegetables in sauce,70,1.0,27,1,6,0,0.83
+2026-05-03,Chicken rice stew,2026-05-03 14:54,0.82,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken rice stew,539,29,70,15,0.82,Cooking oil,7,1.0,62,0,0,7,0.73,no,,Cooking oil,7,1.0,62,0,0,7,0.73
+2026-05-04,Chicken rice stew,2026-05-04 18:34,,yes,manual,,,,no,,,,,,,,,Cooked white rice,180,1.0,234,4,50,1,,no,,,,,,,,,
+2026-05-04,Chicken rice stew,2026-05-04 18:34,,yes,manual,,,,no,,,,,,,,,"Chicken pieces, stewed",85,1.0,141,22,0,5,,no,,,,,,,,,
+2026-05-04,Chicken rice stew,2026-05-04 18:34,,yes,manual,,,,no,,,,,,,,,Tomato-vegetable sauce,170,1.0,75,2,14,2,,no,,,,,,,,,
+2026-05-04,Chicken rice stew,2026-05-04 18:34,,yes,manual,,,,no,,,,,,,,,Mixed vegetables in sauce,70,1.0,27,1,6,0,,no,,,,,,,,,
+2026-05-04,Chicken rice stew,2026-05-04 18:34,,yes,manual,,,,no,,,,,,,,,Cooking oil,7,1.0,62,0,0,7,,no,,,,,,,,,
+2026-05-04,Sweet pancake slice,2026-05-04 18:35,,yes,manual,,,,no,,,,,,,,,fried pancake,55,1.0,126,3,17,5,,no,2026-05-04 18:35,,,,,,,,
+2026-05-04,Sweet pancake slice,2026-05-04 18:35,,yes,manual,,,,no,,,,,,,,,lactose-free whipped cream,30,1.0,86,1,2,8,,no,2026-05-04 18:35,,,,,,,,
+2026-05-04,Sweet pancake slice,2026-05-04 18:35,,yes,manual,,,,no,,,,,,,,,berry sauce/jam,35,1.0,33,0,8,0,,no,2026-05-04 18:35,,,,,,,,
+2026-05-04,Sweet pancake slice,2026-05-04 18:35,,yes,manual,,,,no,,,,,,,,,fried pancake,55,1.0,126,3,17,5,,no,,,,,,,,,
+2026-05-04,Sweet pancake slice,2026-05-04 18:35,,yes,manual,,,,no,,,,,,,,,lactose-free whipped cream,30,1.0,86,1,2,8,,no,,,,,,,,,
+2026-05-04,Sweet pancake slice,2026-05-04 18:35,,yes,manual,,,,no,,,,,,,,,berry sauce/jam,35,1.0,33,0,8,0,,no,,,,,,,,,
+2026-05-04,Bezlepková polévka se salátem,2026-05-04 18:35,0.56,no,voice_ai,openai,gpt-5.4,,no,,,Bezlepková polévka se salátem,200,5,27,8,0.56,bezlepková vložková polévka,250,1.0,125,3,18,5,0.53,no,2026-05-04 18:36,bezlepková vložková polévka,250,1.0,125,3,18,5,0.53
+2026-05-04,Bezlepková polévka se salátem,2026-05-04 18:35,0.56,no,voice_ai,openai,gpt-5.4,,no,,,Bezlepková polévka se salátem,200,5,27,8,0.56,zeleninový salát,120,1.0,45,2,7,1,0.63,no,2026-05-04 18:36,zeleninový salát,120,1.0,45,2,7,1,0.63
+2026-05-04,Bezlepková polévka se salátem,2026-05-04 18:35,0.56,no,voice_ai,openai,gpt-5.4,,no,,,Bezlepková polévka se salátem,200,5,27,8,0.56,zálivka/olej v salátu,5,1.0,30,0,2,3,0.45,no,2026-05-04 18:36,zálivka/olej v salátu,5,1.0,30,0,2,3,0.45
+2026-05-04,Bezlepková polévka se salátem,2026-05-04 18:35,0.56,no,voice_ai,openai,gpt-5.4,,no,,,Bezlepková polévka se salátem,200,5,27,8,0.56,bezlepková vložková polévka,250,1.0,125,3,18,5,0.53,no,,bezlepková vložková polévka,250,1.0,125,3,18,5,0.53
+2026-05-04,Bezlepková polévka se salátem,2026-05-04 18:35,0.56,no,voice_ai,openai,gpt-5.4,,no,,,Bezlepková polévka se salátem,200,5,27,8,0.56,zeleninový salát,120,1.0,45,2,7,1,0.63,no,,zeleninový salát,120,1.0,45,2,7,1,0.63
+2026-05-04,Bezlepková polévka se salátem,2026-05-04 18:35,0.56,no,voice_ai,openai,gpt-5.4,,no,,,Bezlepková polévka se salátem,200,5,27,8,0.56,zálivka/olej v salátu,5,1.0,30,0,2,3,0.45,no,,zálivka/olej v salátu,5,1.0,30,0,2,3,0.45
+2026-05-04,Žluté jablko,2026-05-04 18:36,0.98,no,voice_ai,openai,gpt-5.4,,no,,,Žluté jablko,156,1,41,0,0.98,Žluté jablko,360,2.0,156,1,41,0,0.98,no,2026-05-04 18:36,Žluté jablko,360,2.0,156,1,41,0,0.98
+2026-05-04,Žluté jablko,2026-05-04 18:36,0.98,no,voice_ai,openai,gpt-5.4,,no,,,Žluté jablko,156,1,41,0,0.98,Žluté jablko,360,2.0,156,1,41,0,0.98,no,,Žluté jablko,360,2.0,156,1,41,0,0.98
+2026-05-05,Rice with berry yogurt,2026-05-05 07:49,0.78,yes,photo_ai,openai,gpt-5.4,,no,,,Rice with berry yogurt,392,10,79,4,0.78,cooked white rice,220,1.0,286,5,63,1,0.84,no,,cooked white rice,220,1.0,286,5,63,1,0.84
+2026-05-05,Rice with berry yogurt,2026-05-05 07:49,0.78,yes,photo_ai,openai,gpt-5.4,,no,,,Rice with berry yogurt,392,10,79,4,0.78,berry-flavored lactose-free yogurt,150,1.0,106,5,16,3,0.71,no,,berry-flavored lactose-free yogurt,150,1.0,106,5,16,3,0.71
+2026-05-05,Plněný croissant,2026-05-05 07:51,0.82,no,voice_ai,openai,gpt-5.4,,no,,,Plněný croissant,386,17,30,23,0.82,Croissant,65,1.0,264,5,29,14,0.90,no,,Croissant,65,1.0,264,5,29,14,0.90
+2026-05-05,Plněný croissant,2026-05-05 07:51,0.82,no,voice_ai,openai,gpt-5.4,,no,,,Plněný croissant,386,17,30,23,0.82,Ham,25,1.0,29,5,0,1,0.77,no,,Ham,25,1.0,29,5,0,1,0.77
+2026-05-05,Plněný croissant,2026-05-05 07:51,0.82,no,voice_ai,openai,gpt-5.4,,no,,,Plněný croissant,386,17,30,23,0.82,Cheese,20,1.0,71,5,0,5,0.72,no,,Cheese,20,1.0,71,5,0,5,0.72
+2026-05-05,Plněný croissant,2026-05-05 07:51,0.82,no,voice_ai,openai,gpt-5.4,,no,,,Plněný croissant,386,17,30,23,0.82,Spinach,15,1.0,3,0,1,0,0.80,no,,Spinach,15,1.0,3,0,1,0,0.80
+2026-05-05,Plněný croissant,2026-05-05 07:51,0.82,no,voice_ai,openai,gpt-5.4,,no,,,Plněný croissant,386,17,30,23,0.82,Butter/oil from baking,3,1.0,19,1,0,3,0.50,no,,Butter/oil from baking,3,1.0,19,1,0,3,0.50
+2026-05-05,Zelený čaj s medem,2026-05-05 07:51,0.95,no,voice_ai,openai,gpt-5.4,,no,,,Zelený čaj s medem,26,0,6,0,0.95,zelený čaj,240,1.0,2,0,0,0,0.99,no,,zelený čaj,240,1.0,2,0,0,0,0.99
+2026-05-05,Zelený čaj s medem,2026-05-05 07:51,0.95,no,voice_ai,openai,gpt-5.4,,no,,,Zelený čaj s medem,26,0,6,0,0.95,med,7,1.0,21,0,6,0,0.97,no,,med,7,1.0,21,0,6,0,0.97
+2026-05-05,Zelený čaj s medem,2026-05-05 07:51,0.95,no,voice_ai,openai,gpt-5.4,,no,,,Zelený čaj s medem,26,0,6,0,0.95,citronová šťáva,10,1.0,3,0,1,0,0.93,no,,citronová šťáva,10,1.0,3,0,1,0,0.93
+2026-05-06,Florian hořká čokoláda limitovaná edice,2026-05-06 07:48,0.98,yes,barcode_ai_fallback,openai,gpt-5.4,8593807736019,yes,2026-05-06 07:48,,Florian hořká čokoláda,255,11,29,11,0.98,Florian hořká čokoláda,150,1.0,255,11,29,11,0.99,no,,Florian hořká čokoláda,150,1.0,255,11,29,11,0.99
+2026-05-06,Heidelbeeren Spanien,2026-05-06 07:48,,yes,barcode,,,4056489011798,no,,,,,,,,,Heidelbeeren Spanien,400,1.0,231,3,42,1,,no,,,,,,,,,
+2026-05-06,tvaroh polotučný,2026-05-06 07:49,,yes,barcode,,,8590421335208,no,,,,,,,,,tvaroh polotučný,250,1.0,215,25,9,9,,no,,,,,,,,,
+2026-05-06,GF pancakes,2026-05-06 07:49,0.77,yes,photo_ai,openai,gpt-5.4,,no,,,GF pancakes,512,20,53,21,0.77,gluten-free pancakes,180,1.0,396,16,52,12,0.79,no,,gluten-free pancakes,180,1.0,396,16,52,12,0.79
+2026-05-06,GF pancakes,2026-05-06 07:49,0.77,yes,photo_ai,openai,gpt-5.4,,no,,,GF pancakes,512,20,53,21,0.77,frying oil,9,1.0,81,0,0,9,0.68,no,,frying oil,9,1.0,81,0,0,9,0.68
+2026-05-06,GF pancakes,2026-05-06 07:49,0.77,yes,photo_ai,openai,gpt-5.4,,no,,,GF pancakes,512,20,53,21,0.77,egg in batter,25,1.0,35,4,1,0,0.54,no,,egg in batter,25,1.0,35,4,1,0,0.54
+2026-05-06,Open-faced ham toasts,2026-05-06 11:02,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Open-faced ham toasts,370,24,32,17,0.91,toast bread,56,2.0,148,5,27,2,0.86,no,,toast bread,56,2.0,148,5,27,2,0.86
+2026-05-06,Open-faced ham toasts,2026-05-06 11:02,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Open-faced ham toasts,370,24,32,17,0.91,ham,50,2.0,73,11,1,3,0.92,no,,ham,50,2.0,73,11,1,3,0.92
+2026-05-06,Open-faced ham toasts,2026-05-06 11:02,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Open-faced ham toasts,370,24,32,17,0.91,semi-hard cheese,32,2.0,102,8,1,8,0.82,no,,semi-hard cheese,32,2.0,102,8,1,8,0.82
+2026-05-06,Open-faced ham toasts,2026-05-06 11:02,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Open-faced ham toasts,370,24,32,17,0.91,tomato,40,2.0,7,0,2,0,0.98,no,,tomato,40,2.0,7,0,2,0,0.98
+2026-05-06,Open-faced ham toasts,2026-05-06 11:02,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Open-faced ham toasts,370,24,32,17,0.91,butter or spread,8,2.0,40,0,1,5,0.52,no,,butter or spread,8,2.0,40,0,1,5,0.52
+2026-05-06,Chicken noodle soup,2026-05-06 14:11,0.87,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-06 14:12,,Chicken noodle soup,198,14,22,7,0.87,chicken broth,250,1.0,18,2,1,1,0.88,no,2026-05-06 14:12,chicken broth,250,1.0,18,2,1,1,0.88
+2026-05-06,Chicken noodle soup,2026-05-06 14:11,0.87,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-06 14:12,,Chicken noodle soup,198,14,22,7,0.87,cooked egg noodles,70,1.0,97,4,19,1,0.78,no,2026-05-06 14:12,cooked egg noodles,70,1.0,97,4,19,1,0.78
+2026-05-06,Chicken noodle soup,2026-05-06 14:11,0.87,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-06 14:12,,Chicken noodle soup,198,14,22,7,0.87,cooked chicken meat,25,1.0,41,8,0,1,0.72,no,2026-05-06 14:12,cooked chicken meat,25,1.0,41,8,0,1,0.72
+2026-05-06,Chicken noodle soup,2026-05-06 14:11,0.87,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-06 14:12,,Chicken noodle soup,198,14,22,7,0.87,carrot and vegetable mix,30,1.0,10,0,2,0,0.77,no,2026-05-06 14:12,carrot and vegetable mix,30,1.0,10,0,2,0,0.77
+2026-05-06,Chicken noodle soup,2026-05-06 14:11,0.87,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-06 14:12,,Chicken noodle soup,198,14,22,7,0.87,oil/fat in broth,5,1.0,32,0,0,4,0.66,no,2026-05-06 14:12,oil/fat in broth,5,1.0,32,0,0,4,0.66
+2026-05-06,Chicken noodle soup,2026-05-06 14:11,0.87,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-06 14:12,,Chicken noodle soup,198,14,22,7,0.87,chicken broth,500,2.0,36,4,2,2,0.88,yes,,chicken broth,250,1.0,18,2,1,1,0.88
+2026-05-06,Chicken noodle soup,2026-05-06 14:11,0.87,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-06 14:12,,Chicken noodle soup,198,14,22,7,0.87,cooked egg noodles,140,2.0,194,7,38,3,0.78,yes,,cooked egg noodles,70,1.0,97,4,19,1,0.78
+2026-05-06,Chicken noodle soup,2026-05-06 14:11,0.87,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-06 14:12,,Chicken noodle soup,198,14,22,7,0.87,cooked chicken meat,50,2.0,82,16,0,2,0.72,yes,,cooked chicken meat,25,1.0,41,8,0,1,0.72
+2026-05-06,Chicken noodle soup,2026-05-06 14:11,0.87,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-06 14:12,,Chicken noodle soup,198,14,22,7,0.87,carrot and vegetable mix,60,2.0,20,1,4,0,0.77,yes,,carrot and vegetable mix,30,1.0,10,0,2,0,0.77
+2026-05-06,Chicken noodle soup,2026-05-06 14:11,0.87,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-06 14:12,,Chicken noodle soup,198,14,22,7,0.87,oil/fat in broth,10,2.0,64,0,0,7,0.66,yes,,oil/fat in broth,5,1.0,32,0,0,4,0.66
+2026-05-06,Pstruh na masle,2026-05-06 18:18,0.86,no,voice_ai,openai,gpt-5.4,,no,,,Pstruh na masle,264,24,0,18,0.86,"Pstruh, opečený",120,1.0,170,24,0,8,0.89,no,,"Pstruh, opečený",120,1.0,170,24,0,8,0.89
+2026-05-06,Pstruh na masle,2026-05-06 18:18,0.86,no,voice_ai,openai,gpt-5.4,,no,,,Pstruh na masle,264,24,0,18,0.86,Maslo,10,1.0,94,0,0,10,0.82,no,,Maslo,10,1.0,94,0,0,10,0.82
+2026-05-07,Stuffed pepper half,2026-05-07 11:54,0.90,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-07 11:55,,Stuffed pepper half,206,9,21,10,0.90,red bell pepper,70,0.5,22,1,5,0,0.97,no,2026-05-07 11:55,red bell pepper,70,0.5,22,1,5,0,0.97
+2026-05-07,Stuffed pepper half,2026-05-07 11:54,0.90,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-07 11:55,,Stuffed pepper half,206,9,21,10,0.90,cooked quinoa,65,0.5,78,3,14,1,0.80,no,2026-05-07 11:55,cooked quinoa,65,0.5,78,3,14,1,0.80
+2026-05-07,Stuffed pepper half,2026-05-07 11:54,0.90,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-07 11:55,,Stuffed pepper half,206,9,21,10,0.90,baked cheese,22,0.5,71,6,0,5,0.72,no,2026-05-07 11:55,baked cheese,22,0.5,71,6,0,5,0.72
+2026-05-07,Stuffed pepper half,2026-05-07 11:54,0.90,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-07 11:55,,Stuffed pepper half,206,9,21,10,0.90,onion,15,0.5,6,0,1,0,0.68,no,2026-05-07 11:55,onion,15,0.5,6,0,1,0,0.68
+2026-05-07,Stuffed pepper half,2026-05-07 11:54,0.90,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-07 11:55,,Stuffed pepper half,206,9,21,10,0.90,cooking oil,3,0.5,27,0,0,3,0.62,no,2026-05-07 11:55,cooking oil,3,0.5,27,0,0,3,0.62
+2026-05-07,Stuffed pepper half,2026-05-07 11:54,0.90,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-07 11:55,,Stuffed pepper half,206,9,21,10,0.90,tomato sauce,12,0.5,2,0,1,0,0.55,no,2026-05-07 11:55,tomato sauce,12,0.5,2,0,1,0,0.55
+2026-05-07,Stuffed pepper half,2026-05-07 11:54,0.90,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-07 11:55,,Stuffed pepper half,206,9,21,10,0.90,red bell pepper,210,1.5,66,2,15,1,0.97,yes,,red bell pepper,70,0.5,22,1,5,0,0.97
+2026-05-07,Stuffed pepper half,2026-05-07 11:54,0.90,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-07 11:55,,Stuffed pepper half,206,9,21,10,0.90,cooked quinoa,195,1.5,234,9,41,4,0.80,yes,,cooked quinoa,65,0.5,78,3,14,1,0.80
+2026-05-07,Stuffed pepper half,2026-05-07 11:54,0.90,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-07 11:55,,Stuffed pepper half,206,9,21,10,0.90,baked cheese,66,1.5,213,17,1,16,0.72,yes,,baked cheese,22,0.5,71,6,0,5,0.72
+2026-05-07,Stuffed pepper half,2026-05-07 11:54,0.90,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-07 11:55,,Stuffed pepper half,206,9,21,10,0.90,onion,45,1.5,18,1,4,0,0.68,yes,,onion,15,0.5,6,0,1,0,0.68
+2026-05-07,Stuffed pepper half,2026-05-07 11:54,0.90,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-07 11:55,,Stuffed pepper half,206,9,21,10,0.90,cooking oil,9,1.5,81,0,0,9,0.62,yes,,cooking oil,3,0.5,27,0,0,3,0.62
+2026-05-07,Stuffed pepper half,2026-05-07 11:54,0.90,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-07 11:55,,Stuffed pepper half,206,9,21,10,0.90,tomato sauce,36,1.5,6,0,2,0,0.55,yes,,tomato sauce,12,0.5,2,0,1,0,0.55
+2026-05-07,Croissant breakfast,2026-05-07 09:06,0.78,no,voice_ai,openai,gpt-5.4,,no,,,Croissant breakfast,910,24,97,47,0.78,Croissant,110,1.0,447,9,50,24,0.95,no,,Croissant,110,1.0,447,9,50,24,0.95
+2026-05-07,Croissant breakfast,2026-05-07 09:06,0.78,no,voice_ai,openai,gpt-5.4,,no,,,Croissant breakfast,910,24,97,47,0.78,Yogurt drink,250,1.0,163,8,22,4,0.72,no,,Yogurt drink,250,1.0,163,8,22,4,0.72
+2026-05-07,Croissant breakfast,2026-05-07 09:06,0.78,no,voice_ai,openai,gpt-5.4,,no,,,Croissant breakfast,910,24,97,47,0.78,Coffee,200,1.0,2,0,0,0,0.79,no,,Coffee,200,1.0,2,0,0,0,0.79
+2026-05-07,Croissant breakfast,2026-05-07 09:06,0.78,no,voice_ai,openai,gpt-5.4,,no,,,Croissant breakfast,910,24,97,47,0.78,Cottage cheese with strawberries,180,1.0,298,8,26,19,0.70,no,,Cottage cheese with strawberries,180,1.0,298,8,26,19,0.70
+2026-05-07,Jazyk v aspiku,2026-05-07 09:07,0.87,no,voice_ai,openai,gpt-5.4,,yes,2026-05-09 09:07,,Jazyk v aspiku,50,7,1,2,0.87,jazyk v aspiku,60,1.0,50,7,1,2,0.87,no,2026-05-09 09:07,jazyk v aspiku,60,1.0,50,7,1,2,0.87
+2026-05-07,Jazyk v aspiku,2026-05-07 09:07,0.87,no,voice_ai,openai,gpt-5.4,,yes,2026-05-09 09:07,,Jazyk v aspiku,50,7,1,2,0.87,jazyk v aspiku,120,2.0,100,14,2,4,0.87,yes,,jazyk v aspiku,60,1.0,50,7,1,2,0.87
+2026-05-08,Open sandwich plate,2026-05-08 14:54,0.76,no,voice_ai,openai,gpt-5.4,,no,,,Open sandwich plate,349,22,31,16,0.76,gluten-free bread,60,1.0,156,4,27,5,0.89,no,2026-05-08 14:55,gluten-free bread,60,1.0,156,4,27,5,0.89
+2026-05-08,Open sandwich plate,2026-05-08 14:54,0.76,no,voice_ai,openai,gpt-5.4,,no,,,Open sandwich plate,349,22,31,16,0.76,ham,35,1.0,41,7,1,1,0.86,no,2026-05-08 14:55,ham,35,1.0,41,7,1,1,0.86
+2026-05-08,Open sandwich plate,2026-05-08 14:54,0.76,no,voice_ai,openai,gpt-5.4,,no,,,Open sandwich plate,349,22,31,16,0.76,lactose-free cheese,20,1.0,71,5,0,5,0.72,no,2026-05-08 14:55,lactose-free cheese,20,1.0,71,5,0,5,0.72
+2026-05-08,Open sandwich plate,2026-05-08 14:54,0.76,no,voice_ai,openai,gpt-5.4,,no,,,Open sandwich plate,349,22,31,16,0.76,red bell pepper,40,1.0,12,0,2,0,0.90,no,2026-05-08 14:55,red bell pepper,40,1.0,12,0,2,0,0.90
+2026-05-08,Open sandwich plate,2026-05-08 14:54,0.76,no,voice_ai,openai,gpt-5.4,,no,,,Open sandwich plate,349,22,31,16,0.76,egg,50,1.0,69,6,1,5,0.95,no,2026-05-08 14:55,egg,50,1.0,69,6,1,5,0.95
+2026-05-08,Open sandwich plate,2026-05-08 14:54,0.76,no,voice_ai,openai,gpt-5.4,,no,,,Open sandwich plate,349,22,31,16,0.76,gluten-free bread,60,1.0,156,4,27,5,0.89,no,,gluten-free bread,60,1.0,156,4,27,5,0.89
+2026-05-08,Open sandwich plate,2026-05-08 14:54,0.76,no,voice_ai,openai,gpt-5.4,,no,,,Open sandwich plate,349,22,31,16,0.76,ham,35,1.0,41,7,1,1,0.86,no,,ham,35,1.0,41,7,1,1,0.86
+2026-05-08,Open sandwich plate,2026-05-08 14:54,0.76,no,voice_ai,openai,gpt-5.4,,no,,,Open sandwich plate,349,22,31,16,0.76,lactose-free cheese,20,1.0,71,5,0,5,0.72,no,,lactose-free cheese,20,1.0,71,5,0,5,0.72
+2026-05-08,Open sandwich plate,2026-05-08 14:54,0.76,no,voice_ai,openai,gpt-5.4,,no,,,Open sandwich plate,349,22,31,16,0.76,red bell pepper,40,1.0,12,0,2,0,0.90,no,,red bell pepper,40,1.0,12,0,2,0,0.90
+2026-05-08,Open sandwich plate,2026-05-08 14:54,0.76,no,voice_ai,openai,gpt-5.4,,no,,,Open sandwich plate,349,22,31,16,0.76,egg,50,1.0,69,6,1,5,0.95,no,,egg,50,1.0,69,6,1,5,0.95
+2026-05-08,Čaj s medem,2026-05-08 14:55,0.97,no,voice_ai,openai,gpt-5.4,,no,,,Čaj s medem,64,0,17,0,0.97,černý čaj,250,1.0,1,0,0,0,0.90,no,2026-05-08 14:55,černý čaj,250,1.0,1,0,0,0,0.90
+2026-05-08,Čaj s medem,2026-05-08 14:55,0.97,no,voice_ai,openai,gpt-5.4,,no,,,Čaj s medem,64,0,17,0,0.97,med,20,1.0,63,0,17,0,0.96,no,2026-05-08 14:55,med,20,1.0,63,0,17,0,0.96
+2026-05-08,Čaj s medem,2026-05-08 14:55,0.97,no,voice_ai,openai,gpt-5.4,,no,,,Čaj s medem,64,0,17,0,0.97,černý čaj,250,1.0,1,0,0,0,0.90,no,,černý čaj,250,1.0,1,0,0,0,0.90
+2026-05-08,Čaj s medem,2026-05-08 14:55,0.97,no,voice_ai,openai,gpt-5.4,,no,,,Čaj s medem,64,0,17,0,0.97,med,20,1.0,63,0,17,0,0.96,no,,med,20,1.0,63,0,17,0,0.96
+2026-05-08,Banán a káva,2026-05-08 14:55,0.80,no,voice_ai,openai,gpt-5.4,,no,,,Banán a káva,133,2,33,0,0.80,Banán,118,2.0,105,1,27,0,0.96,no,2026-05-08 14:56,Banán,118,2.0,105,1,27,0,0.96
+2026-05-08,Banán a káva,2026-05-08 14:55,0.80,no,voice_ai,openai,gpt-5.4,,no,,,Banán a káva,133,2,33,0,0.80,Čierna káva,240,2.0,2,0,0,0,0.86,no,2026-05-08 14:56,Čierna káva,240,2.0,2,0,0,0,0.86
+2026-05-08,Banán a káva,2026-05-08 14:55,0.80,no,voice_ai,openai,gpt-5.4,,no,,,Banán a káva,133,2,33,0,0.80,Cukor v káve,6,2.0,26,0,6,0,0.45,no,2026-05-08 14:56,Cukor v káve,6,2.0,26,0,6,0,0.45
+2026-05-08,Banán a káva,2026-05-08 14:55,0.80,no,voice_ai,openai,gpt-5.4,,no,,,Banán a káva,133,2,33,0,0.80,Banán,118,2.0,105,1,27,0,0.96,no,,Banán,118,2.0,105,1,27,0,0.96
+2026-05-08,Banán a káva,2026-05-08 14:55,0.80,no,voice_ai,openai,gpt-5.4,,no,,,Banán a káva,133,2,33,0,0.80,Čierna káva,240,2.0,2,0,0,0,0.86,no,,Čierna káva,240,2.0,2,0,0,0,0.86
+2026-05-08,Banán a káva,2026-05-08 14:55,0.80,no,voice_ai,openai,gpt-5.4,,no,,,Banán a káva,133,2,33,0,0.80,Cukor v káve,6,2.0,26,0,6,0,0.45,no,,Cukor v káve,6,2.0,26,0,6,0,0.45
+2026-05-08,Krůtí vývar se zeleninou,2026-05-08 14:56,0.80,no,voice_ai,openai,gpt-5.4,,no,,,Krůtí vývar se zeleninou,102,12,5,4,0.80,krůtí vývar,250,1.0,28,3,1,1,0.84,no,,krůtí vývar,250,1.0,28,3,1,1,0.84
+2026-05-08,Krůtí vývar se zeleninou,2026-05-08 14:56,0.80,no,voice_ai,openai,gpt-5.4,,no,,,Krůtí vývar se zeleninou,102,12,5,4,0.80,krůtí maso,30,1.0,41,8,0,1,0.78,no,,krůtí maso,30,1.0,41,8,0,1,0.78
+2026-05-08,Krůtí vývar se zeleninou,2026-05-08 14:56,0.80,no,voice_ai,openai,gpt-5.4,,no,,,Krůtí vývar se zeleninou,102,12,5,4,0.80,mrkev,20,1.0,7,0,2,0,0.80,no,,mrkev,20,1.0,7,0,2,0,0.80
+2026-05-08,Krůtí vývar se zeleninou,2026-05-08 14:56,0.80,no,voice_ai,openai,gpt-5.4,,no,,,Krůtí vývar se zeleninou,102,12,5,4,0.80,celer,10,1.0,4,0,1,0,0.67,no,,celer,10,1.0,4,0,1,0,0.67
+2026-05-08,Krůtí vývar se zeleninou,2026-05-08 14:56,0.80,no,voice_ai,openai,gpt-5.4,,no,,,Krůtí vývar se zeleninou,102,12,5,4,0.80,petržel,10,1.0,4,0,1,0,0.64,no,,petržel,10,1.0,4,0,1,0,0.64
+2026-05-08,Krůtí vývar se zeleninou,2026-05-08 14:56,0.80,no,voice_ai,openai,gpt-5.4,,no,,,Krůtí vývar se zeleninou,102,12,5,4,0.80,cibule,10,1.0,4,0,1,0,0.62,no,,cibule,10,1.0,4,0,1,0,0.62
+2026-05-08,Krůtí vývar se zeleninou,2026-05-08 14:56,0.80,no,voice_ai,openai,gpt-5.4,,no,,,Krůtí vývar se zeleninou,102,12,5,4,0.80,tuk z vývaru,2,1.0,14,0,0,2,0.58,no,,tuk z vývaru,2,1.0,14,0,0,2,0.58
+2026-05-08,Fish with carrot salad,2026-05-08 14:59,0.84,yes,photo_ai,openai,gpt-5.4,,no,,,Fish with carrot salad,382,39,14,18,0.84,baked white fish,210,1.0,273,38,0,13,0.92,no,,baked white fish,210,1.0,273,38,0,13,0.92
+2026-05-08,Fish with carrot salad,2026-05-08 14:59,0.84,yes,photo_ai,openai,gpt-5.4,,no,,,Fish with carrot salad,382,39,14,18,0.84,carrot and onion salad,95,1.0,63,1,14,0,0.87,no,,carrot and onion salad,95,1.0,63,1,14,0,0.87
+2026-05-08,Fish with carrot salad,2026-05-08 14:59,0.84,yes,photo_ai,openai,gpt-5.4,,no,,,Fish with carrot salad,382,39,14,18,0.84,cooking oil,5,1.0,45,0,0,5,0.74,no,,cooking oil,5,1.0,45,0,0,5,0.74
+2026-05-08,Fish with carrot salad,2026-05-08 14:59,0.84,yes,photo_ai,openai,gpt-5.4,,no,,,Fish with carrot salad,382,39,14,18,0.84,light sauce or juices,20,1.0,1,0,0,0,0.52,no,,light sauce or juices,20,1.0,1,0,0,0,0.52
+2026-05-08,Nut & cranberry mix,2026-05-08 15:18,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Nut & cranberry mix,157,4,15,10,0.95,Cashew nuts,15,1.0,83,3,5,7,0.97,no,,Cashew nuts,15,1.0,83,3,5,7,0.97
+2026-05-08,Nut & cranberry mix,2026-05-08 15:18,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Nut & cranberry mix,157,4,15,10,0.95,Peanuts,4,1.0,23,1,1,2,0.93,no,,Peanuts,4,1.0,23,1,1,2,0.93
+2026-05-08,Nut & cranberry mix,2026-05-08 15:18,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Nut & cranberry mix,157,4,15,10,0.95,Dried cranberries,16,1.0,51,0,10,2,0.96,no,,Dried cranberries,16,1.0,51,0,10,2,0.96
+2026-05-08,Banán a káva,2026-05-08 16:01,0.94,no,voice_ai,openai,gpt-5.4,,no,,,Banán a káva,132,2,33,0,0.94,Banán,118,2.0,105,1,27,0,0.98,no,,Banán,118,2.0,105,1,27,0,0.98
+2026-05-08,Banán a káva,2026-05-08 16:01,0.94,no,voice_ai,openai,gpt-5.4,,no,,,Banán a káva,132,2,33,0,0.94,Čierna káva,240,2.0,2,0,0,0,0.90,no,,Čierna káva,240,2.0,2,0,0,0,0.90
+2026-05-08,Banán a káva,2026-05-08 16:01,0.94,no,voice_ai,openai,gpt-5.4,,no,,,Banán a káva,132,2,33,0,0.94,Cukor do kávy,6,2.0,25,0,6,0,0.45,no,,Cukor do kávy,6,2.0,25,0,6,0,0.45
+2026-05-08,Rice noodle ham rolls,2026-05-08 20:24,0.68,yes,photo_ai,openai,gpt-5.4,,no,,,Rice noodle ham rolls,220,14,31,4,0.68,rice paper wrapper,18,1.0,65,1,16,0,0.84,no,,rice paper wrapper,18,1.0,65,1,16,0,0.84
+2026-05-08,Rice noodle ham rolls,2026-05-08 20:24,0.68,yes,photo_ai,openai,gpt-5.4,,no,,,Rice noodle ham rolls,220,14,31,4,0.68,ham,60,1.0,87,11,1,4,0.76,no,,ham,60,1.0,87,11,1,4,0.76
+2026-05-08,Rice noodle ham rolls,2026-05-08 20:24,0.68,yes,photo_ai,openai,gpt-5.4,,no,,,Rice noodle ham rolls,220,14,31,4,0.68,rice vermicelli noodles,45,1.0,49,1,11,0,0.72,no,,rice vermicelli noodles,45,1.0,49,1,11,0,0.72
+2026-05-08,Rice noodle ham rolls,2026-05-08 20:24,0.68,yes,photo_ai,openai,gpt-5.4,,no,,,Rice noodle ham rolls,220,14,31,4,0.68,spring onion,12,1.0,4,0,1,0,0.94,no,,spring onion,12,1.0,4,0,1,0,0.94
+2026-05-08,Rice noodle ham rolls,2026-05-08 20:24,0.68,yes,photo_ai,openai,gpt-5.4,,no,,,Rice noodle ham rolls,220,14,31,4,0.68,soy-based dipping sauce,30,1.0,15,1,2,0,0.52,no,,soy-based dipping sauce,30,1.0,15,1,2,0,0.52
+2026-05-09,Open-faced veggie toast,2026-05-09 09:02,0.80,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-09 09:02,,Open-faced veggie toast,130,4,19,5,0.80,gluten-free bread,30,1.0,75,2,14,2,0.68,no,2026-05-09 09:02,gluten-free bread,30,1.0,75,2,14,2,0.68
+2026-05-09,Open-faced veggie toast,2026-05-09 09:02,0.80,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-09 09:02,,Open-faced veggie toast,130,4,19,5,0.80,lactose-free spread,5,1.0,18,0,0,2,0.55,no,2026-05-09 09:02,lactose-free spread,5,1.0,18,0,0,2,0.55
+2026-05-09,Open-faced veggie toast,2026-05-09 09:02,0.80,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-09 09:02,,Open-faced veggie toast,130,4,19,5,0.80,iceberg/romaine lettuce,12,1.0,2,0,0,0,0.86,no,2026-05-09 09:02,iceberg/romaine lettuce,12,1.0,2,0,0,0,0.86
+2026-05-09,Open-faced veggie toast,2026-05-09 09:02,0.80,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-09 09:02,,Open-faced veggie toast,130,4,19,5,0.80,white radish,12,1.0,2,0,1,0,0.63,no,2026-05-09 09:02,white radish,12,1.0,2,0,1,0,0.63
+2026-05-09,Open-faced veggie toast,2026-05-09 09:02,0.80,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-09 09:02,,Open-faced veggie toast,130,4,19,5,0.80,red bell pepper,15,1.0,5,0,1,0,0.92,no,2026-05-09 09:02,red bell pepper,15,1.0,5,0,1,0,0.92
+2026-05-09,Open-faced veggie toast,2026-05-09 09:02,0.80,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-09 09:02,,Open-faced veggie toast,130,4,19,5,0.80,cucumber,20,1.0,3,0,1,0,0.58,no,2026-05-09 09:02,cucumber,20,1.0,3,0,1,0,0.58
+2026-05-09,Open-faced veggie toast,2026-05-09 09:02,0.80,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-09 09:02,,Open-faced veggie toast,130,4,19,5,0.80,spread/oil absorbed in topping,1,1.0,9,0,0,1,0.35,no,2026-05-09 09:02,spread/oil absorbed in topping,1,1.0,9,0,0,1,0.35
+2026-05-09,Open-faced veggie toast,2026-05-09 09:02,0.80,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-09 09:02,,Open-faced veggie toast,130,4,19,5,0.80,additional bread under toppings,6,1.0,16,1,3,0,0.42,no,2026-05-09 09:02,additional bread under toppings,6,1.0,16,1,3,0,0.42
+2026-05-09,Open-faced veggie toast,2026-05-09 09:02,0.80,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-09 09:02,,Open-faced veggie toast,130,4,19,5,0.80,gluten-free bread,60,2.0,150,4,28,4,0.68,yes,,gluten-free bread,30,1.0,75,2,14,2,0.68
+2026-05-09,Open-faced veggie toast,2026-05-09 09:02,0.80,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-09 09:02,,Open-faced veggie toast,130,4,19,5,0.80,lactose-free spread,10,2.0,36,0,0,4,0.55,yes,,lactose-free spread,5,1.0,18,0,0,2,0.55
+2026-05-09,Open-faced veggie toast,2026-05-09 09:02,0.80,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-09 09:02,,Open-faced veggie toast,130,4,19,5,0.80,iceberg/romaine lettuce,24,2.0,4,0,1,0,0.86,yes,,iceberg/romaine lettuce,12,1.0,2,0,0,0,0.86
+2026-05-09,Open-faced veggie toast,2026-05-09 09:02,0.80,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-09 09:02,,Open-faced veggie toast,130,4,19,5,0.80,white radish,24,2.0,4,0,1,0,0.63,yes,,white radish,12,1.0,2,0,1,0,0.63
+2026-05-09,Open-faced veggie toast,2026-05-09 09:02,0.80,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-09 09:02,,Open-faced veggie toast,130,4,19,5,0.80,red bell pepper,30,2.0,10,0,2,0,0.92,yes,,red bell pepper,15,1.0,5,0,1,0,0.92
+2026-05-09,Open-faced veggie toast,2026-05-09 09:02,0.80,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-09 09:02,,Open-faced veggie toast,130,4,19,5,0.80,cucumber,40,2.0,6,0,1,0,0.58,yes,,cucumber,20,1.0,3,0,1,0,0.58
+2026-05-09,Open-faced veggie toast,2026-05-09 09:02,0.80,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-09 09:02,,Open-faced veggie toast,130,4,19,5,0.80,spread/oil absorbed in topping,2,2.0,18,0,0,2,0.35,yes,,spread/oil absorbed in topping,1,1.0,9,0,0,1,0.35
+2026-05-09,Open-faced veggie toast,2026-05-09 09:02,0.80,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-09 09:02,,Open-faced veggie toast,130,4,19,5,0.80,additional bread under toppings,12,2.0,32,2,5,0,0.42,yes,,additional bread under toppings,6,1.0,16,1,3,0,0.42
+2026-05-09,Klobása s vařenými bramborami,2026-05-09 12:31,0.84,yes,photo_ai,openai,gpt-5.4,,no,,2026-05-09 12:31,Klobása s vařenými bramborami,281,10,20,15,0.84,klobása,55,1.0,178,8,1,15,0.86,no,2026-05-09 12:31,klobása,55,1.0,178,8,1,15,0.86
+2026-05-09,Klobása s vařenými bramborami,2026-05-09 12:31,0.84,yes,photo_ai,openai,gpt-5.4,,no,,2026-05-09 12:31,Klobása s vařenými bramborami,281,10,20,15,0.84,vařené brambory,120,1.0,103,2,19,0,0.96,no,2026-05-09 12:31,vařené brambory,120,1.0,103,2,19,0,0.96
+2026-05-09,Sekaná s bramborem,2026-05-09 12:32,0.88,no,voice_ai,openai,gpt-5.4,,no,,,Sekaná s bramborem,462,23,38,25,0.88,sekaná,120,1.0,264,19,6,18,0.92,no,,sekaná,120,1.0,264,19,6,18,0.92
+2026-05-09,Sekaná s bramborem,2026-05-09 12:32,0.88,no,voice_ai,openai,gpt-5.4,,no,,,Sekaná s bramborem,462,23,38,25,0.88,brambor,150,1.0,131,3,30,0,0.95,no,,brambor,150,1.0,131,3,30,0,0.95
+2026-05-09,Sekaná s bramborem,2026-05-09 12:32,0.88,no,voice_ai,openai,gpt-5.4,,no,,,Sekaná s bramborem,462,23,38,25,0.88,máslo,8,1.0,57,0,0,7,0.90,no,,máslo,8,1.0,57,0,0,7,0.90
+2026-05-09,Sekaná s bramborem,2026-05-09 12:32,0.88,no,voice_ai,openai,gpt-5.4,,no,,,Sekaná s bramborem,462,23,38,25,0.88,kyselá okurka,50,1.0,10,1,2,0,0.93,no,,kyselá okurka,50,1.0,10,1,2,0,0.93
+2026-05-09,Klobása s bramborem,2026-05-09 12:32,0.70,no,voice_ai,openai,gpt-5.4,,no,,2026-05-09 12:33,Klobása s bramborem,358,14,17,24,0.70,Klobása,100,1.0,290,12,2,24,0.81,no,2026-05-09 12:33,Klobása,100,1.0,290,12,2,24,0.81
+2026-05-09,Klobása s bramborem,2026-05-09 12:32,0.70,no,voice_ai,openai,gpt-5.4,,no,,2026-05-09 12:33,Klobása s bramborem,358,14,17,24,0.70,Brambor,130,1.0,68,2,15,0,0.78,no,2026-05-09 12:33,Brambor,130,1.0,68,2,15,0,0.78
+2026-05-09,Pierot jahoda,2026-05-09 15:31,0.99,yes,barcode_ai_fallback,openai,gpt-5.4,8593807056803,yes,2026-05-09 15:31,,OLMA Pierot jahoda,248,5,27,13,0.99,strawberry cream yogurt,175,1.0,248,5,27,13,0.99,no,,strawberry cream yogurt,175,1.0,248,5,27,13,0.99
+2026-05-09,Ham roll,2026-05-09 15:51,0.64,yes,photo_ai,openai,gpt-5.4,,no,,,Ham roll,180,15,6,11,0.64,ham slice,35,1.0,41,7,1,1,0.85,no,,ham slice,35,1.0,41,7,1,1,0.85
+2026-05-09,Ham roll,2026-05-09 15:51,0.64,yes,photo_ai,openai,gpt-5.4,,no,,,Ham roll,180,15,6,11,0.64,egg salad filling,45,1.0,120,6,3,9,0.69,no,,egg salad filling,45,1.0,120,6,3,9,0.69
+2026-05-09,Ham roll,2026-05-09 15:51,0.64,yes,photo_ai,openai,gpt-5.4,,no,,,Ham roll,180,15,6,11,0.64,mustard or dressing,8,1.0,19,2,2,0,0.58,no,,mustard or dressing,8,1.0,19,2,2,0,0.58
+2026-05-10,Scrambled eggs,2026-05-10 08:34,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Scrambled eggs,171,10,1,14,0.94,Scrambled eggs,100,1.0,148,10,1,11,0.94,no,,Scrambled eggs,100,1.0,148,10,1,11,0.94
+2026-05-10,Scrambled eggs,2026-05-10 08:34,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Scrambled eggs,171,10,1,14,0.94,Cooking oil,3,1.0,23,0,0,3,0.72,no,,Cooking oil,3,1.0,23,0,0,3,0.72
+2026-05-10,Ovocný čaj,2026-05-10 08:35,0.97,no,voice_ai,openai,gpt-5.4,,no,,,Ovocný čaj,2,0,0,0,0.97,"ovocný čaj, nesladený",250,1.0,2,0,0,0,0.97,no,,"ovocný čaj, nesladený",250,1.0,2,0,0,0,0.97
+2026-05-10,Yogurt oats with blueberries,2026-05-10 09:05,0.87,yes,photo_ai,openai,gpt-5.4,,no,,,Yogurt oats with blueberries,326,13,50,9,0.87,gluten-free rolled oats,40,1.0,156,7,26,3,0.80,no,,gluten-free rolled oats,40,1.0,156,7,26,3,0.80
+2026-05-10,Yogurt oats with blueberries,2026-05-10 09:05,0.87,yes,photo_ai,openai,gpt-5.4,,no,,,Yogurt oats with blueberries,326,13,50,9,0.87,lactose-free Greek-style yogurt,110,1.0,107,6,8,6,0.82,no,,lactose-free Greek-style yogurt,110,1.0,107,6,8,6,0.82
+2026-05-10,Yogurt oats with blueberries,2026-05-10 09:05,0.87,yes,photo_ai,openai,gpt-5.4,,no,,,Yogurt oats with blueberries,326,13,50,9,0.87,blueberries,45,1.0,26,0,7,0,0.96,no,,blueberries,45,1.0,26,0,7,0,0.96
+2026-05-10,Yogurt oats with blueberries,2026-05-10 09:05,0.87,yes,photo_ai,openai,gpt-5.4,,no,,,Yogurt oats with blueberries,326,13,50,9,0.87,banana,25,1.0,22,0,6,0,0.67,no,,banana,25,1.0,22,0,6,0,0.67
+2026-05-10,Yogurt oats with blueberries,2026-05-10 09:05,0.87,yes,photo_ai,openai,gpt-5.4,,no,,,Yogurt oats with blueberries,326,13,50,9,0.87,honey,5,1.0,15,0,4,0,0.38,no,,honey,5,1.0,15,0,4,0,0.38
+2026-05-11,Znojemské vepřové s rýží,2026-05-11 09:36,0.72,no,voice_ai,openai,gpt-5.4,,no,,,Znojemské vepřové s rýží,566,33,57,20,0.72,vepřové maso dušené,120,1.0,230,28,0,12,0.80,no,2026-05-13 09:36,vepřové maso dušené,120,1.0,230,28,0,12,0.80
+2026-05-11,Znojemské vepřové s rýží,2026-05-11 09:36,0.72,no,voice_ai,openai,gpt-5.4,,no,,,Znojemské vepřové s rýží,566,33,57,20,0.72,znojemská omáčka,100,1.0,75,1,7,4,0.74,no,2026-05-13 09:36,znojemská omáčka,100,1.0,75,1,7,4,0.74
+2026-05-11,Znojemské vepřové s rýží,2026-05-11 09:36,0.72,no,voice_ai,openai,gpt-5.4,,no,,,Znojemské vepřové s rýží,566,33,57,20,0.72,vařená bílá rýže,180,1.0,234,4,50,1,0.86,no,2026-05-13 09:36,vařená bílá rýže,180,1.0,234,4,50,1,0.86
+2026-05-11,Znojemské vepřové s rýží,2026-05-11 09:36,0.72,no,voice_ai,openai,gpt-5.4,,no,,,Znojemské vepřové s rýží,566,33,57,20,0.72,olej / tuk z přípravy,3,1.0,27,0,0,3,0.62,no,2026-05-13 09:36,olej / tuk z přípravy,3,1.0,27,0,0,3,0.62
+2026-05-11,Znojemské vepřové s rýží,2026-05-11 09:36,0.72,no,voice_ai,openai,gpt-5.4,,no,,,Znojemské vepřové s rýží,566,33,57,20,0.72,vepřové maso dušené,120,1.0,230,28,0,12,0.80,no,,vepřové maso dušené,120,1.0,230,28,0,12,0.80
+2026-05-11,Znojemské vepřové s rýží,2026-05-11 09:36,0.72,no,voice_ai,openai,gpt-5.4,,no,,,Znojemské vepřové s rýží,566,33,57,20,0.72,znojemská omáčka,100,1.0,75,1,7,4,0.74,no,,znojemská omáčka,100,1.0,75,1,7,4,0.74
+2026-05-11,Znojemské vepřové s rýží,2026-05-11 09:36,0.72,no,voice_ai,openai,gpt-5.4,,no,,,Znojemské vepřové s rýží,566,33,57,20,0.72,vařená bílá rýže,180,1.0,234,4,50,1,0.86,no,,vařená bílá rýže,180,1.0,234,4,50,1,0.86
+2026-05-11,Znojemské vepřové s rýží,2026-05-11 09:36,0.72,no,voice_ai,openai,gpt-5.4,,no,,,Znojemské vepřové s rýží,566,33,57,20,0.72,olej / tuk z přípravy,3,1.0,27,0,0,3,0.62,no,,olej / tuk z přípravy,3,1.0,27,0,0,3,0.62
+2026-05-11,Vločky s jogurtem,2026-05-11 09:37,0.88,no,voice_ai,openai,gpt-5.4,,no,,,Vločky s jogurtem,419,14,75,7,0.88,bezlepkové ovesné vločky,50,1.0,185,7,30,4,0.93,no,2026-05-13 09:37,bezlepkové ovesné vločky,50,1.0,185,7,30,4,0.93
+2026-05-11,Vločky s jogurtem,2026-05-11 09:37,0.88,no,voice_ai,openai,gpt-5.4,,no,,,Vločky s jogurtem,419,14,75,7,0.88,bezlaktózový jogurt,150,1.0,95,5,11,3,0.82,no,2026-05-13 09:37,bezlaktózový jogurt,150,1.0,95,5,11,3,0.82
+2026-05-11,Vločky s jogurtem,2026-05-11 09:37,0.88,no,voice_ai,openai,gpt-5.4,,no,,,Vločky s jogurtem,419,14,75,7,0.88,borůvky,50,1.0,29,0,7,0,0.95,no,2026-05-13 09:37,borůvky,50,1.0,29,0,7,0,0.95
+2026-05-11,Vločky s jogurtem,2026-05-11 09:37,0.88,no,voice_ai,openai,gpt-5.4,,no,,,Vločky s jogurtem,419,14,75,7,0.88,banán,120,1.0,107,1,27,0,0.96,no,2026-05-13 09:37,banán,120,1.0,107,1,27,0,0.96
+2026-05-11,Vločky s jogurtem,2026-05-11 09:37,0.88,no,voice_ai,openai,gpt-5.4,,no,,,Vločky s jogurtem,419,14,75,7,0.88,káva,200,1.0,2,0,0,0,0.78,no,2026-05-13 09:37,káva,200,1.0,2,0,0,0,0.78
+2026-05-11,Vločky s jogurtem,2026-05-11 09:37,0.88,no,voice_ai,openai,gpt-5.4,,no,,,Vločky s jogurtem,419,14,75,7,0.88,čaj,250,1.0,1,0,0,0,0.80,no,2026-05-13 09:37,čaj,250,1.0,1,0,0,0,0.80
+2026-05-11,Vločky s jogurtem,2026-05-11 09:37,0.88,no,voice_ai,openai,gpt-5.4,,no,,,Vločky s jogurtem,419,14,75,7,0.88,med nebo cukr v nápoji nezjištěn,0,1.0,0,0,0,0,0.35,no,2026-05-13 09:37,med nebo cukr v nápoji nezjištěn,0,1.0,0,0,0,0,0.35
+2026-05-11,Vločky s jogurtem,2026-05-11 09:37,0.88,no,voice_ai,openai,gpt-5.4,,no,,,Vločky s jogurtem,419,14,75,7,0.88,bezlepkové ovesné vločky,50,1.0,185,7,30,4,0.93,no,,bezlepkové ovesné vločky,50,1.0,185,7,30,4,0.93
+2026-05-11,Vločky s jogurtem,2026-05-11 09:37,0.88,no,voice_ai,openai,gpt-5.4,,no,,,Vločky s jogurtem,419,14,75,7,0.88,bezlaktózový jogurt,150,1.0,95,5,11,3,0.82,no,,bezlaktózový jogurt,150,1.0,95,5,11,3,0.82
+2026-05-11,Vločky s jogurtem,2026-05-11 09:37,0.88,no,voice_ai,openai,gpt-5.4,,no,,,Vločky s jogurtem,419,14,75,7,0.88,borůvky,50,1.0,29,0,7,0,0.95,no,,borůvky,50,1.0,29,0,7,0,0.95
+2026-05-11,Vločky s jogurtem,2026-05-11 09:37,0.88,no,voice_ai,openai,gpt-5.4,,no,,,Vločky s jogurtem,419,14,75,7,0.88,banán,120,1.0,107,1,27,0,0.96,no,,banán,120,1.0,107,1,27,0,0.96
+2026-05-11,Vločky s jogurtem,2026-05-11 09:37,0.88,no,voice_ai,openai,gpt-5.4,,no,,,Vločky s jogurtem,419,14,75,7,0.88,káva,200,1.0,2,0,0,0,0.78,no,,káva,200,1.0,2,0,0,0,0.78
+2026-05-11,Vločky s jogurtem,2026-05-11 09:37,0.88,no,voice_ai,openai,gpt-5.4,,no,,,Vločky s jogurtem,419,14,75,7,0.88,čaj,250,1.0,1,0,0,0,0.80,no,,čaj,250,1.0,1,0,0,0,0.80
+2026-05-11,Vločky s jogurtem,2026-05-11 09:37,0.88,no,voice_ai,openai,gpt-5.4,,no,,,Vločky s jogurtem,419,14,75,7,0.88,med nebo cukr v nápoji nezjištěn,0,1.0,0,0,0,0,0.35,no,,med nebo cukr v nápoji nezjištěn,0,1.0,0,0,0,0,0.35
+2026-05-11,Králík,2026-05-11 09:37,0.58,no,voice_ai,openai,gpt-5.4,,no,,,Králík,173,32,0,5,0.58,králičí maso,120,1.0,173,32,0,5,0.58,no,2026-05-13 09:38,králičí maso,120,1.0,173,32,0,5,0.58
+2026-05-11,Králík,2026-05-11 09:37,0.58,no,voice_ai,openai,gpt-5.4,,no,,,Králík,173,32,0,5,0.58,králičí maso,120,1.0,173,32,0,5,0.58,no,,králičí maso,120,1.0,173,32,0,5,0.58
+2026-05-12,Višňová buchta a nápoje,2026-05-12 09:32,0.88,no,voice_ai,openai,gpt-5.4,,no,,,Višňová buchta a nápoje,582,7,68,31,0.88,Višňová buchta z listového těsta,120,3.0,452,7,54,23,0.90,no,,Višňová buchta z listového těsta,120,3.0,452,7,54,23,0.90
+2026-05-12,Višňová buchta a nápoje,2026-05-12 09:32,0.88,no,voice_ai,openai,gpt-5.4,,no,,,Višňová buchta a nápoje,582,7,68,31,0.88,Káva černá,200,3.0,2,0,0,0,0.82,no,,Káva černá,200,3.0,2,0,0,0,0.82
+2026-05-12,Višňová buchta a nápoje,2026-05-12 09:32,0.88,no,voice_ai,openai,gpt-5.4,,no,,,Višňová buchta a nápoje,582,7,68,31,0.88,Zelený čaj,250,3.0,0,0,0,0,0.86,no,,Zelený čaj,250,3.0,0,0,0,0,0.86
+2026-05-12,Višňová buchta a nápoje,2026-05-12 09:32,0.88,no,voice_ai,openai,gpt-5.4,,no,,,Višňová buchta a nápoje,582,7,68,31,0.88,Cukr do nápojů,14,3.0,56,0,14,0,0.35,no,,Cukr do nápojů,14,3.0,56,0,14,0,0.35
+2026-05-12,Višňová buchta a nápoje,2026-05-12 09:32,0.88,no,voice_ai,openai,gpt-5.4,,no,,,Višňová buchta a nápoje,582,7,68,31,0.88,Rostlinný tuk v těstě/pečení,8,3.0,72,0,0,8,0.55,no,,Rostlinný tuk v těstě/pečení,8,3.0,72,0,0,8,0.55
+2026-05-12,Salát s černou čočkou,2026-05-12 09:33,0.79,no,voice_ai,openai,gpt-5.4,,no,,,Salát s černou čočkou,311,14,51,7,0.79,černá čočka vařená,120,1.0,139,11,24,1,0.88,no,2026-05-13 09:33,černá čočka vařená,120,1.0,139,11,24,1,0.88
+2026-05-12,Salát s černou čočkou,2026-05-12 09:33,0.79,no,voice_ai,openai,gpt-5.4,,no,,,Salát s černou čočkou,311,14,51,7,0.79,batát pečený,100,1.0,90,2,21,0,0.84,no,2026-05-13 09:33,batát pečený,100,1.0,90,2,21,0,0.84
+2026-05-12,Salát s černou čočkou,2026-05-12 09:33,0.79,no,voice_ai,openai,gpt-5.4,,no,,,Salát s černou čočkou,311,14,51,7,0.79,ředkvičky syrové,40,1.0,6,0,1,0,0.92,no,2026-05-13 09:33,ředkvičky syrové,40,1.0,6,0,1,0,0.92
+2026-05-12,Salát s černou čočkou,2026-05-12 09:33,0.79,no,voice_ai,openai,gpt-5.4,,no,,,Salát s černou čočkou,311,14,51,7,0.79,míchaný zeleninový salát,80,1.0,16,1,3,0,0.74,no,2026-05-13 09:33,míchaný zeleninový salát,80,1.0,16,1,3,0,0.74
+2026-05-12,Salát s černou čočkou,2026-05-12 09:33,0.79,no,voice_ai,openai,gpt-5.4,,no,,,Salát s černou čočkou,311,14,51,7,0.79,olivový olej / zálivka,5,1.0,45,0,0,5,0.58,no,2026-05-13 09:33,olivový olej / zálivka,5,1.0,45,0,0,5,0.58
+2026-05-12,Salát s černou čočkou,2026-05-12 09:33,0.79,no,voice_ai,openai,gpt-5.4,,no,,,Salát s černou čočkou,311,14,51,7,0.79,semena nebo drobný posyp,5,1.0,15,0,2,1,0.35,no,2026-05-13 09:33,semena nebo drobný posyp,5,1.0,15,0,2,1,0.35
+2026-05-12,Salát s černou čočkou,2026-05-12 09:33,0.79,no,voice_ai,openai,gpt-5.4,,no,,,Salát s černou čočkou,311,14,51,7,0.79,černá čočka vařená,120,1.0,139,11,24,1,0.88,no,,černá čočka vařená,120,1.0,139,11,24,1,0.88
+2026-05-12,Salát s černou čočkou,2026-05-12 09:33,0.79,no,voice_ai,openai,gpt-5.4,,no,,,Salát s černou čočkou,311,14,51,7,0.79,batát pečený,100,1.0,90,2,21,0,0.84,no,,batát pečený,100,1.0,90,2,21,0,0.84
+2026-05-12,Salát s černou čočkou,2026-05-12 09:33,0.79,no,voice_ai,openai,gpt-5.4,,no,,,Salát s černou čočkou,311,14,51,7,0.79,ředkvičky syrové,40,1.0,6,0,1,0,0.92,no,,ředkvičky syrové,40,1.0,6,0,1,0,0.92
+2026-05-12,Salát s černou čočkou,2026-05-12 09:33,0.79,no,voice_ai,openai,gpt-5.4,,no,,,Salát s černou čočkou,311,14,51,7,0.79,míchaný zeleninový salát,80,1.0,16,1,3,0,0.74,no,,míchaný zeleninový salát,80,1.0,16,1,3,0,0.74
+2026-05-12,Salát s černou čočkou,2026-05-12 09:33,0.79,no,voice_ai,openai,gpt-5.4,,no,,,Salát s černou čočkou,311,14,51,7,0.79,olivový olej / zálivka,5,1.0,45,0,0,5,0.58,no,,olivový olej / zálivka,5,1.0,45,0,0,5,0.58
+2026-05-12,Salát s černou čočkou,2026-05-12 09:33,0.79,no,voice_ai,openai,gpt-5.4,,no,,,Salát s černou čočkou,311,14,51,7,0.79,semena nebo drobný posyp,5,1.0,15,0,2,1,0.35,no,,semena nebo drobný posyp,5,1.0,15,0,2,1,0.35
+2026-05-12,Jablka,2026-05-12 09:34,0.99,no,voice_ai,openai,gpt-5.4,,no,,,Jablka,198,1,52,0,0.99,jablko,364,2.0,198,1,52,0,0.99,no,2026-05-13 09:34,jablko,364,2.0,198,1,52,0,0.99
+2026-05-12,Jablka,2026-05-12 09:34,0.99,no,voice_ai,openai,gpt-5.4,,no,,,Jablka,198,1,52,0,0.99,jablko,364,2.0,198,1,52,0,0.99,no,,jablko,364,2.0,198,1,52,0,0.99
+2026-05-12,Voda a čaj,2026-05-12 09:34,0.99,no,voice_ai,openai,gpt-5.4,,no,,,Voda a čaj,0,0,0,0,0.99,Voda,250,2.0,0,0,0,0,0.99,no,,Voda,250,2.0,0,0,0,0,0.99
+2026-05-12,Voda a čaj,2026-05-12 09:34,0.99,no,voice_ai,openai,gpt-5.4,,no,,,Voda a čaj,0,0,0,0,0.99,Čaj,250,2.0,0,0,0,0,0.98,no,,Čaj,250,2.0,0,0,0,0,0.98
+2026-05-12,Eidam 30%,2026-05-12 09:35,0.95,no,voice_ai,openai,gpt-5.4,,no,,,Eidam 30%,124,12,1,8,0.95,Eidam 30% cheese,40,2.0,124,12,1,8,0.95,no,,Eidam 30% cheese,40,2.0,124,12,1,8,0.95
+2026-05-12,Voda a čaj,2026-05-12 09:35,0.98,no,voice_ai,openai,gpt-5.4,,no,,,Voda a čaj,0,0,0,0,0.98,Voda,250,2.0,0,0,0,0,0.99,no,,Voda,250,2.0,0,0,0,0,0.99
+2026-05-12,Voda a čaj,2026-05-12 09:35,0.98,no,voice_ai,openai,gpt-5.4,,no,,,Voda a čaj,0,0,0,0,0.98,Čaj,250,2.0,0,0,0,0,0.97,no,,Čaj,250,2.0,0,0,0,0,0.97
+2026-05-12,Azitromycin,2026-05-12 09:41,0.61,no,voice_ai,openai,gpt-5.4,,no,,,Azitromycin,0,0,0,0,0.61,Azitromycin,1,1.0,0,0,0,0,0.61,no,,Azitromycin,1,1.0,0,0,0,0,0.61
+2026-05-13,Tvarohové pečivo,2026-05-13 09:39,0.73,no,voice_ai,openai,gpt-5.4,,no,,,Tvarohové pečivo,355,11,50,12,0.73,Vanilkové tvarohové pečivo,90,1.0,315,8,44,12,0.79,no,2026-05-13 09:39,Vanilkové tvarohové pečivo,90,1.0,315,8,44,12,0.79
+2026-05-13,Tvarohové pečivo,2026-05-13 09:39,0.73,no,voice_ai,openai,gpt-5.4,,no,,,Tvarohové pečivo,355,11,50,12,0.73,Káva bez mléka a cukru,200,1.0,2,0,0,0,0.92,no,2026-05-13 09:39,Káva bez mléka a cukru,200,1.0,2,0,0,0,0.92
+2026-05-13,Tvarohové pečivo,2026-05-13 09:39,0.73,no,voice_ai,openai,gpt-5.4,,no,,,Tvarohové pečivo,355,11,50,12,0.73,Čaj bez cukru,250,1.0,1,0,0,0,0.95,no,2026-05-13 09:39,Čaj bez cukru,250,1.0,1,0,0,0,0.95
+2026-05-13,Tvarohové pečivo,2026-05-13 09:39,0.73,no,voice_ai,openai,gpt-5.4,,no,,,Tvarohové pečivo,355,11,50,12,0.73,Možná náplň tvarohu/vanilky,10,1.0,37,2,6,1,0.46,no,2026-05-13 09:39,Možná náplň tvarohu/vanilky,10,1.0,37,2,6,1,0.46
+2026-05-13,Tvarohové pečivo,2026-05-13 09:39,0.73,no,voice_ai,openai,gpt-5.4,,no,,,Tvarohové pečivo,355,11,50,12,0.73,Vanilkové tvarohové pečivo,90,1.0,315,8,44,12,0.79,no,,Vanilkové tvarohové pečivo,90,1.0,315,8,44,12,0.79
+2026-05-13,Tvarohové pečivo,2026-05-13 09:39,0.73,no,voice_ai,openai,gpt-5.4,,no,,,Tvarohové pečivo,355,11,50,12,0.73,Káva bez mléka a cukru,200,1.0,2,0,0,0,0.92,no,,Káva bez mléka a cukru,200,1.0,2,0,0,0,0.92
+2026-05-13,Tvarohové pečivo,2026-05-13 09:39,0.73,no,voice_ai,openai,gpt-5.4,,no,,,Tvarohové pečivo,355,11,50,12,0.73,Čaj bez cukru,250,1.0,1,0,0,0,0.95,no,,Čaj bez cukru,250,1.0,1,0,0,0,0.95
+2026-05-13,Tvarohové pečivo,2026-05-13 09:39,0.73,no,voice_ai,openai,gpt-5.4,,no,,,Tvarohové pečivo,355,11,50,12,0.73,Možná náplň tvarohu/vanilky,10,1.0,37,2,6,1,0.46,no,,Možná náplň tvarohu/vanilky,10,1.0,37,2,6,1,0.46
+2026-05-13,Červené jablko,2026-05-13 09:40,0.98,no,voice_ai,openai,gpt-5.4,,no,,,Červené jablko,50,0,14,0,0.98,"červené jablko, syrové",91,0.5,50,0,14,0,0.99,no,,"červené jablko, syrové",91,0.5,50,0,14,0,0.99
+2026-05-14,Vajíčko,2026-05-14 09:47,0.90,no,voice_ai,openai,gpt-5.4,,no,,,Vajíčko,78,6,1,5,0.90,Vejce slepičí vařené,50,1.0,78,6,1,5,0.90,no,,Vejce slepičí vařené,50,1.0,78,6,1,5,0.90
+2026-05-14,Pečené kuře,2026-05-14 12:40,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Pečené kuře,329,35,0,21,0.95,Kuřecí křídlo pečené se kůží,70,1.0,203,21,0,13,0.96,no,,Kuřecí křídlo pečené se kůží,70,1.0,203,21,0,13,0.96
+2026-05-14,Pečené kuře,2026-05-14 12:40,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Pečené kuře,329,35,0,21,0.95,Kuřecí prso pečené,45,1.0,74,14,0,2,0.92,no,,Kuřecí prso pečené,45,1.0,74,14,0,2,0.92
+2026-05-14,Pečené kuře,2026-05-14 12:40,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Pečené kuře,329,35,0,21,0.95,Vypečený tuk/šťáva,7,1.0,52,0,0,6,0.67,no,,Vypečený tuk/šťáva,7,1.0,52,0,0,6,0.67
+2026-05-14,Pickled herring pieces,2026-05-14 16:27,0.76,yes,photo_ai,openai,gpt-5.4,,no,,,Pickled herring pieces,122,9,3,8,0.76,pickled herring,62,1.0,104,9,1,8,0.86,no,,pickled herring,62,1.0,104,9,1,8,0.86
+2026-05-14,Pickled herring pieces,2026-05-14 16:27,0.76,yes,photo_ai,openai,gpt-5.4,,no,,,Pickled herring pieces,122,9,3,8,0.76,pickling marinade with onion/carrot,20,1.0,18,0,1,0,0.72,no,,pickling marinade with onion/carrot,20,1.0,18,0,1,0,0.72
+2026-05-14,Bezlepková ovesná kaše,2026-05-14 17:34,0.80,no,voice_ai,openai,gpt-5.4,,no,,,Bezlepková ovesná kaše,369,12,70,5,0.80,Bezlepková ovesná kaše,220,1.0,154,6,28,3,0.88,no,2026-05-14 17:34,Bezlepková ovesná kaše,220,1.0,154,6,28,3,0.88
+2026-05-14,Bezlepková ovesná kaše,2026-05-14 17:34,0.80,no,voice_ai,openai,gpt-5.4,,no,,,Bezlepková ovesná kaše,369,12,70,5,0.80,Ovocný jogurt bez laktózy,150,1.0,135,5,21,2,0.72,no,2026-05-14 17:34,Ovocný jogurt bez laktózy,150,1.0,135,5,21,2,0.72
+2026-05-14,Bezlepková ovesná kaše,2026-05-14 17:34,0.80,no,voice_ai,openai,gpt-5.4,,no,,,Bezlepková ovesná kaše,369,12,70,5,0.80,Jablko,150,1.0,78,1,21,0,0.96,no,2026-05-14 17:34,Jablko,150,1.0,78,1,21,0,0.96
+2026-05-14,Bezlepková ovesná kaše,2026-05-14 17:34,0.80,no,voice_ai,openai,gpt-5.4,,no,,,Bezlepková ovesná kaše,369,12,70,5,0.80,Čaj,250,1.0,0,0,0,0,0.95,no,2026-05-14 17:34,Čaj,250,1.0,0,0,0,0,0.95
+2026-05-14,Bezlepková ovesná kaše,2026-05-14 17:34,0.80,no,voice_ai,openai,gpt-5.4,,no,,,Bezlepková ovesná kaše,369,12,70,5,0.80,Káva,200,1.0,2,0,0,0,0.93,no,2026-05-14 17:34,Káva,200,1.0,2,0,0,0,0.93
+2026-05-14,Bezlepková ovesná kaše,2026-05-14 17:34,0.80,no,voice_ai,openai,gpt-5.4,,no,,,Bezlepková ovesná kaše,369,12,70,5,0.80,Voda,300,1.0,0,0,0,0,0.99,no,2026-05-14 17:34,Voda,300,1.0,0,0,0,0,0.99
+2026-05-14,Bezlepková ovesná kaše,2026-05-14 17:34,0.80,no,voice_ai,openai,gpt-5.4,,no,,,Bezlepková ovesná kaše,369,12,70,5,0.80,Bezlepková ovesná kaše,220,1.0,154,6,28,3,0.88,no,,Bezlepková ovesná kaše,220,1.0,154,6,28,3,0.88
+2026-05-14,Bezlepková ovesná kaše,2026-05-14 17:34,0.80,no,voice_ai,openai,gpt-5.4,,no,,,Bezlepková ovesná kaše,369,12,70,5,0.80,Ovocný jogurt bez laktózy,150,1.0,135,5,21,2,0.72,no,,Ovocný jogurt bez laktózy,150,1.0,135,5,21,2,0.72
+2026-05-14,Bezlepková ovesná kaše,2026-05-14 17:34,0.80,no,voice_ai,openai,gpt-5.4,,no,,,Bezlepková ovesná kaše,369,12,70,5,0.80,Jablko,150,1.0,78,1,21,0,0.96,no,,Jablko,150,1.0,78,1,21,0,0.96
+2026-05-14,Bezlepková ovesná kaše,2026-05-14 17:34,0.80,no,voice_ai,openai,gpt-5.4,,no,,,Bezlepková ovesná kaše,369,12,70,5,0.80,Čaj,250,1.0,0,0,0,0,0.95,no,,Čaj,250,1.0,0,0,0,0,0.95
+2026-05-14,Bezlepková ovesná kaše,2026-05-14 17:34,0.80,no,voice_ai,openai,gpt-5.4,,no,,,Bezlepková ovesná kaše,369,12,70,5,0.80,Káva,200,1.0,2,0,0,0,0.93,no,,Káva,200,1.0,2,0,0,0,0.93
+2026-05-14,Bezlepková ovesná kaše,2026-05-14 17:34,0.80,no,voice_ai,openai,gpt-5.4,,no,,,Bezlepková ovesná kaše,369,12,70,5,0.80,Voda,300,1.0,0,0,0,0,0.99,no,,Voda,300,1.0,0,0,0,0,0.99
+
+--- Záznam cvičení ---
+Datum,Název,Doba trvání,Kalorie,Zdroj
+2026-05-03 18:37,cycling,90,713,manual
+2026-05-03 11:11,cycling,60,665,manual
+2026-05-04 18:37,rychlá chůze,30,149,manual
+2026-05-05 07:53,strength training (gym),30,143,manual
+2026-05-06 18:19,domácí posilování,30,143,manual
+2026-05-06 18:18,cycling,60,475,manual
+2026-05-07 09:05,chůze,30,113,manual
+2026-05-08 09:04,forest work,60,428,manual
+2026-05-09 09:08,rehabilitační cvičení,30,95,manual
+
+--- Vývoj váhy ---
+Datum,Váha (kg),Má foto
+2026-04-30,95.0,no
+
+--- AI Attempts ---
+Timestamp,kind,modality,provider,model,status,confidence,error_message
+2026-04-30 15:59,meal,photo_ai,openai,gpt-5.4,success,0.79,
+2026-04-30 16:00,meal,photo_ai,openai,gpt-5.4,success,0.90,
+2026-04-30 17:19,meal,photo_ai,openai,gpt-5.4,success,0.89,
+2026-04-30 17:20,meal,photo_ai,openai,gpt-5.4,success,0.95,
+2026-05-01 10:45,meal,voice_ai,openai,gpt-5.4,success,0.78,
+2026-05-01 15:22,meal,voice_ai,openai,gpt-5.4,success,0.90,
+2026-05-01 15:24,meal,voice_ai,openai,gpt-5.4,success,0.81,
+2026-05-02 07:45,meal,photo_ai,openai,gpt-5.4,success,0.89,
+2026-05-02 11:34,meal,photo_ai,openai,gpt-5.4,success,0.80,
+2026-05-02 11:47,meal,voice_ai,openai,gpt-5.4,success,0.62,
+2026-05-02 11:47,meal,voice_ai,openai,gpt-5.4,success,0.98,
+2026-05-02 16:58,meal,photo_ai,openai,gpt-5.4,success,0.88,
+2026-05-02 17:15,meal,voice_ai,openai,gpt-5.4,success,0.93,
+2026-05-03 07:21,meal,photo_ai,openai,gpt-5.4,success,0.72,
+2026-05-03 11:11,exercise,voice_ai,openai,gpt-5.4,success,0.91,
+2026-05-03 11:13,meal,voice_ai,openai,gpt-5.4,success,0.92,
+2026-05-03 11:15,meal,voice_ai,openai,gpt-5.4,success,0.99,
+2026-05-03 11:44,meal,photo_ai,openai,gpt-5.4,success,0.87,
+2026-05-03 14:54,meal,photo_ai,openai,gpt-5.4,success,0.82,
+2026-05-04 18:35,meal,voice_ai,openai,gpt-5.4,success,0.56,
+2026-05-04 18:36,meal,voice_ai,openai,gpt-5.4,success,0.98,
+2026-05-04 18:37,exercise,voice_ai,openai,gpt-5.4,success,0.98,
+2026-05-04 18:37,exercise,voice_ai,openai,gpt-5.4,success,0.94,
+2026-05-05 07:49,meal,photo_ai,openai,gpt-5.4,success,0.78,
+2026-05-05 07:51,meal,voice_ai,openai,gpt-5.4,success,0.82,
+2026-05-05 07:51,meal,voice_ai,openai,gpt-5.4,success,0.95,
+2026-05-05 07:53,exercise,voice_ai,openai,gpt-5.4,success,0.93,
+2026-05-06 07:48,meal,barcode_ai_fallback,openai,gpt-5.4,success,0.98,
+2026-05-06 07:49,meal,photo_ai,openai,gpt-5.4,success,0.77,
+2026-05-06 11:02,meal,photo_ai,openai,gpt-5.4,success,0.91,
+2026-05-06 14:11,meal,photo_ai,openai,gpt-5.4,success,0.87,
+2026-05-06 18:18,exercise,voice_ai,openai,gpt-5.4,invalid_response,0.00,valid_false_or_no_name
+2026-05-06 18:18,meal,voice_ai,openai,gpt-5.4,success,0.86,
+2026-05-06 18:18,exercise,voice_ai,openai,gpt-5.4,success,0.96,
+2026-05-06 18:19,exercise,voice_ai,openai,gpt-5.4,success,0.92,
+2026-05-07 11:53,meal,photo_ai,openai,gpt-5.4,invalid_response,,null_response
+2026-05-07 11:54,meal,photo_ai,openai,gpt-5.4,success,0.90,
+2026-05-07 11:56,exercise,voice_ai,openai,gpt-5.4,invalid_response,0.00,valid_false_or_no_name
+2026-05-07 19:16,exercise,voice_ai,openai,gpt-5.4,invalid_response,0.00,valid_false_or_no_name
+2026-05-08 14:54,meal,voice_ai,openai,gpt-5.4,success,0.76,
+2026-05-08 14:55,meal,voice_ai,openai,gpt-5.4,success,0.97,
+2026-05-08 14:55,meal,voice_ai,openai,gpt-5.4,success,0.80,
+2026-05-08 14:56,meal,voice_ai,openai,gpt-5.4,success,0.80,
+2026-05-08 14:59,meal,photo_ai,openai,gpt-5.4,success,0.84,
+2026-05-08 15:18,meal,photo_ai,openai,gpt-5.4,success,0.95,
+2026-05-08 16:01,meal,voice_ai,openai,gpt-5.4,success,0.94,
+2026-05-08 20:24,meal,photo_ai,openai,gpt-5.4,success,0.68,
+2026-05-09 09:02,meal,photo_ai,openai,gpt-5.4,success,0.80,
+2026-05-09 09:03,exercise,voice_ai,openai,gpt-5.4,success,0.83,
+2026-05-09 09:04,exercise,voice_ai,openai,gpt-5.4,success,0.86,
+2026-05-09 09:05,exercise,voice_ai,openai,gpt-5.4,success,0.98,
+2026-05-09 09:06,meal,voice_ai,openai,gpt-5.4,success,0.78,
+2026-05-09 09:07,meal,voice_ai,openai,gpt-5.4,success,0.87,
+2026-05-09 09:08,exercise,voice_ai,openai,gpt-5.4,success,0.86,
+2026-05-09 09:08,exercise,voice_ai,openai,gpt-5.4,success,0.95,
+2026-05-09 09:30,meal,photo_ai,openai,gpt-5.4,invalid_response,,null_response
+2026-05-09 12:31,meal,photo_ai,openai,gpt-5.4,success,0.84,
+2026-05-09 12:32,meal,voice_ai,openai,gpt-5.4,success,0.88,
+2026-05-09 12:32,meal,voice_ai,openai,gpt-5.4,success,0.70,
+2026-05-09 15:31,meal,barcode_ai_fallback,openai,gpt-5.4,success,0.99,
+2026-05-09 15:51,meal,photo_ai,openai,gpt-5.4,success,0.64,
+2026-05-10 08:34,meal,photo_ai,openai,gpt-5.4,success,0.94,
+2026-05-10 08:35,meal,voice_ai,openai,gpt-5.4,success,0.97,
+2026-05-10 09:05,meal,photo_ai,openai,gpt-5.4,success,0.87,
+2026-05-13 09:32,meal,voice_ai,openai,gpt-5.4,success,0.88,
+2026-05-13 09:33,meal,voice_ai,openai,gpt-5.4,success,0.79,
+2026-05-13 09:34,meal,voice_ai,openai,gpt-5.4,success,0.99,
+2026-05-13 09:34,meal,voice_ai,openai,gpt-5.4,success,0.99,
+2026-05-13 09:35,meal,voice_ai,openai,gpt-5.4,success,0.95,
+2026-05-13 09:35,meal,voice_ai,openai,gpt-5.4,success,0.98,
+2026-05-13 09:36,meal,voice_ai,openai,gpt-5.4,success,0.72,
+2026-05-13 09:37,meal,voice_ai,openai,gpt-5.4,success,0.88,
+2026-05-13 09:37,meal,voice_ai,openai,gpt-5.4,success,0.58,
+2026-05-13 09:39,meal,voice_ai,openai,gpt-5.4,success,0.73,
+2026-05-13 09:40,meal,voice_ai,openai,gpt-5.4,success,0.98,
+2026-05-13 09:41,meal,voice_ai,openai,gpt-5.4,success,0.61,
+2026-05-13 09:47,meal,voice_ai,openai,gpt-5.4,success,0.90,
+2026-05-14 12:40,meal,photo_ai,openai,gpt-5.4,success,0.95,
+2026-05-14 16:27,meal,photo_ai,openai,gpt-5.4,success,0.76,
+2026-05-14 17:34,meal,voice_ai,openai,gpt-5.4,success,0.80,
+
+--- Souhrnné statistiky ---
+Celkem dní,15
+Celkem jídel,66
+Celkem ingrediencí,215
+Celkem cvičení,9
+Celkem záznamů váhy,1
+Průměr kalorií/den,1143
+Průměr bílkovin/den (g),57
+Průměr sacharidů/den (g),128
+Průměr tuků/den (g),45
+Průměr jídel/den,4.4
+Průměr cvičení/den,0.6
+Soft-deleted meals,3
+Soft-deleted ingredients,76
+AI attempts (total),80
+AI attempts (success),75
+AI attempts (invalid_response),5
