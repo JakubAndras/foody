@@ -1,0 +1,219 @@
+--- Profil uživatele ---
+Výška (cm),174
+Váha (kg),78.0
+Cílová váha (kg),85.0
+Pohlaví,male
+Cíl,gain
+Typ diety,classic
+Vlastní dietní preference,
+Rychlost změny váhy (kg/týden),0.4
+Preferuje metrické,yes
+Datum narození,2001-02-02
+
+--- Denní souhrn ---
+Datum,Kalorie,Bílkoviny (g),Sacharidy (g),Tuky (g),Kalorický cíl,Cíl bílkovin (g),Cíl sacharidů (g),Cíl tuků (g),Kalorie z cvičení,Čisté kalorie,Počet jídel,Počet cvičení
+2026-04-30,2209,76,232,97,2990,224,299,100,0,2209,4,0
+2026-05-01,275,9,41,9,2000,150,250,70,0,275,1,0
+2026-05-02,1405,84,154,49,2000,150,250,70,0,1405,3,0
+2026-05-03,1461,51,170,65,2000,150,250,70,0,1461,3,0
+2026-05-04,2392,98,287,86,2000,150,250,70,0,2392,7,0
+2026-05-05,1046,63,108,39,2000,150,250,70,0,1046,3,0
+2026-05-06,902,50,97,33,2000,150,250,70,0,902,1,0
+2026-05-07,973,81,105,26,2000,150,250,70,0,973,4,0
+2026-05-08,1339,84,137,49,2000,150,250,70,0,1339,2,0
+2026-05-09,730,38,83,28,2000,150,250,70,0,730,1,0
+2026-05-10,515,23,12,41,2000,150,250,70,0,515,1,0
+2026-05-11,861,13,138,30,2000,150,250,70,0,861,2,0
+2026-05-12,1580,49,210,66,2000,150,250,70,0,1580,1,0
+2026-05-13,1432,85,170,45,2000,150,250,70,0,1432,3,0
+2026-05-14,1564,89,183,54,2000,150,250,70,0,1564,8,0
+2026-05-15,884,39,98,21,2000,150,250,70,0,884,2,0
+
+Přijato:,19568 kcal
+Spáleno:,0 kcal
+Bilance:,19568 kcal
+
+--- Detail jídel ---
+Datum,Jídlo,Čas jídla,AI spolehlivost jídla,Má foto,input_source,ai_provider,ai_model,barcode,meal_was_edited_by_user,meal_edited_at,meal_deleted_at,meal_ai_original_name,meal_ai_original_calories,meal_ai_original_proteins,meal_ai_original_carbs,meal_ai_original_fats,meal_ai_original_confidence,Ingredience,Váha,Množství (ks),Kalorie,Bílkoviny (g),Sacharidy (g),Tuky (g),AI spolehlivost ingredience,ing_was_edited_by_user,ing_deleted_at,ing_ai_original_name,ing_ai_original_weight,ing_ai_original_amount,ing_ai_original_calories,ing_ai_original_proteins,ing_ai_original_carbs,ing_ai_original_fats,ing_ai_original_confidence
+2026-04-30,Rohlíky s klobásou,2026-04-30 12:21,0.93,yes,photo_ai,openai,gpt-5.4,,yes,2026-04-30 12:25,,Rohlíky s klobásou,1174,44,107,64,0.93,rohlík,150,1.0,420,14,81,5,0.97,no,2026-04-30 12:21,rohlík,150,1.0,420,14,81,5,0.97
+2026-04-30,Rohlíky s klobásou,2026-04-30 12:21,0.93,yes,photo_ai,openai,gpt-5.4,,yes,2026-04-30 12:25,,Rohlíky s klobásou,1174,44,107,64,0.93,maďarská klobása Krásno,100,1.0,410,20,2,35,0.88,no,2026-04-30 12:21,maďarská klobása Krásno,100,1.0,410,20,2,35,0.88
+2026-04-30,Rohlíky s klobásou,2026-04-30 12:21,0.93,yes,photo_ai,openai,gpt-5.4,,yes,2026-04-30 12:25,,Rohlíky s klobásou,1174,44,107,64,0.93,Hermelín Král sýrů Original,120,1.0,344,11,24,25,0.98,no,2026-04-30 12:21,Hermelín Král sýrů Original,120,1.0,344,11,24,25,0.98
+2026-04-30,Rohlíky s klobásou,2026-04-30 12:21,0.93,yes,photo_ai,openai,gpt-5.4,,yes,2026-04-30 12:25,,Rohlíky s klobásou,1174,44,107,64,0.93,rohlík,150,1.0,420,14,81,5,0.97,no,2026-04-30 12:25,rohlík,150,1.0,420,14,81,5,0.97
+2026-04-30,Rohlíky s klobásou,2026-04-30 12:21,0.93,yes,photo_ai,openai,gpt-5.4,,yes,2026-04-30 12:25,,Rohlíky s klobásou,1174,44,107,64,0.93,maďarská klobása Krásno,100,1.0,410,20,2,35,0.88,no,2026-04-30 12:25,maďarská klobása Krásno,100,1.0,410,20,2,35,0.88
+2026-04-30,Rohlíky s klobásou,2026-04-30 12:21,0.93,yes,photo_ai,openai,gpt-5.4,,yes,2026-04-30 12:25,,Rohlíky s klobásou,1174,44,107,64,0.93,Hermelín Král sýrů Original,120,1.0,344,11,24,25,0.98,no,2026-04-30 12:25,Hermelín Král sýrů Original,120,1.0,344,11,24,25,0.98
+2026-04-30,Rohlíky s klobásou,2026-04-30 12:21,0.93,yes,photo_ai,openai,gpt-5.4,,yes,2026-04-30 12:25,,Rohlíky s klobásou,1174,44,107,64,0.93,rohlík,150,1.0,420,14,81,5,0.97,no,2026-04-30 20:30,rohlík,150,1.0,420,14,81,5,0.97
+2026-04-30,Rohlíky s klobásou,2026-04-30 12:21,0.93,yes,photo_ai,openai,gpt-5.4,,yes,2026-04-30 12:25,,Rohlíky s klobásou,1174,44,107,64,0.93,maďarská klobása Krásno,95,1.0,389,19,2,33,0.88,yes,2026-04-30 20:30,maďarská klobása Krásno,100,1.0,410,20,2,35,0.88
+2026-04-30,Rohlíky s klobásou,2026-04-30 12:21,0.93,yes,photo_ai,openai,gpt-5.4,,yes,2026-04-30 12:25,,Rohlíky s klobásou,1174,44,107,64,0.93,Hermelín Král sýrů Original,120,1.0,344,11,24,25,0.98,no,2026-04-30 20:30,Hermelín Král sýrů Original,120,1.0,344,11,24,25,0.98
+2026-04-30,Rohlíky s klobásou,2026-04-30 12:21,0.93,yes,photo_ai,openai,gpt-5.4,,yes,2026-04-30 12:25,,Rohlíky s klobásou,1174,44,107,64,0.93,rohlík,150,1.0,420,14,81,5,0.97,no,,rohlík,150,1.0,420,14,81,5,0.97
+2026-04-30,Rohlíky s klobásou,2026-04-30 12:21,0.93,yes,photo_ai,openai,gpt-5.4,,yes,2026-04-30 12:25,,Rohlíky s klobásou,1174,44,107,64,0.93,maďarská klobása Krásno,190,1.0,778,38,4,66,0.88,yes,,maďarská klobása Krásno,100,1.0,410,20,2,35,0.88
+2026-04-30,Rohlíky s klobásou,2026-04-30 12:21,0.93,yes,photo_ai,openai,gpt-5.4,,yes,2026-04-30 12:25,,Rohlíky s klobásou,1174,44,107,64,0.93,Hermelín Král sýrů Original,120,1.0,344,11,24,25,0.98,no,,Hermelín Král sýrů Original,120,1.0,344,11,24,25,0.98
+2026-04-30,Orange,2026-04-30 20:29,0.97,yes,photo_ai,openai,gpt-5.4,,no,,,Orange,80,2,18,0,0.97,Orange,170,1.0,80,2,18,0,0.97,no,,Orange,170,1.0,80,2,18,0,0.97
+2026-04-30,Starobrno Tradicni,2026-04-30 21:11,0.99,yes,photo_ai,openai,gpt-5.4,,no,,,Starobrno Tradicni,165,2,14,0,0.99,Starobrno Tradicni lager beer,500,1.0,165,2,14,0,0.99,no,,Starobrno Tradicni lager beer,500,1.0,165,2,14,0,0.99
+2026-04-30,Rýže s hráškem a kukuřicí,2026-04-30 22:59,0.95,yes,photo_ai,openai,gpt-5.4,,yes,2026-04-30 23:00,,Rýže s hráškem a kukuřicí,207,5,44,1,0.95,vařená bílá rýže,130,1.0,169,4,36,0,0.97,no,2026-04-30 23:00,vařená bílá rýže,130,1.0,169,4,36,0,0.97
+2026-04-30,Rýže s hráškem a kukuřicí,2026-04-30 22:59,0.95,yes,photo_ai,openai,gpt-5.4,,yes,2026-04-30 23:00,,Rýže s hráškem a kukuřicí,207,5,44,1,0.95,vařený hrášek,25,1.0,21,1,4,0,0.94,no,2026-04-30 23:00,vařený hrášek,25,1.0,21,1,4,0,0.94
+2026-04-30,Rýže s hráškem a kukuřicí,2026-04-30 22:59,0.95,yes,photo_ai,openai,gpt-5.4,,yes,2026-04-30 23:00,,Rýže s hráškem a kukuřicí,207,5,44,1,0.95,kukuřice,20,1.0,17,1,4,0,0.94,no,2026-04-30 23:00,kukuřice,20,1.0,17,1,4,0,0.94
+2026-04-30,Rýže s hráškem a kukuřicí,2026-04-30 22:59,0.95,yes,photo_ai,openai,gpt-5.4,,yes,2026-04-30 23:00,,Rýže s hráškem a kukuřicí,207,5,44,1,0.95,vařená bílá rýže,295,1.0,384,8,83,1,0.97,yes,,vařená bílá rýže,130,1.0,169,4,36,0,0.97
+2026-04-30,Rýže s hráškem a kukuřicí,2026-04-30 22:59,0.95,yes,photo_ai,openai,gpt-5.4,,yes,2026-04-30 23:00,,Rýže s hráškem a kukuřicí,207,5,44,1,0.95,vařený hrášek,25,1.0,21,1,4,0,0.94,no,,vařený hrášek,25,1.0,21,1,4,0,0.94
+2026-04-30,Rýže s hráškem a kukuřicí,2026-04-30 22:59,0.95,yes,photo_ai,openai,gpt-5.4,,yes,2026-04-30 23:00,,Rýže s hráškem a kukuřicí,207,5,44,1,0.95,kukuřice,20,1.0,17,1,4,0,0.94,no,,kukuřice,20,1.0,17,1,4,0,0.94
+2026-05-01,Müllermilch,2026-05-01 09:05,0.98,yes,photo_ai,openai,gpt-5.4,,no,,,Müllermilch,275,9,41,9,0.98,Müllermilch pistachio-coconut flavored milk drink,400,1.0,275,9,41,9,0.98,no,,Müllermilch pistachio-coconut flavored milk drink,400,1.0,275,9,41,9,0.98
+2026-05-02,Chicken rice box,2026-05-02 17:52,,yes,manual,,,,no,,,,,,,,,Cooked rice,220,1.0,286,5,62,1,,no,,,,,,,,,
+2026-05-02,Chicken rice box,2026-05-02 17:52,,yes,manual,,,,no,,,,,,,,,Roasted chicken pieces,110,1.0,251,29,0,15,,no,,,,,,,,,
+2026-05-02,Chicken rice box,2026-05-02 17:52,,yes,manual,,,,no,,,,,,,,,Cooked lentils,70,1.0,81,6,14,0,,no,,,,,,,,,
+2026-05-02,Chicken rice box,2026-05-02 17:52,,yes,manual,,,,no,,,,,,,,,Mixed vegetables (corn and peas),45,1.0,34,2,7,0,,no,,,,,,,,,
+2026-05-02,Chicken rice box,2026-05-02 17:52,,yes,manual,,,,no,,,,,,,,,Cooking oil,5,1.0,45,0,0,5,,no,,,,,,,,,
+2026-05-02,Roast chicken rice plate,2026-05-02 17:52,,yes,manual,,,,no,,,,,,,,,Roasted chicken leg quarter,160,1.0,349,35,0,22,,no,,,,,,,,,
+2026-05-02,Roast chicken rice plate,2026-05-02 17:52,,yes,manual,,,,no,,,,,,,,,Cooked white rice,135,1.0,176,3,38,0,,no,,,,,,,,,
+2026-05-02,Roast chicken rice plate,2026-05-02 17:52,,yes,manual,,,,no,,,,,,,,,Green peas,50,1.0,42,3,8,0,,no,,,,,,,,,
+2026-05-02,Roast chicken rice plate,2026-05-02 17:52,,yes,manual,,,,no,,,,,,,,,Sweet corn,45,1.0,39,1,9,1,,no,,,,,,,,,
+2026-05-02,Roast chicken rice plate,2026-05-02 17:52,,yes,manual,,,,no,,,,,,,,,Cooking oil / pan juices,4,1.0,36,0,0,4,,no,,,,,,,,,
+2026-05-02,capri sun Mystic dragon,2026-05-02 17:52,,yes,manual,,,,no,,,,,,,,,Capri-Sun Mystic Dragon,200,1.0,66,0,17,0,,no,,,,,,,,,
+2026-05-03,Orange,2026-05-03 17:53,,yes,manual,,,,no,,,,,,,,,Orange,170,1.0,80,2,18,0,,no,,,,,,,,,
+2026-05-03,Rohlíky s klobásou,2026-05-03 17:53,,yes,manual,,,,no,,,,,,,,,rohlík,150,1.0,420,14,81,5,,no,,,,,,,,,
+2026-05-03,Rohlíky s klobásou,2026-05-03 17:53,,yes,manual,,,,no,,,,,,,,,maďarská klobása Krásno,100,1.0,410,20,2,35,,no,,,,,,,,,
+2026-05-03,Rohlíky s klobásou,2026-05-03 17:53,,yes,manual,,,,no,,,,,,,,,Hermelín Král sýrů Original,120,1.0,344,11,24,25,,no,,,,,,,,,
+2026-05-03,Rýže s hráškem a kukuřicí,2026-05-03 17:53,,yes,manual,,,,no,,,,,,,,,vařená bílá rýže,130,1.0,169,4,36,0,,no,,,,,,,,,
+2026-05-03,Rýže s hráškem a kukuřicí,2026-05-03 17:53,,yes,manual,,,,no,,,,,,,,,vařený hrášek,25,1.0,21,1,4,0,,no,,,,,,,,,
+2026-05-03,Rýže s hráškem a kukuřicí,2026-05-03 17:53,,yes,manual,,,,no,,,,,,,,,kukuřice,20,1.0,17,1,4,0,,no,,,,,,,,,
+2026-05-04,Bread rolls with ham cheese,2026-05-04 11:19,0.90,yes,photo_ai,openai,gpt-5.4,,no,,,Bread rolls with ham cheese,1193,52,151,42,0.90,bread rolls,270,1.0,729,24,138,8,0.93,no,,bread rolls,270,1.0,729,24,138,8,0.93
+2026-05-04,Bread rolls with ham cheese,2026-05-04 11:19,0.90,yes,photo_ai,openai,gpt-5.4,,no,,,Bread rolls with ham cheese,1193,52,151,42,0.90,Emmental cheese slices,100,1.0,380,27,1,29,0.96,no,,Emmental cheese slices,100,1.0,380,27,1,29,0.96
+2026-05-04,Bread rolls with ham cheese,2026-05-04 11:19,0.90,yes,photo_ai,openai,gpt-5.4,,no,,,Bread rolls with ham cheese,1193,52,151,42,0.90,ham slices,100,1.0,84,1,12,5,0.88,no,,ham slices,100,1.0,84,1,12,5,0.88
+2026-05-04,Espresso s mlékem,2026-05-04 12:57,0.97,yes,photo_ai,openai,gpt-5.4,,no,,,Espresso s mlékem,32,2,3,2,0.97,dvojité espresso,60,1.0,2,0,0,0,0.99,no,,dvojité espresso,60,1.0,2,0,0,0,0.99
+2026-05-04,Espresso s mlékem,2026-05-04 12:57,0.97,yes,photo_ai,openai,gpt-5.4,,no,,,Espresso s mlékem,32,2,3,2,0.97,mléko do kávy,50,1.0,30,1,3,2,0.85,no,,mléko do kávy,50,1.0,30,1,3,2,0.85
+2026-05-04,Banana,2026-05-04 17:20,0.98,no,voice_ai,openai,gpt-5.4,,no,,,Banana,105,1,27,0,0.98,Banana,118,1.0,105,1,27,0,0.98,no,,Banana,118,1.0,105,1,27,0,0.98
+2026-05-04,Pizza margherita,2026-05-04 22:01,,no,barcode,,,5051007166126,no,,,,,,,,,Pizza margherita,100,1.0,241,9,33,8,,no,,,,,,,,,
+2026-05-04,"Čerstvé plnotučné mléko 3,5%",2026-05-04 22:04,,yes,barcode,,,5051007150521,no,,,,,,,,,"Čerstvé plnotučné mléko 3,5%",1000,1.0,630,33,47,35,,no,,,,,,,,,
+2026-05-04,capri sun Mystic dragon,2026-05-04 22:05,0.99,yes,barcode_ai_fallback,openai,gpt-5.4,4000177408100,yes,2026-05-04 22:05,,Capri-Sun Mystic Dragon,66,0,17,0,0.99,Capri-Sun Mystic Dragon,200,1.0,66,0,17,0,0.99,no,,Capri-Sun Mystic Dragon,200,1.0,66,0,17,0,0.99
+2026-05-04,guiness,2026-05-04 22:20,0.99,yes,barcode_ai_fallback,openai,gpt-5.4,1040213101872,yes,2026-05-04 22:20,,Guinness Draught,125,1,10,0,0.99,Guinness Draught stout,440,1.0,125,1,10,0,0.99,no,,Guinness Draught stout,440,1.0,125,1,10,0,0.99
+2026-05-05,Gnocchi with chicken,2026-05-05 11:53,0.84,yes,photo_ai,openai,gpt-5.4,,no,,,Gnocchi with chicken,366,20,44,12,0.84,potato gnocchi,135,1.0,202,5,42,1,0.95,no,,potato gnocchi,135,1.0,202,5,42,1,0.95
+2026-05-05,Gnocchi with chicken,2026-05-05 11:53,0.84,yes,photo_ai,openai,gpt-5.4,,no,,,Gnocchi with chicken,366,20,44,12,0.84,chicken breast,45,1.0,74,14,0,2,0.82,no,,chicken breast,45,1.0,74,14,0,2,0.82
+2026-05-05,Gnocchi with chicken,2026-05-05 11:53,0.84,yes,photo_ai,openai,gpt-5.4,,no,,,Gnocchi with chicken,366,20,44,12,0.84,spinach,25,1.0,6,1,1,0,0.86,no,,spinach,25,1.0,6,1,1,0,0.86
+2026-05-05,Gnocchi with chicken,2026-05-05 11:53,0.84,yes,photo_ai,openai,gpt-5.4,,no,,,Gnocchi with chicken,366,20,44,12,0.84,cream sauce,20,1.0,39,1,1,4,0.72,no,,cream sauce,20,1.0,39,1,1,4,0.72
+2026-05-05,Gnocchi with chicken,2026-05-05 11:53,0.84,yes,photo_ai,openai,gpt-5.4,,no,,,Gnocchi with chicken,366,20,44,12,0.84,olive oil,5,1.0,45,0,0,5,0.69,no,,olive oil,5,1.0,45,0,0,5,0.69
+2026-05-05,Red grapes,2026-05-05 11:57,0.98,yes,photo_ai,openai,gpt-5.4,,no,,,Red grapes,38,0,10,0,0.98,Red grapes,46,11.0,38,0,10,0,0.98,no,,Red grapes,46,11.0,38,0,10,0,0.98
+2026-05-05,Roast chicken rice plate,2026-05-05 23:06,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Roast chicken rice plate,642,43,54,28,0.95,Roasted chicken leg quarter,160,1.0,349,35,0,22,0.96,no,,Roasted chicken leg quarter,160,1.0,349,35,0,22,0.96
+2026-05-05,Roast chicken rice plate,2026-05-05 23:06,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Roast chicken rice plate,642,43,54,28,0.95,Cooked white rice,135,1.0,176,3,38,0,0.94,no,,Cooked white rice,135,1.0,176,3,38,0,0.94
+2026-05-05,Roast chicken rice plate,2026-05-05 23:06,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Roast chicken rice plate,642,43,54,28,0.95,Green peas,50,1.0,42,3,8,0,0.93,no,,Green peas,50,1.0,42,3,8,0,0.93
+2026-05-05,Roast chicken rice plate,2026-05-05 23:06,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Roast chicken rice plate,642,43,54,28,0.95,Sweet corn,45,1.0,39,1,9,1,0.93,no,,Sweet corn,45,1.0,39,1,9,1,0.93
+2026-05-05,Roast chicken rice plate,2026-05-05 23:06,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Roast chicken rice plate,642,43,54,28,0.95,Cooking oil / pan juices,4,1.0,36,0,0,4,0.63,no,,Cooking oil / pan juices,4,1.0,36,0,0,4,0.63
+2026-05-06,Ham Spinach Pizza,2026-05-06 11:55,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Ham Spinach Pizza,902,50,97,33,0.91,Pizza crust,190,1.0,513,15,91,8,0.95,no,,Pizza crust,190,1.0,513,15,91,8,0.95
+2026-05-06,Ham Spinach Pizza,2026-05-06 11:55,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Ham Spinach Pizza,902,50,97,33,0.91,Mozzarella cheese,110,1.0,308,24,3,22,0.94,no,,Mozzarella cheese,110,1.0,308,24,3,22,0.94
+2026-05-06,Ham Spinach Pizza,2026-05-06 11:55,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Ham Spinach Pizza,902,50,97,33,0.91,Ham,45,1.0,65,9,1,2,0.88,no,,Ham,45,1.0,65,9,1,2,0.88
+2026-05-06,Ham Spinach Pizza,2026-05-06 11:55,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Ham Spinach Pizza,902,50,97,33,0.91,Spinach,25,1.0,6,1,1,0,0.90,no,,Spinach,25,1.0,6,1,1,0,0.90
+2026-05-06,Ham Spinach Pizza,2026-05-06 11:55,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Ham Spinach Pizza,902,50,97,33,0.91,White sauce,25,1.0,10,0,1,0,0.76,no,,White sauce,25,1.0,10,0,1,0,0.76
+2026-05-07,Strawberries,2026-05-07 10:01,0.98,yes,photo_ai,openai,gpt-5.4,,no,,,Strawberries,24,1,6,0,0.98,Strawberries,75,4.0,24,1,6,0,0.98,no,,Strawberries,75,4.0,24,1,6,0,0.98
+2026-05-07,Strawberries,2026-05-07 10:39,0.98,yes,photo_ai,openai,gpt-5.4,,no,,,Strawberries,18,0,4,0,0.98,"Strawberries, raw",55,1.0,18,0,4,0,0.99,no,,"Strawberries, raw",55,1.0,18,0,4,0,0.99
+2026-05-07,Chicken rice box,2026-05-07 11:00,0.88,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken rice box,697,42,83,22,0.88,Cooked rice,220,1.0,286,5,62,1,0.94,no,,Cooked rice,220,1.0,286,5,62,1,0.94
+2026-05-07,Chicken rice box,2026-05-07 11:00,0.88,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken rice box,697,42,83,22,0.88,Roasted chicken pieces,110,1.0,251,29,0,15,0.92,no,,Roasted chicken pieces,110,1.0,251,29,0,15,0.92
+2026-05-07,Chicken rice box,2026-05-07 11:00,0.88,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken rice box,697,42,83,22,0.88,Cooked lentils,70,1.0,81,6,14,0,0.83,no,,Cooked lentils,70,1.0,81,6,14,0,0.83
+2026-05-07,Chicken rice box,2026-05-07 11:00,0.88,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken rice box,697,42,83,22,0.88,Mixed vegetables (corn and peas),45,1.0,34,2,7,0,0.90,no,,Mixed vegetables (corn and peas),45,1.0,34,2,7,0,0.90
+2026-05-07,Chicken rice box,2026-05-07 11:00,0.88,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken rice box,697,42,83,22,0.88,Cooking oil,5,1.0,45,0,0,5,0.70,no,,Cooking oil,5,1.0,45,0,0,5,0.70
+2026-05-07,YoPRO & Protein Pudding,2026-05-07 22:17,0.96,yes,photo_ai,openai,gpt-5.4,,no,,,YoPRO & Protein Pudding,234,38,12,4,0.96,YoPRO high protein yogurt,160,2.0,96,18,6,1,0.96,no,,YoPRO high protein yogurt,160,2.0,96,18,6,1,0.96
+2026-05-07,YoPRO & Protein Pudding,2026-05-07 22:17,0.96,yes,photo_ai,openai,gpt-5.4,,no,,,YoPRO & Protein Pudding,234,38,12,4,0.96,Zott Protein Pudding Vanilla,200,2.0,138,20,6,3,0.98,no,,Zott Protein Pudding Vanilla,200,2.0,138,20,6,3,0.98
+2026-05-08,Chicken rice box,2026-05-08 17:57,,yes,manual,,,,no,,,,,,,,,Cooked rice,220,1.0,286,5,62,1,,no,,,,,,,,,
+2026-05-08,Chicken rice box,2026-05-08 17:57,,yes,manual,,,,no,,,,,,,,,Roasted chicken pieces,110,1.0,251,29,0,15,,no,,,,,,,,,
+2026-05-08,Chicken rice box,2026-05-08 17:57,,yes,manual,,,,no,,,,,,,,,Cooked lentils,70,1.0,81,6,14,0,,no,,,,,,,,,
+2026-05-08,Chicken rice box,2026-05-08 17:57,,yes,manual,,,,no,,,,,,,,,Mixed vegetables (corn and peas),45,1.0,34,2,7,0,,no,,,,,,,,,
+2026-05-08,Chicken rice box,2026-05-08 17:57,,yes,manual,,,,no,,,,,,,,,Cooking oil,5,1.0,45,0,0,5,,no,,,,,,,,,
+2026-05-08,Roast chicken rice plate,2026-05-08 17:57,,yes,manual,,,,no,,,,,,,,,Roasted chicken leg quarter,160,1.0,349,35,0,22,,no,,,,,,,,,
+2026-05-08,Roast chicken rice plate,2026-05-08 17:57,,yes,manual,,,,no,,,,,,,,,Cooked white rice,135,1.0,176,3,38,0,,no,,,,,,,,,
+2026-05-08,Roast chicken rice plate,2026-05-08 17:57,,yes,manual,,,,no,,,,,,,,,Green peas,50,1.0,42,3,8,0,,no,,,,,,,,,
+2026-05-08,Roast chicken rice plate,2026-05-08 17:57,,yes,manual,,,,no,,,,,,,,,Sweet corn,45,1.0,39,1,9,1,,no,,,,,,,,,
+2026-05-08,Roast chicken rice plate,2026-05-08 17:57,,yes,manual,,,,no,,,,,,,,,Cooking oil / pan juices,4,1.0,36,0,0,4,,no,,,,,,,,,
+2026-05-09,Kuřecí bageta a latte,2026-05-09 17:57,0.76,no,voice_ai,openai,gpt-5.4,,no,,,Kuřecí bageta a latte,730,38,83,28,0.76,Kuřecí bageta,250,2.0,510,28,58,18,0.78,no,,Kuřecí bageta,250,2.0,510,28,58,18,0.78
+2026-05-09,Kuřecí bageta a latte,2026-05-09 17:57,0.76,no,voice_ai,openai,gpt-5.4,,no,,,Kuřecí bageta a latte,730,38,83,28,0.76,Latte,300,2.0,220,10,25,10,0.74,no,,Latte,300,2.0,220,10,25,10,0.74
+2026-05-10,Křupavá kachna,2026-05-10 17:56,0.76,no,voice_ai,openai,gpt-5.4,,no,,,Křupavá kachna,515,23,12,41,0.76,roast duck with crispy skin,170,1.0,510,23,0,41,0.76,no,,roast duck with crispy skin,170,1.0,510,23,0,41,0.76
+2026-05-10,Křupavá kachna,2026-05-10 17:56,0.76,no,voice_ai,openai,gpt-5.4,,no,,,Křupavá kachna,515,23,12,41,0.76,glaze/sauce,15,1.0,5,0,12,0,0.42,no,,glaze/sauce,15,1.0,5,0,12,0,0.42
+2026-05-11,Bonbóny,2026-05-11 17:55,0.57,no,voice_ai,openai,gpt-5.4,,no,,,Bonbóny,420,3,78,11,0.57,Bonbóny,100,1.0,420,3,78,11,0.57,no,,Bonbóny,100,1.0,420,3,78,11,0.57
+2026-05-11,Palačinky s nutelou,2026-05-11 17:56,0.90,no,voice_ai,openai,gpt-5.4,,no,,,Palačinky s nutelou,441,10,60,19,0.90,Palačinky,120,1.0,270,7,37,10,0.92,no,,Palačinky,120,1.0,270,7,37,10,0.92
+2026-05-11,Palačinky s nutelou,2026-05-11 17:56,0.90,no,voice_ai,openai,gpt-5.4,,no,,,Palačinky s nutelou,441,10,60,19,0.90,Nutella,30,1.0,161,2,17,9,0.96,no,,Nutella,30,1.0,161,2,17,9,0.96
+2026-05-11,Palačinky s nutelou,2026-05-11 17:56,0.90,no,voice_ai,openai,gpt-5.4,,no,,,Palačinky s nutelou,441,10,60,19,0.90,Cooking oil,3,1.0,10,1,6,0,0.63,no,,Cooking oil,3,1.0,10,1,6,0,0.63
+2026-05-12,McDonald's Big Mac menu,2026-05-12 17:54,0.99,no,voice_ai,openai,gpt-5.4,,no,,,McDonald's Big Mac menu,1580,49,210,66,0.99,McDonald's Double Big Mac,328,3.0,740,43,46,43,0.99,no,,McDonald's Double Big Mac,328,3.0,740,43,46,43,0.99
+2026-05-12,McDonald's Big Mac menu,2026-05-12 17:54,0.99,no,voice_ai,openai,gpt-5.4,,no,,,McDonald's Big Mac menu,1580,49,210,66,0.99,McDonald's large fries,150,3.0,480,6,63,23,0.99,no,,McDonald's large fries,150,3.0,480,6,63,23,0.99
+2026-05-12,McDonald's Big Mac menu,2026-05-12 17:54,0.99,no,voice_ai,openai,gpt-5.4,,no,,,McDonald's Big Mac menu,1580,49,210,66,0.99,Coca-Cola large,500,3.0,360,0,101,0,0.98,no,,Coca-Cola large,500,3.0,360,0,101,0,0.98
+2026-05-13,Milk tea/coffee,2026-05-13 17:53,0.76,yes,photo_ai,openai,gpt-5.4,,no,,,Milk tea/coffee,38,1,5,2,0.76,milk tea or coffee beverage,70,1.0,38,1,5,2,0.76,no,,milk tea or coffee beverage,70,1.0,38,1,5,2,0.76
+2026-05-13,Chicken rice box,2026-05-13 17:53,,yes,,,,,no,,,,,,,,,Cooked rice,220,1.0,286,5,62,1,,no,,,,,,,,,
+2026-05-13,Chicken rice box,2026-05-13 17:53,,yes,,,,,no,,,,,,,,,Roasted chicken pieces,110,1.0,251,29,0,15,,no,,,,,,,,,
+2026-05-13,Chicken rice box,2026-05-13 17:53,,yes,,,,,no,,,,,,,,,Cooked lentils,70,1.0,81,6,14,0,,no,,,,,,,,,
+2026-05-13,Chicken rice box,2026-05-13 17:53,,yes,,,,,no,,,,,,,,,Mixed vegetables (corn and peas),45,1.0,34,2,7,0,,no,,,,,,,,,
+2026-05-13,Chicken rice box,2026-05-13 17:53,,yes,,,,,no,,,,,,,,,Cooking oil,5,1.0,45,0,0,5,,no,,,,,,,,,
+2026-05-13,Chicken rice box,2026-05-13 17:53,,yes,manual,,,,no,,,,,,,,,Cooked rice,220,1.0,286,5,62,1,,no,,,,,,,,,
+2026-05-13,Chicken rice box,2026-05-13 17:53,,yes,manual,,,,no,,,,,,,,,Roasted chicken pieces,110,1.0,251,29,0,15,,no,,,,,,,,,
+2026-05-13,Chicken rice box,2026-05-13 17:53,,yes,manual,,,,no,,,,,,,,,Cooked lentils,70,1.0,81,6,14,0,,no,,,,,,,,,
+2026-05-13,Chicken rice box,2026-05-13 17:53,,yes,manual,,,,no,,,,,,,,,Mixed vegetables (corn and peas),45,1.0,34,2,7,0,,no,,,,,,,,,
+2026-05-13,Chicken rice box,2026-05-13 17:53,,yes,manual,,,,no,,,,,,,,,Cooking oil,5,1.0,45,0,0,5,,no,,,,,,,,,
+2026-05-14,Apple slices,2026-05-14 20:08,0.98,yes,photo_ai,openai,gpt-5.4,,no,,,Apple slices,75,0,19,0,0.98,Raw apple,145,1.0,75,0,19,0,0.98,no,,Raw apple,145,1.0,75,0,19,0,0.98
+2026-05-14,Chicken rice box,2026-05-14 21:08,,yes,manual,,,,no,,,,,,,,,Cooked rice,220,1.0,286,5,62,1,,no,,,,,,,,,
+2026-05-14,Chicken rice box,2026-05-14 21:08,,yes,manual,,,,no,,,,,,,,,Roasted chicken pieces,110,1.0,251,29,0,15,,no,,,,,,,,,
+2026-05-14,Chicken rice box,2026-05-14 21:08,,yes,manual,,,,no,,,,,,,,,Cooked lentils,70,1.0,81,6,14,0,,no,,,,,,,,,
+2026-05-14,Chicken rice box,2026-05-14 21:08,,yes,manual,,,,no,,,,,,,,,Mixed vegetables (corn and peas),45,1.0,34,2,7,0,,no,,,,,,,,,
+2026-05-14,Chicken rice box,2026-05-14 21:08,,yes,manual,,,,no,,,,,,,,,Cooking oil,5,1.0,45,0,0,5,,no,,,,,,,,,
+2026-05-14,Strawberries,2026-05-14 21:08,,yes,manual,,,,no,,,,,,,,,Strawberries,75,1.0,24,1,6,0,,no,,,,,,,,,
+2026-05-14,Red grapes,2026-05-14 21:08,,yes,manual,,,,no,,,,,,,,,Red grapes,46,1.0,38,0,10,0,,no,,,,,,,,,
+2026-05-14,Strawberries,2026-05-14 21:08,,yes,manual,,,,no,,,,,,,,,Strawberries,75,1.0,24,1,6,0,,no,,,,,,,,,
+2026-05-14,Roast chicken rice plate,2026-05-14 21:09,,yes,manual,,,,no,,,,,,,,,Roasted chicken leg quarter,160,1.0,349,35,0,22,,no,,,,,,,,,
+2026-05-14,Roast chicken rice plate,2026-05-14 21:09,,yes,manual,,,,no,,,,,,,,,Cooked white rice,135,1.0,176,3,38,0,,no,,,,,,,,,
+2026-05-14,Roast chicken rice plate,2026-05-14 21:09,,yes,manual,,,,no,,,,,,,,,Green peas,50,1.0,42,3,8,0,,no,,,,,,,,,
+2026-05-14,Roast chicken rice plate,2026-05-14 21:09,,yes,manual,,,,no,,,,,,,,,Sweet corn,45,1.0,39,1,9,1,,no,,,,,,,,,
+2026-05-14,Roast chicken rice plate,2026-05-14 21:09,,yes,manual,,,,no,,,,,,,,,Cooking oil / pan juices,4,1.0,36,0,0,4,,no,,,,,,,,,
+2026-05-14,Espresso s mlékem,2026-05-14 21:09,,yes,manual,,,,no,,,,,,,,,dvojité espresso,60,1.0,2,0,0,0,,no,,,,,,,,,
+2026-05-14,Espresso s mlékem,2026-05-14 21:09,,yes,manual,,,,no,,,,,,,,,mléko do kávy,50,1.0,30,1,3,2,,no,,,,,,,,,
+2026-05-14,Espresso s mlékem,2026-05-14 21:09,,yes,manual,,,,no,,,,,,,,,dvojité espresso,60,1.0,2,0,0,0,,no,,,,,,,,,
+2026-05-14,Espresso s mlékem,2026-05-14 21:09,,yes,manual,,,,no,,,,,,,,,mléko do kávy,50,1.0,30,1,3,2,,no,,,,,,,,,
+2026-05-15,Rice with chili chicken,2026-05-15 12:52,0.85,yes,photo_ai,openai,gpt-5.4,,no,,,Rice with chili chicken,669,37,80,21,0.85,Cooked white rice,200,1.0,260,5,57,1,0.97,no,,Cooked white rice,200,1.0,260,5,57,1,0.97
+2026-05-15,Rice with chili chicken,2026-05-15 12:52,0.85,yes,photo_ai,openai,gpt-5.4,,no,,,Rice with chili chicken,669,37,80,21,0.85,Chicken chili with corn,180,1.0,302,25,22,13,0.79,no,,Chicken chili with corn,180,1.0,302,25,22,13,0.79
+2026-05-15,Rice with chili chicken,2026-05-15 12:52,0.85,yes,photo_ai,openai,gpt-5.4,,no,,,Rice with chili chicken,669,37,80,21,0.85,Shredded cheese,35,1.0,107,7,1,7,0.95,no,,Shredded cheese,35,1.0,107,7,1,7,0.95
+2026-05-15,Draft beer,2026-05-15 21:06,0.97,yes,fix_with_ai_rerun,openai,gpt-5.4,,no,,,Draft beer,215,3,18,0,0.97,Draft beer,660,2.0,258,3,22,0,0.97,no,2026-05-15 21:08,Draft beer,660,2.0,258,3,22,0,0.97
+2026-05-15,Draft beer,2026-05-15 21:06,0.97,yes,fix_with_ai_rerun,openai,gpt-5.4,,no,,,Draft beer,215,3,18,0,0.97,Draft pale lager beer,500,2.0,215,3,18,0,0.97,yes,,Draft pale lager beer,500,1.0,215,3,18,0,0.97
+
+--- Vývoj váhy ---
+Datum,Váha (kg),Má foto
+2026-04-30,78.0,no
+
+--- AI Attempts ---
+Timestamp,kind,modality,provider,model,status,confidence,error_message
+2026-04-30 12:21,meal,photo_ai,openai,gpt-5.4,success,0.93,
+2026-04-30 20:29,meal,photo_ai,openai,gpt-5.4,success,0.97,
+2026-04-30 21:11,meal,photo_ai,openai,gpt-5.4,success,0.99,
+2026-04-30 22:59,meal,photo_ai,openai,gpt-5.4,success,0.95,
+2026-05-01 09:05,meal,photo_ai,openai,gpt-5.4,success,0.98,
+2026-05-04 11:19,meal,photo_ai,openai,gpt-5.4,success,0.90,
+2026-05-04 12:57,meal,photo_ai,openai,gpt-5.4,success,0.97,
+2026-05-04 17:20,meal,voice_ai,openai,gpt-5.4,success,0.98,
+2026-05-04 22:05,meal,barcode_ai_fallback,openai,gpt-5.4,success,0.99,
+2026-05-04 22:20,meal,barcode_ai_fallback,openai,gpt-5.4,success,0.99,
+2026-05-05 11:53,meal,photo_ai,openai,gpt-5.4,success,0.84,
+2026-05-05 11:57,meal,photo_ai,openai,gpt-5.4,success,0.98,
+2026-05-05 23:06,meal,photo_ai,openai,gpt-5.4,success,0.95,
+2026-05-06 11:55,meal,photo_ai,openai,gpt-5.4,success,0.91,
+2026-05-06 11:56,meal,fix_with_ai_rerun,openai,gpt-5.4,success,0.90,
+2026-05-07 10:01,meal,photo_ai,openai,gpt-5.4,success,0.98,
+2026-05-07 10:39,meal,photo_ai,openai,gpt-5.4,success,0.98,
+2026-05-07 11:00,meal,photo_ai,openai,gpt-5.4,success,0.88,
+2026-05-07 22:17,meal,photo_ai,openai,gpt-5.4,success,0.96,
+2026-05-13 17:53,meal,photo_ai,openai,gpt-5.4,success,0.76,
+2026-05-13 17:54,meal,voice_ai,openai,gpt-5.4,success,0.99,
+2026-05-13 17:55,meal,voice_ai,openai,gpt-5.4,success,0.57,
+2026-05-13 17:56,meal,voice_ai,openai,gpt-5.4,success,0.90,
+2026-05-13 17:56,meal,voice_ai,openai,gpt-5.4,success,0.76,
+2026-05-13 17:57,meal,voice_ai,openai,gpt-5.4,success,0.76,
+2026-05-14 20:08,meal,photo_ai,openai,gpt-5.4,success,0.98,
+2026-05-15 12:52,meal,photo_ai,openai,gpt-5.4,success,0.85,
+2026-05-15 21:06,meal,photo_ai,openai,gpt-5.4,success,0.97,
+2026-05-15 21:07,meal,fix_with_ai_rerun,openai,gpt-5.4,success,0.97,
+
+--- Souhrnné statistiky ---
+Celkem dní,16
+Celkem jídel,46
+Celkem ingrediencí,116
+Celkem cvičení,0
+Celkem záznamů váhy,1
+Průměr kalorií/den,1223
+Průměr bílkovin/den (g),58
+Průměr sacharidů/den (g),139
+Průměr tuků/den (g),46
+Průměr jídel/den,2.9
+Průměr cvičení/den,0.0
+Soft-deleted meals,0
+Soft-deleted ingredients,13
+AI attempts (total),29
+AI attempts (success),29

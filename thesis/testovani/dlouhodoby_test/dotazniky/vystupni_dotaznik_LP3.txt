@@ -6,16 +6,18 @@
 
 ---
 
-## Před vyplněním
+## Sekce 0 — pár údajů o tobě
 
-Děkuji za to, že jsi aplikaci Foody dva týdny používal/a v běžném životě. Tento dotazník doplňuje data, která jsem získal automatickým exportem z aplikace, o tvůj subjektivní pohled. Bez něj by analýza nebyla úplná.
-
-**Pár praktických informací:**
-
-- Vyplnění zabere přibližně **10 minut**.
-- Vyplň prosím **do 24 hodin** od posledního dne, kdy jsi aplikaci aktivně používal/a, dokud máš zážitek čerstvý.
-- Odpovědi jsou anonymizovány — v textu diplomové práce budeš uveden/a pouze kódem (např. `LP1`), tvé jméno se v práci nikde neobjeví.
-- U otevřených otázek na konci stačí **1 až 3 věty**. Krátká a věcná odpověď je pro mě cennější než dlouhá úvaha.
+| | |
+|---|---|
+| Tvůj kód | LP3 |
+| Datum vyplnění | 16.5.2026 |
+| Kolik dní celkem trvalo tvé testovací období? | 14 |
+| Jaký hlavní cíl jsi měl/a na začátku testování? | Hubnutí |
+| Věk | 54 |
+| Pohlaví | Žena |
+| Měl/a jsi předtím zkušenost s aplikacemi pro sledování stravy? | Kalorické tabulky |
+| Máš nějaká zdravotní omezení nebo specifickou dietu (alergie, intolerance, vegetariánství, jiné)? | Ano, lepek |
 
 ---
 

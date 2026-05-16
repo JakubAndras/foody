@@ -1,0 +1,484 @@
+--- Profil uživatele ---
+Výška (cm),182
+Váha (kg),79.0
+Cílová váha (kg),
+Pohlaví,male
+Cíl,maintain
+Typ diety,classic
+Vlastní dietní preference,
+Rychlost změny váhy (kg/týden),
+Preferuje metrické,yes
+Datum narození,1998-05-12
+
+--- Denní souhrn ---
+Datum,Kalorie,Bílkoviny (g),Sacharidy (g),Tuky (g),Kalorický cíl,Cíl bílkovin (g),Cíl sacharidů (g),Cíl tuků (g),Kalorie z cvičení,Čisté kalorie,Počet jídel,Počet cvičení
+2026-04-30,330,3,28,0,3100,233,310,103,0,330,2,0
+2026-05-01,1425,46,214,42,2000,150,250,70,0,1425,2,0
+2026-05-02,2492,81,342,63,2000,150,250,70,0,2492,8,0
+2026-05-03,2178,79,294,73,3100,150,250,70,0,2178,6,0
+2026-05-04,2966,150,353,105,3100,150,250,70,0,2966,5,0
+2026-05-05,1408,79,133,60,2000,150,250,70,0,1408,3,0
+2026-05-06,1355,45,174,56,2000,150,250,70,0,1355,5,0
+2026-05-07,1692,59,182,82,2000,150,250,70,0,1692,4,0
+2026-05-08,2280,88,268,61,2000,150,250,70,0,2280,7,0
+2026-05-09,2997,78,371,114,2000,150,250,70,0,2997,7,0
+2026-05-10,3304,115,476,99,2000,150,250,70,0,3304,8,0
+2026-05-11,1250,61,171,36,2000,150,250,70,0,1250,4,0
+2026-05-12,2665,144,227,124,2000,150,250,70,0,2665,6,0
+2026-05-13,1865,102,222,61,2000,150,250,70,0,1865,5,0
+2026-05-14,2281,129,206,97,2000,150,250,70,0,2281,4,0
+2026-05-15,1413,59,147,45,2000,150,250,70,0,1413,4,0
+2026-05-16,774,31,87,34,2000,150,250,70,0,774,1,0
+
+Přijato:,32675 kcal
+Spáleno:,0 kcal
+Bilance:,32675 kcal
+
+--- Detail jídel ---
+Datum,Jídlo,Čas jídla,AI spolehlivost jídla,Má foto,input_source,ai_provider,ai_model,barcode,meal_was_edited_by_user,meal_edited_at,meal_deleted_at,meal_ai_original_name,meal_ai_original_calories,meal_ai_original_proteins,meal_ai_original_carbs,meal_ai_original_fats,meal_ai_original_confidence,Ingredience,Váha,Množství (ks),Kalorie,Bílkoviny (g),Sacharidy (g),Tuky (g),AI spolehlivost ingredience,ing_was_edited_by_user,ing_deleted_at,ing_ai_original_name,ing_ai_original_weight,ing_ai_original_amount,ing_ai_original_calories,ing_ai_original_proteins,ing_ai_original_carbs,ing_ai_original_fats,ing_ai_original_confidence
+2026-04-30,Draft beer,2026-04-30 21:25,0.97,yes,photo_ai,openai,gpt-5.4,,yes,2026-04-30 21:26,,Draft beer,48,1,4,0,0.97,lager beer,100,1.0,48,1,4,0,0.97,no,2026-04-30 21:26,lager beer,100,1.0,48,1,4,0,0.97
+2026-04-30,Draft beer,2026-04-30 21:25,0.97,yes,photo_ai,openai,gpt-5.4,,yes,2026-04-30 21:26,,Draft beer,48,1,4,0,0.97,lager beer,250,2.5,120,1,10,0,0.97,yes,,lager beer,100,1.0,48,1,4,0,0.97
+2026-04-30,,2026-04-30 21:38,,yes,manual,,,,no,,2026-04-30 21:40,,,,,,,,,,,,,,,,,,,,,,,,
+2026-04-30,Draft beer,2026-04-30 21:40,,yes,manual,,,,no,,2026-04-30 21:40,,,,,,,lager beer,100,1.0,48,1,4,0,,no,2026-04-30 21:40,,,,,,,,
+2026-04-30,Draft beer,2026-04-30 21:40,,yes,manual,,,,no,,2026-04-30 21:42,,,,,,,lager beer,100,1.0,48,1,4,0,,no,2026-04-30 21:42,,,,,,,,
+2026-04-30,Draft beer,2026-04-30 21:41,0.96,yes,photo_ai,openai,gpt-5.4,,no,,,Draft beer,210,2,18,0,0.96,Draft lager beer,500,1.0,210,2,18,0,0.96,no,2026-04-30 21:41,Draft lager beer,500,1.0,210,2,18,0,0.96
+2026-04-30,Draft beer,2026-04-30 21:41,0.96,yes,photo_ai,openai,gpt-5.4,,no,,,Draft beer,210,2,18,0,0.96,Draft lager beer,500,1.0,210,2,18,0,0.96,no,,Draft lager beer,500,1.0,210,2,18,0,0.96
+2026-05-01,Muesli s jogurtem,2026-05-01 06:52,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Muesli s jogurtem,427,10,68,14,0.94,muesli/granola,70,1.0,315,7,47,11,0.94,no,,muesli/granola,70,1.0,315,7,47,11,0.94
+2026-05-01,Muesli s jogurtem,2026-05-01 06:52,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Muesli s jogurtem,427,10,68,14,0.94,white yogurt,80,1.0,49,3,4,2,0.86,no,,white yogurt,80,1.0,49,3,4,2,0.86
+2026-05-01,Muesli s jogurtem,2026-05-01 06:52,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Muesli s jogurtem,427,10,68,14,0.94,apple,75,1.0,39,0,11,0,0.98,no,,apple,75,1.0,39,0,11,0,0.98
+2026-05-01,Muesli s jogurtem,2026-05-01 06:52,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Muesli s jogurtem,427,10,68,14,0.94,raisins,8,1.0,24,0,6,0,0.72,no,,raisins,8,1.0,24,0,6,0,0.72
+2026-05-01,Macaroni with meat sauce,2026-05-01 20:15,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-01 21:11,,Macaroni with meat sauce,498,18,73,14,0.91,Cooked macaroni,210,1.0,331,12,65,2,0.97,no,2026-05-01 21:11,Cooked macaroni,210,1.0,331,12,65,2,0.97
+2026-05-01,Macaroni with meat sauce,2026-05-01 20:15,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-01 21:11,,Macaroni with meat sauce,498,18,73,14,0.91,Tomato meat sauce,80,1.0,126,6,8,7,0.89,no,2026-05-01 21:11,Tomato meat sauce,80,1.0,126,6,8,7,0.89
+2026-05-01,Macaroni with meat sauce,2026-05-01 20:15,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-01 21:11,,Macaroni with meat sauce,498,18,73,14,0.91,Added cooking oil,5,1.0,41,0,0,5,0.72,no,2026-05-01 21:11,Added cooking oil,5,1.0,41,0,0,5,0.72
+2026-05-01,Macaroni with meat sauce,2026-05-01 20:15,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-01 21:11,,Macaroni with meat sauce,498,18,73,14,0.91,Cooked macaroni,315,1.5,497,18,98,3,0.97,yes,2026-05-02 18:16,Cooked macaroni,210,1.0,331,12,65,2,0.97
+2026-05-01,Macaroni with meat sauce,2026-05-01 20:15,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-01 21:11,,Macaroni with meat sauce,498,18,73,14,0.91,Tomato meat sauce,120,1.5,189,9,11,11,0.89,yes,2026-05-02 18:16,Tomato meat sauce,80,1.0,126,6,8,7,0.89
+2026-05-01,Macaroni with meat sauce,2026-05-01 20:15,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-01 21:11,,Macaroni with meat sauce,498,18,73,14,0.91,Added cooking oil,7,1.5,62,0,0,7,0.72,yes,2026-05-02 18:16,Added cooking oil,5,1.0,41,0,0,5,0.72
+2026-05-01,Macaroni with meat sauce,2026-05-01 20:15,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-01 21:11,,Macaroni with meat sauce,498,18,73,14,0.91,Cooked macaroni,420,2.0,663,24,131,4,0.97,yes,,Cooked macaroni,210,1.0,331,12,65,2,0.97
+2026-05-01,Macaroni with meat sauce,2026-05-01 20:15,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-01 21:11,,Macaroni with meat sauce,498,18,73,14,0.91,Tomato meat sauce,160,2.0,252,12,15,15,0.89,yes,,Tomato meat sauce,80,1.0,126,6,8,7,0.89
+2026-05-01,Macaroni with meat sauce,2026-05-01 20:15,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-01 21:11,,Macaroni with meat sauce,498,18,73,14,0.91,Added cooking oil,9,2.0,83,0,0,9,0.72,yes,,Added cooking oil,5,1.0,41,0,0,5,0.72
+2026-05-01,Instant noodles & bread,2026-05-01 17:30,0.93,yes,photo_ai,openai,gpt-5.4,,no,,2026-05-02 17:31,Instant noodles & bread,471,13,77,12,0.93,"Instant noodles, cooked",300,1.0,336,8,51,11,0.96,no,2026-05-02 17:31,"Instant noodles, cooked",300,1.0,336,8,51,11,0.96
+2026-05-01,Instant noodles & bread,2026-05-01 17:30,0.93,yes,photo_ai,openai,gpt-5.4,,no,,2026-05-02 17:31,Instant noodles & bread,471,13,77,12,0.93,White bread roll,50,1.0,135,5,26,1,0.94,no,2026-05-02 17:31,White bread roll,50,1.0,135,5,26,1,0.94
+2026-05-02,Závin tvarohový,2026-05-02 07:39,,no,barcode,,,8590077701693,no,,,,,,,,,Závin tvarohový,400,1.0,1016,44,180,14,,no,2026-05-02 07:39,,,,,,,,
+2026-05-02,Závin tvarohový,2026-05-02 07:39,,no,barcode,,,8590077701693,no,,,,,,,,,Závin tvarohový,200,0.5,508,22,90,7,,no,,,,,,,,,
+2026-05-02,prémiové sušené maso sriracha,2026-05-02 09:59,,yes,barcode,,,8595229921554,no,,,,,,,,,prémiové sušené maso sriracha,23,1.0,67,10,2,2,,no,2026-05-02 10:00,,,,,,,,
+2026-05-02,prémiové sušené maso sriracha,2026-05-02 09:59,,yes,barcode,,,8595229921554,no,,,,,,,,,prémiové sušené maso sriracha,12,0.5,34,5,1,1,,no,,,,,,,,,
+2026-05-02,Tatranky wafer bar,2026-05-02 17:22,0.66,no,barcode_ai_fallback,openai,gpt-5.4,8594002676902,no,,,Tatranky wafer bar,269,4,29,15,0.66,Chocolate wafer bar,47,1.0,269,4,29,15,0.66,no,2026-05-02 17:22,Chocolate wafer bar,47,1.0,269,4,29,15,0.66
+2026-05-02,Tatranky wafer bar,2026-05-02 17:22,0.66,no,barcode_ai_fallback,openai,gpt-5.4,8594002676902,no,,,Tatranky wafer bar,269,4,29,15,0.66,Chocolate wafer bar,47,1.0,269,4,29,15,0.66,no,2026-05-02 17:23,Chocolate wafer bar,47,1.0,269,4,29,15,0.66
+2026-05-02,Tatranky wafer bar,2026-05-02 17:22,0.66,no,barcode_ai_fallback,openai,gpt-5.4,8594002676902,no,,,Tatranky wafer bar,269,4,29,15,0.66,Chocolate wafer bar,47,1.0,269,4,29,15,0.66,no,,Chocolate wafer bar,47,1.0,269,4,29,15,0.66
+2026-05-02,ovocná přesnídávka - malina,2026-05-02 17:22,0.99,yes,barcode_ai_fallback,openai,gpt-5.4,8590014839243,yes,2026-05-02 17:22,,HELLO Ovocná přesnídávka,52,0,13,0,0.99,Fruit puree pouch,100,1.0,52,0,13,0,0.99,no,2026-05-02 17:23,Fruit puree pouch,100,1.0,52,0,13,0,0.99
+2026-05-02,ovocná přesnídávka - malina,2026-05-02 17:22,0.99,yes,barcode_ai_fallback,openai,gpt-5.4,8590014839243,yes,2026-05-02 17:22,,HELLO Ovocná přesnídávka,52,0,13,0,0.99,Fruit puree pouch,100,1.0,52,0,13,0,0.99,no,,Fruit puree pouch,100,1.0,52,0,13,0,0.99
+2026-05-02,Instant noodles & bread,2026-05-02 17:31,,yes,,,,,no,,2026-05-02 17:31,,,,,,,"Instant noodles, cooked",300,1.0,336,8,51,11,,no,2026-05-02 17:31,,,,,,,,
+2026-05-02,Instant noodles & bread,2026-05-02 17:31,,yes,,,,,no,,2026-05-02 17:31,,,,,,,White bread roll,50,1.0,135,5,26,1,,no,2026-05-02 17:31,,,,,,,,
+2026-05-02,Instant noodles & bread,2026-05-02 17:31,,yes,manual,,,,no,,2026-05-02 17:31,,,,,,,"Instant noodles, cooked",300,1.0,336,8,51,11,,no,2026-05-02 17:31,,,,,,,,
+2026-05-02,Instant noodles & bread,2026-05-02 17:31,,yes,manual,,,,no,,2026-05-02 17:31,,,,,,,White bread roll,50,1.0,135,5,26,1,,no,2026-05-02 17:31,,,,,,,,
+2026-05-02,Instant noodles & bread,2026-05-02 17:31,,yes,manual,,,,no,,,,,,,,,"Instant noodles, cooked",300,1.0,336,8,51,11,,no,,,,,,,,,
+2026-05-02,Instant noodles & bread,2026-05-02 17:31,,yes,manual,,,,no,,,,,,,,,White bread roll,50,1.0,135,5,26,1,,no,,,,,,,,,
+2026-05-02,Packaged snack item,2026-05-02 18:15,0.22,no,barcode_ai_fallback,openai,gpt-5.4,8593875910595,no,,2026-05-02 18:15,Packaged snack item,220,4,24,12,0.22,Packaged baked snack,45,1.0,220,4,24,12,0.22,no,2026-05-02 18:15,Packaged baked snack,45,1.0,220,4,24,12,0.22
+2026-05-02,Holba Serak 11 beer,2026-05-02 18:15,0.99,yes,photo_ai,openai,gpt-5.4,,no,,,Holba Serak 11 beer,182,2,16,0,0.99,Holba Šerák 11 světlý ležák,500,1.0,182,2,16,0,0.99,no,,Holba Šerák 11 světlý ležák,500,1.0,182,2,16,0,0.99
+2026-05-02,Holba Serak 11 beer,2026-05-02 18:15,,yes,manual,,,,no,,,,,,,,,Holba Šerák 11 světlý ležák,500,1.0,182,2,16,0,,no,2026-05-02 18:16,,,,,,,,
+2026-05-02,Holba Serak 11 beer,2026-05-02 18:15,,yes,manual,,,,no,,,,,,,,,Holba Šerák 11 světlý ležák,500,1.0,182,2,16,0,,no,,,,,,,,,
+2026-05-02,Tortellini pasta salad,2026-05-02 19:49,0.86,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-02 19:49,,Tortellini pasta salad,397,17,50,14,0.86,"cheese tortellini, cooked",210,1.0,315,13,46,8,0.93,no,2026-05-02 19:49,"cheese tortellini, cooked",210,1.0,315,13,46,8,0.93
+2026-05-02,Tortellini pasta salad,2026-05-02 19:49,0.86,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-02 19:49,,Tortellini pasta salad,397,17,50,14,0.86,ham pieces,20,1.0,29,4,0,1,0.62,no,2026-05-02 19:49,ham pieces,20,1.0,29,4,0,1,0.62
+2026-05-02,Tortellini pasta salad,2026-05-02 19:49,0.86,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-02 19:49,,Tortellini pasta salad,397,17,50,14,0.86,pesto or herb oil sauce,10,1.0,45,1,1,5,0.68,no,2026-05-02 19:49,pesto or herb oil sauce,10,1.0,45,1,1,5,0.68
+2026-05-02,Tortellini pasta salad,2026-05-02 19:49,0.86,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-02 19:49,,Tortellini pasta salad,397,17,50,14,0.86,cooking oil,5,1.0,8,0,3,1,0.58,no,2026-05-02 19:49,cooking oil,5,1.0,8,0,3,1,0.58
+2026-05-02,Tortellini pasta salad,2026-05-02 19:49,0.86,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-02 19:49,,Tortellini pasta salad,397,17,50,14,0.86,"cheese tortellini, cooked",420,2.0,630,25,92,15,0.93,yes,,"cheese tortellini, cooked",210,1.0,315,13,46,8,0.93
+2026-05-02,Tortellini pasta salad,2026-05-02 19:49,0.86,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-02 19:49,,Tortellini pasta salad,397,17,50,14,0.86,ham pieces,40,2.0,58,8,1,2,0.62,yes,,ham pieces,20,1.0,29,4,0,1,0.62
+2026-05-02,Tortellini pasta salad,2026-05-02 19:49,0.86,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-02 19:49,,Tortellini pasta salad,397,17,50,14,0.86,pesto or herb oil sauce,20,2.0,90,1,2,9,0.68,yes,,pesto or herb oil sauce,10,1.0,45,1,1,5,0.68
+2026-05-02,Tortellini pasta salad,2026-05-02 19:49,0.86,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-02 19:49,,Tortellini pasta salad,397,17,50,14,0.86,cooking oil,10,2.0,16,0,6,2,0.58,yes,,cooking oil,5,1.0,8,0,3,1,0.58
+2026-05-03,Závin tvarohový,2026-05-03 08:08,,no,,,,,no,,,,,,,,,Závin tvarohový,200,0.5,508,22,90,7,,no,,,,,,,,,
+2026-05-03,Ovocná Svačinka s Broskvemi,2026-05-03 10:19,,no,barcode,,,8590014839458,no,,,,,,,,,Ovocná Svačinka s Broskvemi,100,1.0,76,0,19,0,,no,,,,,,,,,
+2026-05-03,Špička Švestková,2026-05-03 20:40,,no,barcode,,,8590077701761,no,,,,,,,,,Špička Švestková,100,1.0,307,6,60,4,,no,2026-05-03 20:41,,,,,,,,
+2026-05-03,Špička Švestková,2026-05-03 20:40,,no,barcode,,,8590077701761,no,,,,,,,,,Špička Švestková,100,1.0,307,6,60,4,,no,,,,,,,,,
+2026-05-03,Meatloaf with potatoes,2026-05-03 21:21,0.83,yes,photo_ai,openai,gpt-5.4,,no,,,Meatloaf with potatoes,809,34,81,37,0.83,mashed potatoes,430,1.0,490,9,73,19,0.90,no,,mashed potatoes,430,1.0,490,9,73,19,0.90
+2026-05-03,Meatloaf with potatoes,2026-05-03 21:21,0.83,yes,photo_ai,openai,gpt-5.4,,no,,,Meatloaf with potatoes,809,34,81,37,0.83,meatloaf slices,180,1.0,315,26,8,18,0.88,no,,meatloaf slices,180,1.0,315,26,8,18,0.88
+2026-05-03,Meatloaf with potatoes,2026-05-03 21:21,0.83,yes,photo_ai,openai,gpt-5.4,,no,,,Meatloaf with potatoes,809,34,81,37,0.83,butter/milk in potatoes,15,1.0,4,0,0,0,0.56,no,,butter/milk in potatoes,15,1.0,4,0,0,0,0.56
+2026-05-03,Creamy cucumber salad,2026-05-03 21:22,0.83,yes,photo_ai,openai,gpt-5.4,,no,,,Creamy cucumber salad,147,3,10,11,0.83,cucumber,140,1.0,21,1,5,0,0.94,no,,cucumber,140,1.0,21,1,5,0,0.94
+2026-05-03,Creamy cucumber salad,2026-05-03 21:22,0.83,yes,photo_ai,openai,gpt-5.4,,no,,,Creamy cucumber salad,147,3,10,11,0.83,cream dressing,70,1.0,126,2,5,11,0.80,no,,cream dressing,70,1.0,126,2,5,11,0.80
+2026-05-03,3 ham rolls,2026-05-03 22:24,0.95,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-03 22:25,,3 ham rolls,993,41,101,42,0.95,white bread rolls,195,3.0,520,16,100,6,0.96,no,2026-05-03 22:25,white bread rolls,195,3.0,520,16,100,6,0.96
+2026-05-03,3 ham rolls,2026-05-03 22:24,0.95,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-03 22:25,,3 ham rolls,993,41,101,42,0.95,fried/grilled ham slice,150,3.0,413,26,2,30,0.94,no,2026-05-03 22:25,fried/grilled ham slice,150,3.0,413,26,2,30,0.94
+2026-05-03,3 ham rolls,2026-05-03 22:24,0.95,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-03 22:25,,3 ham rolls,993,41,101,42,0.95,cooking fat/oil,6,3.0,60,0,0,6,0.62,no,2026-05-03 22:25,cooking fat/oil,6,3.0,60,0,0,6,0.62
+2026-05-03,3 ham rolls,2026-05-03 22:24,0.95,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-03 22:25,,3 ham rolls,993,41,101,42,0.95,white bread rolls,65,1.0,173,5,33,2,0.96,yes,,white bread rolls,195,3.0,520,16,100,6,0.96
+2026-05-03,3 ham rolls,2026-05-03 22:24,0.95,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-03 22:25,,3 ham rolls,993,41,101,42,0.95,fried/grilled ham slice,50,1.0,138,9,1,10,0.94,yes,,fried/grilled ham slice,150,3.0,413,26,2,30,0.94
+2026-05-03,3 ham rolls,2026-05-03 22:24,0.95,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-03 22:25,,3 ham rolls,993,41,101,42,0.95,cooking fat/oil,2,1.0,20,0,0,2,0.62,yes,,cooking fat/oil,6,3.0,60,0,0,6,0.62
+2026-05-04,Granola with milk,2026-05-04 05:37,0.88,yes,photo_ai,openai,gpt-5.4,,no,,,Granola with milk,342,10,47,14,0.88,granola,50,1.0,225,5,31,9,0.93,no,,granola,50,1.0,225,5,31,9,0.93
+2026-05-04,Granola with milk,2026-05-04 05:37,0.88,yes,photo_ai,openai,gpt-5.4,,no,,,Granola with milk,342,10,47,14,0.88,milk,150,1.0,57,4,7,3,0.90,no,,milk,150,1.0,57,4,7,3,0.90
+2026-05-04,Granola with milk,2026-05-04 05:37,0.88,yes,photo_ai,openai,gpt-5.4,,no,,,Granola with milk,342,10,47,14,0.88,dried apple chips,8,1.0,28,0,7,0,0.72,no,,dried apple chips,8,1.0,28,0,7,0,0.72
+2026-05-04,Granola with milk,2026-05-04 05:37,0.88,yes,photo_ai,openai,gpt-5.4,,no,,,Granola with milk,342,10,47,14,0.88,coconut flakes,5,1.0,32,0,1,3,0.78,no,,coconut flakes,5,1.0,32,0,1,3,0.78
+2026-05-04,Couscous chicken box,2026-05-04 12:53,0.81,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 17:24,,Couscous chicken box,432,33,52,9,0.81,cooked couscous,210,1.0,235,8,48,0,0.89,no,2026-05-04 12:53,cooked couscous,210,1.0,235,8,48,0,0.89
+2026-05-04,Couscous chicken box,2026-05-04 12:53,0.81,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 17:24,,Couscous chicken box,432,33,52,9,0.81,cooked chicken breast,80,1.0,132,25,0,3,0.80,no,2026-05-04 12:53,cooked chicken breast,80,1.0,132,25,0,3,0.80
+2026-05-04,Couscous chicken box,2026-05-04 12:53,0.81,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 17:24,,Couscous chicken box,432,33,52,9,0.81,cooked carrots,20,1.0,7,0,2,0,0.84,no,2026-05-04 12:53,cooked carrots,20,1.0,7,0,2,0,0.84
+2026-05-04,Couscous chicken box,2026-05-04 12:53,0.81,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 17:24,,Couscous chicken box,432,33,52,9,0.81,added cooking oil,5,1.0,45,0,0,5,0.60,no,2026-05-04 12:53,added cooking oil,5,1.0,45,0,0,5,0.60
+2026-05-04,Couscous chicken box,2026-05-04 12:53,0.81,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 17:24,,Couscous chicken box,432,33,52,9,0.81,seasoning/onion traces,10,1.0,13,0,2,0,0.45,no,2026-05-04 12:53,seasoning/onion traces,10,1.0,13,0,2,0,0.45
+2026-05-04,Couscous chicken box,2026-05-04 12:53,0.81,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 17:24,,Couscous chicken box,432,33,52,9,0.81,cooked couscous,210,1.0,235,8,48,0,0.89,no,2026-05-04 17:24,cooked couscous,210,1.0,235,8,48,0,0.89
+2026-05-04,Couscous chicken box,2026-05-04 12:53,0.81,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 17:24,,Couscous chicken box,432,33,52,9,0.81,cooked chicken breast,80,1.0,132,25,0,3,0.80,no,2026-05-04 17:24,cooked chicken breast,80,1.0,132,25,0,3,0.80
+2026-05-04,Couscous chicken box,2026-05-04 12:53,0.81,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 17:24,,Couscous chicken box,432,33,52,9,0.81,cooked carrots,20,1.0,7,0,2,0,0.84,no,2026-05-04 17:24,cooked carrots,20,1.0,7,0,2,0,0.84
+2026-05-04,Couscous chicken box,2026-05-04 12:53,0.81,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 17:24,,Couscous chicken box,432,33,52,9,0.81,added cooking oil,5,1.0,45,0,0,5,0.60,no,2026-05-04 17:24,added cooking oil,5,1.0,45,0,0,5,0.60
+2026-05-04,Couscous chicken box,2026-05-04 12:53,0.81,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 17:24,,Couscous chicken box,432,33,52,9,0.81,seasoning/onion traces,10,1.0,13,0,2,0,0.45,no,2026-05-04 17:24,seasoning/onion traces,10,1.0,13,0,2,0,0.45
+2026-05-04,Couscous chicken box,2026-05-04 12:53,0.81,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 17:24,,Couscous chicken box,432,33,52,9,0.81,cooked couscous,420,2.0,470,16,96,1,0.89,yes,,cooked couscous,210,1.0,235,8,48,0,0.89
+2026-05-04,Couscous chicken box,2026-05-04 12:53,0.81,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 17:24,,Couscous chicken box,432,33,52,9,0.81,cooked chicken breast,160,2.0,264,50,0,6,0.80,yes,,cooked chicken breast,80,1.0,132,25,0,3,0.80
+2026-05-04,Couscous chicken box,2026-05-04 12:53,0.81,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 17:24,,Couscous chicken box,432,33,52,9,0.81,cooked carrots,40,2.0,14,0,3,0,0.84,yes,,cooked carrots,20,1.0,7,0,2,0,0.84
+2026-05-04,Couscous chicken box,2026-05-04 12:53,0.81,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 17:24,,Couscous chicken box,432,33,52,9,0.81,added cooking oil,10,2.0,90,0,0,10,0.60,yes,,added cooking oil,5,1.0,45,0,0,5,0.60
+2026-05-04,Couscous chicken box,2026-05-04 12:53,0.81,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 17:24,,Couscous chicken box,432,33,52,9,0.81,seasoning/onion traces,20,2.0,26,0,4,1,0.45,yes,,seasoning/onion traces,10,1.0,13,0,2,0,0.45
+2026-05-04,Bread roll with ham cheese,2026-05-04 17:23,0.78,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 17:23,,Bread roll with ham cheese,366,19,41,14,0.78,white bread roll,75,1.0,201,7,38,2,0.91,no,2026-05-04 17:23,white bread roll,75,1.0,201,7,38,2,0.91
+2026-05-04,Bread roll with ham cheese,2026-05-04 17:23,0.78,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 17:23,,Bread roll with ham cheese,366,19,41,14,0.78,chicken debrecinka ham,24,1.0,32,4,1,1,0.80,no,2026-05-04 17:23,chicken debrecinka ham,24,1.0,32,4,1,1,0.80
+2026-05-04,Bread roll with ham cheese,2026-05-04 17:23,0.78,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 17:23,,Bread roll with ham cheese,366,19,41,14,0.78,eidam cheese,30,1.0,133,8,2,10,0.84,no,2026-05-04 17:23,eidam cheese,30,1.0,133,8,2,10,0.84
+2026-05-04,Bread roll with ham cheese,2026-05-04 17:23,0.78,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 17:23,,Bread roll with ham cheese,366,19,41,14,0.78,white bread roll,150,2.0,402,14,77,5,0.91,yes,,white bread roll,75,1.0,201,7,38,2,0.91
+2026-05-04,Bread roll with ham cheese,2026-05-04 17:23,0.78,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 17:23,,Bread roll with ham cheese,366,19,41,14,0.78,chicken debrecinka ham,48,2.0,64,8,1,3,0.80,yes,,chicken debrecinka ham,24,1.0,32,4,1,1,0.80
+2026-05-04,Bread roll with ham cheese,2026-05-04 17:23,0.78,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 17:23,,Bread roll with ham cheese,366,19,41,14,0.78,eidam cheese,60,2.0,266,16,4,20,0.84,yes,,eidam cheese,30,1.0,133,8,2,10,0.84
+2026-05-04,"STIEGL-WEISSE FIN FRUCHTIGES, NATURTROBES WEISSBIE",2026-05-04 17:24,,yes,barcode,,,9003400304939,no,,,,,,,,,"STIEGL-WEISSE FIN FRUCHTIGES, NATURTROBES WEISSBIE",500,1.0,130,3,28,0,,no,,,,,,,,,
+2026-05-04,"Mini peppers, salami, bagel",2026-05-04 18:29,0.84,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 18:29,,"Mini peppers, salami, bagel",449,17,47,22,0.84,mini sweet peppers,28,1.0,9,0,2,0,0.94,no,2026-05-04 18:29,mini sweet peppers,28,1.0,9,0,2,0,0.94
+2026-05-04,"Mini peppers, salami, bagel",2026-05-04 18:29,0.84,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 18:29,,"Mini peppers, salami, bagel",449,17,47,22,0.84,salami with small pepper bits,35,1.0,143,8,1,12,0.80,no,2026-05-04 18:29,salami with small pepper bits,35,1.0,143,8,1,12,0.80
+2026-05-04,"Mini peppers, salami, bagel",2026-05-04 18:29,0.84,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 18:29,,"Mini peppers, salami, bagel",449,17,47,22,0.84,seeded bagel pieces,80,1.0,216,8,43,2,0.91,no,2026-05-04 18:29,seeded bagel pieces,80,1.0,216,8,43,2,0.91
+2026-05-04,"Mini peppers, salami, bagel",2026-05-04 18:29,0.84,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 18:29,,"Mini peppers, salami, bagel",449,17,47,22,0.84,cream cheese,15,1.0,51,1,1,5,0.77,no,2026-05-04 18:29,cream cheese,15,1.0,51,1,1,5,0.77
+2026-05-04,"Mini peppers, salami, bagel",2026-05-04 18:29,0.84,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 18:29,,"Mini peppers, salami, bagel",449,17,47,22,0.84,butter or oil on peppers/salami,3,1.0,30,0,0,3,0.51,no,2026-05-04 18:29,butter or oil on peppers/salami,3,1.0,30,0,0,3,0.51
+2026-05-04,"Mini peppers, salami, bagel",2026-05-04 18:29,0.84,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 18:29,,"Mini peppers, salami, bagel",449,17,47,22,0.84,mini sweet peppers,56,2.0,18,1,4,0,0.94,yes,,mini sweet peppers,28,1.0,9,0,2,0,0.94
+2026-05-04,"Mini peppers, salami, bagel",2026-05-04 18:29,0.84,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 18:29,,"Mini peppers, salami, bagel",449,17,47,22,0.84,salami with small pepper bits,70,2.0,286,15,1,24,0.80,yes,,salami with small pepper bits,35,1.0,143,8,1,12,0.80
+2026-05-04,"Mini peppers, salami, bagel",2026-05-04 18:29,0.84,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 18:29,,"Mini peppers, salami, bagel",449,17,47,22,0.84,seeded bagel pieces,160,2.0,432,16,86,4,0.91,yes,,seeded bagel pieces,80,1.0,216,8,43,2,0.91
+2026-05-04,"Mini peppers, salami, bagel",2026-05-04 18:29,0.84,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 18:29,,"Mini peppers, salami, bagel",449,17,47,22,0.84,cream cheese,30,2.0,102,2,2,10,0.77,yes,,cream cheese,15,1.0,51,1,1,5,0.77
+2026-05-04,"Mini peppers, salami, bagel",2026-05-04 18:29,0.84,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-04 18:29,,"Mini peppers, salami, bagel",449,17,47,22,0.84,butter or oil on peppers/salami,6,2.0,60,0,0,7,0.51,yes,,butter or oil on peppers/salami,3,1.0,30,0,0,3,0.51
+2026-05-05,Eggs with ham rolls,2026-05-05 06:34,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Eggs with ham rolls,554,32,40,29,0.95,fried eggs,100,1.0,144,13,1,10,0.99,no,,fried eggs,100,1.0,144,13,1,10,0.99
+2026-05-05,Eggs with ham rolls,2026-05-05 06:34,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Eggs with ham rolls,554,32,40,29,0.95,cooking oil,5,1.0,45,0,0,5,0.86,no,,cooking oil,5,1.0,45,0,0,5,0.86
+2026-05-05,Eggs with ham rolls,2026-05-05 06:34,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Eggs with ham rolls,554,32,40,29,0.95,white bread rolls,70,1.0,186,6,36,2,0.96,no,,white bread rolls,70,1.0,186,6,36,2,0.96
+2026-05-05,Eggs with ham rolls,2026-05-05 06:34,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Eggs with ham rolls,554,32,40,29,0.95,sliced ham,40,1.0,46,8,1,2,0.95,no,,sliced ham,40,1.0,46,8,1,2,0.95
+2026-05-05,Eggs with ham rolls,2026-05-05 06:34,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Eggs with ham rolls,554,32,40,29,0.95,semi-hard cheese,40,1.0,133,6,3,10,0.93,no,,semi-hard cheese,40,1.0,133,6,3,10,0.93
+2026-05-05,Couscous chicken box,2026-05-05 12:08,,yes,,,,,no,,,,,,,,,cooked couscous,210,1.0,235,8,48,0,,no,,,,,,,,,
+2026-05-05,Couscous chicken box,2026-05-05 12:08,,yes,,,,,no,,,,,,,,,cooked chicken breast,80,1.0,132,25,0,3,,no,,,,,,,,,
+2026-05-05,Couscous chicken box,2026-05-05 12:08,,yes,,,,,no,,,,,,,,,cooked carrots,20,1.0,7,0,2,0,,no,,,,,,,,,
+2026-05-05,Couscous chicken box,2026-05-05 12:08,,yes,,,,,no,,,,,,,,,added cooking oil,5,1.0,45,0,0,5,,no,,,,,,,,,
+2026-05-05,Couscous chicken box,2026-05-05 12:08,,yes,,,,,no,,,,,,,,,seasoning/onion traces,10,1.0,13,0,2,0,,no,,,,,,,,,
+2026-05-05,Termix & Knoppers,2026-05-05 15:12,0.98,yes,photo_ai,openai,gpt-5.4,,no,,,Termix & Knoppers,422,13,42,23,0.98,Kunin Termix Maxi kakao,130,2.0,170,8,21,6,0.98,no,,Kunin Termix Maxi kakao,130,2.0,170,8,21,6,0.98
+2026-05-05,Termix & Knoppers,2026-05-05 15:12,0.98,yes,photo_ai,openai,gpt-5.4,,no,,,Termix & Knoppers,422,13,42,23,0.98,Knoppers milk-hazelnut wafer,25,2.0,252,5,20,17,0.99,no,,Knoppers milk-hazelnut wafer,25,2.0,252,5,20,17,0.99
+2026-05-06,Granola with milk,2026-05-06 04:58,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Granola with milk,373,12,50,15,0.95,Granola,75,1.0,339,8,45,14,0.96,no,,Granola,75,1.0,339,8,45,14,0.96
+2026-05-06,Granola with milk,2026-05-06 04:58,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Granola with milk,373,12,50,15,0.95,Milk,150,1.0,34,4,5,1,0.92,no,,Milk,150,1.0,34,4,5,1,0.92
+2026-05-06,Yellow apple,2026-05-06 08:59,0.98,yes,photo_ai,openai,gpt-5.4,,no,,,Yellow apple,77,0,20,0,0.98,Yellow apple,148,1.0,77,0,20,0,0.98,no,,Yellow apple,148,1.0,77,0,20,0,0.98
+2026-05-06,Creamy potato bake,2026-05-06 12:00,0.88,yes,photo_ai,openai,gpt-5.4,,no,,,Creamy potato bake,522,17,50,28,0.88,Boiled potatoes,230,1.0,200,5,46,0,0.96,no,,Boiled potatoes,230,1.0,200,5,46,0,0.96
+2026-05-06,Creamy potato bake,2026-05-06 12:00,0.88,yes,photo_ai,openai,gpt-5.4,,no,,,Creamy potato bake,522,17,50,28,0.88,Ham pieces,45,1.0,65,9,1,3,0.84,no,,Ham pieces,45,1.0,65,9,1,3,0.84
+2026-05-06,Creamy potato bake,2026-05-06 12:00,0.88,yes,photo_ai,openai,gpt-5.4,,no,,,Creamy potato bake,522,17,50,28,0.88,Cream sauce,55,1.0,195,2,3,20,0.87,no,,Cream sauce,55,1.0,195,2,3,20,0.87
+2026-05-06,Creamy potato bake,2026-05-06 12:00,0.88,yes,photo_ai,openai,gpt-5.4,,no,,,Creamy potato bake,522,17,50,28,0.88,Melted cheese,15,1.0,57,2,0,5,0.72,no,,Melted cheese,15,1.0,57,2,0,5,0.72
+2026-05-06,Creamy potato bake,2026-05-06 12:00,0.88,yes,photo_ai,openai,gpt-5.4,,no,,,Creamy potato bake,522,17,50,28,0.88,Seasonings,2,1.0,5,0,0,0,0.90,no,,Seasonings,2,1.0,5,0,0,0,0.90
+2026-05-06,Yellow apple,2026-05-06 21:05,,yes,manual,,,,no,,,,,,,,,Yellow apple,148,1.0,77,0,20,0,,no,2026-05-07 21:05,,,,,,,,
+2026-05-06,Yellow apple,2026-05-06 21:05,,yes,manual,,,,no,,,,,,,,,Yellow apple,148,1.0,77,0,20,0,,no,,,,,,,,,
+2026-05-06,Seeded bread with cheese,2026-05-06 21:05,,yes,manual,,,,no,,,,,,,,,Seeded bread slice,35,1.0,93,4,16,2,,no,2026-05-07 21:05,,,,,,,,
+2026-05-06,Seeded bread with cheese,2026-05-06 21:05,,yes,manual,,,,no,,,,,,,,,Semi-hard cheese slice,18,1.0,60,4,1,4,,no,2026-05-07 21:05,,,,,,,,
+2026-05-06,Seeded bread with cheese,2026-05-06 21:05,,yes,manual,,,,no,,,,,,,,,Seeded bread slice,70,2.0,186,7,32,4,,no,,,,,,,,,
+2026-05-06,Seeded bread with cheese,2026-05-06 21:05,,yes,manual,,,,no,,,,,,,,,Semi-hard cheese slice,36,2.0,120,8,2,8,,no,,,,,,,,,
+2026-05-07,Granola with milk,2026-05-07 14:38,,yes,,,,,no,,,,,,,,,granola,50,1.0,225,5,31,9,,no,,,,,,,,,
+2026-05-07,Granola with milk,2026-05-07 14:38,,yes,,,,,no,,,,,,,,,milk,150,1.0,57,4,7,3,,no,,,,,,,,,
+2026-05-07,Granola with milk,2026-05-07 14:38,,yes,,,,,no,,,,,,,,,dried apple chips,8,1.0,28,0,7,0,,no,,,,,,,,,
+2026-05-07,Granola with milk,2026-05-07 14:38,,yes,,,,,no,,,,,,,,,coconut flakes,5,1.0,32,0,1,3,,no,,,,,,,,,
+2026-05-07,Creamy potato bake,2026-05-07 14:39,,yes,manual,,,,no,,,,,,,,,Boiled potatoes,230,1.0,200,5,46,0,,no,,,,,,,,,
+2026-05-07,Creamy potato bake,2026-05-07 14:39,,yes,manual,,,,no,,,,,,,,,Ham pieces,45,1.0,65,9,1,3,,no,,,,,,,,,
+2026-05-07,Creamy potato bake,2026-05-07 14:39,,yes,manual,,,,no,,,,,,,,,Cream sauce,55,1.0,195,2,3,20,,no,,,,,,,,,
+2026-05-07,Creamy potato bake,2026-05-07 14:39,,yes,manual,,,,no,,,,,,,,,Melted cheese,15,1.0,57,2,0,5,,no,,,,,,,,,
+2026-05-07,Creamy potato bake,2026-05-07 14:39,,yes,manual,,,,no,,,,,,,,,Seasonings,2,1.0,5,0,0,0,,no,,,,,,,,,
+2026-05-07,Seeded bread with cheese,2026-05-07 16:26,0.95,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-07 16:26,,Seeded bread with cheese,153,8,17,6,0.95,Seeded bread slice,35,1.0,93,4,16,2,0.96,no,2026-05-07 16:26,Seeded bread slice,35,1.0,93,4,16,2,0.96
+2026-05-07,Seeded bread with cheese,2026-05-07 16:26,0.95,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-07 16:26,,Seeded bread with cheese,153,8,17,6,0.95,Semi-hard cheese slice,18,1.0,60,4,1,4,0.92,no,2026-05-07 16:26,Semi-hard cheese slice,18,1.0,60,4,1,4,0.92
+2026-05-07,Seeded bread with cheese,2026-05-07 16:26,0.95,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-07 16:26,,Seeded bread with cheese,153,8,17,6,0.95,Seeded bread slice,70,2.0,186,7,32,4,0.96,yes,,Seeded bread slice,35,1.0,93,4,16,2,0.96
+2026-05-07,Seeded bread with cheese,2026-05-07 16:26,0.95,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-07 16:26,,Seeded bread with cheese,153,8,17,6,0.95,Semi-hard cheese slice,36,2.0,120,8,2,8,0.92,yes,,Semi-hard cheese slice,18,1.0,60,4,1,4,0.92
+2026-05-07,Creamy potato bake,2026-05-07 21:04,,yes,,,,,no,,,,,,,,,Boiled potatoes,230,1.0,200,5,46,0,,no,,,,,,,,,
+2026-05-07,Creamy potato bake,2026-05-07 21:04,,yes,,,,,no,,,,,,,,,Ham pieces,45,1.0,65,9,1,3,,no,,,,,,,,,
+2026-05-07,Creamy potato bake,2026-05-07 21:04,,yes,,,,,no,,,,,,,,,Cream sauce,55,1.0,195,2,3,20,,no,,,,,,,,,
+2026-05-07,Creamy potato bake,2026-05-07 21:04,,yes,,,,,no,,,,,,,,,Melted cheese,15,1.0,57,2,0,5,,no,,,,,,,,,
+2026-05-07,Creamy potato bake,2026-05-07 21:04,,yes,,,,,no,,,,,,,,,Seasonings,2,1.0,5,0,0,0,,no,,,,,,,,,
+2026-05-08,Muesli s jogurtem,2026-05-08 12:02,,yes,,,,,no,,,,,,,,,muesli/granola,70,1.0,315,7,47,11,,no,2026-05-08 12:02,,,,,,,,
+2026-05-08,Muesli s jogurtem,2026-05-08 12:02,,yes,,,,,no,,,,,,,,,white yogurt,80,1.0,49,3,4,2,,no,2026-05-08 12:02,,,,,,,,
+2026-05-08,Muesli s jogurtem,2026-05-08 12:02,,yes,,,,,no,,,,,,,,,apple,75,1.0,39,0,11,0,,no,2026-05-08 12:02,,,,,,,,
+2026-05-08,Muesli s jogurtem,2026-05-08 12:02,,yes,,,,,no,,,,,,,,,raisins,8,1.0,24,0,6,0,,no,2026-05-08 12:02,,,,,,,,
+2026-05-08,Muesli s jogurtem,2026-05-08 12:02,,yes,,,,,no,,,,,,,,,muesli/granola,70,1.0,315,7,47,11,,no,,,,,,,,,
+2026-05-08,Muesli s jogurtem,2026-05-08 12:02,,yes,,,,,no,,,,,,,,,white yogurt,80,1.0,49,3,4,2,,no,,,,,,,,,
+2026-05-08,Muesli s jogurtem,2026-05-08 12:02,,yes,,,,,no,,,,,,,,,apple,75,1.0,39,0,11,0,,no,,,,,,,,,
+2026-05-08,Muesli s jogurtem,2026-05-08 12:02,,yes,,,,,no,,,,,,,,,raisins,8,1.0,24,0,6,0,,no,,,,,,,,,
+2026-05-08,Chicken Rice Bowl,2026-05-08 12:03,0.93,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken Rice Bowl,525,36,70,9,0.93,cooked white rice,230,1.0,299,6,64,1,0.98,no,,cooked white rice,230,1.0,299,6,64,1,0.98
+2026-05-08,Chicken Rice Bowl,2026-05-08 12:03,0.93,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken Rice Bowl,525,36,70,9,0.93,cooked chicken breast,95,1.0,157,30,0,3,0.93,no,,cooked chicken breast,95,1.0,157,30,0,3,0.93
+2026-05-08,Chicken Rice Bowl,2026-05-08 12:03,0.93,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken Rice Bowl,525,36,70,9,0.93,cooked carrots,35,1.0,12,0,3,0,0.86,no,,cooked carrots,35,1.0,12,0,3,0,0.86
+2026-05-08,Chicken Rice Bowl,2026-05-08 12:03,0.93,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken Rice Bowl,525,36,70,9,0.93,cooked onion,20,1.0,8,0,2,0,0.80,no,,cooked onion,20,1.0,8,0,2,0,0.80
+2026-05-08,Chicken Rice Bowl,2026-05-08 12:03,0.93,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken Rice Bowl,525,36,70,9,0.93,cooking oil,5,1.0,45,0,0,5,0.72,no,,cooking oil,5,1.0,45,0,0,5,0.72
+2026-05-08,Chicken Rice Bowl,2026-05-08 12:03,0.93,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken Rice Bowl,525,36,70,9,0.93,light savory sauce/broth,15,1.0,4,0,1,0,0.61,no,,light savory sauce/broth,15,1.0,4,0,1,0,0.61
+2026-05-08,Pizza roll slice,2026-05-08 14:11,0.77,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-08 14:11,,Pizza roll slice,254,14,22,12,0.77,Pizza dough,40,1.0,106,3,20,1,0.84,no,2026-05-08 14:11,Pizza dough,40,1.0,106,3,20,1,0.84
+2026-05-08,Pizza roll slice,2026-05-08 14:11,0.77,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-08 14:11,,Pizza roll slice,254,14,22,12,0.77,Ham,18,1.0,26,4,0,1,0.78,no,2026-05-08 14:11,Ham,18,1.0,26,4,0,1,0.78
+2026-05-08,Pizza roll slice,2026-05-08 14:11,0.77,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-08 14:11,,Pizza roll slice,254,14,22,12,0.77,Cheese,15,1.0,53,4,0,4,0.80,no,2026-05-08 14:11,Cheese,15,1.0,53,4,0,4,0.80
+2026-05-08,Pizza roll slice,2026-05-08 14:11,0.77,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-08 14:11,,Pizza roll slice,254,14,22,12,0.77,Salami,12,1.0,49,3,0,4,0.72,no,2026-05-08 14:11,Salami,12,1.0,49,3,0,4,0.72
+2026-05-08,Pizza roll slice,2026-05-08 14:11,0.77,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-08 14:11,,Pizza roll slice,254,14,22,12,0.77,Tomato sauce,8,1.0,6,0,1,0,0.67,no,2026-05-08 14:11,Tomato sauce,8,1.0,6,0,1,0,0.67
+2026-05-08,Pizza roll slice,2026-05-08 14:11,0.77,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-08 14:11,,Pizza roll slice,254,14,22,12,0.77,Cooking oil,2,1.0,14,0,0,2,0.54,no,2026-05-08 14:11,Cooking oil,2,1.0,14,0,0,2,0.54
+2026-05-08,Pizza roll slice,2026-05-08 14:11,0.77,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-08 14:11,,Pizza roll slice,254,14,22,12,0.77,Pizza dough,80,2.0,212,7,41,3,0.84,yes,2026-05-08 15:46,Pizza dough,40,1.0,106,3,20,1,0.84
+2026-05-08,Pizza roll slice,2026-05-08 14:11,0.77,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-08 14:11,,Pizza roll slice,254,14,22,12,0.77,Ham,36,2.0,52,7,1,2,0.78,yes,2026-05-08 15:46,Ham,18,1.0,26,4,0,1,0.78
+2026-05-08,Pizza roll slice,2026-05-08 14:11,0.77,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-08 14:11,,Pizza roll slice,254,14,22,12,0.77,Cheese,30,2.0,106,7,1,9,0.80,yes,2026-05-08 15:46,Cheese,15,1.0,53,4,0,4,0.80
+2026-05-08,Pizza roll slice,2026-05-08 14:11,0.77,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-08 14:11,,Pizza roll slice,254,14,22,12,0.77,Salami,24,2.0,98,5,1,8,0.72,yes,2026-05-08 15:46,Salami,12,1.0,49,3,0,4,0.72
+2026-05-08,Pizza roll slice,2026-05-08 14:11,0.77,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-08 14:11,,Pizza roll slice,254,14,22,12,0.77,Tomato sauce,16,2.0,12,1,2,0,0.67,yes,2026-05-08 15:46,Tomato sauce,8,1.0,6,0,1,0,0.67
+2026-05-08,Pizza roll slice,2026-05-08 14:11,0.77,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-08 14:11,,Pizza roll slice,254,14,22,12,0.77,Cooking oil,3,2.0,28,0,0,3,0.54,yes,2026-05-08 15:46,Cooking oil,2,1.0,14,0,0,2,0.54
+2026-05-08,Pizza roll slice,2026-05-08 14:11,0.77,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-08 14:11,,Pizza roll slice,254,14,22,12,0.77,Pizza dough,100,2.5,265,9,51,4,0.84,yes,,Pizza dough,40,1.0,106,3,20,1,0.84
+2026-05-08,Pizza roll slice,2026-05-08 14:11,0.77,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-08 14:11,,Pizza roll slice,254,14,22,12,0.77,Ham,45,2.5,65,9,1,3,0.78,yes,,Ham,18,1.0,26,4,0,1,0.78
+2026-05-08,Pizza roll slice,2026-05-08 14:11,0.77,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-08 14:11,,Pizza roll slice,254,14,22,12,0.77,Cheese,38,2.5,133,9,1,11,0.80,yes,,Cheese,15,1.0,53,4,0,4,0.80
+2026-05-08,Pizza roll slice,2026-05-08 14:11,0.77,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-08 14:11,,Pizza roll slice,254,14,22,12,0.77,Salami,30,2.5,123,6,1,10,0.72,yes,,Salami,12,1.0,49,3,0,4,0.72
+2026-05-08,Pizza roll slice,2026-05-08 14:11,0.77,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-08 14:11,,Pizza roll slice,254,14,22,12,0.77,Tomato sauce,20,2.5,15,1,3,0,0.67,yes,,Tomato sauce,8,1.0,6,0,1,0,0.67
+2026-05-08,Pizza roll slice,2026-05-08 14:11,0.77,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-08 14:11,,Pizza roll slice,254,14,22,12,0.77,Cooking oil,4,2.5,35,0,0,4,0.54,yes,,Cooking oil,2,1.0,14,0,0,2,0.54
+2026-05-08,Jam sponge cake,2026-05-08 14:23,0.86,yes,photo_ai,openai,gpt-5.4,,no,,,Jam sponge cake,167,2,26,6,0.86,Jam sponge cake,48,1.0,167,2,26,6,0.86,no,2026-05-08 14:23,Jam sponge cake,48,1.0,167,2,26,6,0.86
+2026-05-08,Jam sponge cake,2026-05-08 14:23,0.86,yes,photo_ai,openai,gpt-5.4,,no,,,Jam sponge cake,167,2,26,6,0.86,Jam sponge cake,48,1.0,167,2,26,6,0.86,no,2026-05-08 14:24,Jam sponge cake,48,1.0,167,2,26,6,0.86
+2026-05-08,Jam sponge cake,2026-05-08 14:23,0.86,yes,photo_ai,openai,gpt-5.4,,no,,,Jam sponge cake,167,2,26,6,0.86,Jam sponge cake,48,1.0,167,2,26,6,0.86,no,,Jam sponge cake,48,1.0,167,2,26,6,0.86
+2026-05-08,Dark beer,2026-05-08 14:32,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Dark beer,168,2,18,0,0.95,Dark beer,400,1.0,168,2,18,0,0.95,no,,Dark beer,400,1.0,168,2,18,0,0.95
+2026-05-08,Amber beer,2026-05-08 15:40,0.95,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-08 15:40,,Amber beer,102,1,9,0,0.95,Amber beer,240,1.0,102,1,9,0,0.95,no,2026-05-08 15:40,Amber beer,240,1.0,102,1,9,0,0.95
+2026-05-08,Amber beer,2026-05-08 15:40,0.95,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-08 15:40,,Amber beer,102,1,9,0,0.95,Amber beer,480,2.0,204,2,17,0,0.95,yes,,Amber beer,240,1.0,102,1,9,0,0.95
+2026-05-08,Amber Beer,2026-05-08 18:37,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Amber Beer,153,2,13,0,0.95,amber beer,400,1.0,153,2,13,0,0.95,no,,amber beer,400,1.0,153,2,13,0,0.95
+2026-05-09,Jam sponge cake,2026-05-09 09:05,,yes,manual,,,,no,,2026-05-09 09:05,,,,,,,Jam sponge cake,48,1.0,167,2,26,6,,no,2026-05-09 09:05,,,,,,,,
+2026-05-09,Jam sponge cake,2026-05-09 09:05,,yes,manual,,,,no,,2026-05-09 09:05,,,,,,,Jam sponge cake,192,4.0,668,10,103,24,,no,2026-05-09 09:05,,,,,,,,
+2026-05-09,Jam sponge cake,2026-05-09 09:05,,yes,,,,,no,,,,,,,,,Jam sponge cake,192,4.0,668,10,103,24,,no,,,,,,,,,
+2026-05-09,Maoam Joystixx,2026-05-09 13:55,0.88,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-09 17:48,,Maoam Joystixx,133,0,33,0,0.88,Fruit-flavored gummy candy,34,1.0,133,0,33,0,0.91,no,2026-05-09 13:56,Fruit-flavored gummy candy,34,1.0,133,0,33,0,0.91
+2026-05-09,Maoam Joystixx,2026-05-09 13:55,0.88,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-09 17:48,,Maoam Joystixx,133,0,33,0,0.88,Fruit-flavored gummy candy,34,1.0,133,0,33,0,0.91,no,2026-05-09 17:48,Fruit-flavored gummy candy,34,1.0,133,0,33,0,0.91
+2026-05-09,Maoam Joystixx,2026-05-09 13:55,0.88,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-09 17:48,,Maoam Joystixx,133,0,33,0,0.88,Fruit-flavored gummy candy,102,3.0,399,0,100,0,0.91,yes,2026-05-09 17:48,Fruit-flavored gummy candy,34,1.0,133,0,33,0,0.91
+2026-05-09,Maoam Joystixx,2026-05-09 13:55,0.88,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-09 17:48,,Maoam Joystixx,133,0,33,0,0.88,Fruit-flavored gummy candy,68,2.0,266,0,67,0,0.91,yes,,Fruit-flavored gummy candy,34,1.0,133,0,33,0,0.91
+2026-05-09,Sausage Roll,2026-05-09 13:56,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Sausage Roll,406,15,49,17,0.91,white bread roll,95,1.0,253,8,48,3,0.93,no,,white bread roll,95,1.0,253,8,48,3,0.93
+2026-05-09,Sausage Roll,2026-05-09 13:56,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Sausage Roll,406,15,49,17,0.91,frankfurter sausage,55,1.0,151,7,1,14,0.91,no,,frankfurter sausage,55,1.0,151,7,1,14,0.91
+2026-05-09,Sausage Roll,2026-05-09 13:56,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Sausage Roll,406,15,49,17,0.91,mustard,8,1.0,2,0,1,0,0.58,no,,mustard,8,1.0,2,0,1,0,0.58
+2026-05-09,Dršťková polévka,2026-05-09 15:02,0.97,yes,fix_with_ai_rerun,openai,gpt-5.4,,no,,,Dršťková polévka,227,10,19,12,0.97,tomato-based soup,220,1.0,132,3,15,7,0.85,no,2026-05-09 15:02,tomato-based soup,220,1.0,132,3,15,7,0.85
+2026-05-09,Dršťková polévka,2026-05-09 15:02,0.97,yes,fix_with_ai_rerun,openai,gpt-5.4,,no,,,Dršťková polévka,227,10,19,12,0.97,added oil or butter,7,1.0,63,0,0,7,0.60,no,2026-05-09 15:02,added oil or butter,7,1.0,63,0,0,7,0.60
+2026-05-09,Dršťková polévka,2026-05-09 15:02,0.97,yes,fix_with_ai_rerun,openai,gpt-5.4,,no,,,Dršťková polévka,227,10,19,12,0.97,seasonings/aromatics,8,1.0,5,0,2,0,0.50,no,2026-05-09 15:02,seasonings/aromatics,8,1.0,5,0,2,0,0.50
+2026-05-09,Dršťková polévka,2026-05-09 15:02,0.97,yes,fix_with_ai_rerun,openai,gpt-5.4,,no,,,Dršťková polévka,227,10,19,12,0.97,Dršťková polévka,300,1.0,227,10,19,12,0.97,no,,Dršťková polévka,300,1.0,227,10,19,12,0.97
+2026-05-09,Rohozec draft beer,2026-05-09 17:48,0.98,yes,photo_ai,openai,gpt-5.4,,no,,,Rohozec draft beer,183,2,16,0,0.98,draft lager beer,450,1.0,183,2,16,0,0.98,no,,draft lager beer,450,1.0,183,2,16,0,0.98
+2026-05-09,Pulled pork fries,2026-05-09 18:21,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Pulled pork fries,1072,42,88,61,0.91,French fries,210,1.0,655,7,86,32,0.97,no,2026-05-09 18:21,French fries,210,1.0,655,7,86,32,0.97
+2026-05-09,Pulled pork fries,2026-05-09 18:21,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Pulled pork fries,1072,42,88,61,0.91,Pulled pork,130,1.0,348,34,0,22,0.94,no,2026-05-09 18:21,Pulled pork,130,1.0,348,34,0,22,0.94
+2026-05-09,Pulled pork fries,2026-05-09 18:21,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Pulled pork fries,1072,42,88,61,0.91,Spicy mayo sauce,18,1.0,68,0,1,7,0.82,no,2026-05-09 18:21,Spicy mayo sauce,18,1.0,68,0,1,7,0.82
+2026-05-09,Pulled pork fries,2026-05-09 18:21,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Pulled pork fries,1072,42,88,61,0.91,Parsley,3,1.0,1,0,1,0,0.88,no,2026-05-09 18:21,Parsley,3,1.0,1,0,1,0,0.88
+2026-05-09,Pulled pork fries,2026-05-09 18:21,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Pulled pork fries,1072,42,88,61,0.91,Cooking/oil absorbed,0,1.0,0,0,0,0,0.55,no,2026-05-09 18:21,Cooking/oil absorbed,0,1.0,0,0,0,0,0.55
+2026-05-09,Pulled pork fries,2026-05-09 18:21,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Pulled pork fries,1072,42,88,61,0.91,French fries,210,1.0,655,7,86,32,0.97,no,,French fries,210,1.0,655,7,86,32,0.97
+2026-05-09,Pulled pork fries,2026-05-09 18:21,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Pulled pork fries,1072,42,88,61,0.91,Pulled pork,130,1.0,348,34,0,22,0.94,no,,Pulled pork,130,1.0,348,34,0,22,0.94
+2026-05-09,Pulled pork fries,2026-05-09 18:21,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Pulled pork fries,1072,42,88,61,0.91,Spicy mayo sauce,18,1.0,68,0,1,7,0.82,no,,Spicy mayo sauce,18,1.0,68,0,1,7,0.82
+2026-05-09,Pulled pork fries,2026-05-09 18:21,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Pulled pork fries,1072,42,88,61,0.91,Parsley,3,1.0,1,0,1,0,0.88,no,,Parsley,3,1.0,1,0,1,0,0.88
+2026-05-09,Pulled pork fries,2026-05-09 18:21,0.91,yes,photo_ai,openai,gpt-5.4,,no,,,Pulled pork fries,1072,42,88,61,0.91,Cooking/oil absorbed,0,1.0,0,0,0,0,0.55,no,,Cooking/oil absorbed,0,1.0,0,0,0,0,0.55
+2026-05-09,Packaged Snack Bar,2026-05-09 19:49,0.27,no,barcode_ai_fallback,openai,gpt-5.4,5088246676482,no,,2026-05-09 19:50,Packaged Snack Bar,190,3,27,8,0.27,Snack bar,40,1.0,190,3,27,8,0.27,no,2026-05-09 19:50,Snack bar,40,1.0,190,3,27,8,0.27
+2026-05-09,NaturRadler,2026-05-09 19:50,,yes,barcode,,,9028800616482,no,,,,,,,,,NaturRadler,500,1.0,175,0,29,0,,no,,,,,,,,,
+2026-05-10,Egg salad roll,2026-05-10 09:16,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-10 09:16,,Egg salad roll,307,12,30,16,0.91,bread roll,60,1.0,159,5,30,2,0.95,no,2026-05-10 09:16,bread roll,60,1.0,159,5,30,2,0.95
+2026-05-10,Egg salad roll,2026-05-10 09:16,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-10 09:16,,Egg salad roll,307,12,30,16,0.91,egg salad filling,70,1.0,148,7,0,14,0.92,no,2026-05-10 09:16,egg salad filling,70,1.0,148,7,0,14,0.92
+2026-05-10,Egg salad roll,2026-05-10 09:16,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-10 09:16,,Egg salad roll,307,12,30,16,0.91,bread roll,120,2.0,318,11,60,4,0.95,yes,,bread roll,60,1.0,159,5,30,2,0.95
+2026-05-10,Egg salad roll,2026-05-10 09:16,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-10 09:16,,Egg salad roll,307,12,30,16,0.91,egg salad filling,140,2.0,296,14,0,27,0.92,yes,,egg salad filling,70,1.0,148,7,0,14,0.92
+2026-05-10,Licorice candy,2026-05-10 13:54,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-10 13:56,,Licorice candy,16,0,4,0,0.91,Licorice candy piece,4,1.0,16,0,4,0,0.91,no,2026-05-10 13:55,Licorice candy piece,4,1.0,16,0,4,0,0.91
+2026-05-10,Licorice candy,2026-05-10 13:54,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-10 13:56,,Licorice candy,16,0,4,0,0.91,Licorice candy piece,4,1.0,16,0,4,0,0.91,no,2026-05-10 13:56,Licorice candy piece,4,1.0,16,0,4,0,0.91
+2026-05-10,Licorice candy,2026-05-10 13:54,0.91,yes,photo_ai,openai,gpt-5.4,,yes,2026-05-10 13:56,,Licorice candy,16,0,4,0,0.91,Licorice candy piece,8,2.0,32,0,8,0,0.91,yes,,Licorice candy piece,4,1.0,16,0,4,0,0.91
+2026-05-10,Přesnídávka XXL meruňková s jablky,2026-05-10 13:55,,yes,barcode,,,8590014839380,no,,,,,,,,,Přesnídávka XXL meruňková s jablky,200,1.0,150,0,37,0,,no,2026-05-10 13:55,,,,,,,,
+2026-05-10,Přesnídávka XXL meruňková s jablky,2026-05-10 13:55,,yes,barcode,,,8590014839380,no,,,,,,,,,Přesnídávka XXL meruňková s jablky,200,1.0,150,0,37,0,,no,,,,,,,,,
+2026-05-10,Maoam Joystixx,2026-05-10 13:56,,yes,,,,,no,,,,,,,,,Fruit-flavored gummy candy,34,1.0,133,0,33,0,,no,,,,,,,,,
+2026-05-10,Packaged Food Item,2026-05-10 15:43,0.22,no,barcode_ai_fallback,openai,gpt-5.4,8594003027154,no,,2026-05-10 15:43,Packaged Food Item,220,8,25,9,0.22,Packaged Czech food product,150,1.0,220,8,25,9,0.22,no,2026-05-10 15:43,Packaged Czech food product,150,1.0,220,8,25,9,0.22
+2026-05-10,Kefírové mléko jahodové,2026-05-10 15:44,0.97,yes,photo_ai,openai,gpt-5.4,,no,,,Kefírové mléko jahodové,450,20,68,8,0.97,Karlova Koruna Kefírové mléko jahodové,450,1.0,270,14,32,7,0.99,no,,Karlova Koruna Kefírové mléko jahodové,450,1.0,270,14,32,7,0.99
+2026-05-10,Kefírové mléko jahodové,2026-05-10 15:44,0.97,yes,photo_ai,openai,gpt-5.4,,no,,,Kefírové mléko jahodové,450,20,68,8,0.97,White bread roll,75,1.0,180,6,36,1,0.69,no,,White bread roll,75,1.0,180,6,36,1,0.69
+2026-05-10,Buchtičky tvarohové,2026-05-10 15:44,0.97,yes,barcode_ai_fallback,openai,gpt-5.4,8590077701679,yes,2026-05-10 15:44,,Karlova Koruna Buchtičky,1138,29,159,43,0.97,Buchtičky tvarohové,360,1.0,1138,29,159,43,0.99,no,,Buchtičky tvarohové,360,1.0,1138,29,159,43,0.99
+2026-05-10,Black soft-serve cone,2026-05-10 19:23,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Black soft-serve cone,262,6,41,8,0.92,black vanilla soft-serve ice cream,150,1.0,210,5,33,6,0.91,no,2026-05-10 19:23,black vanilla soft-serve ice cream,150,1.0,210,5,33,6,0.91
+2026-05-10,Black soft-serve cone,2026-05-10 19:23,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Black soft-serve cone,262,6,41,8,0.92,wafer cone,18,1.0,52,1,8,2,0.98,no,2026-05-10 19:23,wafer cone,18,1.0,52,1,8,2,0.98
+2026-05-10,Black soft-serve cone,2026-05-10 19:23,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Black soft-serve cone,262,6,41,8,0.92,black vanilla soft-serve ice cream,150,1.0,210,5,33,6,0.91,no,,black vanilla soft-serve ice cream,150,1.0,210,5,33,6,0.91
+2026-05-10,Black soft-serve cone,2026-05-10 19:23,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Black soft-serve cone,262,6,41,8,0.92,wafer cone,18,1.0,52,1,8,2,0.98,no,,wafer cone,18,1.0,52,1,8,2,0.98
+2026-05-10,Chicken Rice Bowl,2026-05-10 19:23,,yes,,,,,no,,,,,,,,,cooked white rice,230,1.0,299,6,64,1,,no,,,,,,,,,
+2026-05-10,Chicken Rice Bowl,2026-05-10 19:23,,yes,,,,,no,,,,,,,,,cooked chicken breast,95,1.0,157,30,0,3,,no,,,,,,,,,
+2026-05-10,Chicken Rice Bowl,2026-05-10 19:23,,yes,,,,,no,,,,,,,,,cooked carrots,35,1.0,12,0,3,0,,no,,,,,,,,,
+2026-05-10,Chicken Rice Bowl,2026-05-10 19:23,,yes,,,,,no,,,,,,,,,cooked onion,20,1.0,8,0,2,0,,no,,,,,,,,,
+2026-05-10,Chicken Rice Bowl,2026-05-10 19:23,,yes,,,,,no,,,,,,,,,cooking oil,5,1.0,45,0,0,5,,no,,,,,,,,,
+2026-05-10,Chicken Rice Bowl,2026-05-10 19:23,,yes,,,,,no,,,,,,,,,light savory sauce/broth,15,1.0,4,0,1,0,,no,,,,,,,,,
+2026-05-11,Granola with milk,2026-05-11 13:33,,yes,,,,,no,,,,,,,,,granola,50,1.0,225,5,31,9,,no,,,,,,,,,
+2026-05-11,Granola with milk,2026-05-11 13:33,,yes,,,,,no,,,,,,,,,milk,150,1.0,57,4,7,3,,no,,,,,,,,,
+2026-05-11,Granola with milk,2026-05-11 13:33,,yes,,,,,no,,,,,,,,,dried apple chips,8,1.0,28,0,7,0,,no,,,,,,,,,
+2026-05-11,Granola with milk,2026-05-11 13:33,,yes,,,,,no,,,,,,,,,coconut flakes,5,1.0,32,0,1,3,,no,,,,,,,,,
+2026-05-11,Yellow apple,2026-05-11 13:33,,yes,manual,,,,no,,,,,,,,,Yellow apple,148,1.0,77,0,20,0,,no,2026-05-11 13:33,,,,,,,,
+2026-05-11,Yellow apple,2026-05-11 13:33,,yes,manual,,,,no,,,,,,,,,Yellow apple,148,1.0,77,0,20,0,,no,,,,,,,,,
+2026-05-11,Chicken Rice Bowl,2026-05-11 13:33,,yes,manual,,,,no,,,,,,,,,cooked white rice,230,1.0,299,6,64,1,,no,2026-05-11 13:33,,,,,,,,
+2026-05-11,Chicken Rice Bowl,2026-05-11 13:33,,yes,manual,,,,no,,,,,,,,,cooked chicken breast,95,1.0,157,30,0,3,,no,2026-05-11 13:33,,,,,,,,
+2026-05-11,Chicken Rice Bowl,2026-05-11 13:33,,yes,manual,,,,no,,,,,,,,,cooked carrots,35,1.0,12,0,3,0,,no,2026-05-11 13:33,,,,,,,,
+2026-05-11,Chicken Rice Bowl,2026-05-11 13:33,,yes,manual,,,,no,,,,,,,,,cooked onion,20,1.0,8,0,2,0,,no,2026-05-11 13:33,,,,,,,,
+2026-05-11,Chicken Rice Bowl,2026-05-11 13:33,,yes,manual,,,,no,,,,,,,,,cooking oil,5,1.0,45,0,0,5,,no,2026-05-11 13:33,,,,,,,,
+2026-05-11,Chicken Rice Bowl,2026-05-11 13:33,,yes,manual,,,,no,,,,,,,,,light savory sauce/broth,15,1.0,4,0,1,0,,no,2026-05-11 13:33,,,,,,,,
+2026-05-11,Chicken Rice Bowl,2026-05-11 13:33,,yes,manual,,,,no,,,,,,,,,cooked white rice,230,1.0,299,6,64,1,,no,,,,,,,,,
+2026-05-11,Chicken Rice Bowl,2026-05-11 13:33,,yes,manual,,,,no,,,,,,,,,cooked chicken breast,95,1.0,157,30,0,3,,no,,,,,,,,,
+2026-05-11,Chicken Rice Bowl,2026-05-11 13:33,,yes,manual,,,,no,,,,,,,,,cooked carrots,35,1.0,12,0,3,0,,no,,,,,,,,,
+2026-05-11,Chicken Rice Bowl,2026-05-11 13:33,,yes,manual,,,,no,,,,,,,,,cooked onion,20,1.0,8,0,2,0,,no,,,,,,,,,
+2026-05-11,Chicken Rice Bowl,2026-05-11 13:33,,yes,manual,,,,no,,,,,,,,,cooking oil,5,1.0,45,0,0,5,,no,,,,,,,,,
+2026-05-11,Chicken Rice Bowl,2026-05-11 13:33,,yes,manual,,,,no,,,,,,,,,light savory sauce/broth,15,1.0,4,0,1,0,,no,,,,,,,,,
+2026-05-11,Seeded bread with cheese,2026-05-11 18:46,,yes,manual,,,,no,,,,,,,,,Seeded bread slice,35,1.0,93,4,16,2,,no,2026-05-11 18:46,,,,,,,,
+2026-05-11,Seeded bread with cheese,2026-05-11 18:46,,yes,manual,,,,no,,,,,,,,,Semi-hard cheese slice,18,1.0,60,4,1,4,,no,2026-05-11 18:46,,,,,,,,
+2026-05-11,Seeded bread with cheese,2026-05-11 18:46,,yes,manual,,,,no,,,,,,,,,Seeded bread slice,70,2.0,186,7,32,4,,no,,,,,,,,,
+2026-05-11,Seeded bread with cheese,2026-05-11 18:46,,yes,manual,,,,no,,,,,,,,,Semi-hard cheese slice,36,2.0,120,8,2,8,,no,,,,,,,,,
+2026-05-12,Open sandwiches & eggs,2026-05-12 06:42,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Open sandwiches & eggs,1078,50,50,72,0.94,Whole grain bread,105,1.0,252,10,44,3,0.95,no,,Whole grain bread,105,1.0,252,10,44,3,0.95
+2026-05-12,Open sandwiches & eggs,2026-05-12 06:42,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Open sandwiches & eggs,1078,50,50,72,0.94,Mortadella/bologna slices,90,1.0,279,11,3,23,0.89,no,,Mortadella/bologna slices,90,1.0,279,11,3,23,0.89
+2026-05-12,Open sandwiches & eggs,2026-05-12 06:42,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Open sandwiches & eggs,1078,50,50,72,0.94,Semi-hard white cheese,45,1.0,162,11,1,13,0.87,no,,Semi-hard white cheese,45,1.0,162,11,1,13,0.87
+2026-05-12,Open sandwiches & eggs,2026-05-12 06:42,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Open sandwiches & eggs,1078,50,50,72,0.94,Mayonnaise or creamy spread,10,1.0,68,0,0,8,0.72,no,,Mayonnaise or creamy spread,10,1.0,68,0,0,8,0.72
+2026-05-12,Open sandwiches & eggs,2026-05-12 06:42,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Open sandwiches & eggs,1078,50,50,72,0.94,Scrambled eggs / omelet,165,1.0,245,18,2,17,0.93,no,,Scrambled eggs / omelet,165,1.0,245,18,2,17,0.93
+2026-05-12,Open sandwiches & eggs,2026-05-12 06:42,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Open sandwiches & eggs,1078,50,50,72,0.94,Cooking oil or butter,8,1.0,72,0,0,8,0.76,no,,Cooking oil or butter,8,1.0,72,0,0,8,0.76
+2026-05-12,Tatranky (čokoládové),2026-05-12 10:34,,yes,barcode,,,8593894813273,no,,,,,,,,,Tatranky (čokoládové),47,1.0,247,3,27,14,,no,2026-05-12 10:34,,,,,,,,
+2026-05-12,Tatranky (čokoládové),2026-05-12 10:34,,yes,barcode,,,8593894813273,no,,,,,,,,,Tatranky (čokoládové),47,1.0,247,3,27,14,,no,,,,,,,,,
+2026-05-12,Packaged Snack,2026-05-12 16:51,0.23,no,barcode_ai_fallback,openai,gpt-5.4,4049727026357,no,,2026-05-12 16:52,Packaged Snack,220,4,24,12,0.23,Packaged savory snack,40,1.0,220,4,24,12,0.23,no,2026-05-12 16:52,Packaged savory snack,40,1.0,220,4,24,12,0.23
+2026-05-12,Packaged German Snack,2026-05-12 16:52,0.29,no,barcode_ai_fallback,openai,gpt-5.4,4049727026357,no,,2026-05-12 16:52,Packaged German Snack,250,8,27,12,0.29,filled savory pastry,80,1.0,250,8,27,12,0.22,no,2026-05-12 16:52,filled savory pastry,80,1.0,250,8,27,12,0.22
+2026-05-12,Jarmark Termix Cocoa,2026-05-12 16:52,0.99,yes,photo_ai,openai,gpt-5.4,,no,,,Jarmark Termix Cocoa,105,4,16,3,0.99,Jarmark Termix cocoa quark dessert,90,1.0,105,4,16,3,0.99,no,,Jarmark Termix cocoa quark dessert,90,1.0,105,4,16,3,0.99
+2026-05-12,Chicken broccoli pasta,2026-05-12 18:33,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken broccoli pasta,565,42,59,16,0.94,Cooked spaghetti,155,1.0,245,9,47,1,0.95,no,2026-05-12 18:33,Cooked spaghetti,155,1.0,245,9,47,1,0.95
+2026-05-12,Chicken broccoli pasta,2026-05-12 18:33,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken broccoli pasta,565,42,59,16,0.94,Cooked chicken breast,95,1.0,157,30,0,3,0.92,no,2026-05-12 18:33,Cooked chicken breast,95,1.0,157,30,0,3,0.92
+2026-05-12,Chicken broccoli pasta,2026-05-12 18:33,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken broccoli pasta,565,42,59,16,0.94,Cooked broccoli,110,1.0,39,3,8,0,0.96,no,2026-05-12 18:33,Cooked broccoli,110,1.0,39,3,8,0,0.96
+2026-05-12,Chicken broccoli pasta,2026-05-12 18:33,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken broccoli pasta,565,42,59,16,0.94,Creamy sauce,45,1.0,79,1,4,6,0.81,no,2026-05-12 18:33,Creamy sauce,45,1.0,79,1,4,6,0.81
+2026-05-12,Chicken broccoli pasta,2026-05-12 18:33,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken broccoli pasta,565,42,59,16,0.94,Cooking oil/butter,5,1.0,45,0,0,5,0.68,no,2026-05-12 18:33,Cooking oil/butter,5,1.0,45,0,0,5,0.68
+2026-05-12,Chicken broccoli pasta,2026-05-12 18:33,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken broccoli pasta,565,42,59,16,0.94,Cooked spaghetti,155,1.0,245,9,47,1,0.95,no,,Cooked spaghetti,155,1.0,245,9,47,1,0.95
+2026-05-12,Chicken broccoli pasta,2026-05-12 18:33,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken broccoli pasta,565,42,59,16,0.94,Cooked chicken breast,95,1.0,157,30,0,3,0.92,no,,Cooked chicken breast,95,1.0,157,30,0,3,0.92
+2026-05-12,Chicken broccoli pasta,2026-05-12 18:33,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken broccoli pasta,565,42,59,16,0.94,Cooked broccoli,110,1.0,39,3,8,0,0.96,no,,Cooked broccoli,110,1.0,39,3,8,0,0.96
+2026-05-12,Chicken broccoli pasta,2026-05-12 18:33,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken broccoli pasta,565,42,59,16,0.94,Creamy sauce,45,1.0,79,1,4,6,0.81,no,,Creamy sauce,45,1.0,79,1,4,6,0.81
+2026-05-12,Chicken broccoli pasta,2026-05-12 18:33,0.94,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken broccoli pasta,565,42,59,16,0.94,Cooking oil/butter,5,1.0,45,0,0,5,0.68,no,,Cooking oil/butter,5,1.0,45,0,0,5,0.68
+2026-05-12,Chicken broccoli pasta,2026-05-12 18:33,,yes,manual,,,,no,,,,,,,,,Cooked spaghetti,155,1.0,245,9,47,1,,no,2026-05-12 18:33,,,,,,,,
+2026-05-12,Chicken broccoli pasta,2026-05-12 18:33,,yes,manual,,,,no,,,,,,,,,Cooked chicken breast,95,1.0,157,30,0,3,,no,2026-05-12 18:33,,,,,,,,
+2026-05-12,Chicken broccoli pasta,2026-05-12 18:33,,yes,manual,,,,no,,,,,,,,,Cooked broccoli,110,1.0,39,3,8,0,,no,2026-05-12 18:33,,,,,,,,
+2026-05-12,Chicken broccoli pasta,2026-05-12 18:33,,yes,manual,,,,no,,,,,,,,,Creamy sauce,45,1.0,79,1,4,6,,no,2026-05-12 18:33,,,,,,,,
+2026-05-12,Chicken broccoli pasta,2026-05-12 18:33,,yes,manual,,,,no,,,,,,,,,Cooking oil/butter,5,1.0,45,0,0,5,,no,2026-05-12 18:33,,,,,,,,
+2026-05-12,Chicken broccoli pasta,2026-05-12 18:33,,yes,manual,,,,no,,,,,,,,,Cooked spaghetti,155,1.0,245,9,47,1,,no,,,,,,,,,
+2026-05-12,Chicken broccoli pasta,2026-05-12 18:33,,yes,manual,,,,no,,,,,,,,,Cooked chicken breast,95,1.0,157,30,0,3,,no,,,,,,,,,
+2026-05-12,Chicken broccoli pasta,2026-05-12 18:33,,yes,manual,,,,no,,,,,,,,,Cooked broccoli,110,1.0,39,3,8,0,,no,,,,,,,,,
+2026-05-12,Chicken broccoli pasta,2026-05-12 18:33,,yes,manual,,,,no,,,,,,,,,Creamy sauce,45,1.0,79,1,4,6,,no,,,,,,,,,
+2026-05-12,Chicken broccoli pasta,2026-05-12 18:33,,yes,manual,,,,no,,,,,,,,,Cooking oil/butter,5,1.0,45,0,0,5,,no,,,,,,,,,
+2026-05-12,Jarmark Termix Cocoa,2026-05-12 18:33,,yes,,,,,no,,,,,,,,,Jarmark Termix cocoa quark dessert,90,1.0,105,4,16,3,,no,,,,,,,,,
+2026-05-13,Granola with milk,2026-05-13 11:21,,yes,manual,,,,no,,,,,,,,,granola,50,1.0,225,5,31,9,,no,2026-05-13 11:21,,,,,,,,
+2026-05-13,Granola with milk,2026-05-13 11:21,,yes,manual,,,,no,,,,,,,,,milk,150,1.0,57,4,7,3,,no,2026-05-13 11:21,,,,,,,,
+2026-05-13,Granola with milk,2026-05-13 11:21,,yes,manual,,,,no,,,,,,,,,dried apple chips,8,1.0,28,0,7,0,,no,2026-05-13 11:21,,,,,,,,
+2026-05-13,Granola with milk,2026-05-13 11:21,,yes,manual,,,,no,,,,,,,,,coconut flakes,5,1.0,32,0,1,3,,no,2026-05-13 11:21,,,,,,,,
+2026-05-13,Granola with milk,2026-05-13 11:21,,yes,manual,,,,no,,,,,,,,,granola,50,1.0,225,5,31,9,,no,,,,,,,,,
+2026-05-13,Granola with milk,2026-05-13 11:21,,yes,manual,,,,no,,,,,,,,,milk,150,1.0,57,4,7,3,,no,,,,,,,,,
+2026-05-13,Granola with milk,2026-05-13 11:21,,yes,manual,,,,no,,,,,,,,,dried apple chips,8,1.0,28,0,7,0,,no,,,,,,,,,
+2026-05-13,Granola with milk,2026-05-13 11:21,,yes,manual,,,,no,,,,,,,,,coconut flakes,5,1.0,32,0,1,3,,no,,,,,,,,,
+2026-05-13,Seeded bread with cheese,2026-05-13 11:21,,yes,manual,,,,no,,,,,,,,,Seeded bread slice,35,1.0,93,4,16,2,,no,2026-05-13 11:21,,,,,,,,
+2026-05-13,Seeded bread with cheese,2026-05-13 11:21,,yes,manual,,,,no,,,,,,,,,Semi-hard cheese slice,18,1.0,60,4,1,4,,no,2026-05-13 11:21,,,,,,,,
+2026-05-13,Seeded bread with cheese,2026-05-13 11:21,,yes,manual,,,,no,,,,,,,,,Seeded bread slice,35,1.0,93,4,16,2,,no,,,,,,,,,
+2026-05-13,Seeded bread with cheese,2026-05-13 11:21,,yes,manual,,,,no,,,,,,,,,Semi-hard cheese slice,18,1.0,60,4,1,4,,no,,,,,,,,,
+2026-05-13,Chicken broccoli pasta,2026-05-13 11:22,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken broccoli pasta,700,39,83,22,0.92,cooked elbow pasta,240,1.0,379,14,74,2,0.98,no,2026-05-13 11:22,cooked elbow pasta,240,1.0,379,14,74,2,0.98
+2026-05-13,Chicken broccoli pasta,2026-05-13 11:22,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken broccoli pasta,700,39,83,22,0.92,cooked chicken breast,70,1.0,116,22,0,3,0.91,no,2026-05-13 11:22,cooked chicken breast,70,1.0,116,22,0,3,0.91
+2026-05-13,Chicken broccoli pasta,2026-05-13 11:22,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken broccoli pasta,700,39,83,22,0.92,cooked broccoli,60,1.0,21,1,4,0,0.95,no,2026-05-13 11:22,cooked broccoli,60,1.0,21,1,4,0,0.95
+2026-05-13,Chicken broccoli pasta,2026-05-13 11:22,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken broccoli pasta,700,39,83,22,0.92,cream/cheese sauce,75,1.0,94,2,5,7,0.80,no,2026-05-13 11:22,cream/cheese sauce,75,1.0,94,2,5,7,0.80
+2026-05-13,Chicken broccoli pasta,2026-05-13 11:22,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken broccoli pasta,700,39,83,22,0.92,cooking oil or butter,10,1.0,90,0,0,10,0.62,no,2026-05-13 11:22,cooking oil or butter,10,1.0,90,0,0,10,0.62
+2026-05-13,Chicken broccoli pasta,2026-05-13 11:22,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken broccoli pasta,700,39,83,22,0.92,cooked elbow pasta,240,1.0,379,14,74,2,0.98,no,,cooked elbow pasta,240,1.0,379,14,74,2,0.98
+2026-05-13,Chicken broccoli pasta,2026-05-13 11:22,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken broccoli pasta,700,39,83,22,0.92,cooked chicken breast,70,1.0,116,22,0,3,0.91,no,,cooked chicken breast,70,1.0,116,22,0,3,0.91
+2026-05-13,Chicken broccoli pasta,2026-05-13 11:22,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken broccoli pasta,700,39,83,22,0.92,cooked broccoli,60,1.0,21,1,4,0,0.95,no,,cooked broccoli,60,1.0,21,1,4,0,0.95
+2026-05-13,Chicken broccoli pasta,2026-05-13 11:22,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken broccoli pasta,700,39,83,22,0.92,cream/cheese sauce,75,1.0,94,2,5,7,0.80,no,,cream/cheese sauce,75,1.0,94,2,5,7,0.80
+2026-05-13,Chicken broccoli pasta,2026-05-13 11:22,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Chicken broccoli pasta,700,39,83,22,0.92,cooking oil or butter,10,1.0,90,0,0,10,0.62,no,,cooking oil or butter,10,1.0,90,0,0,10,0.62
+2026-05-13,Jarmark Termix Cocoa,2026-05-13 06:34,,yes,manual,,,,no,,,,,,,,,Jarmark Termix cocoa quark dessert,90,1.0,105,4,16,3,,no,2026-05-14 06:34,,,,,,,,
+2026-05-13,Jarmark Termix Cocoa,2026-05-13 06:34,,yes,manual,,,,no,,,,,,,,,Jarmark Termix cocoa quark dessert,90,1.0,105,4,16,3,,no,,,,,,,,,
+2026-05-13,Chicken broccoli pasta,2026-05-13 06:34,,yes,manual,,,,no,,,,,,,,,Cooked spaghetti,155,1.0,245,9,47,1,,no,2026-05-14 06:34,,,,,,,,
+2026-05-13,Chicken broccoli pasta,2026-05-13 06:34,,yes,manual,,,,no,,,,,,,,,Cooked chicken breast,95,1.0,157,30,0,3,,no,2026-05-14 06:34,,,,,,,,
+2026-05-13,Chicken broccoli pasta,2026-05-13 06:34,,yes,manual,,,,no,,,,,,,,,Cooked broccoli,110,1.0,39,3,8,0,,no,2026-05-14 06:34,,,,,,,,
+2026-05-13,Chicken broccoli pasta,2026-05-13 06:34,,yes,manual,,,,no,,,,,,,,,Creamy sauce,45,1.0,79,1,4,6,,no,2026-05-14 06:34,,,,,,,,
+2026-05-13,Chicken broccoli pasta,2026-05-13 06:34,,yes,manual,,,,no,,,,,,,,,Cooking oil/butter,5,1.0,45,0,0,5,,no,2026-05-14 06:34,,,,,,,,
+2026-05-13,Chicken broccoli pasta,2026-05-13 06:34,,yes,manual,,,,no,,,,,,,,,Cooked spaghetti,155,1.0,245,9,47,1,,no,,,,,,,,,
+2026-05-13,Chicken broccoli pasta,2026-05-13 06:34,,yes,manual,,,,no,,,,,,,,,Cooked chicken breast,95,1.0,157,30,0,3,,no,,,,,,,,,
+2026-05-13,Chicken broccoli pasta,2026-05-13 06:34,,yes,manual,,,,no,,,,,,,,,Cooked broccoli,110,1.0,39,3,8,0,,no,,,,,,,,,
+2026-05-13,Chicken broccoli pasta,2026-05-13 06:34,,yes,manual,,,,no,,,,,,,,,Creamy sauce,45,1.0,79,1,4,6,,no,,,,,,,,,
+2026-05-13,Chicken broccoli pasta,2026-05-13 06:34,,yes,manual,,,,no,,,,,,,,,Cooking oil/butter,5,1.0,45,0,0,5,,no,,,,,,,,,
+2026-05-14,Open sandwiches & eggs,2026-05-14 14:44,,yes,manual,,,,no,,,,,,,,,Whole grain bread,105,1.0,252,10,44,3,,no,2026-05-15 14:44,,,,,,,,
+2026-05-14,Open sandwiches & eggs,2026-05-14 14:44,,yes,manual,,,,no,,,,,,,,,Mortadella/bologna slices,90,1.0,279,11,3,23,,no,2026-05-15 14:44,,,,,,,,
+2026-05-14,Open sandwiches & eggs,2026-05-14 14:44,,yes,manual,,,,no,,,,,,,,,Semi-hard white cheese,45,1.0,162,11,1,13,,no,2026-05-15 14:44,,,,,,,,
+2026-05-14,Open sandwiches & eggs,2026-05-14 14:44,,yes,manual,,,,no,,,,,,,,,Mayonnaise or creamy spread,10,1.0,68,0,0,8,,no,2026-05-15 14:44,,,,,,,,
+2026-05-14,Open sandwiches & eggs,2026-05-14 14:44,,yes,manual,,,,no,,,,,,,,,Scrambled eggs / omelet,165,1.0,245,18,2,17,,no,2026-05-15 14:44,,,,,,,,
+2026-05-14,Open sandwiches & eggs,2026-05-14 14:44,,yes,manual,,,,no,,,,,,,,,Cooking oil or butter,8,1.0,72,0,0,8,,no,2026-05-15 14:44,,,,,,,,
+2026-05-14,Open sandwiches & eggs,2026-05-14 14:44,,yes,manual,,,,no,,,,,,,,,Whole grain bread,105,1.0,252,10,44,3,,no,,,,,,,,,
+2026-05-14,Open sandwiches & eggs,2026-05-14 14:44,,yes,manual,,,,no,,,,,,,,,Mortadella/bologna slices,90,1.0,279,11,3,23,,no,,,,,,,,,
+2026-05-14,Open sandwiches & eggs,2026-05-14 14:44,,yes,manual,,,,no,,,,,,,,,Semi-hard white cheese,45,1.0,162,11,1,13,,no,,,,,,,,,
+2026-05-14,Open sandwiches & eggs,2026-05-14 14:44,,yes,manual,,,,no,,,,,,,,,Mayonnaise or creamy spread,10,1.0,68,0,0,8,,no,,,,,,,,,
+2026-05-14,Open sandwiches & eggs,2026-05-14 14:44,,yes,manual,,,,no,,,,,,,,,Scrambled eggs / omelet,165,1.0,245,18,2,17,,no,,,,,,,,,
+2026-05-14,Open sandwiches & eggs,2026-05-14 14:44,,yes,manual,,,,no,,,,,,,,,Cooking oil or butter,8,1.0,72,0,0,8,,no,,,,,,,,,
+2026-05-14,Chicken Rice Bowl,2026-05-14 14:45,,yes,manual,,,,no,,,,,,,,,cooked white rice,230,1.0,299,6,64,1,,no,,,,,,,,,
+2026-05-14,Chicken Rice Bowl,2026-05-14 14:45,,yes,manual,,,,no,,,,,,,,,cooked chicken breast,95,1.0,157,30,0,3,,no,,,,,,,,,
+2026-05-14,Chicken Rice Bowl,2026-05-14 14:45,,yes,manual,,,,no,,,,,,,,,cooked carrots,35,1.0,12,0,3,0,,no,,,,,,,,,
+2026-05-14,Chicken Rice Bowl,2026-05-14 14:45,,yes,manual,,,,no,,,,,,,,,cooked onion,20,1.0,8,0,2,0,,no,,,,,,,,,
+2026-05-14,Chicken Rice Bowl,2026-05-14 14:45,,yes,manual,,,,no,,,,,,,,,cooking oil,5,1.0,45,0,0,5,,no,,,,,,,,,
+2026-05-14,Chicken Rice Bowl,2026-05-14 14:45,,yes,manual,,,,no,,,,,,,,,light savory sauce/broth,15,1.0,4,0,1,0,,no,,,,,,,,,
+2026-05-14,Chicken Rice Bowl,2026-05-14 14:45,,yes,,,,,no,,,,,,,,,cooked white rice,230,1.0,299,6,64,1,,no,,,,,,,,,
+2026-05-14,Chicken Rice Bowl,2026-05-14 14:45,,yes,,,,,no,,,,,,,,,cooked chicken breast,95,1.0,157,30,0,3,,no,,,,,,,,,
+2026-05-14,Chicken Rice Bowl,2026-05-14 14:45,,yes,,,,,no,,,,,,,,,cooked carrots,35,1.0,12,0,3,0,,no,,,,,,,,,
+2026-05-14,Chicken Rice Bowl,2026-05-14 14:45,,yes,,,,,no,,,,,,,,,cooked onion,20,1.0,8,0,2,0,,no,,,,,,,,,
+2026-05-14,Chicken Rice Bowl,2026-05-14 14:45,,yes,,,,,no,,,,,,,,,cooking oil,5,1.0,45,0,0,5,,no,,,,,,,,,
+2026-05-14,Chicken Rice Bowl,2026-05-14 14:45,,yes,,,,,no,,,,,,,,,light savory sauce/broth,15,1.0,4,0,1,0,,no,,,,,,,,,
+2026-05-14,Seeded bread with cheese,2026-05-14 14:45,,yes,manual,,,,no,,,,,,,,,Seeded bread slice,35,1.0,93,4,16,2,,no,2026-05-15 14:45,,,,,,,,
+2026-05-14,Seeded bread with cheese,2026-05-14 14:45,,yes,manual,,,,no,,,,,,,,,Semi-hard cheese slice,18,1.0,60,4,1,4,,no,2026-05-15 14:45,,,,,,,,
+2026-05-14,Seeded bread with cheese,2026-05-14 14:45,,yes,manual,,,,no,,,,,,,,,Seeded bread slice,35,1.0,93,4,16,2,,no,,,,,,,,,
+2026-05-14,Seeded bread with cheese,2026-05-14 14:45,,yes,manual,,,,no,,,,,,,,,Semi-hard cheese slice,18,1.0,60,4,1,4,,no,,,,,,,,,
+2026-05-15,Granola with milk,2026-05-15 14:46,,yes,,,,,no,,,,,,,,,granola,50,1.0,225,5,31,9,,no,2026-05-15 14:47,,,,,,,,
+2026-05-15,Granola with milk,2026-05-15 14:46,,yes,,,,,no,,,,,,,,,milk,150,1.0,57,4,7,3,,no,2026-05-15 14:47,,,,,,,,
+2026-05-15,Granola with milk,2026-05-15 14:46,,yes,,,,,no,,,,,,,,,dried apple chips,8,1.0,28,0,7,0,,no,2026-05-15 14:47,,,,,,,,
+2026-05-15,Granola with milk,2026-05-15 14:46,,yes,,,,,no,,,,,,,,,coconut flakes,5,1.0,32,0,1,3,,no,2026-05-15 14:47,,,,,,,,
+2026-05-15,Granola with milk,2026-05-15 14:46,,yes,,,,,no,,,,,,,,,granola,50,1.0,225,5,31,9,,no,,,,,,,,,
+2026-05-15,Granola with milk,2026-05-15 14:46,,yes,,,,,no,,,,,,,,,milk,150,1.0,57,4,7,3,,no,,,,,,,,,
+2026-05-15,Granola with milk,2026-05-15 14:46,,yes,,,,,no,,,,,,,,,dried apple chips,8,1.0,28,0,7,0,,no,,,,,,,,,
+2026-05-15,Granola with milk,2026-05-15 14:46,,yes,,,,,no,,,,,,,,,coconut flakes,5,1.0,32,0,1,3,,no,,,,,,,,,
+2026-05-15,Chicken broccoli pasta,2026-05-15 14:46,,yes,manual,,,,no,,,,,,,,,Cooked spaghetti,155,1.0,245,9,47,1,,no,,,,,,,,,
+2026-05-15,Chicken broccoli pasta,2026-05-15 14:46,,yes,manual,,,,no,,,,,,,,,Cooked chicken breast,95,1.0,157,30,0,3,,no,,,,,,,,,
+2026-05-15,Chicken broccoli pasta,2026-05-15 14:46,,yes,manual,,,,no,,,,,,,,,Cooked broccoli,110,1.0,39,3,8,0,,no,,,,,,,,,
+2026-05-15,Chicken broccoli pasta,2026-05-15 14:46,,yes,manual,,,,no,,,,,,,,,Creamy sauce,45,1.0,79,1,4,6,,no,,,,,,,,,
+2026-05-15,Chicken broccoli pasta,2026-05-15 14:46,,yes,manual,,,,no,,,,,,,,,Cooking oil/butter,5,1.0,45,0,0,5,,no,,,,,,,,,
+2026-05-15,Florian Choco balls,2026-05-15 14:47,,yes,barcode,,,8593807567248,no,,,,,,,,,Florian Choco balls,150,1.0,218,4,19,14,,no,2026-05-15 14:47,,,,,,,,
+2026-05-15,Florian Choco balls,2026-05-15 14:47,,yes,barcode,,,8593807567248,no,,,,,,,,,Florian Choco balls,150,1.0,218,4,19,14,,no,,,,,,,,,
+2026-05-15,Draft beer,2026-05-15 08:22,,yes,,,,,no,,,,,,,,,lager beer,600,6.0,288,3,23,0,,no,2026-05-16 08:22,,,,,,,,
+2026-05-15,Draft beer,2026-05-15 08:22,,yes,,,,,no,,,,,,,,,lager beer,600,6.0,288,3,23,0,,no,,,,,,,,,
+2026-05-16,3 mini grilled sandwiches,2026-05-16 08:23,0.89,yes,photo_ai,openai,gpt-5.4,,no,,,3 mini grilled sandwiches,774,31,87,34,0.89,bread,120,3.0,318,11,59,4,0.97,no,,bread,120,3.0,318,11,59,4,0.97
+2026-05-16,3 mini grilled sandwiches,2026-05-16 08:23,0.89,yes,photo_ai,openai,gpt-5.4,,no,,,3 mini grilled sandwiches,774,31,87,34,0.89,semi-hard cheese,45,3.0,162,11,1,13,0.90,no,,semi-hard cheese,45,3.0,162,11,1,13,0.90
+2026-05-16,3 mini grilled sandwiches,2026-05-16 08:23,0.89,yes,photo_ai,openai,gpt-5.4,,no,,,3 mini grilled sandwiches,774,31,87,34,0.89,ham,45,3.0,65,9,1,3,0.84,no,,ham,45,3.0,65,9,1,3,0.84
+2026-05-16,3 mini grilled sandwiches,2026-05-16 08:23,0.89,yes,photo_ai,openai,gpt-5.4,,no,,,3 mini grilled sandwiches,774,31,87,34,0.89,butter or frying fat,18,3.0,129,0,0,15,0.82,no,,butter or frying fat,18,3.0,129,0,0,15,0.82
+2026-05-16,3 mini grilled sandwiches,2026-05-16 08:23,0.89,yes,photo_ai,openai,gpt-5.4,,no,,,3 mini grilled sandwiches,774,31,87,34,0.89,brown sauce,60,3.0,100,0,26,0,0.72,no,,brown sauce,60,3.0,100,0,26,0,0.72
+
+--- Vývoj váhy ---
+Datum,Váha (kg),Má foto
+2026-04-30,79.0,no
+
+--- AI Attempts ---
+Timestamp,kind,modality,provider,model,status,confidence,error_message
+2026-04-30 21:25,meal,photo_ai,openai,gpt-5.4,success,0.97,
+2026-04-30 21:41,meal,photo_ai,openai,gpt-5.4,success,0.96,
+2026-05-01 06:52,meal,photo_ai,openai,gpt-5.4,success,0.94,
+2026-05-01 20:15,meal,photo_ai,openai,gpt-5.4,success,0.91,
+2026-05-02 17:22,meal,barcode_ai_fallback,openai,gpt-5.4,success,0.66,
+2026-05-02 17:22,meal,barcode_ai_fallback,openai,gpt-5.4,success,0.99,
+2026-05-02 17:30,meal,photo_ai,openai,gpt-5.4,success,0.93,
+2026-05-02 18:15,meal,barcode_ai_fallback,openai,gpt-5.4,low_confidence,0.22,
+2026-05-02 18:15,meal,photo_ai,openai,gpt-5.4,success,0.99,
+2026-05-02 19:49,meal,photo_ai,openai,gpt-5.4,success,0.86,
+2026-05-03 21:21,meal,photo_ai,openai,gpt-5.4,success,0.83,
+2026-05-03 21:22,meal,photo_ai,openai,gpt-5.4,success,0.83,
+2026-05-03 22:24,meal,photo_ai,openai,gpt-5.4,success,0.95,
+2026-05-04 05:37,meal,photo_ai,openai,gpt-5.4,success,0.88,
+2026-05-04 12:53,meal,photo_ai,openai,gpt-5.4,success,0.81,
+2026-05-04 17:23,meal,photo_ai,openai,gpt-5.4,success,0.78,
+2026-05-04 18:29,meal,photo_ai,openai,gpt-5.4,success,0.84,
+2026-05-05 06:34,meal,photo_ai,openai,gpt-5.4,success,0.95,
+2026-05-05 15:12,meal,photo_ai,openai,gpt-5.4,success,0.98,
+2026-05-06 04:58,meal,photo_ai,openai,gpt-5.4,success,0.95,
+2026-05-06 08:59,meal,photo_ai,openai,gpt-5.4,success,0.98,
+2026-05-06 12:00,meal,photo_ai,openai,gpt-5.4,success,0.88,
+2026-05-07 16:26,meal,photo_ai,openai,gpt-5.4,success,0.95,
+2026-05-08 12:03,meal,photo_ai,openai,gpt-5.4,success,0.93,
+2026-05-08 14:11,meal,photo_ai,openai,gpt-5.4,success,0.77,
+2026-05-08 14:23,meal,photo_ai,openai,gpt-5.4,success,0.86,
+2026-05-08 14:32,meal,photo_ai,openai,gpt-5.4,success,0.95,
+2026-05-08 15:40,meal,photo_ai,openai,gpt-5.4,success,0.95,
+2026-05-08 18:37,meal,photo_ai,openai,gpt-5.4,success,0.95,
+2026-05-09 13:55,meal,photo_ai,openai,gpt-5.4,success,0.88,
+2026-05-09 13:56,meal,photo_ai,openai,gpt-5.4,success,0.91,
+2026-05-09 15:02,meal,photo_ai,openai,gpt-5.4,success,0.85,
+2026-05-09 15:02,meal,fix_with_ai_rerun,openai,gpt-5.4,success,0.97,
+2026-05-09 17:48,meal,photo_ai,openai,gpt-5.4,success,0.98,
+2026-05-09 18:21,meal,photo_ai,openai,gpt-5.4,success,0.91,
+2026-05-09 19:49,meal,barcode_ai_fallback,openai,gpt-5.4,low_confidence,0.27,
+2026-05-10 09:16,meal,photo_ai,openai,gpt-5.4,success,0.91,
+2026-05-10 13:54,meal,photo_ai,openai,gpt-5.4,success,0.91,
+2026-05-10 15:43,meal,barcode_ai_fallback,openai,gpt-5.4,low_confidence,0.22,
+2026-05-10 15:44,meal,photo_ai,openai,gpt-5.4,success,0.97,
+2026-05-10 15:44,meal,barcode_ai_fallback,openai,gpt-5.4,success,0.97,
+2026-05-10 19:23,meal,photo_ai,openai,gpt-5.4,success,0.92,
+2026-05-12 06:42,meal,photo_ai,openai,gpt-5.4,success,0.94,
+2026-05-12 16:51,meal,barcode_ai_fallback,openai,gpt-5.4,low_confidence,0.23,
+2026-05-12 16:52,meal,barcode_ai_fallback,openai,gpt-5.4,low_confidence,0.29,
+2026-05-12 16:52,meal,photo_ai,openai,gpt-5.4,success,0.99,
+2026-05-12 18:33,meal,photo_ai,openai,gpt-5.4,success,0.94,
+2026-05-13 11:22,meal,photo_ai,openai,gpt-5.4,success,0.92,
+2026-05-16 08:23,meal,photo_ai,openai,gpt-5.4,success,0.89,
+
+--- Souhrnné statistiky ---
+Celkem dní,17
+Celkem jídel,81
+Celkem ingrediencí,223
+Celkem cvičení,0
+Celkem záznamů váhy,1
+Průměr kalorií/den,1922
+Průměr bílkovin/den (g),79
+Průměr sacharidů/den (g),229
+Průměr tuků/den (g),68
+Průměr jídel/den,4.8
+Průměr cvičení/den,0.0
+Soft-deleted meals,12
+Soft-deleted ingredients,148
+AI attempts (total),49
+AI attempts (success),44
+AI attempts (low_confidence),5

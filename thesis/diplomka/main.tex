@@ -30,6 +30,27 @@
 \usetikzlibrary{positioning,arrows.meta,shapes.geometric,fit,calc,backgrounds,shapes.multipart}
 
 % =========================================================================
+% PŘÍPADNÝ FIX UMÍSTĚNÍ FIGUR (zakomentováno — aktivovat dle potřeby).
+%
+% Problém: default [ht] dovoluje LaTeXu posunout figuru až za hranici sekce,
+%   takže obrázek se objeví v nesouvisející kapitole. Naopak striktní omezení
+%   vede ke vzniku poloprázdných stránek.
+%
+% Postupné kroky (od nejméně invazivního po nejagresivnější):
+%   1) placeins[section] — zabrání floatům utéct přes \section{} barieru.
+%   2) Uvolnění fraction parametrů — omezí vznik poloprázdných stránek.
+%   3) float + ruční [H] u problematických figur — vynutí přesné místo
+%      (ale může vytvořit prázdno pod figurou, když se další nevejde).
+%
+% \usepackage[section]{placeins}
+% \usepackage{float}
+% \renewcommand{\topfraction}{0.9}
+% \renewcommand{\bottomfraction}{0.8}
+% \renewcommand{\textfraction}{0.1}
+% \renewcommand{\floatpagefraction}{0.75}
+% =========================================================================
+
+% =========================================================================
 % LADITELNÝ PARAMETR: zaoblení rohů iOS screenshotů (zlomek šířky obrázku).
 %   0.04 = jemné, 0.06 = střední, 0.08-0.10 = výrazné, 0.13 = iOS spec.
 % Změnou této hodnoty se přepočte zaoblení u všech 25 snímků v dokumentu.

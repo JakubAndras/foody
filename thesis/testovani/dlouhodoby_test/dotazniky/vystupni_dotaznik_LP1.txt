@@ -6,6 +6,21 @@
 
 ---
 
+## Sekce 0 — pár údajů o tobě
+
+| | |
+|---|---|
+| Tvůj kód | LP1 |
+| Datum vyplnění | 16.5.2026 |
+| Kolik dní celkem trvalo tvé testovací období? | 14 |
+| Jaký hlavní cíl jsi měl/a na začátku testování? | Hubnutí |
+| Věk | 28 |
+| Pohlaví | Žena |
+| Měl/a jsi předtím zkušenost s aplikacemi pro sledování stravy? | Kalorické tabulky |
+| Máš nějaká zdravotní omezení nebo specifickou dietu (alergie, intolerance, vegetariánství, jiné)? | Ano, lepek, vajíčka |
+
+---
+
 ## Sekce A — System Usability Scale (SUS)
 
 > **Co to je:** SUS je standardizovaný dotazník použitelnosti, který se používá v HCI od roku 1986. Skládá se z deseti tvrzení; u každého zatrhneš, jak moc s ním souhlasíš na škále 1 až 5. Liché položky jsou formulovány pozitivně, sudé negativně — to není chyba, je to záměr (vyvažuje to tendenci automaticky souhlasit).
