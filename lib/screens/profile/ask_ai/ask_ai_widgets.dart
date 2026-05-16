@@ -273,8 +273,8 @@ class AskAiResponseCard extends StatelessWidget {
             title: tr(LocaleKeys.ask_ai_response_title),
             icon: CupertinoIcons.sparkles,
             iconGradient: AppGradients.askAiPrimary,
-            iconRadius: AppRadii.pill,
-            iconSize: 32,
+            iconRadius: AppRadii.xs,
+            iconSize: 28,
           ),
           const SizedBox(height: AppSpacing.s),
           Text(

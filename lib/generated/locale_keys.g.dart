@@ -788,6 +788,14 @@ abstract class  LocaleKeys {
   static const faq_a_nutrition_goals = 'faq_a_nutrition_goals';
   static const faq_q_data_storage = 'faq_q_data_storage';
   static const faq_a_data_storage = 'faq_a_data_storage';
+  static const faq_q_exercise_tracking = 'faq_q_exercise_tracking';
+  static const faq_a_exercise_tracking = 'faq_a_exercise_tracking';
+  static const faq_q_ask_ai = 'faq_q_ask_ai';
+  static const faq_a_ask_ai = 'faq_a_ask_ai';
+  static const faq_q_dietary_preferences = 'faq_q_dietary_preferences';
+  static const faq_a_dietary_preferences = 'faq_a_dietary_preferences';
+  static const faq_q_weight_tracking = 'faq_q_weight_tracking';
+  static const faq_a_weight_tracking = 'faq_a_weight_tracking';
   static const health_apple_health = 'health_apple_health';
   static const health_health_connect = 'health_health_connect';
   static const health_sync_to_apple_health = 'health_sync_to_apple_health';

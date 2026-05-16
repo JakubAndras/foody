@@ -19,12 +19,16 @@ class _FaqScreenState extends State<FaqScreen> {
 
   List<_FaqItem> get _items => [
         _FaqItem(question: tr(LocaleKeys.faq_q_how_does_foody_work), answer: tr(LocaleKeys.faq_a_how_does_foody_work)),
+        _FaqItem(question: tr(LocaleKeys.faq_q_without_photo), answer: tr(LocaleKeys.faq_a_without_photo)),
+        _FaqItem(question: tr(LocaleKeys.faq_q_barcode), answer: tr(LocaleKeys.faq_a_barcode)),
         _FaqItem(question: tr(LocaleKeys.faq_q_how_accurate), answer: tr(LocaleKeys.faq_a_how_accurate)),
         _FaqItem(question: tr(LocaleKeys.faq_q_estimate_off), answer: tr(LocaleKeys.faq_a_estimate_off)),
         _FaqItem(question: tr(LocaleKeys.faq_q_per_serving), answer: tr(LocaleKeys.faq_a_per_serving)),
-        _FaqItem(question: tr(LocaleKeys.faq_q_without_photo), answer: tr(LocaleKeys.faq_a_without_photo)),
-        _FaqItem(question: tr(LocaleKeys.faq_q_barcode), answer: tr(LocaleKeys.faq_a_barcode)),
         _FaqItem(question: tr(LocaleKeys.faq_q_nutrition_goals), answer: tr(LocaleKeys.faq_a_nutrition_goals)),
+        _FaqItem(question: tr(LocaleKeys.faq_q_dietary_preferences), answer: tr(LocaleKeys.faq_a_dietary_preferences)),
+        _FaqItem(question: tr(LocaleKeys.faq_q_exercise_tracking), answer: tr(LocaleKeys.faq_a_exercise_tracking)),
+        _FaqItem(question: tr(LocaleKeys.faq_q_weight_tracking), answer: tr(LocaleKeys.faq_a_weight_tracking)),
+        _FaqItem(question: tr(LocaleKeys.faq_q_ask_ai), answer: tr(LocaleKeys.faq_a_ask_ai)),
         _FaqItem(question: tr(LocaleKeys.faq_q_data_storage), answer: tr(LocaleKeys.faq_a_data_storage)),
       ];
 
