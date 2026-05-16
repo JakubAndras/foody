@@ -1,12 +1,8 @@
 \chapter{Implementace}
 \label{ch:implementace}
 
-Tato kapitola popisuje realizaci mobilní aplikace Foody, která navazuje na analytickou a návrhovou fázi představenou v~kapitolách~\ref{ch:analyza} a~\ref{ch:navrh}.
-Na základě HiFi prototypu a funkčních požadavků definovaných v~sekci~\ref{sec:pozadavky} byla provedena implementace vybraných funkcí aplikace s~cílem ověřit, do jaké míry je navržený koncept technicky realizovatelný.
-V~úvodu kapitoly je provedena rešerše přístupů k~vývoji mobilních aplikací a srovnání relevantních technologických frameworků, na jejímž základě byly zvoleny konkrétní technologie popsané v~sekci~\ref{sec:vyberTechnologii}.
-Následuje popis softwarové architektury, datového modelu a integrace modelu umělé inteligence pro rozpoznávání potravin.
-Dále jsou představeny vstupní modality, klíčové implementované funkce a vybrané obrazovky aplikace.
-Kapitola je uzavřena přehledem stavu implementace funkčních požadavků a diskusí omezení výsledného řešení.
+Tato kapitola popisuje realizaci mobilní aplikace Foody na základě HiFi prototypu a~funkčních požadavků z~kapitoly~\ref{ch:navrh} s~cílem ověřit technickou realizovatelnost navrženého konceptu.
+Postup výkladu odpovídá pořadí, ve kterém byla aplikace stavěna: od volby platformy přes architekturu a~datový model k~integraci modelu umělé inteligence a~uživatelským obrazovkám.
 
 \section{Výběr technologií}
 \label{sec:vyberTechnologii}
@@ -33,28 +29,14 @@ API klíče pro externí služby OpenAI a Google Gemini jsou načítány ze soub
 \subsection{Model umělé inteligence a komunikace s~API}
 \label{subsec:aiApi}
 
-V~rámci návrhu aplikace Foody bylo jako klíčová technologická komponenta identifikováno propojení s~externím modelem umělé inteligence, který zajišťuje automatické rozpoznávání jídel z~fotografií, analýzu cvičení z~textových popisů a generování nutričních doporučení.
-Tato podsekce popisuje výběr konkrétního poskytovatele modelu, zdůvodnění přístupu založeného na vzdáleném cloudovém API a~základní komunikační vzor mezi mobilním klientem a~koncovým bodem poskytovatele.
+Klíčovou technologickou komponentou aplikace je propojení s~externím modelem umělé inteligence, který zajišťuje rozpoznávání jídel z~fotografií, analýzu cvičení z~textových popisů a~generování nutričních doporučení.
 
-Jako primární poskytovatel byl zvolen multimodální jazykový model od společnosti OpenAI, přístupný prostřednictvím rozhraní Chat Completions API.
-Tento model podporuje vstup kombinující textové instrukce s~obrazovými daty kódovanými ve formátu Base64, což umožňuje předat mu fotografii jídla společně se strukturovaným promptem a~kontextem uživatelského profilu v~rámci jediného požadavku.
-Odpověď modelu je strukturována ve formátu JSON definovaném v~rámci systémového promptu, přičemž obsahuje identifikaci jídla, odhad nutričních hodnot jednotlivých ingrediencí, numerickou míru nejistoty a celkový výsledek analýzy.
-Pro implementaci HTTP komunikace je využita knihovna Dio, která poskytuje podporu pro konfiguraci hlaviček, nastavení časových limitů a strukturované zpracování chybových odpovědí~\cite{openAiApi}.
+Jako primární poskytovatel byl zvolen multimodální jazykový model od společnosti OpenAI přístupný prostřednictvím rozhraní Chat Completions API~\cite{openAiApi}.
+Vstupem jsou textové instrukce kombinované s~obrazovými daty kódovanými ve formátu Base64, odpověď je strukturována ve formátu JSON definovaném systémovým promptem.
+Pro HTTP komunikaci je využita knihovna Dio.
+Jako alternativní poskytovatel byl integrován model Google Gemini přístupný prostřednictvím rozhraní Generative Language API~\cite{geminiApi}.
 
-Jako alternativní poskytovatel byl do architektury aplikace integrován model Google Gemini, přístupný prostřednictvím rozhraní Generative Language API.
-Architektura komunikační vrstvy je navržena tak, aby byla nezávislá na konkrétním poskytovateli, a to prostřednictvím jednotného abstraktního rozhraní pro generování odpovědí, které musí všechny implementace dodržet.
-Zastřešující komponenta spravuje aktuálně zvoleného poskytovatele a umožňuje za běhu přepínat mezi implementacemi pro OpenAI a pro Gemini, přičemž obě tyto implementace splňují totéž rozhraní.
-Tento návrh umožňuje rozšíření o~další poskytovatele bez zásahu do vyšších vrstev aplikace~\cite{geminiApi}.
-
-Na straně bezpečnosti komunikace je uživatelský vstup před odesláním poskytovateli ošetřen sanitizační vrstvou, která provádí sanitizaci vstupního textu (odstranění řídících znaků, ořez na maximální povolenou délku), detekci podezřelých vzorů naznačujících pokus o~\emph{prompt injection} a obalení uživatelského textu do XML delimitérů pro strukturální izolaci od systémových instrukcí (podrobněji v~sekci~\ref{subsec:promptInjection}).
-Systémové prompty obsahují explicitní direktivu zakazující modelu interpretovat obsah uživatelského vstupu jako instrukce.
-Tato vícevrstvá ochrana snižuje riziko manipulace chování modelu prostřednictvím záměrně formulovaných vstupů.
-
-Přístup založený na vzdáleném modelu s~sebou nese rovněž omezení, která je třeba zohlednit.
-Aplikace vyžaduje pro funkci rozpoznávání pomocí umělé inteligence aktivní internetové připojení, přičemž zbývající funkcionality (manuální záznam, prohlížení historie, export dat) jsou plně dostupné v~režimu offline.
-Latence odpovědi se v~závislosti na velikosti odesílaného obrázku a vytížení poskytovatele pohybuje řádově v~jednotkách sekund, což vyžaduje vhodný návrh uživatelského rozhraní s~indikací probíhajícího zpracování.
-V~neposlední řadě je každé volání modelu zpoplatněno dle cenového modelu poskytovatele, což představuje provozní náklad, jehož výše je úměrná frekvenci používání funkcí postavených na umělé inteligenci.
-Podrobný popis architektury pipeline pro umělou inteligenci, struktury promptů a mechanismu práce s~nejistotou výstupu je uveden v~sekci~\ref{sec:integraceAi}.
+Detaily pipeline pro umělou inteligenci, struktura promptů, mechanismus práce s~nejistotou výstupu a~ochrana proti útokům typu \emph{prompt injection} jsou popsány v~sekci~\ref{sec:integraceAi}, omezení vyplývající z~použití vzdáleného modelu v~sekci~\ref{sec:omezeniImplementace}.
 
 \subsection{Další klíčové knihovny}
 \label{subsec:dalsiKnihovny}
@@ -65,28 +47,18 @@ Pro uživatelské funkce mají přímý dopad zejména \texttt{speech\_to\_text}
 \section{Softwarová architektura}
 \label{sec:softwarovaArchitektura}
 
-Na základě technologií zvolených v~sekci~\ref{sec:vyberTechnologii} byla navržena softwarová architektura aplikace Foody optimalizovaná pro lokální zpracování dat s~komunikací s~externími službami umělé inteligence prostřednictvím REST API.
-Architektura vychází z~návrhového vzoru \emph{Model-View-ViewModel} (MVVM) adaptovaného pro prostředí frameworku Flutter s~využitím reaktivních rozšíření knihovny GetX~\cite{getxDoc}.
-Tato sekce popisuje celkovou architekturu systému včetně použitých architektonických vzorů a navigační model s~organizací obrazovek.
-V~podsekci~\ref{subsec:celkovaArchitektura} je představena celková architektura klientské aplikace bez vlastního backendu, včetně vrstveného uspořádání komponent, použitých návrhových vzorů a struktury projektu.
-V~závěrečné podsekci~\ref{subsec:navigace} je popsán navigační model aplikace, struktura hlavní obrazovky a organizace přibližně 60~obrazovek do tematických skupin.
+Na základě technologií zvolených v~sekci~\ref{sec:vyberTechnologii} byla navržena softwarová architektura aplikace Foody postavená na návrhovém vzoru \emph{Model-View-ViewModel} (MVVM) adaptovaném pro prostředí frameworku Flutter s~využitím reaktivních rozšíření knihovny GetX~\cite{getxDoc}.
+Následující podsekce popisují celkovou architekturu klientské aplikace a~navigační model s~organizací přibližně 60~obrazovek do tematických skupin.
 
 \subsection{Celková architektura systému}
 \label{subsec:celkovaArchitektura}
 
-V~rámci návrhu architektury aplikace Foody bylo základním rozhodnutím zvolení přístupu bez vlastního backendového serveru.
-Aplikace je koncipována jako samostatný mobilní klient, který veškerá uživatelská data ukládá lokálně na zařízení v~databázi SQLite a s~externími službami komunikuje přímo prostřednictvím REST API.
-Tato volba reflektuje tematické zaměření práce na uživatelskou stránku aplikace a~na její experimentální ověření, nikoliv na vývoj a~provoz vlastní serverové infrastruktury.
-Vlastní backend by sice aplikaci rozšířil o~možnost ukládat uživatelská data ve vzdáleném úložišti a~synchronizovat je mezi více zařízeními, z~hlediska samotné použitelnosti a~kvality výstupu pro uživatele by však neznamenal podstatnou změnu, neboť všechny klíčové výpočty probíhají buď přímo na zařízení, nebo prostřednictvím externích cloudových API.
+Základním rozhodnutím při návrhu architektury bylo zvolení přístupu bez vlastního backendového serveru.
+Aplikace je koncipována jako samostatný mobilní klient, který veškerá uživatelská data ukládá lokálně v~databázi SQLite a~s~externími službami komunikuje přímo prostřednictvím REST API.
+Volba reflektuje zaměření práce na uživatelskou stránku aplikace a~její experimentální ověření, nikoliv na vývoj a~provoz vlastní serverové infrastruktury.
 
-Z~hlediska komunikace s~externími službami aplikace využívá tři vzdálená API.
-Primárním poskytovatelem analýzy je rozhraní OpenAI Chat Completions API, prostřednictvím kterého jsou zpracovávány fotografické a textové vstupy pro rozpoznávání jídel, analýzu cvičení a generování nutričních doporučení.
-Jako alternativní poskytovatel je integrováno rozhraní Google Gemini Generative Language API.
-Tato integrace je v~kódu připravena, ale v~aktuální verzi aplikace není aktivně používána, což je v~obrázku~\ref{fig:architektura} znázorněno přerušovaným okrajem příslušného boxu.
-Architektura umožňuje za běhu přepínat mezi oběma poskytovateli, jak bylo popsáno v~sekci~\ref{subsec:aiApi}.
-Pro vyhledávání nutričních údajů produktů na základě čárového kódu je využíváno veřejné API služby Open Food Facts.
-Veškerá síťová komunikace probíhá prostřednictvím HTTP klienta Dio, který zajišťuje jednotné zpracování časových limitů, chybových odpovědí a autorizačních hlaviček.
-Schéma celkové architektury zahrnující mobilního klienta, lokální databázi a externí služby je znázorněno na obrázku~\ref{fig:architektura}.
+Aplikace využívá tři vzdálená API: rozhraní OpenAI Chat Completions API jako primárního poskytovatele analýzy, rozhraní Google Gemini Generative Language API jako alternativy (v~kódu integrované, v~aktuální verzi neaktivované, což je v~obrázku~\ref{fig:architektura} znázorněno přerušovaným okrajem) a~veřejné API služby Open Food Facts pro vyhledávání nutričních údajů podle čárového kódu.
+Veškerá síťová komunikace probíhá prostřednictvím HTTP klienta Dio.
 
 \begin{figure}[ht]
 	\centering
@@ -95,29 +67,15 @@ Schéma celkové architektury zahrnující mobilního klienta, lokální databá
 	\label{fig:architektura}
 \end{figure}
 
-Vrstva kontrolerů (ViewModel) vystavuje pozorovatelné proměnné, na které se prezentační vrstva naváže a automaticky se překresluje při změně dat.
-Architekturu doplňuje vzor \emph{Repository} pro abstrakci přístupu k~datům, vzor \emph{Strategy} pro zaměnitelné implementace poskytovatelů umělé inteligence (viz sekce~\ref{subsec:aiApi}) a centrální registr závislostí v~souboru \texttt{lib/locator.dart}.
+Vnitřní architektura mobilního klienta je organizována do pěti logických vrstev mapovaných na tři role vzoru MVVM.
+Nejvyšší vrstvou je View, kterou tvoří obrazovky a~sdílené widgety postavené na deklarativní kompozici widgetů frameworku Flutter.
+Pod ní stojí kontrolery zapouzdřující prezentační logiku obrazovek a~spravující reaktivní stav prostřednictvím pozorovatelných proměnných (ViewModel), na které se View váže a~automaticky se překresluje při změně dat.
+Roli Model plní tři podvrstvy: doménové služby (pipeline pro umělou inteligenci, správa uživatelského profilu, plánování notifikací, sestavování doménových agregátů), datová vrstva s~repozitáři abstrahujícími přístup k~lokální SQLite databázi a~k~síťovým klientům pro externí API, a~vrstva datových modelů sdílených napříč ostatními vrstvami.
 
-V~souladu se vzorem MVVM je vnitřní architektura mobilního klienta organizována do pěti logických vrstev, které lze mapovat na tři základní role tohoto vzoru.
-Nejvyšší vrstvou je prezentační vrstva (View), tvořená obrazovkami (adresář \texttt{lib/screens/}) a~sdílenými widgety (\texttt{lib/widgets/}), která definuje uživatelské rozhraní aplikace prostřednictvím deklarativní kompozice Flutter widgetů.
-Pod ní se nachází vrstva kontrolerů (ViewModel, adresář \texttt{lib/controller/}), jejíž komponenty rozšiřují třídu \texttt{GetxController} a~zapouzdřují prezentační logiku jednotlivých obrazovek včetně reakcí na uživatelské akce a~správy reaktivního stavu zobrazených dat prostřednictvím pozorovatelných proměnných.
-
-Zbývající tři vrstvy společně tvoří vrstvu Model vzoru MVVM.
-První z~nich je vrstva služeb (\texttt{lib/services/}), která implementuje doménovou logiku aplikace včetně pipeline pro umělou inteligenci, správy uživatelského profilu, plánování notifikací a~sestavování doménových agregátů z~databázových entit.
-Přístup k~datům zajišťují dvě oddělené vrstvy odpovídající dvěma typům datových zdrojů aplikace, přičemž abstrakci nad těmito zdroji poskytuje vzor \emph{Repository}.
-
-Lokální datová vrstva (\texttt{lib/database/}) obsahuje definice databázových entit, datových přístupových objektů (DAO) a~migračních skriptů frameworku Floor, přičemž zajišťuje typově bezpečný přístup k~relačním datům uloženým v~SQLite.
-Síťová vrstva (\texttt{lib/network/}) zapouzdřuje REST klienty pro komunikaci s~externími API a~poskytuje vyšším vrstvám typované odpovědi bez nutnosti pracovat přímo s~HTTP protokolem.
-Repozitáře, jejichž ústředním zástupcem je \texttt{DayRecordRepository} pro denní záznam (sekce~\ref{subsec:repozitare}), fungují jako fasáda nad těmito datovými zdroji a~vystavují výsledky prostřednictvím reaktivních streamů, čímž kontrolery a~služby nejsou vázány na konkrétní implementaci úložiště.
-Na nejnižší úrovni stojí vrstva modelů (\texttt{lib/model/}), která definuje datové třídy s~podporou serializace prostřednictvím knihovny \texttt{json\_serializable} a~slouží jako společný jazyk pro výměnu dat mezi ostatními vrstvami.
-
-Na úrovni adresářové struktury projektu odpovídá každá architektonická vrstva samostatnému adresáři v~rámci kořenového adresáře \texttt{lib/}.
-Kromě výše popsaných vrstev projekt obsahuje adresář \texttt{lib/utils/} se sdílenými pomocnými funkcemi, jako jsou definice promptů pro model umělé inteligence, validační logika a formátovací utility, a adresář \texttt{lib/generated/} s~automaticky generovanými soubory pro lokalizaci a databázový kód, které nejsou editovány ručně.
-Konfigurační soubor \texttt{lib/app\_theme.dart} centralizuje veškeré návrhové tokeny aplikace (barvy, rozestupy, typografie, stíny), čímž zajišťuje konzistentní vizuální styl napříč všemi obrazovkami.
-Vstupním bodem aplikace je soubor \texttt{lib/main.dart}, který řídí inicializační sekvenci zahrnující načtení konfigurace prostředí, registraci závislostí, obnovení uživatelské relace a spuštění plánovaných notifikací, přičemž samotná konfigurace \texttt{MaterialApp} je definována v~souboru \texttt{lib/app.dart}~\cite{flutterDoc}.
-
-Komunikace mezi vrstvami probíhá přes centralizovaný registr závislostí, čímž jsou kontrolery a služby odděleny od konkrétních implementací datových zdrojů.
-Tento návrh umožňuje za běhu nahradit implementaci poskytovatele umělé inteligence (sekce~\ref{subsec:aiApi}) bez zásahu do vyšších vrstev aplikace.
+Architekturu doplňují tři návrhové vzory.
+Vzor \emph{Repository} izoluje vyšší vrstvy od konkrétní implementace úložiště a~vystavuje výsledky prostřednictvím reaktivních streamů.
+Výměnu poskytovatele umělé inteligence za běhu (sekce~\ref{subsec:aiApi}) umožňuje vzor \emph{Strategy} bez zásahu do vyšších vrstev.
+Propojení vrstev a~oddělení kontrolerů od konkrétních datových zdrojů zajišťuje vzor \emph{Service Locator} implementovaný jako centrální registr závislostí~\cite{flutterDoc}.
 
 \subsection{Navigace a struktura obrazovek}
 \label{subsec:navigace}
@@ -734,61 +692,6 @@ Funkce automatické úpravy makroživin proporcionálně přepočítává cíle 
 Z~hlediska funkčního požadavku FR-05 (kontrola nad daty) aplikace umožňuje mazání jednotlivých záznamů jídel a cvičení, neobsahuje však úplné mazání uživatelského profilu.
 Funkční požadavek FR-26 (offline tolerance) je naplněn principem \emph{local-first}, kdy jsou veškerá uživatelská data primárně ukládána do lokální SQLite databáze (viz sekce~\ref{sec:datovyModel}), což zajišťuje plnou funkčnost aplikace bez internetového připojení s~výjimkou modalit závislých na cloudovém modelu umělé inteligence.
 
-\section{Přehled implementovaných funkčních požadavků}
-\label{sec:prehledFR}
-
-Pro shrnutí míry pokrytí návrhové specifikace je v~tabulce~\ref{tab:fr-status} uveden přehled stavu implementace všech třiceti funkčních požadavků definovaných v~sekci~\ref{sec:pozadavky}.
-Každý požadavek je klasifikován do jedné ze tří kategorií, kterými jsou implementováno, částečně implementováno a neimplementováno, doplněných o~stručné zdůvodnění a odkaz na příslušné komponenty aplikace.
-Tato klasifikace tvoří přímý podklad pro vyhodnocení splnění návrhových cílů v~kapitole~\ref{ch:zaver} a pro identifikaci oblastí, jejichž ověření je předmětem uživatelského testování v~kapitole~\ref{ch:testovani}.
-
-\begin{footnotesize}
-\renewcommand{\arraystretch}{1.35}
-\rowcolors{2}{gray!10}{white}
-\setlength{\tabcolsep}{4pt}
-\begin{longtable}{@{}l>{\raggedright\arraybackslash}p{4.4cm}>{\raggedright\arraybackslash}p{2.2cm}>{\raggedright\arraybackslash}p{4.4cm}@{}}
-	\toprule
-	\rowcolor{white}\textbf{FR} & \textbf{Název} & \textbf{Stav} & \textbf{Poznámka} \\
-	\midrule
-	\endfirsthead
-	\toprule
-	\rowcolor{white}\textbf{FR} & \textbf{Název} & \textbf{Stav} & \textbf{Poznámka} \\
-	\midrule
-	\endhead
-	FR-01 & Ruční přidání záznamu jídla bez umělé inteligence & Implementováno & Editační obrazovka jídla, manuální vstup ingrediencí \\
-	FR-02 & Denní přehled kalorií a makroživin & Implementováno & Hlavní obrazovka s~kontrolery denního záznamu \\
-	FR-03 & Nastavení cílových hodnot & Implementováno & Služba nutričních cílů s~obrazovkou nastavení \\
-	FR-04 & Správa profilu uživatele & Implementováno & Profilové obrazovky, služba uživatelské relace \\
-	FR-05 & Kontrola nad daty a mazání & Částečně implementováno & Mazání jídel a cvičení funkční, mazání účtu chybí \\
-	FR-06 & Fotografie jako vstup pro rozpoznání & Implementováno & Obrazovka kamery, pipeline umělé inteligence \\
-	FR-07 & Návrh položek a porcí umělou inteligencí & Implementováno & \texttt{AiPipelineService}, strukturovaný JSON prompt \\
-	FR-08 & Indikace nejistoty výstupu & Implementováno & Barevný badge (zelená $\geq$ 75~\%, žlutá $\geq$ 50~\%, červená $<$ 50~\%) \\
-	FR-09 & Vysvětlení limitů umělé inteligence & Implementováno & Pětistránková onboardingová sekvence s~tipy \\
-	FR-10 & Rozlišení limitu umělé inteligence a technické chyby & Částečně implementováno & Čárový kód: 6 typů chyb, AI pipeline: generické selhání \\
-	FR-11 & Textový fallback po selhání rozpoznání & Implementováno & Textový popis $\to$ pipeline umělé inteligence \\
-	FR-12 & Import fotografie z~galerie & Implementováno & Integrace knihovny \texttt{image\_picker} \\
-	FR-13 & Opakování rozpoznání z~editace & Implementováno & \uv{Fix with AI} a samostatná obrazovka porovnání verzí \\
-	FR-14 & Záznam bez fotografie (hlas, text) & Implementováno & Hlasový vstup, textový popis, manuální vstup \\
-	FR-15 & Jednotky množství (gramy, kusy) & Implementováno & 1~g, 100~g, vlastní jednotky, zlomky \\
-	FR-16 & Čtečka čárových kódů & Implementováno & Knihovna \texttt{mobile\_scanner}, klient Open Food Facts \\
-	FR-17 & Oblíbené položky & Implementováno & Příznak na jídlech, ingrediencích a cvičeních \\
-	FR-18 & Duplikace předchozího záznamu & Implementováno & Modální list s~výběrem data \\
-	FR-19 & Našeptávání podle historie & Částečně implementováno & Fulltextové vyhledávání s~debounce, bez klasického dropdown \\
-	FR-20 & Dietní omezení a intolerance & Implementováno & Předdefinovaný typ diety + uživatelská omezení \\
-	FR-21 & Porušení dietních omezení v~kalendáři & Implementováno & Karta s~měsíční mřížkou na obrazovce přehledů \\
-	FR-22 & Příjem versus výdej v~jednom pohledu & Implementováno & Hlavní obrazovka s~kalorickým příjmem a výdajem \\
-	FR-23 & Nastavení integrace výdeje & Částečně implementováno & Přepínače pro výdej a rollover, bez granulárních multiplikátorů \\
-	FR-24 & Týdenní a měsíční přehledy & Implementováno & Obrazovka přehledů s~kartou týdenní energie \\
-	FR-25 & Export dat (CSV, PDF) & Implementováno & Dedikovaná služba exportu s~výběrem období \\
-	FR-26 & Offline tolerance & Implementováno & Lokální SQLite, umělá inteligence vyžaduje připojení \\
-	FR-27 & Dotazy v~přirozeném jazyce & Implementováno & Obrazovka Ask AI, dvouprůchodový systém \\
-	FR-28 & Měsíční motivační souhrn & Implementováno & Periodicky generované shrnutí (denně, týdně, měsíčně) \\
-	FR-29 & Nastavitelné notifikace & Implementováno & Pět typů připomínek s~knihovnou flutter\_local\_notifications \\
-	FR-30 & Skrytí a zobrazení pokročilých funkcí & Částečně implementováno & Individuální přepínače, bez režimu basic versus advanced \\
-	\bottomrule
-	\caption{Stav implementace funkčních požadavků.} \label{tab:fr-status} \\
-\end{longtable}
-\end{footnotesize}
-
 \section{Omezení implementace}
 \label{sec:omezeniImplementace}
 
@@ -805,8 +708,7 @@ Komunikace s~poskytovatelem modelu umělé inteligence vyžaduje aktivní intern
 Vyhledávání podle čárového kódu se opírá o~veřejnou databázi Open Food Facts, jejíž pokrytí lokálních českých produktů není úplné, což bylo identifikováno jako omezení i v~uživatelském testování (sekce~\ref{subsec:uiProblemyTesting}).
 Provoz multimodálního modelu představuje nezanedbatelný náklad na volání API, jehož výše je úměrná frekvenci použití funkcí postavených na umělé inteligenci a v~současné implementaci není limitován kvótami na úrovni uživatele.
 
-Pět funkčních požadavků (FR-05, FR-10, FR-19, FR-23 a FR-30) bylo implementováno pouze částečně.
-Konkrétní povaha omezení jednotlivých požadavků je uvedena ve sloupci \emph{Poznámka} tabulky~\ref{tab:fr-status} v~sekci~\ref{sec:prehledFR}.
+Pět funkčních požadavků bylo implementováno pouze částečně: FR-05 (mazání jídel a cvičení funguje, mazání účtu chybí), FR-10 (čárový kód rozlišuje šest typů chyb, pipeline pro umělou inteligenci vrací generické selhání), FR-19 (fulltextové vyhledávání s~debounce bez klasického dropdown), FR-23 (přepínače pro výdej a rollover bez granulárních multiplikátorů) a FR-30 (individuální přepínače pokročilých funkcí bez režimu \emph{basic} versus \emph{advanced}).
 
 Z~technických omezení je v~současné implementaci skenování nutričních etiket pokryto pouze pro základní makroživiny, zatímco rozšířené atributy jako vláknina, sůl a vybrané mikronutrienty zůstávají námětem pro budoucí iteraci.
 Analýza cvičení a výpočet nutričních cílů jsou v~aktuální verzi vázány přímo na poskytovatele OpenAI a nepřepínají se spolu s~hlavním poskytovatelem rozpoznávání jídel.

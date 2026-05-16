@@ -21,7 +21,7 @@ Z~provedeného uživatelského testování a doplňkové kvantitativní validace
 	\item Celkové skóre UEQ-S 1,917 odpovídá pozitivnímu hodnocení, přičemž hedonická kvalita (2,167) byla vnímána výše než pragmatická (1,667), což odráží zaujetí participantů moderním designem.
 	\item Všechny měřené nefunkční požadavky vázané na uživatelskou zátěž byly splněny: latence rozpoznávání umělou inteligencí činila v~průměru 7,67~s (limit NFR-02 je 20~s), čas zápisu nového záznamu 22~s (limit 5~min) a počet kroků pro zápis jednoduché položky se pohyboval mezi 2 (čárový kód) a 5 (foto, hlas) v~rámci limitu 6~kroků.
 	\item Druhá polovina hypotézy formulované v~úvodu, vázaná na požadavek NFR-01 a týkající se přesnosti odhadu energetické hodnoty, byla doplňkově ověřena indikativní validací pipeline pro umělou inteligenci na padesáti talířích z~referenčního datasetu Nutrition5k. Nejlepší konfigurace (model GPT-5.5 s~promptem improved v2) dosáhla 32,12~\% \emph{calorie MAPE}, na pásmu 100--400~kcal odpovídajícímu typickému použití aplikace pak 20 až 23~\% MAPE, což se přibližuje referenční hodnotě 26,1~\% specializovaného modelu z~původní publikace Nutrition5k.
-	\item Z~třiceti funkčních požadavků bylo 25 implementováno v~plném rozsahu a 5 částečně. Podrobnosti jsou uvedeny v~tabulce~\ref{tab:fr-status}.
+	\item Z~třiceti funkčních požadavků bylo 25 implementováno v~plném rozsahu a 5 částečně (FR-05, FR-10, FR-19, FR-23 a FR-30).
 	\item Z~testovací relace bylo identifikováno celkem 27 problémů (11 implementačních chyb a 16 problémů uživatelského rozhraní), z~nichž 25 bylo v~navazující iteraci opraveno. Bez úpravy zůstaly s~explicitním odůvodněním v~sekci~\ref{sec:doporuceni} pouze dva problémy s~nižší prioritou (U1 a U9).
 	\item Hlasový vstup byl participanty nezávisle označen za jednu z~nejvíce oceněných funkcí a v~debriefingu byl opakovaně navrhován k~rozšíření i do dalších rozhraní (modul cvičení, funkce úprav výsledku, dotazy v~přirozeném jazyce).
 \end{enumerate}
@@ -39,7 +39,7 @@ Tato omezení vytvářejí přirozené pole pro další rozvoj.
 % TODO: po dokončení dlouhodobé studie (všech 6 účastníků + výstupní dotazníky) aktualizovat
 % tento odstavec a~"Hlavní zjištění a~přínosy" výše. Doplnit (a) finální SUS skóre dlouhodobé
 % fáze, (b) Raw NASA-TLX hodnoty per dimenze, (c) tematický souhrn 3 otevřených otázek,
-% (d) přepočet telemetrických metrik na úplném vzorku, (e) srovnání s~krátkodobou fází
+% (d) přepočet behaviorálních metrik na úplném vzorku, (e) srovnání s~krátkodobou fází
 % (SUS 85,83 vs.~dlouhodobé X). Reflektovat dlouhodobou studii jako provedenou součást práce,
 % nikoliv jako doporučení do budoucna.
 Z~pohledu validace je nejvýznamnějším následujícím krokem dlouhodobá uživatelská studie s~větším a heterogennějším vzorkem participantů a delším časovým horizontem, která by ověřila retenci uživatelů, přesnost odhadu energie v~reálných stravovacích vzorcích nad rámec indikativní validace na padesáti referenčních talířích a vliv aplikace na splnění zdravotních cílů.
