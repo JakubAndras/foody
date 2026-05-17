@@ -15,7 +15,7 @@
 \paragraph{Orientace v~repozitáři.}
 Pro účely reprodukovatelnosti experimentů popsaných v~kapitole~\ref{ch:testovani} jsou klíčové části kódu lokalizovány následovně:
 \begin{itemize}
-	\item \textbf{Systémové prompty pro model umělé inteligence} (sekce~\ref{subsec:prompty}) -- soubor \texttt{lib/utils/prompt.dart}, který obsahuje plný text šablon pro všechny scénáře (rozpoznání jídla z~obrazu i textu, analýza cvičení, výpočet nutričních cílů a dotazy v~přirozeném jazyce) včetně použité verze \emph{improved v2} vyhodnocené v~benchmarku v~sekci~\ref{subsec:benchmarkPresnost}.
+	\item \textbf{Systémové prompty pro model umělé inteligence} (sekce~\ref{subsec:prompty}) -- soubor \texttt{lib/utils/prompt.dart}, který obsahuje plný text šablon pro všechny scénáře (rozpoznání jídla z~obrazu i textu, analýza cvičení, výpočet nutričních cílů a dotazy v~přirozeném jazyce) včetně použité verze \emph{improved v2} vyhodnocené v~benchmarku v~sekci~\ref{sec:benchmarkPresnost}.
 	\item \textbf{Sanitizace vstupu a ochrana proti prompt injection} (sekce~\ref{subsec:promptInjection}) -- soubor \texttt{lib/utils/prompt\_sanitizer.dart}.
 	\item \textbf{Pipeline pro umělou inteligenci a confidence gate} (sekce~\ref{subsec:confidence}) -- adresář \texttt{lib/services/ai\_feature/}.
 \end{itemize}

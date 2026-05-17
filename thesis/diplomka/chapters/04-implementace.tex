@@ -495,7 +495,7 @@ Komunikační vrstva pro analýzu jídel je proto navržena tak, aby byla nezáv
 V~projektu jsou pro hlavní pipeline připraveny dvě strategie, a~to pro OpenAI Chat Completions a~pro Google Gemini Generative Language.
 Zbývající scénáře (analýza cvičení, výpočet nutričních cílů, rozhraní Ask AI) jsou v~aktuální verzi vázány přímo na OpenAI a~rozšíření jejich abstrakce je formulováno jako námět pro další iteraci.
 
-Empirické porovnání tří variant modelů OpenAI (GPT-5.4, GPT-5.4-mini, GPT-5.5) ve dvou iteracích systémového promptu bylo provedeno v~rámci kvantitativního benchmarku popsaného v~sekci~\ref{subsec:benchmarkPresnost}, na jehož základě byl pro produkční nasazení zvolen jako výchozí model GPT-5.4 s~promptem improved v2.
+Empirické porovnání tří variant modelů OpenAI (GPT-5.4, GPT-5.4-mini, GPT-5.5) ve dvou iteracích systémového promptu bylo provedeno v~rámci kvantitativního benchmarku popsaného v~sekci~\ref{sec:benchmarkPresnost}, na jehož základě byl pro produkční nasazení zvolen jako výchozí model GPT-5.4 s~promptem improved v2.
 Doplňkovou součástí pipeline je funkce hlášení nesprávně rozpoznaného jídla dostupná z~editační obrazovky, která sbírá uživatelskou zpětnou vazbu pro budoucí ladění promptů a~výběr referenčních příkladů pro vyhodnocování.
 
 \section{Vstupní modality pro záznam stravy}
