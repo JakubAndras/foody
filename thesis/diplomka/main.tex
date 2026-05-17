@@ -85,9 +85,9 @@
 	subfieldofstudy-czech = {Interakce člověka s počítačem},
 	fieldofstudy-english = {Open Informatics},
 	subfieldofstudy-english = {Human-Computer Interaction},
-	keywords-czech = {umělá inteligence, rozpoznávání potravin, sledování kalorií, mobilní aplikace, Flutter, OpenAI},
-	keywords-english = {artificial intelligence, food recognition, calorie tracking, mobile application, Flutter, OpenAI},
-	day = 1,
+	keywords-czech = {rozpoznávání potravin, sledování kalorií, mobilní aplikace, Flutter, multimodální jazykový model, HCI, uživatelské testování, SUS, NASA-TLX},
+	keywords-english = {food recognition, calorie tracking, mobile application, Flutter, multimodal language model, HCI, user testing, SUS, NASA-TLX},
+	day = 22,
 	month = 5,
 	year = 2026,
 }
@@ -104,14 +104,22 @@
 % Pro hutnější (čistě indentovaný) styl: zakomentovat. Pro vzdušnější: zvýšit na 1\baselineskip.
 \setlength{\parskip}{0.5\baselineskip plus 0.2ex minus 0.2ex}
 
+% PDF metadata (zajistí, že název v PDF prohlížeči odpovídá názvu práce, ne placeholder)
+\hypersetup{
+	pdftitle={Aplikace pro rozpoznávání potravin a sledování kalorického příjmu pomocí AI},
+	pdfauthor={Jakub Sebastian Andráš},
+	pdfsubject={Diplomová práce, ČVUT FEL, Katedra počítačové grafiky a interakce},
+	pdfkeywords={rozpoznávání potravin, sledování kalorií, mobilní aplikace, Flutter, multimodální jazykový model, HCI, uživatelské testování, SUS, NASA-TLX}
+}
+
 % Český abstrakt
 \begin{abstract-czech}
-	% TODO: Doplnit český abstrakt po dokončení dlouhodobého testování (sekce~\ref{sec:dlouhodobeTestovani}).
+	Diplomová práce se zabývá návrhem, implementací a~ověřením mobilní aplikace Foody pro AI-asistované sledování kalorického příjmu s~cílem snížit časovou a~kognitivní zátěž záznamu stravy. Aplikace umožňuje zaznamenat jídlo pomocí fotografie, hlasového popisu, čárového kódu nebo ručního zadání a~nutriční hodnoty odhaduje multimodální jazykový model společnosti OpenAI. Návrh vychází ze strukturovaných rozhovorů se čtyřmi respondenty a~analýzy existujících aplikací. Aplikace je implementována ve frameworku Flutter. Funkčnost a~použitelnost byla ověřena dvoufázovým uživatelským testováním. V~první fázi proběhlo krátkodobé moderované testování se třemi participanty, ve druhé fázi dvoutýdenní testování v~reálném prostředí se šesti účastníky. Krátkodobá fáze dosáhla průměrného SUS skóre 85,8, dlouhodobá fáze SUS 88,3 a~Raw NASA-TLX 4,97 z~20. Přesnost AI odhadu byla ověřena na padesáti talířích z~datasetu Nutrition5k s~výsledkem 32,1~\% MAPE, což se přibližuje referenční hodnotě 26,1~\% publikované pro specializovaný model trénovaný přímo na tomto datasetu. Hlavním přínosem práce je funkční prototyp ověřující, že kombinace více vstupních modalit s~multimodálním jazykovým modelem dokáže významně snížit uživatelskou zátěž záznamu stravy při zachování srozumitelnosti výstupu.
 \end{abstract-czech}
 
 % Anglický abstrakt
 \begin{abstract-english}
-	% TODO: Add English abstract once long-term testing is finalised (see~\ref{sec:dlouhodobeTestovani}).
+	This thesis presents the design, implementation, and evaluation of Foody, a~mobile application for AI-assisted calorie tracking that aims to reduce the time and cognitive burden of dietary self-monitoring. The application supports meal logging via photograph, voice description, barcode scanning, and manual entry, with nutritional values estimated by a~multimodal language model from OpenAI. The design is grounded in structured interviews with four respondents and an analysis of existing applications. The application is implemented in the Flutter framework. Functionality and usability were evaluated through two-phase user testing. The first phase consisted of a~short-term moderated test with three participants, the second of a~two-week field test with six participants. The short-term phase yielded an average SUS score of 85.8, while the long-term phase reached an SUS of 88.3 and a~Raw NASA-TLX of 4.97 out of 20. The accuracy of AI estimation was validated on fifty plates from the Nutrition5k dataset with a~result of 32.1\% \emph{calorie MAPE}, which approaches the reference value of 26.1\% published for a~specialised model trained directly on this dataset. The main contribution is a~functional prototype demonstrating that combining multiple input modalities with a~multimodal language model can substantially reduce the user burden of dietary self-monitoring while preserving output transparency.
 \end{abstract-english}
 
 % Poděkování

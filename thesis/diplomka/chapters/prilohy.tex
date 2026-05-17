@@ -1,21 +1,20 @@
 \chapter{Zdrojový kód aplikace}
 \label{app:kod}
 
-% TODO: Vložit URL Git repozitáře (případně commit hash odpovídající stavu odevzdané verze)
-% a stručný popis, jak repozitář klonovat a sestavit aplikaci.
-%
-% Doporučená struktura:
-%   - URL Git repozitáře a referenční commit (tag nebo SHA odpovídající odevzdané verzi)
-%   - Licence
-%   - Stručný návod na sestavení (Flutter SDK, build_runner, .env, flutter run)
-%   - Adresářová struktura (odkaz na CLAUDE.md / README repozitáře)
+Kompletní zdrojový kód aplikace Foody, podklady z~obou fází uživatelského testování, předkompilovaný release build pro Android i~doprovodné materiály jsou dostupné v~Git repozitáři Fakulty elektrotechnické ČVUT na adrese:
 
-\textit{Tato příloha bude doplněna o~odkaz na Git repozitář se zdrojovým kódem aplikace, referenční commit odpovídající odevzdané verzi a~stručný návod na sestavení.}
+\begin{center}
+\url{https://gitlab.fel.cvut.cz/andrajak/diplomka-foody}
+\end{center}
+
+Repozitář obsahuje zdrojový kód aplikace ve frameworku Flutter (\texttt{lib/}), nativní platformové projekty pro Android a~iOS, validační benchmark přesnosti AI odhadu na datasetu Nutrition5k (\texttt{test/ai\_benchmark/}), anonymizované podklady z~uživatelského testování (\texttt{testovani/kratkodobe/} pro účastníky \texttt{P1}--\texttt{P3} a~\texttt{testovani/dlouhodobe/} pro \texttt{LP1}--\texttt{LP6}) a~předkompilovaný release build aplikace pro Android v~souboru \texttt{foody-release.apk}.
+
+Aplikace byla primárně vyvíjena pro iOS (referenční zařízení iPhone 16 Pro s~operačním systémem iOS 26), na vybraných Android zařízeních byla doplňkově ověřena pro účely uživatelského testování. Návod na sestavení, konfiguraci klíče \texttt{OPENAI\_API\_KEY} v~souboru \texttt{.env} i~odkaz na HiFi prototyp v~prostředí Figma jsou v~souboru \texttt{README.md} v~kořenovém adresáři repozitáře.
 
 \paragraph{Orientace v~repozitáři.}
 Pro účely reprodukovatelnosti experimentů popsaných v~kapitole~\ref{ch:testovani} jsou klíčové části kódu lokalizovány následovně:
 \begin{itemize}
-	\item \textbf{Systémové prompty pro model umělé inteligence} (sekce~\ref{subsec:prompty}) -- soubor \texttt{lib/utils/prompt.dart}, který obsahuje plný text šablon pro všechny scénáře (rozpoznání jídla z~obrazu i textu, analýza cvičení, výpočet nutričních cílů a dotazy v~přirozeném jazyce) včetně použité verze \emph{improved v2} vyhodnocené v~benchmarku v~sekci~\ref{sec:benchmarkPresnost}.
+	\item \textbf{Systémové prompty pro model umělé inteligence} (sekce~\ref{subsec:prompty}) -- soubor \texttt{lib/utils/prompt.dart}, obsahující šablony pro všechny scénáře (rozpoznání jídla, analýza cvičení, výpočet nutričních cílů, dotazy v~přirozeném jazyce).
 	\item \textbf{Sanitizace vstupu a ochrana proti prompt injection} (sekce~\ref{subsec:promptInjection}) -- soubor \texttt{lib/utils/prompt\_sanitizer.dart}.
 	\item \textbf{Pipeline pro umělou inteligenci a confidence gate} (sekce~\ref{subsec:confidence}) -- adresář \texttt{lib/services/ai\_feature/}.
 \end{itemize}
@@ -23,16 +22,13 @@ Pro účely reprodukovatelnosti experimentů popsaných v~kapitole~\ref{ch:testo
 \chapter{HiFi prototyp uživatelského rozhraní}
 \label{app:hifi}
 
-% TODO: Vložit odkaz na archiv s exportovanými snímky HiFi prototypu z nástroje Figma
-% (PDF nebo PNG, případně samostatný odkaz na sdílený Figma soubor v read-only režimu).
-% Tato příloha odpovídá odkazu v sekci 3.3.
-%
-% Doporučená struktura:
-%   1. Stručný popis prototypu (rozsah, použité styly, navigace).
-%   2. Snímky obrazovek seskupené podle hlavních toků (onboarding, záznam jídla, přehledy, profil).
-%   3. Odkaz na sdílený Figma soubor.
+HiFi prototyp uživatelského rozhraní aplikace Foody vytvořený v~nástroji Figma je dostupný v~Git repozitáři práce na adrese:
 
-\textit{Tato příloha bude doplněna o~exportovaný HiFi prototyp z~nástroje Figma a~odkaz na sdílený zdrojový soubor.}
+\begin{center}
+\url{https://gitlab.fel.cvut.cz/andrajak/diplomka-foody}
+\end{center}
+
+V~kořenovém adresáři repozitáře je prototyp k~dispozici ve dvou formátech: jako odkaz na interaktivní zdrojový soubor v~prostředí Figma a~jako statický PDF export v~souboru \texttt{DiplomkaHiFi.pdf}.
 
 \chapter{Případy užití}
 \label{app:pripadyUziti}
@@ -147,43 +143,33 @@ Hlavní scénář:
 \chapter{Anonymizované reporty z~uživatelských rozhovorů}
 \label{app:rozhovory}
 
-% TODO: Vložit anonymizované reporty ze čtyř strukturovaných rozhovorů (R1 až R4).
-% Tato příloha odpovídá odkazu v sekci 2.6.1 (chapters/02-analyza.tex).
-%
-% Doporučená struktura pro každého respondenta:
-%   - Profil respondenta (anonymizováno: věk, pohlaví, primární cíl, zkušenosti s aplikacemi)
-%   - Datum a délka rozhovoru
-%   - Klíčové výroky a citace
-%   - Identifikované potřeby a frustrace
-%   - Mapování na případy užití a požadavky
+Anonymizované zápisy ze čtyř strukturovaných rozhovorů s~respondenty \texttt{R1}--\texttt{R4} popsaných v~sekci~\ref{sec:uzivatelskaStudie} jsou dostupné v~Git repozitáři práce na adrese:
 
-\textit{Tato příloha bude doplněna o~anonymizované reporty ze čtyř strukturovaných rozhovorů (R1--R4) provedených v~rámci uživatelského výzkumu.}
+\begin{center}
+\url{https://gitlab.fel.cvut.cz/andrajak/diplomka-foody}
+\end{center}
+
+V~adresáři \texttt{testovani/rozhovory/} jsou k~dispozici individuální zápisy z~rozhovorů se všemi čtyřmi respondenty doplněné o~osnovu rozhovoru použitou moderátorem.
 
 \chapter{Doprovodné materiály k~uživatelskému testování}
 \label{app:testovani}
 
-% TODO: Vložit odkazy na archiv s doprovodnými materiály z krátkodobého uživatelského testování
-% (P1-P3, sekce 5.1-5.4).
-%
-% Doporučená struktura:
-%   - Sada testovacích úloh T1-T16 v plném znění (zadání pro participanty, kritéria úspěchu)
-%   - Vyplněné dotazníky SUS, SEQ a UEQ-S (anonymizované, individuální skóre)
-%   - Souhrnná tabulka výsledků a SUS/SEQ/UEQ-S výpočtů
-%   - Záznamy z debriefingových rozhovorů (přepisy nebo poznámky moderátora)
-%   - Souhlasy s účastí (template, nikoli individuální podpisy)
+Doprovodné materiály ke krátkodobému moderovanému testování s~participanty \texttt{P1}--\texttt{P3} popsanému v~sekci~\ref{sec:metodikaTestovani} jsou dostupné v~Git repozitáři práce na adrese:
 
-\textit{Tato příloha bude doplněna o~úplnou sadu doprovodných materiálů z~krátkodobého uživatelského testování s~participanty P1--P3, včetně testovacích úloh, vyplněných dotazníků SUS, SEQ a~UEQ-S, souhrnných tabulek výsledků a~záznamů z~debriefingových rozhovorů.}
+\begin{center}
+\url{https://gitlab.fel.cvut.cz/andrajak/diplomka-foody}
+\end{center}
+
+V~adresáři \texttt{testovani/kratkodobe/} jsou k~dispozici individuální záznamy z~testovacích relací jednotlivých participantů v~souborech \texttt{testovani\_P1.md}, \texttt{testovani\_P2.md} a~\texttt{testovani\_P3.md} a~souhrnný report \texttt{souhrn\_testovani.md} obsahující kompletní výsledky plnění úloh, vyhodnocení dotazníků SEQ, SUS a~UEQ-S, naměřené hodnoty nefunkčních požadavků, identifikované problémy a~návrhy na zlepšení.
 
 \chapter{Doprovodné materiály k~dlouhodobému testování}
 \label{app:dlouhodobeTestovani}
 
-Doprovodné materiály k~dlouhodobé uživatelské studii popsané v~sekci~\ref{sec:dlouhodobeTestovani} jsou udržovány v~externím repozitáři.
-Materiály zahrnují úplné znění výstupního dotazníku (sekce profilových údajů, System Usability Scale, Raw NASA-TLX a~otevřené otázky), předpisy pro výpočet skóre standardizovaných nástrojů, anonymizované vyplněné dotazníky všech účastníků, souhrnnou tabulku SUS skóre a~per-dimenze hodnot NASA-TLX, tematický souhrn odpovědí na otevřené otázky a~kompletní export behaviorálních dat ve formátu CSV.
+Doprovodné materiály k~dlouhodobému uživatelskému testování v~reálném prostředí s~účastníky \texttt{LP1}--\texttt{LP6} popsanému v~sekci~\ref{sec:dlouhodobeTestovani} jsou dostupné v~Git repozitáři práce na adrese:
 
-\paragraph{Umístění repozitáře.}
-\url{https://github.com/<placeholder>/<placeholder>}
+\begin{center}
+\url{https://gitlab.fel.cvut.cz/andrajak/diplomka-foody}
+\end{center}
 
-\paragraph{Stav doplnění.}
-Materiály budou do repozitáře průběžně doplňovány po skončení testovacího období jednotlivých účastníků.
-Finální verze obsahující všech šest dotazníků a~úplný export behaviorálních dat bude k~dispozici po uzavření studie.
+V~adresáři \texttt{testovani/dlouhodobe/dotazniky/} jsou k~dispozici anonymizované výstupní dotazníky všech šesti účastníků (SUS, Raw NASA-TLX a~otevřené otázky) v~souborech \texttt{vystupni\_dotaznik\_LP1.txt} až \texttt{vystupni\_dotaznik\_LP6.txt} doplněné o~souhrnný report \texttt{souhrn\_dotazniku.md}. V~adresáři \texttt{testovani/dlouhodobe/reporty/} jsou pro každého z~účastníků uloženy úplné exporty behaviorálních dat z~aplikace ve formátu CSV.
 
