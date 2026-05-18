@@ -490,7 +490,7 @@ U2 a U3 současně tvoří dvojici problémů týkajících se funkce oblíbený
 \label{sec:doporuceni}
 
 V~navazující implementační iteraci provedené bezprostředně po skončení testovací relace bylo opraveno 23 z~25 identifikovaných problémů, konkrétně všech devět implementačních chyb (B1--B9) a~čtrnáct z~šestnácti problémů uživatelského rozhraní.
-Bez úpravy zůstaly s~odůvodněním problémy U1 (nízká nalezitelnost ikony pro import z~galerie, jejíž dopad v~dlouhodobém scénáři opakovaného používání prakticky vymizí) a~U14 (chybějící potvrzovací krok před spuštěním rozpoznání, ponechaný pro zachování krátkého toku zápisu jídla a~splnění NFR-03 a~NFR-04).
+Bez úpravy zůstaly s~odůvodněním problémy U1 (nízká nalezitelnost ikony pro import z~galerie, jejíž dopad v~dlouhodobém scénáři opakovaného používání prakticky vymizí) a~U14 (chybějící potvrzovací krok před spuštěním rozpoznání, ponechaný pro zachování krátkého \emph{flow} při zápisu jídla a~splnění NFR-03 a~NFR-04).
 Z~patnácti návrhů na rozšíření funkcionality formulovaných v~debriefingových rozhovorech bylo do iterace přijato pět (N1, N3, N7, N13, N14), zaměřených na rozšíření hlasového vstupu do dalších rozhraní, zjednodušení onboardingu a~interakci v~detailu jídla.
 Zbývajících deset návrhů spolu s~přehledem otevřených otázek z~dlouhodobé fáze je shrnuto v~sekci~\ref{sec:shrnutiTestovani}.
 
@@ -789,7 +789,7 @@ LP2 uvádí, že u~jídel byly „často špatně bílkoviny, sacharidy a~tuky, 
 LP6 vnímá nepřesnost koncentrovanou do scénářů s~většími porcemi: „při některých jídlech to podle mě hodně netrefilo kalorie, hlavně u~větších porcí jídla jsem měl ten pocit", a~jako prioritní zlepšení formuluje obecný požadavek, aby uživatel mohl AI návrhům vždy věřit.
 Tato linie zpětné vazby je v~souladu s~doplňkovou validací přesnosti uvedenou v~sekci~\ref{sec:benchmarkPresnost} i~s~poznámkou v~části věnované confidence gate (sekce~\ref{subsec:confidence}), podle které je třeba předkládat odhady AI jako odhady, nikoliv jako referenční hodnoty.
 
-\paragraph{Editační toky jako zdroj frustrace.}
+\paragraph{\emph{Edit flows} jako zdroj frustrace.}
 Tři účastníci (LP1, LP2, LP4) zmínili konkrétní situace, ve kterých byla editace AI návrhu nebo záznamu obtížnější, než očekávali.
 LP1 popisuje konkrétní vzorec, kdy zadání více odlišných položek hlasem vede k~vytvoření jednoho záznamu s~násobně vyšším množstvím, jehož následná úprava na samostatné položky je komplikovaná, „takže jsem radši zadávala odlišné potraviny v~oddělených logech".
 LP2 obecně popisuje obtížnou nalezitelnost editačních akcí: „vždy než jsem to našel, tak jsem to spíš vzdal".
@@ -833,7 +833,7 @@ Sloupec \emph{Opraveno} rozlišuje nálezy s~připravenou implementační opravo
 \end{table}
 
 Charakter problémů identifikovaných v~dlouhodobé studii se kvalitativně liší od problémů zjištěných v~krátkodobé moderované fázi (sekce~\ref{sec:identifikovaneProblemy}).
-Krátkodobé testování s~předem připravenými úlohami se soustředilo na nalezitelnost prvků v~rozhraní a~na koherenci jednotlivých interakčních toků, zatímco dlouhodobé testování v~přirozeném prostředí odhalilo především okrajové stavy a~chyby v~dlouhodobém datovém toku, které se v~rámci 90minutové relace na čistém profilu neprojeví (L1, L7), nedostatečnou srozumitelnost pojmů a~vizuálních konvencí v~situaci, kdy uživatel nemá k~dispozici moderátora (L2, L3, L5), a~hraniční případy AI rozpoznávání spojené s~kompoziční nejednoznačností scény (L8, L9).
+Krátkodobé testování s~předem připravenými úlohami se soustředilo na nalezitelnost prvků v~rozhraní a~na koherenci jednotlivých \emph{interaction flows}, zatímco dlouhodobé testování v~přirozeném prostředí odhalilo především okrajové stavy a~chyby v~dlouhodobém datovém toku, které se v~rámci 90minutové relace na čistém profilu neprojeví (L1, L7), nedostatečnou srozumitelnost pojmů a~vizuálních konvencí v~situaci, kdy uživatel nemá k~dispozici moderátora (L2, L3, L5), a~hraniční případy AI rozpoznávání spojené s~kompoziční nejednoznačností scény (L8, L9).
 Problémy L1 až~L7 mají připravenou implementační opravu a~jsou plánovány k~zahrnutí do navazující vývojové iterace. Problémy L8 a~L9 jsou ponechány jako otevřené, neboť jejich uspokojivé řešení vyžaduje hlubší designové rozhodnutí přesahující rámec aktuální iterace.
 
 \subsection{Diskuse a~omezení studie}
@@ -842,7 +842,7 @@ Problémy L1 až~L7 mají připravenou implementační opravu a~jsou plánovány
 Dlouhodobé testování se šesti účastníky a~93 aktivními dny záznamu jídla přineslo dva komplementární okruhy zjištění.
 Kvantitativní data potvrzují hypotézu, podle které aplikace umožňuje záznam stravy s~nízkou kognitivní a~časovou zátěží (průměrný Raw NASA-TLX 4,97 z~20) a~vysokou subjektivně vnímanou použitelností (průměrný SUS 88,3 z~100), což odpovídá referenčním hodnotám literatury i~výsledkům krátkodobé moderované fáze.
 Behaviorální data zároveň ukazují, že AI rozpoznávání slouží jako primární vstupní kanál (79~\% záznamů s~AI komponentou) a~že většina AI návrhů je uložena bez další úpravy (\emph{edit rate} 14~\%), což indikuje dostatečnou důvěru uživatelů v~kvalitu modelu pro běžné jídelní situace.
-Kvalitativní reflexe doplňuje obraz o~konkrétní zlepšení a~drobné chyby v~uživatelském toku, které byly v~tabulce~\ref{tab:problemyDlouhodobe} zařazeny do návazného plánu úprav.
+Kvalitativní reflexe doplňuje obraz o~konkrétní zlepšení a~drobné chyby v~\emph{user flow}, které byly v~tabulce~\ref{tab:problemyDlouhodobe} zařazeny do návazného plánu úprav.
 
 Hodnota Raw NASA-TLX 4,97 z~20 odpovídá dolní čtvrtině škály a~v~literatuře HCI bývá obvykle klasifikována jako nízká zátěž.
 Nejvyšší hodnotu napříč vzorkem vykazuje dimenze časové zátěže (průměr 9,0), kterou čtyři ze šesti účastníků hodnotili nad sedmi body, zatímco mentální zátěž, úsilí a~vnímaný vlastní výkon se pohybují v~úzkém pásmu kolem 4--5 bodů a~frustrace zůstává setrvale nízká (průměr 2,2).
@@ -875,7 +875,7 @@ Konzistence subjektivního hodnocení napříč různými stravovacími profily,
 \paragraph{Robustní zjištění napříč fázemi.}
 Tři tematické okruhy se objevily v~obou fázích a~představují nejspolehlivější výstup testovací části práce.
 Prvním je hodnota AI rozpoznávání jako primárního vstupního kanálu, kterou v~krátkodobé fázi participanti opakovaně formulovali v~debriefingových rozhovorech a~v~dlouhodobé fázi potvrdila jak kvalitativní reflexe (oceněná funkce u~všech šesti účastníků), tak behaviorální data (79~\% záznamů s~AI komponentou).
-Druhým je význam editačních toků, kde krátkodobé testování odhalilo dílčí problémy s~nalezitelností editačních akcí a~dlouhodobá fáze tato pozorování rozšířila o~konkrétní okrajové stavy (násobné položky z~jednoho hlasového vstupu, nemožnost zpětně přidávat cvičení).
+Druhým je význam \emph{edit flows}, kde krátkodobé testování odhalilo dílčí problémy s~nalezitelností editačních akcí a~dlouhodobá fáze tato pozorování rozšířila o~konkrétní okrajové stavy (násobné položky z~jednoho hlasového vstupu, nemožnost zpětně přidávat cvičení).
 Třetím je dopad přesnosti odhadu nutričních hodnot na uživatelskou důvěru, který se v~krátkodobé fázi projevil v~doplňkové validaci přesnosti odhadu kalorií (sekce~\ref{sec:benchmarkPresnost}) a~v~dlouhodobé fázi v~explicitních formulacích účastníků (LP2, LP6) označujících přesnost makroživin a~kalorií u~větších porcí za prioritní oblast ke zlepšení.
 
 \paragraph{Společná metodologická omezení.}

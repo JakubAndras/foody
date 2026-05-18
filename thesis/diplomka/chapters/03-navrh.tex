@@ -144,7 +144,7 @@ HiFi prototyp byl realizován v~nástroji Figma jako graficky plnohodnotný mode
 
 Vzhledem k~tomu, že implementovaná aplikace poměrně věrně navazuje na navržený prototyp, jsou jednotlivé obrazovky prezentovány vizuálně až v~sekci~\ref{sec:klicoveObrazovky} formou snímků z~reálného běhu aplikace, čímž se zamezí duplicitnímu zobrazení téhož rozhraní v~prototypové i implementované podobě.
 Kompletní HiFi prototyp ve své navržené formě je k~dispozici jako součást příloh této práce (viz příloha~\ref{app:hifi}).
-Tato sekce se proto soustředí na popis návrhových východisek a klíčových interakčních toků, které propojují definované případy užití do souvislých uživatelských scénářů.
+Tato sekce se proto soustředí na popis návrhových východisek a klíčových \emph{interaction flows}, které propojují definované případy užití do souvislých uživatelských scénářů.
 
 Vizuální a~interakční jazyk aplikace vychází z~konvencí systému iOS, na nichž byla iterativně vystavěna vlastní vizuální podoba aplikace.
 Plně nativní vzhled však Flutter z~principu neumožňuje, neboť veškeré prvky rozhraní vykresluje vlastním grafickým enginem namísto systémových UI komponent platformy.
@@ -162,5 +162,5 @@ Toto pořadí (od prototypování k~formalizaci) odpovídá iterativní povaze n
 
 Návrhová fáze převedla vstupy z~uživatelského výzkumu a analýzy konkurence do osmi případů užití (sekce~\ref{sec:pripadyUziti}), třiceti funkčních a pěti nefunkčních požadavků (sekce~\ref{sec:pozadavky}) a HiFi prototypu v~nástroji Figma (sekce~\ref{sec:prototyp}, příloha~\ref{app:hifi}).
 Tyto artefakty vymezují rozsah cílového řešení a tvoří přímý podklad pro implementaci popsanou v~kapitole~\ref{ch:implementace}.
-Případ užití UC06, vaření s~režimem plán versus realita, není v~aplikaci realizován jako vyhrazený režim, ale je pokryt obecnějšími toky.
+Případ užití UC06, vaření s~režimem plán versus realita, není v~aplikaci realizován jako vyhrazený režim, ale je pokryt obecnějšími \emph{flows}.
 Plán odpovídá pořízení fotografie více předpřipravených ingrediencí najednou (UC01), realita pak následné editaci uloženého záznamu po dokončení vaření (UC02).
