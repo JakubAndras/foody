@@ -783,31 +783,20 @@ Toto řešení není fyziologicky optimální, vzhledem k~rozsahu této práce j
 \section{Omezení implementace}
 \label{sec:omezeniImplementace}
 
-Aplikace Foody představuje funkční prototyp ověřující navržený koncept a v~několika oblastech nedosahuje plného potenciálu návrhu z~kapitoly~\ref{ch:navrh}.
-Tato sekce shrnuje hlavní omezení výsledné implementace, která je třeba zohlednit při interpretaci výsledků uživatelského testování v~kapitole~\ref{ch:testovani} a při formulaci doporučení pro další rozvoj v~kapitole~\ref{ch:zaver}.
+Aplikace Foody představuje funkční prototyp ověřující navržený koncept a~v~některých oblastech nedosahuje plného potenciálu návrhu z~kapitoly~\ref{ch:navrh}.
+Tato sekce shrnuje hlavní omezení výsledné implementace, která je třeba zohlednit při interpretaci výsledků testování v~kapitole~\ref{ch:testovani} a~při formulaci doporučení v~kapitole~\ref{ch:zaver}.
 
 Hlavní omezení vyplývá z~povahy rozpoznávání pomocí umělé inteligence.
-Multimodální jazykový model dosahuje vyšší přesnosti u~jednoznačně viditelných pokrmů, zatímco u~složených jídel s~překrývajícími se ingrediencemi a u~regionálně specifických receptur klesá spolehlivost odhadu.
-Kvalita rozpoznání je rovněž závislá na kvalitě vstupního obrazu, zejména na osvětlení a úhlu pohledu, což aplikace adresuje pětistránkovou onboardingovou instruktáží, nemůže však zcela kompenzovat nepříznivé pořizovací podmínky.
-Latence rozpoznávání se v~kontrolovaných podmínkách pohybuje hluboko pod stanoveným limitem 20~vteřin (NFR-02), avšak energetický odhad zůstává aproximací s~nejistotou, kterou aplikace transparentně signalizuje prostřednictvím tříúrovňového indikátoru spolehlivosti.
+Multimodální jazykový model dosahuje vyšší přesnosti u~jednoznačně viditelných pokrmů, zatímco u~složených jídel s~překrývajícími se ingrediencemi a~u~regionálně specifických receptur klesá spolehlivost odhadu.
+Kvantitativní validace této přesnosti vůči nefunkčnímu požadavku NFR-01 je popsána v~sekci~\ref{sec:benchmarkPresnost}, podle které se ani nejlepší testovaná konfigurace modelu k~cílové hranici desetiprocentní odchylky nepřiblížila.
 
-Architektura aplikace závisí na třech externích službách, jejichž dostupnost ovlivňuje uživatelskou zkušenost.
-Komunikace s~poskytovatelem modelu umělé inteligence vyžaduje aktivní internetové připojení, takže funkce rozpoznávání jídel z~fotografie, hlasového a textového popisu, analýzy cvičení a dotazů v~přirozeném jazyce nejsou v~režimu offline dostupné, zatímco zbývající funkcionality jsou plně funkční lokálně.
-Vyhledávání podle čárového kódu se opírá o~veřejnou databázi Open Food Facts, jejíž pokrytí lokálních českých produktů není úplné, což bylo identifikováno jako omezení i v~uživatelském testování (sekce~\ref{subsec:uiProblemyTesting}).
-Provoz multimodálního modelu představuje nezanedbatelný náklad na volání API, jehož výše je úměrná frekvenci použití funkcí postavených na umělé inteligenci a v~současné implementaci není limitován kvótami na úrovni uživatele.
+Architektura aplikace závisí na externích službách, jejichž dostupnost ovlivňuje plynulost práce s~aplikací.
+Komunikace s~poskytovatelem modelu umělé inteligence vyžaduje aktivní internetové připojení, takže funkce rozpoznávání jídel z~fotografie, hlasového a~textového popisu, analýzy cvičení a~dotazů v~přirozeném jazyce nejsou v~režimu offline dostupné.
+Vyhledávání podle čárového kódu se opírá o~veřejnou databázi Open Food Facts, jejíž pokrytí lokálních českých produktů není úplné, což bylo identifikováno i~v~uživatelském testování (sekce~\ref{subsec:uiProblemyTesting}).
+Provoz multimodálního modelu představuje nezanedbatelný náklad na volání API, který v~aktuální implementaci není nijak zohledněn ani limitován.
 
-Pět funkčních požadavků bylo implementováno pouze částečně.
-Mazání jídel a cvičení funguje, mazání účtu chybí.
-Čárový kód rozlišuje šest typů chyb, zatímco pipeline pro umělou inteligenci vrací generické selhání.
-Vyhledávání v~historii je fulltextové se~zpožděným spouštěním dotazu, ale bez klasického dropdown menu.
-Integrace energetického výdeje má pouze přepínače pro výdej a rollover bez koeficientů podle typu aktivity.
-Skrytí nebo zobrazení pokročilých funkcí je řešeno individuálními přepínači bez explicitního režimu \emph{basic} versus \emph{advanced}.
+Z~technické stránky pokrývá skenování nutričních etiket pouze základní makroživiny, zatímco rozšířené atributy jako vláknina, sůl a~vybrané mikronutrienty zůstávají námětem pro budoucí iteraci.
+Google Gemini je v~aplikaci připraven jako alternativní poskytovatel modelu, jeho integrace však nebyla v~rámci práce implementačně dokončena.
+Aplikace dále neobsahuje automatický fallback mezi poskytovateli při selhání jednoho z~nich.
+Nedisponuje ani cloudovou synchronizací nebo vzdálenou zálohou dat, což odpovídá zvolenému architektonickému přístupu bez vlastního backendu.
 
-Z~technických omezení je v~současné implementaci skenování nutričních etiket pokryto pouze pro základní makroživiny, zatímco rozšířené atributy jako vláknina, sůl a vybrané mikronutrienty zůstávají námětem pro budoucí iteraci.
-Analýza cvičení a výpočet nutričních cílů jsou v~aktuální verzi vázány přímo na poskytovatele OpenAI a nepřepínají se spolu s~hlavním poskytovatelem rozpoznávání jídel.
-Ověření kompatibility Gemini API pro tyto scénáře nebylo v~rámci práce dokončeno.
-Aplikace dále neobsahuje automatický fallback mezi poskytovateli při selhání jednoho z~nich a nedisponuje cloudovou synchronizací ani vzdálenou zálohou dat, což odpovídá zvolenému architektonickému přístupu bez vlastního backendu.
-
-Posledním okruhem omezení je rozsah uživatelského testování.
-Implementace byla ověřena na malém vzorku tří participantů v~kontrolovaném prostředí, jak je popsáno v~kapitole~\ref{ch:testovani}, což odpovídá rozsahu kvalitativního testování v~rámci diplomové práce, ale neumožňuje zobecnění výsledků na širší populaci.
-Dlouhodobá retence uživatelů, přesnost odhadů v~reálném používání a chování aplikace v~produkčním prostředí na různých zařízeních a operačních systémech zůstávají předmětem dalšího ověření, jež je formulováno jako doporučení pro budoucí validační studii v~sekci~\ref{sec:doporuceni}.
