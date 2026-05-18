@@ -53,7 +53,7 @@ Testování probíhalo formou individuálních relací v~kontrolovaném prostře
 V~průběhu testování byla použita metoda souběžného protokolu \emph{think aloud}, při které participanti sdíleli své myšlenky, dojmy a pochybnosti během plnění úloh~\cite{nielsen1994thinkAloud}.
 Na začátku každé relace byl participant seznámen s~účelem testování, podepsal informovaný souhlas a obdržel instrukce k~verbalizaci myšlenek.
 
-Každá testovací relace sestávala ze čtyř fází uvedených v~tabulce~\ref{tab:strukturaRelace}: úvodní instruktáže k~metodě \emph{think aloud}, hlavní fáze plnění šestnácti testovacích úloh s~vyplněním dotazníku SEQ po každé úloze, společného vyplnění dotazníků SUS a UEQ-S a závěrečného polostrukturovaného debriefingu.
+Každá testovací relace sestávala ze čtyř fází uvedených v~tabulce~\ref{tab:strukturaRelace}, kterými jsou úvodní instruktáž k~metodě \emph{think aloud}, hlavní fáze plnění šestnácti testovacích úloh s~vyplněním dotazníku SEQ po každé úloze, společné vyplnění dotazníků SUS a UEQ-S a závěrečný polostrukturovaný debriefing.
 Toto pořadí umožňuje zachytit subjektivní obtížnost u~každé úlohy v~okamžiku jejího dokončení a otevřít prostor pro souhrnné hodnocení a otevřenou kvalitativní reflexi až po nasazení aplikace v~plné šíři úloh.
 
 \begin{table}[ht]
@@ -147,7 +147,8 @@ V~kontextu dostupných benchmarků odpovídá průměrné SUS skóre napříč s
 Jako doplňkový nástroj pro hodnocení uživatelské zkušenosti byl použit dotazník \emph{User Experience Questionnaire Short} (UEQ-S), který měří pragmatickou a hedonickou kvalitu systému prostřednictvím osmi položek ve formě sémantického diferenciálu na sedmibodové škále $-3$ až $+3$~\cite{schrepp2017ueqs}.
 Položky 1 až 4 (bránící/podporující, složitý/jednoduchý, neefektivní/efektivní, matoucí/jasný) měří pragmatickou kvalitu a položky 5 až 8 (nudný/vzrušující, nezajímavý/zajímavý, obvyklý/vynalézavý, tradiční/moderní) měří hedonickou kvalitu.
 Pragmatická kvalita se vypočítá jako průměr položek 1 až 4, hedonická kvalita jako průměr položek 5 až 8 a celkové skóre jako průměr všech osmi položek.
-Interpretace skóre vychází z~oficiálních benchmarků UEQ: hodnota pod $-0,8$ odpovídá negativnímu hodnocení, rozsah $-0,8$ až $0,8$ neutrálnímu a hodnota nad $0,8$ pozitivnímu.
+Interpretace skóre vychází z~oficiálních benchmarků UEQ.
+Hodnota pod $-0,8$ odpovídá negativnímu hodnocení, rozsah $-0,8$ až $0,8$ neutrálnímu a hodnota nad $0,8$ pozitivnímu.
 
 \section{Výsledky testování}
 \label{sec:vysledkyTestovani}
@@ -209,7 +210,8 @@ U~všech čtyř úloh dosáhla míra dokončení 100~\%. Sloupec \uv{Dokončeno 
 	\end{tabularx}
 \end{table}
 
-Měření nefunkčních požadavků prokázalo, že všechny metriky vázané na uživatelskou zátěž záznamu byly v~rámci stanovených limitů: latence rozpoznávání u~úlohy T2 dosáhla průměru 7,67~s (limit 20~s), čas zápisu nového záznamu u~T2 činil 22~s (limit 5~min), čas opakovaného záznamu u~T8 byl 39,67~s (limit 1~min) a počet kroků u~scénářů s~asistencí umělé inteligence se pohyboval v~rozmezí 2,00–4,67 (limit 6).
+Měření nefunkčních požadavků prokázalo, že všechny metriky vázané na uživatelskou zátěž záznamu byly v~rámci stanovených limitů.
+Latence rozpoznávání u~úlohy T2 dosáhla průměru 7,67~s (limit 20~s), čas zápisu nového záznamu u~T2 činil 22~s (limit 5~min), čas opakovaného záznamu u~T8 byl 39,67~s (limit 1~min) a počet kroků u~scénářů s~asistencí umělé inteligence se pohyboval v~rozmezí 2,00–4,67 (limit 6).
 U~ručního zápisu (T7) dosahoval průměr 11,00~kroků, což odpovídá vyšší inherentní složitosti vstupní modality bez asistence umělé inteligence.
 Pro tento scénář není v~původní specifikaci NFR-03 stanoven konkrétní limit.
 
@@ -388,14 +390,14 @@ Toto srovnání je nutné interpretovat s~rezervou, protože referenční model 
 Pro kalorické pásmo 100--400~kcal, které odpovídá typickému použití aplikace na běžných pokrmech, dosahuje GPT-5.5 hodnoty 20 až 23~\% MAPE, což lze považovat za srovnatelné nebo lepší než zmíněná referenční hodnota.
 
 Z~výsledků vyplývají tři pozorování relevantní pro design aplikace.
-Zaprvé, prompt engineering má měřitelný dopad na přesnost: přechod z~baseline na improved v2 přinesl zlepšení MAPE o~11 až 29~procentních bodů napříč modely, přičemž větší modely lépe využily strukturu \emph{Chain-of-Thought reasoning}.
+Zaprvé, prompt engineering má měřitelný dopad na přesnost, protože přechod z~baseline na improved v2 přinesl zlepšení MAPE o~11 až 29~procentních bodů napříč modely, přičemž větší modely lépe využily strukturu \emph{Chain-of-Thought reasoning}.
 Zadruhé, prosté přidání pravidel k~baseline (improved v1) celkovou MAPE zhoršilo, což odpovídá zjištění studie publikované v~časopise \emph{Nutrients}, podle které strukturovanější prompt nemusí být vždy lepší, protože striktnost pravidel jde na úkor souladu s~lidským úsudkem~\cite{ase2025structuredPrompts}.
 Zatřetí se ukazuje, že model umělé inteligence systematicky nadhodnocuje velmi malé porce (pod 100~kcal s~75 až 128~\% MAPE), protože defaultuje na typické velikosti porce.
 Jedná se o~inherentní omezení vizuálního odhadu z~jednotlivé fotografie bez hloubkové informace, které je v~původní publikaci Nutrition5k doloženo přidáním hloubkového senzoru, jež snížilo MAPE na 16,5~\%~\cite{thames2021nutrition5k}.
 
 Z~hlediska produkčního nasazení se ukazuje výrazný kompromis mezi přesností a dobou odpovědi.
 Model GPT-5.5 dosahuje nejlepší přesnosti, avšak průměrná doba odpovědi 27,93~s je na hranici přijatelnosti pro mobilní aplikaci a překračuje limit nefunkčního požadavku NFR-02 (20~s) změřený v~uživatelském testování s~modelem GPT-5.4 (7,67~s, sekce~\ref{subsec:plneniUloh}).
-Jako nejlepší kompromis se proto jeví GPT-5.4 s~promptem improved v2: hodnota 38,27~\% MAPE při průměrné době odpovědi 6,03~s, a tento model je v~aktuální verzi aplikace nasazen jako výchozí.
+Jako nejlepší kompromis se proto jeví GPT-5.4 s~promptem improved v2 s~hodnotou 38,27~\% MAPE při průměrné době odpovědi 6,03~s, a tento model je v~aktuální verzi aplikace nasazen jako výchozí.
 
 Cíl nefunkčního požadavku NFR-01, tedy odchylka pod 10~\% oproti referenčním hodnotám, nebyl v~rámci provedeného experimentu dosažen žádnou z~testovaných kombinací modelu a iterace promptu.
 Nejlepší konfigurace (GPT-5.5 + improved v2) dosáhla 32,12~\% \emph{calorie MAPE}, výchozí produkční konfigurace (GPT-5.4 + improved v2) hodnoty 38,27~\%.
@@ -504,7 +506,8 @@ Mezní přínos opakované moderované studie je za situace, kdy první kolo sko
 Zadruhé, hlavní deklarovaný cíl aplikace, tedy snížení časové a kognitivní zátěže záznamu stravy a podpora dlouhodobé udržitelnosti self monitoringu (viz sekce~\ref{sec:selfMonitoring}), nelze v~rámci 90minutové moderované relace adekvátně ověřit.
 Ten se projevuje až v~horizontu dnů a týdnů, kdy se mění míra motivace uživatele, ustaluje se rutina zapisování a vystupují do popředí situace, jež úlohové scénáře ze své povahy nepokrývají (zápis při běžné stravovací rutině, opakovaná jídla, jídla mimo domov, technické podmínky reálných zařízení a sítí).
 
-Dlouhodobá studie tak doplňuje krátkodobé moderované testování o~komplementární rovinu dat: tam, kde \emph{think aloud} relace s~předem připravenými úlohami umožnila identifikovat konkrétní problémy s~použitelností rozhraní, dlouhodobý test cílí na otázky retence, frekvence a~struktury reálného používání, vnímané užitečnosti v~delším časovém horizontu a~na problémy, které se v~kontrolovaném prostředí neprojeví.
+Dlouhodobá studie tak doplňuje krátkodobé moderované testování o~komplementární rovinu dat.
+Tam, kde \emph{think aloud} relace s~předem připravenými úlohami umožnila identifikovat konkrétní problémy s~použitelností rozhraní, dlouhodobý test cílí na otázky retence, frekvence a~struktury reálného používání, vnímané užitečnosti v~delším časovém horizontu a~na problémy, které se v~kontrolovaném prostředí neprojeví.
 Návazné podsekce popisují metodiku, sledované metriky, profil šestice účastníků, behaviorální výsledky, vyhodnocení standardizovaných dotazníků SUS a~Raw NASA-TLX, kvalitativní reflexi, problémy identifikované v~reálném provozu a~diskusi metodologických omezení studie.
 
 \subsection{Metodika dlouhodobé studie}
@@ -538,7 +541,7 @@ Sledované metriky se dělí do dvou skupin podle zdroje.
 Behaviorální data jsou sbírána automaticky aplikací po celou dobu testovacího období, výstupní dotazník je vyplněn jednorázově po jeho skončení.
 
 Behaviorální data jsou ukládána do vyhrazených sloupců databázových entit \texttt{Meal} a~\texttt{Ingredient} (vstupní modalita, poskytovatel a~verze modelu, případný čárový kód, hodnota spolehlivosti rozpoznání, příznak editace uživatelem a~časová značka odstranění) v~kombinaci s~odděleným logem všech pokusů o~rozpoznání pomocí umělé inteligence, který pro každý pokus zaznamenává časovou značku, modalitu, poskytovatele, model, výsledný stav, hodnotu spolehlivosti a~případnou chybovou hlášku.
-Tyto údaje umožňují odvodit šest skupin metrik: frekvenci a~rozložení záznamů v~čase, distribuci použitých vstupních modalit, rozložení hodnot spolehlivosti AI návrhů, podíl AI návrhů přijatých uživatelem bez další úpravy (\emph{acceptance rate}), poměr úspěšných a~neúspěšných pokusů o~rozpoznání a~rozsah využití integrace s~platformou Apple Health.
+Tyto údaje umožňují odvodit šest skupin metrik, kterými jsou frekvence a~rozložení záznamů v~čase, distribuce použitých vstupních modalit, rozložení hodnot spolehlivosti AI návrhů, podíl AI návrhů přijatých uživatelem bez další úpravy (\emph{acceptance rate}), poměr úspěšných a~neúspěšných pokusů o~rozpoznání a~rozsah využití integrace s~platformou Apple Health.
 Data jsou exportována do strukturovaného CSV souboru přes mechanismus popsaný v~sekci~\ref{subsec:exportDat} a~slouží jako vstup pro deskriptivní analýzu v~sekci~\ref{subsec:vysledkyDlouhodobe}.
 
 Výstupní dotazník kombinuje dva standardizované nástroje a~tři otevřené otázky.
@@ -568,7 +571,7 @@ Namísto toho byl zařazen NASA-TLX, který přímo měří hlavní hypotézu o~
 Net Promoter Score nebylo zařazeno z~důvodu nízké rozlišovací schopnosti jednopoložkové škály při plánovaném vzorku šesti účastníků.
 
 Nástroj NASA-TLX je v~rámci studie použit v~upravené pětidimenzionální variantě, ze které je vynechána dimenze fyzické zátěže (\emph{physical demand}).
-Důvodem je povaha hodnocené činnosti: záznam stravy v~mobilní aplikaci je realizován krátkou manuální interakcí s~dotykovou obrazovkou a~hlasovým či fotografickým vstupem, u~nichž je fyzická námaha ve smyslu původní definice Hart a~Stavelandové~\cite{hart1988nasaTlx} zanedbatelná a~její zařazení by se promítlo systematicky nízkými hodnotami bez diagnostické informace.
+Důvodem je povaha hodnocené činnosti, neboť záznam stravy v~mobilní aplikaci je realizován krátkou manuální interakcí s~dotykovou obrazovkou a~hlasovým či fotografickým vstupem, u~nichž je fyzická námaha ve smyslu původní definice Hart a~Stavelandové~\cite{hart1988nasaTlx} zanedbatelná a~její zařazení by se promítlo systematicky nízkými hodnotami bez diagnostické informace.
 Zbývajících pět dimenzí (mentální zátěž, časová zátěž, vlastní výkon, úsilí a~frustrace) je ponecháno v~původním znění a~vyhodnocováno jako neváhovaná \emph{Raw TLX} agregace, tedy aritmetický průměr surových hodnot bez párového vážení dimenzí~\cite{hart2006nasaTlx20Years}.
 Tato modifikace odpovídá zavedené praxi v~oblasti HCI hodnocení mobilních a~webových rozhraní, je však v~textu explicitně reportována, aby výsledky nebyly chybně srovnávány s~plnou šestidimenzionální verzí nástroje.
 
@@ -694,7 +697,8 @@ Jinými slovy, v~přibližně osmi z~deseti případů uživatel přijal AI náv
 \end{table}
 
 Hodnoty edit rate je nutné interpretovat ve dvou rovinách.
-Vyšší míra editace u~LP1 a~LP6 nemusí znamenat nižší kvalitu AI návrhu, ale odráží i~ochotu konkrétního uživatele do návrhu vstupovat: LP1 v~kvalitativní reflexi explicitně oceňuje, že je možné AI výstup dále zpřesnit (sekce~\ref{subsec:kvalitativniReflexe}).
+Vyšší míra editace u~LP1 a~LP6 nemusí znamenat nižší kvalitu AI návrhu, ale odráží i~ochotu konkrétního uživatele do návrhu vstupovat.
+LP1 v~kvalitativní reflexi explicitně oceňuje, že je možné AI výstup dále zpřesnit (sekce~\ref{subsec:kvalitativniReflexe}).
 Naopak nízká míra editace u~LP2 a~LP4 může reflektovat jak vyšší přesnost AI návrhů u~daného stravovacího profilu, tak nižší ochotu věnovat čas dodatečné kontrole.
 Odlišení obou efektů by vyžadovalo srovnání s~referenčními nutričními hodnotami pro konkrétní jídla, což přesahuje rozsah aktuální studie.
 
@@ -848,7 +852,8 @@ Rozptyl celkového hodnocení mezi účastníky (od 0,8 u~LP3 po 7,6 u~LP1) zár
 Studie přitom má řadu metodologických omezení, která je nutné při interpretaci výsledků zohlednit.
 Vzorek šesti účastníků je svojí podstatou kvalitativní a~neumožňuje statistické zobecnění na širší populaci ani robustní srovnání mezi podskupinami podle pohlaví, věku nebo dietních omezení.
 Čtyři ze šesti účastníků (LP1--LP4) se zároveň účastnili předchozích fází výzkumu, což představuje potenciál pro konfirmační zkreslení, neboť tito účastníci testovali řešení reflektující jejich vlastní vstupní formulace požadavků.
-Formát testování v~reálném prostředí s~sebou nese specifická zkreslení dlouhodobých studií: efekt prvních dnů (\emph{novelty effect}) může nadhodnocovat frekvenci záznamu na začátku testovacího období, vědomí účasti ve studii (\emph{Hawthorne effect}) může vést k~pečlivějšímu zápisu, než jaký by účastník praktikoval bez sledování, a~rekrutace přes osobní síť autora s~sebou nese riziko samovýběru účastníků s~vyšší motivací než průměrný uživatel cílové skupiny.
+Formát testování v~reálném prostředí s~sebou nese specifická zkreslení dlouhodobých studií.
+Efekt prvních dnů (\emph{novelty effect}) může nadhodnocovat frekvenci záznamu na začátku testovacího období, vědomí účasti ve studii (\emph{Hawthorne effect}) může vést k~pečlivějšímu zápisu, než jaký by účastník praktikoval bez sledování, a~rekrutace přes osobní síť autora s~sebou nese riziko samovýběru účastníků s~vyšší motivací než průměrný uživatel cílové skupiny.
 Validní vyhodnocení skutečné přesnosti AI odhadu vůči referenčním nutričním hodnotám přesahuje rozsah této práce a~tvoří jeden z~námětů pro budoucí rozvoj formulovaných v~závěru práce (kapitola~\ref{ch:zaver}).
 
 Kombinace 14denního přirozeného používání, standardizovaných dotazníků SUS a~NASA-TLX, otevřené kvalitativní reflexe a~objektivních behaviorálních dat z~exportu aplikace umožnila ověřit nejen použitelnost rozhraní, ale i~dlouhodobou udržitelnost záznamu stravy, vnímanou hodnotu jednotlivých modalit a~konkrétní hraniční stavy aplikace v~reálném provozu, které se v~kontrolovaném prostředí krátkodobé fáze neprojevily.

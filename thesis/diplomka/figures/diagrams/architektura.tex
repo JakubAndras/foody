@@ -52,10 +52,10 @@
 
 % Vrstvy mobilního klienta
 \node[layer] (view) {Prezentační vrstva (View)\\\scriptsize \texttt{lib/screens/}, \texttt{lib/widgets/}};
-\node[layer, below=of view] (ctrl) {Kontrolery (ViewModel)\\\scriptsize \texttt{lib/controller/} -- GetX};
+\node[layer, below=of view] (ctrl) {Kontrolery (ViewModel)\\\scriptsize \texttt{lib/controller/}, GetX};
 \node[layer, below=of ctrl] (svc) {Služby a repozitáře\\\scriptsize \texttt{lib/services/}, \texttt{Repository}};
-\node[layer, below=of svc] (model) {Modely\\\scriptsize \texttt{lib/model/} -- \texttt{json\_serializable}};
-\node[layer, below=of model] (data) {Datová vrstva\\\scriptsize \texttt{lib/database/} (Floor) -- \texttt{lib/network/} (Dio)};
+\node[layer, below=of svc] (model) {Modely\\\scriptsize \texttt{lib/model/}, \texttt{json\_serializable}};
+\node[layer, below=of model] (data) {Datová vrstva\\\scriptsize \texttt{lib/database/} (Floor), \texttt{lib/network/} (Dio)};
 
 % Obal mobilního klienta -- kreslíme na background layer, aby nezakryl vnitřní vrstvy
 \begin{scope}[on background layer]

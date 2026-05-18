@@ -9,7 +9,7 @@ import 'package:diplomka/utils/prompt_sanitizer.dart';
 
 class GeminiRestClient {
   final Dio _dio = Dio();
-  final String apiUrl = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"; // TODO: Check if this is the correct endpoint for Gemini
+  final String apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
   String? geminiApiKey = dotenv.env['GEMINI_API_KEY'];
 
   final String context = 'You are an AI food analyzer. Always respond in JSON format. ${PromptSanitizer.antiInjectionDirective}';
@@ -24,7 +24,7 @@ class GeminiRestClient {
       final String base64Image = base64Encode(imageBytes);
       return {
         "type": "image_url",
-        "image_url": {"url": "database:image/jpeg;base64,$base64Image"}
+        "image_url": {"url": "data:image/jpeg;base64,$base64Image"}
       };
     }).toList();
 
@@ -59,7 +59,7 @@ class GeminiRestClient {
               "parts": [
                 {"text": prompt},
                 ...imageContents.map((img) => {
-                      "inline_data": {"mime_type": "image/jpeg", "database": img["image_url"]["url"].split(",").last}
+                      "inline_data": {"mime_type": "image/jpeg", "data": img["image_url"]["url"].split(",").last}
                     }),
               ]
             }
