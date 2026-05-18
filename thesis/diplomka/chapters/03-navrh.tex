@@ -5,7 +5,7 @@ Návrh aplikace navazuje na zjištění z~uživatelské studie shrnutá v~sekci~
 Tato kapitola formalizuje vstupy z~uživatelského výzkumu do podoby, kterou je možné přímo použít pro implementaci a následné ověření.
 Nejprve jsou v~sekci~\ref{sec:pripadyUziti} představeny případy užití UC01--UC08, jejichž plné hlavní scénáře jsou uvedeny v~příloze~\ref{app:pripadyUziti}.
 Sekce~\ref{sec:pozadavky} představuje sadu funkčních a nefunkčních požadavků odvozenou z~rozhovorů a ze zadání práce.
-V~sekci~\ref{sec:prototyp} je popsán návrh uživatelského rozhraní a HiFi prototyp, který případy užití a požadavky převádí do konkrétní vizuální a interakční podoby.
+V~sekci~\ref{sec:prototyp} je popsán návrh uživatelského rozhraní a HiFi prototyp, který případy užití a požadavky převádí do konkrétní vizuální podoby.
 Závěrečná sekce~\ref{sec:shrnutiNavrhu} shrnuje výstupy návrhové fáze a vymezuje, co bude implementováno v~kapitole~\ref{ch:implementace}.
 
 \section{Případy užití}
@@ -13,7 +13,7 @@ Závěrečná sekce~\ref{sec:shrnutiNavrhu} shrnuje výstupy návrhové fáze a 
 
 V~návrhu aplikací se používají jak narativní popisy situací z~praxe, tak případy užití jako formální popis interakce aktéra se systémem.
 V~této práci byly narativní situace využity při analýze rozhovorů, pro formální popis systému je dále uvedena sada scénářů případů užití použitelná přímo pro návrh prototypu a testování.
-Přehled osmi případů užití (UC01--UC08) shrnuje tabulka~\ref{tab:pripadyUziti}, plné hlavní scénáře včetně předpokladů, alternativních toků a~chybových stavů jsou uvedeny v~příloze~\ref{app:pripadyUziti}.
+Přehled osmi případů užití (UC01--UC08) shrnuje tabulka~\ref{tab:pripadyUziti}, plné hlavní scénáře včetně charakteristiky a~primárního aktéra jsou uvedeny v~příloze~\ref{app:pripadyUziti}.
 
 \begin{table}[!ht]
 	\centering
@@ -39,9 +39,10 @@ Přehled osmi případů užití (UC01--UC08) shrnuje tabulka~\ref{tab:pripadyUz
 \section{Funkční a nefunkční požadavky}
 \label{sec:pozadavky}
 
-Sada funkčních a nefunkčních požadavků byla sestavena ze dvou navzájem se doplňujících zdrojů: zjištění ze strukturovaných rozhovorů s~respondenty R1--R4 (sekce~\ref{subsec:vysledkyRozhovoru}) a doménové opory tvořené zadáním práce a doménovou logikou kalorické aplikace, která je v~následujících tabulkách označována zkratkou Z.
-Funkční požadavky jsou shrnuty v~tabulce~\ref{tab:trasovatelnostFR}, která zároveň slouží jako matice trasovatelnosti: pro každý požadavek dokládá, ze kterého zdroje jeho motivace pochází, a tím vylučuje, že by některý požadavek vznikl bez podkladu.
-Nefunkční požadavky jsou uvedeny v~samostatném seznamu doplněném o~měřitelné kritérium pro vyhodnocení.
+Sada funkčních a nefunkčních požadavků byla sestavena ze dvou navzájem se doplňujících zdrojů.
+Prvním zdrojem jsou zjištění ze strukturovaných rozhovorů s~respondenty R1--R4 (sekce~\ref{subsec:vysledkyRozhovoru}), druhým doménová opora tvořená zadáním práce a logikou kalorické aplikace, která je v~následujících tabulkách označována zkratkou Z.
+Funkční požadavky jsou shrnuty v~tabulce~\ref{tab:trasovatelnostFR}, která zároveň slouží jako matice trasovatelnosti.
+Pro každý požadavek dokládá, ze kterého zdroje jeho motivace pochází, a tím vylučuje, že by některý požadavek vznikl bez podkladu.
 
 \begin{footnotesize}
 \renewcommand{\arraystretch}{1.35}
@@ -127,7 +128,7 @@ Nefunkční požadavky jsou shrnuty v~tabulce~\ref{tab:nfr}, která pro každý 
 	\bottomrule
 \end{tabular}
 \begin{tablenotes}[para,flushleft]
-\item[\textsuperscript{1}] Hodnota 10~\% představuje pracovní cíl, který je výsledkem autorského rozhodnutí informovaného dvěma doplňujícími úvahami. Respondenti R4 a~R2 ohraničili akceptovatelnou nepřesnost shora přibližně 20~\% (R4) a zdola jednotkami procent (R2). Hodnota 10~\% leží uvnitř tohoto rozpětí. Empirickým kontextem je srovnávací studie publikovaná v~časopise \emph{Nutrients}~\cite{li2024evaluating}, která pro nutriční aplikace dokumentuje odchylky v~řádu stovek kilojoulů denně oproti referenčním metodám. Přesný práh 10~\% z~této studie přímo neplyne, slouží však jako orientační kritérium konzistentní s~jejími zjištěními. Cíl je proto chápán jako orientační vodítko pro vyhodnocení kvality výstupu, nikoliv jako absolutní mez.
+\item[\textsuperscript{1}] Hodnota 10~\% představuje pracovní cíl odvozený z~výroků respondentů. R4 a~R2 ohraničili akceptovatelnou nepřesnost shora přibližně 20~\% (R4) a zdola jednotkami procent (R2). Hodnota 10~\% leží uvnitř tohoto rozpětí.
 \end{tablenotes}
 \end{threeparttable}
 \end{footnotesize}
@@ -138,17 +139,15 @@ Nefunkční požadavky jsou shrnuty v~tabulce~\ref{tab:nfr}, která pro každý 
 \section{Návrh uživatelského rozhraní a HiFi prototyp}
 \label{sec:prototyp}
 
-Návrh uživatelského rozhraní převádí případy užití a požadavky z~předchozích sekcí do konkrétní vizuální a interakční podoby, která slouží jako přímý podklad pro implementaci popsanou v~kapitole~\ref{ch:implementace}.
-HiFi prototyp byl realizován v~nástroji Figma jako graficky a interakčně plnohodnotný model mobilní aplikace primárně pro operační systém iOS, přičemž zvolená vizuální linie byla později přenesena i na platformu Android s~respektem k~platformním konvencím obou systémů.
+Návrh uživatelského rozhraní převádí případy užití a požadavky z~předchozích sekcí do konkrétní vizuální podoby, která slouží jako přímý podklad pro implementaci popsanou v~kapitole~\ref{ch:implementace}.
+HiFi prototyp byl realizován v~nástroji Figma jako graficky plnohodnotný model mobilní aplikace primárně pro operační systém iOS, přičemž zvolená vizuální podoba byla později přenesena i na platformu Android.
 
-Vzhledem k~tomu, že implementovaná aplikace věrně navazuje na navržený prototyp, jsou jednotlivé obrazovky prezentovány vizuálně až v~sekci~\ref{sec:klicoveObrazovky} formou snímků z~reálného běhu aplikace, čímž se zamezí duplicitnímu zobrazení téhož rozhraní v~prototypové i implementované podobě.
+Vzhledem k~tomu, že implementovaná aplikace poměrně věrně navazuje na navržený prototyp, jsou jednotlivé obrazovky prezentovány vizuálně až v~sekci~\ref{sec:klicoveObrazovky} formou snímků z~reálného běhu aplikace, čímž se zamezí duplicitnímu zobrazení téhož rozhraní v~prototypové i implementované podobě.
 Kompletní HiFi prototyp ve své navržené formě je k~dispozici jako součást příloh této práce (viz příloha~\ref{app:hifi}).
 Tato sekce se proto soustředí na popis návrhových východisek a klíčových interakčních toků, které propojují definované případy užití do souvislých uživatelských scénářů.
 
-\subsection{Návrhová východiska}
-\label{subsec:navrhVychodiska}
-
-Vizuální i interakční stránka aplikace vychází z~výchozího systému Material Design jako designové báze, na níž byla iterativně vystavěna vlastní vizuální linie aplikace.
+Vizuální a~interakční jazyk aplikace vychází z~konvencí systému iOS, na nichž byla iterativně vystavěna vlastní vizuální podoba aplikace.
+Plně nativní vzhled však Flutter z~principu neumožňuje, neboť veškeré prvky rozhraní vykresluje vlastním grafickým enginem namísto systémových UI komponent platformy.
 Hlavním cílem bylo vytvořit minimalistické a přehledné rozhraní bez rušivých prvků v~souladu s~nefunkčním požadavkem NFR-05 a zároveň zachovat konzistentní vizuální identitu mezi jednotlivými moduly aplikace (záznam jídel, cvičení, přehledy, profil).
 
 Sémantické barvy hrají v~návrhu specifickou roli, neboť se uplatňují při indikaci nejistoty výstupu rozpoznání umělou inteligencí (zelená, žlutá, červená), upozornění na překročení cílových kalorických hodnot a varování při porušení dietních omezení.
@@ -156,24 +155,12 @@ Tato barevná konvence prostupuje všemi obrazovkami a tvoří jeden z~pilířů
 
 Konkrétní hodnoty barev, typografických stylů, rozestupů a stínů nebyly v~prototypové fázi formálně specifikovány předem, ale postupně se vyvíjely při tvorbě jednotlivých obrazovek.
 Jejich finální podoba byla teprve v~implementační fázi sjednocena do centralizovaného souboru zdrojového kódu \texttt{lib/app\_theme.dart}, který je popsán v~sekci~\ref{subsec:vyvojovaPlatforma}.
-Toto pořadí (od prototypování k~formalizaci) odpovídá iterativní povaze návrhové fáze, ve které je vizuální linie zpřesňována podle vznikajících obrazovek a požadavků jednotlivých případů užití.
-
-\subsection{Klíčové interakční toky}
-\label{subsec:interakcniToky}
-
-Navržené uživatelské rozhraní propojuje případy užití UC01--UC08 s~funkčními požadavky do následujících interakčních toků:
-
-\begin{itemize}
-	\item \textbf{Záznam jídla z~fotografie (UC01, UC02)}: hlavní tok začínající pořízením nebo importem snímku, pokračující obrazovkou náhledu s~barevnou indikací nejistoty a editační obrazovkou umožňující opakování rozpoznání s~doplněným textovým popisem (FR-08, FR-11, FR-13).
-	\item \textbf{Alternativní vstupy} pro situace, kdy fotografie selže nebo není praktická: hlasový a textový popis jídla (FR-14) a čtečka čárových kódů s~rozlišenými chybovými stavy (FR-10, FR-16).
-	\item \textbf{Rychlý opakovaný zápis (UC03, UC05)} se opírá o~historii záznamů, oblíbené položky a duplikaci dřívějšího jídla na zvolený den (FR-15, FR-17--FR-19).
-	\item \textbf{Přehledy a dotazy nad daty (UC08)} pokrývají týdenní a měsíční souhrny, kalendář porušení dietních omezení a dotazy v~přirozeném jazyce nad lokálně dostupnými daty. Data lze exportovat do tabulkového formátu a všechny záznamové funkce zůstávají dostupné v~režimu offline (FR-21, FR-24--FR-27).
-\end{itemize}
-
-Kompletní interakční toky včetně přechodů mezi obrazovkami jsou dokumentovány v~HiFi prototypu v~příloze~\ref{app:hifi}, snímky odpovídajících obrazovek z~implementované aplikace jsou uvedeny v~sekci~\ref{sec:klicoveObrazovky}.
+Toto pořadí (od prototypování k~formalizaci) odpovídá iterativní povaze návrhové fáze, ve které je vizuální podoba zpřesňována podle vznikajících obrazovek a požadavků jednotlivých případů užití.
 
 \section{Shrnutí návrhu aplikace}
 \label{sec:shrnutiNavrhu}
 
 Návrhová fáze převedla vstupy z~uživatelského výzkumu a analýzy konkurence do osmi případů užití (sekce~\ref{sec:pripadyUziti}), třiceti funkčních a pěti nefunkčních požadavků (sekce~\ref{sec:pozadavky}) a HiFi prototypu v~nástroji Figma (sekce~\ref{sec:prototyp}, příloha~\ref{app:hifi}).
 Tyto artefakty vymezují rozsah cílového řešení a tvoří přímý podklad pro implementaci popsanou v~kapitole~\ref{ch:implementace}.
+Případ užití UC06, vaření s~režimem plán versus realita, není v~aplikaci realizován jako vyhrazený režim, ale je pokryt obecnějšími toky.
+Plán odpovídá pořízení fotografie více předpřipravených ingrediencí najednou (UC01), realita pak následné editaci uloženého záznamu po dokončení vaření (UC02).

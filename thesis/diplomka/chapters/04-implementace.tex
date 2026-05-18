@@ -14,7 +14,7 @@ S~ohledem na požadavek pokrýt platformy iOS i~Android při vývoji jedním aut
 Ze tří hlavních multiplatformních frameworků (Flutter~\cite{flutterDoc}, React Native~\cite{reactNativeDoc} a~Kotlin Multiplatform~\cite{kotlinMultiplatformDoc}) byl zvolen Flutter s~jazykem Dart, neboť nabízí nejvyšší míru sdílení kódu včetně prezentační vrstvy díky vlastnímu renderovacímu enginu zajišťujícímu konzistentní vykreslování napříč verzemi operačního systému a~disponuje zralým ekosystémem balíčků pokrývajícím všechny funkčně vyžadované oblasti (kamera, hlasový vstup, čárové kódy, lokální notifikace, integrace se zdravotními platformami, lokalizace).
 
 Aplikace je primárně vyvíjena a~testována pro iOS s~plnou funkčností i~na Androidu díky multiplatformní povaze frameworku.
-Použity jsou Flutter ve verzi 3.35 a~Dart 3.9, výchozí designový systém Material Design je doplněn o~centralizované návrhové tokeny v~souboru \texttt{lib/app\_theme.dart}.
+Použity jsou Flutter ve verzi 3.35 a~Dart 3.9, návrhové tokeny jsou centralizovány v~souboru \texttt{lib/app\_theme.dart}.
 
 \subsection{Databáze a perzistence dat}
 \label{subsec:databaze}
@@ -88,7 +88,7 @@ Plovoucí akční tlačítko ve spodní liště otevírá panel rychlých akcí 
 Panel je dostupný z~libovolné záložky a slouží jako centrální rozcestník pro všechny modality záznamu definované funkčními požadavky.
 Aplikace obsahuje přibližně 58~obrazovek a modálních listů organizovaných v~adresáři \texttt{lib/screens/} do tematických skupin (onboarding, skenování, jídla a ingredience, logování, profil).
 Modální listy jsou využívány pro doplňkové interakce nevyžadující opuštění aktuálního kontextu, jako je výběr data pro kopírování jídla, záznam hmotnosti nebo akce u~detailu cvičení.
-Konkrétní navigační toky pro hlavní případy užití byly popsány v~sekci~\ref{subsec:interakcniToky} a snímky odpovídajících obrazovek jsou prezentovány v~sekci~\ref{sec:klicoveObrazovky}.
+Snímky obrazovek pro hlavní případy užití jsou prezentovány v~sekci~\ref{sec:klicoveObrazovky}.
 
 \section{Datový model}
 \label{sec:datovyModel}

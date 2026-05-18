@@ -397,6 +397,11 @@ Z~hlediska produkčního nasazení se ukazuje výrazný kompromis mezi přesnost
 Model GPT-5.5 dosahuje nejlepší přesnosti, avšak průměrná doba odpovědi 27,93~s je na hranici přijatelnosti pro mobilní aplikaci a překračuje limit nefunkčního požadavku NFR-02 (20~s) změřený v~uživatelském testování s~modelem GPT-5.4 (7,67~s, sekce~\ref{subsec:plneniUloh}).
 Jako nejlepší kompromis se proto jeví GPT-5.4 s~promptem improved v2: hodnota 38,27~\% MAPE při průměrné době odpovědi 6,03~s, a tento model je v~aktuální verzi aplikace nasazen jako výchozí.
 
+Cíl nefunkčního požadavku NFR-01, tedy odchylka pod 10~\% oproti referenčním hodnotám, nebyl v~rámci provedeného experimentu dosažen žádnou z~testovaných kombinací modelu a iterace promptu.
+Nejlepší konfigurace (GPT-5.5 + improved v2) dosáhla 32,12~\% \emph{calorie MAPE}, výchozí produkční konfigurace (GPT-5.4 + improved v2) hodnoty 38,27~\%.
+Pro klíčové kalorické pásmo 100--400~kcal se MAPE u~GPT-5.5 přibližuje hranici 20~\% a~je srovnatelná s~referenční hodnotou specializovaného modelu Nutrition5k.
+Zpřesnění odhadu je formulováno mezi další kroky v~kapitole~\ref{ch:zaver}.
+
 \paragraph{Omezení.}
 V~současné podobě má validace charakter doplňkové studie a interpretovat ji je třeba s~ohledem na několik omezení.
 Vzorek padesáti talířů sice pokrývá pět kalorických pásem, ale neodráží plné spektrum jídel a vizuálních kontextů, na které aplikace v~reálném použití naráží (různé osvětlení, úhly, pozadí, regionální pokrmy mimo americkou cafeterii).

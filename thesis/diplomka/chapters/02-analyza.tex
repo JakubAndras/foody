@@ -203,13 +203,13 @@ Mobilní aplikace pro sledování stravy patří mezi nejčastěji používané 
 Tematická analýza 72\,084 recenzí patnácti nejpoužívanějších aplikací identifikovala jako nejhůře hodnocené netransparentní účtování předplatného (průměrné hodnocení 2,32 z~5) a technickou stabilitu (2,85 z~5), zatímco kladně jsou vnímány jednoduchost ovládání, zápis kalorií a integrace čtečky čárových kódů~\cite{zecevic2021userPerspectives}.
 Ruční zapisování přitom vede k~nekompletním záznamům a podle typu stravy k~nadhodnocení či podhodnocení energetického příjmu o~stovky kilokalorií denně~\cite{li2024evaluating}.
 
-V~reakci na tato omezení se prosazuje využití umělé inteligence a počítačového vidění, avšak ve vzorku 80 podrobně analyzovaných aplikací byla identifikována pouze jediná schopná z~fotografie automaticky určit druh jídla i velikost porce~\cite{samad2022smartphoneApps}.
-Plně automatické rozpoznávání talíře typicky vyžaduje potvrzení uživatele, zatímco skenování čárových kódů se stalo běžným standardem~\cite{aburub2025foodScanning}.
-Nezávislá akademická validace přesnosti komerčních AI funkcí v~recenzované literatuře přitom nadále chybí.
+Vlna multimodálních jazykových modelů po roce 2022 přinesla schopnost rozpoznat druh jídla i~odhadnout velikost porce z~jediné fotografie.
+Před touto vlnou byla situace odlišná. Systematický přehled 80 aplikací z~roku 2022~\cite{samad2022smartphoneApps} identifikoval pouze jedinou aplikaci s~touto kombinací funkcí.
+Plně automatické rozpoznávání talíře přitom typicky vyžaduje potvrzení uživatele, zatímco skenování čárových kódů se stalo běžným standardem~\cite{aburub2025foodScanning}.
 
-Pro detailní analýzu byly vybrány čtyři aplikace pokrývající dvě osy trhu: tradiční přístup s~AI jako asistentem zápisu oproti přístupu stavícímu primárně na AI rozpoznávání, a~globální oproti lokální působnost.
-Tradiční skupinu zastupují globální MyFitnessPal a československé Kalorické Tabulky (Dine4Fit) s~milionovou tuzemskou základnou.
-Druhá skupina, navazující na třetí vlnu multimodálních velkých jazykových modelů uvedených po roce 2022~\cite{wang2026visionLanguageFood,fridolfsson2025llmNutrition}, se dělí na specializovaný model trénovaný na vlastním potravinovém datasetu (zastoupený SnapCalorie pro publikovanou metodiku trénování) a~generický multimodální model nasazený přes API (komerční zástupce CalZen)~\cite{coburn2025multimodalNutrition}.
+Pro bližší rozbor byly vybrány čtyři aplikace pokrývající dvě osy trhu, tradiční přístup s~AI jako asistentem zápisu oproti přístupu stavícímu primárně na AI rozpoznávání, a~globální oproti lokální působnosti.
+Tradiční skupinu zastupují globální MyFitnessPal a~československé Kalorické Tabulky od společnosti Dine4Fit s~rozsáhlou tuzemskou uživatelskou základnou.
+Druhá skupina využívá multimodální velké jazykové modely~\cite{wang2026visionLanguageFood,fridolfsson2025llmNutrition} a~dělí se na specializovaný model trénovaný na vlastním potravinovém datasetu zastoupený aplikací SnapCalorie a~generický multimodální model nasazený přes API zastoupený komerční aplikací CalZen~\cite{coburn2025multimodalNutrition}.
 
 \subsection{Tradiční aplikace s~manuálním zápisem}
 \label{subsec:tradicniAplikace}
@@ -222,13 +222,13 @@ Jádrem je potravinový deník navázaný na databázi v~řádu milionů značko
 MyFitnessPal patří mezi první komerční aplikace, které nasadily foto rozpoznávání ve větším měřítku, a detailnější přehledy včetně mikronutrientů jsou součástí placeného tarifu Premium~\cite{myFitnessPal2025}.
 
 Klíčovými přednostmi z~hlediska této práce jsou rozsáhlá globální databáze, kombinace více vstupních metod a dlouhodobá přítomnost na trhu doložená nezávislými studiemi~\cite{samad2022smartphoneApps}.
-Limity představují proměnlivá kvalita uživatelsky přidaných položek vedoucí k~chybám v~nutričních údajích~\cite{li2024evaluating}, nutnost ruční kontroly výsledků foto rozpoznávání a nedostatečné pokrytí lokálních středoevropských produktů.
+Limity představují proměnlivá kvalita uživatelsky přidaných položek vedoucí k~chybám v~nutričních údajích~\cite{li2024evaluating}, časová náročnost zápisu jídla zejména u~složitějších pokrmů s~více ingrediencemi a~nedostatečné pokrytí lokálních středoevropských produktů.
 
 \subsubsection{Kalorické Tabulky}
 \label{subsubsec:kalorickeTabulky}
 
 Kalorické Tabulky, vyvíjené společností Dine4Fit~a.s., představují nejpoužívanější aplikaci pro sledování stravy v~českém a slovenském prostředí s~milionem měsíčních uživatelů podle oficiálních údajů firmy, dostupnou jako web i mobilní aplikace pro Android a iOS s~podporou Garmin a Apple Watch~\cite{dine4fit2025}.
-Funkčním rozsahem se neliší od globálního MyFitnessPal, hlavním diferenciátorem je výrazná lokalizace: databáze přizpůsobená regionálnímu trhu s~komunitně rozšiřovanými recepty a značkovými výrobky dostupnými v~ČR a SR, lokalizované rozhraní a foto rozpoznávání zaměřené i na středoevropské pokrmy~\cite{dine4fit2025}.
+Funkčním rozsahem se neliší od globálního MyFitnessPal, hlavním rozlišujícím rysem je výrazná lokalizace, tedy databáze přizpůsobená regionálnímu trhu s~komunitně rozšiřovanými recepty a značkovými výrobky dostupnými v~ČR a SR, lokalizované rozhraní a foto rozpoznávání zaměřené i na středoevropské pokrmy~\cite{dine4fit2025}.
 Hlavními limity z~hlediska této práce jsou časová náročnost při práci se složitějšími recepty, riziko nepřesností v~komunitně rozšiřovaných databázích~\cite{li2024evaluating} a stále spíše doplňková role AI rozpoznávání vůči manuálnímu zápisu.
 
 \subsection{Aplikace stavící primárně na AI rozpoznávání}
@@ -243,13 +243,16 @@ Doprovodnou výbavou je databáze přibližně 500\,000 položek validovaná opr
 
 Sebereportovaná průměrná chyba odhadu energetické hodnoty činí podle vyjádření výrobce přibližně 15~\%, což je srovnáváno s~tolerancí 20~\% povolenou na nutričních štítcích~\cite{snapcalorie2025}.
 Tyto údaje pocházejí výhradně od provozovatele a nezávislá validační studie chybí.
-SnapCalorie tak zůstává referenčním příkladem přístupu stavícího primárně na AI rozpoznávání se specializovaným vlastním modelem, jehož hlavním limitem je převážně západní složení trénovacího datasetu.
-Riziko zhoršení přesnosti mimo tréninkový region je v~recenzované literatuře doloženo na transformerové architektuře CBiAFormer poklesem z~92,40~\% na ETHZ Food-101 na 72,92~\% na smíšeném ISIA Food-200, což lze nepřímo vztáhnout i na obtížnou přenositelnost SnapCalorie do české a středoevropské kuchyně~\cite{liu2025deepLearning}.
+SnapCalorie tak zůstává referenčním příkladem přístupu stavícího primárně na AI rozpoznávání se specializovaným vlastním modelem.
+Hlavním limitem tohoto modelu je převážně západní složení trénovacího datasetu.
+Recenzovaná literatura dokládá, že modely trénované na západní kuchyni výrazně ztrácejí přesnost na pokrmech z~odlišného kulturního prostředí.
+Nezávislá studie například zaznamenala, že modelu trénovanému na převážně západním datasetu Food-101 klesla přesnost při testu na kulturně rozmanitějším datasetu ISIA Food-200 z~92,4~\% na 72,9~\%, tedy přibližně o~21 procentních bodů~\cite{liu2025deepLearning}.
+Podobné riziko ztráty přesnosti lze očekávat i~při nasazení SnapCalorie na českou a~středoevropskou kuchyni.
 
 \subsubsection{CalZen}
 \label{subsubsec:calzen}
 
-Aplikace CalZen reprezentuje generickou vlnu nástrojů stavících primárně na AI rozpoznávání uvedených v~letech 2024 a~2025, slibujících odhad kalorické a~makroživinové hodnoty z~fotografie pokrmu řádově do několika sekund pro domácí jídla, restaurační pokrmy i~balené potraviny~\cite{calzen2025}.
+Aplikace CalZen reprezentuje vlnu nástrojů stavících primárně na AI rozpoznávání uvedených v~letech 2024 a~2025, slibujících odhad kalorické a~makroživinové hodnoty z~fotografie pokrmu řádově do několika sekund pro domácí jídla, restaurační pokrmy i~balené potraviny~\cite{calzen2025}.
 Provozovatel deklaruje řádově tři miliony uživatelů a průměrné hodnocení 4,8~z~5 v~hlavních mobilních obchodech, jedná se však o~marketingové údaje bez nezávislé verifikace.
 Doprovodnými funkcemi jsou krokoměr a sledování pitného režimu, aplikace funguje ve freemium modelu s~placeným tarifem pro pokročilé makroanalýzy~\cite{calzen2025}.
 
@@ -261,24 +264,21 @@ Silnou stránkou CalZen jsou rychlost vývoje a generická šíře pokrytí, sla
 \label{subsec:shrnutiTrhu}
 
 Žádná ze čtyř představených aplikací nepokrývá současně všechny aspekty relevantní pro českého uživatele hledajícího kombinaci lokalizovaného AI-asistovaného zápisu, transparentní komunikace nejistoty modelu a proaktivní podpory dodržování individuálních dietních omezení.
-MyFitnessPal nepodporuje češtinu v~uživatelském rozhraní ani ve hlasovém vstupu (omezeno na angličtinu a Spojené státy) a jeho AI asistent dietní omezení využívá pouze v~plánování, nikoli při varování v~okamžiku logování konkrétní položky.
-SnapCalorie a CalZen postrádají českou lokalizaci v~celém rozsahu.
-Kalorické Tabulky sice nabízejí kompletní českou lokalizaci včetně AI rozpoznávání~\cite{dine4fit2025}, avšak nepodporují hlasový vstup pro logování ani veřejně dokumentované varování při porušení dietních omezení.
-Chybějící nezávislá akademická validace komerčních AI funkcí je přitom společným rysem obou skupin~\cite{zecevic2021userPerspectives,liu2025deepLearning}.
+MyFitnessPal, SnapCalorie a~CalZen postrádají českou lokalizaci v~různém rozsahu, zatímco Kalorické Tabulky sice nabízejí kompletní českou lokalizaci včetně AI rozpoznávání~\cite{dine4fit2025}, jedná se však o~tradiční aplikaci postavenou na databázi potravin průběžně rozšiřované samotnými uživateli, což s~sebou nese vlastní chybovost i~vyšší časovou náročnost záznamu.
+K~žádné ze čtyř aplikací se v~rámci analýzy provedené pro tuto práci nepodařilo dohledat nezávislou akademickou validaci jejich AI funkcí.
 
-Pozici této diplomové práce proto nevymezuje ambice překonat komerční nástroje stavící primárně na AI rozpoznávání v~technické přesnosti, ke které by autorský tým bez zdrojů firem typu SnapCalorie neměl reálné prostředky, nýbrž diferenciace postavená na třech osách: otevřené databázi potravin nad evropským zdrojem Open Food Facts~\cite{openFoodFacts2025}, transparentním zobrazení nejistoty AI výstupu uživateli a~kombinaci česky lokalizovaného hlasového vstupu pro jídla i~fyzické aktivity~\cite{myFitnessPalVoiceLog2025,myFitnessPalLanguages2025} s~proaktivním varováním v~okamžiku AI odhadu jídla, pokud porušuje uživatelem nastavená dietní omezení~\cite{myFitnessPalCoach2025}.
+Pozici této diplomové práce proto nevymezuje ambice překonat komerční nástroje stavící primárně na AI rozpoznávání v~technické přesnosti, ke které by autorský tým bez zdrojů firem typu SnapCalorie neměl reálné prostředky, nýbrž odlišení postavené na třech osách, a~to otevřené databázi potravin nad evropským zdrojem Open Food Facts~\cite{openFoodFacts2025}, transparentním zobrazení nejistoty AI výstupu uživateli a~kombinaci česky lokalizovaného hlasového vstupu pro jídla i~fyzické aktivity~\cite{myFitnessPalVoiceLog2025,myFitnessPalLanguages2025} s~proaktivním varováním v~okamžiku AI odhadu jídla, pokud porušuje uživatelem nastavená dietní omezení~\cite{myFitnessPalCoach2025}.
 Volba Open Food Facts může v~aktuálním pokrytí české kuchyně zaostávat za proprietární databází Kalorických Tabulek~\cite{dine4fit2025}, na rozdíl od všech čtyř proprietárních alternativ však umožňuje transparentní ověření původu nutričních údajů, kontinuální komunitní aktualizaci a nezávislost na uzavřených datech jediného poskytovatele.
 
-Z~uvedeného přehledu vyplývají pro návrh aplikace v~této diplomové práci tři hlavní závěry, které jsou konzistentní i s~výše citovanou analýzou uživatelských stížností~\cite{zecevic2021userPerspectives}.
+Z~uvedeného přehledu vyplývají pro návrh aplikace v~této diplomové práci dva hlavní závěry konzistentní s~výše citovanou analýzou uživatelských stížností~\cite{zecevic2021userPerspectives}.
 Inovace by neměla cílit na samotnou existenci AI funkce, která je již na trhu komoditou, ale na konkrétní slabá místa stávajících řešení, zejména na uživatelskou zátěž zápisu, kvalitu lokální databáze a transparentní komunikaci nejistoty výstupu vůči uživateli~\cite{li2024evaluating,zecevic2021userPerspectives}.
-Přístup stavící primárně na AI rozpoznávání je dostupný i~bez vlastního trénovaného modelu skrze multimodální velké jazykové modely nasazené přes API, což otevírá prostor pro rychlou implementaci v~rámci diplomové práce~\cite{wang2026visionLanguageFood}.
-Lokální kontext a~podpora české a~středoevropské kuchyně zůstávají strukturálním diferenciátorem vůči konkurenci typu SnapCalorie a~CalZen, primárně orientované na západní a~anglosaský trh~\cite{dine4fit2025,liu2025deepLearning}.
+Přístup stavící primárně na AI rozpoznávání je přitom dostupný i~bez vlastního trénovaného modelu skrze multimodální velké jazykové modely nasazené přes API, což otevírá prostor pro rychlou implementaci v~rámci diplomové práce~\cite{wang2026visionLanguageFood}.
 
 \section{Uživatelská studie}
 \label{sec:uzivatelskaStudie}
 
 Uživatelská studie představuje soubor metod, jejichž cílem je porozumět potřebám, motivacím a kontextu cílových uživatelů a tyto poznatky následně převést do návrhu systému.
-V~oblasti mobilního zdraví je uživatelsky orientovaný přístup považován za důležitý, protože ovlivňuje použitelnost, důvěru, dlouhodobou adherenci a tím i reálný dopad aplikace~\cite{cornet2020untoldStories}.
+V~oblasti mobilního zdraví je uživatelsky orientovaný přístup považován za důležitý, protože ovlivňuje použitelnost, důvěru, dlouhodobou adherenci a tím i reálný dopad aplikace~\cite{molina2020proposalUserCentered}.
 
 V~této práci byla uživatelská studie použita jako hlavní vstup pro návrh aplikace pro rozpoznávání potravin pomocí umělé inteligence a pro sledování kalorického příjmu.
 Cílem bylo identifikovat situace, ve kterých je ruční zapisování pro uživatele překážkou, jaká míra nepřesnosti je akceptovatelná, jak uživatelé vnímají selhání umělé inteligence a jaké podpůrné funkce zvyšují pravděpodobnost dlouhodobého používání.
