@@ -838,39 +838,32 @@ Společné vyhodnocení obou testovacích fází je shrnuto v~sekci~\ref{sec:shr
 \label{sec:shrnutiTestovani}
 
 Tato sekce propojuje výsledky obou testovacích fází, krátkodobého moderovaného testování s~participanty \texttt{P1}--\texttt{P3} a~dlouhodobého testování v~reálném prostředí s~účastníky \texttt{LP1}--\texttt{LP6}, do společného vyhodnocení.
-Cílem je odlišit zjištění, která se napříč oběma fázemi opakují (a~jsou tedy metodologicky robustnější), od pozorování vázaných na konkrétní fázi, shrnout dílčí úpravy promítnuté do iterací aplikace a~formulovat otevřené návrhy i~doporučení pro navazující rozvoj práce.
+Cílem je odlišit zjištění, která se napříč oběma fázemi opakují a~jsou tedy metodologicky robustnější, od pozorování vázaných na konkrétní fázi, shrnout dílčí úpravy promítnuté do iterací aplikace a~formulovat otevřené návrhy i~doporučení pro navazující rozvoj práce.
 
 \paragraph{Vyhodnocení hlavní hypotézy.}
 Hypotéza formulovaná v~cílech práce (sekce~\ref{sec:cile}), podle které aplikace umožňuje záznam stravy s~výrazně nižší kognitivní a~časovou zátěží než dosavadní manuální postup, je oběma fázemi konzistentně podpořena.
-Krátkodobé testování dosáhlo průměrného SUS skóre 85,8~bodu (sekce~\ref{subsec:vysledkySus}), dlouhodobé testování průměrného SUS 88,3~bodu (sekce~\ref{subsec:susDlouhodobe}).
-Obě hodnoty se nacházejí nad prahem 80,3 označovaným v~literatuře za excelentní použitelnost~\cite{bangor2008susAdjective} a~nad referenčním průměrem 76,2~bodu zjištěným meta-analýzou aplikací digitálního zdraví~\cite{hyzy2022susDigitalHealth}.
-Měření kognitivní a~časové zátěže v~dlouhodobé fázi nástrojem Raw NASA-TLX přineslo průměrnou hodnotu 4,97 z~20 (sekce~\ref{subsec:tlxDlouhodobe}), tedy hodnotu spadající do dolní čtvrtiny škály.
+Konkrétní hodnoty SUS, Raw NASA-TLX a~dalších metrik jsou uvedeny v~sekcích~\ref{subsec:vysledkySus},~\ref{subsec:susDlouhodobe} a~\ref{subsec:tlxDlouhodobe}.
 Konzistence subjektivního hodnocení napříč různými stravovacími profily, dietními kontexty a~délkami expozice aplikaci je z~hlediska podpory hypotézy věcně významnější než absolutní úroveň jednotlivých hodnot.
 
 \paragraph{Robustní zjištění napříč fázemi.}
 Tři tematické okruhy se objevily v~obou fázích a~představují nejspolehlivější výstup testovací části práce.
 Prvním je hodnota AI rozpoznávání jako primárního vstupního kanálu, kterou v~krátkodobé fázi participanti opakovaně formulovali v~debriefingových rozhovorech a~v~dlouhodobé fázi potvrdila jak kvalitativní reflexe (oceněná funkce u~všech šesti účastníků), tak behaviorální data (79~\% záznamů s~AI komponentou).
-Druhým je význam \emph{edit flows}, kde krátkodobé testování odhalilo dílčí problémy s~nalezitelností editačních akcí a~dlouhodobá fáze tato pozorování rozšířila o~konkrétní okrajové stavy (násobné položky z~jednoho hlasového vstupu, nemožnost zpětně přidávat cvičení).
-Třetím je dopad přesnosti odhadu nutričních hodnot na uživatelskou důvěru, který se v~krátkodobé fázi projevil ve validaci přesnosti odhadu kalorií (sekce~\ref{sec:benchmarkPresnost}) a~v~dlouhodobé fázi v~explicitních formulacích účastníků (LP2, LP6) označujících přesnost makroživin a~kalorií u~větších porcí za prioritní oblast ke zlepšení.
+Druhým je význam \emph{edit flows}, kde krátkodobé testování odhalilo dílčí problémy s~nalezitelností editačních akcí a~dlouhodobá fáze tato pozorování rozšířila o~konkrétní okrajové stavy.
+Třetím je dopad přesnosti odhadu nutričních hodnot na uživatelskou důvěru, který se v~krátkodobé fázi projevil ve validaci přesnosti odhadu kalorií (sekce~\ref{sec:benchmarkPresnost}) a~v~dlouhodobé fázi v~explicitních formulacích účastníků označujících přesnost makroživin a~kalorií u~větších porcí za prioritní oblast ke zlepšení.
 
 \paragraph{Společná metodologická omezení.}
-Obě fáze sdílejí omezení kvalitativního výzkumu s~malým vzorkem.
-Krátkodobá studie pracovala s~třemi participanty, dlouhodobá se šesti účastníky, přičemž čtyři ze šesti účastníků dlouhodobé fáze (LP1--LP4) jsou totožní s~respondenty vstupních rozhovorů a~účastníky krátkodobého testování, což představuje potenciál pro konfirmační zkreslení.
-Vzorek je v~obou fázích geograficky a~kulturně homogenní (česky mluvící uživatelé z~okruhu známých) a~neumožňuje statistické zobecnění ani srovnání mezi podskupinami podle pohlaví, věku nebo dietních omezení.
-Žádná z~fází nezahrnovala kontrolní podmínku, ve které by titíž účastníci paralelně používali i~existující aplikaci pro ruční záznam stravy, což by umožnilo přímé kvantitativní vyhodnocení rozdílu v~uživatelské zátěži vůči konkrétnímu referenčnímu řešení.
-Validní vyhodnocení skutečné přesnosti AI odhadu vůči referenčním nutričním hodnotám rovněž přesahuje rozsah aktuální studie a~je formulováno jako náplň doporučované navazující validační studie.
+Obě fáze sdílejí omezení kvalitativního výzkumu s~malým vzorkem (tři participanti krátkodobé, šest účastníků dlouhodobé fáze), potenciál pro konfirmační zkreslení u~účastníků LP1--LP4 prošedších předchozími fázemi a~chybějící kontrolní podmínku paralelního používání existující referenční aplikace.
+Validní vyhodnocení skutečné přesnosti AI odhadu vůči referenčním nutričním hodnotám rovněž přesahuje rozsah aktuální studie.
+Detailní rozbor omezení je v~sekci~\ref{subsec:omezeniDlouhodobe} a~v~kapitole~\ref{ch:zaver}.
 
 \paragraph{Souhrn implementačních iterací.}
 Z~obou fází testování bylo do navazujících implementačních iterací zapracováno celkem 30 nálezů.
-Z~krátkodobé fáze devět implementačních chyb (B1--B9), čtrnáct problémů uživatelského rozhraní a~pět návrhů na rozšíření funkcionality (N1, N3, N7, N13, N14).
-Z~dlouhodobé fáze sedm dalších nálezů (L1--L7) zahrnujících opravu denního kalorického limitu, přejmenování \emph{Voice Log} na obecnější vstup, sjednocení barevné indikace přepínače \emph{Meal/Exercise}, lokalizaci notifikací mealtime, sladění náhledu kamery s~výsledným oříznutím, perzistenci editace názvu cvičení v~knihovně cvičení a~korektní zobrazení dnů se zápornou kalorickou bilancí v~přehledech.
-Iterativní zapracování těchto 30 nálezů do dvou navazujících verzí aplikace předcházelo dlouhodobé fázi a~je dokladem toho, že obě testovací fáze sloužily nejen jako evaluační, ale i~jako vstup do reálných vývojových rozhodnutí.
+Z~krátkodobé fáze devět implementačních chyb (B1--B9), čtrnáct problémů uživatelského rozhraní a~pět návrhů na rozšíření funkcionality (N1, N3, N7, N13, N14), z~dlouhodobé fáze sedm nálezů L1--L7.
+Iterativní zapracování těchto nálezů do dvou navazujících verzí aplikace předcházelo dlouhodobé fázi a~dokládá, že obě testovací fáze sloužily nejen jako evaluační, ale i~jako vstup do reálných vývojových rozhodnutí.
 
 \paragraph{Otevřené návrhy a~designové otázky.}
-Vedle implementovaných úprav vznikla v~průběhu obou fází sada otevřených námětů a~designových otázek, jejichž rozhodnutí přesahuje rozsah aktuální implementační iterace nebo vyžaduje hlubší designový průzkum.
-Z~krátkodobé fáze jde o~deset z~patnácti návrhů na rozšíření funkcionality uvedených v~tabulce~\ref{tab:navrhyFunkce}, seřazených podle počtu participantů, kteří je formulovali.
-Z~dlouhodobé fáze jsou to dva nálezy L8 a~L9 (sekce~\ref{subsec:problemyDlouhodobe}) týkající se reprezentace složených záznamů z~jednoho vstupu a~individuální požadavky z~kvalitativní reflexe, konkrétně rozšíření hlasového vstupu na záznam sportovní aktivity (LP1), nastavitelná velikost písma (LP3) a~úprava výchozího zobrazení fotoaparátu (LP2).
-Otevřené návrhy se od opravených dílčích nálezů liší tím, že vyžadují strukturální rozhodnutí. Otázka, zda hlasový vstup tří položek vytvoří jeden záznam s~amount~=~3 (současný stav, nález L9) nebo tři samostatné záznamy, není lokální oprava, ale volba dominantní mentální mapy záznamu jídla.
+Vedle implementovaných úprav vznikla v~průběhu obou fází sada dalších návrhů na rozšíření či úpravu stávající funkcionality, které byly odloženy na další iteraci.
+Tabulka~\ref{tab:navrhyFunkce} je obsahuje seřazené podle počtu participantů, kteří je formulovali.
 
 \begin{table}[ht]
 	\centering
@@ -881,8 +874,8 @@ Otevřené návrhy se od opravených dílčích nálezů liší tím, že vyžad
 		\toprule
 		\textbf{\#} & \textbf{Návrh} & \textbf{Účastníci} \\
 		\midrule
-		N1 & Podpora hlasového vstupu v~modulu cvičení a v~rozhraní ,,Fix issue'' & P1, P2, P3 \\
-		N2 & Vizuální zvýraznění dnů s~existujícími záznamy v~měsíčním kalendáři & P2, P3 \\
+		N1 & Podpora hlasového vstupu v~modulu cvičení a v~rozhraní ,,Improve with AI'' & P1, P2, P3 \\
+		N2 & Vizuální zvýraznění dnů s~existujícími záznamy v~měsíčním kalendáři hlavní obrazovky & P2, P3 \\
 		N3 & Podpora hlasového vstupu v~rozhraní Ask AI & P3 \\
 		N4 & Přesun rozhraní Ask AI ze záložky Profil do záložky Progress & P3 \\
 		N5 & Deaktivace odesílacího tlačítka u~prázdného vstupního pole v~Ask AI & P1 \\
@@ -901,14 +894,5 @@ Otevřené návrhy se od opravených dílčích nálezů liší tím, že vyžad
 \end{table}
 
 \paragraph{Doporučení pro navazující rozvoj.}
-Tři otevřené otázky přesahují rozsah dílčích úprav a~představují náplň navazující výzkumné a~vývojové práce.
-Prvním je systematická validační studie přesnosti AI odhadu nutričních hodnot na reprezentativním souboru referenčních pokrmů s~kvantifikací odchylky vůči laboratorně stanoveným hodnotám, která by překročila rozsah provedené validace na padesáti talířích z~datasetu Nutrition5k.
-Druhým je opakování dlouhodobé studie na rozšířeném vzorku účastníků mimo okruh známých s~kontrolní podmínkou v~podobě paralelního používání existující referenční aplikace, což by umožnilo přímé srovnání kognitivní a~časové zátěže napříč nástroji a~zmírnilo riziko konfirmačního zkreslení současného vzorku.
-Třetím je dořešení otevřených designových otázek L8 a~L9 ohledně reprezentace složených záznamů z~jednoho vstupu, jejichž řešení vyžaduje hlubší designové rozhodnutí přesahující rámec aktuální iterace.
-Tato doporučení tvoří přímý vstup do kapitoly~\ref{ch:zaver}, ve které jsou zařazena mezi náměty pro další iteraci aplikace i~výzkumného programu.
-
-% TODO: zrevidovat — duplicita s odstavcem "Společná metodologická omezení" (řádky 881–886). Přesunuto z 4.8 Omezení implementace.
-\paragraph{Rozsah a~metodologická povaha testování.}
-Implementace byla ověřena na třech participantech v~krátkodobém moderovaném testování a~šesti účastnících v~dlouhodobém testování v~reálném prostředí (kapitola~\ref{ch:testovani}), které kombinuje kvalitativní zpětnou vazbu s~kvantitativními ukazateli ze získaných behaviorálních dat.
-Rozsah obou vzorků odpovídá testování v~rámci diplomové práce, neumožňuje však plnohodnotné statistické zobecnění výsledků na širší populaci.
-Dlouhodobá retence uživatelů a~chování aplikace v~produkčním prostředí zůstávají předmětem doporučené validační studie v~sekci~\ref{sec:doporuceni}.
+Tři otevřené otázky přesahují rozsah dílčích úprav, konkrétně validační studie přesnosti AI odhadu nutričních hodnot na reprezentativním souboru referenčních pokrmů, opakování dlouhodobé studie na rozšířeném vzorku mimo okruh známých s~kontrolní podmínkou paralelního používání existující referenční aplikace, a~dořešení otevřených designových otázek L8 a~L9 týkajících se reprezentace složených záznamů z~jednoho vstupu.
+Tyto okruhy jsou rozvedeny v~kapitole~\ref{ch:zaver} jako náměty pro další iteraci aplikace i~výzkumného programu.
