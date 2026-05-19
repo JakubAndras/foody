@@ -717,11 +717,12 @@ Nejvyšší skóre 100~bodů udělila LP3, tedy nejstarší účastnice vzorku s
 \label{subsec:tlxDlouhodobe}
 
 Hodnocení vnímané zátěže formou \emph{Raw} NASA-TLX shrnuté v~tabulce~\ref{tab:tlxDlouhodobe} potvrzuje hypotézu o~nízké kognitivní a~časové zátěži záznamu stravy v~dlouhodobém používání aplikace.
+Každá z~pěti dimenzí je hodnocena na škále 0--20, kde vyšší hodnota znamená vyšší vnímanou zátěž. U~dimenze vlastní výkon vyjadřuje vyšší hodnota nižší spokojenost s~vlastním výkonem.
 Průměrná hodnota přes všechny dimenze a~účastníky činí 4,97~bodu z~maximálních 20.
 
 \begin{table}[ht]
 	\centering
-	\caption{Hodnoty Raw NASA-TLX per účastník a~dimenze (škála 0--20).}
+	\caption{Hodnoty Raw NASA-TLX.}
 	\label{tab:tlxDlouhodobe}
 	\footnotesize
 	\setlength{\tabcolsep}{4pt}
@@ -736,11 +737,11 @@ Průměrná hodnota přes všechny dimenze a~účastníky činí 4,97~bodu z~max
 		Vlastní výkon\tnote{1}          & 5  & 5  & 1 & 7 & 3  & 5 & 4,3 \\
 		Frustrace                       & 5  & 0  & 0 & 2 & 3  & 3 & 2,2 \\
 		\midrule
-		\textbf{Aritmetický průměr}     & \textbf{7,6} & \textbf{6,4} & \textbf{0,8} & \textbf{4,8} & \textbf{5,2} & \textbf{5,0} & \textbf{4,97} \\
+		\textbf{Průměr}                 & \textbf{7,6} & \textbf{6,4} & \textbf{0,8} & \textbf{4,8} & \textbf{5,2} & \textbf{5,0} & \textbf{4,97} \\
 		\bottomrule
 	\end{tabularx}
 	\begin{tablenotes}[para,flushleft]
-	\item[\textsuperscript{1}] Obrácená škála: 0 = velmi spokojen, 20 = velmi nespokojen.
+	\item[\textsuperscript{1}] Hodnota vyjadřuje spokojenost s~vlastním výkonem (0 = velmi spokojen, 20 = velmi nespokojen).
 	\end{tablenotes}
 	\end{threeparttable}
 \end{table}
@@ -773,22 +774,22 @@ Tato linie zpětné vazby je v~souladu s~validací přesnosti uvedenou v~sekci~\
 Tři účastníci (LP1, LP2, LP4) zmínili konkrétní situace, ve kterých byla editace AI návrhu nebo záznamu obtížnější, než očekávali.
 LP1 popisuje konkrétní vzorec, kdy zadání více odlišných položek hlasem vede k~vytvoření jednoho záznamu s~násobně vyšším množstvím, jehož následná úprava na samostatné položky je komplikovaná, „takže jsem radši zadávala odlišné potraviny v~oddělených logech".
 LP2 obecně popisuje obtížnou nalezitelnost editačních akcí: „vždy než jsem to našel, tak jsem to spíš vzdal".
-LP4 jmenuje konkrétně chybějící zpětné přidávání cvičení, neperzistentní editaci druhu jídla a~přesnější editaci množství porcí jako prioritní oblast.
+LP4 jmenuje konkrétně neperzistentní editaci druhu jídla a~přesnější editaci množství porcí jako prioritní oblast.
 Některé z~těchto problémů odpovídají chybám identifikovaným v~sekci~\ref{subsec:problemyDlouhodobe} (zejména L8 a~L9), jiné představují nové nálezy zařazené do návazného plánu úprav.
 
 \paragraph{Drobná individuální vylepšení.}
 Mimo společné okruhy obsahuje kvalitativní reflexe i~jednotlivé požadavky, které odrážejí specifický kontext daného účastníka.
 LP1 si přeje rozšíření hlasového vstupu i~na záznam sportovní aktivity.
 LP2 zmiňuje zbytečně přiblížené zobrazení fotoaparátu, kvůli kterému musel telefon při focení jídla držet nepřirozeně daleko.
-LP3 jako nejstarší účastnice vzorku formuluje prioritní požadavek na možnost nastavit velikost písma v~aplikaci.
-Tyto individuální podněty jsou v~části adresovány návazným plánem úprav popsaným v~sekci~\ref{sec:doporuceni}, v~části zařazeny mezi otevřené otázky pro další iteraci.
+LP3 jako nejstarší účastnice formuluje prioritní požadavek na lépe škálovatelné písmo. Aplikace na zvětšené nastavení písma systémem částečně reaguje, její rozhraní však na tuto situaci není optimalizováno a~při větší zvolené velikosti se některé prvky zobrazují nevzhledně nebo se rozpadají.
+Tyto individuální podněty jsou zařazeny mezi otevřené otázky pro další iteraci a~souhrnně formulovány v~sekci~\ref{sec:shrnutiTestovani}.
 
 \subsection{Identifikované problémy v~reálném provozu}
 \label{subsec:problemyDlouhodobe}
 
 Devět nálezů identifikovaných v~průběhu testovacího období, které se v~kontrolovaném prostředí krátkodobé studie neprojevily, vychází ze tří zdrojů: průběžné verbální zpětné vazby účastníků, kvalitativní reflexe ve výstupních dotaznících a~revize behaviorálních dat.
 Přehled je uveden v~tabulce~\ref{tab:problemyDlouhodobe}.
-Sloupec \emph{Opraveno} rozlišuje nálezy s~připravenou implementační opravou (hodnota \emph{ano}) od problémů a~designových otázek ponechaných pro pozdější rozhodnutí (\emph{ne}).
+Sloupec \emph{Opraveno} rozlišuje nálezy s~připravenou implementační opravou od problémů a~designových otázek ponechaných pro pozdější rozhodnutí.
 
 \begin{table}[ht]
 	\centering
@@ -812,31 +813,25 @@ Sloupec \emph{Opraveno} rozlišuje nálezy s~připravenou implementační opravo
 	\end{tabularx}
 \end{table}
 
-Charakter problémů identifikovaných v~dlouhodobé studii se kvalitativně liší od problémů zjištěných v~krátkodobé moderované fázi (sekce~\ref{sec:identifikovaneProblemy}).
-Krátkodobé testování s~předem připravenými úlohami se soustředilo na nalezitelnost prvků v~rozhraní a~na koherenci jednotlivých \emph{interaction flows}, zatímco dlouhodobé testování v~přirozeném prostředí odhalilo především okrajové stavy a~chyby v~dlouhodobém datovém toku, které se v~rámci 90minutové relace na čistém profilu neprojeví (L1, L7), nedostatečnou srozumitelnost pojmů a~vizuálních konvencí v~situaci, kdy uživatel nemá k~dispozici moderátora (L2, L3, L5), a~hraniční případy AI rozpoznávání spojené s~kompoziční nejednoznačností scény (L8, L9).
-Problémy L1 až~L7 mají připravenou implementační opravu a~jsou plánovány k~zahrnutí do navazující vývojové iterace. Problémy L8 a~L9 jsou ponechány jako otevřené, neboť jejich uspokojivé řešení vyžaduje hlubší designové rozhodnutí přesahující rámec aktuální iterace.
+Problémy identifikované v~dlouhodobé studii mají jiný charakter než problémy z~krátkodobé moderované fáze (sekce~\ref{sec:identifikovaneProblemy}).
+Zatímco krátkodobé testování se soustředilo na nalezitelnost prvků a~návaznost kroků v~rozhraní, dlouhodobá fáze odhalila okrajové stavy datového toku (L1, L7), nedostatečnou srozumitelnost pojmů bez moderátora (L2, L3, L5) a~hraniční případy AI rozpoznávání s~kompoziční nejednoznačností scény (L8, L9).
+L1 až~L7 mají připravenou implementační opravu. L8 a~L9 zůstávají otevřené, neboť vyžadují hlubší designové rozhodnutí.
 
 \subsection{Diskuse a~omezení studie}
 \label{subsec:omezeniDlouhodobe}
 
-Dlouhodobé testování se šesti účastníky a~93 aktivními dny záznamu jídla přineslo dva komplementární okruhy zjištění.
-Kvantitativní data potvrzují hypotézu, podle které aplikace umožňuje záznam stravy s~nízkou kognitivní a~časovou zátěží (průměrný Raw NASA-TLX 4,97 z~20) a~vysokou subjektivně vnímanou použitelností (průměrný SUS 88,3 z~100), což odpovídá referenčním hodnotám literatury i~výsledkům krátkodobé moderované fáze.
-Behaviorální data zároveň ukazují, že AI rozpoznávání slouží jako primární vstupní kanál (79~\% záznamů s~AI komponentou) a~že většina AI návrhů je uložena bez další úpravy (\emph{edit rate} 14~\%), což indikuje dostatečnou důvěru uživatelů v~kvalitu modelu pro běžné jídelní situace.
-Kvalitativní reflexe doplňuje obraz o~konkrétní zlepšení a~drobné chyby v~\emph{user flow}, které byly v~tabulce~\ref{tab:problemyDlouhodobe} zařazeny do návazného plánu úprav.
+Dlouhodobé testování přineslo dva komplementární okruhy zjištění.
+Kvantitativní data potvrzují hypotézu o~nízké kognitivní a~časové zátěži a~vysoké vnímané použitelnosti, behaviorální data dokumentují AI rozpoznávání jako primární vstupní kanál s~vysokou důvěrou uživatelů v~kvalitu modelu.
 
-Hodnota Raw NASA-TLX 4,97 z~20 odpovídá dolní čtvrtině škály a~v~literatuře HCI bývá obvykle klasifikována jako nízká zátěž.
-Nejvyšší hodnotu napříč vzorkem vykazuje dimenze časové zátěže (průměr 9,0), kterou čtyři ze šesti účastníků hodnotili nad sedmi body, zatímco mentální zátěž, úsilí a~vnímaný vlastní výkon se pohybují v~úzkém pásmu kolem 4--5 bodů a~frustrace zůstává setrvale nízká (průměr 2,2).
-Časová zátěž má přitom z~větší části strukturální povahu, neboť záznam stravy musí být časově synchronizovaný s~konzumací jídla a~tlak okamžitě zaznamenat jídlo, než uživatel zapomene, je vlastní povaze sledování stravy jako takového, nikoliv konkrétnímu designu aplikace.
-Rozptyl celkového hodnocení mezi účastníky (od 0,8 u~LP3 po 7,6 u~LP1) zároveň naznačuje, že vnímaná zátěž silně závisí na osobním kontextu uživatele, zejména na rozsahu dietních omezení a~technologické zdatnosti, a~nikoliv pouze na vlastnostech samotné aplikace.
+Nejvyšší dílčí zátěž vykazuje časová tíseň, která má z~větší části strukturální povahu, neboť tlak okamžitě zaznamenat jídlo je vlastní povaze sledování stravy, nikoliv designu aplikace.
+Rozptyl mezi účastníky zároveň naznačuje, že vnímaná zátěž silně závisí na osobním kontextu uživatele, zejména na rozsahu dietních omezení a~technologické zdatnosti.
 
-Studie přitom má řadu metodologických omezení, která je nutné při interpretaci výsledků zohlednit.
-Vzorek šesti účastníků je svojí podstatou kvalitativní a~neumožňuje statistické zobecnění na širší populaci ani robustní srovnání mezi podskupinami podle pohlaví, věku nebo dietních omezení.
-Čtyři ze šesti účastníků (LP1--LP4) se zároveň účastnili předchozích fází výzkumu, což představuje potenciál pro konfirmační zkreslení, neboť tito účastníci testovali řešení reflektující jejich vlastní vstupní formulace požadavků.
-Formát testování v~reálném prostředí s~sebou nese specifická zkreslení dlouhodobých studií.
-Efekt prvních dnů (\emph{novelty effect}) může nadhodnocovat frekvenci záznamu na začátku testovacího období, vědomí účasti ve studii (\emph{Hawthorne effect}) může vést k~pečlivějšímu zápisu, než jaký by účastník praktikoval bez sledování, a~rekrutace z~okruhu známých s~sebou nese riziko samovýběru účastníků s~vyšší motivací než průměrný uživatel cílové skupiny.
+Studie má řadu metodologických omezení.
+Vzorek šesti účastníků neumožňuje statistické zobecnění ani robustní srovnání mezi podskupinami podle pohlaví, věku nebo dietních omezení.
+Čtyři ze šesti účastníků (LP1--LP4) prošli předchozími fázemi výzkumu, což představuje potenciál pro konfirmační zkreslení.
+Formát testování v~reálném prostředí dále nese efekt prvních dnů (\emph{novelty effect}), kdy uživatelé v~úvodu studie reagují na novost prostředí spíše než na vlastnosti aplikace~\cite{clark1983reconsidering}, efekt vědomí účasti ve studii (\emph{Hawthorne effect}), kdy se chování mění jen vlivem pocitu sledování~\cite{mccambridge2014hawthorne}, a~riziko samovýběru účastníků s~vyšší motivací než průměrný uživatel cílové skupiny.
 Validní vyhodnocení skutečné přesnosti AI odhadu vůči referenčním nutričním hodnotám přesahuje rozsah této práce a~tvoří jeden z~námětů pro budoucí rozvoj formulovaných v~závěru práce (kapitola~\ref{ch:zaver}).
 
-Kombinace 14denního přirozeného používání, standardizovaných dotazníků SUS a~NASA-TLX, otevřené kvalitativní reflexe a~objektivních behaviorálních dat z~exportu aplikace umožnila ověřit nejen použitelnost rozhraní, ale i~dlouhodobou udržitelnost záznamu stravy, vnímanou hodnotu jednotlivých modalit a~konkrétní hraniční stavy aplikace v~reálném provozu, které se v~kontrolovaném prostředí krátkodobé fáze neprojevily.
 Společné vyhodnocení obou testovacích fází je shrnuto v~sekci~\ref{sec:shrnutiTestovani}.
 
 \section{Shrnutí a~doporučení pro další rozvoj}
