@@ -147,7 +147,7 @@ Thesis requirements (FR-01 to FR-30). Status as of current codebase:
 | FR-10 | AI error vs app error | Partial — barcode errors typed (6 types), AI pipeline generic failure |
 | FR-11 | Text fallback after photo failure | Done |
 | FR-12 | Import photo from gallery | Done |
-| FR-13 | Re-run recognition from edit | Done — "Fix with AI" in EditMealScreen → FixResultScreen |
+| FR-13 | Re-run recognition from edit | Done — "Improve with AI" in EditMealScreen → FixResultScreen |
 | FR-14 | Entry without photo | Done — voice, text description, manual entry |
 | FR-15 | Quantity units (grams/pieces) | Done — 1g, 100g, custom units, fraction display |
 | FR-16 | Barcode scanner | Done |
@@ -155,7 +155,7 @@ Thesis requirements (FR-01 to FR-30). Status as of current codebase:
 | FR-18 | Duplicate previous record | Done — MealCopyToSheet with calendar date picker |
 | FR-19 | Name autocomplete from history | Partial — search with debounce in SelectMealScreen, not classic autocomplete dropdown |
 | FR-20 | Dietary restrictions/intolerances | Done |
-| FR-21 | Violations in calendar | Done — DietaryViolationsCalendarCard with monthly grid |
+| FR-21 | Violations in calendar | Done — per-meal "Dietary warning" banner + highlighted offending ingredients on EditMealScreen; monthly calendar (AskAiCalendarCard) rendered in Ask AI response when user queries about violations |
 | FR-22 | Intake vs expenditure in one view | Done |
 | FR-23 | Expenditure integration settings | Partial — burnedCaloriesEnabled/rolloverCaloriesEnabled toggles, no granular multipliers |
 | FR-24 | Weekly and monthly overviews | Done |
