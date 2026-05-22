@@ -19,8 +19,11 @@ Přehled osmi případů užití (UC01--UC08) shrnuje tabulka~\ref{tab:pripadyUz
 	\centering
 	\caption{Přehled případů užití navržené aplikace.}
 	\label{tab:pripadyUziti}
+	\begin{footnotesize}
+	\renewcommand{\arraystretch}{1.35}
 	\rowcolors{2}{gray!10}{white}
-	\begin{tabularx}{\textwidth}{l >{\hsize=.7\hsize\linewidth=\hsize}X >{\hsize=1.3\hsize\linewidth=\hsize}X}
+	\setlength{\tabcolsep}{4pt}
+	\begin{tabularx}{\textwidth}{@{}l >{\hsize=.7\hsize\linewidth=\hsize\raggedright\arraybackslash}X >{\hsize=1.3\hsize\linewidth=\hsize\raggedright\arraybackslash}X@{}}
 		\toprule
 		\rowcolor{white}\textbf{ID} & \textbf{Název} & \textbf{Charakteristika} \\
 		\midrule
@@ -34,6 +37,7 @@ Přehled osmi případů užití (UC01--UC08) shrnuje tabulka~\ref{tab:pripadyUz
 		UC08 & Přehledy a~dotazy nad daty & Vyhodnocení progresu, dotazy nad historií a~export dat. \\
 		\bottomrule
 	\end{tabularx}
+	\end{footnotesize}
 \end{table}
 
 \section{Funkční a nefunkční požadavky}
