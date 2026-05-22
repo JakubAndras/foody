@@ -443,11 +443,18 @@ Pro analýzu cvičení je validace doplněna o~kontrolu prázdného názvu, čí
 \subsection{Ochrana proti prompt injection}
 \label{subsec:promptInjection}
 
+\begin{figure}[!htb]
+	\centering
+	\resizebox{0.7\textwidth}{!}{\input{figures/diagrams/prompt-injection-defense}}
+	\caption{Stavový diagram ochrany proti prompt injection.}
+	\label{fig:promptInjection}
+\end{figure}
+
 Vstup uživatele do pipeline pro umělou inteligenci představuje potenciální bezpečnostní riziko známé jako \emph{prompt injection}, kdy záměrně formulovaný vstup může změnit nebo přepsat původní systémové instrukce zaslané modelu~\cite{greshake2023indirect, owasp2025llm01}.
 Hlavní motivací ochrany v~kontextu této aplikace není utajení samotného systémového promptu, jehož text je veřejně dostupný v~repozitáři aplikace, ale zachování předvídatelnosti chování modelu, na niž je vázána důvěra uživatele v~zobrazené nutriční odhady.
 Z~pohledu uživatele lze identifikovat tři kategorie hrozeb, kterými jsou vědomý explicitní útok formulovaný jako adversariální instrukce, falešný poplach vyvolaný legitimním popisem jídla nebo cvičení s~náhodnou podobností pokusu o~injekci a obfuskovaný útok cíleně navržený tak, aby unikl jednoduché detekci.
 
-Implementace adresuje tyto kategorie vícevrstvou ochranou v~rámci dedikovaného sanitizačního modulu volaného před každým odesláním vstupu do pipeline.
+Implementace adresuje tyto kategorie vícevrstvou ochranou v~rámci dedikovaného sanitizačního modulu volaného před každým odesláním vstupu do pipeline, jejíž schéma je uvedeno na obrázku~\ref{fig:promptInjection}.
 První vrstva (L1) provádí deterministické mechanické úpravy textu, kterými jsou odstranění bílých znaků na okrajích, odstranění řídících znaků a literálních značek vstupního delimitéru a oříznutí textu na maximální povolenou délku 500~znaků.
 Druhá vrstva (L2) klasifikuje vstup pomocí šesti regulárních výrazů a vrací jeden ze tří stavů, kterými jsou \emph{čistý}, \emph{nejednoznačný} a \emph{explicitní útok}.
 Čtyři vzory zachycují fráze jednoznačně adversariální (například \uv{ignore previous instructions}, \uv{disregard your instructions}, \uv{reveal the system prompt} nebo \uv{do not respond in json}) a vstup s~takovým výskytem je odmítnut okamžitě.
@@ -470,15 +477,6 @@ Maximálním důsledkem úspěšného obejití všech vrstev je manipulace s~vý
 Únik systémového promptu nepředstavuje samostatnou hrozbu, jelikož jeho text je veřejně dostupný v~repozitáři aplikace.
 Pravděpodobnost falešně pozitivních klasifikací u~reálných uživatelských popisů jídla a cvičení v~přirozeném jazyce je naopak očekávána jako blízká nule, neboť tyto popisy fráze odpovídající explicitním adversariálním vzorům přirozeně neobsahují.
 Vlastním podrobnějším vyhodnocením odolnosti popsaného schématu se tato práce blíže nezabývala.
-
-Schematické zobrazení vrstev L1--L3, dvou rozhodovacích bodů a~průřezové fáze \emph{prompt assembly} je uvedeno na obrázku~\ref{fig:promptInjection}.
-
-\begin{figure}[!ht]
-	\centering
-	\resizebox{0.7\textwidth}{!}{\input{figures/diagrams/prompt-injection-defense}}
-	\caption{Stavový diagram ochrany proti prompt injection.}
-	\label{fig:promptInjection}
-\end{figure}
 
 \subsection{Volba poskytovatele a modelu}
 \label{subsec:vicePoskytovatelu}
