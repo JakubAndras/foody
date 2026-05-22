@@ -129,31 +129,9 @@
 	Děkuji rovněž rodině a~blízkým za podporu během celého studia.
 \end{thanks}
 
-% Prohlášení
-\begin{declaration}
-	Prohlašuji, že jsem předloženou diplomovou práci vypracoval samostatně a~uvedl veškeré použité informační zdroje v~souladu s~Metodickým pokynem o~dodržování etických principů při přípravě vysokoškolských závěrečných prací a~Rámcovými pravidly používání umělé inteligence na ČVUT pro studijní a~pedagogické účely v~Bc a~NM studiu.
-
-	Prohlašuji, že jsem v~průběhu příprav a~psaní závěrečné práce použil nástroje umělé inteligence. Vygenerovaný obsah jsem ověřil. Stvrzuji, že jsem si vědom, že za obsah závěrečné práce plně zodpovídám.
-
-	\medskip
-	\noindent\textbf{Použité nástroje:}
-	\begin{itemize}\setlength{\itemsep}{2pt}
-		\item \textbf{Claude Code}:
-			\begin{itemize}\setlength{\itemsep}{1pt}
-				\item revize formulací, kontrola stylistické konzistence a~typografické úpravy textu práce.
-				\item asistence při implementační části aplikace.
-				\item zpracování dat z~AI benchmarků a~behaviorálních dat z~dlouhodobého testování.
-			\end{itemize}
-		\item \textbf{Figma Make}: návrh podkladů pro HiFi prototyp (sekce~\ref{sec:prototyp}).
-		\item \textbf{OpenAI GPT modely}: klíčová komponenta implementovaného řešení pro rozpoznávání jídel, analýzu cvičení a~generování nutričních doporučení (sekce~\ref{sec:integraceAi}).
-	\end{itemize}
-
-	V~Praze, \ctufield{day}.~\monthinlanguage{title}~\ctufield{year}
-\end{declaration}
-
 % Override front matter sequence to inject signed PDF prohlášení before
-% the Poděkování/Prohlášení twocolumn page. The short list of AI tools
-% is part of the typeset declaration above.
+% the front-matter twocolumn page. The signed PDF nahrazuje sazený text
+% prohlášení; přehled použitých AI nástrojů je přesunut do přílohy.
 \ctutemplateset{maketitle.twocolumn.default}{
 	\cleardoublepage
 	\includepdf[pages=-]{figures/Zadani.pdf}
@@ -161,8 +139,6 @@
 	\includepdf[pages={1}]{figures/Prohlášení.pdf}
 	\begin{twocolumnfrontmatterpage}
 		\ctutemplate{twocolumn.thanks}
-	\newpage
-		\ctutemplate{twocolumn.declaration}
 	\clearpage
 		\ctutemplate{twocolumn.abstract.in.titlelanguage}
 	\newpage

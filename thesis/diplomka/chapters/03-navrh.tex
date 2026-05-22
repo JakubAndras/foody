@@ -40,7 +40,9 @@ Přehled osmi případů užití (UC01--UC08) shrnuje tabulka~\ref{tab:pripadyUz
 \label{sec:pozadavky}
 
 Sada funkčních a nefunkčních požadavků byla sestavena ze dvou navzájem se doplňujících zdrojů.
-Prvním zdrojem jsou zjištění ze strukturovaných rozhovorů s~respondenty R1--R4 (sekce~\ref{subsec:vysledkyRozhovoru}), druhým doménová opora tvořená zadáním práce a logikou kalorické aplikace, která je v~následujících tabulkách označována zkratkou Z.
+Prvním zdrojem jsou zjištění ze strukturovaných rozhovorů s~respondenty R1--R4 (sekce~\ref{subsec:vysledkyRozhovoru}).
+Druhým zdrojem je zadání práce a obecná logika aplikací pro sledování kalorického příjmu.
+V~následujících tabulkách je tento druhý zdroj označován zkratkou Z.
 Funkční požadavky jsou shrnuty v~tabulce~\ref{tab:trasovatelnostFR}, která zároveň slouží jako matice trasovatelnosti.
 Pro každý požadavek dokládá, ze kterého zdroje jeho motivace pochází, a tím vylučuje, že by některý požadavek vznikl bez podkladu.
 
@@ -156,6 +158,13 @@ Tato barevná konvence prostupuje všemi obrazovkami a tvoří jeden z~pilířů
 Konkrétní hodnoty barev, typografických stylů, rozestupů a stínů nebyly v~prototypové fázi formálně specifikovány předem, ale postupně se vyvíjely při tvorbě jednotlivých obrazovek.
 Jejich finální podoba byla teprve v~implementační fázi sjednocena do centralizovaného souboru zdrojového kódu \texttt{lib/app\_theme.dart}, který je popsán v~sekci~\ref{subsec:vyvojovaPlatforma}.
 Toto pořadí (od prototypování k~formalizaci) odpovídá iterativní povaze návrhové fáze, ve které je vizuální podoba zpřesňována podle vznikajících obrazovek a požadavků jednotlivých případů užití.
+
+\section{Ověření prototypu před implementací}
+\label{sec:overeniPrototypu}
+
+Před vstupem do implementační fáze proběhlo krátké ověření prototypu s~jedním participantem, konkrétně s~respondentem R1 z~uživatelské studie (sekce~\ref{sec:uzivatelskaStudie}), který je zároveň participantem P1 následného moderovaného testování (sekce~\ref{sec:metodikaTestovani}).
+Cílem tohoto ověření bylo rychlé potvrzení, že navržené uživatelské rozhraní a hlavní toky dávají z~pohledu participanta smysl.
+Vzhledem k~rozsahu HCI aktivit pokrytých touto prací, kterými jsou strukturované rozhovory v~analytické fázi a dvoufázové uživatelské testování implementované aplikace v~evaluační části, byla samostatná validace prototypu vědomě zúžena na toto základní ověření a hlavní těžiště usability evaluace leží na testování implementovaného řešení popsaném v~kapitole~\ref{ch:testovani}.
 
 \section{Shrnutí návrhu aplikace}
 \label{sec:shrnutiNavrhu}
