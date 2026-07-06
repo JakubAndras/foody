@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:diplomka/controller/dashboard_controller.dart';
+import 'package:diplomka/state/dashboard_notifier.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/nutrition_goals.dart';
 import 'package:diplomka/model/user_profile.dart';
@@ -14,7 +14,7 @@ import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 import 'package:diplomka/app_theme.dart';
@@ -22,15 +22,14 @@ import 'package:diplomka/services/ai_feature/ai_pipeline_service.dart';
 import 'package:diplomka/utils/app_limits.dart';
 
 
-class EditNutritionGoalsScreen extends StatefulWidget {
+class EditNutritionGoalsScreen extends ConsumerStatefulWidget {
   const EditNutritionGoalsScreen({super.key});
 
   @override
-  State<EditNutritionGoalsScreen> createState() => _EditNutritionGoalsScreenState();
+  ConsumerState<EditNutritionGoalsScreen> createState() => _EditNutritionGoalsScreenState();
 }
 
-class _EditNutritionGoalsScreenState extends State<EditNutritionGoalsScreen> {
-  final NutritionGoalsService _nutritionGoalsService = NutritionGoalsService.to;
+class _EditNutritionGoalsScreenState extends ConsumerState<EditNutritionGoalsScreen> {
   final TextEditingController _calorieController = TextEditingController();
   final TextEditingController _proteinController = TextEditingController();
   final TextEditingController _carbsController = TextEditingController();
@@ -51,8 +50,8 @@ class _EditNutritionGoalsScreenState extends State<EditNutritionGoalsScreen> {
   @override
   void initState() {
     super.initState();
-    _selectedDate = SelectedDateService.to.selectedDate.value;
-    _originalGoals = _nutritionGoalsService.goalsForDate(_selectedDate);
+    _selectedDate = ref.read(selectedDateProvider);
+    _originalGoals = ref.read(nutritionGoalsProvider.notifier).goalsForDate(_selectedDate);
     _setControllersFromGoals(_originalGoals);
     unawaited(_refreshGoals());
 
@@ -89,9 +88,9 @@ class _EditNutritionGoalsScreenState extends State<EditNutritionGoalsScreen> {
 
   Future<void> _refreshGoals() async {
     try {
-      await _nutritionGoalsService.refreshForDate(_selectedDate);
+      await ref.read(nutritionGoalsProvider.notifier).refreshForDate(_selectedDate);
       if (!mounted) return;
-      _originalGoals = _nutritionGoalsService.goalsForDate(_selectedDate);
+      _originalGoals = ref.read(nutritionGoalsProvider.notifier).goalsForDate(_selectedDate);
       _setControllersFromGoals(_originalGoals);
     } finally {
       if (mounted) {
@@ -151,12 +150,12 @@ class _EditNutritionGoalsScreenState extends State<EditNutritionGoalsScreen> {
     );
     if (confirmed != true || !mounted) return;
 
-    final sm = SessionManager.to;
-    final double? weightKg = sm.weightKg.value;
-    final double? heightCm = sm.heightCm.value;
-    final DateTime? dob = sm.dateOfBirth.value;
-    final ProfileSex? sex = sm.sex.value;
-    final ProfileGoal? goal = sm.goal.value;
+    final session = ref.read(sessionProvider);
+    final double? weightKg = session.weightKg;
+    final double? heightCm = session.heightCm;
+    final DateTime? dob = session.dateOfBirth;
+    final ProfileSex? sex = session.sex;
+    final ProfileGoal? goal = session.goal;
 
     if (weightKg == null || heightCm == null || dob == null || sex == null || goal == null) {
       showSnackBar(context: context, message: tr(LocaleKeys.nutrition_goals_invalid_values), type: SnackBarType.warning);
@@ -169,8 +168,8 @@ class _EditNutritionGoalsScreenState extends State<EditNutritionGoalsScreen> {
       dateOfBirth: dob,
       sex: sex,
       goal: goal,
-      workoutsPerWeek: sm.workoutsPerWeek.value ?? '2-3',
-      weightChangeRateKgPerWeek: sm.weightChangeRateKgPerWeek.value,
+      workoutsPerWeek: session.workoutsPerWeek ?? '2-3',
+      weightChangeRateKgPerWeek: session.weightChangeRateKgPerWeek,
     );
     _setControllersFromGoals(goals);
   }
@@ -178,7 +177,7 @@ class _EditNutritionGoalsScreenState extends State<EditNutritionGoalsScreen> {
   Future<void> _generateWithAi() async {
     setState(() => _isGenerating = true);
     try {
-      final goals = await AiPipelineService.to.generateNutritionGoals();
+      final goals = await ref.read(aiPipelineServiceProvider).generateNutritionGoals();
       if (!mounted) return;
       if (goals == null) {
         showSnackBar(context: context, message: tr(LocaleKeys.nutrition_goals_ai_failed), type: SnackBarType.warning);
@@ -225,20 +224,20 @@ class _EditNutritionGoalsScreenState extends State<EditNutritionGoalsScreen> {
     });
 
     try {
-      await _nutritionGoalsService.saveGoalsEffectiveFromDate(
-        effectiveDate: _selectedDate,
-        goals: NutritionGoals(
-          calorieGoal: calorieGoal,
-          proteinGoal: proteinGoal,
-          carbsGoal: carbsGoal,
-          fatGoal: fatGoal,
-        ),
-      );
-      DashboardController.to.refresh();
+      await ref.read(nutritionGoalsProvider.notifier).saveGoalsEffectiveFromDate(
+            effectiveDate: _selectedDate,
+            goals: NutritionGoals(
+              calorieGoal: calorieGoal,
+              proteinGoal: proteinGoal,
+              carbsGoal: carbsGoal,
+              fatGoal: fatGoal,
+            ),
+          );
+      ref.read(dailyRecordProvider.notifier).refresh();
 
       if (!mounted) return;
       showSnackBar(context: context, message: tr(LocaleKeys.nutrition_goals_updated));
-      Get.back();
+      Navigator.of(context).pop();
     } finally {
       if (mounted) {
         setState(() {

@@ -10,18 +10,19 @@ import 'package:diplomka/widgets/mesh_gradient_background.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
-class OnboardingLoadingPlanScreen extends StatefulWidget {
+class OnboardingLoadingPlanScreen extends ConsumerStatefulWidget {
   const OnboardingLoadingPlanScreen({super.key, required this.onNext});
 
   final VoidCallback onNext;
 
   @override
-  State<OnboardingLoadingPlanScreen> createState() => _OnboardingLoadingPlanScreenState();
+  ConsumerState<OnboardingLoadingPlanScreen> createState() => _OnboardingLoadingPlanScreenState();
 }
 
-class _OnboardingLoadingPlanScreenState extends State<OnboardingLoadingPlanScreen> with SingleTickerProviderStateMixin {
+class _OnboardingLoadingPlanScreenState extends ConsumerState<OnboardingLoadingPlanScreen> with SingleTickerProviderStateMixin {
   late final AnimationController _progressController;
   bool _isComplete = false;
 
@@ -39,12 +40,12 @@ class _OnboardingLoadingPlanScreenState extends State<OnboardingLoadingPlanScree
   }
 
   Future<void> _computeAndSaveGoals() async {
-    final sm = SessionManager.to;
-    final double? weightKg = sm.weightKg.value;
-    final double? heightCm = sm.heightCm.value;
-    final DateTime? dob = sm.dateOfBirth.value;
-    final ProfileSex? sex = sm.sex.value;
-    final ProfileGoal? goal = sm.goal.value;
+    final session = ref.read(sessionProvider);
+    final double? weightKg = session.weightKg;
+    final double? heightCm = session.heightCm;
+    final DateTime? dob = session.dateOfBirth;
+    final ProfileSex? sex = session.sex;
+    final ProfileGoal? goal = session.goal;
 
     if (weightKg == null || heightCm == null || dob == null || sex == null || goal == null) return;
 
@@ -54,11 +55,11 @@ class _OnboardingLoadingPlanScreenState extends State<OnboardingLoadingPlanScree
       dateOfBirth: dob,
       sex: sex,
       goal: goal,
-      workoutsPerWeek: sm.workoutsPerWeek.value ?? '2-3',
-      weightChangeRateKgPerWeek: sm.weightChangeRateKgPerWeek.value,
+      workoutsPerWeek: session.workoutsPerWeek ?? '2-3',
+      weightChangeRateKgPerWeek: session.weightChangeRateKgPerWeek,
     );
 
-    await NutritionGoalsService.to.saveGoalsEffectiveFromDate(effectiveDate: DateTime.now(), goals: goals);
+    await ref.read(nutritionGoalsProvider.notifier).saveGoalsEffectiveFromDate(effectiveDate: DateTime.now(), goals: goals);
   }
 
   @override

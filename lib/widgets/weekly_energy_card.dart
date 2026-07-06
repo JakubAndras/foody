@@ -1,15 +1,14 @@
 import 'dart:math' as math;
 
 import 'package:diplomka/app_theme.dart';
-import 'package:diplomka/controller/day_record_controller.dart';
+import 'package:diplomka/state/day_record_notifier.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/widgets/liquid_glass/glass_segmented_tabs.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 DateTime _dateOnly(DateTime date) => DateTime(date.year, date.month, date.day);
 
@@ -34,14 +33,14 @@ class _WeeklyEnergyStats {
   const _WeeklyEnergyStats({required this.days, required this.totalBurned, required this.totalConsumed, required this.totalEnergy, required this.avgDailyGoal, required this.bmr});
 }
 
-class WeeklyEnergyCard extends StatefulWidget {
+class WeeklyEnergyCard extends ConsumerStatefulWidget {
   const WeeklyEnergyCard({super.key});
 
   @override
-  State<WeeklyEnergyCard> createState() => _WeeklyEnergyCardState();
+  ConsumerState<WeeklyEnergyCard> createState() => _WeeklyEnergyCardState();
 }
 
-class _WeeklyEnergyCardState extends State<WeeklyEnergyCard> {
+class _WeeklyEnergyCardState extends ConsumerState<WeeklyEnergyCard> {
   int _selectedIndex = 0;
 
   List<String> get _labels => [tr(LocaleKeys.progress_this_wk), tr(LocaleKeys.progress_last_wk), tr(LocaleKeys.progress_two_wk_ago), tr(LocaleKeys.progress_three_wk_ago)];
@@ -104,11 +103,10 @@ class _WeeklyEnergyCardState extends State<WeeklyEnergyCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      final records = DayRecordController.to.dayRecords.toList(growable: false);
-      final bmr = SessionManager.to.bmr.value;
-      final stats = _calculateStats(records, _selectedIndex, bmr);
-      final calUnit = tr(LocaleKeys.common_kcal);
+    final records = ref.watch(dayRecordProvider).dayRecords.toList(growable: false);
+    final bmr = ref.watch(sessionProvider).bmr;
+    final stats = _calculateStats(records, _selectedIndex, bmr);
+    final calUnit = tr(LocaleKeys.common_kcal);
 
       double maxBar = 0;
       for (final d in stats.days) {
@@ -207,7 +205,6 @@ class _WeeklyEnergyCardState extends State<WeeklyEnergyCard> {
           ],
         ),
       );
-    });
   }
 }
 

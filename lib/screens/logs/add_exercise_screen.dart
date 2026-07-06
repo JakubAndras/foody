@@ -1,6 +1,6 @@
 import 'package:diplomka/app_theme.dart';
-import 'package:diplomka/controller/dashboard_controller.dart';
-import 'package:diplomka/controller/day_record_controller.dart';
+import 'package:diplomka/state/dashboard_notifier.dart';
+import 'package:diplomka/state/day_record_notifier.dart';
 import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/exercise.dart';
@@ -12,9 +12,10 @@ import 'package:diplomka/widgets/duration_picker_sheet.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 
-class AddExerciseScreen extends StatefulWidget {
+class AddExerciseScreen extends ConsumerStatefulWidget {
   const AddExerciseScreen({super.key, this.initialName, this.initialDurationMinutes, this.initialCaloriesTotal});
 
   final String? initialName;
@@ -22,10 +23,10 @@ class AddExerciseScreen extends StatefulWidget {
   final int? initialCaloriesTotal;
 
   @override
-  State<AddExerciseScreen> createState() => _AddExerciseScreenState();
+  ConsumerState<AddExerciseScreen> createState() => _AddExerciseScreenState();
 }
 
-class _AddExerciseScreenState extends State<AddExerciseScreen> {
+class _AddExerciseScreenState extends ConsumerState<AddExerciseScreen> {
   late final TextEditingController _nameController;
   late final TextEditingController _caloriesController;
   late int _durationMinutes;
@@ -80,7 +81,7 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
     setState(() => _isSaving = true);
 
     try {
-      final selectedDate = SelectedDateService.to.selectedDate.value;
+      final selectedDate = ref.read(selectedDateProvider);
       final now = DateTime.now();
       final exercise = Exercise(
         name: exerciseName,
@@ -90,8 +91,8 @@ class _AddExerciseScreenState extends State<AddExerciseScreen> {
         isFavorite: _isFavorite,
       );
 
-      await DayRecordController.to.saveExerciseForDate(date: selectedDate, exerciseToSave: exercise);
-      DashboardController.to.refresh();
+      await ref.read(dayRecordProvider.notifier).saveExerciseForDate(date: selectedDate, exerciseToSave: exercise);
+      ref.read(dailyRecordProvider.notifier).refresh();
 
       if (!mounted) return;
       showSnackBar(context: context, message: tr(LocaleKeys.exercise_exercise_added));

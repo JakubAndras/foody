@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 
 class GlassTestScreen extends StatefulWidget {
@@ -106,7 +105,7 @@ class _GlassTestScreenState extends State<GlassTestScreen> {
                   ),
                   const SizedBox(width: 12),
                   ElevatedButton(
-                    onPressed: () => Get.back(),
+                    onPressed: () => Navigator.of(context).pop(),
                     child: const Icon(CupertinoIcons.xmark),
                   ),
                 ],

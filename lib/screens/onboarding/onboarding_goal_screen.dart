@@ -5,8 +5,9 @@ import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class OnboardingGoalScreen extends StatefulWidget {
+class OnboardingGoalScreen extends ConsumerStatefulWidget {
   const OnboardingGoalScreen({
     super.key,
     required this.onNext,
@@ -23,10 +24,10 @@ class OnboardingGoalScreen extends StatefulWidget {
   final ValueChanged<ProfileGoal?>? onGoalChanged;
 
   @override
-  State<OnboardingGoalScreen> createState() => _OnboardingGoalScreenState();
+  ConsumerState<OnboardingGoalScreen> createState() => _OnboardingGoalScreenState();
 }
 
-class _OnboardingGoalScreenState extends State<OnboardingGoalScreen>
+class _OnboardingGoalScreenState extends ConsumerState<OnboardingGoalScreen>
     with AutomaticKeepAliveClientMixin {
   ProfileGoal? _selected;
 
@@ -55,7 +56,7 @@ class _OnboardingGoalScreenState extends State<OnboardingGoalScreen>
         isEnabled: _selected != null,
         onPressed: _selected != null
             ? () async {
-                await SessionManager.to.setGoal(_selected);
+                await ref.read(sessionProvider.notifier).setGoal(_selected);
                 widget.onNext();
               }
             : null,

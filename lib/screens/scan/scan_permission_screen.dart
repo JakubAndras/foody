@@ -4,7 +4,6 @@ import 'package:diplomka/screens/profile/profile_widgets.dart';
 import 'package:diplomka/widgets/foody_glass_buttons.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ScanPermissionScreen extends StatelessWidget {
@@ -26,7 +25,7 @@ class ScanPermissionScreen extends StatelessWidget {
         children: [
           ProfileTopBar(
             title: tr(LocaleKeys.scan_camera_access),
-            onBack: () => Get.back(),
+            onBack: () => Navigator.of(context).pop(),
           ),
           const Spacer(),
           Center(

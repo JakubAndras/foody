@@ -2,17 +2,13 @@ import 'dart:io' show Platform;
 
 import 'package:diplomka/app_theme.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
-import 'package:diplomka/controller/day_record_controller.dart';
+import 'package:diplomka/state/day_record_notifier.dart';
 import 'package:diplomka/screens/main_screen.dart';
-import 'package:diplomka/controller/weight_entry_controller.dart';
+import 'package:diplomka/state/weight_entry_notifier.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/day_record.dart';
-import 'package:diplomka/model/streak_info.dart';
 import 'package:diplomka/model/weight_entry.dart';
 import 'package:diplomka/services/session_manager.dart';
-import 'package:diplomka/services/streak_service.dart';
-import 'package:diplomka/screens/profile/ask_ai/ask_ai_screen.dart';
-import 'package:diplomka/screens/profile/subscreens/export_pdf_intro_screen.dart';
 import 'package:diplomka/widgets/bmi_card.dart';
 import 'package:diplomka/widgets/current_weight_card.dart';
 import 'package:diplomka/widgets/dietary_violations_calendar_card.dart';
@@ -22,7 +18,7 @@ import 'package:diplomka/widgets/mesh_gradient_background.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../widgets/weekly_energy_card.dart';
 
@@ -47,10 +43,6 @@ String _formatWeight(double value) {
   return value.toStringAsFixed(isInt ? 0 : 1);
 }
 
-StreakInfo _computeStreakMetrics(List<DayRecord> records) {
-  return StreakService.to.calculateStreakInfo(records);
-}
-
 String _nextWeighInLabel(WeightEntry? latestEntry) {
   if (latestEntry == null) {
     return tr(LocaleKeys.progress_log_first_weigh_in);
@@ -73,37 +65,37 @@ class _DailyAverageStats {
   const _DailyAverageStats({required this.average, required this.hasMeals, required this.rangeLabel});
 }
 
-class ProgressScreen extends StatefulWidget {
+class ProgressScreen extends ConsumerStatefulWidget {
   const ProgressScreen({super.key});
 
   @override
-  State<ProgressScreen> createState() => _ProgressScreenState();
+  ConsumerState<ProgressScreen> createState() => _ProgressScreenState();
 }
 
-class _ProgressScreenState extends State<ProgressScreen> {
+class _ProgressScreenState extends ConsumerState<ProgressScreen> {
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _calendarKey = GlobalKey();
-  Worker? _scrollWorker;
+  ProviderSubscription<bool>? _scrollSub;
 
   @override
   void initState() {
     super.initState();
-    _scrollWorker = ever(MainScreenController.to.scrollToEnergy, (shouldScroll) {
+    _scrollSub = ref.listenManual(mainScreenProvider.select((s) => s.scrollToEnergy), (previous, shouldScroll) {
       if (shouldScroll) {
-        MainScreenController.to.scrollToEnergy.value = false;
+        ref.read(mainScreenProvider.notifier).setScrollToEnergy(false);
         WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToCalendarSection());
       }
     });
-    // Cold start: flag may already be set before the worker was registered
-    if (MainScreenController.to.scrollToEnergy.value) {
-      MainScreenController.to.scrollToEnergy.value = false;
+    // Cold start: flag may already be set before the listener was registered
+    if (ref.read(mainScreenProvider).scrollToEnergy) {
+      ref.read(mainScreenProvider.notifier).setScrollToEnergy(false);
       WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToCalendarSection());
     }
   }
 
   @override
   void dispose() {
-    _scrollWorker?.dispose();
+    _scrollSub?.close();
     _scrollController.dispose();
     super.dispose();
   }
@@ -151,10 +143,11 @@ class _ProgressScreenState extends State<ProgressScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
-              Obx(() {
-                final weightEntries = WeightEntryController.to.entries.toList(growable: false);
-                final double? profileWeight = SessionManager.to.weightKg.value;
-                final double? goalWeight = SessionManager.to.goalWeightKg.value;
+              Consumer(builder: (context, ref, _) {
+                final weightEntries = (ref.watch(weightEntriesProvider).valueOrNull ?? const <WeightEntry>[]).toList(growable: false);
+                final session = ref.watch(sessionProvider);
+                final double? profileWeight = session.weightKg;
+                final double? goalWeight = session.goalWeightKg;
 
                 final sortedWeights = _sortWeightEntries(weightEntries);
                 final latestEntry = sortedWeights.isNotEmpty ? sortedWeights.first : null;
@@ -177,8 +170,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 );
               }),
               const SizedBox(height: AppSpacing.m),
-              Obx(() {
-                final entries = WeightEntryController.to.entries;
+              Consumer(builder: (context, ref, _) {
+                final entries = ref.watch(weightEntriesProvider).valueOrNull ?? const <WeightEntry>[];
                 if (entries.isEmpty) {
                   return const WeightProgressCard(entries: []);
                 }
@@ -189,11 +182,11 @@ class _ProgressScreenState extends State<ProgressScreen> {
               const SizedBox(height: AppSpacing.m),
               const WeeklyEnergyCard(),
               const SizedBox(height: AppSpacing.m),
-              Obx(() {
-                final weightEntries = WeightEntryController.to.entries.toList(growable: false);
+              Consumer(builder: (context, ref, _) {
+                final weightEntries = (ref.watch(weightEntriesProvider).valueOrNull ?? const <WeightEntry>[]).toList(growable: false);
                 final sorted = _sortWeightEntries(weightEntries);
                 final latest = sorted.isNotEmpty ? sorted.first : null;
-                return BmiCard(currentWeight: latest?.weight, heightCm: SessionManager.to.heightCm.value);
+                return BmiCard(currentWeight: latest?.weight, heightCm: ref.watch(sessionProvider).heightCm);
               }),
             ],
           ),
@@ -219,14 +212,14 @@ class _DayLabel extends StatelessWidget {
   }
 }
 
-class _DailyAverageCard extends StatefulWidget {
+class _DailyAverageCard extends ConsumerStatefulWidget {
   const _DailyAverageCard();
 
   @override
-  State<_DailyAverageCard> createState() => _DailyAverageCardState();
+  ConsumerState<_DailyAverageCard> createState() => _DailyAverageCardState();
 }
 
-class _DailyAverageCardState extends State<_DailyAverageCard> {
+class _DailyAverageCardState extends ConsumerState<_DailyAverageCard> {
   int _selectedIndex = 0;
 
   List<String> get _labels => [tr(LocaleKeys.progress_this_wk), tr(LocaleKeys.progress_last_wk), tr(LocaleKeys.progress_two_wk_ago), tr(LocaleKeys.progress_three_wk_ago)];
@@ -260,11 +253,10 @@ class _DailyAverageCardState extends State<_DailyAverageCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      final records = DayRecordController.to.dayRecords.toList(growable: false);
-      final stats = _calculateStats(records, _selectedIndex);
+    final records = ref.watch(dayRecordProvider).dayRecords.toList(growable: false);
+    final stats = _calculateStats(records, _selectedIndex);
 
-      return Container(
+    return Container(
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(AppRadii.l),
@@ -305,7 +297,6 @@ class _DailyAverageCardState extends State<_DailyAverageCard> {
           ],
         ),
       );
-    });
   }
 }
 

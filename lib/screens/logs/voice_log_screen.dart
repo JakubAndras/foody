@@ -4,7 +4,8 @@ import 'dart:async';
 
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/widgets/sheet_drag_handle.dart';
-import 'package:diplomka/controller/dashboard_controller.dart';
+import 'package:diplomka/state/dashboard_notifier.dart';
+import 'package:diplomka/state/language_settings_notifier.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/screens/main_screen.dart';
 import 'package:diplomka/screens/logs/voice_widgets.dart';
@@ -18,7 +19,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
@@ -27,16 +28,16 @@ import 'package:speech_to_text/speech_to_text.dart';
 
 enum VoiceLogMode { meals, exercise }
 
-class VoiceLogScreen extends StatefulWidget {
+class VoiceLogScreen extends ConsumerStatefulWidget {
   const VoiceLogScreen({super.key, this.initialMode = VoiceLogMode.meals});
 
   final VoiceLogMode initialMode;
 
   @override
-  State<VoiceLogScreen> createState() => _VoiceLogScreenState();
+  ConsumerState<VoiceLogScreen> createState() => _VoiceLogScreenState();
 }
 
-class _VoiceLogScreenState extends State<VoiceLogScreen> with WidgetsBindingObserver, TickerProviderStateMixin {
+class _VoiceLogScreenState extends ConsumerState<VoiceLogScreen> with WidgetsBindingObserver, TickerProviderStateMixin {
   final VoiceTranscriptionService _voiceService = VoiceTranscriptionService();
   final TextEditingController _controller = TextEditingController();
   late final AnimationController _pulseController;
@@ -66,7 +67,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with WidgetsBindingObse
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _mode = widget.initialMode != VoiceLogMode.meals ? widget.initialMode : SessionManager.to.voiceLogMode.value;
+    _mode = widget.initialMode != VoiceLogMode.meals ? widget.initialMode : ref.read(sessionProvider).voiceLogMode;
     _pulseController = AnimationController(vsync: this, duration: const Duration(milliseconds: 900))..repeat(reverse: true);
     _pulseAnimation = Tween<double>(begin: 1, end: 1.11).animate(CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut));
     _analyzeAttentionController = AnimationController(vsync: this, duration: const Duration(milliseconds: 600));
@@ -268,7 +269,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with WidgetsBindingObse
     _userRequestedStop = false;
     _consecutiveRestarts = 0;
     final appLocale = context.locale;
-    final preferredVoiceLanguageCode = LanguageSettingsService.to.resolveVoiceLogLanguageCode(appLanguageCode: appLocale.languageCode);
+    final preferredVoiceLanguageCode = ref.read(languageSettingsServiceProvider).resolveVoiceLogLanguageCode(appLanguageCode: appLocale.languageCode, preference: ref.read(languageSettingsProvider).voiceLogLanguagePreference);
 
     if (!_hasPermission) {
       await _showVoicePermissionDialog();
@@ -364,7 +365,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with WidgetsBindingObse
       _currentSessionTranscript = '';
       _speechErrorMessage = cancellationErrorMessage;
     });
-    SessionManager.to.setVoiceLogMode(mode);
+    ref.read(sessionProvider.notifier).setVoiceLogMode(mode);
   }
 
   Future<void> _handleAnalyze() async {
@@ -392,23 +393,21 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with WidgetsBindingObse
   }
 
   void _startMealAnalysisAndNavigate(String description) {
-    final selectedDate = SelectedDateService.to.selectedDate.value;
-    unawaited(DashboardController.to.analyzeMealFromVoice(selectedDate: selectedDate, description: description, scrollToTodayMealsOnStart: true));
+    final selectedDate = ref.read(selectedDateProvider);
+    unawaited(ref.read(mealAnalysisProvider.notifier).analyzeMealFromVoice(selectedDate: selectedDate, description: description, scrollToTodayMealsOnStart: true));
     _navigateToDashboardRoot();
   }
 
   void _startExerciseAnalysisAndNavigate(String description) {
-    final selectedDate = SelectedDateService.to.selectedDate.value;
-    unawaited(DashboardController.to.analyzeExerciseFromVoice(selectedDate: selectedDate, description: description, scrollToTodayMealsOnStart: true));
+    final selectedDate = ref.read(selectedDateProvider);
+    unawaited(ref.read(activityAnalysisProvider.notifier).analyzeExerciseFromVoice(selectedDate: selectedDate, description: description, scrollToTodayMealsOnStart: true));
     _navigateToDashboardRoot();
   }
 
   void _navigateToDashboardRoot() {
-    if (Get.isRegistered<MainScreenController>()) {
-      MainScreenController.to.showDashboardTab();
-    }
-    Get.until((route) => route.isFirst);
+    ref.read(mainScreenProvider.notifier).showDashboardTab();
     if (mounted) {
+      Navigator.of(context).popUntil((route) => route.isFirst);
       setState(() {
         _isAnalyzing = false;
       });
@@ -450,7 +449,7 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with WidgetsBindingObse
       _consecutiveRestarts++;
       try {
         final appLocale = context.locale;
-        final preferredVoiceLanguageCode = LanguageSettingsService.to.resolveVoiceLogLanguageCode(appLanguageCode: appLocale.languageCode);
+        final preferredVoiceLanguageCode = ref.read(languageSettingsServiceProvider).resolveVoiceLogLanguageCode(appLanguageCode: appLocale.languageCode, preference: ref.read(languageSettingsProvider).voiceLogLanguagePreference);
         await _voiceService.startListening(onResult: _handleSpeechResult, appLocale: appLocale, preferredLanguageCode: preferredVoiceLanguageCode);
         if (!mounted) return;
         setState(() {
@@ -537,8 +536,6 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with WidgetsBindingObse
   }
 
   void _showVoiceLanguageSheet(BuildContext context) {
-    final service = LanguageSettingsService.to;
-
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.transparent,
@@ -588,32 +585,34 @@ class _VoiceLogScreenState extends State<VoiceLogScreen> with WidgetsBindingObse
                       child: Text(tr(LocaleKeys.language_settings_voice_language_subtitle), style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary)),
                     ),
                     const SizedBox(height: AppSpacing.m),
-                    Obx(() {
-                      final current = service.voiceLogLanguagePreference.value;
-                      return Column(
-                        children: [
-                          _VoiceLanguageRow(
-                            flag: '🇺🇸',
-                            label: tr(LocaleKeys.language_settings_option_english),
-                            selected: current == VoiceLogLanguagePreference.english,
-                            onTap: () async {
-                              await service.setVoiceLogLanguagePreference(VoiceLogLanguagePreference.english);
-                              if (sheetContext.mounted) Navigator.of(sheetContext).pop();
-                            },
-                          ),
-                          Divider(height: AppSizes.dividerThin, color: AppColors.surfaceMuted),
-                          _VoiceLanguageRow(
-                            flag: '🇨🇿',
-                            label: tr(LocaleKeys.language_settings_option_czech),
-                            selected: current == VoiceLogLanguagePreference.czech,
-                            onTap: () async {
-                              await service.setVoiceLogLanguagePreference(VoiceLogLanguagePreference.czech);
-                              if (sheetContext.mounted) Navigator.of(sheetContext).pop();
-                            },
-                          ),
-                        ],
-                      );
-                    }),
+                    Consumer(
+                      builder: (context, ref, _) {
+                        final current = ref.watch(languageSettingsProvider).voiceLogLanguagePreference;
+                        return Column(
+                          children: [
+                            _VoiceLanguageRow(
+                              flag: '🇺🇸',
+                              label: tr(LocaleKeys.language_settings_option_english),
+                              selected: current == VoiceLogLanguagePreference.english,
+                              onTap: () async {
+                                await ref.read(languageSettingsProvider.notifier).setVoiceLogLanguagePreference(VoiceLogLanguagePreference.english);
+                                if (sheetContext.mounted) Navigator.of(sheetContext).pop();
+                              },
+                            ),
+                            Divider(height: AppSizes.dividerThin, color: AppColors.surfaceMuted),
+                            _VoiceLanguageRow(
+                              flag: '🇨🇿',
+                              label: tr(LocaleKeys.language_settings_option_czech),
+                              selected: current == VoiceLogLanguagePreference.czech,
+                              onTap: () async {
+                                await ref.read(languageSettingsProvider.notifier).setVoiceLogLanguagePreference(VoiceLogLanguagePreference.czech);
+                                if (sheetContext.mounted) Navigator.of(sheetContext).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),

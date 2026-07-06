@@ -1,34 +1,29 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:diplomka/database/app_database.dart';
 import 'package:diplomka/database/dao/meal_template_dao.dart';
 import 'package:diplomka/database/dao/meal_template_ingredient_dao.dart';
 import 'package:diplomka/database/entities/meal_template_entity.dart';
 import 'package:diplomka/database/entities/meal_template_ingredient_entity.dart';
+import 'package:diplomka/di/providers.dart';
 import 'package:diplomka/model/ingredient.dart';
 import 'package:diplomka/model/meal.dart';
 import 'package:diplomka/model/meal_template.dart';
-import 'package:get/get.dart';
 
-class MealTemplateRepository extends GetxService {
-  static MealTemplateRepository get to => Get.find();
-
-  MealTemplateRepository({required AppDatabase database}) : _database = database;
-
-  final AppDatabase _database;
+/// Reaktivní seznam šablon jídel (uživatelova osobní knihovna).
+/// Stav je `AsyncValue<List<MealTemplate>>` — `build()` provede iniciální načtení,
+/// mutace zapíší do DB a znovu načtou stav.
+class MealTemplatesNotifier extends AsyncNotifier<List<MealTemplate>> {
+  AppDatabase get _database => ref.watch(databaseProvider);
   MealTemplateDao get _templateDao => _database.mealTemplateDao;
   MealTemplateIngredientDao get _ingredientDao => _database.mealTemplateIngredientDao;
 
-  final RxList<MealTemplate> allTemplates = RxList<MealTemplate>();
-
   @override
-  void onInit() {
-    super.onInit();
-    refreshTemplates();
-  }
+  Future<List<MealTemplate>> build() => _loadTemplates();
 
-  Future<void> refreshTemplates() async {
+  Future<List<MealTemplate>> _loadTemplates() async {
     final entities = await _templateDao.getAllTemplates();
-    final templates = await Future.wait(entities.map(_buildFromEntity));
-    allTemplates.assignAll(templates);
+    return Future.wait(entities.map(_buildFromEntity));
   }
 
   Future<void> upsertFromMeal(Meal meal) async {
@@ -65,7 +60,7 @@ class MealTemplateRepository extends GetxService {
         );
       }
     }
-    await refreshTemplates();
+    state = await AsyncValue.guard(_loadTemplates);
   }
 
   Future<void> setFavorite(MealTemplate template, bool isFavorite) async {
@@ -73,13 +68,13 @@ class MealTemplateRepository extends GetxService {
     final entity = await _templateDao.findByNormalizedName(template.normalizedName);
     if (entity == null) return;
     await _templateDao.updateTemplate(entity.copyWith(isFavorite: isFavorite));
-    await refreshTemplates();
+    state = await AsyncValue.guard(_loadTemplates);
   }
 
   Future<void> deleteTemplate(MealTemplate template) async {
     if (template.id == null) return;
     await _templateDao.deleteTemplateById(template.id!);
-    await refreshTemplates();
+    state = await AsyncValue.guard(_loadTemplates);
   }
 
   Future<MealTemplate> _buildFromEntity(MealTemplateEntity entity) async {
@@ -107,3 +102,5 @@ class MealTemplateRepository extends GetxService {
     );
   }
 }
+
+final mealTemplatesProvider = AsyncNotifierProvider<MealTemplatesNotifier, List<MealTemplate>>(MealTemplatesNotifier.new);

@@ -2,18 +2,18 @@
 // every AI invocation outcome. Drop along with the entity. See
 // RESEARCH_ONLY.md.
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:diplomka/database/app_database.dart';
 import 'package:diplomka/database/dao/ai_attempt_dao.dart';
 import 'package:diplomka/database/entities/ai_attempt_entity.dart';
-import 'package:get/get.dart';
+import 'package:diplomka/di/providers.dart';
 
 enum AiAttemptKind { meal, exercise, goals, query, queryScope, injectionScreen }
 
 enum AiAttemptStatus { success, lowConfidence, invalidResponse, error, injectionRejected, injectionDetected }
 
-class AiAttemptLogService extends GetxService {
-  static AiAttemptLogService get to => Get.find();
-
+class AiAttemptLogService {
   AiAttemptLogService({required AppDatabase database}) : _dao = database.aiAttemptDao;
 
   final AiAttemptDao _dao;
@@ -102,3 +102,5 @@ class AiAttemptLogService extends GetxService {
     return '${message.substring(0, _maxErrorMessageLength)}…';
   }
 }
+
+final aiAttemptLogServiceProvider = Provider<AiAttemptLogService>((ref) => AiAttemptLogService(database: ref.watch(databaseProvider)));

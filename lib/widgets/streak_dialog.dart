@@ -2,15 +2,15 @@ import 'dart:io' show Platform;
 import 'dart:ui';
 
 import 'package:diplomka/app_theme.dart';
-import 'package:diplomka/model/streak_info.dart';
-import 'package:diplomka/controller/streak_controller.dart';
+import 'package:diplomka/state/streak_provider.dart';
 import 'package:diplomka/widgets/sheet_drag_handle.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class StreakSheet extends StatelessWidget {
+class StreakSheet extends ConsumerWidget {
   const StreakSheet({super.key});
 
   static const List<String> _dayLetters = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
@@ -27,7 +27,8 @@ class StreakSheet extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final streakInfoAsync = ref.watch(streakInfoProvider);
     return Padding(
       padding: Platform.isAndroid ? const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.xxxl + AppSpacing.xs) : const EdgeInsets.all(AppSpacing.xs),
       child: ClipRRect(
@@ -39,48 +40,27 @@ class StreakSheet extends StatelessWidget {
             child: SafeArea(
               top: false,
               bottom: false,
-              child: FutureBuilder<StreakInfo>(
-                future: StreakController.to.getStreakInfo(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const SizedBox(height: 280, child: Center(child: CircularProgressIndicator()));
-                  }
-                  if (snapshot.hasError) {
-                    return Padding(
-                      padding: const EdgeInsets.all(AppSpacing.xl),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const SheetDragHandle(),
-                          const SizedBox(height: AppSpacing.xl),
-                          const Icon(CupertinoIcons.exclamationmark_circle, color: AppColors.error, size: 48),
-                          const SizedBox(height: AppSpacing.m),
-                          Text(
-                            tr(LocaleKeys.streak_error_loading, namedArgs: {'error': snapshot.error.toString()}),
-                            textAlign: TextAlign.center,
-                            style: AppTextStyles.body14Regular.copyWith(color: AppColors.textPrimary),
-                          ),
-                          const SizedBox(height: AppSpacing.xxl),
-                        ],
+              child: streakInfoAsync.when(
+                loading: () => const SizedBox(height: 280, child: Center(child: CircularProgressIndicator())),
+                error: (error, _) => Padding(
+                  padding: const EdgeInsets.all(AppSpacing.xl),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SheetDragHandle(),
+                      const SizedBox(height: AppSpacing.xl),
+                      const Icon(CupertinoIcons.exclamationmark_circle, color: AppColors.error, size: 48),
+                      const SizedBox(height: AppSpacing.m),
+                      Text(
+                        tr(LocaleKeys.streak_error_loading, namedArgs: {'error': error.toString()}),
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.body14Regular.copyWith(color: AppColors.textPrimary),
                       ),
-                    );
-                  }
-                  if (!snapshot.hasData) {
-                    return Padding(
-                      padding: const EdgeInsets.all(AppSpacing.xl),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const SheetDragHandle(),
-                          const SizedBox(height: AppSpacing.xl),
-                          Text(tr(LocaleKeys.streak_no_data), style: AppTextStyles.body14Regular.copyWith(color: AppColors.textSecondary)),
-                          const SizedBox(height: AppSpacing.xxl),
-                        ],
-                      ),
-                    );
-                  }
-
-                  final info = snapshot.data!;
+                      const SizedBox(height: AppSpacing.xxl),
+                    ],
+                  ),
+                ),
+                data: (info) {
                   final isNewRecord = info.currentStreak >= info.longestStreak && info.currentStreak > 0;
 
                   return Column(

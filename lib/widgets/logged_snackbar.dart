@@ -1,10 +1,10 @@
 import 'dart:io' show Platform;
 
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 
 enum SnackBarType { success, error, info, warning }
 
@@ -21,7 +21,7 @@ void showSnackBar({
   VoidCallback? onSecondary,
   Duration duration = const Duration(seconds: 2),
 }) {
-  final ctx = context ?? Get.context!;
+  final ctx = context ?? navigatorKey.currentContext!;
   final isDark = Theme.of(ctx).brightness == Brightness.dark;
 
   final IconData resolvedIcon;

@@ -5,10 +5,12 @@ import 'package:diplomka/model/meal.dart';
 import 'package:diplomka/model/user_profile.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DietaryViolationService {
-  static DietaryViolationService get to => Get.find();
+  DietaryViolationService(this._ref);
+
+  final Ref _ref;
 
   static const Map<String, String> _meatKeywords = {
     // EN
@@ -191,9 +193,9 @@ class DietaryViolationService {
 
   // Legacy keyword fallback: same logic as before, but translated reason returned instead of key.
   String? _legacyKeywordReason(String ingredientName) {
-    final dietType = SessionManager.to.dietType.value;
+    final dietType = _ref.read(sessionProvider).dietType;
     if (dietType == null || dietType == ProfileDietType.classic) return null;
-    final keywords = _getRestrictionKeywords(dietType, SessionManager.to.customDietPreferences.value);
+    final keywords = _getRestrictionKeywords(dietType, _ref.read(sessionProvider).customDietPreferences);
     if (keywords.isEmpty) return null;
     final nameLower = ingredientName.toLowerCase();
     for (final entry in keywords.entries) {
@@ -228,3 +230,5 @@ class DietaryViolationService {
     return violations;
   }
 }
+
+final dietaryViolationServiceProvider = Provider<DietaryViolationService>((ref) => DietaryViolationService(ref));

@@ -1,29 +1,23 @@
-import 'package:diplomka/database/app_database.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:diplomka/database/dao/exercise_template_dao.dart';
 import 'package:diplomka/database/entities/exercise_template_entity.dart';
+import 'package:diplomka/di/providers.dart';
 import 'package:diplomka/model/exercise.dart';
 import 'package:diplomka/model/exercise_template.dart';
-import 'package:get/get.dart';
 
-class ExerciseTemplateRepository extends GetxService {
-  static ExerciseTemplateRepository get to => Get.find();
-
-  ExerciseTemplateRepository({required AppDatabase database}) : _database = database;
-
-  final AppDatabase _database;
-  ExerciseTemplateDao get _templateDao => _database.exerciseTemplateDao;
-
-  final RxList<ExerciseTemplate> allTemplates = RxList<ExerciseTemplate>();
+/// Reaktivní seznam šablon cvičení.
+/// Stav je `AsyncValue<List<ExerciseTemplate>>` — `build()` provede iniciální načtení,
+/// mutace zapíší do DB a znovu načtou stav.
+class ExerciseTemplatesNotifier extends AsyncNotifier<List<ExerciseTemplate>> {
+  ExerciseTemplateDao get _templateDao => ref.watch(databaseProvider).exerciseTemplateDao;
 
   @override
-  void onInit() {
-    super.onInit();
-    refreshTemplates();
-  }
+  Future<List<ExerciseTemplate>> build() => _loadTemplates();
 
-  Future<void> refreshTemplates() async {
+  Future<List<ExerciseTemplate>> _loadTemplates() async {
     final entities = await _templateDao.getAllTemplates();
-    allTemplates.assignAll(entities.map(_buildFromEntity).toList());
+    return entities.map(_buildFromEntity).toList();
   }
 
   Future<void> upsertFromExercise(Exercise exercise) async {
@@ -45,7 +39,7 @@ class ExerciseTemplateRepository extends GetxService {
         lastUsedAt: exercise.timestamp,
       ));
     }
-    await refreshTemplates();
+    state = await AsyncValue.guard(_loadTemplates);
   }
 
   Future<void> setFavorite(ExerciseTemplate template, bool isFavorite) async {
@@ -53,7 +47,7 @@ class ExerciseTemplateRepository extends GetxService {
     final entity = await _templateDao.findByNormalizedName(template.normalizedName);
     if (entity == null) return;
     await _templateDao.updateTemplate(entity.copyWith(isFavorite: isFavorite));
-    await refreshTemplates();
+    state = await AsyncValue.guard(_loadTemplates);
   }
 
   Future<void> updateTemplateValues({
@@ -71,13 +65,13 @@ class ExerciseTemplateRepository extends GetxService {
       caloriesBurned: caloriesBurned,
       durationMinutes: durationMinutes,
     ));
-    await refreshTemplates();
+    state = await AsyncValue.guard(_loadTemplates);
   }
 
   Future<void> deleteTemplate(ExerciseTemplate template) async {
     if (template.id == null) return;
     await _templateDao.deleteTemplateById(template.id!);
-    await refreshTemplates();
+    state = await AsyncValue.guard(_loadTemplates);
   }
 
   ExerciseTemplate _buildFromEntity(ExerciseTemplateEntity entity) {
@@ -93,3 +87,5 @@ class ExerciseTemplateRepository extends GetxService {
     );
   }
 }
+
+final exerciseTemplatesProvider = AsyncNotifierProvider<ExerciseTemplatesNotifier, List<ExerciseTemplate>>(ExerciseTemplatesNotifier.new);

@@ -1,32 +1,28 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:diplomka/database/app_database.dart';
 import 'package:diplomka/database/dao/ingredient_template_dao.dart';
 import 'package:diplomka/database/entities/ingredient_template_entity.dart';
+import 'package:diplomka/di/providers.dart';
 import 'package:diplomka/model/ingredient.dart';
 import 'package:diplomka/model/ingredient_template.dart';
-import 'package:get/get.dart';
 
-class IngredientTemplateRepository extends GetxService {
-  static IngredientTemplateRepository get to => Get.find();
-
-  IngredientTemplateRepository({required AppDatabase database}) : _database = database;
-
-  final AppDatabase _database;
+/// Reaktivní seznam šablon ingrediencí.
+/// Stav je `AsyncValue<List<IngredientTemplate>>` — `build()` provede iniciální načtení,
+/// mutační metody zapíší do DB a znovu načtou stav.
+class IngredientTemplatesNotifier extends AsyncNotifier<List<IngredientTemplate>> {
+  AppDatabase get _database => ref.watch(databaseProvider);
   IngredientTemplateDao get _templateDao => _database.ingredientTemplateDao;
 
-  final RxList<IngredientTemplate> allTemplates = RxList<IngredientTemplate>();
-
   @override
-  void onInit() {
-    super.onInit();
-    refreshTemplates();
-  }
+  Future<List<IngredientTemplate>> build() => _loadTemplates();
 
-  Future<void> refreshTemplates() async {
+  Future<List<IngredientTemplate>> _loadTemplates() async {
     final entities = await _templateDao.getAllTemplates();
-    allTemplates.assignAll(entities.map(_buildFromEntity).toList());
+    return entities.map(_buildFromEntity).toList();
   }
 
-  Future<void> upsertFromIngredient(Ingredient ingredient) async {
+  Future<void> _writeFromIngredient(Ingredient ingredient) async {
     if (ingredient.name.trim().isEmpty) return;
     final normalized = IngredientTemplate.normalize(ingredient.name);
     final existing = await _templateDao.findByNormalizedName(normalized);
@@ -58,13 +54,18 @@ class IngredientTemplateRepository extends GetxService {
         dietaryViolation: ingredient.dietaryViolation,
       ));
     }
-    await refreshTemplates();
+  }
+
+  Future<void> upsertFromIngredient(Ingredient ingredient) async {
+    await _writeFromIngredient(ingredient);
+    state = await AsyncValue.guard(_loadTemplates);
   }
 
   Future<void> upsertFromIngredients(List<Ingredient> ingredients) async {
     for (final ingredient in ingredients) {
-      await upsertFromIngredient(ingredient);
+      await _writeFromIngredient(ingredient);
     }
+    state = await AsyncValue.guard(_loadTemplates);
   }
 
   Future<void> updateTemplate(IngredientTemplate template) async {
@@ -80,7 +81,7 @@ class IngredientTemplateRepository extends GetxService {
       carbs: template.carbs,
       fats: template.fats,
     ));
-    await refreshTemplates();
+    state = await AsyncValue.guard(_loadTemplates);
   }
 
   Future<void> setFavorite(IngredientTemplate template, bool isFavorite) async {
@@ -88,13 +89,13 @@ class IngredientTemplateRepository extends GetxService {
     final entity = await _templateDao.findByNormalizedName(template.normalizedName);
     if (entity == null) return;
     await _templateDao.updateTemplate(entity.copyWith(isFavorite: isFavorite));
-    await refreshTemplates();
+    state = await AsyncValue.guard(_loadTemplates);
   }
 
   Future<void> deleteTemplate(IngredientTemplate template) async {
     if (template.id == null) return;
     await _templateDao.deleteTemplateById(template.id!);
-    await refreshTemplates();
+    state = await AsyncValue.guard(_loadTemplates);
   }
 
   IngredientTemplate _buildFromEntity(IngredientTemplateEntity entity) {
@@ -114,3 +115,5 @@ class IngredientTemplateRepository extends GetxService {
     );
   }
 }
+
+final ingredientTemplatesProvider = AsyncNotifierProvider<IngredientTemplatesNotifier, List<IngredientTemplate>>(IngredientTemplatesNotifier.new);

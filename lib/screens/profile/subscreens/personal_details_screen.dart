@@ -3,11 +3,11 @@ import 'dart:io' show Platform;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
-import 'package:diplomka/controller/weight_entry_controller.dart';
+import 'package:diplomka/state/weight_entry_notifier.dart';
 import 'package:diplomka/model/user_profile.dart';
 import 'package:diplomka/model/weight_entry.dart';
 import 'package:diplomka/screens/logs/weight_log_sheet.dart';
@@ -19,7 +19,7 @@ import 'package:diplomka/widgets/picker_column.dart';
 import 'package:diplomka/widgets/sheet_drag_handle.dart';
 import 'package:diplomka/widgets/sheet_top_bar.dart';
 
-class PersonalDetailsScreen extends StatelessWidget {
+class PersonalDetailsScreen extends ConsumerWidget {
   const PersonalDetailsScreen({super.key});
 
   String _workoutsLabel(String? code) {
@@ -33,20 +33,22 @@ class PersonalDetailsScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return ProfileGradientScaffold(
       scroll: true,
       padding: const EdgeInsets.fromLTRB(AppSpacing.screen, 0, AppSpacing.screen, AppSpacing.xl),
-      child: Obx(() {
-        final entries = WeightEntryController.to.entries;
-        final double? profileWeight = SessionManager.to.weightKg.value;
-        final double? heightCm = SessionManager.to.heightCm.value;
-        final double? goalWeight = SessionManager.to.goalWeightKg.value;
-        final ProfileSex? sex = SessionManager.to.sex.value;
-        final DateTime? dob = SessionManager.to.dateOfBirth.value;
-        final ProfileDietType? dietType = SessionManager.to.dietType.value;
-        final String? customDietPreferences = SessionManager.to.customDietPreferences.value;
-        final String? workoutsPerWeek = SessionManager.to.workoutsPerWeek.value;
+      child: Consumer(
+        builder: (context, ref, _) {
+        final entries = ref.watch(weightEntriesProvider).valueOrNull ?? const <WeightEntry>[];
+        final session = ref.watch(sessionProvider);
+        final double? profileWeight = session.weightKg;
+        final double? heightCm = session.heightCm;
+        final double? goalWeight = session.goalWeightKg;
+        final ProfileSex? sex = session.sex;
+        final DateTime? dob = session.dateOfBirth;
+        final ProfileDietType? dietType = session.dietType;
+        final String? customDietPreferences = session.customDietPreferences;
+        final String? workoutsPerWeek = session.workoutsPerWeek;
 
         final WeightEntry? latestEntry = _latestWeight(entries);
         final double? currentWeight = latestEntry?.weight ?? profileWeight;
@@ -60,13 +62,13 @@ class PersonalDetailsScreen extends StatelessWidget {
         final String? dietSubtitle = dietType == ProfileDietType.custom && (customDietPreferences?.trim().isNotEmpty ?? false) ? customDietPreferences!.trim() : null;
         final String workoutsLabel = '${_workoutsLabel(workoutsPerWeek)} ${tr(LocaleKeys.personal_details_activity_workouts_week)}';
 
-        final double? bmrValue = SessionManager.to.bmr.value;
+        final double? bmrValue = session.bmr;
         final String bmrLabel = bmrValue != null ? '${bmrValue.round()} kcal' : '—';
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ProfileTopBar(title: tr(LocaleKeys.personal_details_title), onBack: () => Get.back()),
+            ProfileTopBar(title: tr(LocaleKeys.personal_details_title), onBack: () => Navigator.of(context).pop()),
             const SizedBox(height: AppSpacing.m),
             ProfileCard(
               radius: AppRadii.l,
@@ -90,7 +92,7 @@ class PersonalDetailsScreen extends StatelessWidget {
                       title: tr(LocaleKeys.personal_details_goal_weight),
                       initialWeight: goalWeight,
                       showDate: false,
-                      onSave: (weight) => SessionManager.to.setGoalWeightKg(weight),
+                      onSave: (weight) => ref.read(sessionProvider.notifier).setGoalWeightKg(weight),
                     ),
                   ),
                 ],
@@ -112,26 +114,26 @@ class PersonalDetailsScreen extends StatelessWidget {
                       initialWeight: currentWeight,
                       showDate: false,
                       onSave: (weight) async {
-                        await SessionManager.to.setWeightKg(weight);
-                        await WeightEntryController.to.saveEntry(WeightEntry(date: DateTime.now(), weight: weight));
+                        await ref.read(sessionProvider.notifier).setWeightKg(weight);
+                        await ref.read(weightEntriesProvider.notifier).saveEntry(WeightEntry(date: DateTime.now(), weight: weight));
                       },
                     ),
                   ),
                   _DetailRow(
                     label: tr(LocaleKeys.personal_details_height),
                     value: heightLabel,
-                    onTap: (_) => _showHeightSheet(context, initialHeightCm: heightCm),
+                    onTap: (_) => _showHeightSheet(context, ref, initialHeightCm: heightCm),
                   ),
                   _DetailRow(
                     label: tr(LocaleKeys.personal_details_date_of_birth),
                     value: dobLabel,
-                    onTap: (_) => _showDobSheet(context, initialDate: dob),
+                    onTap: (_) => _showDobSheet(context, ref, initialDate: dob),
                   ),
-                  _DetailRow(label: tr(LocaleKeys.personal_details_gender), value: sexLabel, onTap: (_) => _showSexSheet(context, sex)),
+                  _DetailRow(label: tr(LocaleKeys.personal_details_gender), value: sexLabel, onTap: (_) => _showSexSheet(context, ref, sex)),
                   _InfoDetailRow(
                     label: tr(LocaleKeys.personal_details_activity_level),
                     value: workoutsLabel,
-                    onTap: () => _showWorkoutsSheet(context, workoutsPerWeek),
+                    onTap: () => _showWorkoutsSheet(context, ref, workoutsPerWeek),
                     onInfoTap: () => _showActivityInfoDialog(context),
                   ),
                   _DetailRow(
@@ -139,7 +141,7 @@ class PersonalDetailsScreen extends StatelessWidget {
                     value: dietLabel,
                     subtitle: dietSubtitle,
                     showDivider: false,
-                    onTap: (_) => _openDietFlow(context, currentDietType: dietType, currentCustomPreferences: customDietPreferences),
+                    onTap: (_) => _openDietFlow(context, ref, currentDietType: dietType, currentCustomPreferences: customDietPreferences),
                   ),
                 ],
               ),
@@ -177,7 +179,7 @@ class PersonalDetailsScreen extends StatelessWidget {
     return '${date.day}. ${date.month}. ${date.year}';
   }
 
-  Future<void> _showDobSheet(BuildContext context, {required DateTime? initialDate}) async {
+  Future<void> _showDobSheet(BuildContext context, WidgetRef ref, {required DateTime? initialDate}) async {
     final now = DateTime.now();
     final initial = initialDate ?? DateTime(now.year - 25, now.month, now.day);
     DateTime selected = initial;
@@ -209,7 +211,7 @@ class PersonalDetailsScreen extends StatelessWidget {
                     title: tr(LocaleKeys.personal_details_dob_label),
                     onClose: () => Navigator.of(sheetContext).pop(),
                     onConfirm: () async {
-                      await SessionManager.to.setDateOfBirth(selected);
+                      await ref.read(sessionProvider.notifier).setDateOfBirth(selected);
                       if (sheetContext.mounted) Navigator.of(sheetContext).pop();
                     },
                   ),
@@ -228,7 +230,7 @@ class PersonalDetailsScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _showHeightSheet(BuildContext context, {required double? initialHeightCm}) async {
+  Future<void> _showHeightSheet(BuildContext context, WidgetRef ref, {required double? initialHeightCm}) async {
     final initial = initialHeightCm?.round() ?? 175;
     int selectedCm = initial.clamp(140, 259);
 
@@ -244,7 +246,7 @@ class PersonalDetailsScreen extends StatelessWidget {
           child: _HeightPickerSheet(
             initialCm: selectedCm,
             onSave: (cm) async {
-              await SessionManager.to.setHeightCm(cm.toDouble());
+              await ref.read(sessionProvider.notifier).setHeightCm(cm.toDouble());
               if (sheetContext.mounted) Navigator.of(sheetContext).pop();
             },
             onClose: () => Navigator.of(sheetContext).pop(),
@@ -254,7 +256,7 @@ class PersonalDetailsScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _showSexSheet(BuildContext context, ProfileSex? current) async {
+  Future<void> _showSexSheet(BuildContext context, WidgetRef ref, ProfileSex? current) async {
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -267,7 +269,7 @@ class PersonalDetailsScreen extends StatelessWidget {
           child: _GenderPickerSheet(
             initialSex: current,
             onSave: (sex) async {
-              await SessionManager.to.setSex(sex);
+              await ref.read(sessionProvider.notifier).setSex(sex);
               if (sheetContext.mounted) Navigator.of(sheetContext).pop();
             },
             onClose: () => Navigator.of(sheetContext).pop(),
@@ -277,32 +279,34 @@ class PersonalDetailsScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _openDietFlow(BuildContext context, {required ProfileDietType? currentDietType, required String? currentCustomPreferences}) async {
+  Future<void> _openDietFlow(BuildContext context, WidgetRef ref, {required ProfileDietType? currentDietType, required String? currentCustomPreferences}) async {
     String? selectedDietCode = currentDietType?.code;
     String customPreferencesDraft = currentCustomPreferences ?? '';
 
-    await Get.to<void>(
-      () => PersonalDetailsDietScreen(
-        onBack: () => Get.back<void>(),
-        onNext: () async {
-          final ProfileDietType? selectedDiet = profileDietTypeFromCode(selectedDietCode);
-          if (selectedDiet == null) return;
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (_) => PersonalDetailsDietScreen(
+          onBack: () => Navigator.of(context).pop(),
+          onNext: () async {
+            final ProfileDietType? selectedDiet = profileDietTypeFromCode(selectedDietCode);
+            if (selectedDiet == null) return;
 
-          if (selectedDiet != ProfileDietType.custom) {
-            await SessionManager.to.setDietType(selectedDiet);
-            Get.back<void>();
-            return;
-          }
+            if (selectedDiet != ProfileDietType.custom) {
+              await ref.read(sessionProvider.notifier).setDietType(selectedDiet);
+              if (context.mounted) Navigator.of(context).pop();
+              return;
+            }
 
-          final saved = await _showCustomDietSheet(context, initialPreferences: customPreferencesDraft);
-          if (saved == null) return;
-          await SessionManager.to.setDietType(ProfileDietType.custom);
-          await SessionManager.to.setCustomDietPreferences(saved);
-          Get.back<void>();
-        },
-        initialDiet: selectedDietCode,
-        customPreferences: customPreferencesDraft,
-        onDietChanged: (diet) => selectedDietCode = diet,
+            final saved = await _showCustomDietSheet(context, initialPreferences: customPreferencesDraft);
+            if (saved == null) return;
+            await ref.read(sessionProvider.notifier).setDietType(ProfileDietType.custom);
+            await ref.read(sessionProvider.notifier).setCustomDietPreferences(saved);
+            if (context.mounted) Navigator.of(context).pop();
+          },
+          initialDiet: selectedDietCode,
+          customPreferences: customPreferencesDraft,
+          onDietChanged: (diet) => selectedDietCode = diet,
+        ),
       ),
     );
   }
@@ -318,7 +322,7 @@ class PersonalDetailsScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _showWorkoutsSheet(BuildContext context, String? current) async {
+  Future<void> _showWorkoutsSheet(BuildContext context, WidgetRef ref, String? current) async {
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -331,7 +335,7 @@ class PersonalDetailsScreen extends StatelessWidget {
           child: _WorkoutsPickerSheet(
             initialWorkouts: current,
             onSave: (value) async {
-              await SessionManager.to.setWorkoutsPerWeek(value);
+              await ref.read(sessionProvider.notifier).setWorkoutsPerWeek(value);
               if (sheetContext.mounted) Navigator.of(sheetContext).pop();
             },
             onClose: () => Navigator.of(sheetContext).pop(),

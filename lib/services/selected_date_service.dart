@@ -1,18 +1,14 @@
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SelectedDateService extends GetxService {
-  static SelectedDateService get to {
-    if (Get.isRegistered<SelectedDateService>()) {
-      return Get.find<SelectedDateService>();
-    }
-    return Get.put(SelectedDateService(), permanent: true);
-  }
-
+/// Vybrané datum napříč aplikací.
+/// Stav = normalizované `DateTime` (bez času).
+class SelectedDateNotifier extends Notifier<DateTime> {
   static DateTime normalize(DateTime date) => DateTime(date.year, date.month, date.day);
 
-  final Rx<DateTime> selectedDate = normalize(DateTime.now()).obs;
+  @override
+  DateTime build() => normalize(DateTime.now());
 
-  void setSelectedDate(DateTime date) {
-    selectedDate.value = normalize(date);
-  }
+  void setSelectedDate(DateTime date) => state = normalize(date);
 }
+
+final selectedDateProvider = NotifierProvider<SelectedDateNotifier, DateTime>(SelectedDateNotifier.new);

@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:diplomka/utils/error.dart';
 import 'package:diplomka/utils/prompt_sanitizer.dart';
@@ -91,3 +91,5 @@ class GeminiRestClient {
     geminiApiKey ??= dotenv.env['GEMINI_API_KEY'];
   }
 }
+
+final geminiRestClientProvider = Provider<GeminiRestClient>((ref) => GeminiRestClient());

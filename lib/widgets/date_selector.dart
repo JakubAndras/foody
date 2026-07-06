@@ -1,5 +1,5 @@
 import 'package:diplomka/app_theme.dart';
-import 'package:diplomka/controller/day_record_controller.dart';
+import 'package:diplomka/state/day_record_notifier.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/services/calendar_day_ring_service.dart';
 import 'package:diplomka/widgets/calendar_day_ring_painter.dart';
@@ -7,9 +7,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DateSelector extends StatefulWidget {
+class DateSelector extends ConsumerStatefulWidget {
   final DateTime selectedDate;
   final Function(DateTime) onDateSelected;
   final bool useSegmentedRing;
@@ -22,12 +22,11 @@ class DateSelector extends StatefulWidget {
   });
 
   @override
-  State<DateSelector> createState() => _DateSelectorState();
+  ConsumerState<DateSelector> createState() => _DateSelectorState();
 }
 
-class _DateSelectorState extends State<DateSelector> {
+class _DateSelectorState extends ConsumerState<DateSelector> {
   late PageController _pageController;
-  final DayRecordController _dayRecordController = DayRecordController.to;
 
   static const int _totalPages = 10400; // Roughly 100 years past/future
   static const int _initialPageIndex = _totalPages ~/ 2;
@@ -38,7 +37,7 @@ class _DateSelectorState extends State<DateSelector> {
     _initializePageController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final mondayOfWeek = _getMondayForWeekContaining(widget.selectedDate);
-      _dayRecordController.loadWeek(mondayOfWeek);
+      ref.read(dayRecordProvider.notifier).loadWeek(mondayOfWeek);
     });
   }
 
@@ -77,7 +76,7 @@ class _DateSelectorState extends State<DateSelector> {
     if (oldMonday != newMonday) {
       final targetPage = _calculatePageIndex(widget.selectedDate);
       _pageController.jumpToPage(targetPage);
-      _dayRecordController.loadWeek(newMonday);
+      ref.read(dayRecordProvider.notifier).loadWeek(newMonday);
     }
   }
 
@@ -94,7 +93,7 @@ class _DateSelectorState extends State<DateSelector> {
           }
           final baseMonday = _getMondayForWeekContaining(DateTime.now());
           final mondayOfWeek = DateTime(baseMonday.year, baseMonday.month, baseMonday.day + (pageIndex - _initialPageIndex) * 7);
-          _dayRecordController.loadWeek(mondayOfWeek);
+          ref.read(dayRecordProvider.notifier).loadWeek(mondayOfWeek);
         },
         itemBuilder: (context, pageIndex) {
           final baseMonday = _getMondayForWeekContaining(DateTime.now());
@@ -140,8 +139,9 @@ class _DateSelectorState extends State<DateSelector> {
     ];
     final dayLabel = isToday ? tr(LocaleKeys.common_today) : dayNames[date.weekday - 1];
 
-    return Obx(() {
-      final ringStyle = _dayRecordController.weekRingStyles[normalizedDate] ?? CalendarDayRingService.emptyStyle;
+    return Consumer(
+      builder: (context, ref, _) {
+      final ringStyle = ref.watch(dayRecordProvider).weekRingStyles[normalizedDate] ?? CalendarDayRingService.emptyStyle;
       return Container(
         padding: EdgeInsets.only(left: 1, top: AppSpacing.xxs + 2, right: 1, bottom: 2),
         decoration: BoxDecoration(
@@ -200,7 +200,8 @@ class _DateSelectorState extends State<DateSelector> {
           ],
         ),
       );
-    });
+      },
+    );
   }
 
   @override

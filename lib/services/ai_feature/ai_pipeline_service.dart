@@ -13,16 +13,16 @@ import 'package:diplomka/services/ai_feature/ai_service_manager.dart';
 import 'package:diplomka/services/ai_feature/openai_service.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/utils/ai_cost_calculator.dart';
-import 'package:diplomka/utils/ai_model_constants.dart';
 import 'package:diplomka/utils/app_limits.dart';
 import 'package:diplomka/utils/openai_usage.dart';
 import 'package:diplomka/utils/prompt_sanitizer.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/foundation.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AiPipelineService extends GetxService {
-  static AiPipelineService get to => Get.find();
+class AiPipelineService {
+  AiPipelineService(this._ref);
+
+  final Ref _ref;
 
   static const double minMealConfidence = 0.50;
   static const double minExerciseConfidence = 0.50;
@@ -46,7 +46,7 @@ class AiPipelineService extends GetxService {
         }
         if (classification == InjectionClassification.ambiguous) {
           print('[AiPipeline] AMBIGUOUS PATTERN — LLM pre-screening meal description');
-          final isInjection = await PromptSanitizer.preScreenWithLlm(sanitizedDescription);
+          final isInjection = await PromptSanitizer.preScreenWithLlm(_ref.read(openaiRestClientProvider), sanitizedDescription);
           if (isInjection) {
             print('[AiPipeline] LLM PRE-SCREEN REJECTED meal description');
             _logMealAttempt(modality: modality, status: AiAttemptStatus.injectionRejected, errorMessage: 'llm_prescreen_rejected');
@@ -55,7 +55,7 @@ class AiPipelineService extends GetxService {
         }
       }
 
-      final AiService service = Get.isRegistered<AiService>() ? Get.find<AiService>() : OpenAiService();
+      final AiService service = _ref.read(aiServiceProvider);
       final mealUserAttributes = _buildMealUserAttributes();
       final response = await service.generateResponse(
         imageFiles: imageFiles,
@@ -121,15 +121,14 @@ class AiPipelineService extends GetxService {
     String? errorMessage,
     OpenAiUsage? usage,
   }) {
-    if (!Get.isRegistered<AiAttemptLogService>()) return;
-    final manager = Get.isRegistered<AiServiceManager>() ? AiServiceManager.to : null;
-    final model = manager?.currentModelCode;
-    final cost = (usage != null && model != null) ? AiCostCalculator.calculateCostUsd(model: model, promptTokens: usage.promptTokens, completionTokens: usage.completionTokens, cachedTokens: usage.cachedTokens) : null;
-    AiAttemptLogService.to.log(
+    final manager = _ref.read(aiServiceManagerProvider.notifier);
+    final model = manager.currentModelCode;
+    final cost = (usage != null) ? AiCostCalculator.calculateCostUsd(model: model, promptTokens: usage.promptTokens, completionTokens: usage.completionTokens, cachedTokens: usage.cachedTokens) : null;
+    _ref.read(aiAttemptLogServiceProvider).log(
       kind: AiAttemptKind.meal,
       status: status,
       modality: modality,
-      provider: manager?.currentProviderCode,
+      provider: manager.currentProviderCode,
       model: model,
       confidence: confidence,
       errorMessage: errorMessage,
@@ -153,7 +152,7 @@ class AiPipelineService extends GetxService {
     }
     if (classification == InjectionClassification.ambiguous) {
       print('[AiPipeline] AMBIGUOUS PATTERN — LLM pre-screening exercise description');
-      final isInjection = await PromptSanitizer.preScreenWithLlm(trimmedDescription);
+      final isInjection = await PromptSanitizer.preScreenWithLlm(_ref.read(openaiRestClientProvider), trimmedDescription);
       if (isInjection) {
         print('[AiPipeline] LLM PRE-SCREEN REJECTED exercise description');
         _logExerciseAttempt(status: AiAttemptStatus.injectionRejected, errorMessage: 'llm_prescreen_rejected');
@@ -169,7 +168,7 @@ class AiPipelineService extends GetxService {
 
     try {
       final userAttributes = _buildExerciseUserAttributes();
-      final data = await OpenaiRestClient().generateExerciseResponse(
+      final data = await _ref.read(openaiRestClientProvider).generateExerciseResponse(
         textPrompt: trimmedDescription,
         userAttributes: userAttributes,
       );
@@ -248,15 +247,14 @@ class AiPipelineService extends GetxService {
     String? errorMessage,
     OpenAiUsage? usage,
   }) {
-    if (!Get.isRegistered<AiAttemptLogService>()) return;
-    final manager = Get.isRegistered<AiServiceManager>() ? AiServiceManager.to : null;
-    final model = manager?.currentModelCode ?? aiModelMain;
+    final manager = _ref.read(aiServiceManagerProvider.notifier);
+    final model = manager.currentModelCode;
     final cost = (usage != null) ? AiCostCalculator.calculateCostUsd(model: model, promptTokens: usage.promptTokens, completionTokens: usage.completionTokens, cachedTokens: usage.cachedTokens) : null;
-    AiAttemptLogService.to.log(
+    _ref.read(aiAttemptLogServiceProvider).log(
       kind: AiAttemptKind.exercise,
       status: status,
       modality: 'voice_ai',
-      provider: manager?.currentProviderCode,
+      provider: manager.currentProviderCode,
       model: model,
       confidence: confidence,
       errorMessage: errorMessage,
@@ -270,7 +268,7 @@ class AiPipelineService extends GetxService {
   Future<NutritionGoals?> generateNutritionGoals() async {
     try {
       final userProfile = _buildGoalsUserProfile();
-      final data = await OpenaiRestClient().generateGoalsResponse(userProfile: userProfile);
+      final data = await _ref.read(openaiRestClientProvider).generateGoalsResponse(userProfile: userProfile);
       final goalsUsage = OpenAiUsage.fromResponse(data);
       final goals = _parseNutritionGoals(data);
       // RESEARCH-ONLY: research-only attempt log
@@ -289,14 +287,13 @@ class AiPipelineService extends GetxService {
 
   // RESEARCH-ONLY: research-only helper. Drop with telemetry.
   void _logGoalsAttempt({required AiAttemptStatus status, String? errorMessage, OpenAiUsage? usage}) {
-    if (!Get.isRegistered<AiAttemptLogService>()) return;
-    final manager = Get.isRegistered<AiServiceManager>() ? AiServiceManager.to : null;
-    final model = manager?.currentModelCode ?? aiModelMain;
+    final manager = _ref.read(aiServiceManagerProvider.notifier);
+    final model = manager.currentModelCode;
     final cost = (usage != null) ? AiCostCalculator.calculateCostUsd(model: model, promptTokens: usage.promptTokens, completionTokens: usage.completionTokens, cachedTokens: usage.cachedTokens) : null;
-    AiAttemptLogService.to.log(
+    _ref.read(aiAttemptLogServiceProvider).log(
       kind: AiAttemptKind.goals,
       status: status,
-      provider: manager?.currentProviderCode,
+      provider: manager.currentProviderCode,
       model: model,
       errorMessage: errorMessage,
       promptTokens: usage?.promptTokens,
@@ -335,17 +332,15 @@ class AiPipelineService extends GetxService {
   }
 
   Map<String, dynamic> _buildGoalsUserProfile() {
-    if (!Get.isRegistered<SessionManager>()) return <String, dynamic>{};
-
-    final session = SessionManager.to;
-    final ageYears = _resolveAgeYears(session.dateOfBirth.value);
-    final sex = session.sex.value?.code;
-    final heightCm = session.heightCm.value;
-    final weightKg = session.weightKg.value;
-    final goalWeightKg = session.goalWeightKg.value;
-    final goal = session.goal.value?.code;
-    final dietType = (session.dietType.value ?? ProfileDietType.classic).code;
-    final rawDietPreferences = session.customDietPreferences.value?.trim();
+    final session = _ref.read(sessionProvider);
+    final ageYears = _resolveAgeYears(session.dateOfBirth);
+    final sex = session.sex?.code;
+    final heightCm = session.heightCm;
+    final weightKg = session.weightKg;
+    final goalWeightKg = session.goalWeightKg;
+    final goal = session.goal?.code;
+    final dietType = (session.dietType ?? ProfileDietType.classic).code;
+    final rawDietPreferences = session.customDietPreferences?.trim();
     String? customDietPreferences;
     if (rawDietPreferences != null && rawDietPreferences.isNotEmpty) {
       customDietPreferences = PromptSanitizer.sanitize(rawDietPreferences);
@@ -355,7 +350,7 @@ class AiPipelineService extends GetxService {
       }
       customDietPreferences = PromptSanitizer.wrapUserInput(customDietPreferences);
     }
-    final weightChangeRate = session.weightChangeRateKgPerWeek.value;
+    final weightChangeRate = session.weightChangeRateKgPerWeek;
 
     return <String, dynamic>{
       'sex': (sex != null && sex.isNotEmpty) ? sex : null,
@@ -391,20 +386,11 @@ class AiPipelineService extends GetxService {
   }
 
   Map<String, dynamic> _buildExerciseUserAttributes() {
-    if (!Get.isRegistered<SessionManager>()) {
-      return <String, dynamic>{
-        'sex': null,
-        'age_years': null,
-        'height_cm': null,
-        'weight_kg': null,
-      };
-    }
-
-    final session = SessionManager.to;
-    final ageYears = _resolveAgeYears(session.dateOfBirth.value);
-    final sex = session.sex.value?.code;
-    final heightCm = session.heightCm.value;
-    final weightKg = session.weightKg.value;
+    final session = _ref.read(sessionProvider);
+    final ageYears = _resolveAgeYears(session.dateOfBirth);
+    final sex = session.sex?.code;
+    final heightCm = session.heightCm;
+    final weightKg = session.weightKg;
 
     return <String, dynamic>{
       'sex': (sex != null && sex.isNotEmpty) ? sex : null,
@@ -415,16 +401,9 @@ class AiPipelineService extends GetxService {
   }
 
   Map<String, dynamic> _buildMealUserAttributes() {
-    if (!Get.isRegistered<SessionManager>()) {
-      return <String, dynamic>{
-        'diet_type': ProfileDietType.classic.code,
-        'diet_custom_preferences': null,
-      };
-    }
-
-    final session = SessionManager.to;
-    final dietType = session.dietType.value ?? ProfileDietType.classic;
-    final rawPreferences = session.customDietPreferences.value?.trim();
+    final session = _ref.read(sessionProvider);
+    final dietType = session.dietType ?? ProfileDietType.classic;
+    final rawPreferences = session.customDietPreferences?.trim();
     String? customPreferences;
     if (rawPreferences != null && rawPreferences.isNotEmpty) {
       customPreferences = PromptSanitizer.sanitize(rawPreferences);
@@ -542,3 +521,5 @@ class AiExerciseAnalysisResult {
 
   bool get isSuccess => status == AiExerciseAnalysisStatus.success || status == AiExerciseAnalysisStatus.lowConfidence;
 }
+
+final aiPipelineServiceProvider = Provider<AiPipelineService>((ref) => AiPipelineService(ref));

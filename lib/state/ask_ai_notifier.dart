@@ -3,71 +3,92 @@ import 'dart:convert';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/ask_ai_query_response.dart';
 import 'package:diplomka/model/day_record.dart';
-import 'package:diplomka/model/user_profile.dart';
 import 'package:diplomka/network/openai_rest_client.dart';
 import 'package:diplomka/services/ai_feature/ai_attempt_log_service.dart';
+import 'package:diplomka/services/day_record_repository.dart';
+import 'package:diplomka/model/user_profile.dart';
+import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/utils/ai_cost_calculator.dart';
 import 'package:diplomka/utils/ai_model_constants.dart';
 import 'package:diplomka/utils/error.dart' as app_error;
 import 'package:diplomka/utils/openai_usage.dart';
 import 'package:diplomka/utils/prompt_sanitizer.dart';
-import 'package:diplomka/services/day_record_repository.dart';
-import 'package:diplomka/services/session_manager.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AskAiController extends GetxController {
-  static AskAiController get to => Get.find();
+/// Sentinel pro `copyWith`, aby šlo nullovatelné pole explicitně nastavit na `null`.
+const Object _undefined = Object();
 
-  final RxBool isLoading = false.obs;
-  final Rxn<AskAiQueryResponse> response = Rxn<AskAiQueryResponse>();
-  final RxnString errorMessage = RxnString();
-  final RxnString lastQuery = RxnString();
+/// Immutable stav obrazovky Ask AI.
+/// `AsyncValue` sjednocuje původní `isLoading` + `response` + `errorMessage`
+/// do jednoho pole (`loading` / `error` / `data`).
+@immutable
+class AskAiState {
+  const AskAiState({
+    this.lastQuery,
+    this.result = const AsyncData<AskAiQueryResponse?>(null),
+  });
 
-  void clearResponse() {
-    response.value = null;
-    lastQuery.value = null;
+  final String? lastQuery;
+  final AsyncValue<AskAiQueryResponse?> result;
+
+  AskAiState copyWith({
+    Object? lastQuery = _undefined,
+    AsyncValue<AskAiQueryResponse?>? result,
+  }) {
+    return AskAiState(
+      lastQuery: lastQuery == _undefined ? this.lastQuery : lastQuery as String?,
+      result: result ?? this.result,
+    );
   }
+}
 
+/// neukazuje dialog. Vystaví stav, UI reaguje přes `ref.watch`/`ref.listen`.
+class AskAiNotifier extends Notifier<AskAiState> {
   static const int _detailThresholdDays = 14;
 
-  Future<AskAiQueryResponse?> submitQuery(String query) async {
-    final trimmed = PromptSanitizer.sanitize(query);
-    if (trimmed.isEmpty) return null;
+  @override
+  AskAiState build() => const AskAiState();
 
-    isLoading.value = true;
-    errorMessage.value = null;
-    response.value = null;
+  void clearResponse() {
+    state = const AskAiState();
+  }
+
+  /// Odešle dotaz na Ask AI. `languageCode` předává volající (UI) z `context.locale`;
+  /// při null se použije fallback `en`.
+  Future<void> submitQuery(String query, {String? languageCode}) async {
+    final trimmed = PromptSanitizer.sanitize(query);
+    if (trimmed.isEmpty) return;
+
+    state = state.copyWith(result: const AsyncLoading<AskAiQueryResponse?>());
 
     final classification = PromptSanitizer.classifyInput(trimmed);
     if (classification == InjectionClassification.explicitAttack) {
       print('[AskAi] EXPLICIT INJECTION REJECTED in query: "${trimmed.substring(0, trimmed.length.clamp(0, 80))}..."');
-      errorMessage.value = tr(LocaleKeys.error_ai_input_rejected);
-      isLoading.value = false;
-      return null;
+      _emitError(tr(LocaleKeys.error_ai_input_rejected));
+      return;
     }
     if (classification == InjectionClassification.ambiguous) {
       print('[AskAi] AMBIGUOUS PATTERN — LLM pre-screening query');
-      final isInjection = await PromptSanitizer.preScreenWithLlm(trimmed);
+      final isInjection = await PromptSanitizer.preScreenWithLlm(ref.read(openaiRestClientProvider), trimmed);
       if (isInjection) {
         print('[AskAi] LLM PRE-SCREEN REJECTED query');
-        errorMessage.value = tr(LocaleKeys.error_ai_input_rejected);
-        isLoading.value = false;
-        return null;
+        _emitError(tr(LocaleKeys.error_ai_input_rejected));
+        return;
       }
     }
 
     try {
-      final records = await DayRecordRepository.to.getAllDayRecords();
+      final records = await ref.read(dayRecordRepositoryProvider).getAllDayRecords();
 
       if (records.isEmpty) {
-        errorMessage.value = tr(LocaleKeys.ask_ai_no_data);
-        return null;
+        _emitError(tr(LocaleKeys.ask_ai_no_data));
+        return;
       }
 
       final sorted = List<DayRecord>.from(records)..sort((a, b) => b.date.compareTo(a.date));
-      final client = OpenaiRestClient();
+      final client = ref.read(openaiRestClientProvider);
 
       // Pass 1: estimate the date range the question needs
       final dateRange = await _estimateScope(client, trimmed, sorted);
@@ -79,48 +100,47 @@ class AskAiController extends GetxController {
       }).toList();
 
       if (selectedRecords.isEmpty) {
-        errorMessage.value = tr(LocaleKeys.ask_ai_no_data);
-        return null;
+        _emitError(tr(LocaleKeys.ask_ai_no_data));
+        return;
       }
 
       final nutritionContext = _buildNutritionContext(selectedRecords);
       final profileContext = _buildUserProfileContext();
-      final languageCode = Get.locale?.languageCode ?? 'en';
+      final resolvedLanguage = languageCode ?? 'en';
 
       final data = await client.generateQueryResponse(
         query: trimmed,
         nutritionContext: nutritionContext,
         userProfileContext: profileContext,
-        languageCode: languageCode,
+        languageCode: resolvedLanguage,
       );
       _logAiAttempt(AiAttemptKind.query, data);
 
       final parsed = _parseQueryResponse(data);
       if (parsed == null) {
-        errorMessage.value = tr(LocaleKeys.ask_ai_parse_error);
-        return null;
+        _emitError(tr(LocaleKeys.ask_ai_parse_error));
+        return;
       }
 
-      response.value = parsed;
-      lastQuery.value = trimmed;
-      return parsed;
+      state = state.copyWith(lastQuery: trimmed, result: AsyncData(parsed));
     } on app_error.Error catch (e) {
-      print('AskAiController.submitQuery error: $e');
+      print('AskAiNotifier.submitQuery error: $e');
       if (e.errorType == app_error.ErrorType.noInternetConnection) {
-        errorMessage.value = tr(LocaleKeys.error_no_internet);
+        _emitError(tr(LocaleKeys.error_no_internet));
       } else if (e.errorType == app_error.ErrorType.timeout) {
-        errorMessage.value = tr(LocaleKeys.error_timeout);
+        _emitError(tr(LocaleKeys.error_timeout));
       } else {
-        errorMessage.value = tr(LocaleKeys.ask_ai_fetch_error);
+        _emitError(tr(LocaleKeys.ask_ai_fetch_error));
       }
-      return null;
     } catch (e) {
-      print('AskAiController.submitQuery error: $e');
-      errorMessage.value = tr(LocaleKeys.ask_ai_fetch_error);
-      return null;
-    } finally {
-      isLoading.value = false;
+      print('AskAiNotifier.submitQuery error: $e');
+      _emitError(tr(LocaleKeys.ask_ai_fetch_error));
     }
+  }
+
+  /// Uloží uživatelsky čitelnou chybovou zprávu jako `AsyncError`.
+  void _emitError(String message) {
+    state = state.copyWith(result: AsyncError<AskAiQueryResponse?>(message, StackTrace.current));
   }
 
   /// Returns (from, to) date range for the query. Falls back to last 30 days.
@@ -156,7 +176,7 @@ class AskAiController extends GetxController {
         }
       }
     } catch (e) {
-      print('AskAiController._estimateScope fallback: $e');
+      print('AskAiNotifier._estimateScope fallback: $e');
     }
     // Fallback: last 30 days
     final fallbackFrom = todayDt.subtract(const Duration(days: 30));
@@ -173,7 +193,7 @@ class AskAiController extends GetxController {
       if (decoded is! Map<String, dynamic>) return null;
       return AskAiQueryResponse.fromJson(decoded);
     } catch (e) {
-      print('AskAiController._parseQueryResponse error: $e');
+      print('AskAiNotifier._parseQueryResponse error: $e');
       return null;
     }
   }
@@ -246,10 +266,9 @@ class AskAiController extends GetxController {
 
   // RESEARCH-ONLY: log Ask AI API calls for token/cost telemetry.
   void _logAiAttempt(AiAttemptKind kind, Map<String, dynamic> data) {
-    if (!Get.isRegistered<AiAttemptLogService>()) return;
     final usage = OpenAiUsage.fromResponse(data);
     final cost = (usage != null) ? AiCostCalculator.calculateCostUsd(model: aiModelMain, promptTokens: usage.promptTokens, completionTokens: usage.completionTokens, cachedTokens: usage.cachedTokens) : null;
-    AiAttemptLogService.to.log(
+    ref.read(aiAttemptLogServiceProvider).log(
       kind: kind,
       status: AiAttemptStatus.success,
       provider: 'openai',
@@ -262,26 +281,26 @@ class AskAiController extends GetxController {
   }
 
   String _buildUserProfileContext() {
-    if (!Get.isRegistered<SessionManager>()) return '';
-
-    final session = SessionManager.to;
+    final session = ref.read(sessionProvider);
     final parts = <String, dynamic>{};
 
-    final dietType = session.dietType.value;
+    final dietType = session.dietType;
     if (dietType != null) parts['diet_type'] = dietType.code;
 
-    final customDiet = session.customDietPreferences.value?.trim();
+    final customDiet = session.customDietPreferences?.trim();
     if (customDiet != null && customDiet.isNotEmpty) parts['diet_preferences'] = customDiet;
 
-    final weight = session.weightKg.value;
+    final weight = session.weightKg;
     if (weight != null && weight > 0) parts['weight_kg'] = weight;
 
-    final height = session.heightCm.value;
+    final height = session.heightCm;
     if (height != null && height > 0) parts['height_cm'] = height;
 
-    final goal = session.goal.value;
+    final goal = session.goal;
     if (goal != null) parts['goal'] = goal.code;
 
     return parts.isNotEmpty ? jsonEncode(parts) : '';
   }
 }
+
+final askAiProvider = NotifierProvider<AskAiNotifier, AskAiState>(AskAiNotifier.new);

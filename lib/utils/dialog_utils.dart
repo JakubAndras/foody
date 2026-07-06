@@ -1,13 +1,14 @@
 import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:get/get.dart';
 
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
+import 'package:diplomka/navigation.dart';
 
 class DialogUtils {
   static Future<void> showDialog({
@@ -20,22 +21,27 @@ class DialogUtils {
     bool barrierDismissible = true,
     bool hideActions = false,
   }) async {
+    final context = navigatorKey.currentContext;
+    if (context == null) return;
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+
     List<PlatformDialogAction> dialogActions = [];
 
     if (actions?.isNotEmpty ?? false) {
       dialogActions = actions!
           .map(
             (action) => PlatformDialogAction(
-              onPressed: action.onPressed ?? () => Get.back(),
+              onPressed: action.onPressed ?? () => navigatorKey.currentState?.pop(),
               cupertino: (_, __) => CupertinoDialogActionData(
                 isDefaultAction: action.isDefault,
                 isDestructiveAction: action.isDestructive,
-                textStyle: Get.textTheme.titleMedium?.copyWith(color: action.isDestructive ? Get.theme.colorScheme.secondary : Get.theme.colorScheme.primary),
+                textStyle: textTheme.titleMedium?.copyWith(color: action.isDestructive ? colorScheme.secondary : colorScheme.primary),
               ),
               child: PlatformText(
                 action.title ?? "",
                 semanticsLabel: action.title ?? "",
-                style: Get.textTheme.titleMedium?.copyWith(color: action.isDestructive ? Get.theme.colorScheme.secondary : Get.theme.colorScheme.primary),
+                style: textTheme.titleMedium?.copyWith(color: action.isDestructive ? colorScheme.secondary : colorScheme.primary),
               ),
             ),
           )
@@ -44,23 +50,25 @@ class DialogUtils {
       dialogActions.add(PlatformDialogAction(
         child: PlatformText(
           defaultActionTitle ?? tr(LocaleKeys.common_ok),
-          style: Get.textTheme.titleMedium?.copyWith(color: Get.theme.colorScheme.primary),
+          style: textTheme.titleMedium?.copyWith(color: colorScheme.primary),
         ),
-        onPressed: () => Get.back(),
+        onPressed: () => navigatorKey.currentState?.pop(),
         cupertino: (_, __) => CupertinoDialogActionData(
           isDefaultAction: true,
           isDestructiveAction: false,
-          textStyle: Get.textTheme.titleMedium?.copyWith(color: Get.theme.colorScheme.primary),
+          textStyle: textTheme.titleMedium?.copyWith(color: colorScheme.primary),
         ),
       ));
     }
 
     try {
-      await Get.dialog(
-        PopScope(
+      final value = await material.showDialog<dynamic>(
+        context: context,
+        barrierDismissible: barrierDismissible,
+        builder: (_) => PopScope(
           canPop: barrierDismissible,
           child: PlatformAlertDialog(
-            title: title != null ? Text(title, style: Platform.isAndroid ? Get.textTheme.displaySmall : null) : null,
+            title: title != null ? Text(title, style: Platform.isAndroid ? textTheme.displaySmall : null) : null,
             content: content ??
                 (message != null //
                     ? Text(message)
@@ -70,25 +78,23 @@ class DialogUtils {
             cupertino: (_, __) => CupertinoAlertDialogData(),
           ),
         ),
-        barrierDismissible: barrierDismissible,
-      ).then((value) {
-        if (onClose != null) {
-          onClose(value);
-        }
-      });
+      );
+      if (onClose != null) {
+        onClose(value);
+      }
     } catch (error) {
       //Logger.to.logError(error);
     }
   }
 
-  static Future<dynamic> showProgressHUD({Widget? content, double contentWidth = 200.0, contentHeight = 180.0, RxnDouble? progress}) {
-    final context = Get.context;
+  static Future<dynamic> showProgressHUD({Widget? content, double contentWidth = 200.0, contentHeight = 180.0, ValueListenable<double?>? progress}) {
+    final context = navigatorKey.currentContext;
+    if (context == null) return Future<dynamic>.value();
+    final accentColor = Theme.of(context).colorScheme.secondary;
     return material.showDialog(
       barrierDismissible: false,
-      context: context!,
+      context: context,
       builder: (BuildContext context) {
-        final accentColor = Get.theme.colorScheme.secondary;
-
         return PopScope(
           canPop: false,
           child: Center(
@@ -111,15 +117,18 @@ class DialogUtils {
                       ),
                     ),
                     if (progress != null)
-                      Obx(() {
-                        if (progress.value == null) {
-                          return Container();
-                        }
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 16.0),
-                          child: Text("progress.value!.toPercentString()"),
-                        );
-                      }),
+                      ValueListenableBuilder<double?>(
+                        valueListenable: progress,
+                        builder: (_, value, __) {
+                          if (value == null) {
+                            return Container();
+                          }
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                            child: Text("${(value * 100).toStringAsFixed(0)}%"),
+                          );
+                        },
+                      ),
                     if (content != null) ...[content],
                   ]),
                 ),
@@ -132,16 +141,17 @@ class DialogUtils {
   }
 
   static Future<void> showSuccessDialog(String title, {Duration dismissTime = const Duration(seconds: 2), VoidCallback? onClose}) async {
-    final context = Get.context;
+    final context = navigatorKey.currentContext;
+    if (context == null) return;
 
     Future.delayed(dismissTime, () {
-      Get.back();
+      navigatorKey.currentState?.pop();
       onClose?.call();
     });
 
     return material.showDialog(
       barrierDismissible: false,
-      context: context!,
+      context: context,
       builder: (BuildContext context) {
         return Center(
           child: SizedBox(
@@ -177,8 +187,6 @@ class DialogUtils {
       },
     );
   }
-
-
 }
 
 class DialogAction {

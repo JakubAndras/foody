@@ -1,34 +1,34 @@
 import 'dart:io' show Platform;
 
 import 'package:diplomka/app_theme.dart';
-import 'package:diplomka/widgets/sheet_drag_handle.dart';
-import 'package:diplomka/controller/dashboard_controller.dart';
+import 'package:diplomka/state/dashboard_notifier.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/screens/main_screen.dart';
 import 'package:diplomka/screens/scan/scan_widgets.dart';
 import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
+import 'package:diplomka/widgets/sheet_drag_handle.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
-class ScanPreviewScreen extends StatefulWidget {
+class ScanPreviewScreen extends ConsumerStatefulWidget {
   const ScanPreviewScreen({super.key, required this.imagePath});
 
   final String? imagePath;
 
   @override
-  State<ScanPreviewScreen> createState() => _ScanPreviewScreenState();
+  ConsumerState<ScanPreviewScreen> createState() => _ScanPreviewScreenState();
 }
 
-class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
+class _ScanPreviewScreenState extends ConsumerState<ScanPreviewScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
   bool _isAnalyzing = false;
 
-  DateTime get _selectedDate => SelectedDateService.to.selectedDate.value;
+  DateTime get _selectedDate => ref.read(selectedDateProvider);
 
   @override
   void dispose() {
@@ -42,18 +42,16 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
     setState(() => _isAnalyzing = true);
     final description = _buildDescription();
 
-    DashboardController.to.analyzeMealFromImage(
-      selectedDate: _selectedDate,
-      imagePath: widget.imagePath,
-      description: description,
-      preferredMealName: _nameController.text.trim(),
-      scrollToTodayMealsOnStart: true,
-    );
+    ref.read(mealAnalysisProvider.notifier).analyzeMealFromImage(
+          selectedDate: _selectedDate,
+          imagePath: widget.imagePath,
+          description: description,
+          preferredMealName: _nameController.text.trim(),
+          scrollToTodayMealsOnStart: true,
+        );
 
-    if (Get.isRegistered<MainScreenController>()) {
-      MainScreenController.to.showDashboardTab();
-    }
-    Get.until((route) => route.isFirst);
+    ref.read(mainScreenProvider.notifier).showDashboardTab();
+    Navigator.of(context).popUntil((route) => route.isFirst);
   }
 
   @override
@@ -65,10 +63,13 @@ class _ScanPreviewScreenState extends State<ScanPreviewScreen> {
         appBar: CustomGlassAppBar(
           leadingIconSize: AppSizes.iconLg,
           horizontalPadding: AppSpacing.m,
-          onBack: () => Get.back(),
+          onBack: () => Navigator.of(context).pop(),
           actions: [
             CustomGlassIconButtonGroup(
-              items: [(icon: CupertinoIcons.arrow_counterclockwise, onPressed: () => Get.back()), (icon: CupertinoIcons.info, onPressed: () => _showPreviewTips(context))],
+              items: [
+                (icon: CupertinoIcons.arrow_counterclockwise, onPressed: () => Navigator.of(context).pop()),
+                (icon: CupertinoIcons.info, onPressed: () => _showPreviewTips(context)),
+              ],
             ),
           ],
         ),

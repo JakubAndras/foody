@@ -1,3 +1,4 @@
+import 'package:diplomka/di/providers.dart';
 import 'package:diplomka/services/motivational_summary_service.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/services/shared_preferences_manager.dart';
@@ -25,15 +26,17 @@ class NotificationBootstrap {
 
     await _migrateLegacyChannelsIfNeeded();
 
-    await TrackingReminderService.to.initialize();
-    await TrackingReminderService.to.rescheduleAllFromStorage();
-    await MotivationalSummaryService.to.initialize();
-    await MotivationalSummaryService.to.rescheduleAllFromStorage();
+    final trackingReminder = rootContainer.read(trackingReminderServiceProvider);
+    await trackingReminder.initialize();
+    await trackingReminder.rescheduleAllFromStorage();
+    final motivationalSummary = rootContainer.read(motivationalSummaryServiceProvider);
+    await motivationalSummary.initialize();
+    await motivationalSummary.rescheduleAllFromStorage();
 
-    if (SessionManager.to.onboardingComplete.value) {
+    if (rootContainer.read(sessionProvider).onboardingComplete) {
       // ignore: avoid_print
       print('[Notifications] Requesting permission at startup...');
-      final granted = await TrackingReminderService.to.ensureNotificationPermission();
+      final granted = await trackingReminder.ensureNotificationPermission();
       // ignore: avoid_print
       print('[Notifications] Permission result: $granted');
     } else {
@@ -47,13 +50,13 @@ class NotificationBootstrap {
   /// deleting them lets `initialize()` recreate them with the now-correctly
   /// translated names.
   static Future<void> _migrateLegacyChannelsIfNeeded() async {
-    final prefs = SharedPreferencesService.to;
+    final prefs = rootContainer.read(sharedPreferencesServiceProvider);
     final migrated = await prefs.getBool(key: _channelMigrationFlag) ?? false;
     if (migrated) {
       return;
     }
 
-    final android = TrackingReminderService.to.notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+    final android = rootContainer.read(trackingReminderServiceProvider).notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
     try {
       await android?.deleteNotificationChannel('tracking_reminders');
       await android?.deleteNotificationChannel('motivational_summary');

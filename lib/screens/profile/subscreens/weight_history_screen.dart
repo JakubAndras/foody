@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:diplomka/app_theme.dart';
-import 'package:diplomka/controller/weight_entry_controller.dart';
+import 'package:diplomka/state/weight_entry_notifier.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/weight_entry.dart';
 import 'package:diplomka/screens/logs/weight_log_sheet.dart';
@@ -14,13 +14,13 @@ import 'package:diplomka/widgets/weight_progress_card.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class WeightHistoryScreen extends StatelessWidget {
+class WeightHistoryScreen extends ConsumerWidget {
   const WeightHistoryScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: AppColors.meshBase,
       body: SafeArea(
@@ -40,32 +40,41 @@ class WeightHistoryScreen extends StatelessWidget {
                 children: [
                   const SizedBox(height: AppSizes.topBarHeight),
                   const SizedBox(height: AppSpacing.m),
-                  Obx(() {
-                    final entries = WeightEntryController.to.entries;
-                    return Column(
-                      children: [
-                        WeightProgressCard(entries: entries),
-                        const SizedBox(height: AppSpacing.m),
-                        if (entries.isEmpty)
-                          const _WeightHistoryEmptyState()
-                        else
-                          WeightHistoryListView(
-                            entries: entries,
-                            onEntryTap: (entry) => showWeightLogSheet(context, entry: entry),
-                            onPhotoAction: (entry, photoPath) async {
-                              print('[WeightHistory] onPhotoAction: entryId=${entry.id}, photoPath=$photoPath');
-                              final updated = entry.copyWith(photoPath: photoPath, clearPhotoPath: photoPath == null);
-                              print('[WeightHistory] updated entry photoPath: ${updated.photoPath}');
-                              await WeightEntryController.to.saveEntry(updated);
-                              print('[WeightHistory] saveEntry done, entries count: ${WeightEntryController.to.entries.length}');
-                              final saved = WeightEntryController.to.entries.firstWhereOrNull((e) => e.id == entry.id);
-                              print('[WeightHistory] saved entry photoPath from DB: ${saved?.photoPath}');
-                            },
-                          ),
-                        const SizedBox(height: AppSpacing.huge),
-                      ],
-                    );
-                  }),
+                  Consumer(
+                    builder: (context, ref, _) {
+                      final entries = ref.watch(weightEntriesProvider).valueOrNull ?? const <WeightEntry>[];
+                      return Column(
+                        children: [
+                          WeightProgressCard(entries: entries),
+                          const SizedBox(height: AppSpacing.m),
+                          if (entries.isEmpty)
+                            const _WeightHistoryEmptyState()
+                          else
+                            WeightHistoryListView(
+                              entries: entries,
+                              onEntryTap: (entry) => showWeightLogSheet(context, entry: entry),
+                              onPhotoAction: (entry, photoPath) async {
+                                print('[WeightHistory] onPhotoAction: entryId=${entry.id}, photoPath=$photoPath');
+                                final updated = entry.copyWith(photoPath: photoPath, clearPhotoPath: photoPath == null);
+                                print('[WeightHistory] updated entry photoPath: ${updated.photoPath}');
+                                await ref.read(weightEntriesProvider.notifier).saveEntry(updated);
+                                final currentEntries = ref.read(weightEntriesProvider).valueOrNull ?? const <WeightEntry>[];
+                                print('[WeightHistory] saveEntry done, entries count: ${currentEntries.length}');
+                                WeightEntry? saved;
+                                for (final e in currentEntries) {
+                                  if (e.id == entry.id) {
+                                    saved = e;
+                                    break;
+                                  }
+                                }
+                                print('[WeightHistory] saved entry photoPath from DB: ${saved?.photoPath}');
+                              },
+                            ),
+                          const SizedBox(height: AppSpacing.huge),
+                        ],
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
@@ -77,7 +86,7 @@ class WeightHistoryScreen extends StatelessWidget {
                 bottom: false,
                 child: CustomGlassAppBar(
                   title: tr(LocaleKeys.profile_weight_history),
-                  onBack: () => Get.back(),
+                  onBack: () => Navigator.of(context).pop(),
                   actions: [
                     CustomGlassIconButton(
                       icon: CupertinoIcons.add,

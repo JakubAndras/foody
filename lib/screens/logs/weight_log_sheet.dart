@@ -2,7 +2,7 @@ import 'dart:io' show Platform;
 import 'dart:math';
 
 import 'package:diplomka/app_theme.dart';
-import 'package:diplomka/controller/weight_entry_controller.dart';
+import 'package:diplomka/state/weight_entry_notifier.dart';
 import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/weight_entry.dart';
@@ -14,6 +14,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 Future<void> showWeightLogSheet(
   BuildContext context, {
@@ -36,7 +37,7 @@ Future<void> showWeightLogSheet(
   );
 }
 
-class WeightLogSheet extends StatefulWidget {
+class WeightLogSheet extends ConsumerStatefulWidget {
   const WeightLogSheet({super.key, this.entry, this.title, this.initialWeight, this.showDate = true, this.onSave});
 
   final WeightEntry? entry;
@@ -46,22 +47,20 @@ class WeightLogSheet extends StatefulWidget {
   final Future<void> Function(double weight)? onSave;
 
   @override
-  State<WeightLogSheet> createState() => _WeightLogSheetState();
+  ConsumerState<WeightLogSheet> createState() => _WeightLogSheetState();
 }
 
-class _WeightLogSheetState extends State<WeightLogSheet> {
+class _WeightLogSheetState extends ConsumerState<WeightLogSheet> {
   late DateTime _selectedDate;
   late double _selectedWeight;
   bool _isSaving = false;
-
-  double? get _lastEntryWeight => WeightEntryController.to.latestEntry?.weight;
 
   @override
   void initState() {
     super.initState();
     final now = DateTime.now();
     _selectedDate = widget.entry?.date ?? DateTime(now.year, now.month, now.day);
-    _selectedWeight = widget.initialWeight ?? widget.entry?.weight ?? _lastEntryWeight ?? 70.0;
+    _selectedWeight = widget.initialWeight ?? widget.entry?.weight ?? ref.read(latestWeightEntryProvider)?.weight ?? 70.0;
   }
 
   bool get _isEditing => widget.entry != null;
@@ -94,7 +93,7 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
         final baseDate = widget.entry?.date ?? DateTime.now();
         final date = _applyDate(baseDate, _selectedDate);
         final entry = WeightEntry(id: widget.entry?.id, date: date, weight: _selectedWeight, photoPath: widget.entry?.photoPath);
-        await WeightEntryController.to.saveEntry(entry);
+        await ref.read(weightEntriesProvider.notifier).saveEntry(entry);
       }
       if (!mounted) return;
       Navigator.of(context).pop();
@@ -118,7 +117,7 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
       isDestructive: true,
     );
     if (confirmed != true || !mounted) return;
-    await WeightEntryController.to.deleteEntry(entry);
+    await ref.read(weightEntriesProvider.notifier).deleteEntry(entry);
     if (!mounted) return;
     Navigator.of(context).pop();
   }
@@ -144,7 +143,7 @@ class _WeightLogSheetState extends State<WeightLogSheet> {
   @override
   Widget build(BuildContext context) {
     final bottomPadding = MediaQuery.of(context).viewInsets.bottom + MediaQuery.of(context).padding.bottom;
-    final lastWeight = _lastEntryWeight;
+    final lastWeight = ref.watch(latestWeightEntryProvider)?.weight;
 
     return Container(
       decoration: BoxDecoration(

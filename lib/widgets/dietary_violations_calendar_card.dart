@@ -1,27 +1,26 @@
 import 'package:diplomka/app_theme.dart';
-import 'package:diplomka/controller/day_record_controller.dart';
+import 'package:diplomka/state/day_record_notifier.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/calendar_day_ring_style.dart';
 import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/services/calendar_day_ring_service.dart';
 import 'package:diplomka/widgets/calendar_day_ring_painter.dart';
 import 'package:diplomka/screens/dashboard_screen.dart';
-import 'package:diplomka/widgets/info_dialog.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 DateTime _dateOnly(DateTime d) => DateTime(d.year, d.month, d.day);
 
-class MonthlyCalendarCard extends StatefulWidget {
+class MonthlyCalendarCard extends ConsumerStatefulWidget {
   const MonthlyCalendarCard({super.key});
 
   @override
-  State<MonthlyCalendarCard> createState() => _MonthlyCalendarCardState();
+  ConsumerState<MonthlyCalendarCard> createState() => _MonthlyCalendarCardState();
 }
 
-class _MonthlyCalendarCardState extends State<MonthlyCalendarCard> {
+class _MonthlyCalendarCardState extends ConsumerState<MonthlyCalendarCard> {
   late DateTime _currentMonth;
   final CalendarDayRingService _ringService = CalendarDayRingService();
   bool _showMonthYearPicker = false;
@@ -49,10 +48,9 @@ class _MonthlyCalendarCardState extends State<MonthlyCalendarCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      final records = DayRecordController.to.dayRecords.toList(growable: false);
+    final records = ref.watch(dayRecordProvider).dayRecords.toList(growable: false);
 
-      final Map<DateTime, DayRecord> recordsByDate = {for (final r in records) _dateOnly(r.date): r};
+    final Map<DateTime, DayRecord> recordsByDate = {for (final r in records) _dateOnly(r.date): r};
 
       final daysInMonth = DateTime(_currentMonth.year, _currentMonth.month + 1, 0).day;
       final startWeekday = DateTime(_currentMonth.year, _currentMonth.month, 1).weekday;
@@ -69,10 +67,10 @@ class _MonthlyCalendarCardState extends State<MonthlyCalendarCard> {
         monthRingStyles[date] = _ringService.resolve(record);
       }
 
-      final totalSlots = (startWeekday - 1) + daysInMonth;
-      final rowCount = (totalSlots / 7).ceil();
+    final totalSlots = (startWeekday - 1) + daysInMonth;
+    final rowCount = (totalSlots / 7).ceil();
 
-      return Container(
+    return Container(
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(AppRadii.l),
@@ -148,7 +146,6 @@ class _MonthlyCalendarCardState extends State<MonthlyCalendarCard> {
           ],
         ),
       );
-    });
   }
 
   bool _isCurrentMonth(DateTime today) => _currentMonth.year == today.year && _currentMonth.month == today.month;
@@ -225,7 +222,13 @@ class _MonthlyCalendarCardState extends State<MonthlyCalendarCard> {
                 final ringStyle = monthRingStyles[date] ?? CalendarDayRingService.emptyStyle;
 
                 return Expanded(
-                  child: _DayCell(day: day, isToday: date == today, hasMeals: hasMeals, ringStyle: ringStyle, onTap: () => Get.to(() => DashboardPreviewScreen(date: date))),
+                  child: _DayCell(
+                    day: day,
+                    isToday: date == today,
+                    hasMeals: hasMeals,
+                    ringStyle: ringStyle,
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => DashboardPreviewScreen(date: date))),
+                  ),
                 );
               }),
             ),

@@ -13,32 +13,57 @@ import 'package:diplomka/services/share/app_share_service.dart';
 import 'package:diplomka/services/weight_entry_repository.dart';
 import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:get/get.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 enum ExportDateRange { last7, last30, allTime, custom }
 
-class ExportController extends GetxController {
-  static ExportController get to => Get.find();
+/// Immutable stav exportní obrazovky.
+@immutable
+class ExportState {
+  const ExportState({
+    this.selectedRange = ExportDateRange.last7,
+    this.customStart,
+    this.customEnd,
+    this.isExporting = false,
+  });
 
-  final selectedRange = ExportDateRange.last7.obs;
-  final customStart = Rxn<DateTime>();
-  final customEnd = Rxn<DateTime>();
-  final isExporting = false.obs;
+  final ExportDateRange selectedRange;
+  final DateTime? customStart;
+  final DateTime? customEnd;
+  final bool isExporting;
 
-  void selectRange(ExportDateRange range) => selectedRange.value = range;
+  ExportState copyWith({
+    ExportDateRange? selectedRange,
+    DateTime? customStart,
+    DateTime? customEnd,
+    bool? isExporting,
+  }) {
+    return ExportState(
+      selectedRange: selectedRange ?? this.selectedRange,
+      customStart: customStart ?? this.customStart,
+      customEnd: customEnd ?? this.customEnd,
+      isExporting: isExporting ?? this.isExporting,
+    );
+  }
+}
+
+class ExportNotifier extends Notifier<ExportState> {
+  @override
+  ExportState build() => const ExportState();
+
+  void selectRange(ExportDateRange range) => state = state.copyWith(selectedRange: range);
 
   void setCustomDates(DateTime start, DateTime end) {
-    customStart.value = start;
-    customEnd.value = end;
+    state = state.copyWith(customStart: start, customEnd: end);
   }
 
   (DateTime, DateTime) _resolveDateRange() {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    switch (selectedRange.value) {
+    switch (state.selectedRange) {
       case ExportDateRange.last7:
         return (today.subtract(const Duration(days: 6)), today);
       case ExportDateRange.last30:
@@ -46,7 +71,7 @@ class ExportController extends GetxController {
       case ExportDateRange.allTime:
         return (DateTime(2000), today);
       case ExportDateRange.custom:
-        return (customStart.value ?? today, customEnd.value ?? today);
+        return (state.customStart ?? today, state.customEnd ?? today);
     }
   }
 
@@ -55,7 +80,7 @@ class ExportController extends GetxController {
   String _dateRangeLabel() {
     final fmt = DateFormat('MMM d, yyyy');
     final (start, end) = _resolveDateRange();
-    if (selectedRange.value == ExportDateRange.allTime) return tr(LocaleKeys.export_all_time);
+    if (state.selectedRange == ExportDateRange.allTime) return tr(LocaleKeys.export_all_time);
     return '${fmt.format(start)} - ${fmt.format(end)}';
   }
 
@@ -70,10 +95,10 @@ class ExportController extends GetxController {
 
     // RESEARCH-ONLY: include soft-deleted meals/ingredients in the export.
     // For production, swap back to `getAllDayRecords()`.
-    final allRecords = await DayRecordRepository.to.getAllDayRecordsForExport();
+    final allRecords = await ref.read(dayRecordRepositoryProvider).getAllDayRecordsForExport();
     final records = allRecords.where((r) => !r.date.isBefore(start) && r.date.isBefore(endInclusive)).toList()..sort((a, b) => a.date.compareTo(b.date));
 
-    final allWeights = await WeightEntryRepository.to.getAllEntries();
+    final allWeights = await ref.read(weightEntryRepositoryProvider).getAllEntries();
     final weights = allWeights.where((w) => !w.date.isBefore(start) && w.date.isBefore(endInclusive)).toList()..sort((a, b) => a.date.compareTo(b.date));
 
     return (records, weights);
@@ -81,22 +106,21 @@ class ExportController extends GetxController {
 
   // RESEARCH-ONLY: research-only fetch. Drop with telemetry.
   Future<List<AiAttemptEntity>> _fetchAiAttempts() async {
-    if (!Get.isRegistered<AiAttemptLogService>()) return const [];
     final (start, end) = _resolveDateRange();
     final endInclusive = end.add(const Duration(days: 1));
-    return AiAttemptLogService.to.getAttempts(start: start, end: endInclusive);
+    return ref.read(aiAttemptLogServiceProvider).getAttempts(start: start, end: endInclusive);
   }
 
   Future<void> exportPdf() async {
-    isExporting.value = true;
+    state = state.copyWith(isExporting: true);
     try {
       final (records, weights) = await _fetchData();
       if (records.isEmpty && weights.isEmpty) {
         showSnackBar(message: tr(LocaleKeys.export_pdf_title), subtitle: tr(LocaleKeys.export_no_data), type: SnackBarType.info);
         return;
       }
-      final goals = NutritionGoalsService.to.goalsForDate(DateTime.now());
-      final session = SessionManager.to;
+      final goals = ref.read(nutritionGoalsProvider.notifier).goalsForDate(DateTime.now());
+      final session = ref.read(sessionProvider);
       final aiAttempts = await _fetchAiAttempts();
       final bytes = await ExportService.generatePdf(
         records,
@@ -106,7 +130,7 @@ class ExportController extends GetxController {
         proteinGoal: goals.proteinGoal,
         carbsGoal: goals.carbsGoal,
         fatGoal: goals.fatGoal,
-        dietType: session.dietType.value?.name,
+        dietType: session.dietType?.name,
         aiAttempts: aiAttempts,
       );
       final dir = await getTemporaryDirectory();
@@ -121,34 +145,34 @@ class ExportController extends GetxController {
     } catch (e) {
       showSnackBar(message: tr(LocaleKeys.common_error), subtitle: tr(LocaleKeys.export_error), type: SnackBarType.error);
     } finally {
-      isExporting.value = false;
+      state = state.copyWith(isExporting: false);
     }
   }
 
   Future<void> exportCsv() async {
-    isExporting.value = true;
+    state = state.copyWith(isExporting: true);
     try {
       final (records, weights) = await _fetchData();
       if (records.isEmpty && weights.isEmpty) {
         showSnackBar(message: tr(LocaleKeys.export_pdf_title), subtitle: tr(LocaleKeys.export_no_data), type: SnackBarType.info);
         return;
       }
-      final session = SessionManager.to;
+      final session = ref.read(sessionProvider);
       // RESEARCH-ONLY: AI attempt log fetched alongside records.
       final aiAttempts = await _fetchAiAttempts();
       final csvString = ExportService.generateCsv(
         records,
         weights,
-        heightCm: session.heightCm.value,
-        weightKg: session.weightKg.value,
-        goalWeightKg: session.goalWeightKg.value,
-        sex: session.sex.value?.name,
-        goal: session.goal.value?.name,
-        dietType: session.dietType.value?.name,
-        customDietPreferences: session.customDietPreferences.value,
-        weightChangeRateKgPerWeek: session.weightChangeRateKgPerWeek.value,
-        prefersMetric: session.prefersMetric.value,
-        dateOfBirth: session.dateOfBirth.value,
+        heightCm: session.heightCm,
+        weightKg: session.weightKg,
+        goalWeightKg: session.goalWeightKg,
+        sex: session.sex?.name,
+        goal: session.goal?.name,
+        dietType: session.dietType?.name,
+        customDietPreferences: session.customDietPreferences,
+        weightChangeRateKgPerWeek: session.weightChangeRateKgPerWeek,
+        prefersMetric: session.prefersMetric,
+        dateOfBirth: session.dateOfBirth,
         aiAttempts: aiAttempts,
       );
       final dir = await getTemporaryDirectory();
@@ -163,7 +187,9 @@ class ExportController extends GetxController {
     } catch (e) {
       showSnackBar(message: tr(LocaleKeys.common_error), subtitle: tr(LocaleKeys.export_error), type: SnackBarType.error);
     } finally {
-      isExporting.value = false;
+      state = state.copyWith(isExporting: false);
     }
   }
 }
+
+final exportProvider = NotifierProvider<ExportNotifier, ExportState>(ExportNotifier.new);

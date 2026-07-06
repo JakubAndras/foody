@@ -2,8 +2,8 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:diplomka/app_theme.dart';
-import 'package:diplomka/controller/dashboard_controller.dart';
-import 'package:diplomka/controller/day_record_controller.dart';
+import 'package:diplomka/state/dashboard_notifier.dart';
+import 'package:diplomka/state/day_record_notifier.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/ingredient.dart';
 import 'package:diplomka/model/meal.dart';
@@ -37,11 +37,11 @@ import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum MealScreenMode { view, edit }
 
-class EditMealScreen extends StatefulWidget {
+class EditMealScreen extends ConsumerStatefulWidget {
   final Meal meal;
   final MealScreenMode initialMode;
   final bool isNewMeal;
@@ -71,10 +71,10 @@ class EditMealScreen extends StatefulWidget {
   });
 
   @override
-  State<EditMealScreen> createState() => _EditMealScreenState();
+  ConsumerState<EditMealScreen> createState() => _EditMealScreenState();
 }
 
-class _EditMealScreenState extends State<EditMealScreen> {
+class _EditMealScreenState extends ConsumerState<EditMealScreen> {
   late Meal _meal;
   late MealScreenMode _mode;
   late DateTime _selectedDate;
@@ -148,7 +148,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
     _initialMealtime = _mealtime;
     _initialAmount = _amountValue;
     _heroImage = _resolveHeroImage(_meal.photoPath);
-    _autoSync = SessionManager.to.autoAdjustMacrosEnabled.value;
+    _autoSync = ref.read(sessionProvider).autoAdjustMacrosEnabled;
     if (_totalCalories > 0) {
       _savedProteinRatio = _totalProteins / _totalCalories;
       _savedCarbsRatio = _totalCarbs / _totalCalories;
@@ -208,7 +208,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
   // Unique dietary violation reasons across current (possibly-edited) ingredients.
   // Used both for showing the AllergyAlertCard banner and composing its subtitle.
   List<String> get _mealViolationsList {
-    final service = DietaryViolationService.to;
+    final service = ref.read(dietaryViolationServiceProvider);
     final seen = <String>{};
     final ordered = <String>[];
     for (final ing in _ingredients) {
@@ -239,7 +239,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
 
   bool get _isInteractionDisabled => _isBusy || widget.isPreview;
 
-  bool get _canEditNutrients => widget.isNewMeal || _ingredients.length <= 1 || SessionManager.to.editableNutrientsEnabled1.value;
+  bool get _canEditNutrients => widget.isNewMeal || _ingredients.length <= 1 || ref.read(sessionProvider).editableNutrientsEnabled1;
 
 
 
@@ -597,25 +597,25 @@ class _EditMealScreenState extends State<EditMealScreen> {
     setState(() => _isSaving = true);
     final updated = _buildWorkingMeal();
 
-    await DayRecordController.to.saveMealForDate(date: _selectedDate, mealToSave: updated);
+    await ref.read(dayRecordProvider.notifier).saveMealForDate(date: _selectedDate, mealToSave: updated);
 
     if (!mounted) return;
     setState(() => _isSaving = false);
-    Get.back(result: updated);
+    Navigator.of(context).pop(updated);
   }
 
   Future<void> _handleSaveInViewMode() async {
     if (_isSaving) return;
 
     setState(() => _isSaving = true);
-    final targetDate = widget.selectedDate ?? SelectedDateService.to.selectedDate.value;
+    final DateTime targetDate = widget.selectedDate ?? ref.read(selectedDateProvider);
     final mealToSave = _buildWorkingMeal(forDate: targetDate).copyWith(id: null, dayRecordId: null);
 
-    await DayRecordController.to.saveMealForDate(date: targetDate, mealToSave: mealToSave);
+    await ref.read(dayRecordProvider.notifier).saveMealForDate(date: targetDate, mealToSave: mealToSave);
 
     if (!mounted) return;
     setState(() => _isSaving = false);
-    Get.back(result: mealToSave);
+    Navigator.of(context).pop(mealToSave);
   }
 
   void _openCopyToSheet() {
@@ -670,9 +670,9 @@ class _EditMealScreenState extends State<EditMealScreen> {
         wasEditedByUser: baseMeal.wasEditedByUser,
         editedAt: baseMeal.editedAt,
       );
-      await DayRecordController.to.saveMealForDate(date: date, mealToSave: copy);
+      await ref.read(dayRecordProvider.notifier).saveMealForDate(date: date, mealToSave: copy);
     }
-    DashboardController.to.refresh();
+    ref.read(dailyRecordProvider.notifier).refresh();
     if (!mounted) return;
     final viewDate = dates.first;
     showSnackBar(
@@ -680,14 +680,16 @@ class _EditMealScreenState extends State<EditMealScreen> {
       message: tr(LocaleKeys.meal_copied_to_dates, namedArgs: {'count': '${dates.length}'}),
       primaryLabel: tr(LocaleKeys.common_view),
       onPrimary: () {
-        SelectedDateService.to.setSelectedDate(viewDate);
-        Get.back();
+        ref.read(selectedDateProvider.notifier).setSelectedDate(viewDate);
+        Navigator.of(context).pop();
       },
     );
   }
 
   Future<void> _handleFixWithAi() async {
-    final result = await Get.to<Meal>(() => FixResultScreen(baseMeal: _buildWorkingMeal(), selectedDate: _selectedDate, isNewMeal: widget.isNewMeal));
+    final result = await Navigator.of(context).push<Meal>(
+      MaterialPageRoute(builder: (_) => FixResultScreen(baseMeal: _buildWorkingMeal(), selectedDate: _selectedDate, isNewMeal: widget.isNewMeal)),
+    );
     if (result == null || !mounted) return;
     _applyFixResult(result);
   }
@@ -781,14 +783,21 @@ class _EditMealScreenState extends State<EditMealScreen> {
 
     // Always sync to template (both paths need this)
     final normalized = MealTemplate.normalize(_meal.name);
-    final template = MealTemplateRepository.to.allTemplates.firstWhereOrNull((t) => t.normalizedName == normalized);
-    if (template != null) await MealTemplateRepository.to.setFavorite(template, next);
+    final templates = ref.read(mealTemplatesProvider).valueOrNull ?? const <MealTemplate>[];
+    MealTemplate? template;
+    for (final t in templates) {
+      if (t.normalizedName == normalized) {
+        template = t;
+        break;
+      }
+    }
+    if (template != null) await ref.read(mealTemplatesProvider.notifier).setFavorite(template, next);
 
     if (widget.openedFromLogScreen) return;
 
     // Dashboard path: also update the Meal record
     if (_meal.id == null || _meal.dayRecordId == null) return;
-    await DayRecordController.to.setMealFavorite(meal: _meal, isFavorite: next);
+    await ref.read(dayRecordProvider.notifier).setMealFavorite(meal: _meal, isFavorite: next);
 
     if (next && mounted) {
       showSnackBar(
@@ -796,7 +805,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
         message: tr(LocaleKeys.common_added_to_favorites),
         icon: CupertinoIcons.heart_fill,
         primaryLabel: tr(LocaleKeys.common_view),
-        onPrimary: () => Get.to(() => const SelectMealScreen(initialTab: SelectMealTab.favorites)),
+        onPrimary: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SelectMealScreen(initialTab: SelectMealTab.favorites))),
         duration: const Duration(seconds: 3),
       );
     }
@@ -820,11 +829,11 @@ class _EditMealScreenState extends State<EditMealScreen> {
     if (confirmed != true || !mounted) return;
 
     setState(() => _isDeleting = true);
-    await DayRecordController.to.deleteMeal(_meal);
+    await ref.read(dayRecordProvider.notifier).deleteMeal(_meal);
 
     if (!mounted) return;
     setState(() => _isDeleting = false);
-    Get.back(result: true);
+    Navigator.of(context).pop(true);
   }
 
   Future<void> _handleShareMeal() async {
@@ -952,7 +961,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
         //   icon: CupertinoIcons.flag,
         //   onTap: () {
         //     Navigator.of(context).pop();
-        //     Get.to(() => const ReportMealScreen());
+        //     Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ReportMealScreen()));
         //   },
         // ),
         GlassPopupItem(
@@ -1051,13 +1060,13 @@ class _EditMealScreenState extends State<EditMealScreen> {
   Future<void> _persistCurrentState() async {
     final updated = _buildWorkingMeal();
     if (widget.openedFromLogScreen) {
-      final targetDate = widget.selectedDate ?? SelectedDateService.to.selectedDate.value;
+      final DateTime targetDate = widget.selectedDate ?? ref.read(selectedDateProvider);
       final mealToSave = updated.copyWith(id: null, dayRecordId: null);
-      await DayRecordController.to.saveMealForDate(date: targetDate, mealToSave: mealToSave);
+      await ref.read(dayRecordProvider.notifier).saveMealForDate(date: targetDate, mealToSave: mealToSave);
     } else {
-      await DayRecordController.to.saveMealForDate(date: _selectedDate, mealToSave: updated);
+      await ref.read(dayRecordProvider.notifier).saveMealForDate(date: _selectedDate, mealToSave: updated);
     }
-    DashboardController.to.refresh();
+    ref.read(dailyRecordProvider.notifier).refresh();
     _syncInitialState();
   }
 
@@ -1159,12 +1168,12 @@ class _EditMealScreenState extends State<EditMealScreen> {
 
     if (widget.openedFromLogScreen) return;
     if (ingredient.id == null || ingredient.mealId == null) return;
-    await DayRecordController.to.setIngredientFavorite(ingredient: ingredient, isFavorite: next);
+    await ref.read(dayRecordProvider.notifier).setIngredientFavorite(ingredient: ingredient, isFavorite: next);
   }
 
   Future<void> _editIngredient(int index) async {
     final ingredient = _ingredients[index];
-    final result = await Get.to<EditIngredientResult>(() => EditIngredientScreen(ingredient: ingredient));
+    final result = await Navigator.of(context).push<EditIngredientResult>(MaterialPageRoute(builder: (_) => EditIngredientScreen(ingredient: ingredient)));
 
     if (!mounted || result == null) return;
     if (result.deleted) {
@@ -1177,7 +1186,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
   }
 
   Future<void> _addIngredient() async {
-    Get.to(() => const SelectMealScreen(initialTab: SelectMealTab.ingredients));
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SelectMealScreen(initialTab: SelectMealTab.ingredients)));
   }
 
   VoidCallback? get _onPrimaryTap {
@@ -1397,7 +1406,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                             if (_useInlineNutrientEditing) ...[
                               const SizedBox(height: AppSpacing.xxs),
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: AppSpacing.edge + (SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0)),
+                                padding: EdgeInsets.symmetric(horizontal: AppSpacing.edge + (ref.watch(sessionProvider).sectionHeaderPaddingEnabled ? AppSpacing.s : 0)),
                                 child: GlassToggleRow(
                                   title: tr(LocaleKeys.preferences_auto_adjust),
                                   subtitle: tr(LocaleKeys.preferences_auto_adjust_desc),
@@ -1463,7 +1472,7 @@ class _EditMealScreenState extends State<EditMealScreen> {
                                 child: Column(
                                   children: List.generate(_ingredients.length, (index) {
                                     final ingredient = _ingredients[index];
-                                    final violationReason = DietaryViolationService.to.checkIngredient(ingredient);
+                                    final violationReason = ref.read(dietaryViolationServiceProvider).checkIngredient(ingredient);
                                     final isViolation = violationReason != null;
                                     if (!_isEditMode) {
                                       return Padding(

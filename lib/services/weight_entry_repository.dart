@@ -1,12 +1,13 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:diplomka/database/app_database.dart';
 import 'package:diplomka/database/dao/weight_entry_dao.dart';
 import 'package:diplomka/database/entities/weight_entry_entity.dart';
+import 'package:diplomka/di/providers.dart';
 import 'package:diplomka/model/weight_entry.dart';
-import 'package:get/get.dart';
 
-class WeightEntryRepository extends GetxService {
-  static WeightEntryRepository get to => Get.find();
-
+/// Perzistence vážení.
+class WeightEntryRepository {
   WeightEntryRepository({required AppDatabase database}) : _database = database;
 
   final AppDatabase _database;
@@ -62,3 +63,7 @@ class WeightEntryRepository extends GetxService {
     await _weightEntryDao.deleteEntryById(entry.id!);
   }
 }
+
+final weightEntryRepositoryProvider = Provider<WeightEntryRepository>(
+  (ref) => WeightEntryRepository(database: ref.watch(databaseProvider)),
+);

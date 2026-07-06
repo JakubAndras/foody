@@ -1,20 +1,21 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/widgets/sheet_drag_handle.dart';
-import 'package:diplomka/controller/export_controller.dart';
+import 'package:diplomka/state/export_notifier.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 
-class ExportPdfDateRangeScreen extends GetView<ExportController> {
+class ExportPdfDateRangeScreen extends ConsumerWidget {
   const ExportPdfDateRangeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(exportProvider);
+    final notifier = ref.read(exportProvider.notifier);
     return Stack(
       children: [
         ProfileGradientScaffold(
@@ -24,7 +25,7 @@ class ExportPdfDateRangeScreen extends GetView<ExportController> {
               // ── Top bar ──
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
-                child: ProfileTopBar(title: tr(LocaleKeys.export_select_date_range), onBack: () => Get.back()),
+                child: ProfileTopBar(title: tr(LocaleKeys.export_select_date_range), onBack: () => Navigator.of(context).pop()),
               ),
 
               // ── Centered content ──
@@ -37,23 +38,22 @@ class ExportPdfDateRangeScreen extends GetView<ExportController> {
                       children: [
                         ...ExportDateRange.values.map((range) => Padding(
                               padding: const EdgeInsets.only(bottom: AppSpacing.m),
-                              child: Obx(() => _DateRangeButton(
-                                    label: _rangeLabel(range),
-                                    isSelected: controller.selectedRange.value == range,
-                                    onTap: () async {
-                                      controller.selectRange(range);
-                                      if (range == ExportDateRange.custom) {
-                                        await _pickCustomRange(context);
-                                      }
-                                    },
-                                  )),
+                              child: _DateRangeButton(
+                                label: _rangeLabel(range),
+                                isSelected: state.selectedRange == range,
+                                onTap: () async {
+                                  notifier.selectRange(range);
+                                  if (range == ExportDateRange.custom) {
+                                    await _pickCustomRange(context, ref);
+                                  }
+                                },
+                              ),
                             )),
-                        Obx(() {
-                          final range = controller.selectedRange.value;
-                          final show = range == ExportDateRange.custom && controller.customStart.value != null && controller.customEnd.value != null;
+                        Builder(builder: (_) {
+                          final show = state.selectedRange == ExportDateRange.custom && state.customStart != null && state.customEnd != null;
                           return Center(
                             child: Text(
-                              show ? '${_fmtDate(controller.customStart.value!)} – ${_fmtDate(controller.customEnd.value!)}' : ' ',
+                              show ? '${_fmtDate(state.customStart!)} – ${_fmtDate(state.customEnd!)}' : ' ',
                               style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w600),
                             ),
                           );
@@ -65,55 +65,57 @@ class ExportPdfDateRangeScreen extends GetView<ExportController> {
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.screen, AppSpacing.screen, AppSpacing.bottom),
-                child: Obx(() => Column(
-                      children: [
-                        ProfilePrimaryButton(
-                          label: tr(LocaleKeys.export_pdf),
-                          height: AppSizes.buttonHeight,
-                          radius: AppRadii.pill,
-                          onPressed: controller.isExporting.value ? null : controller.exportPdf,
+                child: Column(
+                  children: [
+                    ProfilePrimaryButton(
+                      label: tr(LocaleKeys.export_pdf),
+                      height: AppSizes.buttonHeight,
+                      radius: AppRadii.pill,
+                      onPressed: state.isExporting ? null : notifier.exportPdf,
+                    ),
+                    const SizedBox(height: AppSpacing.s),
+                    SizedBox(
+                      width: double.infinity,
+                      height: AppSizes.buttonHeight,
+                      child: OutlinedButton(
+                        onPressed: state.isExporting ? null : notifier.exportCsv,
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(color: AppColors.textSecondary),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadii.pill)),
                         ),
-                        const SizedBox(height: AppSpacing.s),
-                        SizedBox(
-                          width: double.infinity,
-                          height: AppSizes.buttonHeight,
-                          child: OutlinedButton(
-                            onPressed: controller.isExporting.value ? null : controller.exportCsv,
-                            style: OutlinedButton.styleFrom(
-                              side: BorderSide(color: AppColors.textSecondary),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadii.pill)),
-                            ),
-                            child: Text(tr(LocaleKeys.export_csv), style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
-                          ),
-                        ),
-                      ],
-                    )),
+                        child: Text(tr(LocaleKeys.export_csv), style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
         ),
-        Obx(() => controller.isExporting.value
-            ? Container(
-                color: Colors.black26,
-                child: const Center(child: CircularProgressIndicator()),
-              )
-            : const SizedBox.shrink()),
+        if (state.isExporting)
+          Container(
+            color: Colors.black26,
+            child: const Center(child: CircularProgressIndicator()),
+          )
+        else
+          const SizedBox.shrink(),
       ],
     );
   }
 
-  Future<void> _pickCustomRange(BuildContext context) async {
+  Future<void> _pickCustomRange(BuildContext context, WidgetRef ref) async {
+    final state = ref.read(exportProvider);
     final result = await showModalBottomSheet<(DateTime, DateTime)>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (_) => _CalendarRangeSheet(
-        initialStart: controller.customStart.value,
-        initialEnd: controller.customEnd.value,
+        initialStart: state.customStart,
+        initialEnd: state.customEnd,
       ),
     );
     if (result != null) {
-      controller.setCustomDates(result.$1, result.$2);
+      ref.read(exportProvider.notifier).setCustomDates(result.$1, result.$2);
     }
   }
 

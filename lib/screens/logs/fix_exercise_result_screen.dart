@@ -10,9 +10,9 @@ import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class FixExerciseResultScreen extends StatefulWidget {
+class FixExerciseResultScreen extends ConsumerStatefulWidget {
   final Exercise baseExercise;
   final DateTime? selectedDate;
   final bool openedFromLogScreen;
@@ -20,10 +20,10 @@ class FixExerciseResultScreen extends StatefulWidget {
   const FixExerciseResultScreen({super.key, required this.baseExercise, this.selectedDate, this.openedFromLogScreen = false});
 
   @override
-  State<FixExerciseResultScreen> createState() => _FixExerciseResultScreenState();
+  ConsumerState<FixExerciseResultScreen> createState() => _FixExerciseResultScreenState();
 }
 
-class _FixExerciseResultScreenState extends State<FixExerciseResultScreen> {
+class _FixExerciseResultScreenState extends ConsumerState<FixExerciseResultScreen> {
   final TextEditingController _controller = TextEditingController();
   static const int _maxLength = 500;
   bool _isSubmitting = false;
@@ -126,7 +126,7 @@ class _FixExerciseResultScreenState extends State<FixExerciseResultScreen> {
     setState(() => _isSubmitting = true);
 
     final description = '${widget.baseExercise.name}. $text';
-    final result = await AiPipelineService.to.analyzeExercise(description: description);
+    final result = await ref.read(aiPipelineServiceProvider).analyzeExercise(description: description);
 
     if (!mounted) return;
     setState(() => _isSubmitting = false);
@@ -148,6 +148,6 @@ class _FixExerciseResultScreenState extends State<FixExerciseResultScreen> {
     final caloriesBurned = updatedExercise.caloriesBurned;
     final Exercise exerciseToOpen = caloriesBurned > 0 ? updatedExercise : updatedExercise.copyWith(caloriesBurned: base.caloriesBurned);
 
-    Get.back(result: exerciseToOpen);
+    Navigator.of(context).pop(exerciseToOpen);
   }
 }

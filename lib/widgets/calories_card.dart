@@ -2,12 +2,13 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/widgets/progress_ring.dart';
 
-class CaloriesCard extends StatelessWidget {
+class CaloriesCard extends ConsumerWidget {
   const CaloriesCard({super.key, required this.dayRecord, this.caloriesPlanEnabled = true, this.rolloverAmount = 0});
 
   final DayRecord dayRecord;
@@ -15,9 +16,10 @@ class CaloriesCard extends StatelessWidget {
   final double rolloverAmount;
 
   @override
-  Widget build(BuildContext context) {
-    final bool burnedEnabled = SessionManager.to.burnedCaloriesEnabled.value;
-    final bool rolloverEnabled = SessionManager.to.rolloverCaloriesEnabled.value;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final session = ref.watch(sessionProvider);
+    final bool burnedEnabled = session.burnedCaloriesEnabled;
+    final bool rolloverEnabled = session.rolloverCaloriesEnabled;
     final double baseGoal = dayRecord.calorieGoal <= 0 ? 1 : dayRecord.calorieGoal;
     final double effectiveGoal = baseGoal + (rolloverEnabled ? rolloverAmount : 0);
     final double food = dayRecord.totalCalories;

@@ -7,7 +7,6 @@ import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/model/weight_entry.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 

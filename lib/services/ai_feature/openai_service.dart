@@ -1,14 +1,18 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:diplomka/model/ai_response.dart';
 import 'package:diplomka/network/openai_rest_client.dart';
 import 'package:diplomka/services/ai_feature/ai_service.dart';
 import 'package:diplomka/utils/openai_usage.dart';
 
 class OpenAiService implements AiService {
-  final restClient = OpenaiRestClient();
+  OpenAiService(this._ref);
+
+  final Ref _ref;
+
+  OpenaiRestClient get restClient => _ref.read(openaiRestClientProvider);
 
   // RESEARCH-ONLY: side-channel for the last call's token usage.
   OpenAiUsage? lastCallUsage;
@@ -54,3 +58,5 @@ class OpenAiService implements AiService {
     }
   }
 }
+
+final openAiServiceProvider = Provider<OpenAiService>((ref) => OpenAiService(ref));

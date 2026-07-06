@@ -1,3 +1,5 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:diplomka/model/calendar_day_ring_style.dart';
 import 'package:diplomka/model/day_record.dart';
 
@@ -46,3 +48,5 @@ class CalendarDayRingService {
     );
   }
 }
+
+final calendarDayRingServiceProvider = Provider<CalendarDayRingService>((ref) => CalendarDayRingService());

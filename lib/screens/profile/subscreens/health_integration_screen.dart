@@ -1,21 +1,22 @@
 import 'dart:io';
 
 import 'package:diplomka/app_theme.dart';
-import 'package:diplomka/controller/health_integration_controller.dart';
+import 'package:diplomka/state/health_integration_notifier.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
+import 'package:diplomka/services/health_integration_service.dart';
 import 'package:diplomka/widgets/glass_toggle_row.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HealthIntegrationScreen extends StatelessWidget {
+class HealthIntegrationScreen extends ConsumerWidget {
   const HealthIntegrationScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final controller = Get.find<HealthIntegrationController>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final notifier = ref.read(healthControllerProvider.notifier);
 
     return ProfileGradientScaffold(
       scroll: true,
@@ -25,7 +26,7 @@ class HealthIntegrationScreen extends StatelessWidget {
         width: MediaQuery.of(context).size.width - (AppSpacing.screen * 2),
         child: ProfilePrimaryButton(
           label: Platform.isIOS ? tr(LocaleKeys.health_open_health_app) : tr(LocaleKeys.health_open_health_connect),
-          onPressed: () => controller.openHealthApp(),
+          onPressed: () => notifier.openHealthApp(),
         ),
       ),
       child: Column(
@@ -33,7 +34,7 @@ class HealthIntegrationScreen extends StatelessWidget {
         children: [
           ProfileTopBar(
             title: Platform.isIOS ? tr(LocaleKeys.health_sync_to_apple_health) : tr(LocaleKeys.health_sync_to_health_connect),
-            onBack: () => Get.back(),
+            onBack: () => Navigator.of(context).pop(),
           ),
           const SizedBox(height: AppSpacing.m),
           // Toggle row
@@ -41,15 +42,23 @@ class HealthIntegrationScreen extends StatelessWidget {
             radius: AppRadii.l,
             shadow: AppShadows.screenCard,
             padding: const EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.xs, AppSpacing.screen, AppSpacing.xs),
-            child: Obx(() {
-              return GlassToggleRow(
-                title: tr(LocaleKeys.health_sync_burned_calories),
-                subtitle: controller.isEnabled.value ? _formatLastSync(controller.lastSyncTime.value) : null,
-                isOn: controller.isEnabled.value,
-                showDivider: false,
-                onChanged: controller.isSyncing.value ? null : (val) => controller.toggleSync(val),
-              );
-            }),
+            child: Consumer(
+              builder: (context, ref, _) {
+                final isSyncing = ref.watch(healthControllerProvider).isSyncing;
+                // isEnabled/lastSyncTime jsou odvozené z healthIntegrationProvider;
+                // sledujeme ho, aby se řádek překreslil po dokončení synchronizace.
+                ref.watch(healthIntegrationProvider);
+                final controllerNotifier = ref.read(healthControllerProvider.notifier);
+                final isEnabled = controllerNotifier.isEnabled;
+                return GlassToggleRow(
+                  title: tr(LocaleKeys.health_sync_burned_calories),
+                  subtitle: isEnabled ? _formatLastSync(controllerNotifier.lastSyncTime) : null,
+                  isOn: isEnabled,
+                  showDivider: false,
+                  onChanged: isSyncing ? null : (val) => controllerNotifier.toggleSync(val),
+                );
+              },
+            ),
           ),
           const SizedBox(height: AppSpacing.m),
           // Instructions

@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:diplomka/app_theme.dart';
-import 'package:diplomka/controller/dashboard_controller.dart';
-import 'package:diplomka/controller/day_record_controller.dart';
+import 'package:diplomka/state/dashboard_notifier.dart';
+import 'package:diplomka/state/day_record_notifier.dart';
 import 'package:diplomka/model/ingredient.dart';
 import 'package:diplomka/model/meal.dart';
 // RESEARCH-ONLY: import for research-only inputSource tagging
@@ -20,6 +20,7 @@ import 'package:diplomka/screens/log_meal/select_meal_widgets.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/utils/media_storage.dart';
 import 'package:diplomka/screens/main_screen.dart';
+import 'package:diplomka/state/language_settings_notifier.dart';
 import 'package:diplomka/services/language_settings_service.dart';
 import 'package:diplomka/services/selected_date_service.dart';
 import 'package:diplomka/services/voice/voice_transcription_service.dart';
@@ -29,7 +30,7 @@ import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:diplomka/widgets/recently_uploaded_card.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -40,7 +41,7 @@ enum SelectMealTab { all, favorites, meals, ingredients }
 
 enum SelectMealSort { mostRecent, aToZ, zToA, mostProtein }
 
-class SelectMealScreen extends StatefulWidget {
+class SelectMealScreen extends ConsumerStatefulWidget {
   const SelectMealScreen({super.key, this.showLoading = false, this.errorMessage, this.initialTab = SelectMealTab.all});
 
   final bool showLoading;
@@ -48,10 +49,10 @@ class SelectMealScreen extends StatefulWidget {
   final SelectMealTab initialTab;
 
   @override
-  State<SelectMealScreen> createState() => _SelectMealScreenState();
+  ConsumerState<SelectMealScreen> createState() => _SelectMealScreenState();
 }
 
-class _SelectMealScreenState extends State<SelectMealScreen> {
+class _SelectMealScreenState extends ConsumerState<SelectMealScreen> {
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
   Timer? _debounce;
@@ -61,7 +62,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
   SelectMealTab _tab = SelectMealTab.all;
   SelectMealSort _sort = SelectMealSort.mostRecent;
   late final PageController _pageController;
-  int _selectedMealtimeIndex = 1;
+  final int _selectedMealtimeIndex = 1;
 
   // Voice search
   final VoiceTranscriptionService _voiceService = VoiceTranscriptionService();
@@ -168,7 +169,8 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
     // Start listening
     if (!mounted) return;
     final appLocale = context.locale;
-    final preferredLanguageCode = LanguageSettingsService.to.resolveVoiceLogLanguageCode(appLanguageCode: appLocale.languageCode);
+    final preference = ref.read(languageSettingsProvider).voiceLogLanguagePreference;
+    final preferredLanguageCode = ref.read(languageSettingsServiceProvider).resolveVoiceLogLanguageCode(appLanguageCode: appLocale.languageCode, preference: preference);
 
     _searchFocusNode.unfocus();
     await _voiceService.startListening(
@@ -225,10 +227,10 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
   }
 
   void _openManualLog() {
-    final selectedDate = SelectedDateService.to.selectedDate.value;
+    final selectedDate = ref.read(selectedDateProvider);
     // RESEARCH-ONLY: inputSource arg is research-only
     final meal = Meal(name: '', ingredients: const [], timestamp: _applyDateToTime(DateTime.now(), selectedDate), inputSource: MealEntrySource.manual.code);
-    Get.to(() => EditMealScreen(meal: meal, isNewMeal: true, selectedDate: selectedDate));
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => EditMealScreen(meal: meal, isNewMeal: true, selectedDate: selectedDate)));
   }
 
   DateTime _applyDateToTime(DateTime source, DateTime targetDate) {
@@ -242,7 +244,8 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
   }
 
   List<_IngredientItem> _resolveIngredients() {
-    return IngredientTemplateRepository.to.allTemplates.map((t) => _IngredientItem(ingredient: t.toIngredient(), subtitle: '${t.calories.toStringAsFixed(0)} ${tr(LocaleKeys.common_kcal)}', template: t)).toList();
+    final templates = ref.watch(ingredientTemplatesProvider).valueOrNull ?? const <IngredientTemplate>[];
+    return templates.map((t) => _IngredientItem(ingredient: t.toIngredient(), subtitle: '${t.calories.toStringAsFixed(0)} ${tr(LocaleKeys.common_kcal)}', template: t)).toList();
   }
 
   List<MealTemplate> _applyMealFilters(List<MealTemplate> templates, {required SelectMealTab tab}) {
@@ -288,69 +291,67 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
   }
 
   Future<void> _addMealToToday(MealTemplate template) async {
-    final selectedDate = SelectedDateService.to.selectedDate.value;
+    final selectedDate = ref.read(selectedDateProvider);
     // RESEARCH-ONLY: inputSource copyWith is research-only
     final newMeal = template.toMeal(timestamp: _applyDateToTime(DateTime.now(), selectedDate)).copyWith(inputSource: MealEntrySource.manual.code);
-    final savedMeal = await DayRecordController.to.saveMealForDate(date: selectedDate, mealToSave: newMeal);
-    DashboardController.to.refresh();
+    final savedMeal = await ref.read(dayRecordProvider.notifier).saveMealForDate(date: selectedDate, mealToSave: newMeal);
+    ref.read(dailyRecordProvider.notifier).refresh();
     if (!mounted) return;
     showSnackBar(
       context: context,
       message: tr(LocaleKeys.common_food_logged),
       primaryLabel: tr(LocaleKeys.common_view),
       onPrimary: () {
-        SelectedDateService.to.selectedDate.value = selectedDate;
-        MainScreenController.to.showDashboardTab();
-        Get.back();
+        ref.read(selectedDateProvider.notifier).setSelectedDate(selectedDate);
+        ref.read(mainScreenProvider.notifier).showDashboardTab();
+        Navigator.of(context).pop();
       },
       secondaryLabel: tr(LocaleKeys.common_undo),
       onSecondary: () async {
         if (savedMeal != null) {
-          await DayRecordController.to.deleteMeal(savedMeal);
-          DashboardController.to.refresh();
+          await ref.read(dayRecordProvider.notifier).deleteMeal(savedMeal);
+          ref.read(dailyRecordProvider.notifier).refresh();
         }
       },
     );
   }
 
   Future<void> _addIngredientToToday(Ingredient ingredient) async {
-    final selectedDate = SelectedDateService.to.selectedDate.value;
+    final selectedDate = ref.read(selectedDateProvider);
     // RESEARCH-ONLY: inputSource arg is research-only
     final meal = Meal(name: ingredient.name, ingredients: [ingredient], timestamp: _applyDateToTime(DateTime.now(), selectedDate), inputSource: MealEntrySource.manual.code);
-    final savedMeal = await DayRecordController.to.saveMealForDate(date: selectedDate, mealToSave: meal);
-    DashboardController.to.refresh();
+    final savedMeal = await ref.read(dayRecordProvider.notifier).saveMealForDate(date: selectedDate, mealToSave: meal);
+    ref.read(dailyRecordProvider.notifier).refresh();
     if (!mounted) return;
     showSnackBar(
       context: context,
       message: tr(LocaleKeys.common_food_logged),
       primaryLabel: tr(LocaleKeys.common_view),
       onPrimary: () {
-        SelectedDateService.to.selectedDate.value = selectedDate;
-        MainScreenController.to.showDashboardTab();
-        Get.back();
+        ref.read(selectedDateProvider.notifier).setSelectedDate(selectedDate);
+        ref.read(mainScreenProvider.notifier).showDashboardTab();
+        Navigator.of(context).pop();
       },
       secondaryLabel: tr(LocaleKeys.common_undo),
       onSecondary: () async {
         if (savedMeal != null) {
-          await DayRecordController.to.deleteMeal(savedMeal);
-          DashboardController.to.refresh();
+          await ref.read(dayRecordProvider.notifier).deleteMeal(savedMeal);
+          ref.read(dailyRecordProvider.notifier).refresh();
         }
       },
     );
   }
 
   Widget _buildPage(SelectMealTab tab) {
-    return Obx(() {
-      final allTemplates = MealTemplateRepository.to.allTemplates.toList();
-      IngredientTemplateRepository.to.allTemplates.length;
-      final allIngredients = _resolveIngredients();
-      final showMeals = tab == SelectMealTab.all || tab == SelectMealTab.meals || tab == SelectMealTab.favorites;
-      final showIngredients = tab == SelectMealTab.all || tab == SelectMealTab.ingredients || tab == SelectMealTab.favorites;
-      final meals = showMeals ? _applyMealFilters(allTemplates, tab: tab) : <MealTemplate>[];
-      final ingredients = showIngredients ? _applyIngredientFilters(allIngredients, tab: tab) : <_IngredientItem>[];
-      final isEmpty = meals.isEmpty && ingredients.isEmpty;
+    final allTemplates = (ref.watch(mealTemplatesProvider).valueOrNull ?? const <MealTemplate>[]).toList();
+    final allIngredients = _resolveIngredients();
+    final showMeals = tab == SelectMealTab.all || tab == SelectMealTab.meals || tab == SelectMealTab.favorites;
+    final showIngredients = tab == SelectMealTab.all || tab == SelectMealTab.ingredients || tab == SelectMealTab.favorites;
+    final meals = showMeals ? _applyMealFilters(allTemplates, tab: tab) : <MealTemplate>[];
+    final ingredients = showIngredients ? _applyIngredientFilters(allIngredients, tab: tab) : <_IngredientItem>[];
+    final isEmpty = meals.isEmpty && ingredients.isEmpty;
 
-      return CustomScrollView(
+    return CustomScrollView(
         slivers: [
         if (isEmpty)
           SliverFillRemaining(
@@ -383,7 +384,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
               sliver: SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
                   final template = meals[index];
-                  final selectedDate = SelectedDateService.to.selectedDate.value;
+                  final selectedDate = ref.watch(selectedDateProvider);
                   final previewMeal = template.toMeal(timestamp: _applyDateToTime(DateTime.now(), selectedDate));
                   return MealItemCard(
                     name: template.name,
@@ -392,7 +393,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                     carbs: template.totalCarbs,
                     fats: template.totalFats,
                     imageProvider: _resolveImage(template.photoPath),
-                    onTap: () => Get.to(() => MealDetailScreen(meal: previewMeal, openedFromLogScreen: true, selectedDate: selectedDate)),
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => MealDetailScreen(meal: previewMeal, openedFromLogScreen: true, selectedDate: selectedDate))),
                     onAdd: () => _addMealToToday(template),
                   );
                 }, childCount: meals.length),
@@ -434,9 +435,9 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                       ingredient: item.ingredient,
                       onAdd: () => _addIngredientToToday(item.ingredient),
                       onTap: () async {
-                        final result = await Get.to<EditIngredientResult>(() => EditIngredientScreen(ingredient: item.ingredient, allowDelete: false));
+                        final result = await Navigator.of(context).push<EditIngredientResult>(MaterialPageRoute(builder: (_) => EditIngredientScreen(ingredient: item.ingredient, allowDelete: false)));
                         if (result?.ingredient != null && item.template != null) {
-                          await IngredientTemplateRepository.to.upsertFromIngredient(result!.ingredient!);
+                          await ref.read(ingredientTemplatesProvider.notifier).upsertFromIngredient(result!.ingredient!);
                         }
                       },
                     ),
@@ -449,7 +450,6 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
         ],
         ],
       );
-    });
   }
 
   @override
@@ -535,7 +535,7 @@ class _SelectMealScreenState extends State<SelectMealScreen> {
                 // icons look squished on Meal Log.
                 horizontalPadding: AppSpacing.screen,
                 leadingIconSize: AppSizes.iconLg,
-                onBack: () => Get.back(),
+                onBack: () => Navigator.of(context).pop(),
                 titleWidget: Text(tr(LocaleKeys.meal_select_title), style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600, letterSpacing: -0.3125, color: AppColors.primary)),
                 actions: [
                   CustomGlassIconButtonGroup(

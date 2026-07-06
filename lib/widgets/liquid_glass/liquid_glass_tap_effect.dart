@@ -3,31 +3,33 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 
 /// Drives the scale animation for a [LiquidGlass] lens config.
 ///
-/// Create inside a GetxController that uses [GetTickerProviderStateMixin],
-/// then read [scale] in the build method to set animated width / height /
-/// position on the lens config.  Call [animate] from the child's tap handler.
+/// Create with a [TickerProvider] (e.g. from a [TickerProviderStateMixin]),
+/// then observe [scale] via a [ValueListenableBuilder] to set animated
+/// width / height / position on the lens config.  Call [animate] from the
+/// child's tap handler.
 ///
 /// ```dart
-/// // In controller:
+/// // In State:
 /// late final streakTap = LiquidGlassTapAnimator(vsync: this);
 ///
-/// // In build – glass config:
-/// width:  baseW * controller.streakTap.scale.value,
-/// height: baseH * controller.streakTap.scale.value,
+/// // In build – observe the scale:
+/// ValueListenableBuilder<double>(
+///   valueListenable: streakTap.scale,
+///   builder: (context, scale, _) => /* width: baseW * scale, ... */,
+/// );
 ///
 /// // In child widget – tap handler:
 /// onTap: () async {
-///   await MainScreenController.to.streakTap.animate();
+///   await streakTap.animate();
 ///   showDialog(...);
 /// }
 /// ```
 class LiquidGlassTapAnimator {
   final double peakScale;
-  final RxDouble scale;
+  final ValueNotifier<double> scale;
 
   late final AnimationController _controller;
   late final CurvedAnimation _curved;
@@ -37,7 +39,7 @@ class LiquidGlassTapAnimator {
     this.peakScale = 1.3,
     Duration forwardDuration = const Duration(milliseconds: 100),
     Duration reverseDuration = const Duration(milliseconds: 100),
-  }) : scale = 1.0.obs {
+  }) : scale = ValueNotifier(1.0) {
     _controller = AnimationController(
       vsync: vsync,
       duration: forwardDuration,
@@ -70,6 +72,7 @@ class LiquidGlassTapAnimator {
   void dispose() {
     _curved.dispose();
     _controller.dispose();
+    scale.dispose();
   }
 }
 

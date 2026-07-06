@@ -5,14 +5,14 @@ import 'package:diplomka/screens/logs/weight_log_sheet.dart';
 import 'package:diplomka/screens/profile/subscreens/weight_history_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 String _formatWeight(double value) {
   final isInt = value % 1 == 0;
   return value.toStringAsFixed(isInt ? 0 : 1);
 }
 
-class CurrentWeightCard extends StatelessWidget {
+class CurrentWeightCard extends ConsumerWidget {
   const CurrentWeightCard({
     super.key,
     required this.currentWeight,
@@ -51,12 +51,12 @@ class CurrentWeightCard extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final hasData = currentWeight != null;
     final etaLabel = _computeGoalEta();
 
     return GestureDetector(
-      onTap: () => Get.to(() => const WeightHistoryScreen()),
+      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const WeightHistoryScreen())),
       behavior: HitTestBehavior.opaque,
       child: Container(
         decoration: BoxDecoration(

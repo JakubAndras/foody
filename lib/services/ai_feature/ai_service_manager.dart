@@ -1,8 +1,7 @@
-
 import 'package:diplomka/services/ai_feature/ai_service.dart';
 import 'package:diplomka/services/ai_feature/gemini_service.dart';
 import 'package:diplomka/services/ai_feature/openai_service.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Enum for AI Service Provider Type
 enum AiServiceProviderType {
@@ -10,52 +9,29 @@ enum AiServiceProviderType {
   gemini,
 }
 
-// GetX Controller to manage AI service selection and registration
-class AiServiceManager extends GetxController {
-  static AiServiceManager get to => Get.find();
-
-  final Rx<AiServiceProviderType> currentServiceType = AiServiceProviderType.openAI.obs;
-
+/// Spravuje výběr aktivního AI providera.
+/// Stav = aktivní `AiServiceProviderType` (default `openAI`).
+class AiServiceManagerNotifier extends Notifier<AiServiceProviderType> {
   @override
-  void onInit() {
-    super.onInit();
-    // Initialize the AiService binding and update it when the type changes
-    _updateAiServiceBinding(currentServiceType.value);
-    // Listen to changes in currentServiceType to update the AiService registration
-    ever(currentServiceType, _updateAiServiceBinding);
-  }
+  AiServiceProviderType build() => AiServiceProviderType.openAI;
 
-  // Updates the registered AiService instance based on the current type.
-  void _updateAiServiceBinding(AiServiceProviderType type) {
-    final AiService newService = (type == AiServiceProviderType.gemini)
-        ? GeminiService()
-        : OpenAiService();
-
-    if (Get.isRegistered<AiService>()) {
-      Get.replace<AiService>(newService);
-    } else {
-      // Use permanent: true if this service should live throughout the app's lifecycle
-      Get.put<AiService>(newService, permanent: true);
-    }
-  }
-
-  // Switches the AI service provider type.
-  void switchService(AiServiceProviderType type) {
-    currentServiceType.value = type;
-  }
-
-  AiService get currentService => Get.find<AiService>();
+  /// Přepne aktivního AI providera.
+  void switchService(AiServiceProviderType type) => state = type;
 
   // RESEARCH-ONLY: provider/model code getters used only by telemetry
   // wiring (MealEntity.aiProvider/aiModel). Research-only.
   /// Stable code identifying the active provider (`openai` or `gemini`).
-  String get currentProviderCode {
-    return currentServiceType.value == AiServiceProviderType.gemini ? 'gemini' : 'openai';
-  }
+  String get currentProviderCode => state == AiServiceProviderType.gemini ? 'gemini' : 'openai';
 
   /// Stable code identifying the active model. Mirrors values configured in REST clients.
-  String get currentModelCode {
-    return currentServiceType.value == AiServiceProviderType.gemini ? 'gemini-default' : 'gpt-5.4';
-  }
+  String get currentModelCode => state == AiServiceProviderType.gemini ? 'gemini-default' : 'gpt-5.4';
   // RESEARCH-ONLY: end
 }
+
+final aiServiceManagerProvider = NotifierProvider<AiServiceManagerNotifier, AiServiceProviderType>(AiServiceManagerNotifier.new);
+
+/// Vrací aktivní AI službu podle stavu `aiServiceManagerProvider`.
+/// Přepnutí providera řeší tento selektor, ne runtime rebind.
+final aiServiceProvider = Provider<AiService>((ref) {
+  return ref.watch(aiServiceManagerProvider) == AiServiceProviderType.gemini ? ref.watch(geminiServiceProvider) : ref.watch(openAiServiceProvider);
+});

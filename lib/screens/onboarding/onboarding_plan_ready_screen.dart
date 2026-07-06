@@ -7,8 +7,9 @@ import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class OnboardingPlanReadyScreen extends StatelessWidget {
+class OnboardingPlanReadyScreen extends ConsumerWidget {
   const OnboardingPlanReadyScreen({super.key, required this.onNext, required this.onBack, this.progress});
 
   final VoidCallback onNext;
@@ -22,10 +23,11 @@ class OnboardingPlanReadyScreen extends StatelessWidget {
     return value.toStringAsFixed(1);
   }
 
-  String _buildGoalSummaryLabel(BuildContext context) {
-    final double? currentWeightKg = SessionManager.to.weightKg.value;
-    final double? desiredWeightKg = SessionManager.to.goalWeightKg.value;
-    final double speedKgPerWeek = (SessionManager.to.weightChangeRateKgPerWeek.value ?? 0.8).clamp(0.1, 1.5);
+  String _buildGoalSummaryLabel(BuildContext context, WidgetRef ref) {
+    final session = ref.watch(sessionProvider);
+    final double? currentWeightKg = session.weightKg;
+    final double? desiredWeightKg = session.goalWeightKg;
+    final double speedKgPerWeek = (session.weightChangeRateKgPerWeek ?? 0.8).clamp(0.1, 1.5);
 
     if (currentWeightKg == null || desiredWeightKg == null) {
       return tr(LocaleKeys.onboarding_set_goal_hint);
@@ -53,10 +55,10 @@ class OnboardingPlanReadyScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final TextTheme textTheme = Theme.of(context).textTheme;
-    final String goalSummaryLabel = _buildGoalSummaryLabel(context);
-    final NutritionGoals goals = NutritionGoalsService.to.goalsForDate(DateTime.now());
+    final String goalSummaryLabel = _buildGoalSummaryLabel(context, ref);
+    final NutritionGoals goals = ref.read(nutritionGoalsProvider.notifier).goalsForDate(DateTime.now());
 
     return OnboardingPage(
       progress: progress,

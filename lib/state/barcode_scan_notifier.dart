@@ -2,7 +2,8 @@ import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/barcode_lookup_result.dart';
 import 'package:diplomka/services/barcode_lookup_service.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:get/get.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum BarcodeScanState {
   idle,
@@ -59,69 +60,111 @@ class BarcodeScanOutcome {
   }
 }
 
-class BarcodeScanController extends GetxController {
-  static BarcodeScanController get to => Get.find();
+/// Immutable stav skenování čárového kódu.
+///
+/// Pole [scanState] nese enum [BarcodeScanState]. Kvůli kolizi s vlastním polem
+/// `state` Notifieru (které drží tuto celou třídu) je záměrně pojmenováno `scanState`.
+@immutable
+class BarcodeScanUiState {
+  const BarcodeScanUiState({
+    this.scanState = BarcodeScanState.idle,
+    this.latestResult,
+    this.activeBarcode = '',
+    this.latestMessage = '',
+    this.latestFailureType,
+  });
 
-  BarcodeScanController({
-    required BarcodeLookupService lookupService,
-  }) : _lookupService = lookupService;
+  final BarcodeScanState scanState;
+  final BarcodeLookupResult? latestResult;
+  final String activeBarcode;
+  final String latestMessage;
+  final BarcodeLookupFailureType? latestFailureType;
 
-  final BarcodeLookupService _lookupService;
+  /// Zpracování probíhá, dokud běží dotaz na produkt (stav `lookupLoading`).
+  /// Slouží zároveň jako reentrancy guard v [BarcodeScanNotifier.processDetectedBarcode].
+  bool get isProcessing => scanState == BarcodeScanState.lookupLoading;
 
-  final Rx<BarcodeScanState> state = BarcodeScanState.idle.obs;
-  final Rxn<BarcodeLookupResult> latestResult = Rxn<BarcodeLookupResult>();
-  final RxString activeBarcode = ''.obs;
-  final RxString latestMessage = ''.obs;
-  final Rxn<BarcodeLookupFailureType> latestFailureType = Rxn<BarcodeLookupFailureType>();
+  BarcodeScanUiState copyWith({
+    BarcodeScanState? scanState,
+    Object? latestResult = _undefined,
+    String? activeBarcode,
+    String? latestMessage,
+    Object? latestFailureType = _undefined,
+  }) {
+    return BarcodeScanUiState(
+      scanState: scanState ?? this.scanState,
+      latestResult: latestResult == _undefined ? this.latestResult : latestResult as BarcodeLookupResult?,
+      activeBarcode: activeBarcode ?? this.activeBarcode,
+      latestMessage: latestMessage ?? this.latestMessage,
+      latestFailureType: latestFailureType == _undefined ? this.latestFailureType : latestFailureType as BarcodeLookupFailureType?,
+    );
+  }
+}
+
+/// Sentinel pro `copyWith`, aby šlo nullovatelná pole explicitně nastavit na `null`.
+const Object _undefined = Object();
+
+class BarcodeScanNotifier extends Notifier<BarcodeScanUiState> {
+  BarcodeLookupService get _lookupService => ref.read(barcodeLookupServiceProvider);
 
   static const Duration _duplicateCooldown = Duration(seconds: 3);
   DateTime? _lastProcessedAt;
   String? _lastProcessedBarcode;
-  bool _isProcessing = false;
 
-  bool get isProcessing => _isProcessing;
+  @override
+  BarcodeScanUiState build() => const BarcodeScanUiState();
 
   void resetForScanning() {
-    state.value = BarcodeScanState.scanning;
-    activeBarcode.value = '';
-    latestMessage.value = '';
-    latestFailureType.value = null;
+    state = state.copyWith(
+      scanState: BarcodeScanState.scanning,
+      activeBarcode: '',
+      latestMessage: '',
+      latestFailureType: null,
+    );
   }
 
   Future<BarcodeScanOutcome?> processDetectedBarcode(String rawBarcode) async {
-    if (_isProcessing) return null;
+    if (state.isProcessing) return null;
     final normalized = _lookupService.normalizeBarcode(rawBarcode);
     if (normalized == null) return null;
     if (_isDuplicateWithinCooldown(normalized)) return null;
 
-    _isProcessing = true;
-    state.value = BarcodeScanState.lookupLoading;
-    activeBarcode.value = normalized;
-    latestMessage.value = '';
-    latestFailureType.value = null;
+    state = state.copyWith(
+      scanState: BarcodeScanState.lookupLoading,
+      activeBarcode: normalized,
+      latestMessage: '',
+      latestFailureType: null,
+    );
     _lastProcessedBarcode = normalized;
     _lastProcessedAt = DateTime.now();
 
     try {
       final result = await _lookupService.lookupProductByBarcode(normalized);
-      latestResult.value = result;
-      state.value = BarcodeScanState.lookupSuccess;
+      state = state.copyWith(
+        latestResult: result,
+        scanState: BarcodeScanState.lookupSuccess,
+      );
       return BarcodeScanOutcome.success(result);
     } on BarcodeLookupException catch (e) {
-      latestFailureType.value = e.type;
-      latestMessage.value = e.message ?? _fallbackMessage(e.type);
+      final message = e.message ?? _fallbackMessage(e.type);
       if (e.type == BarcodeLookupFailureType.notFound) {
-        state.value = BarcodeScanState.lookupNotFound;
+        state = state.copyWith(
+          latestFailureType: e.type,
+          latestMessage: message,
+          scanState: BarcodeScanState.lookupNotFound,
+        );
         return BarcodeScanOutcome.notFound(normalized);
       }
-      state.value = BarcodeScanState.lookupError;
+      state = state.copyWith(
+        latestFailureType: e.type,
+        latestMessage: message,
+        scanState: BarcodeScanState.lookupError,
+      );
       return BarcodeScanOutcome.error(
         failureType: e.type,
-        message: latestMessage.value,
+        message: message,
         barcode: normalized,
       );
-    } finally {
-      _isProcessing = false;
     }
   }
 
@@ -149,3 +192,5 @@ class BarcodeScanController extends GetxController {
     }
   }
 }
+
+final barcodeScanProvider = NotifierProvider<BarcodeScanNotifier, BarcodeScanUiState>(BarcodeScanNotifier.new);

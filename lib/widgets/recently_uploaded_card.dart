@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:diplomka/controller/dashboard_controller.dart';
+import 'package:diplomka/state/dashboard_notifier.dart';
 import 'package:diplomka/model/exercise.dart';
 import 'package:diplomka/model/meal.dart';
 import 'package:diplomka/utils/media_storage.dart';
@@ -11,12 +11,11 @@ import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 import 'package:diplomka/widgets/animated_add_button.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/services/session_manager.dart';
 
-class RecentlyUploadedCard extends StatelessWidget {
+class RecentlyUploadedCard extends ConsumerWidget {
   final List<Meal> meals;
   final List<Exercise> exercises;
   final DateTime selectedDate;
@@ -41,30 +40,28 @@ class RecentlyUploadedCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final now = DateTime.now();
     final isToday = selectedDate.year == now.year && selectedDate.month == now.month && selectedDate.day == now.day;
     final title = isToday
         ? tr(LocaleKeys.dashboard_meals_title_today)
         : tr(LocaleKeys.dashboard_meals_title, namedArgs: {'date': DateFormat('MMM d').format(selectedDate).replaceFirstMapped(RegExp(r'^.'), (m) => m[0]!.toUpperCase())});
+    final sectionHeaderPaddingEnabled = ref.watch(sessionProvider).sectionHeaderPaddingEnabled;
+    final isMealLoading = ref.watch(mealAnalysisProvider).newMealAnalyzeLoading;
+    final isExerciseLoading = ref.watch(activityAnalysisProvider).newExerciseAnalyzeLoading;
+    final mealSection = _buildMealSection(context, isMealLoading: isMealLoading);
+    final exerciseSection = _buildExerciseSection(context, isExerciseLoading: isExerciseLoading, hasMealSectionContent: mealSection.isNotEmpty, sectionHeaderPaddingEnabled: sectionHeaderPaddingEnabled);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
+          padding: EdgeInsets.symmetric(horizontal: sectionHeaderPaddingEnabled ? AppSpacing.s : 0),
           child: Text(
             title,
             style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700),
           ),
         ),
-        Obx(() {
-          final isMealLoading = DashboardController.to.newMealAnalyzeLoading.value;
-          final isExerciseLoading = DashboardController.to.newExerciseAnalyzeLoading.value;
-          final mealSection = _buildMealSection(context, isMealLoading: isMealLoading);
-          final exerciseSection = _buildExerciseSection(context, isExerciseLoading: isExerciseLoading, hasMealSectionContent: mealSection.isNotEmpty);
-
-          return Column(children: [...mealSection, ...exerciseSection]);
-        }),
+        Column(children: [...mealSection, ...exerciseSection]),
       ],
     );
   }
@@ -79,7 +76,7 @@ class RecentlyUploadedCard extends StatelessWidget {
     ];
   }
 
-  List<Widget> _buildExerciseSection(BuildContext context, {required bool isExerciseLoading, required bool hasMealSectionContent}) {
+  List<Widget> _buildExerciseSection(BuildContext context, {required bool isExerciseLoading, required bool hasMealSectionContent, required bool sectionHeaderPaddingEnabled}) {
     final hasExercises = exercises.isNotEmpty;
     if (!hasExercises && !isExerciseLoading) {
       return const <Widget>[];
@@ -87,7 +84,7 @@ class RecentlyUploadedCard extends StatelessWidget {
 
     return <Widget>[
       if (hasMealSectionContent) const SizedBox(height: AppSpacing.m),
-      _buildExerciseHeader(),
+      _buildExerciseHeader(sectionHeaderPaddingEnabled: sectionHeaderPaddingEnabled),
       const SizedBox(height: AppSpacing.xxs),
       // Loading card on top so the currently analyzing exercise is most visible.
       if (isExerciseLoading) ...<Widget>[const AnalyzingMealCard(analysisType: AnalysisCardType.exercise), if (hasExercises) const SizedBox(height: AppSpacing.xs)],
@@ -95,7 +92,7 @@ class RecentlyUploadedCard extends StatelessWidget {
     ];
   }
 
-  Widget _buildExerciseHeader() {
+  Widget _buildExerciseHeader({required bool sectionHeaderPaddingEnabled}) {
     final now = DateTime.now();
     final isToday = selectedDate.year == now.year && selectedDate.month == now.month && selectedDate.day == now.day;
     final title = isToday
@@ -103,7 +100,7 @@ class RecentlyUploadedCard extends StatelessWidget {
         : tr(LocaleKeys.dashboard_exercises_title, namedArgs: {'date': DateFormat('MMM d').format(selectedDate).replaceFirstMapped(RegExp(r'^.'), (m) => m[0]!.toUpperCase())});
     return Padding(
       key: exerciseSectionKey,
-      padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
+      padding: EdgeInsets.symmetric(horizontal: sectionHeaderPaddingEnabled ? AppSpacing.s : 0),
       child: Align(
         alignment: Alignment.centerLeft,
         child: Text(title, style: AppTextStyles.title.copyWith(fontWeight: FontWeight.w700)),

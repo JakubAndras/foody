@@ -1,67 +1,121 @@
 import 'dart:io' show Platform;
 
 import 'package:easy_localization/easy_localization.dart';
-import 'package:get/get.dart';
-
-import 'package:diplomka/app_theme.dart';
-import 'package:diplomka/controller/dashboard_controller.dart';
-import 'package:diplomka/generated/locale_keys.g.dart';
-import 'package:diplomka/screens/dashboard_screen.dart';
-import 'package:diplomka/screens/progress_screen.dart';
-import 'package:diplomka/screens/profile/profile_screen.dart';
-import 'package:diplomka/widgets/dashboard_calendar_sheet.dart';
-import 'package:diplomka/widgets/streak_dialog.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
-import 'package:diplomka/screens/scan/scan_onboarding_screen.dart';
-import 'package:diplomka/controller/base_controller.dart';
-import 'package:diplomka/screens/scan/scan_camera_screen.dart';
-import 'package:diplomka/widgets/quick_action_sheet.dart';
-import 'package:diplomka/screens/logs/voice_log_screen.dart';
-import 'package:diplomka/screens/logs/exercise_log_home_screen.dart';
-import 'package:diplomka/screens/log_meal/select_meal_screen.dart';
-import 'package:diplomka/services/session_manager.dart';
 
-class MainScreen extends GetView<MainScreenController> {
+import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/state/dashboard_notifier.dart';
+import 'package:diplomka/generated/locale_keys.g.dart';
+import 'package:diplomka/screens/dashboard_screen.dart';
+import 'package:diplomka/screens/log_meal/select_meal_screen.dart';
+import 'package:diplomka/screens/logs/exercise_log_home_screen.dart';
+import 'package:diplomka/screens/logs/voice_log_screen.dart';
+import 'package:diplomka/screens/profile/profile_screen.dart';
+import 'package:diplomka/screens/progress_screen.dart';
+import 'package:diplomka/screens/scan/scan_camera_screen.dart';
+import 'package:diplomka/screens/scan/scan_onboarding_screen.dart';
+import 'package:diplomka/services/session_manager.dart';
+import 'package:diplomka/widgets/dashboard_calendar_sheet.dart';
+import 'package:diplomka/widgets/quick_action_sheet.dart';
+import 'package:diplomka/widgets/streak_dialog.dart';
+
+/// Stav hlavní obrazovky (3-tab shell).
+///
+/// Vedle aktivního tabu drží notifier i dvě reaktivní pole, která dřívější
+/// controller vystavoval napříč aplikací: `isCalendarSheetVisible`
+/// (kalendářový sheet na dashboardu) a `scrollToEnergy` (trigger pro
+/// odscrollování na energetickou sekci na Progress tabu).
+@immutable
+class MainScreenState {
+  const MainScreenState({
+    this.selectedIndex = 0,
+    this.isCalendarSheetVisible = false,
+    this.scrollToEnergy = false,
+  });
+
+  /// Aktivní tab (0 = Dashboard, 1 = Progress, 2 = Profile).
+  final int selectedIndex;
+
+  /// Zda je právě otevřený kalendářový sheet na dashboardu.
+  final bool isCalendarSheetVisible;
+
+  /// Po přepnutí na Progress tab se má odscrollovat na energetickou sekci.
+  final bool scrollToEnergy;
+
+  MainScreenState copyWith({
+    int? selectedIndex,
+    bool? isCalendarSheetVisible,
+    bool? scrollToEnergy,
+  }) {
+    return MainScreenState(
+      selectedIndex: selectedIndex ?? this.selectedIndex,
+      isCalendarSheetVisible: isCalendarSheetVisible ?? this.isCalendarSheetVisible,
+      scrollToEnergy: scrollToEnergy ?? this.scrollToEnergy,
+    );
+  }
+}
+
+class MainScreenNotifier extends Notifier<MainScreenState> {
+  @override
+  MainScreenState build() => const MainScreenState();
+
+  void changeTab(int index) => state = state.copyWith(selectedIndex: index);
+
+  void showDashboardTab() => state = state.copyWith(selectedIndex: 0);
+
+  void showProgressTab() => state = state.copyWith(selectedIndex: 1);
+
+  /// Přepne na Progress tab a nastaví trigger pro odscrollování na energetickou sekci.
+  void showProgressTabAndScrollToEnergy() => state = state.copyWith(selectedIndex: 1, scrollToEnergy: true);
+
+  void setScrollToEnergy(bool value) => state = state.copyWith(scrollToEnergy: value);
+
+  void setCalendarSheetVisible(bool value) => state = state.copyWith(isCalendarSheetVisible: value);
+}
+
+final mainScreenProvider = NotifierProvider<MainScreenNotifier, MainScreenState>(MainScreenNotifier.new);
+
+/// Obsah jednotlivých tabů. Na Androidu drženy pohromadě přes `IndexedStack`.
+const List<Widget> _mainTabs = <Widget>[DashboardScreen(), ProgressScreen(), ProfileScreen()];
+
+class MainScreen extends ConsumerWidget {
   const MainScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedIndex = ref.watch(mainScreenProvider.select((s) => s.selectedIndex));
+    final isDashboard = selectedIndex == 0;
+    final appBarSpacing = AppSpacing.m + 1;
+    final appBarTop = defaultTargetPlatform == TargetPlatform.android ? AppSpacing.safeAreaTopAndroid : AppSpacing.safeAreaTop;
+
+    // On Android, keep all tabs mounted via IndexedStack to avoid expensive
+    // teardown/rebuild (Floor queries, LiquidGlass shader recompilation) that
+    // causes visible blank frames on slower devices. iOS handles the swap fine.
+    final body = Platform.isAndroid ? IndexedStack(index: selectedIndex, children: _mainTabs) : _mainTabs.elementAt(selectedIndex);
+
     return LiquidGlassScope(
       child: Scaffold(
         backgroundColor: Colors.transparent,
         extendBody: true,
         body: LiquidGlassBackground(
-          child: Obx(() {
-            final selectedIndex = controller._selectedIndex.value;
-            final isDashboard = selectedIndex == 0;
-            final appBarSpacing = AppSpacing.m + 1;
-            final appBarTop = defaultTargetPlatform == TargetPlatform.android ? AppSpacing.safeAreaTopAndroid : AppSpacing.safeAreaTop;
-
-            // On Android, keep all tabs mounted via IndexedStack to avoid expensive
-            // teardown/rebuild (Floor queries, LiquidGlass shader recompilation) that
-            // causes visible blank frames on slower devices. iOS handles the swap fine.
-            final body = Platform.isAndroid
-                ? IndexedStack(index: selectedIndex, children: controller.widgetOptions)
-                : controller.widgetOptions.elementAt(selectedIndex);
-
-            return Stack(
-              children: [
-                body,
-                if (isDashboard) ...[
-                  Positioned(left: appBarSpacing, top: appBarTop, child: const _DashboardStreakPill()),
-                  Positioned(right: appBarSpacing, top: appBarTop, child: const _DashboardCalendarPill()),
-                ],
+          child: Stack(
+            children: [
+              body,
+              if (isDashboard) ...[
+                Positioned(left: appBarSpacing, top: appBarTop, child: const _DashboardStreakPill()),
+                Positioned(right: appBarSpacing, top: appBarTop, child: const _DashboardCalendarPill()),
               ],
-            );
-          }),
+            ],
+          ),
         ),
         bottomNavigationBar: Builder(
           builder: (ctx) {
             final androidBottomPadding = Platform.isAndroid ? MediaQuery.of(ctx).viewPadding.bottom : 0.0;
-            return Obx(() => Column(
+            return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 _BorderedGlassBottomBar(
@@ -78,12 +132,12 @@ class MainScreen extends GetView<MainScreenController> {
                       GlassBottomBarTab(label: tr(LocaleKeys.nav_progress), icon: const Icon(CupertinoIcons.chart_bar), activeIcon: const Icon(CupertinoIcons.chart_bar_fill)),
                       GlassBottomBarTab(label: tr(LocaleKeys.nav_profile), icon: const Icon(CupertinoIcons.person), activeIcon: const Icon(CupertinoIcons.person_fill)),
                     ],
-                    selectedIndex: controller._selectedIndex.value,
-                    onTabSelected: controller._onItemTapped,
+                    selectedIndex: selectedIndex,
+                    onTabSelected: (index) => ref.read(mainScreenProvider.notifier).changeTab(index),
                     extraButton: GlassBottomBarExtraButton(
                       icon: const Icon(CupertinoIcons.add),
                       label: tr(LocaleKeys.nav_home),
-                      onTap: () => controller.showQuickActions(context),
+                      onTap: () => _showQuickActions(context, ref),
                       iconColor: AppColors.primary,
                       size: AppSizes.fabSize,
                     ),
@@ -91,7 +145,7 @@ class MainScreen extends GetView<MainScreenController> {
                 ),
                 if (androidBottomPadding > 0) Container(height: androidBottomPadding, color: AppColors.meshBase),
               ],
-            ));
+            );
           },
         ),
       ),
@@ -99,171 +153,134 @@ class MainScreen extends GetView<MainScreenController> {
   }
 }
 
-class MainScreenController extends BaseController {
-  static MainScreenController get to => Get.find();
-  final RxInt _selectedIndex = 0.obs;
-  final RxBool isCalendarSheetVisible = false.obs;
-
-  /// Set to true when navigating to Progress tab should also scroll to the energy section.
-  final RxBool scrollToEnergy = false.obs;
-
-  final List<Widget> widgetOptions = <Widget>[const DashboardScreen(), const ProgressScreen(), const ProfileScreen()];
-
-  void _onItemTapped(int index) {
-    _selectedIndex.value = index;
-  }
-
-  void showDashboardTab() {
-    _selectedIndex.value = 0;
-  }
-
-  void showProgressTab() {
-    _selectedIndex.value = 1;
-  }
-
-  /// Navigate to Progress tab and scroll to the Monthly Calendar / Weekly Energy section.
-  void showProgressTabAndScrollToEnergy() {
-    scrollToEnergy.value = true;
-    _selectedIndex.value = 1;
-  }
-
-  void showQuickActions(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      barrierColor: AppColors.overlayDark40,
-      isScrollControlled: false,
-      builder: (_) => QuickActionSheet(
-        onLogMeal: () {
-          Navigator.of(context).pop();
-          Get.to(() => const SelectMealScreen());
-        },
-        onBarcode: () {
-          Navigator.of(context).pop();
-          Get.to(() => const ScanCameraScreen(initialMode: ScanMode.barcode));
-        },
-        onVoiceLog: () {
-          Navigator.of(context).pop();
-          Get.to(() => const VoiceLogScreen());
-        },
-        onMealScan: () {
-          Navigator.of(context).pop();
-          if (SessionManager.to.scanOnboardingComplete.value) {
-            Get.to(() => const ScanCameraScreen());
-          } else {
-            Get.to(() => const ScanOnboardingScreen());
-          }
-        },
-        onExercise: () {
-          Navigator.of(context).pop();
-          Get.to(() => const ExerciseLogHomeScreen());
-        },
-      ),
-    );
-  }
-
-  @override
-  void onHidden() {
-    // TODO: implement onHidden
-  }
+/// Rychlé akce (dřívější `MainScreenController.showQuickActions`). Navigace patří
+/// do UI vrstvy, proto zůstává mimo notifier (viz konvence kontraktu).
+void _showQuickActions(BuildContext context, WidgetRef ref) {
+  showModalBottomSheet(
+    context: context,
+    backgroundColor: Colors.transparent,
+    elevation: 0,
+    barrierColor: AppColors.overlayDark40,
+    isScrollControlled: false,
+    builder: (_) => QuickActionSheet(
+      onLogMeal: () {
+        Navigator.of(context).pop();
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SelectMealScreen()));
+      },
+      onBarcode: () {
+        Navigator.of(context).pop();
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ScanCameraScreen(initialMode: ScanMode.barcode)));
+      },
+      onVoiceLog: () {
+        Navigator.of(context).pop();
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const VoiceLogScreen()));
+      },
+      onMealScan: () {
+        Navigator.of(context).pop();
+        if (ref.read(sessionProvider).scanOnboardingComplete) {
+          Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ScanCameraScreen()));
+        } else {
+          Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ScanOnboardingScreen()));
+        }
+      },
+      onExercise: () {
+        Navigator.of(context).pop();
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ExerciseLogHomeScreen()));
+      },
+    ),
+  );
 }
 
-class _DashboardStreakPill extends StatelessWidget {
+class _DashboardStreakPill extends ConsumerWidget {
   const _DashboardStreakPill();
 
   @override
-  Widget build(BuildContext context) {
-    return Obx(() {
-      final dc = DashboardController.to;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final daily = ref.watch(dailyRecordProvider);
 
-      if (dc.isLoadingStreak.value) {
-        return SizedBox(
-          width: AppSizes.streakPillMinWidthTripleDigit,
-          height: AppSizes.streakPillHeight,
-          child: const Center(
-            child: SizedBox(
-              width: AppSizes.iconSm,
-              height: AppSizes.iconSm,
-              child: CircularProgressIndicator(strokeWidth: AppSizes.borderThick, color: AppColors.orange),
-            ),
-          ),
-        );
-      }
-
-      Widget content;
-      if (dc.streakError.isNotEmpty) {
-        content = Icon(CupertinoIcons.exclamationmark_circle, color: AppColors.error, size: AppSizes.iconSm);
-      } else {
-        final streak = dc.streakInfo.value?.currentStreak ?? 0;
-        content = Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(CupertinoIcons.star, color: AppColors.textPrimary, size: 18),
-            const SizedBox(width: AppSpacing.xs),
-            Text(
-              '$streak',
-              style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w700),
-            ),
-          ],
-        );
-      }
-
-      return GlassButton.custom(
-        onTap: () => StreakSheet.show(context),
+    if (daily.isLoadingStreak) {
+      return SizedBox(
         width: AppSizes.streakPillMinWidthTripleDigit,
         height: AppSizes.streakPillHeight,
-        shape: const LiquidRoundedRectangle(borderRadius: AppRadii.pill),
-        useOwnLayer: true,
-        settings: AppGlass.standard,
-        quality: GlassQuality.premium,
-        interactionScale: 0.95,
-        child: Center(child: content),
-      );
-    });
-  }
-}
-
-class _DashboardCalendarPill extends StatelessWidget {
-  const _DashboardCalendarPill();
-
-  @override
-  Widget build(BuildContext context) {
-    return Obx(() {
-      final dc = DashboardController.to;
-      final date = dc.selectedDate.value;
-      final dayStr = date.day.toString();
-      final monthStr = date.month.toString().padLeft(2, '0');
-      final showYear = date.year != DateTime.now().year;
-      final label = showYear ? '$dayStr. $monthStr. ${date.year}' : '$dayStr. $monthStr';
-      final pillWidth = showYear ? 140.0 : 100.0;
-
-      return GlassButton.custom(
-        onTap: () {
-          DashboardCalendarSheet.show(context, selectedDate: dc.selectedDate.value, onDateSelected: (date) => DashboardController.to.updateDate(date));
-        },
-        width: pillWidth,
-        height: AppSizes.streakPillHeight,
-        shape: const LiquidRoundedRectangle(borderRadius: AppRadii.pill),
-        useOwnLayer: true,
-        settings: AppGlass.standard,
-        quality: GlassQuality.premium,
-        interactionScale: 0.95,
-        child: Center(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(CupertinoIcons.calendar, color: AppColors.textPrimary, size: 18),
-              const SizedBox(width: AppSpacing.xs),
-              Text(
-                label,
-                style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w700),
-              ),
-            ],
+        child: const Center(
+          child: SizedBox(
+            width: AppSizes.iconSm,
+            height: AppSizes.iconSm,
+            child: CircularProgressIndicator(strokeWidth: AppSizes.borderThick, color: AppColors.orange),
           ),
         ),
       );
-    });
+    }
+
+    Widget content;
+    if (daily.streakError.isNotEmpty) {
+      content = Icon(CupertinoIcons.exclamationmark_circle, color: AppColors.error, size: AppSizes.iconSm);
+    } else {
+      final streak = daily.streakInfo?.currentStreak ?? 0;
+      content = Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(CupertinoIcons.star, color: AppColors.textPrimary, size: 18),
+          const SizedBox(width: AppSpacing.xs),
+          Text(
+            '$streak',
+            style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w700),
+          ),
+        ],
+      );
+    }
+
+    return GlassButton.custom(
+      onTap: () => StreakSheet.show(context),
+      width: AppSizes.streakPillMinWidthTripleDigit,
+      height: AppSizes.streakPillHeight,
+      shape: const LiquidRoundedRectangle(borderRadius: AppRadii.pill),
+      useOwnLayer: true,
+      settings: AppGlass.standard,
+      quality: GlassQuality.premium,
+      interactionScale: 0.95,
+      child: Center(child: content),
+    );
+  }
+}
+
+class _DashboardCalendarPill extends ConsumerWidget {
+  const _DashboardCalendarPill();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final date = ref.watch(dailyRecordProvider.select((s) => s.selectedDate));
+    final dayStr = date.day.toString();
+    final monthStr = date.month.toString().padLeft(2, '0');
+    final showYear = date.year != DateTime.now().year;
+    final label = showYear ? '$dayStr. $monthStr. ${date.year}' : '$dayStr. $monthStr';
+    final pillWidth = showYear ? 140.0 : 100.0;
+
+    return GlassButton.custom(
+      onTap: () {
+        DashboardCalendarSheet.show(context, selectedDate: date, onDateSelected: (selected) => ref.read(dailyRecordProvider.notifier).updateDate(selected));
+      },
+      width: pillWidth,
+      height: AppSizes.streakPillHeight,
+      shape: const LiquidRoundedRectangle(borderRadius: AppRadii.pill),
+      useOwnLayer: true,
+      settings: AppGlass.standard,
+      quality: GlassQuality.premium,
+      interactionScale: 0.95,
+      child: Center(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(CupertinoIcons.calendar, color: AppColors.textPrimary, size: 18),
+            const SizedBox(width: AppSpacing.xs),
+            Text(
+              label,
+              style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w700),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 

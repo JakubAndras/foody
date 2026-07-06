@@ -1,9 +1,7 @@
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:diplomka/model/recipe.dart';
 
-class RecipeService extends GetxService {
-  static RecipeService get to => Get.find();
-
+class RecipeService {
   // Mock database for recipes, imageUrls are placeholders
   final List<Recipe> _recipes = [
     const Recipe(
@@ -97,3 +95,5 @@ class RecipeService extends GetxService {
 
 // You can add other methods here later, e.g., for filtering, searching, etc.
 }
+
+final recipeServiceProvider = Provider<RecipeService>((ref) => RecipeService());

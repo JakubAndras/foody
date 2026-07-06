@@ -4,15 +4,17 @@ import 'package:diplomka/services/shared_preferences_manager.dart';
 import 'package:diplomka/services/tracking_reminder_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 const String motivationalSummaryChannelId = 'motivational_summary';
 
-class MotivationalSummaryService extends GetxService {
-  static MotivationalSummaryService get to => Get.find();
+class MotivationalSummaryService {
+  MotivationalSummaryService(this._ref);
 
-  FlutterLocalNotificationsPlugin get _plugin => TrackingReminderService.to.notificationsPlugin;
+  final Ref _ref;
+
+  FlutterLocalNotificationsPlugin get _plugin => _ref.read(trackingReminderServiceProvider).notificationsPlugin;
 
   Future<void> initialize() async {
     await _createAndroidChannel();
@@ -32,7 +34,7 @@ class MotivationalSummaryService extends GetxService {
   Future<List<MotivationalSummarySetting>> loadSettingsFromStorage() async {
     final List<MotivationalSummarySetting> settings = [];
     for (final type in MotivationalSummaryType.values) {
-      settings.add(await SharedPreferencesService.to.getMotivationalSummarySetting(type));
+      settings.add(await _ref.read(sharedPreferencesServiceProvider).getMotivationalSummarySetting(type));
     }
     return settings;
   }
@@ -60,7 +62,7 @@ class MotivationalSummaryService extends GetxService {
       iOS: const DarwinNotificationDetails(presentAlert: true, presentBadge: true, presentSound: true),
     );
 
-    final scheduleMode = await TrackingReminderService.to.resolveAndroidScheduleMode();
+    final scheduleMode = await _ref.read(trackingReminderServiceProvider).resolveAndroidScheduleMode();
     await _plugin.zonedSchedule(
       setting.type.notificationId,
       _safeTr(LocaleKeys.motivational_summary_notification_title),
@@ -132,3 +134,7 @@ class MotivationalSummaryService extends GetxService {
     return resolved;
   }
 }
+
+final motivationalSummaryServiceProvider = Provider<MotivationalSummaryService>(
+  (ref) => MotivationalSummaryService(ref),
+);

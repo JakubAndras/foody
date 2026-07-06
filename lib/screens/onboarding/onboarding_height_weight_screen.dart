@@ -1,5 +1,5 @@
 import 'package:diplomka/app_theme.dart';
-import 'package:diplomka/controller/weight_entry_controller.dart';
+import 'package:diplomka/state/weight_entry_notifier.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/user_profile.dart';
 import 'package:diplomka/model/weight_entry.dart';
@@ -8,9 +8,10 @@ import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
 import 'package:diplomka/widgets/picker_column.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
-class OnboardingHeightWeightScreen extends StatefulWidget {
+class OnboardingHeightWeightScreen extends ConsumerStatefulWidget {
   const OnboardingHeightWeightScreen({super.key, required this.onNext, required this.onBack, this.progress});
 
   final VoidCallback onNext;
@@ -18,10 +19,10 @@ class OnboardingHeightWeightScreen extends StatefulWidget {
   final double? progress;
 
   @override
-  State<OnboardingHeightWeightScreen> createState() => _OnboardingHeightWeightScreenState();
+  ConsumerState<OnboardingHeightWeightScreen> createState() => _OnboardingHeightWeightScreenState();
 }
 
-class _OnboardingHeightWeightScreenState extends State<OnboardingHeightWeightScreen> {
+class _OnboardingHeightWeightScreenState extends ConsumerState<OnboardingHeightWeightScreen> {
   bool _metric = true;
   late final List<int> _heightCmValues;
   late final List<int> _weightKgValues;
@@ -41,18 +42,19 @@ class _OnboardingHeightWeightScreenState extends State<OnboardingHeightWeightScr
   @override
   void initState() {
     super.initState();
-    _metric = SessionManager.to.prefersMetric.value;
+    final session = ref.read(sessionProvider);
+    _metric = session.prefersMetric;
     _heightCmValues = List.generate(120, (index) => 140 + index);
     _weightKgValues = List.generate(140, (index) => 40 + index);
     _heightInchValues = List.generate(_cmToInches(_heightCmValues.last) - _cmToInches(_heightCmValues.first) + 1, (index) => _cmToInches(_heightCmValues.first) + index);
     _weightLbValues = List.generate(_kgToPounds(_weightKgValues.last) - _kgToPounds(_weightKgValues.first) + 1, (index) => _kgToPounds(_weightKgValues.first) + index);
 
-    final double? storedHeight = SessionManager.to.heightCm.value;
-    final double? storedWeight = SessionManager.to.weightKg.value;
+    final double? storedHeight = session.heightCm;
+    final double? storedWeight = session.weightKg;
     if (storedHeight != null) {
       _selectedHeightCm = storedHeight.round();
     } else {
-      _selectedHeightCm = switch (SessionManager.to.sex.value) {
+      _selectedHeightCm = switch (session.sex) {
         ProfileSex.male => _maleDefaultHeightCm,
         ProfileSex.female => _femaleDefaultHeightCm,
         ProfileSex.other || null => _otherDefaultHeightCm,
@@ -61,7 +63,7 @@ class _OnboardingHeightWeightScreenState extends State<OnboardingHeightWeightScr
     if (storedWeight != null) {
       _selectedWeightKg = storedWeight.round();
     } else {
-      _selectedWeightKg = switch (SessionManager.to.sex.value) {
+      _selectedWeightKg = switch (session.sex) {
         ProfileSex.male => _maleDefaultWeightKg,
         ProfileSex.female => _femaleDefaultWeightKg,
         ProfileSex.other || null => _otherDefaultWeightKg,
@@ -126,10 +128,11 @@ class _OnboardingHeightWeightScreenState extends State<OnboardingHeightWeightScr
       bottom: OnboardingPrimaryButton(
         label: tr(LocaleKeys.common_continue_btn),
         onPressed: () async {
-          await SessionManager.to.setHeightCm(_selectedHeightCm.toDouble());
-          await SessionManager.to.setWeightKg(_selectedWeightKg.toDouble());
-          await SessionManager.to.setPrefersMetric(_metric);
-          await WeightEntryController.to.saveEntry(WeightEntry(date: DateTime.now(), weight: _selectedWeightKg.toDouble()));
+          final sessionNotifier = ref.read(sessionProvider.notifier);
+          await sessionNotifier.setHeightCm(_selectedHeightCm.toDouble());
+          await sessionNotifier.setWeightKg(_selectedWeightKg.toDouble());
+          await sessionNotifier.setPrefersMetric(_metric);
+          await ref.read(weightEntriesProvider.notifier).saveEntry(WeightEntry(date: DateTime.now(), weight: _selectedWeightKg.toDouble()));
           widget.onNext();
         },
       ),

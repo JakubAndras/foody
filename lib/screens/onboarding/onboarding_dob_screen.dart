@@ -5,8 +5,9 @@ import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class OnboardingDobScreen extends StatefulWidget {
+class OnboardingDobScreen extends ConsumerStatefulWidget {
   const OnboardingDobScreen({super.key, required this.onNext, required this.onBack, this.progress});
 
   final VoidCallback onNext;
@@ -14,10 +15,10 @@ class OnboardingDobScreen extends StatefulWidget {
   final double? progress;
 
   @override
-  State<OnboardingDobScreen> createState() => _OnboardingDobScreenState();
+  ConsumerState<OnboardingDobScreen> createState() => _OnboardingDobScreenState();
 }
 
-class _OnboardingDobScreenState extends State<OnboardingDobScreen> {
+class _OnboardingDobScreenState extends ConsumerState<OnboardingDobScreen> {
   static final DateTime _defaultDate = DateTime(2000, 1, 15);
   static final DateTime _minimumDate = DateTime(DateTime.now().year - 100);
   static final DateTime _maximumDate = DateTime.now();
@@ -27,7 +28,7 @@ class _OnboardingDobScreenState extends State<OnboardingDobScreen> {
   @override
   void initState() {
     super.initState();
-    _selectedDate = SessionManager.to.dateOfBirth.value ?? _defaultDate;
+    _selectedDate = ref.read(sessionProvider).dateOfBirth ?? _defaultDate;
   }
 
   @override
@@ -40,7 +41,7 @@ class _OnboardingDobScreenState extends State<OnboardingDobScreen> {
       bottom: OnboardingPrimaryButton(
         label: tr(LocaleKeys.common_continue_btn),
         onPressed: () async {
-          await SessionManager.to.setDateOfBirth(_selectedDate);
+          await ref.read(sessionProvider.notifier).setDateOfBirth(_selectedDate);
           widget.onNext();
         },
       ),

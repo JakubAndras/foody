@@ -8,20 +8,20 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
 
-class ScanOnboardingScreen extends StatefulWidget {
+class ScanOnboardingScreen extends ConsumerStatefulWidget {
   const ScanOnboardingScreen({super.key, this.forceShow = false});
 
   final bool forceShow;
 
   @override
-  State<ScanOnboardingScreen> createState() => _ScanOnboardingScreenState();
+  ConsumerState<ScanOnboardingScreen> createState() => _ScanOnboardingScreenState();
 }
 
-class _ScanOnboardingScreenState extends State<ScanOnboardingScreen> {
+class _ScanOnboardingScreenState extends ConsumerState<ScanOnboardingScreen> {
   final PageController _pageController = PageController();
   int _activeIndex = 0;
 
@@ -77,8 +77,8 @@ class _ScanOnboardingScreenState extends State<ScanOnboardingScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!widget.forceShow && SessionManager.to.scanOnboardingComplete.value) {
-        Get.off(() => const ScanCameraScreen());
+      if (!widget.forceShow && ref.read(sessionProvider).scanOnboardingComplete) {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const ScanCameraScreen()));
       }
     });
   }
@@ -91,7 +91,7 @@ class _ScanOnboardingScreenState extends State<ScanOnboardingScreen> {
 
   void _back() {
     if (_activeIndex == 0) {
-      Get.back();
+      Navigator.of(context).pop();
     } else {
       _pageController.previousPage(duration: const Duration(milliseconds: 250), curve: Curves.easeOutCubic);
     }
@@ -99,8 +99,8 @@ class _ScanOnboardingScreenState extends State<ScanOnboardingScreen> {
 
   void _next() {
     if (_activeIndex == _pages.length - 1) {
-      SessionManager.to.setScanOnboardingComplete(true);
-      Get.to(() => const ScanCameraScreen());
+      ref.read(sessionProvider.notifier).setScanOnboardingComplete(true);
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ScanCameraScreen()));
       return;
     }
     _pageController.nextPage(duration: const Duration(milliseconds: 250), curve: Curves.easeOutCubic);

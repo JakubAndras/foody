@@ -6,8 +6,9 @@ import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
 import 'package:diplomka/widgets/picker_column.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class OnboardingDesiredWeightScreen extends StatefulWidget {
+class OnboardingDesiredWeightScreen extends ConsumerStatefulWidget {
   const OnboardingDesiredWeightScreen({
     super.key,
     required this.onNext,
@@ -20,10 +21,10 @@ class OnboardingDesiredWeightScreen extends StatefulWidget {
   final double? progress;
 
   @override
-  State<OnboardingDesiredWeightScreen> createState() => _OnboardingDesiredWeightScreenState();
+  ConsumerState<OnboardingDesiredWeightScreen> createState() => _OnboardingDesiredWeightScreenState();
 }
 
-class _OnboardingDesiredWeightScreenState extends State<OnboardingDesiredWeightScreen> {
+class _OnboardingDesiredWeightScreenState extends ConsumerState<OnboardingDesiredWeightScreen> {
   static const int _absoluteMinKg = 40;
   static const int _absoluteMaxKg = 179;
 
@@ -39,9 +40,10 @@ class _OnboardingDesiredWeightScreenState extends State<OnboardingDesiredWeightS
   @override
   void initState() {
     super.initState();
-    _metric = SessionManager.to.prefersMetric.value;
-    final ProfileGoal? goal = SessionManager.to.goal.value;
-    final int currentKg = (SessionManager.to.weightKg.value ?? 80).round().clamp(_absoluteMinKg, _absoluteMaxKg);
+    final session = ref.read(sessionProvider);
+    _metric = session.prefersMetric;
+    final ProfileGoal? goal = session.goal;
+    final int currentKg = (session.weightKg ?? 80).round().clamp(_absoluteMinKg, _absoluteMaxKg);
 
     // Lose → values below current weight; Gain → values above current weight
     final int minKg = goal == ProfileGoal.gain ? currentKg : _absoluteMinKg;
@@ -79,7 +81,7 @@ class _OnboardingDesiredWeightScreenState extends State<OnboardingDesiredWeightS
       bottom: OnboardingPrimaryButton(
         label: tr(LocaleKeys.common_continue_btn),
         onPressed: () async {
-          await SessionManager.to.setGoalWeightKg(_selectedWeightKg.toDouble());
+          await ref.read(sessionProvider.notifier).setGoalWeightKg(_selectedWeightKg.toDouble());
           widget.onNext();
         },
       ),

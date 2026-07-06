@@ -1,6 +1,6 @@
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/utils/app_limits.dart';
-import 'package:diplomka/controller/day_record_controller.dart';
+import 'package:diplomka/state/day_record_notifier.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/ingredient.dart';
 import 'package:diplomka/model/ingredient_template.dart';
@@ -17,7 +17,7 @@ import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 class EditIngredientResult {
@@ -35,17 +35,17 @@ class EditIngredientResult {
   }
 }
 
-class EditIngredientScreen extends StatefulWidget {
+class EditIngredientScreen extends ConsumerStatefulWidget {
   final Ingredient ingredient;
   final bool allowDelete;
 
   const EditIngredientScreen({super.key, required this.ingredient, this.allowDelete = true});
 
   @override
-  State<EditIngredientScreen> createState() => _EditIngredientScreenState();
+  ConsumerState<EditIngredientScreen> createState() => _EditIngredientScreenState();
 }
 
-class _EditIngredientScreenState extends State<EditIngredientScreen> {
+class _EditIngredientScreenState extends ConsumerState<EditIngredientScreen> {
   late final TextEditingController _nameController;
   late final TextEditingController _caloriesController;
   late final TextEditingController _proteinsController;
@@ -97,7 +97,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
     _carbs = _baseIngredient.carbs;
     _fats = _baseIngredient.fats;
     _weight = _baseIngredient.weight;
-    _autoSync = SessionManager.to.autoAdjustMacrosEnabled.value;
+    _autoSync = ref.read(sessionProvider).autoAdjustMacrosEnabled;
     _isFavorite = _baseIngredient.isFavorite;
 
     if (_calories > 0) {
@@ -438,11 +438,18 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
     setState(() => _isFavorite = next);
 
     final normalized = IngredientTemplate.normalize(_baseIngredient.name);
-    final template = IngredientTemplateRepository.to.allTemplates.firstWhereOrNull((t) => t.normalizedName == normalized);
-    if (template != null) IngredientTemplateRepository.to.setFavorite(template, next);
+    final templates = ref.read(ingredientTemplatesProvider).valueOrNull ?? const [];
+    IngredientTemplate? template;
+    for (final t in templates) {
+      if (t.normalizedName == normalized) {
+        template = t;
+        break;
+      }
+    }
+    if (template != null) ref.read(ingredientTemplatesProvider.notifier).setFavorite(template, next);
 
     if (_baseIngredient.id != null && _baseIngredient.mealId != null) {
-      DayRecordController.to.setIngredientFavorite(ingredient: _baseIngredient, isFavorite: next);
+      ref.read(dayRecordProvider.notifier).setIngredientFavorite(ingredient: _baseIngredient, isFavorite: next);
     }
 
     if (next) {
@@ -451,7 +458,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
         message: tr(LocaleKeys.common_added_to_favorites),
         icon: CupertinoIcons.heart_fill,
         primaryLabel: tr(LocaleKeys.common_view),
-        onPrimary: () => Get.to(() => const SelectMealScreen(initialTab: SelectMealTab.favorites)),
+        onPrimary: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SelectMealScreen(initialTab: SelectMealTab.favorites))),
         duration: const Duration(seconds: 3),
       );
     }
@@ -466,8 +473,8 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
       secondaryLabel: tr(LocaleKeys.common_cancel),
       isDestructive: true,
     );
-    if (confirmed != true) return;
-    Get.back(result: EditIngredientResult.deleted());
+    if (confirmed != true || !mounted) return;
+    Navigator.of(context).pop(EditIngredientResult.deleted());
   }
 
   void _handleDone() {
@@ -476,7 +483,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
       setState(() => _showValidationError = true);
       return;
     }
-    Get.back(result: EditIngredientResult.updated(updated));
+    Navigator.of(context).pop(EditIngredientResult.updated(updated));
   }
 
   @override
@@ -516,7 +523,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
                     const SizedBox(height: AppSpacing.xs),
                     // Name field
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
+                      padding: EdgeInsets.symmetric(horizontal: ref.watch(sessionProvider).sectionHeaderPaddingEnabled ? AppSpacing.s : 0),
                       child: TextField(
                         controller: _nameController,
                         style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w700, color: AppColors.textPrimary),
@@ -576,7 +583,7 @@ class _EditIngredientScreenState extends State<EditIngredientScreen> {
                     ),
                     const SizedBox(height: AppSpacing.xxs),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
+                      padding: EdgeInsets.symmetric(horizontal: ref.watch(sessionProvider).sectionHeaderPaddingEnabled ? AppSpacing.s : 0),
                       child: GlassToggleRow(
                         title: tr(LocaleKeys.preferences_auto_adjust),
                         subtitle: tr(LocaleKeys.preferences_auto_adjust_desc),

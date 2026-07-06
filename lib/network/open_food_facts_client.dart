@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart' as dio_package;
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class OffProductDto {
@@ -60,9 +60,7 @@ class OffLookupResponse {
   final OffProductDto? product;
 }
 
-class OpenFoodFactsClient extends GetxService {
-  static OpenFoodFactsClient get to => Get.find();
-
+class OpenFoodFactsClient {
   static const String _contactEmail = 'jakub.s.andras@gmail.com';
   bool _hasUserAgentHeader = false;
 
@@ -150,3 +148,5 @@ class OpenFoodFactsClientException implements Exception {
     return '$message Cause: $cause';
   }
 }
+
+final openFoodFactsClientProvider = Provider<OpenFoodFactsClient>((ref) => OpenFoodFactsClient());

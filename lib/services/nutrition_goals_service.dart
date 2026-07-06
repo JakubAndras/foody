@@ -1,31 +1,24 @@
 import 'dart:async';
 
-import 'package:diplomka/controller/day_record_controller.dart';
+import 'package:diplomka/state/day_record_notifier.dart';
 import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/model/nutrition_goals.dart';
 import 'package:diplomka/services/day_record_repository.dart';
 import 'package:diplomka/services/selected_date_service.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class NutritionGoalsService extends GetxService {
-  static NutritionGoalsService get to {
-    if (Get.isRegistered<NutritionGoalsService>()) {
-      return Get.find<NutritionGoalsService>();
-    }
-    return Get.put(NutritionGoalsService(), permanent: true);
-  }
-
-  final RxMap<DateTime, NutritionGoals> goalsByDate = <DateTime, NutritionGoals>{}.obs;
-
+/// Cache nutričních cílů podle data.
+/// Stav = mapa normalizovaných dat na `NutritionGoals` (`goalsByDate`).
+class NutritionGoalsNotifier extends Notifier<Map<DateTime, NutritionGoals>> {
   @override
-  void onInit() {
-    super.onInit();
-    unawaited(refreshForDate(SelectedDateService.to.selectedDate.value));
+  Map<DateTime, NutritionGoals> build() {
+    unawaited(refreshForDate(ref.read(selectedDateProvider)));
+    return <DateTime, NutritionGoals>{};
   }
 
   NutritionGoals goalsForDate(DateTime date, {DayRecord? fallbackRecord}) {
     final normalizedDate = _normalize(date);
-    final cached = goalsByDate[normalizedDate];
+    final cached = state[normalizedDate];
     if (cached != null) {
       return cached;
     }
@@ -43,12 +36,12 @@ class NutritionGoalsService extends GetxService {
 
   Future<void> refreshForDate(DateTime date) async {
     final normalizedDate = _normalize(date);
-    final dayRecord = await DayRecordController.to.getDayRecord(normalizedDate);
+    final dayRecord = await ref.read(dayRecordProvider.notifier).getDayRecord(normalizedDate);
     if (dayRecord == null) {
-      goalsByDate.remove(normalizedDate);
+      _removeDate(normalizedDate);
       return;
     }
-    goalsByDate[normalizedDate] = NutritionGoals.fromDayRecord(dayRecord);
+    state = {...state, normalizedDate: NutritionGoals.fromDayRecord(dayRecord)};
   }
 
   void syncFromDayRecord({
@@ -57,10 +50,10 @@ class NutritionGoalsService extends GetxService {
   }) {
     final normalizedDate = _normalize(date);
     if (dayRecord == null) {
-      goalsByDate.remove(normalizedDate);
+      _removeDate(normalizedDate);
       return;
     }
-    goalsByDate[normalizedDate] = NutritionGoals.fromDayRecord(dayRecord);
+    state = {...state, normalizedDate: NutritionGoals.fromDayRecord(dayRecord)};
   }
 
   Future<void> saveGoalsEffectiveFromDate({
@@ -68,7 +61,7 @@ class NutritionGoalsService extends GetxService {
     required NutritionGoals goals,
   }) async {
     final normalizedEffectiveDate = _normalize(effectiveDate);
-    final records = await DayRecordController.to.getAllDayRecords();
+    final records = await ref.read(dayRecordProvider.notifier).getAllDayRecords();
 
     final futureOrTodayRecords = records.where((record) {
       final recordDate = _normalize(record.date);
@@ -79,23 +72,35 @@ class NutritionGoalsService extends GetxService {
       futureOrTodayRecords.add(DayRecord.initial(normalizedEffectiveDate));
     }
 
+    final updatedGoals = <DateTime, NutritionGoals>{};
     for (final record in futureOrTodayRecords) {
       final normalizedDate = _normalize(record.date);
       final updatedRecord = goals.applyToDayRecord(record).copyWith(date: normalizedDate);
-      await DayRecordRepository.to.upsertDayRecord(updatedRecord);
-      goalsByDate[normalizedDate] = goals;
+      await ref.read(dayRecordRepositoryProvider).upsertDayRecord(updatedRecord);
+      updatedGoals[normalizedDate] = goals;
     }
 
-    goalsByDate.removeWhere((date, _) => date.isAfter(normalizedEffectiveDate));
-    goalsByDate[normalizedEffectiveDate] = goals;
-    await DayRecordController.to.refreshDayRecords();
+    final next = {...state, ...updatedGoals};
+    next.removeWhere((date, _) => date.isAfter(normalizedEffectiveDate));
+    next[normalizedEffectiveDate] = goals;
+    state = next;
+
+    await ref.read(dayRecordProvider.notifier).refreshDayRecords();
+  }
+
+  void _removeDate(DateTime normalizedDate) {
+    if (!state.containsKey(normalizedDate)) {
+      return;
+    }
+    final next = {...state}..remove(normalizedDate);
+    state = next;
   }
 
   DateTime _normalize(DateTime date) => DateTime(date.year, date.month, date.day);
 
   NutritionGoals? _resolveGoalsFromKnownDayRecords(DateTime targetDate) {
     DayRecord? bestMatch;
-    for (final record in DayRecordController.to.dayRecords) {
+    for (final record in ref.read(dayRecordProvider).dayRecords) {
       final recordDate = _normalize(record.date);
       if (recordDate.isAfter(targetDate)) {
         continue;
@@ -110,3 +115,5 @@ class NutritionGoalsService extends GetxService {
     return NutritionGoals.fromDayRecord(bestMatch);
   }
 }
+
+final nutritionGoalsProvider = NotifierProvider<NutritionGoalsNotifier, Map<DateTime, NutritionGoals>>(NutritionGoalsNotifier.new);

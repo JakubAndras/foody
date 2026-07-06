@@ -12,11 +12,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:diplomka/app_theme.dart';
-import 'package:diplomka/controller/ask_ai_controller.dart';
+import 'package:diplomka/state/ask_ai_notifier.dart';
+import 'package:diplomka/state/language_settings_notifier.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/ask_ai_query_response.dart';
 import 'package:diplomka/screens/dashboard_screen.dart';
@@ -27,16 +28,15 @@ import 'package:diplomka/widgets/variable_blur_scroll_view.dart';
 import 'package:diplomka/widgets/mesh_gradient_background.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
-class AskAiScreen extends StatefulWidget {
+class AskAiScreen extends ConsumerStatefulWidget {
   const AskAiScreen({super.key});
 
   @override
-  State<AskAiScreen> createState() => _AskAiScreenState();
+  ConsumerState<AskAiScreen> createState() => _AskAiScreenState();
 }
 
-class _AskAiScreenState extends State<AskAiScreen> with SingleTickerProviderStateMixin {
+class _AskAiScreenState extends ConsumerState<AskAiScreen> with SingleTickerProviderStateMixin {
   final _textController = TextEditingController();
-  late final AskAiController _controller;
 
   // Voice state
   final VoiceTranscriptionService _voiceService = VoiceTranscriptionService();
@@ -52,7 +52,6 @@ class _AskAiScreenState extends State<AskAiScreen> with SingleTickerProviderStat
   @override
   void initState() {
     super.initState();
-    _controller = AskAiController.to;
     _pulseController = AnimationController(vsync: this, duration: const Duration(milliseconds: 900))..repeat(reverse: true);
     _pulseAnimation = Tween<double>(begin: 1, end: 1.11).animate(CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut));
     _refreshPermissionStatus();
@@ -116,9 +115,10 @@ class _AskAiScreenState extends State<AskAiScreen> with SingleTickerProviderStat
   }
 
   Future<void> _startListening() async {
-    if (_controller.isLoading.value) return;
+    if (ref.read(askAiProvider).result.isLoading) return;
     final appLocale = context.locale;
-    final preferredVoiceLanguageCode = LanguageSettingsService.to.resolveVoiceLogLanguageCode(appLanguageCode: appLocale.languageCode);
+    final preference = ref.read(languageSettingsProvider).voiceLogLanguagePreference;
+    final preferredVoiceLanguageCode = ref.read(languageSettingsServiceProvider).resolveVoiceLogLanguageCode(appLanguageCode: appLocale.languageCode, preference: preference);
 
     if (!_hasPermission) {
       final micStatus = await Permission.microphone.request();
@@ -194,7 +194,6 @@ class _AskAiScreenState extends State<AskAiScreen> with SingleTickerProviderStat
   }
 
   void _showVoiceLanguageSheet(BuildContext context) {
-    final service = LanguageSettingsService.to;
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.transparent,
@@ -242,17 +241,17 @@ class _AskAiScreenState extends State<AskAiScreen> with SingleTickerProviderStat
                       child: Text(tr(LocaleKeys.language_settings_voice_language_subtitle), style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary)),
                     ),
                     const SizedBox(height: AppSpacing.m),
-                    Obx(() {
-                      final current = service.voiceLogLanguagePreference.value;
+                    Consumer(builder: (context, ref, _) {
+                      final current = ref.watch(languageSettingsProvider).voiceLogLanguagePreference;
                       return Column(
                         children: [
                           _buildLanguageRow('🇺🇸', tr(LocaleKeys.language_settings_option_english), current == VoiceLogLanguagePreference.english, () async {
-                            await service.setVoiceLogLanguagePreference(VoiceLogLanguagePreference.english);
+                            await ref.read(languageSettingsProvider.notifier).setVoiceLogLanguagePreference(VoiceLogLanguagePreference.english);
                             if (sheetContext.mounted) Navigator.of(sheetContext).pop();
                           }),
                           Divider(height: AppSizes.dividerThin, color: AppColors.surfaceMuted),
                           _buildLanguageRow('🇨🇿', tr(LocaleKeys.language_settings_option_czech), current == VoiceLogLanguagePreference.czech, () async {
-                            await service.setVoiceLogLanguagePreference(VoiceLogLanguagePreference.czech);
+                            await ref.read(languageSettingsProvider.notifier).setVoiceLogLanguagePreference(VoiceLogLanguagePreference.czech);
                             if (sheetContext.mounted) Navigator.of(sheetContext).pop();
                           }),
                         ],
@@ -299,25 +298,19 @@ class _AskAiScreenState extends State<AskAiScreen> with SingleTickerProviderStat
     final query = _textController.text.trim();
     if (query.isEmpty) return;
 
-    final result = await _controller.submitQuery(query);
-    if (result == null && _controller.errorMessage.value != null) {
-      showSnackBar(
-        context: context,
-        message: tr(LocaleKeys.ask_ai_title),
-        subtitle: _controller.errorMessage.value!,
-        type: SnackBarType.error,
-      );
-    }
+    // Chyba se propaguje přes AsyncError ve stavu (viz ref.listen v build).
+    await ref.read(askAiProvider.notifier).submitQuery(query, languageCode: context.locale.languageCode);
   }
 
   void _clearResponse() {
-    _controller.clearResponse();
+    ref.read(askAiProvider.notifier).clearResponse();
     _textController.clear();
   }
 
   Future<void> _handleShare() async {
-    final response = _controller.response.value;
-    final query = _controller.lastQuery.value;
+    final askState = ref.read(askAiProvider);
+    final response = askState.result.valueOrNull;
+    final query = askState.lastQuery;
     if (response == null) return;
 
     final text = [
@@ -391,6 +384,20 @@ class _AskAiScreenState extends State<AskAiScreen> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
+    // Chybu ze stavu (AsyncError) zobrazíme jako snackbar při každém přechodu.
+    ref.listen<AskAiState>(askAiProvider, (previous, next) {
+      next.result.whenOrNull(
+        error: (error, _) {
+          showSnackBar(
+            context: context,
+            message: tr(LocaleKeys.ask_ai_title),
+            subtitle: error is String ? error : error.toString(),
+            type: SnackBarType.error,
+          );
+        },
+      );
+    });
+
     return LiquidGlassScope(
       child: Scaffold(
         backgroundColor: AppColors.meshBase,
@@ -404,9 +411,10 @@ class _AskAiScreenState extends State<AskAiScreen> with SingleTickerProviderStat
               fadeColor: AppColors.meshBase,
               backgroundWidget: const MeshGradientBackground(),
               padding: EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.mega + AppSpacing.xxl, AppSpacing.m, AppSpacing.xl + AppSpacing.mega + (Platform.isAndroid ? MediaQuery.of(context).padding.bottom : 0)),
-              child: Obx(() {
-                final response = _controller.response.value;
-                final loading = _controller.isLoading.value;
+              child: Consumer(builder: (context, ref, _) {
+                final askState = ref.watch(askAiProvider);
+                final response = askState.result.valueOrNull;
+                final loading = askState.result.isLoading;
 
                 if (response != null) {
                   return _buildResponseContent(response);
@@ -430,11 +438,11 @@ class _AskAiScreenState extends State<AskAiScreen> with SingleTickerProviderStat
               top: 0,
               left: AppSpacing.m,
               right: AppSpacing.m,
-              child: Obx(() {
-                final hasResponse = _controller.response.value != null;
+              child: Consumer(builder: (context, ref, _) {
+                final hasResponse = ref.watch(askAiProvider).result.valueOrNull != null;
                 return ProfileTopBar(
                   title: tr(LocaleKeys.ask_ai_title),
-                  onBack: () => Get.back(),
+                  onBack: () => Navigator.of(context).pop(),
                   actions: [
                     if (hasResponse)
                       CustomGlassIconButtonGroup(
@@ -455,8 +463,8 @@ class _AskAiScreenState extends State<AskAiScreen> with SingleTickerProviderStat
               }),
             ),
             // Bottom mic button
-            Obx(() {
-              final hasResponse = _controller.response.value != null;
+            Consumer(builder: (context, ref, _) {
+              final hasResponse = ref.watch(askAiProvider).result.valueOrNull != null;
               if (hasResponse) return const SizedBox.shrink();
               return Positioned(
                 // Android-only extra bottom padding to lift the mic above the
@@ -519,7 +527,7 @@ class _AskAiScreenState extends State<AskAiScreen> with SingleTickerProviderStat
             affectedGradient: response.summaryGradient,
             initialYear: response.primaryYear,
             initialMonth: response.primaryMonth,
-            onDayTap: (date) => Get.to(() => DashboardPreviewScreen(date: date)),
+            onDayTap: (date) => Navigator.of(context).push(MaterialPageRoute(builder: (_) => DashboardPreviewScreen(date: date))),
           ),
         ],
         const SizedBox(height: AppSpacing.m),

@@ -1,161 +1,62 @@
 import 'dart:io' show Platform;
 
-import 'package:diplomka/controller/dashboard_controller.dart';
-import 'package:diplomka/screens/main_screen.dart';
+import 'package:diplomka/state/dashboard_notifier.dart';
 import 'package:diplomka/screens/logs/exercise_detail_screen.dart';
+import 'package:diplomka/screens/logs/exercise_log_home_screen.dart';
+import 'package:diplomka/screens/logs/voice_log_screen.dart';
+import 'package:diplomka/screens/log_meal/select_meal_screen.dart';
 import 'package:diplomka/screens/meals/meal_detail_screen.dart';
-import 'package:diplomka/screens/profile/profile_widgets.dart';
+import 'package:diplomka/screens/scan/scan_camera_screen.dart';
+import 'package:diplomka/screens/scan/scan_onboarding_screen.dart';
 import 'package:diplomka/widgets/custom_glass_app_bar.dart';
+import 'package:diplomka/widgets/quick_action_sheet.dart';
 import 'package:diplomka/services/day_record_repository.dart';
 import 'package:diplomka/widgets/calories_card.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
-import 'package:get/get.dart';
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/widgets/date_selector.dart';
 import 'package:diplomka/widgets/macros_row.dart';
 import 'package:diplomka/widgets/recently_uploaded_card.dart';
-import 'package:diplomka/controller/base_controller.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/services/nutrition_goals_service.dart';
 import 'package:diplomka/widgets/variable_blur_scroll_view.dart';
 import 'package:diplomka/widgets/mesh_gradient_background.dart';
 
-class DashboardScreen extends GetView<_DashboardScreenController> {
+class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
 
   static const bool _useSegmentedDateRing = false;
 
   @override
-  Widget build(BuildContext context) {
-    return GetBuilder<_DashboardScreenController>(
-      init: _DashboardScreenController(),
-      builder: (_DashboardScreenController controller) {
-        final dashboardController = DashboardController.to;
-        return Scaffold(
-          backgroundColor: AppColors.meshBase,
-          body: SafeArea(
-            top: false,
-            bottom: false,
-            child: Obx(() {
-                final selectedDate = dashboardController.selectedDate.value;
-                final existingDayRecord = dashboardController.dayRecord.value;
-                final dayRecord = existingDayRecord ?? DayRecord.initial(selectedDate);
-                final nutritionGoals = NutritionGoalsService.to.goalsForDate(selectedDate, fallbackRecord: existingDayRecord);
-                final recordToShow = nutritionGoals.applyToDayRecord(dayRecord);
-                controller.maybeHandleScrollToTodayMealsRequest(dashboardController.scrollToTodayMealsRequestId.value);
-                controller.maybeHandleScrollToExercisesRequest(dashboardController.scrollToExercisesRequestId.value, currentMealsRequestId: dashboardController.scrollToTodayMealsRequestId.value);
-
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Builder(
-                        builder: (context) {
-                          final isAnalyzingMeal = dashboardController.newMealAnalyzeLoading.value;
-                          final hasLoadedRecord = dashboardController.dayRecord.value != null;
-
-                          if (!dashboardController.initialLoadComplete.value && dashboardController.isLoadingDayRecord.value && !hasLoadedRecord && !isAnalyzingMeal) {
-                            return const Center(child: CircularProgressIndicator());
-                          }
-                          if (dashboardController.dayRecordError.isNotEmpty) {
-                            return Center(child: Text(tr(LocaleKeys.dashboard_error_loading, namedArgs: {'error': dashboardController.dayRecordError.value})));
-                          }
-
-                          final bottomInset = Platform.isAndroid ? MediaQuery.of(context).padding.bottom : 0.0;
-                          return VariableBlurScrollView(
-                            topBlurSigma: 52,
-                            topBlurHeight: 0.1,
-                            backgroundColor: Colors.transparent,
-                            fadeColor: AppColors.meshBase,
-                            backgroundWidget: const MeshGradientBackground(),
-                            controller: controller.scrollController,
-                            padding: EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.xs, AppSpacing.m, AppSpacing.mega + 42 + bottomInset),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(height: Platform.isAndroid ? AppSpacing.huge * 2 - 20 : AppSpacing.huge * 2 - 12),
-                                DateSelector(
-                                  selectedDate: dashboardController.selectedDate.value,
-                                  useSegmentedRing: _useSegmentedDateRing,
-                                  onDateSelected: (date) {
-                                    dashboardController.updateDate(date);
-                                  },
-                                ),
-                                const SizedBox(height: AppSpacing.xxs),
-                                _caloriesTrackerWidget(recordToShow),
-                                const SizedBox(height: AppSpacing.m),
-                                RecentlyUploadedCard(
-                                  meals: recordToShow.meals,
-                                  exercises: recordToShow.exercises,
-                                  selectedDate: dashboardController.selectedDate.value,
-                                  exerciseSectionKey: controller.exerciseSectionKey,
-                                  onMealTap: (meal) async {
-                                    await Get.to(() => MealDetailScreen(meal: meal));
-                                    dashboardController.refresh();
-                                  },
-                                  onExerciseTap: (exercise) async {
-                                    await Get.to(() => ExerciseDetailScreen(exercise: exercise));
-                                    dashboardController.refresh();
-                                  },
-                                  onEmptyStateTap: () => MainScreenController.to.showQuickActions(context),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                );
-              }),
-            ),
-        );
-      },
-    );
-  }
-
-  Widget _caloriesTrackerWidget(DayRecord recordToShow) {
-    final rollover = DashboardController.to.rolloverAmount.value;
-    Widget caloriesTrackerWidget;
-    if (SessionManager.to.caloriesPlanEnabled.value) {
-      caloriesTrackerWidget = Column(
-        children: [
-          CaloriesCard(dayRecord: recordToShow, rolloverAmount: rollover),
-          const SizedBox(height: AppSpacing.s),
-          MacrosRow(dayRecord: recordToShow),
-        ],
-      );
-    } else {
-      caloriesTrackerWidget = Column(
-        children: [
-          CaloriesCard(dayRecord: recordToShow, caloriesPlanEnabled: false, rolloverAmount: rollover),
-          const SizedBox(height: AppSpacing.s),
-          MacrosRow(dayRecord: recordToShow, caloriesPlanEnabled: false),
-        ],
-      );
-    }
-    return caloriesTrackerWidget;
-  }
+  ConsumerState<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenController extends BaseController {
+class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   final ScrollController scrollController = ScrollController();
   final GlobalKey exerciseSectionKey = GlobalKey();
   int _lastHandledScrollRequestId = 0;
   int _lastHandledExerciseScrollRequestId = 0;
   bool _isDisposed = false;
 
-  void maybeHandleScrollToTodayMealsRequest(int requestId) {
+  @override
+  void dispose() {
+    _isDisposed = true;
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  void _maybeHandleScrollToTodayMealsRequest(int requestId) {
     if (requestId <= _lastHandledScrollRequestId) return;
     _lastHandledScrollRequestId = requestId;
     _scheduleScrollToTop(attempt: 0);
   }
 
-  void maybeHandleScrollToExercisesRequest(int requestId, {int currentMealsRequestId = 0}) {
+  void _maybeHandleScrollToExercisesRequest(int requestId, {int currentMealsRequestId = 0}) {
     if (requestId <= _lastHandledExerciseScrollRequestId) return;
     _lastHandledExerciseScrollRequestId = requestId;
     if (currentMealsRequestId > _lastHandledScrollRequestId) _lastHandledScrollRequestId = currentMealsRequestId;
@@ -193,32 +94,174 @@ class _DashboardScreenController extends BaseController {
     });
   }
 
-  @override
-  void onClose() {
-    _isDisposed = true;
-    scrollController.dispose();
-    super.onClose();
+  /// Rychlé akce (dřívější `MainScreenController.showQuickActions`).
+  void _showQuickActions() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      barrierColor: AppColors.overlayDark40,
+      isScrollControlled: false,
+      builder: (_) => QuickActionSheet(
+        onLogMeal: () {
+          Navigator.of(context).pop();
+          Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SelectMealScreen()));
+        },
+        onBarcode: () {
+          Navigator.of(context).pop();
+          Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ScanCameraScreen(initialMode: ScanMode.barcode)));
+        },
+        onVoiceLog: () {
+          Navigator.of(context).pop();
+          Navigator.of(context).push(MaterialPageRoute(builder: (_) => const VoiceLogScreen()));
+        },
+        onMealScan: () {
+          Navigator.of(context).pop();
+          if (ref.read(sessionProvider).scanOnboardingComplete) {
+            Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ScanCameraScreen()));
+          } else {
+            Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ScanOnboardingScreen()));
+          }
+        },
+        onExercise: () {
+          Navigator.of(context).pop();
+          Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ExerciseLogHomeScreen()));
+        },
+      ),
+    );
   }
 
   @override
-  void onHidden() {
-    // TODO: implement onHidden
+  Widget build(BuildContext context) {
+    // Scroll-request signály z analýzy cvičení/jídla řídí posun seznamu.
+    ref.listen<ActivityAnalysisState>(activityAnalysisProvider, (previous, next) {
+      if (previous?.scrollToTodayMealsRequestId != next.scrollToTodayMealsRequestId) {
+        _maybeHandleScrollToTodayMealsRequest(next.scrollToTodayMealsRequestId);
+      }
+      if (previous?.scrollToExercisesRequestId != next.scrollToExercisesRequestId) {
+        _maybeHandleScrollToExercisesRequest(next.scrollToExercisesRequestId, currentMealsRequestId: next.scrollToTodayMealsRequestId);
+      }
+    });
+
+    final daily = ref.watch(dailyRecordProvider);
+    // Přebuduj při změně cílů výživy pro vybraný den.
+    ref.watch(nutritionGoalsProvider);
+
+    final selectedDate = daily.selectedDate;
+    final existingDayRecord = daily.dayRecord;
+    final dayRecord = existingDayRecord ?? DayRecord.initial(selectedDate);
+    final nutritionGoals = ref.read(nutritionGoalsProvider.notifier).goalsForDate(selectedDate, fallbackRecord: existingDayRecord);
+    final recordToShow = nutritionGoals.applyToDayRecord(dayRecord);
+
+    final isAnalyzingMeal = ref.watch(mealAnalysisProvider.select((s) => s.newMealAnalyzeLoading));
+    final hasLoadedRecord = existingDayRecord != null;
+
+    return Scaffold(
+      backgroundColor: AppColors.meshBase,
+      body: SafeArea(
+        top: false,
+        bottom: false,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Builder(
+                builder: (context) {
+                  if (!daily.initialLoadComplete && daily.isLoadingDayRecord && !hasLoadedRecord && !isAnalyzingMeal) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (daily.dayRecordError.isNotEmpty) {
+                    return Center(child: Text(tr(LocaleKeys.dashboard_error_loading, namedArgs: {'error': daily.dayRecordError})));
+                  }
+
+                  final bottomInset = Platform.isAndroid ? MediaQuery.of(context).padding.bottom : 0.0;
+                  return VariableBlurScrollView(
+                    topBlurSigma: 52,
+                    topBlurHeight: 0.1,
+                    backgroundColor: Colors.transparent,
+                    fadeColor: AppColors.meshBase,
+                    backgroundWidget: const MeshGradientBackground(),
+                    controller: scrollController,
+                    padding: EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.xs, AppSpacing.m, AppSpacing.mega + 42 + bottomInset),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: Platform.isAndroid ? AppSpacing.huge * 2 - 20 : AppSpacing.huge * 2 - 12),
+                        DateSelector(
+                          selectedDate: selectedDate,
+                          useSegmentedRing: DashboardScreen._useSegmentedDateRing,
+                          onDateSelected: (date) {
+                            ref.read(dailyRecordProvider.notifier).updateDate(date);
+                          },
+                        ),
+                        const SizedBox(height: AppSpacing.xxs),
+                        _caloriesTrackerWidget(recordToShow),
+                        const SizedBox(height: AppSpacing.m),
+                        RecentlyUploadedCard(
+                          meals: recordToShow.meals,
+                          exercises: recordToShow.exercises,
+                          selectedDate: selectedDate,
+                          exerciseSectionKey: exerciseSectionKey,
+                          onMealTap: (meal) async {
+                            await Navigator.of(context).push(MaterialPageRoute(builder: (_) => MealDetailScreen(meal: meal)));
+                            ref.read(dailyRecordProvider.notifier).refresh();
+                          },
+                          onExerciseTap: (exercise) async {
+                            await Navigator.of(context).push(MaterialPageRoute(builder: (_) => ExerciseDetailScreen(exercise: exercise)));
+                            ref.read(dailyRecordProvider.notifier).refresh();
+                          },
+                          onEmptyStateTap: _showQuickActions,
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _caloriesTrackerWidget(DayRecord recordToShow) {
+    final rollover = ref.watch(dailyRecordProvider.select((s) => s.rolloverAmount));
+    final caloriesPlanEnabled = ref.watch(sessionProvider.select((s) => s.caloriesPlanEnabled));
+    Widget caloriesTrackerWidget;
+    if (caloriesPlanEnabled) {
+      caloriesTrackerWidget = Column(
+        children: [
+          CaloriesCard(dayRecord: recordToShow, rolloverAmount: rollover),
+          const SizedBox(height: AppSpacing.s),
+          MacrosRow(dayRecord: recordToShow),
+        ],
+      );
+    } else {
+      caloriesTrackerWidget = Column(
+        children: [
+          CaloriesCard(dayRecord: recordToShow, caloriesPlanEnabled: false, rolloverAmount: rollover),
+          const SizedBox(height: AppSpacing.s),
+          MacrosRow(dayRecord: recordToShow, caloriesPlanEnabled: false),
+        ],
+      );
+    }
+    return caloriesTrackerWidget;
   }
 }
 
 /// Standalone read-only dashboard for a specific date.
 /// Used by Ask AI to preview an affected day.
 /// No streak widget, no date picker, no bottom tab bar.
-class DashboardPreviewScreen extends StatefulWidget {
+class DashboardPreviewScreen extends ConsumerStatefulWidget {
   const DashboardPreviewScreen({super.key, required this.date});
 
   final DateTime date;
 
   @override
-  State<DashboardPreviewScreen> createState() => _DashboardPreviewScreenState();
+  ConsumerState<DashboardPreviewScreen> createState() => _DashboardPreviewScreenState();
 }
 
-class _DashboardPreviewScreenState extends State<DashboardPreviewScreen> {
+class _DashboardPreviewScreenState extends ConsumerState<DashboardPreviewScreen> {
   DayRecord? _dayRecord;
   bool _isLoading = true;
 
@@ -229,7 +272,7 @@ class _DashboardPreviewScreenState extends State<DashboardPreviewScreen> {
   }
 
   Future<void> _loadRecord() async {
-    final record = await DayRecordRepository.to.getDayRecord(widget.date);
+    final record = await ref.read(dayRecordRepositoryProvider).getDayRecord(widget.date);
     if (mounted) {
       setState(() {
         _dayRecord = record;
@@ -241,7 +284,8 @@ class _DashboardPreviewScreenState extends State<DashboardPreviewScreen> {
   @override
   Widget build(BuildContext context) {
     final dayRecord = _dayRecord ?? DayRecord.initial(widget.date);
-    final nutritionGoals = NutritionGoalsService.to.goalsForDate(widget.date, fallbackRecord: _dayRecord);
+    ref.watch(nutritionGoalsProvider);
+    final nutritionGoals = ref.read(nutritionGoalsProvider.notifier).goalsForDate(widget.date, fallbackRecord: _dayRecord);
     final recordToShow = nutritionGoals.applyToDayRecord(dayRecord);
     final dateLabel = DateFormat.yMMMd().format(widget.date);
 
@@ -276,7 +320,7 @@ class _DashboardPreviewScreenState extends State<DashboardPreviewScreen> {
                             meals: recordToShow.meals,
                             exercises: recordToShow.exercises,
                             selectedDate: widget.date,
-                            onMealTap: (meal) => Get.to(() => MealDetailScreen(meal: meal, isPreview: true)),
+                            onMealTap: (meal) => Navigator.of(context).push(MaterialPageRoute(builder: (_) => MealDetailScreen(meal: meal, isPreview: true))),
                           ),
                           const SizedBox(height: AppSpacing.huge),
                         ],
@@ -314,7 +358,7 @@ class _DashboardPreviewScreenState extends State<DashboardPreviewScreen> {
                         bottom: false,
                         child: CustomGlassAppBar(
                           title: dateLabel,
-                          onBack: () => Get.back(),
+                          onBack: () => Navigator.of(context).pop(),
                         ),
                       ),
                     ),
@@ -326,8 +370,8 @@ class _DashboardPreviewScreenState extends State<DashboardPreviewScreen> {
   }
 
   Widget _buildCaloriesTracker(DayRecord recordToShow) {
-    final planEnabled = SessionManager.to.caloriesPlanEnabled.value;
-    final rollover = DashboardController.to.rolloverAmount.value;
+    final planEnabled = ref.watch(sessionProvider.select((s) => s.caloriesPlanEnabled));
+    final rollover = ref.watch(dailyRecordProvider.select((s) => s.rolloverAmount));
     return Column(
       children: [
         CaloriesCard(dayRecord: recordToShow, caloriesPlanEnabled: planEnabled, rolloverAmount: rollover),

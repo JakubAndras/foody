@@ -12,12 +12,11 @@ import 'package:diplomka/model/exercise.dart';
 import 'package:diplomka/model/ingredient.dart';
 import 'package:diplomka/model/meal.dart';
 import 'package:diplomka/model/nutrition_goals.dart';
+import 'package:diplomka/di/providers.dart';
 import 'package:diplomka/utils/media_storage.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DayRecordRepository extends GetxService {
-  static DayRecordRepository get to => Get.find();
-
+class DayRecordRepository {
   DayRecordRepository({required AppDatabase database}) : _database = database;
 
   final AppDatabase _database;
@@ -474,3 +473,7 @@ class DayRecordRepository extends GetxService {
     return DateTime(date.year, date.month, date.day);
   }
 }
+
+final dayRecordRepositoryProvider = Provider<DayRecordRepository>(
+  (ref) => DayRecordRepository(database: ref.watch(databaseProvider)),
+);

@@ -8,8 +8,9 @@ import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DashboardCalendarSheet extends StatefulWidget {
+class DashboardCalendarSheet extends ConsumerStatefulWidget {
   const DashboardCalendarSheet({super.key, required this.selectedDate, required this.onDateSelected, this.selectOnPickerScroll = true});
 
   final DateTime selectedDate;
@@ -17,7 +18,8 @@ class DashboardCalendarSheet extends StatefulWidget {
   final bool selectOnPickerScroll;
 
   static void show(BuildContext context, {required DateTime selectedDate, required ValueChanged<DateTime> onDateSelected}) {
-    MainScreenController.to.isCalendarSheetVisible.value = true;
+    final container = ProviderScope.containerOf(context, listen: false);
+    container.read(mainScreenProvider.notifier).setCalendarSheetVisible(true);
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -26,15 +28,15 @@ class DashboardCalendarSheet extends StatefulWidget {
       isScrollControlled: true,
       builder: (sheetContext) => DashboardCalendarSheet(selectedDate: selectedDate, onDateSelected: onDateSelected),
     ).whenComplete(() {
-      MainScreenController.to.isCalendarSheetVisible.value = false;
+      container.read(mainScreenProvider.notifier).setCalendarSheetVisible(false);
     });
   }
 
   @override
-  State<DashboardCalendarSheet> createState() => _DashboardCalendarSheetState();
+  ConsumerState<DashboardCalendarSheet> createState() => _DashboardCalendarSheetState();
 }
 
-class _DashboardCalendarSheetState extends State<DashboardCalendarSheet> {
+class _DashboardCalendarSheetState extends ConsumerState<DashboardCalendarSheet> {
   late DateTime _displayedMonth;
   late DateTime _today;
   late DateTime _selectedDate;

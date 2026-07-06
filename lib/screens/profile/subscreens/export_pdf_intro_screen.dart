@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
 
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
@@ -23,13 +22,13 @@ class ExportPdfIntroScreen extends StatelessWidget {
           label: tr(LocaleKeys.common_next),
           height: AppSizes.buttonHeight,
           radius: AppRadii.pill,
-          onPressed: () => Get.to(() => const ExportPdfDateRangeScreen()),
+          onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ExportPdfDateRangeScreen())),
         ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ProfileTopBar(title: tr(LocaleKeys.export_intro_title), onBack: () => Get.back()),
+          ProfileTopBar(title: tr(LocaleKeys.export_intro_title), onBack: () => Navigator.of(context).pop()),
           const SizedBox(height: AppSpacing.m),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),

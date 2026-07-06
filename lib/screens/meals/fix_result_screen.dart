@@ -8,6 +8,7 @@ import 'package:diplomka/model/meal.dart';
 import 'package:diplomka/model/meal_entry_source.dart';
 import 'package:diplomka/services/ai_feature/ai_service_manager.dart';
 // RESEARCH-ONLY: end
+import 'package:diplomka/state/language_settings_notifier.dart';
 import 'package:diplomka/model/language_settings.dart';
 import 'package:diplomka/screens/logs/voice_widgets.dart';
 import 'package:diplomka/screens/profile/ask_ai/ask_ai_widgets.dart';
@@ -25,11 +26,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class FixResultScreen extends StatefulWidget {
+class FixResultScreen extends ConsumerStatefulWidget {
   final bool showSyncCards;
   final Meal? baseMeal;
   final DateTime? selectedDate;
@@ -38,10 +39,10 @@ class FixResultScreen extends StatefulWidget {
   const FixResultScreen({super.key, this.showSyncCards = false, this.baseMeal, this.selectedDate, this.isNewMeal = false});
 
   @override
-  State<FixResultScreen> createState() => _FixResultScreenState();
+  ConsumerState<FixResultScreen> createState() => _FixResultScreenState();
 }
 
-class _FixResultScreenState extends State<FixResultScreen> with SingleTickerProviderStateMixin {
+class _FixResultScreenState extends ConsumerState<FixResultScreen> with SingleTickerProviderStateMixin {
   final TextEditingController _controller = TextEditingController();
   bool _isSubmitting = false;
 
@@ -127,7 +128,7 @@ class _FixResultScreenState extends State<FixResultScreen> with SingleTickerProv
   Future<void> _startListening() async {
     if (_isSubmitting) return;
     final appLocale = context.locale;
-    final preferredVoiceLanguageCode = LanguageSettingsService.to.resolveVoiceLogLanguageCode(appLanguageCode: appLocale.languageCode);
+    final preferredVoiceLanguageCode = ref.read(languageSettingsServiceProvider).resolveVoiceLogLanguageCode(appLanguageCode: appLocale.languageCode, preference: ref.read(languageSettingsProvider).voiceLogLanguagePreference);
 
     if (!_hasPermission) {
       final micStatus = await Permission.microphone.request();
@@ -210,7 +211,6 @@ class _FixResultScreenState extends State<FixResultScreen> with SingleTickerProv
   }
 
   void _showVoiceLanguageSheet(BuildContext context) {
-    final service = LanguageSettingsService.to;
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.transparent,
@@ -258,17 +258,18 @@ class _FixResultScreenState extends State<FixResultScreen> with SingleTickerProv
                       child: Text(tr(LocaleKeys.language_settings_voice_language_subtitle), style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary)),
                     ),
                     const SizedBox(height: AppSpacing.m),
-                    Obx(() {
-                      final current = service.voiceLogLanguagePreference.value;
+                    Consumer(builder: (context, ref, _) {
+                      final current = ref.watch(languageSettingsProvider).voiceLogLanguagePreference;
+                      final notifier = ref.read(languageSettingsProvider.notifier);
                       return Column(
                         children: [
                           _buildLanguageRow('🇺🇸', tr(LocaleKeys.language_settings_option_english), current == VoiceLogLanguagePreference.english, () async {
-                            await service.setVoiceLogLanguagePreference(VoiceLogLanguagePreference.english);
+                            await notifier.setVoiceLogLanguagePreference(VoiceLogLanguagePreference.english);
                             if (sheetContext.mounted) Navigator.of(sheetContext).pop();
                           }),
                           Divider(height: AppSizes.dividerThin, color: AppColors.surfaceMuted),
                           _buildLanguageRow('🇨🇿', tr(LocaleKeys.language_settings_option_czech), current == VoiceLogLanguagePreference.czech, () async {
-                            await service.setVoiceLogLanguagePreference(VoiceLogLanguagePreference.czech);
+                            await notifier.setVoiceLogLanguagePreference(VoiceLogLanguagePreference.czech);
                             if (sheetContext.mounted) Navigator.of(sheetContext).pop();
                           }),
                         ],
@@ -369,7 +370,7 @@ class _FixResultScreenState extends State<FixResultScreen> with SingleTickerProv
     final photoFile = MediaStorage.existingMealPhotoFile(photoPath);
     final imageFiles = photoFile == null ? null : [photoFile];
     // RESEARCH-ONLY: modality routed to AiAttempt log
-    final result = await AiPipelineService.to.analyzeMeal(
+    final result = await ref.read(aiPipelineServiceProvider).analyzeMeal(
       imageFiles: imageFiles,
       description: text,
       modality: MealEntrySource.fixWithAiRerun.code,
@@ -391,8 +392,8 @@ class _FixResultScreenState extends State<FixResultScreen> with SingleTickerProv
     final baseMeal = widget.baseMeal;
     // RESEARCH-ONLY: provider/model/source resolution is research-only.
     // When stripping telemetry, drop the four extra copyWith args below.
-    final providerCode = AiServiceManager.to.currentProviderCode;
-    final modelCode = AiServiceManager.to.currentModelCode;
+    final providerCode = ref.read(aiServiceManagerProvider.notifier).currentProviderCode;
+    final modelCode = ref.read(aiServiceManagerProvider.notifier).currentModelCode;
     final isRerun = !widget.isNewMeal && baseMeal?.id != null;
     final resolvedSource = isRerun ? MealEntrySource.fixWithAiRerun.code : (baseMeal?.inputSource ?? MealEntrySource.textAi.code);
     final updatedMeal = analyzedMeal.copyWith(
@@ -407,7 +408,7 @@ class _FixResultScreenState extends State<FixResultScreen> with SingleTickerProv
       aiModel: modelCode,
     );
 
-    Get.back(result: updatedMeal);
+    Navigator.of(context).pop(updatedMeal);
   }
 
   // ── Build ──

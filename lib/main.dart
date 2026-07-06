@@ -1,13 +1,17 @@
-import 'package:diplomka/services/session_manager.dart';
+import 'package:diplomka/database/app_database.dart';
+import 'package:diplomka/database/migrations.dart';
+import 'package:diplomka/di/providers.dart';
 import 'package:diplomka/services/home_widget/widget_sync_service.dart';
 import 'package:diplomka/services/language_settings_service.dart';
+import 'package:diplomka/services/session_manager.dart';
+import 'package:diplomka/utils/media_storage.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 import 'app.dart';
-import 'locator.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,18 +20,30 @@ Future<void> main() async {
   try {
     await dotenv.load(fileName: '.env');
   } catch (_) {}
-  await setupServices();
-  await SessionManager.to.onAppInit();
-  await LanguageSettingsService.to.load();
-  await WidgetSyncService.to.initialize();
+
+  await MediaStorage.initialize();
+
+  // Databáze se staví před UI a injektuje se do grafu providerů přes override.
+  final db = await $FloorAppDatabase.databaseBuilder(AppDatabase.databaseName).addMigrations(appMigrations).build();
+
+  rootContainer = ProviderContainer(
+    overrides: [databaseProvider.overrideWithValue(db)],
+  );
+
+  await rootContainer.read(sessionProvider.notifier).onAppInit();
+  await rootContainer.read(languageSettingsServiceProvider).load();
+  await rootContainer.read(widgetSyncServiceProvider).initialize();
 
   runApp(
-    EasyLocalization(
-      supportedLocales: InitUtils.supportedLocales,
-      path: InitUtils.localizationPath,
-      fallbackLocale: InitUtils.supportedLocales.first,
-      useFallbackTranslations: true,
-      child: App(),
+    UncontrolledProviderScope(
+      container: rootContainer,
+      child: EasyLocalization(
+        supportedLocales: InitUtils.supportedLocales,
+        path: InitUtils.localizationPath,
+        fallbackLocale: InitUtils.supportedLocales.first,
+        useFallbackTranslations: true,
+        child: const App(),
+      ),
     ),
   );
 }

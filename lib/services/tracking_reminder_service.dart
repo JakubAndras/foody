@@ -1,22 +1,29 @@
 import 'dart:io';
 
+import 'package:diplomka/state/dashboard_notifier.dart';
+import 'package:diplomka/di/providers.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
-import 'package:diplomka/controller/dashboard_controller.dart';
 import 'package:diplomka/model/tracking_reminder_setting.dart';
+import 'package:diplomka/navigation.dart';
 import 'package:diplomka/screens/main_screen.dart';
 import 'package:diplomka/services/shared_preferences_manager.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/data/latest_all.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
 
 const String trackingRemindersChannelId = 'tracking_reminders';
 
-class TrackingReminderService extends GetxService {
-  static TrackingReminderService get to => Get.find();
+/// Plánování a rušení lokálních tracking notifikací.
+class TrackingReminderService {
+  TrackingReminderService(this._ref);
+
+  final Ref _ref;
+
+  SharedPreferencesService get _prefs => _ref.read(sharedPreferencesServiceProvider);
 
   final FlutterLocalNotificationsPlugin notificationsPlugin = FlutterLocalNotificationsPlugin();
   bool _initialized = false;
@@ -137,7 +144,7 @@ class TrackingReminderService extends GetxService {
   Future<List<TrackingReminderSetting>> loadSettingsFromStorage() async {
     final List<TrackingReminderSetting> settings = [];
     for (final type in TrackingReminderType.values) {
-      settings.add(await SharedPreferencesService.to.getTrackingReminderSetting(type));
+      settings.add(await _prefs.getTrackingReminderSetting(type));
     }
     return settings;
   }
@@ -234,25 +241,31 @@ class TrackingReminderService extends GetxService {
     return resolved;
   }
 
+  /// Callback po tapnutí na notifikaci. Běží mimo widget tree (bez `BuildContext`),
+  /// proto naviguje přes globální `navigatorKey` a čte providery z root `rootContainer`.
   static void _onNotificationTap(NotificationResponse response) {
     final payload = response.payload ?? '';
     print('[Notifications] Tap received: payload=$payload, type=${response.notificationResponseType}');
 
     try {
-      // Pop any pushed routes back to MainScreen so the tab switch is visible
-      if (Get.currentRoute != '/') {
-        Get.until((route) => route.isFirst);
-      }
+      // Pop any pushed routes back to the root (MainScreen) so the tab switch is visible.
+      navigatorKey.currentState?.popUntil((route) => route.isFirst);
 
       if (payload.startsWith('motivational_')) {
-        MainScreenController.to.showProgressTabAndScrollToEnergy();
+        // Progress tab (index 1). TODO(riverpod): scroll-to-energy signál
+        // (dřívější MainScreenController.scrollToEnergy) nemá v kontraktu ekvivalent.
+        rootContainer.read(mainScreenProvider.notifier).changeTab(1);
       } else {
-        // Tracking reminders → Dashboard on today's date
-        MainScreenController.to.showDashboardTab();
-        DashboardController.to.updateDate(DateTime.now());
+        // Tracking reminders → Dashboard (index 0) na dnešní datum.
+        rootContainer.read(mainScreenProvider.notifier).changeTab(0);
+        rootContainer.read(dailyRecordProvider.notifier).updateDate(DateTime.now());
       }
     } catch (e) {
       print('[Notifications] Error handling tap: $e');
     }
   }
 }
+
+final trackingReminderServiceProvider = Provider<TrackingReminderService>(
+  (ref) => TrackingReminderService(ref),
+);

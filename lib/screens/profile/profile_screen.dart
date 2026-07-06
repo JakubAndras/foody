@@ -2,18 +2,17 @@ import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/widgets/sheet_drag_handle.dart';
 import 'package:diplomka/widgets/sheet_top_bar.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
-import 'package:diplomka/controller/dashboard_controller.dart';
+import 'package:diplomka/state/dashboard_notifier.dart';
 import 'package:diplomka/model/day_record.dart';
-import 'package:diplomka/screens/profile/subscreens/confirm_username_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/personal_details_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/preferences_screen.dart';
-import 'package:diplomka/controller/language_settings_controller.dart';
+import 'package:diplomka/state/language_settings_notifier.dart';
 import 'package:diplomka/model/language_settings.dart';
 import 'package:diplomka/screens/profile/subscreens/edit_nutrition_goals_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/health_integration_screen.dart';
@@ -23,8 +22,6 @@ import 'package:diplomka/screens/profile/subscreens/tracking_reminders_screen.da
 import 'package:diplomka/screens/profile/subscreens/export_pdf_intro_screen.dart';
 import 'package:diplomka/screens/profile/ask_ai/ask_ai_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/faq_screen.dart';
-import 'package:diplomka/screens/profile/subscreens/glass_test_screen.dart';
-import 'package:diplomka/screens/onboarding/onboarding_flow_screen.dart';
 import 'package:diplomka/screens/scan/scan_camera_screen.dart';
 import 'package:diplomka/screens/scan/scan_onboarding_screen.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
@@ -34,11 +31,12 @@ import 'package:diplomka/widgets/variable_blur_scroll_view.dart';
 import 'package:diplomka/widgets/progress_ring.dart';
 import 'package:diplomka/widgets/mesh_gradient_background.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final sectionHeaderPaddingEnabled = ref.watch(sessionProvider).sectionHeaderPaddingEnabled;
     return Scaffold(
       backgroundColor: AppColors.meshBase,
       body: SafeArea(
@@ -63,52 +61,85 @@ class ProfileScreen extends StatelessWidget {
               // const _ProfileHeaderCard(),
               // const SizedBox(height: AppSpacing.l),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
+                padding: EdgeInsets.symmetric(horizontal: sectionHeaderPaddingEnabled ? AppSpacing.s : 0),
                 child: ProfileSectionHeader(title: tr(LocaleKeys.profile_account)),
               ),
               const SizedBox(height: AppSpacing.s),
               _ProfileGroupCard(
                 children: [
-                  _ProfileActionRow(title: tr(LocaleKeys.profile_personal_details), icon: CupertinoIcons.person, onTap: () => Get.to(() => const PersonalDetailsScreen())),
-                  _ProfileActionRow(title: tr(LocaleKeys.profile_preferences), icon: CupertinoIcons.gear, onTap: () => Get.to(() => const PreferencesScreen())),
-                  _ProfileActionRow(title: tr(LocaleKeys.profile_language), icon: CupertinoIcons.globe, showDivider: false, onTap: () => _showLanguageSheet(context)),
+                  _ProfileActionRow(
+                    title: tr(LocaleKeys.profile_personal_details),
+                    icon: CupertinoIcons.person,
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PersonalDetailsScreen())),
+                  ),
+                  _ProfileActionRow(
+                    title: tr(LocaleKeys.profile_preferences),
+                    icon: CupertinoIcons.gear,
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PreferencesScreen())),
+                  ),
+                  _ProfileActionRow(title: tr(LocaleKeys.profile_language), icon: CupertinoIcons.globe, showDivider: false, onTap: () => _showLanguageSheet(context, ref)),
                 ],
               ),
               const SizedBox(height: AppSpacing.l),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
+                padding: EdgeInsets.symmetric(horizontal: sectionHeaderPaddingEnabled ? AppSpacing.s : 0),
                 child: ProfileSectionHeader(title: tr(LocaleKeys.profile_goals_tracking)),
               ),
               const SizedBox(height: AppSpacing.s),
               _ProfileGroupCard(
                 children: [
-                  _ProfileActionRow(title: tr(LocaleKeys.nutrition_goals_title), icon: CupertinoIcons.location, onTap: () => Get.to(() => const EditNutritionGoalsScreen())),
-                  _ProfileActionRow(title: tr(LocaleKeys.profile_tracking_reminders), icon: CupertinoIcons.bell, onTap: () => Get.to(() => const TrackingRemindersScreen())),
-                  _ProfileActionRow(title: tr(LocaleKeys.profile_motivational_summary), icon: CupertinoIcons.star, onTap: () => Get.to(() => const MotivationalSummaryScreen())),
+                  _ProfileActionRow(
+                    title: tr(LocaleKeys.nutrition_goals_title),
+                    icon: CupertinoIcons.location,
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const EditNutritionGoalsScreen())),
+                  ),
+                  _ProfileActionRow(
+                    title: tr(LocaleKeys.profile_tracking_reminders),
+                    icon: CupertinoIcons.bell,
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const TrackingRemindersScreen())),
+                  ),
+                  _ProfileActionRow(
+                    title: tr(LocaleKeys.profile_motivational_summary),
+                    icon: CupertinoIcons.star,
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MotivationalSummaryScreen())),
+                  ),
                   _ProfileActionRow(
                     title: Platform.isIOS ? tr(LocaleKeys.health_apple_health) : tr(LocaleKeys.health_health_connect),
                     icon: CupertinoIcons.heart,
-                    onTap: () => Get.to(() => const HealthIntegrationScreen()),
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const HealthIntegrationScreen())),
                   ),
                   _ProfileActionRow(
                     title: tr(LocaleKeys.profile_ring_colors),
                     icon: CupertinoIcons.circle,
                     showDivider: false,
-                    onTap: () => Get.to(() => const RingColorsExplainedScreen()),
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const RingColorsExplainedScreen())),
                   ),
                 ],
               ),
               const SizedBox(height: AppSpacing.l),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
+                padding: EdgeInsets.symmetric(horizontal: sectionHeaderPaddingEnabled ? AppSpacing.s : 0),
                 child: ProfileSectionHeader(title: tr(LocaleKeys.profile_progress_data)),
               ),
               const SizedBox(height: AppSpacing.s),
               _ProfileGroupCard(
                 children: [
-                  _ProfileActionRow(title: tr(LocaleKeys.profile_export_summary), icon: CupertinoIcons.share, onTap: () => Get.to(() => const ExportPdfIntroScreen())),
-                  _ProfileActionRow(title: tr(LocaleKeys.profile_ask_ai), icon: CupertinoIcons.sparkles, onTap: () => Get.to(() => const AskAiScreen())),
-                  _ProfileActionRow(title: tr(LocaleKeys.profile_faq), icon: CupertinoIcons.question_circle, showDivider: false, onTap: () => Get.to(() => const FaqScreen())),
+                  _ProfileActionRow(
+                    title: tr(LocaleKeys.profile_export_summary),
+                    icon: CupertinoIcons.share,
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ExportPdfIntroScreen())),
+                  ),
+                  _ProfileActionRow(
+                    title: tr(LocaleKeys.profile_ask_ai),
+                    icon: CupertinoIcons.sparkles,
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AskAiScreen())),
+                  ),
+                  _ProfileActionRow(
+                    title: tr(LocaleKeys.profile_faq),
+                    icon: CupertinoIcons.question_circle,
+                    showDivider: false,
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const FaqScreen())),
+                  ),
                 ],
               ),
               // TODO: Test section — hidden, re-enable for development
@@ -120,10 +151,10 @@ class ProfileScreen extends StatelessWidget {
               // const SizedBox(height: AppSpacing.s),
               // _ProfileGroupCard(
               //   children: [
-              //     _ProfileActionRow(title: 'Glass Test', icon: CupertinoIcons.circle_filled, onTap: () => Get.to(() => const GlassTestScreen())),
-              //     _ProfileActionRow(title: 'Liquid Glass Widgets Test', icon: CupertinoIcons.sparkles, onTap: () => Get.to(() => const LiquidGlassWidgetsTestScreen())),
-              //     _ProfileActionRow(title: 'Test Onboarding', icon: CupertinoIcons.play_circle, onTap: () => Get.to(() => const OnboardingFlowScreen())),
-              //     _ProfileActionRow(title: 'Test Scanning Onboarding', icon: CupertinoIcons.viewfinder, showDivider: false, onTap: () => Get.to(() => const ScanOnboardingScreen(forceShow: true))),
+              //     _ProfileActionRow(title: 'Glass Test', icon: CupertinoIcons.circle_filled, onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const GlassTestScreen()))),
+              //     _ProfileActionRow(title: 'Liquid Glass Widgets Test', icon: CupertinoIcons.sparkles, onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const LiquidGlassWidgetsTestScreen()))),
+              //     _ProfileActionRow(title: 'Test Onboarding', icon: CupertinoIcons.play_circle, onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const OnboardingFlowScreen()))),
+              //     _ProfileActionRow(title: 'Test Scanning Onboarding', icon: CupertinoIcons.viewfinder, showDivider: false, onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ScanOnboardingScreen(forceShow: true)))),
               //   ],
               // ),
               // TODO: Account Actions section — hidden for now, will be needed later
@@ -150,7 +181,7 @@ class ProfileScreen extends StatelessWidget {
               // ),
               const SizedBox(height: AppSpacing.s),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
+                padding: EdgeInsets.symmetric(horizontal: sectionHeaderPaddingEnabled ? AppSpacing.s : 0),
                 child: Center(
                   child: Text(tr(LocaleKeys.profile_version, namedArgs: {'version': '0.0.0'}), style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary)),
                 ),
@@ -163,9 +194,8 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  void _showLanguageSheet(BuildContext context) {
-    final controller = LanguageSettingsController.to;
-    controller.initializeFromContext(context);
+  void _showLanguageSheet(BuildContext context, WidgetRef ref) {
+    ref.read(languageSettingsProvider.notifier).initializeFromContext(context);
 
     showModalBottomSheet<void>(
       context: context,
@@ -183,47 +213,47 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: AppSpacing.s),
               SheetTopBar(title: tr(LocaleKeys.language_settings_title), onClose: () => Navigator.of(sheetContext).pop()),
               const SizedBox(height: AppSpacing.m),
-              Obx(() {
-                final current = controller.appLanguage.value;
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
-                  child: Column(
-                    children: [
-                      _LanguageRow(
-                        flag: '🇺🇸',
-                        label: tr(LocaleKeys.language_settings_option_english),
-                        selected: current == AppLanguage.english,
-                        onTap: () async {
-                          if (current == AppLanguage.english) {
-                            Navigator.of(sheetContext).pop();
-                            return;
-                          }
-                          controller.setAppLanguage(AppLanguage.english);
-                          await sheetContext.setLocale(AppLanguage.english.locale);
-                          await Get.updateLocale(AppLanguage.english.locale);
-                          if (sheetContext.mounted) Navigator.of(sheetContext).pop();
-                        },
-                      ),
-                      Divider(height: AppSizes.dividerThin, color: AppColors.surfaceMuted),
-                      _LanguageRow(
-                        flag: '🇨🇿',
-                        label: tr(LocaleKeys.language_settings_option_czech),
-                        selected: current == AppLanguage.czech,
-                        onTap: () async {
-                          if (current == AppLanguage.czech) {
-                            Navigator.of(sheetContext).pop();
-                            return;
-                          }
-                          controller.setAppLanguage(AppLanguage.czech);
-                          await sheetContext.setLocale(AppLanguage.czech.locale);
-                          await Get.updateLocale(AppLanguage.czech.locale);
-                          if (sheetContext.mounted) Navigator.of(sheetContext).pop();
-                        },
-                      ),
-                    ],
-                  ),
-                );
-              }),
+              Consumer(
+                builder: (context, ref, _) {
+                  final current = ref.watch(languageSettingsProvider).appLanguage;
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l),
+                    child: Column(
+                      children: [
+                        _LanguageRow(
+                          flag: '🇺🇸',
+                          label: tr(LocaleKeys.language_settings_option_english),
+                          selected: current == AppLanguage.english,
+                          onTap: () async {
+                            if (current == AppLanguage.english) {
+                              Navigator.of(sheetContext).pop();
+                              return;
+                            }
+                            ref.read(languageSettingsProvider.notifier).setAppLanguage(AppLanguage.english);
+                            await sheetContext.setLocale(AppLanguage.english.locale);
+                            if (sheetContext.mounted) Navigator.of(sheetContext).pop();
+                          },
+                        ),
+                        Divider(height: AppSizes.dividerThin, color: AppColors.surfaceMuted),
+                        _LanguageRow(
+                          flag: '🇨🇿',
+                          label: tr(LocaleKeys.language_settings_option_czech),
+                          selected: current == AppLanguage.czech,
+                          onTap: () async {
+                            if (current == AppLanguage.czech) {
+                              Navigator.of(sheetContext).pop();
+                              return;
+                            }
+                            ref.read(languageSettingsProvider.notifier).setAppLanguage(AppLanguage.czech);
+                            await sheetContext.setLocale(AppLanguage.czech.locale);
+                            if (sheetContext.mounted) Navigator.of(sheetContext).pop();
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ],
           ),
         );
@@ -344,22 +374,22 @@ class _ProfileActionRow extends StatelessWidget {
   }
 }
 
-class _WidgetSection extends StatelessWidget {
+class _WidgetSection extends ConsumerWidget {
   const _WidgetSection();
 
   @override
-  Widget build(BuildContext context) {
-    final dashboardController = DashboardController.to;
-    return Obx(() {
-      final record = dashboardController.dayRecord.value ?? DayRecord.initial(dashboardController.selectedDate.value);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final dailyRecord = ref.watch(dailyRecordProvider);
+    final scanOnboardingComplete = ref.watch(sessionProvider).scanOnboardingComplete;
+    final record = dailyRecord.dayRecord ?? DayRecord.initial(dailyRecord.selectedDate);
 
-      final caloriesText = record.totalCalories.round().toString();
-      final proteinText = '${_formatMacro(record.totalProteins)}g';
-      final carbsText = '${_formatMacro(record.totalCarbs)}g';
-      final fatText = '${_formatMacro(record.totalFats)}g';
-      final progress = record.calorieGoal <= 0 ? 0.0 : (record.totalCalories / record.calorieGoal).clamp(0.0, 1.0);
+    final caloriesText = record.totalCalories.round().toString();
+    final proteinText = '${_formatMacro(record.totalProteins)}g';
+    final carbsText = '${_formatMacro(record.totalCarbs)}g';
+    final fatText = '${_formatMacro(record.totalFats)}g';
+    final progress = record.calorieGoal <= 0 ? 0.0 : (record.totalCalories / record.calorieGoal).clamp(0.0, 1.0);
 
-      return Row(
+    return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
@@ -412,10 +442,10 @@ class _WidgetSection extends StatelessWidget {
                   icon: CupertinoIcons.viewfinder,
                   label: tr(LocaleKeys.profile_scan_food),
                   onTap: () {
-                    if (SessionManager.to.scanOnboardingComplete.value) {
-                      Get.to(() => const ScanCameraScreen());
+                    if (scanOnboardingComplete) {
+                      Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ScanCameraScreen()));
                     } else {
-                      Get.to(() => const ScanOnboardingScreen());
+                      Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ScanOnboardingScreen()));
                     }
                   },
                 ),
@@ -423,14 +453,13 @@ class _WidgetSection extends StatelessWidget {
                 _WidgetShortcutCard(
                   icon: CupertinoIcons.qrcode,
                   label: tr(LocaleKeys.profile_barcode),
-                  onTap: () => Get.to(() => const ScanCameraScreen(initialMode: ScanMode.barcode)),
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ScanCameraScreen(initialMode: ScanMode.barcode))),
                 ),
               ],
             ),
           ),
         ],
       );
-    });
   }
 
   String _formatMacro(double value) {

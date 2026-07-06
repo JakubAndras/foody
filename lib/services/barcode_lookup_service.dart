@@ -5,7 +5,7 @@ import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/barcode_lookup_result.dart';
 import 'package:diplomka/network/open_food_facts_client.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum BarcodeLookupFailureType {
   invalidBarcode,
@@ -28,14 +28,12 @@ class BarcodeLookupException implements Exception {
   }
 }
 
-class BarcodeLookupService extends GetxService {
-  static BarcodeLookupService get to => Get.find();
+class BarcodeLookupService {
+  BarcodeLookupService(this._ref);
 
-  BarcodeLookupService({
-    required OpenFoodFactsClient client,
-  }) : _client = client;
+  final Ref _ref;
 
-  final OpenFoodFactsClient _client;
+  OpenFoodFactsClient get _client => _ref.read(openFoodFactsClientProvider);
 
   String? normalizeBarcode(String rawBarcode) {
     final normalized = rawBarcode.replaceAll(RegExp(r'[^0-9]'), '');
@@ -47,7 +45,7 @@ class BarcodeLookupService extends GetxService {
     return barcode.length == 8 || barcode.length == 12 || barcode.length == 13 || barcode.length == 14;
   }
 
-  Future<BarcodeLookupResult> lookupProductByBarcode(String rawBarcode) async {
+  Future<BarcodeLookupResult> lookupProductByBarcode(String rawBarcode, {String? languageCode}) async {
     final normalized = normalizeBarcode(rawBarcode);
     if (normalized == null || !isSupportedBarcode(normalized)) {
       throw BarcodeLookupException(
@@ -57,7 +55,7 @@ class BarcodeLookupService extends GetxService {
     }
 
     try {
-      final appLocale = Get.locale?.languageCode ?? 'cs';
+      final appLocale = languageCode ?? 'cs';
       final lookupResponse = await _client.fetchProductByBarcode(normalized, locale: appLocale);
       final product = lookupResponse.product;
       if (!lookupResponse.found || product == null) {
@@ -67,7 +65,7 @@ class BarcodeLookupService extends GetxService {
         );
       }
 
-      final productName = _resolveProductName(product);
+      final productName = _resolveProductName(product, languageCode: languageCode);
       if (productName.isEmpty) {
         throw BarcodeLookupException(
           BarcodeLookupFailureType.parseError,
@@ -122,8 +120,8 @@ class BarcodeLookupService extends GetxService {
     }
   }
 
-  String _resolveProductName(OffProductDto product) {
-    final appLocale = Get.locale?.languageCode ?? 'cs';
+  String _resolveProductName(OffProductDto product, {String? languageCode}) {
+    final appLocale = languageCode ?? 'cs';
     if (appLocale == 'cs') {
       final czechName = _cleanString(product.productNameCs);
       if (czechName != null) return czechName;
@@ -183,3 +181,5 @@ class BarcodeLookupService extends GetxService {
     return null;
   }
 }
+
+final barcodeLookupServiceProvider = Provider<BarcodeLookupService>((ref) => BarcodeLookupService(ref));

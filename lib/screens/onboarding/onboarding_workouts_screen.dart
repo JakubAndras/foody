@@ -5,8 +5,9 @@ import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class OnboardingWorkoutsScreen extends StatefulWidget {
+class OnboardingWorkoutsScreen extends ConsumerStatefulWidget {
   const OnboardingWorkoutsScreen({super.key, required this.onNext, required this.onBack, this.progress, this.onCanProceedChanged});
 
   final VoidCallback onNext;
@@ -15,10 +16,10 @@ class OnboardingWorkoutsScreen extends StatefulWidget {
   final ValueChanged<bool>? onCanProceedChanged;
 
   @override
-  State<OnboardingWorkoutsScreen> createState() => _OnboardingWorkoutsScreenState();
+  ConsumerState<OnboardingWorkoutsScreen> createState() => _OnboardingWorkoutsScreenState();
 }
 
-class _OnboardingWorkoutsScreenState extends State<OnboardingWorkoutsScreen> with AutomaticKeepAliveClientMixin {
+class _OnboardingWorkoutsScreenState extends ConsumerState<OnboardingWorkoutsScreen> with AutomaticKeepAliveClientMixin {
   String? _selected;
 
   @override
@@ -45,7 +46,7 @@ class _OnboardingWorkoutsScreenState extends State<OnboardingWorkoutsScreen> wit
         isEnabled: _selected != null,
         onPressed: _selected != null
             ? () async {
-                await SessionManager.to.setWorkoutsPerWeek(_selected);
+                await ref.read(sessionProvider.notifier).setWorkoutsPerWeek(_selected);
                 widget.onNext();
               }
             : null,

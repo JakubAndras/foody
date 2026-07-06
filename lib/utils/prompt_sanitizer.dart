@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 
 import 'package:diplomka/network/openai_rest_client.dart';
 import 'package:diplomka/utils/app_limits.dart';
@@ -76,9 +75,9 @@ class PromptSanitizer {
 
   /// Optional LLM-based pre-screening. Returns true if injection detected.
   /// Fails open (returns false) on any error — never blocks the user.
-  static Future<bool> preScreenWithLlm(String input) async {
+  static Future<bool> preScreenWithLlm(OpenaiRestClient client, String input) async {
     try {
-      return await OpenaiRestClient().preScreenForInjection(input);
+      return await client.preScreenForInjection(input);
     } catch (_) {
       return false;
     }

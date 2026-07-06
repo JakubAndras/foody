@@ -4,7 +4,7 @@ import 'dart:ui' as ui;
 
 import 'package:camera/camera.dart';
 import 'package:diplomka/app_theme.dart';
-import 'package:diplomka/controller/dashboard_controller.dart';
+import 'package:diplomka/state/dashboard_notifier.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/screens/main_screen.dart';
 import 'package:diplomka/screens/scan/scan_permission_screen.dart';
@@ -18,25 +18,25 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 enum ScanMode { scanMeal, barcode, foodLabel }
 
-class ScanCameraScreen extends StatefulWidget {
+class ScanCameraScreen extends ConsumerStatefulWidget {
   const ScanCameraScreen({super.key, this.initialMode = ScanMode.scanMeal});
 
   final ScanMode initialMode;
 
   @override
-  State<ScanCameraScreen> createState() => _ScanCameraScreenState();
+  ConsumerState<ScanCameraScreen> createState() => _ScanCameraScreenState();
 }
 
-class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBindingObserver {
+class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen> with WidgetsBindingObserver {
   final GlobalKey _previewBoundaryKey = GlobalKey();
-  final BarcodeLookupService _barcodeLookupService = BarcodeLookupService.to;
+  BarcodeLookupService get _barcodeLookupService => ref.read(barcodeLookupServiceProvider);
   final MobileScannerController _barcodeScannerController = MobileScannerController(
     formats: const <BarcodeFormat>[BarcodeFormat.ean8, BarcodeFormat.ean13, BarcodeFormat.upcA, BarcodeFormat.upcE, BarcodeFormat.code128],
     detectionSpeed: DetectionSpeed.noDuplicates,
@@ -273,7 +273,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
         finalPath = await PhotoCropper.cropCenterCoverToAspect(sourcePath: file.path, targetAspectRatio: targetAspect);
       }
       if (!mounted) return;
-      Get.to(() => ScanPreviewScreen(imagePath: finalPath));
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) => ScanPreviewScreen(imagePath: finalPath)));
     } catch (_) {}
   }
 
@@ -284,7 +284,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image == null) return;
     if (!mounted) return;
-    Get.to(() => ScanPreviewScreen(imagePath: image.path));
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => ScanPreviewScreen(imagePath: image.path)));
   }
 
   Future<bool> _requestGalleryPermission() async {
@@ -446,13 +446,11 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
     _pauseBarcodeScanner();
     if (!mounted) return;
 
-    final selectedDate = SelectedDateService.to.selectedDate.value;
-    DashboardController.to.analyzeMealFromBarcode(selectedDate: selectedDate, barcode: barcode);
+    final selectedDate = ref.read(selectedDateProvider);
+    ref.read(mealAnalysisProvider.notifier).analyzeMealFromBarcode(selectedDate: selectedDate, barcode: barcode);
 
-    if (Get.isRegistered<MainScreenController>()) {
-      MainScreenController.to.showDashboardTab();
-    }
-    Get.until((route) => route.isFirst);
+    ref.read(mainScreenProvider.notifier).showDashboardTab();
+    Navigator.of(context).popUntil((route) => route.isFirst);
   }
 
   @override
@@ -553,7 +551,7 @@ class _ScanCameraScreenState extends State<ScanCameraScreen> with WidgetsBinding
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            ScanCircleButton(icon: CupertinoIcons.xmark, onPressed: () => Get.back(), child: GlassStrokeIcon.close()),
+            ScanCircleButton(icon: CupertinoIcons.xmark, onPressed: () => Navigator.of(context).pop(), child: GlassStrokeIcon.close()),
             ScanCircleButton(
               icon: CupertinoIcons.info,
               onPressed: () {

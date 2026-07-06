@@ -6,19 +6,19 @@ import 'package:diplomka/widgets/liquid_glass/glass_segmented_tabs.dart';
 import 'package:diplomka/model/weight_entry.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class WeightProgressCard extends StatefulWidget {
+class WeightProgressCard extends ConsumerStatefulWidget {
   const WeightProgressCard({super.key, required this.entries});
 
   final List<WeightEntry> entries;
 
   @override
-  State<WeightProgressCard> createState() => _WeightProgressCardState();
+  ConsumerState<WeightProgressCard> createState() => _WeightProgressCardState();
 }
 
-class _WeightProgressCardState extends State<WeightProgressCard> {
+class _WeightProgressCardState extends ConsumerState<WeightProgressCard> {
   int _selectedIndex = 0;
 
   static const List<String> _rangeLabels = ['30D', '6M', '1Y', 'ALL'];
@@ -85,9 +85,9 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
   }
 
   int? _computeGoalPercent() {
-    final sm = SessionManager.to;
-    final startWeight = sm.weightKg.value;
-    final goalWeight = sm.goalWeightKg.value;
+    final session = ref.watch(sessionProvider);
+    final startWeight = session.weightKg;
+    final goalWeight = session.goalWeightKg;
     if (startWeight == null || goalWeight == null || startWeight == goalWeight) return null;
 
     final entries = _sortedEntries();

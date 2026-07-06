@@ -1,4 +1,4 @@
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:diplomka/model/motivational_summary_setting.dart';
 import 'package:diplomka/model/tracking_reminder_setting.dart';
@@ -26,9 +26,7 @@ const String healthIntegrationEnabledKey = "healthIntegration_enabled";
 const String healthIntegrationLastSyncKey = "healthIntegration_lastSync";
 const String voiceLogModeKey = "voiceLogModeKey";
 
-class SharedPreferencesService extends GetxService {
-  static SharedPreferencesService get to => Get.find();
-
+class SharedPreferencesService {
   SharedPreferences? _prefsInstance;
 
   Future<SharedPreferences> get getPrefsInstance async {
@@ -141,3 +139,5 @@ class SharedPreferencesService extends GetxService {
     await setInt(key: motivationalSummaryMinuteKey(setting.type), value: setting.minute);
   }
 }
+
+final sharedPreferencesServiceProvider = Provider<SharedPreferencesService>((ref) => SharedPreferencesService());

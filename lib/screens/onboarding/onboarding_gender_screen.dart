@@ -5,8 +5,9 @@ import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/widgets/onboarding/onboarding_widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class OnboardingGenderScreen extends StatefulWidget {
+class OnboardingGenderScreen extends ConsumerStatefulWidget {
   const OnboardingGenderScreen({
     super.key,
     required this.onNext,
@@ -21,10 +22,10 @@ class OnboardingGenderScreen extends StatefulWidget {
   final ValueChanged<bool>? onCanProceedChanged;
 
   @override
-  State<OnboardingGenderScreen> createState() => _OnboardingGenderScreenState();
+  ConsumerState<OnboardingGenderScreen> createState() => _OnboardingGenderScreenState();
 }
 
-class _OnboardingGenderScreenState extends State<OnboardingGenderScreen> with AutomaticKeepAliveClientMixin {
+class _OnboardingGenderScreenState extends ConsumerState<OnboardingGenderScreen> with AutomaticKeepAliveClientMixin {
   ProfileSex? _selected;
 
   @override
@@ -52,7 +53,7 @@ class _OnboardingGenderScreenState extends State<OnboardingGenderScreen> with Au
         isEnabled: _selected != null,
         onPressed: _selected != null
             ? () async {
-                await SessionManager.to.setSex(_selected);
+                await ref.read(sessionProvider.notifier).setSex(_selected);
                 widget.onNext();
               }
             : null,

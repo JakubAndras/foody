@@ -15,19 +15,18 @@ import 'package:diplomka/screens/onboarding/onboarding_workouts_screen.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../main_screen.dart';
 
-class OnboardingFlowScreen extends StatefulWidget {
+class OnboardingFlowScreen extends ConsumerStatefulWidget {
   const OnboardingFlowScreen({super.key});
 
   @override
-  State<OnboardingFlowScreen> createState() => _OnboardingFlowScreenState();
+  ConsumerState<OnboardingFlowScreen> createState() => _OnboardingFlowScreenState();
 }
 
-class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
+class _OnboardingFlowScreenState extends ConsumerState<OnboardingFlowScreen> {
   final PageController _controller = PageController();
   int _index = 0;
   bool _showCustomDiet = false;
@@ -40,11 +39,14 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
 
   void _next() {
     if (_index >= _screens.length - 1) {
-      if (SessionManager.to.dietType.value == null) {
-        unawaited(SessionManager.to.setDietType(ProfileDietType.classic));
+      if (ref.read(sessionProvider).dietType == null) {
+        unawaited(ref.read(sessionProvider.notifier).setDietType(ProfileDietType.classic));
       }
-      unawaited(SessionManager.to.setOnboardingComplete(true));
-      Get.offAll(() => const MainScreen());
+      unawaited(ref.read(sessionProvider.notifier).setOnboardingComplete(true));
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const MainScreen()),
+        (_) => false,
+      );
       return;
     }
     setState(() => _canSwipeForward = true);
@@ -57,11 +59,11 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
   void _skipOnboarding()  {
     print('[SKIP] _skipOnboarding called');
     try {
-      if (SessionManager.to.dietType.value == null) {
-        unawaited(SessionManager.to.setDietType(ProfileDietType.classic));
+      if (ref.read(sessionProvider).dietType == null) {
+        unawaited(ref.read(sessionProvider.notifier).setDietType(ProfileDietType.classic));
       }
-      unawaited(SessionManager.to.setOnboardingComplete(true));
-      Get.to(() => const MainScreen());
+      unawaited(ref.read(sessionProvider.notifier).setOnboardingComplete(true));
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MainScreen()));
     } catch (e, st) {
       print('[SKIP] ERROR: $e\n$st');
     }
@@ -115,7 +117,7 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
   void _handleDietChanged(String diet) {
     final ProfileDietType? selectedDietType = profileDietTypeFromCode(diet);
     if (selectedDietType != null) {
-      unawaited(SessionManager.to.setDietType(selectedDietType));
+      unawaited(ref.read(sessionProvider.notifier).setDietType(selectedDietType));
     }
 
     final bool shouldShowCustomDiet = diet == 'custom';
@@ -180,7 +182,7 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
     if (showDesiredWeight) {
       screens.add(OnboardingDesiredWeightScreen(
         onNext: () async {
-          await SessionManager.to.applyRecommendedWeightChangeRate();
+          await ref.read(sessionProvider.notifier).applyRecommendedWeightChangeRate();
           _next();
         },
         onBack: _previous,
@@ -205,8 +207,8 @@ class _OnboardingFlowScreenState extends State<OnboardingFlowScreen> {
         onNext: _next,
         onBack: _previous,
         keepAlive: true,
-        initialPreferences: SessionManager.to.customDietPreferences.value,
-        onPreferencesSaved: (value) => unawaited(SessionManager.to.setCustomDietPreferences(value)),
+        initialPreferences: ref.read(sessionProvider).customDietPreferences,
+        onPreferencesSaved: (value) => unawaited(ref.read(sessionProvider.notifier).setCustomDietPreferences(value)),
       ));
     }
 

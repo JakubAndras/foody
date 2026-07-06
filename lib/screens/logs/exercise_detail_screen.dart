@@ -1,6 +1,6 @@
 import 'package:diplomka/app_theme.dart';
-import 'package:diplomka/controller/dashboard_controller.dart';
-import 'package:diplomka/controller/day_record_controller.dart';
+import 'package:diplomka/state/dashboard_notifier.dart';
+import 'package:diplomka/state/day_record_notifier.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/exercise.dart';
 import 'package:diplomka/model/exercise_template.dart';
@@ -17,10 +17,10 @@ import 'package:diplomka/widgets/duration_picker_sheet.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 
-class ExerciseDetailScreen extends StatefulWidget {
+class ExerciseDetailScreen extends ConsumerStatefulWidget {
   const ExerciseDetailScreen({super.key, required this.exercise, this.openedFromLogScreen = false, this.selectedDate});
 
   final Exercise exercise;
@@ -28,10 +28,10 @@ class ExerciseDetailScreen extends StatefulWidget {
   final DateTime? selectedDate;
 
   @override
-  State<ExerciseDetailScreen> createState() => _ExerciseDetailScreenState();
+  ConsumerState<ExerciseDetailScreen> createState() => _ExerciseDetailScreenState();
 }
 
-class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
+class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
   late Exercise _exercise;
   late final TextEditingController _nameController;
   late final TextEditingController _caloriesController;
@@ -54,6 +54,14 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     super.dispose();
   }
 
+  ExerciseTemplate? _findTemplate(String normalizedName) {
+    final templates = ref.read(exerciseTemplatesProvider).valueOrNull ?? const <ExerciseTemplate>[];
+    for (final t in templates) {
+      if (t.normalizedName == normalizedName) return t;
+    }
+    return null;
+  }
+
   Exercise _buildExercise() {
     return _exercise.copyWith(
       name: _nameController.text.trim().isNotEmpty ? _nameController.text.trim() : _exercise.name,
@@ -71,20 +79,20 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
 
       if (widget.openedFromLogScreen) {
         final normalized = ExerciseTemplate.normalize(widget.exercise.name);
-        final template = ExerciseTemplateRepository.to.allTemplates.firstWhereOrNull((t) => t.normalizedName == normalized);
+        final template = _findTemplate(normalized);
         if (template != null) {
-          await ExerciseTemplateRepository.to.updateTemplateValues(
-            template: template,
-            name: updated.name,
-            caloriesBurned: updated.caloriesBurned,
-            durationMinutes: updated.durationMinutes,
-          );
+          await ref.read(exerciseTemplatesProvider.notifier).updateTemplateValues(
+                template: template,
+                name: updated.name,
+                caloriesBurned: updated.caloriesBurned,
+                durationMinutes: updated.durationMinutes,
+              );
         }
       } else {
         if (updated.id != null) {
           final date = widget.selectedDate ?? DateTime(updated.timestamp.year, updated.timestamp.month, updated.timestamp.day);
-          await DayRecordController.to.saveExerciseForDate(date: date, exerciseToSave: updated);
-          DashboardController.to.refresh();
+          await ref.read(dayRecordProvider.notifier).saveExerciseForDate(date: date, exerciseToSave: updated);
+          ref.read(dailyRecordProvider.notifier).refresh();
         }
       }
 
@@ -117,14 +125,14 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
 
     // Always sync to template (both paths need this)
     final normalized = ExerciseTemplate.normalize(_exercise.name);
-    final template = ExerciseTemplateRepository.to.allTemplates.firstWhereOrNull((t) => t.normalizedName == normalized);
-    if (template != null) await ExerciseTemplateRepository.to.setFavorite(template, next);
+    final template = _findTemplate(normalized);
+    if (template != null) await ref.read(exerciseTemplatesProvider.notifier).setFavorite(template, next);
 
     if (widget.openedFromLogScreen) return;
 
     // Dashboard path: also update the Exercise record
     if (_exercise.id == null || _exercise.dayRecordId == null) return;
-    await DayRecordController.to.setExerciseFavorite(exercise: _exercise, isFavorite: next);
+    await ref.read(dayRecordProvider.notifier).setExerciseFavorite(exercise: _exercise, isFavorite: next);
 
     if (next && mounted) {
       showSnackBar(
@@ -256,10 +264,12 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
   }
 
   Future<void> _handleFixIssue() async {
-    final result = await Get.to<Exercise>(() => FixExerciseResultScreen(
-      baseExercise: _buildExercise(),
-      selectedDate: widget.selectedDate,
-      openedFromLogScreen: widget.openedFromLogScreen,
+    final result = await Navigator.of(context).push<Exercise>(MaterialPageRoute(
+      builder: (_) => FixExerciseResultScreen(
+        baseExercise: _buildExercise(),
+        selectedDate: widget.selectedDate,
+        openedFromLogScreen: widget.openedFromLogScreen,
+      ),
     ));
     if (result == null || !mounted) return;
     setState(() {
@@ -284,15 +294,15 @@ class _ExerciseDetailScreenState extends State<ExerciseDetailScreen> {
     if (widget.openedFromLogScreen) {
       // Log screen path: delete the template
       final normalized = ExerciseTemplate.normalize(_exercise.name);
-      final template = ExerciseTemplateRepository.to.allTemplates.firstWhereOrNull((t) => t.normalizedName == normalized);
-      if (template != null) await ExerciseTemplateRepository.to.deleteTemplate(template);
+      final template = _findTemplate(normalized);
+      if (template != null) await ref.read(exerciseTemplatesProvider.notifier).deleteTemplate(template);
     } else {
       // Dashboard path: delete the exercise record
       if (_exercise.id == null) return;
-      await DayRecordController.to.deleteExercise(_exercise);
+      await ref.read(dayRecordProvider.notifier).deleteExercise(_exercise);
     }
     if (!mounted) return;
-    Get.back(result: true);
+    Navigator.of(context).pop(true);
   }
 }
 

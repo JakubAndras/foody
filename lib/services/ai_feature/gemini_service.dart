@@ -1,13 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:diplomka/model/ai_response.dart';
 import 'package:diplomka/network/gemini_rest_client.dart';
 import 'package:diplomka/services/ai_feature/ai_service.dart';
 
 class GeminiService implements AiService {
-  final restClient = GeminiRestClient();
+  GeminiService(this._ref);
+
+  final Ref _ref;
+
+  GeminiRestClient get restClient => _ref.read(geminiRestClientProvider);
 
   @override
   Future<AiResponse?> generateResponse({
@@ -54,3 +58,5 @@ class GeminiService implements AiService {
     }
   }
 }
+
+final geminiServiceProvider = Provider<GeminiService>((ref) => GeminiService(ref));

@@ -1,7 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
 
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
@@ -40,7 +38,7 @@ class _FaqScreenState extends State<FaqScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ProfileTopBar(title: tr(LocaleKeys.profile_faq), onBack: () => Get.back()),
+          ProfileTopBar(title: tr(LocaleKeys.profile_faq), onBack: () => Navigator.of(context).pop()),
           const SizedBox(height: AppSpacing.m),
           ..._items.asMap().entries.map((entry) {
             final index = entry.key;

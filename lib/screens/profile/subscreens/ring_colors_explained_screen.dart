@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
@@ -19,7 +18,7 @@ class RingColorsExplainedScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ProfileTopBar(title: tr(LocaleKeys.ring_colors_title), onBack: () => Get.back()),
+          ProfileTopBar(title: tr(LocaleKeys.ring_colors_title), onBack: () => Navigator.of(context).pop()),
           const SizedBox(height: AppSpacing.m),
           ProfileCard(
             color: AppColors.surface,

@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:diplomka/widgets/animated_add_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 enum MatchBadgeVariant { good, medium, low }
 

@@ -1,6 +1,6 @@
 import 'package:diplomka/app_theme.dart';
-import 'package:diplomka/controller/dashboard_controller.dart';
-import 'package:diplomka/controller/day_record_controller.dart';
+import 'package:diplomka/state/dashboard_notifier.dart';
+import 'package:diplomka/state/day_record_notifier.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
 import 'package:diplomka/model/exercise_template.dart';
 import 'package:diplomka/services/exercise_template_repository.dart';
@@ -18,18 +18,18 @@ import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum ExerciseSort { mostRecent, aToZ, zToA }
 
-class ExerciseLogHomeScreen extends StatefulWidget {
+class ExerciseLogHomeScreen extends ConsumerStatefulWidget {
   const ExerciseLogHomeScreen({super.key});
 
   @override
-  State<ExerciseLogHomeScreen> createState() => _ExerciseLogHomeScreenState();
+  ConsumerState<ExerciseLogHomeScreen> createState() => _ExerciseLogHomeScreenState();
 }
 
-class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
+class _ExerciseLogHomeScreenState extends ConsumerState<ExerciseLogHomeScreen> {
   final TextEditingController _searchController = TextEditingController();
   bool _showFavorites = false;
   ExerciseSort _sort = ExerciseSort.mostRecent;
@@ -38,10 +38,6 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
   void dispose() {
     _searchController.dispose();
     super.dispose();
-  }
-
-  List<ExerciseTemplate> _allExercises() {
-    return ExerciseTemplateRepository.to.allTemplates.toList();
   }
 
   List<ExerciseTemplate> _applyFilters(List<ExerciseTemplate> exercises) {
@@ -90,14 +86,14 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
   }
 
   Future<void> _addExerciseFromTemplate(ExerciseTemplate template) async {
-    final selectedDate = SelectedDateService.to.selectedDate.value;
+    final selectedDate = ref.read(selectedDateProvider);
     final now = DateTime.now();
     final timestamp = DateTime(selectedDate.year, selectedDate.month, selectedDate.day, now.hour, now.minute, now.second, now.millisecond, now.microsecond);
 
     final newExercise = template.toExercise(timestamp: timestamp);
 
-    final savedExercise = await DayRecordController.to.saveExerciseForDate(date: selectedDate, exerciseToSave: newExercise);
-    DashboardController.to.refresh();
+    final savedExercise = await ref.read(dayRecordProvider.notifier).saveExerciseForDate(date: selectedDate, exerciseToSave: newExercise);
+    ref.read(dailyRecordProvider.notifier).refresh();
 
     if (!mounted) return;
     showSnackBar(
@@ -105,15 +101,15 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
       message: tr(LocaleKeys.common_exercise_logged),
       primaryLabel: tr(LocaleKeys.common_view),
       onPrimary: () {
-        DashboardController.to.requestScrollToExercises();
-        MainScreenController.to.showDashboardTab();
-        Get.until((route) => route.isFirst);
+        ref.read(activityAnalysisProvider.notifier).requestScrollToExercises();
+        ref.read(mainScreenProvider.notifier).showDashboardTab();
+        Navigator.of(context).popUntil((route) => route.isFirst);
       },
       secondaryLabel: tr(LocaleKeys.common_undo),
       onSecondary: () async {
         if (savedExercise != null) {
-          await DayRecordController.to.deleteExercise(savedExercise);
-          DashboardController.to.refresh();
+          await ref.read(dayRecordProvider.notifier).deleteExercise(savedExercise);
+          ref.read(dailyRecordProvider.notifier).refresh();
         }
       },
     );
@@ -121,6 +117,8 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final allExercises = ref.watch(exerciseTemplatesProvider).valueOrNull ?? [];
+    final filtered = _applyFilters(allExercises);
     return ProfileGradientScaffold(
       safeBottom: false,
       padding: const EdgeInsets.symmetric(horizontal: 0),
@@ -136,8 +134,8 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
                 CustomGlassIconButtonGroup(
                   iconSize: AppSizes.iconLg,
                   items: [
-                    (icon: CupertinoIcons.mic, onPressed: () => Get.to(() => const VoiceLogScreen(initialMode: VoiceLogMode.exercise))),
-                    (icon: CupertinoIcons.add, onPressed: () => Get.to(() => const AddExerciseScreen())),
+                    (icon: CupertinoIcons.mic, onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const VoiceLogScreen(initialMode: VoiceLogMode.exercise)))),
+                    (icon: CupertinoIcons.add, onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AddExerciseScreen()))),
                   ],
                 ),
               ],
@@ -178,33 +176,29 @@ class _ExerciseLogHomeScreenState extends State<ExerciseLogHomeScreen> {
           ),
           const SizedBox(height: 2),
           Expanded(
-            child: Obx(() {
-              final filtered = _applyFilters(_allExercises());
-              if (filtered.isEmpty) {
-                return Center(
-                  child: Text(
-                    _showFavorites ? tr(LocaleKeys.exercise_no_favorites) : tr(LocaleKeys.exercise_no_logged),
-                    style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary),
+            child: filtered.isEmpty
+                ? Center(
+                    child: Text(
+                      _showFavorites ? tr(LocaleKeys.exercise_no_favorites) : tr(LocaleKeys.exercise_no_logged),
+                      style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary),
+                    ),
+                  )
+                : ListView.separated(
+                    padding: EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.s, AppSpacing.screen, AppSpacing.l + MediaQuery.paddingOf(context).bottom),
+                    itemCount: filtered.length,
+                    separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.s),
+                    itemBuilder: (context, index) {
+                      final template = filtered[index];
+                      final previewExercise = template.toExercise(timestamp: DateTime.now());
+                      return ExerciseListCard(
+                        title: template.name,
+                        kcal: template.caloriesBurned.round(),
+                        minutes: template.durationMinutes ?? 0,
+                        onAdd: () => _addExerciseFromTemplate(template),
+                        onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => ExerciseDetailScreen(exercise: previewExercise, openedFromLogScreen: true))),
+                      );
+                    },
                   ),
-                );
-              }
-              return ListView.separated(
-                padding: EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.s, AppSpacing.screen, AppSpacing.l + MediaQuery.paddingOf(context).bottom),
-                itemCount: filtered.length,
-                separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.s),
-                itemBuilder: (context, index) {
-                  final template = filtered[index];
-                  final previewExercise = template.toExercise(timestamp: DateTime.now());
-                  return ExerciseListCard(
-                    title: template.name,
-                    kcal: template.caloriesBurned.round(),
-                    minutes: template.durationMinutes ?? 0,
-                    onAdd: () => _addExerciseFromTemplate(template),
-                    onTap: () => Get.to(() => ExerciseDetailScreen(exercise: previewExercise, openedFromLogScreen: true)),
-                  );
-                },
-              );
-            }),
           ),
         ],
       ),

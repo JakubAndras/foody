@@ -1,10 +1,8 @@
 import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/model/streak_info.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class StreakService extends GetxService {
-  static StreakService get to => Get.find();
-
+class StreakService {
   StreakInfo calculateStreakInfo(
     Iterable<DayRecord> records, {
     DateTime? now,
@@ -121,3 +119,5 @@ class StreakService extends GetxService {
     return DateTime(date.year, date.month, date.day);
   }
 }
+
+final streakServiceProvider = Provider<StreakService>((ref) => StreakService());

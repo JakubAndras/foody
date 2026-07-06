@@ -2,16 +2,19 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:diplomka/controller/day_record_controller.dart';
+import 'package:diplomka/state/day_record_notifier.dart';
 import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/model/home_widget_payload.dart';
 import 'package:diplomka/services/home_widget/widget_action_router.dart';
 import 'package:diplomka/services/home_widget/widget_constants.dart';
-import 'package:get/get.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_widget/home_widget.dart';
 
-class WidgetSyncService extends GetxService {
-  static WidgetSyncService get to => Get.find();
+class WidgetSyncService {
+  WidgetSyncService(this._ref);
+
+  final Ref _ref;
 
   StreamSubscription<Uri?>? _widgetClickSubscription;
   bool _isInitialized = false;
@@ -29,7 +32,7 @@ class WidgetSyncService extends GetxService {
   Future<void> syncToday({String reason = 'manual'}) async {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    final dayRecord = await DayRecordController.to.getDayRecord(today);
+    final dayRecord = await _ref.read(dayRecordProvider.notifier).getDayRecord(today);
     await syncFromRecordOrFallback(
       dayRecord,
       date: today,
@@ -56,7 +59,7 @@ class WidgetSyncService extends GetxService {
       await _requestWidgetRefresh();
     } catch (error) {
       // Keep widget updates best-effort. UI flow must not fail due to widget bridge issues.
-      Get.log('Widget sync failed: $error');
+      debugPrint('Widget sync failed: $error');
     }
   }
 
@@ -148,22 +151,26 @@ class WidgetSyncService extends GetxService {
 
     _widgetClickSubscription ??= HomeWidget.widgetClicked.listen((uri) {
       if (uri == null) return;
-      unawaited(WidgetActionRouter.to.handleWidgetUri(uri));
+      unawaited(_ref.read(widgetActionRouterProvider).handleWidgetUri(uri));
     });
 
     unawaited(() async {
       final launchUri = await HomeWidget.initiallyLaunchedFromHomeWidget();
       if (launchUri == null) return;
-      await WidgetActionRouter.to.handleWidgetUri(launchUri);
+      await _ref.read(widgetActionRouterProvider).handleWidgetUri(launchUri);
     }());
   }
 
   bool get _isSupportedPlatform => Platform.isAndroid || Platform.isIOS;
 
-  @override
-  void onClose() {
+  void dispose() {
     _widgetClickSubscription?.cancel();
     _widgetClickSubscription = null;
-    super.onClose();
   }
 }
+
+final widgetSyncServiceProvider = Provider<WidgetSyncService>((ref) {
+  final service = WidgetSyncService(ref);
+  ref.onDispose(service.dispose);
+  return service;
+});

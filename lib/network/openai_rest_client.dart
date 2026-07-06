@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:diplomka/services/ai_feature/ai_attempt_log_service.dart';
 import 'package:diplomka/utils/ai_cost_calculator.dart';
@@ -13,6 +13,10 @@ import 'package:diplomka/utils/prompt.dart';
 import 'package:diplomka/utils/prompt_sanitizer.dart';
 
 class OpenaiRestClient {
+  OpenaiRestClient(this._ref);
+
+  final Ref _ref;
+
   final Dio _dio = Dio();
   final String apiUrl = "https://api.openai.com/v1/chat/completions";
   String? chatGptApiKey = dotenv.env['OPENAI_API_KEY'];
@@ -263,20 +267,18 @@ class OpenaiRestClient {
         }
 
         // RESEARCH-ONLY: log pre-screen call for token/cost telemetry.
-        if (Get.isRegistered<AiAttemptLogService>()) {
-          final usage = OpenAiUsage.fromResponse(response.data);
-          final cost = (usage != null) ? AiCostCalculator.calculateCostUsd(model: aiModelPreScreen, promptTokens: usage.promptTokens, completionTokens: usage.completionTokens, cachedTokens: usage.cachedTokens) : null;
-          AiAttemptLogService.to.log(
-            kind: AiAttemptKind.injectionScreen,
-            status: isInjection ? AiAttemptStatus.injectionDetected : AiAttemptStatus.success,
-            provider: 'openai',
-            model: aiModelPreScreen,
-            promptTokens: usage?.promptTokens,
-            completionTokens: usage?.completionTokens,
-            cachedTokens: usage?.cachedTokens,
-            costUsd: cost,
-          );
-        }
+        final usage = OpenAiUsage.fromResponse(response.data);
+        final cost = (usage != null) ? AiCostCalculator.calculateCostUsd(model: aiModelPreScreen, promptTokens: usage.promptTokens, completionTokens: usage.completionTokens, cachedTokens: usage.cachedTokens) : null;
+        _ref.read(aiAttemptLogServiceProvider).log(
+              kind: AiAttemptKind.injectionScreen,
+              status: isInjection ? AiAttemptStatus.injectionDetected : AiAttemptStatus.success,
+              provider: 'openai',
+              model: aiModelPreScreen,
+              promptTokens: usage?.promptTokens,
+              completionTokens: usage?.completionTokens,
+              cachedTokens: usage?.cachedTokens,
+              costUsd: cost,
+            );
 
         return isInjection;
       }
@@ -290,3 +292,5 @@ class OpenaiRestClient {
     chatGptApiKey ??= dotenv.env['OPENAI_API_KEY'];
   }
 }
+
+final openaiRestClientProvider = Provider<OpenaiRestClient>((ref) => OpenaiRestClient(ref));
