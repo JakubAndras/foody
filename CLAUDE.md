@@ -69,17 +69,19 @@ dart format --line-length 180 lib/
 All state management uses GetX. Services extend `GetxService`, controllers extend `GetxController` (or `BaseController`). Access pattern: `static FooService get to => Get.find();`. All services/controllers are registered in `lib/locator.dart` via `Get.put()` (permanent) or `Get.lazyPut()`.
 
 ### Database: Floor ORM
-- Current DB version: **1** (`lib/database/app_database.dart`) — thesis release ships at v1 with all schema baked into `onCreate`. No migration file exists.
-- Entities: `DayRecord`, `Meal`, `Ingredient`, `WeightEntry`, `Exercise`, `IngredientTemplate`, `ExerciseTemplate` in `lib/database/entities/`
+- Current DB version: **3** (`_databaseVersion` in `lib/database/app_database.dart`). Migrations live in `lib/database/migrations.dart`, registered via `.addMigrations(appMigrations)` in `lib/locator.dart`.
+  - **v1 → v2**: `dietaryViolation TEXT` column added to `Ingredient`, `IngredientTemplate`, `MealTemplateIngredient` (AI-set free-text reason; null falls back to keyword matching in `DietaryViolationService`).
+  - **v2 → v3**: per-call token usage + USD cost columns added to `AiAttempt` (`promptTokens`, `completionTokens`, `cachedTokens`, `costUsd`).
+- Entities: `DayRecord`, `Meal`, `Ingredient`, `WeightEntry`, `Exercise`, `IngredientTemplate`, `ExerciseTemplate`, `AiAttempt` in `lib/database/entities/`
 - DAOs in `lib/database/dao/`
 - **Normalized FK schema**: `Meal.dayRecordId → DayRecord`, `Ingredient.mealId → Meal`, `Exercise.dayRecordId → DayRecord` — all CASCADE delete
 - `DayRecordRepository` assembles domain aggregates (`DayRecord` + `Meal[]` + `Ingredient[]` + `Exercise[]`) for UI — always use the repository, not DAOs directly
-- `Meal` and `Ingredient` carry research-only telemetry columns (`inputSource`, `aiProvider`, `aiModel`, `aiOriginal*`, `wasEditedByUser`, `editedAtMs`) — see `RESEARCH_ONLY.md` for the removal plan before production.
+- `Meal` and `Ingredient` carry research-only telemetry columns (`inputSource`, `aiProvider`, `aiModel`, `aiOriginal*`, `wasEditedByUser`, `editedAtMs`); `AiAttempt` holds per-attempt AI cost/token telemetry — see `RESEARCH_ONLY.md` for the removal plan before production.
 
 **Adding DB fields/tables (dev workflow during testing phase):**
 1. Modify entity, run `build_runner`.
-2. **If no testers have the app yet** (or you can ask them to reinstall): keep version at 1, uninstall the app on your own dev device, and the new schema will be created fresh on next launch.
-3. **If testers are already collecting data**: bump version to 2, create `lib/database/migrations.dart` with a `migration1to2` Migration object (ALTER TABLE …), register it via `.addMigrations(appMigrations)` in `lib/locator.dart`.
+2. **If no testers have the app yet** (or you can ask them to reinstall): leave `_databaseVersion` as is, uninstall the app on your own dev device, and the new schema will be created fresh on next launch.
+3. **If testers are already collecting data**: bump `_databaseVersion` (currently 3 → 4), add a new `_migrationNtoM` Migration object (ALTER TABLE …) to `lib/database/migrations.dart`, and append it to the `appMigrations` list (already registered via `.addMigrations(appMigrations)` in `lib/locator.dart`).
 
 ### AI Pipeline
 ```

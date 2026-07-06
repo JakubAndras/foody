@@ -12,7 +12,10 @@ import 'package:diplomka/services/ai_feature/ai_service.dart';
 import 'package:diplomka/services/ai_feature/ai_service_manager.dart';
 import 'package:diplomka/services/ai_feature/openai_service.dart';
 import 'package:diplomka/services/session_manager.dart';
+import 'package:diplomka/utils/ai_cost_calculator.dart';
+import 'package:diplomka/utils/ai_model_constants.dart';
 import 'package:diplomka/utils/app_limits.dart';
+import 'package:diplomka/utils/openai_usage.dart';
 import 'package:diplomka/utils/prompt_sanitizer.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -59,6 +62,8 @@ class AiPipelineService extends GetxService {
         textPrompt: sanitizedDescription,
         mealUserAttributes: mealUserAttributes,
       );
+      // RESEARCH-ONLY: extract usage side-channel from OpenAiService.
+      final OpenAiUsage? mealUsage = (service is OpenAiService) ? service.lastCallUsage : null;
 
       if (response == null || response.valid == false) {
         // RESEARCH-ONLY: research-only attempt log
@@ -67,6 +72,7 @@ class AiPipelineService extends GetxService {
           status: AiAttemptStatus.invalidResponse,
           confidence: response?.answer.confidence,
           errorMessage: response == null ? 'null_response' : 'valid_false',
+          usage: mealUsage,
         );
         return AiAnalysisResult.failure(
           message: tr(LocaleKeys.error_ai_no_result),
@@ -80,6 +86,7 @@ class AiPipelineService extends GetxService {
           modality: modality,
           status: AiAttemptStatus.lowConfidence,
           confidence: confidence,
+          usage: mealUsage,
         );
         return AiAnalysisResult.lowConfidence(
           response: response,
@@ -92,6 +99,7 @@ class AiPipelineService extends GetxService {
         modality: modality,
         status: AiAttemptStatus.success,
         confidence: confidence,
+        usage: mealUsage,
       );
       return AiAnalysisResult.success(response: response);
     } catch (e) {
@@ -111,17 +119,24 @@ class AiPipelineService extends GetxService {
     required AiAttemptStatus status,
     double? confidence,
     String? errorMessage,
+    OpenAiUsage? usage,
   }) {
     if (!Get.isRegistered<AiAttemptLogService>()) return;
     final manager = Get.isRegistered<AiServiceManager>() ? AiServiceManager.to : null;
+    final model = manager?.currentModelCode;
+    final cost = (usage != null && model != null) ? AiCostCalculator.calculateCostUsd(model: model, promptTokens: usage.promptTokens, completionTokens: usage.completionTokens, cachedTokens: usage.cachedTokens) : null;
     AiAttemptLogService.to.log(
       kind: AiAttemptKind.meal,
       status: status,
       modality: modality,
       provider: manager?.currentProviderCode,
-      model: manager?.currentModelCode,
+      model: model,
       confidence: confidence,
       errorMessage: errorMessage,
+      promptTokens: usage?.promptTokens,
+      completionTokens: usage?.completionTokens,
+      cachedTokens: usage?.cachedTokens,
+      costUsd: cost,
     );
   }
 
@@ -158,10 +173,11 @@ class AiPipelineService extends GetxService {
         textPrompt: trimmedDescription,
         userAttributes: userAttributes,
       );
+      final exerciseUsage = OpenAiUsage.fromResponse(data);
       final analysis = _parseExerciseAnalysis(data);
       if (analysis == null) {
         // RESEARCH-ONLY: research-only attempt log
-        _logExerciseAttempt(status: AiAttemptStatus.invalidResponse, errorMessage: 'parse_failed');
+        _logExerciseAttempt(status: AiAttemptStatus.invalidResponse, errorMessage: 'parse_failed', usage: exerciseUsage);
         return AiExerciseAnalysisResult.failure(
           message: tr(LocaleKeys.error_ai_exercise_no_result),
         );
@@ -176,6 +192,7 @@ class AiPipelineService extends GetxService {
           status: AiAttemptStatus.invalidResponse,
           confidence: answer.confidence,
           errorMessage: 'valid_false_or_no_name',
+          usage: exerciseUsage,
         );
         return AiExerciseAnalysisResult.failure(
           message: tr(LocaleKeys.error_ai_exercise_no_result),
@@ -189,6 +206,7 @@ class AiPipelineService extends GetxService {
           status: AiAttemptStatus.invalidResponse,
           confidence: answer.confidence,
           errorMessage: 'missing_name',
+          usage: exerciseUsage,
         );
         return AiExerciseAnalysisResult.failure(
           message: tr(LocaleKeys.error_ai_exercise_missing),
@@ -201,6 +219,7 @@ class AiPipelineService extends GetxService {
         _logExerciseAttempt(
           status: AiAttemptStatus.lowConfidence,
           confidence: answer.confidence,
+          usage: exerciseUsage,
         );
         return AiExerciseAnalysisResult.lowConfidence(
           analysis: analysis,
@@ -212,6 +231,7 @@ class AiPipelineService extends GetxService {
       _logExerciseAttempt(
         status: AiAttemptStatus.success,
         confidence: answer.confidence,
+        usage: exerciseUsage,
       );
       return AiExerciseAnalysisResult.success(analysis: analysis);
     } catch (e) {
@@ -226,17 +246,24 @@ class AiPipelineService extends GetxService {
     required AiAttemptStatus status,
     double? confidence,
     String? errorMessage,
+    OpenAiUsage? usage,
   }) {
     if (!Get.isRegistered<AiAttemptLogService>()) return;
     final manager = Get.isRegistered<AiServiceManager>() ? AiServiceManager.to : null;
+    final model = manager?.currentModelCode ?? aiModelMain;
+    final cost = (usage != null) ? AiCostCalculator.calculateCostUsd(model: model, promptTokens: usage.promptTokens, completionTokens: usage.completionTokens, cachedTokens: usage.cachedTokens) : null;
     AiAttemptLogService.to.log(
       kind: AiAttemptKind.exercise,
       status: status,
       modality: 'voice_ai',
       provider: manager?.currentProviderCode,
-      model: manager?.currentModelCode,
+      model: model,
       confidence: confidence,
       errorMessage: errorMessage,
+      promptTokens: usage?.promptTokens,
+      completionTokens: usage?.completionTokens,
+      cachedTokens: usage?.cachedTokens,
+      costUsd: cost,
     );
   }
 
@@ -244,11 +271,13 @@ class AiPipelineService extends GetxService {
     try {
       final userProfile = _buildGoalsUserProfile();
       final data = await OpenaiRestClient().generateGoalsResponse(userProfile: userProfile);
+      final goalsUsage = OpenAiUsage.fromResponse(data);
       final goals = _parseNutritionGoals(data);
       // RESEARCH-ONLY: research-only attempt log
       _logGoalsAttempt(
         status: goals == null ? AiAttemptStatus.invalidResponse : AiAttemptStatus.success,
         errorMessage: goals == null ? 'parse_failed' : null,
+        usage: goalsUsage,
       );
       return goals;
     } catch (e) {
@@ -259,15 +288,21 @@ class AiPipelineService extends GetxService {
   }
 
   // RESEARCH-ONLY: research-only helper. Drop with telemetry.
-  void _logGoalsAttempt({required AiAttemptStatus status, String? errorMessage}) {
+  void _logGoalsAttempt({required AiAttemptStatus status, String? errorMessage, OpenAiUsage? usage}) {
     if (!Get.isRegistered<AiAttemptLogService>()) return;
     final manager = Get.isRegistered<AiServiceManager>() ? AiServiceManager.to : null;
+    final model = manager?.currentModelCode ?? aiModelMain;
+    final cost = (usage != null) ? AiCostCalculator.calculateCostUsd(model: model, promptTokens: usage.promptTokens, completionTokens: usage.completionTokens, cachedTokens: usage.cachedTokens) : null;
     AiAttemptLogService.to.log(
       kind: AiAttemptKind.goals,
       status: status,
       provider: manager?.currentProviderCode,
-      model: manager?.currentModelCode,
+      model: model,
       errorMessage: errorMessage,
+      promptTokens: usage?.promptTokens,
+      completionTokens: usage?.completionTokens,
+      cachedTokens: usage?.cachedTokens,
+      costUsd: cost,
     );
   }
 

@@ -132,7 +132,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `IngredientTemplate` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL, `normalizedName` TEXT NOT NULL, `weight` REAL NOT NULL, `amount` REAL NOT NULL, `calories` REAL NOT NULL, `proteins` REAL NOT NULL, `carbs` REAL NOT NULL, `fats` REAL NOT NULL, `isFavorite` INTEGER NOT NULL, `lastUsedAt` INTEGER NOT NULL, `usageCount` INTEGER NOT NULL, `dietaryViolation` TEXT)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `AiAttempt` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `timestampMs` INTEGER NOT NULL, `kind` TEXT NOT NULL, `modality` TEXT, `provider` TEXT, `model` TEXT, `status` TEXT NOT NULL, `confidence` REAL, `errorMessage` TEXT)');
+            'CREATE TABLE IF NOT EXISTS `AiAttempt` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `timestampMs` INTEGER NOT NULL, `kind` TEXT NOT NULL, `modality` TEXT, `provider` TEXT, `model` TEXT, `status` TEXT NOT NULL, `confidence` REAL, `errorMessage` TEXT, `promptTokens` INTEGER, `completionTokens` INTEGER, `cachedTokens` INTEGER, `costUsd` REAL)');
         await database.execute(
             'CREATE UNIQUE INDEX `index_DayRecord_date` ON `DayRecord` (`date`)');
         await database.execute(
@@ -1437,7 +1437,11 @@ class _$AiAttemptDao extends AiAttemptDao {
                   'model': item.model,
                   'status': item.status,
                   'confidence': item.confidence,
-                  'errorMessage': item.errorMessage
+                  'errorMessage': item.errorMessage,
+                  'promptTokens': item.promptTokens,
+                  'completionTokens': item.completionTokens,
+                  'cachedTokens': item.cachedTokens,
+                  'costUsd': item.costUsd
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -1461,7 +1465,11 @@ class _$AiAttemptDao extends AiAttemptDao {
             model: row['model'] as String?,
             status: row['status'] as String,
             confidence: row['confidence'] as double?,
-            errorMessage: row['errorMessage'] as String?));
+            errorMessage: row['errorMessage'] as String?,
+            promptTokens: row['promptTokens'] as int?,
+            completionTokens: row['completionTokens'] as int?,
+            cachedTokens: row['cachedTokens'] as int?,
+            costUsd: row['costUsd'] as double?));
   }
 
   @override
@@ -1471,7 +1479,7 @@ class _$AiAttemptDao extends AiAttemptDao {
   ) async {
     return _queryAdapter.queryList(
         'SELECT * FROM AiAttempt WHERE timestampMs >= ?1 AND timestampMs < ?2 ORDER BY timestampMs ASC',
-        mapper: (Map<String, Object?> row) => AiAttemptEntity(id: row['id'] as int?, timestampMs: row['timestampMs'] as int, kind: row['kind'] as String, modality: row['modality'] as String?, provider: row['provider'] as String?, model: row['model'] as String?, status: row['status'] as String, confidence: row['confidence'] as double?, errorMessage: row['errorMessage'] as String?),
+        mapper: (Map<String, Object?> row) => AiAttemptEntity(id: row['id'] as int?, timestampMs: row['timestampMs'] as int, kind: row['kind'] as String, modality: row['modality'] as String?, provider: row['provider'] as String?, model: row['model'] as String?, status: row['status'] as String, confidence: row['confidence'] as double?, errorMessage: row['errorMessage'] as String?, promptTokens: row['promptTokens'] as int?, completionTokens: row['completionTokens'] as int?, cachedTokens: row['cachedTokens'] as int?, costUsd: row['costUsd'] as double?),
         arguments: [startMs, endMs]);
   }
 

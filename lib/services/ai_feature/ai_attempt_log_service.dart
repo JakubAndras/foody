@@ -7,9 +7,9 @@ import 'package:diplomka/database/dao/ai_attempt_dao.dart';
 import 'package:diplomka/database/entities/ai_attempt_entity.dart';
 import 'package:get/get.dart';
 
-enum AiAttemptKind { meal, exercise, goals }
+enum AiAttemptKind { meal, exercise, goals, query, queryScope, injectionScreen }
 
-enum AiAttemptStatus { success, lowConfidence, invalidResponse, error, injectionRejected }
+enum AiAttemptStatus { success, lowConfidence, invalidResponse, error, injectionRejected, injectionDetected }
 
 class AiAttemptLogService extends GetxService {
   static AiAttemptLogService get to => Get.find();
@@ -28,6 +28,10 @@ class AiAttemptLogService extends GetxService {
     double? confidence,
     String? errorMessage,
     DateTime? timestamp,
+    int? promptTokens,
+    int? completionTokens,
+    int? cachedTokens,
+    double? costUsd,
   }) async {
     try {
       await _dao.insertAttempt(
@@ -40,6 +44,10 @@ class AiAttemptLogService extends GetxService {
           status: _statusCode(status),
           confidence: confidence,
           errorMessage: _truncate(errorMessage),
+          promptTokens: promptTokens,
+          completionTokens: completionTokens,
+          cachedTokens: cachedTokens,
+          costUsd: costUsd,
         ),
       );
     } catch (_) {
@@ -60,6 +68,12 @@ class AiAttemptLogService extends GetxService {
         return 'exercise';
       case AiAttemptKind.goals:
         return 'goals';
+      case AiAttemptKind.query:
+        return 'query';
+      case AiAttemptKind.queryScope:
+        return 'query_scope';
+      case AiAttemptKind.injectionScreen:
+        return 'injection_screen';
     }
   }
 
@@ -75,6 +89,8 @@ class AiAttemptLogService extends GetxService {
         return 'error';
       case AiAttemptStatus.injectionRejected:
         return 'injection_rejected';
+      case AiAttemptStatus.injectionDetected:
+        return 'injection_detected';
     }
   }
 

@@ -5,7 +5,11 @@ import 'package:diplomka/model/ask_ai_query_response.dart';
 import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/model/user_profile.dart';
 import 'package:diplomka/network/openai_rest_client.dart';
+import 'package:diplomka/services/ai_feature/ai_attempt_log_service.dart';
+import 'package:diplomka/utils/ai_cost_calculator.dart';
+import 'package:diplomka/utils/ai_model_constants.dart';
 import 'package:diplomka/utils/error.dart' as app_error;
+import 'package:diplomka/utils/openai_usage.dart';
 import 'package:diplomka/utils/prompt_sanitizer.dart';
 import 'package:diplomka/services/day_record_repository.dart';
 import 'package:diplomka/services/session_manager.dart';
@@ -89,6 +93,7 @@ class AskAiController extends GetxController {
         userProfileContext: profileContext,
         languageCode: languageCode,
       );
+      _logAiAttempt(AiAttemptKind.query, data);
 
       final parsed = _parseQueryResponse(data);
       if (parsed == null) {
@@ -132,6 +137,7 @@ class AskAiController extends GetxController {
       });
 
       final data = await client.estimateQueryScope(query: query, dataMetadata: metadata);
+      _logAiAttempt(AiAttemptKind.queryScope, data);
       final content = data['choices']?[0]?['message']?['content'];
       if (content is String) {
         final jsonStr = _extractJson(content);
@@ -237,6 +243,23 @@ class AskAiController extends GetxController {
   }
 
   String _formatDate(DateTime d) => '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
+
+  // RESEARCH-ONLY: log Ask AI API calls for token/cost telemetry.
+  void _logAiAttempt(AiAttemptKind kind, Map<String, dynamic> data) {
+    if (!Get.isRegistered<AiAttemptLogService>()) return;
+    final usage = OpenAiUsage.fromResponse(data);
+    final cost = (usage != null) ? AiCostCalculator.calculateCostUsd(model: aiModelMain, promptTokens: usage.promptTokens, completionTokens: usage.completionTokens, cachedTokens: usage.cachedTokens) : null;
+    AiAttemptLogService.to.log(
+      kind: kind,
+      status: AiAttemptStatus.success,
+      provider: 'openai',
+      model: aiModelMain,
+      promptTokens: usage?.promptTokens,
+      completionTokens: usage?.completionTokens,
+      cachedTokens: usage?.cachedTokens,
+      costUsd: cost,
+    );
+  }
 
   String _buildUserProfileContext() {
     if (!Get.isRegistered<SessionManager>()) return '';

@@ -97,6 +97,7 @@ class ExportController extends GetxController {
       }
       final goals = NutritionGoalsService.to.goalsForDate(DateTime.now());
       final session = SessionManager.to;
+      final aiAttempts = await _fetchAiAttempts();
       final bytes = await ExportService.generatePdf(
         records,
         weights,
@@ -106,6 +107,7 @@ class ExportController extends GetxController {
         carbsGoal: goals.carbsGoal,
         fatGoal: goals.fatGoal,
         dietType: session.dietType.value?.name,
+        aiAttempts: aiAttempts,
       );
       final dir = await getTemporaryDirectory();
       final file = File('${dir.path}/foody_report_${_fileNameDateRange()}.pdf');

@@ -1,10 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:get/get.dart';
 
+import 'package:diplomka/services/ai_feature/ai_attempt_log_service.dart';
+import 'package:diplomka/utils/ai_cost_calculator.dart';
+import 'package:diplomka/utils/ai_model_constants.dart';
 import 'package:diplomka/utils/error.dart';
+import 'package:diplomka/utils/openai_usage.dart';
 import 'package:diplomka/utils/prompt.dart';
 import 'package:diplomka/utils/prompt_sanitizer.dart';
 
@@ -188,6 +192,7 @@ class OpenaiRestClient {
     required String? textPrompt,
     required List<Map<String, dynamic>> imageContents,
     List<String> additionalTextContent = const <String>[],
+    String model = aiModelMain,
   }) async {
     final response = await _dio.post(
       apiUrl,
@@ -199,7 +204,7 @@ class OpenaiRestClient {
         receiveTimeout: 30000,
       ),
       data: {
-        "model": "gpt-5.4",
+        "model": model,
         "messages": [
           {"role": "system", "content": context},
           {
@@ -237,7 +242,7 @@ class OpenaiRestClient {
           receiveTimeout: 5000,
         ),
         data: {
-          "model": "gpt-5.4-mini",
+          "model": aiModelPreScreen,
           "messages": [
             {
               "role": "system",
@@ -256,6 +261,23 @@ class OpenaiRestClient {
         if (isInjection) {
           print('[PreScreen] LLM INJECTION DETECTED: "${userText.substring(0, userText.length.clamp(0, 80))}..."');
         }
+
+        // RESEARCH-ONLY: log pre-screen call for token/cost telemetry.
+        if (Get.isRegistered<AiAttemptLogService>()) {
+          final usage = OpenAiUsage.fromResponse(response.data);
+          final cost = (usage != null) ? AiCostCalculator.calculateCostUsd(model: aiModelPreScreen, promptTokens: usage.promptTokens, completionTokens: usage.completionTokens, cachedTokens: usage.cachedTokens) : null;
+          AiAttemptLogService.to.log(
+            kind: AiAttemptKind.injectionScreen,
+            status: isInjection ? AiAttemptStatus.injectionDetected : AiAttemptStatus.success,
+            provider: 'openai',
+            model: aiModelPreScreen,
+            promptTokens: usage?.promptTokens,
+            completionTokens: usage?.completionTokens,
+            cachedTokens: usage?.cachedTokens,
+            costUsd: cost,
+          );
+        }
+
         return isInjection;
       }
     } catch (e) {

@@ -5,9 +5,13 @@ import 'package:flutter/foundation.dart';
 import 'package:diplomka/model/ai_response.dart';
 import 'package:diplomka/network/openai_rest_client.dart';
 import 'package:diplomka/services/ai_feature/ai_service.dart';
+import 'package:diplomka/utils/openai_usage.dart';
 
 class OpenAiService implements AiService {
   final restClient = OpenaiRestClient();
+
+  // RESEARCH-ONLY: side-channel for the last call's token usage.
+  OpenAiUsage? lastCallUsage;
 
   @override
   Future<AiResponse?> generateResponse({
@@ -15,12 +19,14 @@ class OpenAiService implements AiService {
     String? textPrompt,
     Map<String, dynamic>? mealUserAttributes,
   }) async {
+    lastCallUsage = null;
     try {
       final data = await restClient.generateResponse(
         imageFiles: imageFiles,
         textPrompt: textPrompt,
         mealUserAttributes: mealUserAttributes,
       );
+      lastCallUsage = OpenAiUsage.fromResponse(data);
       return responseContentParser(data);
     } catch (e) {
       print(e.toString());

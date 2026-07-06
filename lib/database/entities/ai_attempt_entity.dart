@@ -37,6 +37,12 @@ class AiAttemptEntity {
   /// Truncated diagnostic message for `invalid_response` and `error` rows.
   final String? errorMessage;
 
+  // RESEARCH-ONLY: token usage and cost fields added in DB v3.
+  final int? promptTokens;
+  final int? completionTokens;
+  final int? cachedTokens;
+  final double? costUsd;
+
   AiAttemptEntity({
     this.id,
     required this.timestampMs,
@@ -47,5 +53,9 @@ class AiAttemptEntity {
     required this.status,
     this.confidence,
     this.errorMessage,
+    this.promptTokens,
+    this.completionTokens,
+    this.cachedTokens,
+    this.costUsd,
   });
 }

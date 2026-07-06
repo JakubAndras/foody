@@ -273,6 +273,10 @@ class ExportService {
         'status',
         'confidence',
         'error_message',
+        'prompt_tokens',
+        'completion_tokens',
+        'cached_tokens',
+        'cost_usd',
       ]);
       for (final a in aiAttempts) {
         rows.add([
@@ -284,6 +288,10 @@ class ExportService {
           a.status,
           a.confidence != null ? a.confidence!.toStringAsFixed(2) : '',
           a.errorMessage ?? '',
+          a.promptTokens?.toString() ?? '',
+          a.completionTokens?.toString() ?? '',
+          a.cachedTokens?.toString() ?? '',
+          a.costUsd != null ? a.costUsd!.toStringAsFixed(6) : '',
         ]);
       }
     }
@@ -328,6 +336,28 @@ class ExportService {
       }
     }
 
+    // RESEARCH-ONLY: AI Usage Summary for cost analysis. Drop with the rest of telemetry.
+    if (aiAttempts.isNotEmpty) {
+      final agg = _aggregateAiUsage(aiAttempts);
+      rows.add([]);
+      rows.add(['--- AI Usage Summary ---']);
+      rows.add(['Total AI calls', agg.totalCalls]);
+      rows.add(['Total prompt tokens (input)', agg.totalPrompt]);
+      rows.add(['Of which cached (input)', agg.totalCached]);
+      rows.add(['Total completion tokens (output)', agg.totalCompletion]);
+      rows.add(['Total cost (USD)', agg.totalCost.toStringAsFixed(6)]);
+      rows.add([]);
+      rows.add(['By model:', 'calls', 'prompt', 'completion', 'cached', 'cost_usd']);
+      for (final e in agg.byModel.entries) {
+        rows.add([e.key, e.value.calls, e.value.prompt, e.value.completion, e.value.cached, e.value.cost.toStringAsFixed(6)]);
+      }
+      rows.add([]);
+      rows.add(['By kind:', 'calls', 'cost_usd']);
+      for (final e in agg.byKind.entries) {
+        rows.add([e.key, e.value.calls, e.value.cost.toStringAsFixed(6)]);
+      }
+    }
+
     return const ListToCsvConverter().convert(rows);
   }
 
@@ -351,6 +381,7 @@ class ExportService {
     double? carbsGoal,
     double? fatGoal,
     String? dietType,
+    List<AiAttemptEntity> aiAttempts = const [],
   }) async {
     final regularData = await rootBundle.load('assets/fonts/Ubuntu-Regular.ttf');
     final boldData = await rootBundle.load('assets/fonts/Ubuntu-Bold.ttf');
@@ -441,6 +472,13 @@ class ExportService {
           if (weights.isNotEmpty) ...[
             pw.Header(level: 1, text: tr(LocaleKeys.progress_weight_progress)),
             _buildWeightTable(weights),
+          ],
+
+          // RESEARCH-ONLY: AI Usage Summary for cost analysis.
+          if (aiAttempts.isNotEmpty) ...[
+            pw.SizedBox(height: 16),
+            pw.Header(level: 1, text: 'AI Usage Summary'),
+            _buildAiUsageSummaryPdf(aiAttempts),
           ],
         ],
       ),
@@ -554,4 +592,93 @@ class ExportService {
       data: weights.map((w) => [_dateFmt.format(w.date), '${w.weight}']).toList(),
     );
   }
+
+  // RESEARCH-ONLY: PDF AI Usage Summary table.
+  static pw.Widget _buildAiUsageSummaryPdf(List<AiAttemptEntity> attempts) {
+    final agg = _aggregateAiUsage(attempts);
+    return pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
+      pw.TableHelper.fromTextArray(
+        headerStyle: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold, color: PdfColors.white),
+        headerDecoration: _headerDeco,
+        oddRowDecoration: _oddRowDeco,
+        cellStyle: const pw.TextStyle(fontSize: 9),
+        headers: ['Metric', 'Value'],
+        data: [
+          ['Total AI calls', '${agg.totalCalls}'],
+          ['Total prompt tokens (input)', '${agg.totalPrompt}'],
+          ['Of which cached (input)', '${agg.totalCached}'],
+          ['Total completion tokens (output)', '${agg.totalCompletion}'],
+          ['Total cost (USD)', '\$${agg.totalCost.toStringAsFixed(4)}'],
+        ],
+      ),
+      pw.SizedBox(height: 8),
+      pw.Text('By model', style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold)),
+      pw.SizedBox(height: 4),
+      pw.TableHelper.fromTextArray(
+        headerStyle: pw.TextStyle(fontSize: 8, fontWeight: pw.FontWeight.bold, color: PdfColors.white),
+        headerDecoration: _headerDeco,
+        oddRowDecoration: _oddRowDeco,
+        cellStyle: const pw.TextStyle(fontSize: 8),
+        headers: ['Model', 'Calls', 'Prompt', 'Completion', 'Cached', 'Cost (USD)'],
+        data: agg.byModel.entries.map((e) => [e.key, '${e.value.calls}', '${e.value.prompt}', '${e.value.completion}', '${e.value.cached}', '\$${e.value.cost.toStringAsFixed(4)}']).toList(),
+      ),
+      pw.SizedBox(height: 8),
+      pw.Text('By kind', style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold)),
+      pw.SizedBox(height: 4),
+      pw.TableHelper.fromTextArray(
+        headerStyle: pw.TextStyle(fontSize: 8, fontWeight: pw.FontWeight.bold, color: PdfColors.white),
+        headerDecoration: _headerDeco,
+        oddRowDecoration: _oddRowDeco,
+        cellStyle: const pw.TextStyle(fontSize: 8),
+        headers: ['Kind', 'Calls', 'Cost (USD)'],
+        data: agg.byKind.entries.map((e) => [e.key, '${e.value.calls}', '\$${e.value.cost.toStringAsFixed(4)}']).toList(),
+      ),
+    ]);
+  }
+
+  // RESEARCH-ONLY: aggregation helper shared by CSV and PDF export.
+  static _AiUsageAgg _aggregateAiUsage(List<AiAttemptEntity> attempts) {
+    int totalPrompt = 0, totalCompletion = 0, totalCached = 0;
+    double totalCost = 0;
+    final byModel = <String, _AiModelAgg>{};
+    final byKind = <String, _AiKindAgg>{};
+    for (final a in attempts) {
+      totalPrompt += a.promptTokens ?? 0;
+      totalCompletion += a.completionTokens ?? 0;
+      totalCached += a.cachedTokens ?? 0;
+      totalCost += a.costUsd ?? 0;
+      final m = a.model ?? 'unknown';
+      final pm = byModel[m] ?? _AiModelAgg();
+      byModel[m] = _AiModelAgg(calls: pm.calls + 1, prompt: pm.prompt + (a.promptTokens ?? 0), completion: pm.completion + (a.completionTokens ?? 0), cached: pm.cached + (a.cachedTokens ?? 0), cost: pm.cost + (a.costUsd ?? 0));
+      final pk = byKind[a.kind] ?? _AiKindAgg();
+      byKind[a.kind] = _AiKindAgg(calls: pk.calls + 1, cost: pk.cost + (a.costUsd ?? 0));
+    }
+    return _AiUsageAgg(totalCalls: attempts.length, totalPrompt: totalPrompt, totalCompletion: totalCompletion, totalCached: totalCached, totalCost: totalCost, byModel: byModel, byKind: byKind);
+  }
+}
+
+class _AiUsageAgg {
+  final int totalCalls;
+  final int totalPrompt;
+  final int totalCompletion;
+  final int totalCached;
+  final double totalCost;
+  final Map<String, _AiModelAgg> byModel;
+  final Map<String, _AiKindAgg> byKind;
+  const _AiUsageAgg({required this.totalCalls, required this.totalPrompt, required this.totalCompletion, required this.totalCached, required this.totalCost, required this.byModel, required this.byKind});
+}
+
+class _AiModelAgg {
+  final int calls;
+  final int prompt;
+  final int completion;
+  final int cached;
+  final double cost;
+  const _AiModelAgg({this.calls = 0, this.prompt = 0, this.completion = 0, this.cached = 0, this.cost = 0});
+}
+
+class _AiKindAgg {
+  final int calls;
+  final double cost;
+  const _AiKindAgg({this.calls = 0, this.cost = 0});
 }
