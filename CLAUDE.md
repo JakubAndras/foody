@@ -15,11 +15,13 @@ lib/
 ├── app_theme.dart                     # Design tokens: AppColors, AppSpacing, AppRadii, AppSizes,
 │                                      #   AppTextStyles, AppGradients, AppShadows
 ├── app_theme_data.dart                # ThemeData builder
-├── locator.dart                       # DI — registers all services/controllers via Get.put/lazyPut
 │
-├── controller/                        # GetxControllers (UI state + business logic)
+├── di/                                # Shared providers (databaseProvider, networkStatusProvider,
+│                                      #   rootContainer) + CONTRACT.md provider map
+├── state/                             # Riverpod Notifiers/AsyncNotifiers (UI state + business logic),
+│                                      #   providers co-located per file (*_notifier.dart)
 │
-├── services/                          # GetxServices (long-lived, app-scoped)
+├── services/                          # App-scoped services (plain classes exposed via Provider)
 │
 ├── database/                          # Floor ORM layer
 │
@@ -65,8 +67,14 @@ dart format --line-length 180 lib/
 
 ## Architecture
 
-### State Management: GetX
-All state management uses GetX. Services extend `GetxService`, controllers extend `GetxController` (or `BaseController`). Access pattern: `static FooService get to => Get.find();`. All services/controllers are registered in `lib/locator.dart` via `Get.put()` (permanent) or `Get.lazyPut()`.
+### State Management: Riverpod
+All state management uses **Riverpod** (`flutter_riverpod`). Services are plain classes exposed via `Provider`; reactive state lives in `Notifier`/`AsyncNotifier` classes exposed via `NotifierProvider`/`AsyncNotifierProvider`. Providers are **co-located** in the file of their class (not a central registry). The only shared DI file is `lib/di/providers.dart`, which holds `databaseProvider` (overridden in `main()`), `networkStatusProvider`, and `rootContainer` (the app-level `ProviderContainer` for reading providers from outside the widget tree — notification taps, home-widget actions). The authoritative provider map is `lib/di/CONTRACT.md`.
+
+- Read/watch via `ref.watch(fooProvider)` (reactive) / `ref.read(fooProvider)` (one-off); never a global service locator.
+- Widgets are `ConsumerWidget`/`ConsumerStatefulWidget`; `Obx` is replaced by `ref.watch`/`Consumer`.
+- Notifiers never navigate or show dialogs — they expose state; the UI reacts via `ref.listen` + `Navigator`.
+- App root is `MaterialApp` (with global `navigatorKey`) inside `UncontrolledProviderScope(container: rootContainer, …)` in `main.dart`.
+- The project was migrated off GetX (2026-07-06); do **not** reintroduce GetX.
 
 ### Database: Floor ORM
 - Current DB version: **3** (`_databaseVersion` in `lib/database/app_database.dart`). Migrations live in `lib/database/migrations.dart`, registered via `.addMigrations(appMigrations)` in `lib/locator.dart`.
@@ -100,7 +108,7 @@ Confidence thresholds: meal >= 0.50, exercise >= 0.50 (in `AiPipelineService`).
 - **Nutrition goals**: `NutritionGoalsService` reads/writes goals through `DayRecordRepository.upsertDayRecord()`, propagated to current + future dates.
 
 ### Navigation
-Direct GetX navigation: `Get.to(() => const SomeScreen())` — no named route table. Main shell is a 3-tab `MainScreen` (Dashboard/Progress/Profile) with a FAB for quick actions.
+Direct imperative navigation from the UI: `Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SomeScreen()))` — no named route table. For state-driven transitions (e.g. after an async notifier action), the widget uses `ref.listen(provider, ...)` and then navigates. Context-less entry points (notification tap, home-widget action) navigate via the global `navigatorKey` (`lib/navigation.dart`). Main shell is a 3-tab `MainScreen` (Dashboard/Progress/Profile) with a FAB for quick actions.
 
 ### Localization
 - `easy_localization` with generated keys in `lib/generated/locale_keys.g.dart`
