@@ -130,15 +130,6 @@ lib/
 
 Supported locales: English (`en`) and Czech (`cs`). Translation files live in `assets/translations/`. After editing them, regenerate the localization keys with `bash commands/generate_localization.command`.
 
-## Screenshots
-
-<!-- Add screenshots here, e.g.:
-![Dashboard](docs/screenshots/dashboard.png)
-![Meal analysis](docs/screenshots/analysis.png)
--->
-
-_To be added._
-
 ## License
 
 Developed for academic purposes as part of a master's thesis at ČVUT FEL. Not licensed for production or commercial use.
