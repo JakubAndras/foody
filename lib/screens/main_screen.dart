@@ -31,11 +31,7 @@ import 'package:diplomka/widgets/streak_dialog.dart';
 /// odscrollování na energetickou sekci na Progress tabu).
 @immutable
 class MainScreenState {
-  const MainScreenState({
-    this.selectedIndex = 0,
-    this.isCalendarSheetVisible = false,
-    this.scrollToEnergy = false,
-  });
+  const MainScreenState({this.selectedIndex = 0, this.isCalendarSheetVisible = false, this.scrollToEnergy = false});
 
   /// Aktivní tab (0 = Dashboard, 1 = Progress, 2 = Profile).
   final int selectedIndex;
@@ -46,11 +42,7 @@ class MainScreenState {
   /// Po přepnutí na Progress tab se má odscrollovat na energetickou sekci.
   final bool scrollToEnergy;
 
-  MainScreenState copyWith({
-    int? selectedIndex,
-    bool? isCalendarSheetVisible,
-    bool? scrollToEnergy,
-  }) {
+  MainScreenState copyWith({int? selectedIndex, bool? isCalendarSheetVisible, bool? scrollToEnergy}) {
     return MainScreenState(
       selectedIndex: selectedIndex ?? this.selectedIndex,
       isCalendarSheetVisible: isCalendarSheetVisible ?? this.isCalendarSheetVisible,
@@ -198,7 +190,7 @@ class _DashboardStreakPill extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final daily = ref.watch(dailyRecordProvider);
 
-    if (daily.isLoadingStreak) {
+    if (daily.streak.isLoading) {
       return SizedBox(
         width: AppSizes.streakPillMinWidthTripleDigit,
         height: AppSizes.streakPillHeight,
@@ -213,10 +205,10 @@ class _DashboardStreakPill extends ConsumerWidget {
     }
 
     Widget content;
-    if (daily.streakError.isNotEmpty) {
+    if (daily.streak.hasError) {
       content = Icon(CupertinoIcons.exclamationmark_circle, color: AppColors.error, size: AppSizes.iconSm);
     } else {
-      final streak = daily.streakInfo?.currentStreak ?? 0;
+      final streak = daily.streak.valueOrNull?.currentStreak ?? 0;
       content = Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -302,10 +294,7 @@ class _BorderedGlassBottomBar extends StatelessWidget {
                 spacing: child.spacing,
                 children: [
                   Expanded(
-                    child: Container(
-                      height: child.barHeight,
-                      decoration: const BoxDecoration(),
-                    ),
+                    child: Container(height: child.barHeight, decoration: const BoxDecoration()),
                   ),
                   if (child.extraButton != null)
                     Container(

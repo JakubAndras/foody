@@ -50,9 +50,7 @@ class DailyRecordState {
     this.isLoadingDayRecord = false,
     this.initialLoadComplete = false,
     this.dayRecordError = '',
-    this.streakInfo,
-    this.isLoadingStreak = false,
-    this.streakError = '',
+    this.streak = const AsyncLoading<StreakInfo>(),
     this.rolloverAmount = 0,
   });
 
@@ -65,11 +63,10 @@ class DailyRecordState {
   /// Notifier nenaviguje ani nezobrazuje dialog; UI reaguje přes `ref.listen`.
   final String dayRecordError;
 
-  final StreakInfo? streakInfo;
-  final bool isLoadingStreak;
-
-  /// Locale klíč poslední chyby streaku (dříve `showSnackBar`).
-  final String streakError;
+  /// Streak jako `AsyncValue` (loading/error/data) přebíraný z `streakInfoProvider`.
+  /// Sjednocuje dřívější ruční trojici `streakInfo` + `isLoadingStreak` + `streakError`;
+  /// UI čte přímo `streak.isLoading` / `streak.hasError` / `streak.valueOrNull`.
+  final AsyncValue<StreakInfo> streak;
 
   final double rolloverAmount;
 
@@ -79,9 +76,7 @@ class DailyRecordState {
     bool? isLoadingDayRecord,
     bool? initialLoadComplete,
     String? dayRecordError,
-    Object? streakInfo = _undefined,
-    bool? isLoadingStreak,
-    String? streakError,
+    AsyncValue<StreakInfo>? streak,
     double? rolloverAmount,
   }) {
     return DailyRecordState(
@@ -90,9 +85,7 @@ class DailyRecordState {
       isLoadingDayRecord: isLoadingDayRecord ?? this.isLoadingDayRecord,
       initialLoadComplete: initialLoadComplete ?? this.initialLoadComplete,
       dayRecordError: dayRecordError ?? this.dayRecordError,
-      streakInfo: streakInfo == _undefined ? this.streakInfo : streakInfo as StreakInfo?,
-      isLoadingStreak: isLoadingStreak ?? this.isLoadingStreak,
-      streakError: streakError ?? this.streakError,
+      streak: streak ?? this.streak,
       rolloverAmount: rolloverAmount ?? this.rolloverAmount,
     );
   }
@@ -146,19 +139,13 @@ class DailyRecordNotifier extends Notifier<DailyRecordState> {
       initialLoadComplete: _initialLoadComplete,
       dayRecordError: '',
       rolloverAmount: _lastRollover,
-      streakInfo: streakAsync.valueOrNull,
-      isLoadingStreak: streakAsync.isLoading,
-      streakError: streakAsync.hasError ? LocaleKeys.common_something_went_wrong : '',
+      streak: streakAsync,
     );
   }
 
   void _applyStreakAsync(AsyncValue<StreakInfo> async) {
     debugPrint('[Streak] dashboard applyStreak: loading=${async.isLoading}, current=${async.valueOrNull?.currentStreak}, hasError=${async.hasError}');
-    state = state.copyWith(
-      streakInfo: async.valueOrNull,
-      isLoadingStreak: async.isLoading,
-      streakError: async.hasError ? LocaleKeys.common_something_went_wrong : '',
-    );
+    state = state.copyWith(streak: async);
   }
 
   Future<void> _syncHealthDataIfEnabled() async {
@@ -194,25 +181,14 @@ class DailyRecordNotifier extends Notifier<DailyRecordState> {
       _lastDayRecord = record;
       _initialLoadComplete = true;
       _lastRollover = rollover;
-      state = state.copyWith(
-        dayRecord: record,
-        isLoadingDayRecord: false,
-        initialLoadComplete: true,
-        dayRecordError: '',
-        rolloverAmount: rollover,
-      );
+      state = state.copyWith(dayRecord: record, isLoadingDayRecord: false, initialLoadComplete: true, dayRecordError: '', rolloverAmount: rollover);
     } catch (e) {
       if (generation != _fetchGeneration) return;
       nutritionGoals.syncFromDayRecord(date: date, dayRecord: null);
 
       _lastDayRecord = null;
       _lastRollover = 0;
-      state = state.copyWith(
-        dayRecord: null,
-        isLoadingDayRecord: false,
-        dayRecordError: LocaleKeys.common_something_went_wrong,
-        rolloverAmount: 0,
-      );
+      state = state.copyWith(dayRecord: null, isLoadingDayRecord: false, dayRecordError: LocaleKeys.common_something_went_wrong, rolloverAmount: 0);
     }
   }
 
@@ -297,10 +273,7 @@ class MealAnalysisNotifier extends Notifier<MealAnalysisState> {
     }
 
     try {
-      await analyzeMealFromImage(
-        selectedDate: ref.read(selectedDateProvider),
-        imagePath: imageFile.path,
-      );
+      await analyzeMealFromImage(selectedDate: ref.read(selectedDateProvider), imagePath: imageFile.path);
     } catch (e) {
       debugPrint('Error calling AI Service: $e');
     }
@@ -325,18 +298,8 @@ class MealAnalysisNotifier extends Notifier<MealAnalysisState> {
     );
   }
 
-  Future<MealAnalysisFlowResult> analyzeMealFromVoice({
-    required DateTime selectedDate,
-    required String description,
-    bool scrollToTodayMealsOnStart = false,
-  }) {
-    return analyzeMeal(
-      MealAnalysisRequest.voice(
-        selectedDate: selectedDate,
-        description: description,
-        scrollToTodayMealsOnStart: scrollToTodayMealsOnStart,
-      ),
-    );
+  Future<MealAnalysisFlowResult> analyzeMealFromVoice({required DateTime selectedDate, required String description, bool scrollToTodayMealsOnStart = false}) {
+    return analyzeMeal(MealAnalysisRequest.voice(selectedDate: selectedDate, description: description, scrollToTodayMealsOnStart: scrollToTodayMealsOnStart));
   }
 
   Future<MealAnalysisFlowResult> analyzeMeal(MealAnalysisRequest request) async {
@@ -390,10 +353,7 @@ class MealAnalysisNotifier extends Notifier<MealAnalysisState> {
     }
   }
 
-  Future<void> analyzeMealFromBarcode({
-    required DateTime selectedDate,
-    required String barcode,
-  }) async {
+  Future<void> analyzeMealFromBarcode({required DateTime selectedDate, required String barcode}) async {
     ref.read(activityAnalysisProvider.notifier).requestScrollToTodayMealsBottom();
     _beginMealAnalysis();
     try {
@@ -406,15 +366,8 @@ class MealAnalysisNotifier extends Notifier<MealAnalysisState> {
       final List<File>? barcodeImageFiles = barcodePhotoPath == null ? null : <File>[File(barcodePhotoPath)];
 
       if (lookupResult != null && lookupResult.hasCompleteNutrientsForDirectUse) {
-        final meal = _buildMealFromBarcodeLookup(
-          selectedDate: selectedDate,
-          result: lookupResult,
-          photoPath: barcodePhotoRef,
-        );
-        await ref.read(dayRecordProvider.notifier).saveMealForDate(
-              date: selectedDate,
-              mealToSave: meal,
-            );
+        final meal = _buildMealFromBarcodeLookup(selectedDate: selectedDate, result: lookupResult, photoPath: barcodePhotoRef);
+        await ref.read(dayRecordProvider.notifier).saveMealForDate(date: selectedDate, mealToSave: meal);
         _notifyRecognitionComplete(message: tr(LocaleKeys.dashboard_meal_recognised), notificationId: 4001, showForegroundSnackBar: false);
         return;
       }
@@ -423,10 +376,7 @@ class MealAnalysisNotifier extends Notifier<MealAnalysisState> {
         selectedDate: selectedDate,
         imageFiles: barcodeImageFiles,
         photoPathToSave: barcodePhotoRef,
-        description: _buildBarcodeAiFallbackDescription(
-          barcode: barcode,
-          result: lookupResult,
-        ),
+        description: _buildBarcodeAiFallbackDescription(barcode: barcode, result: lookupResult),
         preferredMealName: lookupResult?.productName,
         // RESEARCH-ONLY: entrySource + barcodeOverride args are research-only
         entrySource: MealEntrySource.barcodeAiFallback,
@@ -461,7 +411,9 @@ class MealAnalysisNotifier extends Notifier<MealAnalysisState> {
     String? preferredMealName,
     String? barcodeOverride,
   }) async {
-    final result = await ref.read(aiPipelineServiceProvider).analyzeMeal(
+    final result = await ref
+        .read(aiPipelineServiceProvider)
+        .analyzeMeal(
           imageFiles: imageFiles,
           description: description,
           // RESEARCH-ONLY: modality routed to AiAttempt log
@@ -486,21 +438,14 @@ class MealAnalysisNotifier extends Notifier<MealAnalysisState> {
         meal = meal.copyWith(name: trimmedName);
       }
 
-      await ref.read(dayRecordProvider.notifier).saveMealForDate(
-            date: selectedDate,
-            mealToSave: meal,
-          );
+      await ref.read(dayRecordProvider.notifier).saveMealForDate(date: selectedDate, mealToSave: meal);
       return MealAnalysisFlowResult.success(status: result.status);
     } else {
       return MealAnalysisFlowResult.failure(message: result.message);
     }
   }
 
-  Meal _buildMealFromBarcodeLookup({
-    required DateTime selectedDate,
-    required BarcodeLookupResult result,
-    String? photoPath,
-  }) {
+  Meal _buildMealFromBarcodeLookup({required DateTime selectedDate, required BarcodeLookupResult result, String? photoPath}) {
     final timestamp = _applyDateToTime(DateTime.now(), selectedDate);
     final nutriments = result.nutriments;
     final productWeight = _parseProductWeightGrams(result.quantity);
@@ -556,10 +501,7 @@ class MealAnalysisNotifier extends Notifier<MealAnalysisState> {
     return 100;
   }
 
-  String _buildBarcodeAiFallbackDescription({
-    required String barcode,
-    BarcodeLookupResult? result,
-  }) {
+  String _buildBarcodeAiFallbackDescription({required String barcode, BarcodeLookupResult? result}) {
     final buffer = StringBuffer();
     buffer.writeln('Barcode scan fallback request.');
     buffer.writeln('barcode: $barcode');
@@ -635,21 +577,13 @@ final mealAnalysisProvider = NotifierProvider<MealAnalysisNotifier, MealAnalysis
 /// pouze inkrementují; UI reaguje na změnu hodnoty.
 @immutable
 class ActivityAnalysisState {
-  const ActivityAnalysisState({
-    this.newExerciseAnalyzeLoading = false,
-    this.scrollToTodayMealsRequestId = 0,
-    this.scrollToExercisesRequestId = 0,
-  });
+  const ActivityAnalysisState({this.newExerciseAnalyzeLoading = false, this.scrollToTodayMealsRequestId = 0, this.scrollToExercisesRequestId = 0});
 
   final bool newExerciseAnalyzeLoading;
   final int scrollToTodayMealsRequestId;
   final int scrollToExercisesRequestId;
 
-  ActivityAnalysisState copyWith({
-    bool? newExerciseAnalyzeLoading,
-    int? scrollToTodayMealsRequestId,
-    int? scrollToExercisesRequestId,
-  }) {
+  ActivityAnalysisState copyWith({bool? newExerciseAnalyzeLoading, int? scrollToTodayMealsRequestId, int? scrollToExercisesRequestId}) {
     return ActivityAnalysisState(
       newExerciseAnalyzeLoading: newExerciseAnalyzeLoading ?? this.newExerciseAnalyzeLoading,
       scrollToTodayMealsRequestId: scrollToTodayMealsRequestId ?? this.scrollToTodayMealsRequestId,
@@ -668,11 +602,7 @@ class ActivityAnalysisNotifier extends Notifier<ActivityAnalysisState> {
   @override
   ActivityAnalysisState build() => const ActivityAnalysisState();
 
-  Future<void> analyzeExerciseFromVoice({
-    required DateTime selectedDate,
-    required String description,
-    bool scrollToTodayMealsOnStart = true,
-  }) async {
+  Future<void> analyzeExerciseFromVoice({required DateTime selectedDate, required String description, bool scrollToTodayMealsOnStart = true}) async {
     final trimmedDescription = description.trim();
     if (trimmedDescription.isEmpty) {
       // Dříve showSnackBar (prázdný popis) — UI (Tier C).
@@ -708,10 +638,7 @@ class ActivityAnalysisNotifier extends Notifier<ActivityAnalysisState> {
         confidence: answer.confidence,
       );
 
-      await ref.read(dayRecordProvider.notifier).saveExerciseForDate(
-            date: selectedDate,
-            exerciseToSave: exercise,
-          );
+      await ref.read(dayRecordProvider.notifier).saveExerciseForDate(date: selectedDate, exerciseToSave: exercise);
       _notifyRecognitionComplete(message: tr(LocaleKeys.dashboard_exercise_recognised), notificationId: 4002);
     } catch (e) {
       // Dříve showSnackBar (vytvoření cvičení selhalo) — UI (Tier C).
@@ -752,32 +679,20 @@ final activityAnalysisProvider = NotifierProvider<ActivityAnalysisNotifier, Acti
 
 /// Přenese časovou složku [source] na kalendářní den [targetDate].
 DateTime _applyDateToTime(DateTime source, DateTime targetDate) {
-  return DateTime(
-    targetDate.year,
-    targetDate.month,
-    targetDate.day,
-    source.hour,
-    source.minute,
-    source.second,
-    source.millisecond,
-    source.microsecond,
-  );
+  return DateTime(targetDate.year, targetDate.month, targetDate.day, source.hour, source.minute, source.second, source.millisecond, source.microsecond);
 }
 
 /// Oznámí dokončení rozpoznání. Na popředí dřív zobrazoval snackbar (nyní řeší
 /// UI přes `ref.listen` — Tier C), na pozadí odešle systémovou notifikaci.
-void _showRecognitionNotification(
-  Ref ref, {
-  required bool isInForeground,
-  required String message,
-  required int notificationId,
-  bool showForegroundSnackBar = true,
-}) {
+void _showRecognitionNotification(Ref ref, {required bool isInForeground, required String message, required int notificationId, bool showForegroundSnackBar = true}) {
   if (isInForeground) {
     // TODO Tier C: úspěšné oznámení na popředí (dříve showSnackBar) řeší UI.
     return;
   }
-  ref.read(trackingReminderServiceProvider).notificationsPlugin.show(
+  ref
+      .read(trackingReminderServiceProvider)
+      .notificationsPlugin
+      .show(
         notificationId,
         tr(LocaleKeys.common_app_name),
         message,
