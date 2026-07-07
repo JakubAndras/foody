@@ -1,80 +1,148 @@
-A mobile application for calorie tracking using AI, developed as part of a diploma thesis.
+# Foody
+
+**AI-powered calorie tracking mobile app.** Photograph a meal, describe it by voice or text, or scan a barcode, and Foody estimates its nutritional values using a large language model.
+
+Built with Flutter as the practical part of a master's thesis at the **Faculty of Electrical Engineering, Czech Technical University in Prague (ČVUT FEL)**.
+
+![Flutter](https://img.shields.io/badge/Flutter-3.35-02569B?logo=flutter&logoColor=white)
+![Dart](https://img.shields.io/badge/Dart-3.9-0175C2?logo=dart&logoColor=white)
+![State](https://img.shields.io/badge/state-Riverpod-4c53c4)
+![Platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS-lightgrey)
 
 ## Overview
 
-This project is a cross-platform mobile application built with the Flutter framework. Its main purpose is to simplify the process of logging meals by allowing users to take a photo of their food, which is then analyzed by a publicly available artificial intelligence (e.g., Google Gemini) to return estimated nutritional values. The application serves as the practical part of a diploma thesis.
+Foody simplifies meal logging. Instead of searching databases and weighing portions by hand, the user captures the meal (photo, spoken description, free text, or barcode) and the app returns an estimated dish name, ingredient breakdown, portion weight, and macronutrients. Everything is stored locally in an on-device database, so the app works offline for everything except the AI analysis itself.
+
+The app is provider-agnostic on the AI side: **OpenAI is the primary provider**, with **Google Gemini** supported as an interchangeable alternative.
 
 ## Features
 
- - Automatic food analysis from a photograph using an external AI.
- - Automatic food analysis based on text description using an external AI.
- - Display of estimated calories, macronutrients, and ingredients.
- - Barcode scanning for quick product entry.
- - Tracking of daily calorie intake and goals.
- - Display of statistics and intake history.
- - Simple and cross-platform user interface thanks to Flutter.
+**Meal logging**
+- Photo-based recognition using a multimodal LLM
+- Text description recognition
+- Voice input (locale-aware, cs/en) via speech-to-text
+- Barcode scanning (EAN) with lookup against Open Food Facts
+- Manual entry with gram/piece units
+- Confidence indication on AI results (color-coded)
+- Re-run recognition and "improve with AI" from the edit screen
+- Favorites and a personal library of reusable meals, ingredients, and exercises
 
-## Requirements
+**Tracking and insight**
+- Daily dashboard: intake vs. goal for calories and macros
+- Weekly and monthly overviews, history, and charts
+- Exercise tracking (manual, AI, voice, templates)
+- Weight tracking with history and BMI
+- Streaks and rollover calories
+- Dietary restrictions with per-meal violation warnings
+- Ask AI: natural-language questions over the user's own data
 
- - Flutter SDK 3.0+ (3.24.1)
- - Dart SDK 3.0+ (3.5.1)
- - Visual Studio Code or Android Studio
- - A valid API key for a public AI service (e.g., Google Gemini API)
+**Platform integration**
+- Apple Health / Health Connect sync
+- Home-screen widget for quick actions
+- Configurable local reminders and motivational summaries
+- Data export to PDF and CSV
+- Localization (English, Czech)
+- Offline-first local storage
 
-## Development
+## Tech stack
 
-This project uses the following technologies:
- - Flutter for the user interface and application logic.
- - Dart as the programming language.
- - Publicly Available AI (Google Gemini) for image analysis.
- - Dio package for network communication with the API.
- - GetX package for application state management.
+| Area | Choice |
+|------|--------|
+| UI & logic | Flutter / Dart |
+| State management | Riverpod (`flutter_riverpod`) with `Notifier` / `AsyncNotifier`, co-located providers |
+| Local database | Floor (SQLite ORM), normalized FK schema |
+| Networking | Dio |
+| AI | OpenAI (primary), Google Gemini (supported), provider-agnostic pipeline |
+| Barcode data | Open Food Facts API |
+| Voice | `speech_to_text` |
+| Health | `health` (Apple Health / Health Connect) |
+| Localization | `easy_localization` |
 
-## Core Functionality
+### Architecture at a glance
 
-1. AI Food Analysis
-   1. The user takes a photo of the food directly in the app OR he writes a description of the food in the app.
-   2. The image is sent to the multimodal artificial intelligence API (e.g., Gemini API).
-   3. The AI analyzes the image and returns structured data in JSON format.
-   4. The JSON contains the estimated dish name, a list of ingredients, weight, and nutritional values (calories, proteins, carbohydrates, fats).
-   5. The app processes the data and displays it to the user for confirmation and logging into the daily summary and stored it in the user database. 
-2. Barcode Logging
-   1. The application allows barcode scanning (EAN) for quick searching of commercial foods in an external database Open Food Facts (OFF).
-   2. After successful code recognition, the nutritional values for the product are automatically retrieved and stored in the user database.
-3. Dashboard and Statistics
-   1. The main screen (dashboard) displays a daily summary of calories and nutritional values consumed versus the set goal.
-   2. The user has access to history and charts that visualize their eating habits over time.
+- **State**: reactive state and business logic live in `Notifier` / `AsyncNotifier` classes exposed via providers; plain services are exposed via `Provider`. Providers are co-located in the file of their class. Notifiers never navigate or show UI; the UI reacts via `ref.watch` / `ref.listen`.
+- **Data**: Floor entities and DAOs, with a `DayRecordRepository` that assembles domain aggregates (day record + meals + ingredients + exercises) for the UI.
+- **AI pipeline**: `Input → AiPipelineService → AiServiceManager (OpenAI | Gemini) → REST client → structured JSON → confidence gate → result`.
 
-## Project Structure
+## Getting started
 
-This project has the following basic structure (subject to change and expansion).
-1. lib
-   1. controller (directory)
-   2. database (directory)
-   3. generated (directory)
-   4. model (directory)
-   5. screens (directory)
-   6. services (directory)
-   7. utils (directory)
-   8. widgets (directory)
-   9. app_theme.dart
-   10. main.dart
+### Prerequisites
 
-## UI Reference
+- Flutter SDK **3.35+** (Dart **3.9+**)
+- Android Studio or VS Code with the Flutter/Dart plugins
+- An API key for at least one AI provider (OpenAI, optionally Gemini)
 
-This project follows a design style inspired by existing calorie tracking applications.  
-To ensure consistency, several screenshots are provided in the `assets/reference_ui/` directory as reference material.  
-These screenshots are only for design inspiration and are not part of the functional application.
+### Setup
 
-## License
+```bash
+# 1. Clone
+git clone https://github.com/JakubAndras/foody.git
+cd foody
 
-This project is being developed for the purposes of a diploma thesis.
+# 2. Create the environment file (git-ignored) in the project root
+#    .env
+#    OPENAI_API_KEY=sk-...
+#    GEMINI_API_KEY=...      # optional
 
-## Contact
+# 3. Install dependencies
+flutter pub get
 
-Created by Jakub Andras.
+# 4. Generate database and model code
+flutter pub run build_runner build --delete-conflicting-outputs
+
+# 5. Run
+flutter run
+```
+
+> The `.env` file is never committed. Without a valid API key the AI features will fail, but manual entry, barcode lookup, and tracking still work.
 
 ## Useful commands
 
- - generate db -> flutter pub run build_runner build --delete-conflicting-outputs
+```bash
+flutter run                                                      # run the app
+flutter build apk --release                                      # Android release
+flutter build ipa --release                                      # iOS release
+flutter pub run build_runner build --delete-conflicting-outputs  # regenerate DB / models
+bash commands/generate_localization.command                      # regenerate localization keys
+flutter analyze                                                  # static analysis
+flutter test                                                     # unit / widget tests
+dart format --line-length 180 lib/                               # format
+```
 
+## Project structure
+
+```
+lib/
+├── main.dart          # entry point, DI bootstrap, runApp
+├── app.dart           # MaterialApp, onboarding gate
+├── di/                # shared providers + provider contract
+├── state/             # Riverpod notifiers (UI state + business logic)
+├── services/          # app-scoped services
+├── database/          # Floor entities, DAOs, migrations
+├── network/           # REST clients
+├── model/             # data models
+├── screens/           # UI screens
+├── widgets/           # reusable UI components
+└── utils/             # helpers
+```
+
+## Localization
+
+Supported locales: English (`en`) and Czech (`cs`). Translation files live in `assets/translations/`. After editing them, regenerate the localization keys with `bash commands/generate_localization.command`.
+
+## Screenshots
+
+<!-- Add screenshots here, e.g.:
+![Dashboard](docs/screenshots/dashboard.png)
+![Meal analysis](docs/screenshots/analysis.png)
+-->
+
+_To be added._
+
+## License
+
+Developed for academic purposes as part of a master's thesis at ČVUT FEL. Not licensed for production or commercial use.
+
+## Contact
+
+Created by **Jakub Andras**.
