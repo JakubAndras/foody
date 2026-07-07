@@ -1,15 +1,10 @@
 import 'package:diplomka/model/language_settings.dart';
 import 'package:diplomka/services/language_settings_service.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Immutable stav nastavení jazyka.
 class LanguageSettingsState {
-  const LanguageSettingsState({
-    this.appLanguage = AppLanguage.english,
-    this.voiceLogLanguagePreference = VoiceLogLanguagePreference.followApp,
-  });
+  const LanguageSettingsState({this.appLanguage = AppLanguage.english, this.voiceLogLanguagePreference = VoiceLogLanguagePreference.followApp});
 
   final AppLanguage appLanguage;
   final VoiceLogLanguagePreference voiceLogLanguagePreference;
@@ -25,14 +20,8 @@ class LanguageSettingsState {
     }
   }
 
-  LanguageSettingsState copyWith({
-    AppLanguage? appLanguage,
-    VoiceLogLanguagePreference? voiceLogLanguagePreference,
-  }) {
-    return LanguageSettingsState(
-      appLanguage: appLanguage ?? this.appLanguage,
-      voiceLogLanguagePreference: voiceLogLanguagePreference ?? this.voiceLogLanguagePreference,
-    );
+  LanguageSettingsState copyWith({AppLanguage? appLanguage, VoiceLogLanguagePreference? voiceLogLanguagePreference}) {
+    return LanguageSettingsState(appLanguage: appLanguage ?? this.appLanguage, voiceLogLanguagePreference: voiceLogLanguagePreference ?? this.voiceLogLanguagePreference);
   }
 }
 
@@ -40,14 +29,12 @@ class LanguageSettingsNotifier extends Notifier<LanguageSettingsState> {
   @override
   LanguageSettingsState build() => const LanguageSettingsState();
 
-  /// Načte aktuální jazyk aplikace z lokalizačního kontextu a uloženou preferenci hlasového logu.
-  Future<void> initializeFromContext(BuildContext context) async {
-    final currentLanguage = AppLanguageX.fromLanguageCode(context.locale.languageCode);
+  /// Načte aktuální jazyk aplikace z předaného kódu jazyka a uloženou preferenci
+  /// hlasového logu. Notifier nezná `BuildContext` — kód jazyka poskytuje UI vrstva.
+  Future<void> initialize(String languageCode) async {
+    final currentLanguage = AppLanguageX.fromLanguageCode(languageCode);
     final preference = await ref.read(languageSettingsServiceProvider).load();
-    state = state.copyWith(
-      appLanguage: currentLanguage,
-      voiceLogLanguagePreference: preference,
-    );
+    state = state.copyWith(appLanguage: currentLanguage, voiceLogLanguagePreference: preference);
   }
 
   void setAppLanguage(AppLanguage language) {

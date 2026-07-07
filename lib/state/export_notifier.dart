@@ -11,7 +11,6 @@ import 'package:diplomka/services/nutrition_goals_service.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/services/share/app_share_service.dart';
 import 'package:diplomka/services/weight_entry_repository.dart';
-import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,32 +19,45 @@ import 'package:share_plus/share_plus.dart';
 
 enum ExportDateRange { last7, last30, allTime, custom }
 
+/// Druh uživatelské zprávy z exportu (dříve `SnackBarType`).
+enum ExportMessageKind { info, error }
+
+/// Jednorázová uživatelská zpráva vystavená ve stavu (dříve `showSnackBar`).
+/// Notifier nenaviguje ani nezobrazuje UI; nese jen locale klíče a druh, UI je
+/// promítne do snackbaru přes `ref.listen`. Každý výskyt je nová instance, takže
+/// `ref.listen` pozná i dvě po sobě jdoucí stejné zprávy.
+@immutable
+class ExportMessage {
+  const ExportMessage({required this.titleKey, required this.subtitleKey, required this.kind});
+
+  final String titleKey;
+  final String subtitleKey;
+  final ExportMessageKind kind;
+}
+
+/// Sentinel pro `copyWith`, aby šlo nullovatelnou `message` explicitně nastavit na `null`.
+const Object _undefined = Object();
+
 /// Immutable stav exportní obrazovky.
 @immutable
 class ExportState {
-  const ExportState({
-    this.selectedRange = ExportDateRange.last7,
-    this.customStart,
-    this.customEnd,
-    this.isExporting = false,
-  });
+  const ExportState({this.selectedRange = ExportDateRange.last7, this.customStart, this.customEnd, this.isExporting = false, this.message});
 
   final ExportDateRange selectedRange;
   final DateTime? customStart;
   final DateTime? customEnd;
   final bool isExporting;
 
-  ExportState copyWith({
-    ExportDateRange? selectedRange,
-    DateTime? customStart,
-    DateTime? customEnd,
-    bool? isExporting,
-  }) {
+  /// Poslední uživatelská zpráva (dříve `showSnackBar`). UI reaguje přes `ref.listen`.
+  final ExportMessage? message;
+
+  ExportState copyWith({ExportDateRange? selectedRange, DateTime? customStart, DateTime? customEnd, bool? isExporting, Object? message = _undefined}) {
     return ExportState(
       selectedRange: selectedRange ?? this.selectedRange,
       customStart: customStart ?? this.customStart,
       customEnd: customEnd ?? this.customEnd,
       isExporting: isExporting ?? this.isExporting,
+      message: message == _undefined ? this.message : message as ExportMessage?,
     );
   }
 }
@@ -116,7 +128,9 @@ class ExportNotifier extends Notifier<ExportState> {
     try {
       final (records, weights) = await _fetchData();
       if (records.isEmpty && weights.isEmpty) {
-        showSnackBar(message: tr(LocaleKeys.export_pdf_title), subtitle: tr(LocaleKeys.export_no_data), type: SnackBarType.info);
+        state = state.copyWith(
+          message: const ExportMessage(titleKey: LocaleKeys.export_pdf_title, subtitleKey: LocaleKeys.export_no_data, kind: ExportMessageKind.info),
+        );
         return;
       }
       final goals = ref.read(nutritionGoalsProvider.notifier).goalsForDate(DateTime.now());
@@ -143,7 +157,9 @@ class ExportNotifier extends Notifier<ExportState> {
         ),
       );
     } catch (e) {
-      showSnackBar(message: tr(LocaleKeys.common_error), subtitle: tr(LocaleKeys.export_error), type: SnackBarType.error);
+      state = state.copyWith(
+        message: const ExportMessage(titleKey: LocaleKeys.common_error, subtitleKey: LocaleKeys.export_error, kind: ExportMessageKind.error),
+      );
     } finally {
       state = state.copyWith(isExporting: false);
     }
@@ -154,7 +170,9 @@ class ExportNotifier extends Notifier<ExportState> {
     try {
       final (records, weights) = await _fetchData();
       if (records.isEmpty && weights.isEmpty) {
-        showSnackBar(message: tr(LocaleKeys.export_pdf_title), subtitle: tr(LocaleKeys.export_no_data), type: SnackBarType.info);
+        state = state.copyWith(
+          message: const ExportMessage(titleKey: LocaleKeys.export_pdf_title, subtitleKey: LocaleKeys.export_no_data, kind: ExportMessageKind.info),
+        );
         return;
       }
       final session = ref.read(sessionProvider);
@@ -185,7 +203,9 @@ class ExportNotifier extends Notifier<ExportState> {
         ),
       );
     } catch (e) {
-      showSnackBar(message: tr(LocaleKeys.common_error), subtitle: tr(LocaleKeys.export_error), type: SnackBarType.error);
+      state = state.copyWith(
+        message: const ExportMessage(titleKey: LocaleKeys.common_error, subtitleKey: LocaleKeys.export_error, kind: ExportMessageKind.error),
+      );
     } finally {
       state = state.copyWith(isExporting: false);
     }

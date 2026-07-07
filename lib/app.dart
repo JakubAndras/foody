@@ -27,7 +27,7 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      NotificationBootstrap.run();
+      NotificationBootstrap.run(ref);
     });
   }
 

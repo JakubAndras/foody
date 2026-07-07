@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:diplomka/app_theme.dart';
+import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:diplomka/widgets/sheet_drag_handle.dart';
 import 'package:diplomka/state/export_notifier.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
@@ -14,6 +15,21 @@ class ExportPdfDateRangeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Zprávu vystavenou notifierem (prázdná data / chyba exportu) zobrazíme jako
+    // snackbar. Porovnáním instancí `message` se vyhneme opakovanému zobrazení
+    // při nesouvisejících změnách stavu.
+    ref.listen<ExportState>(exportProvider, (previous, next) {
+      final message = next.message;
+      if (message != null && message != previous?.message) {
+        showSnackBar(
+          context: context,
+          message: tr(message.titleKey),
+          subtitle: tr(message.subtitleKey),
+          type: message.kind == ExportMessageKind.error ? SnackBarType.error : SnackBarType.info,
+        );
+      }
+    });
+
     final state = ref.watch(exportProvider);
     final notifier = ref.read(exportProvider.notifier);
     return Stack(
@@ -36,28 +52,32 @@ class ExportPdfDateRangeScreen extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ...ExportDateRange.values.map((range) => Padding(
-                              padding: const EdgeInsets.only(bottom: AppSpacing.m),
-                              child: _DateRangeButton(
-                                label: _rangeLabel(range),
-                                isSelected: state.selectedRange == range,
-                                onTap: () async {
-                                  notifier.selectRange(range);
-                                  if (range == ExportDateRange.custom) {
-                                    await _pickCustomRange(context, ref);
-                                  }
-                                },
-                              ),
-                            )),
-                        Builder(builder: (_) {
-                          final show = state.selectedRange == ExportDateRange.custom && state.customStart != null && state.customEnd != null;
-                          return Center(
-                            child: Text(
-                              show ? '${_fmtDate(state.customStart!)} – ${_fmtDate(state.customEnd!)}' : ' ',
-                              style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w600),
+                        ...ExportDateRange.values.map(
+                          (range) => Padding(
+                            padding: const EdgeInsets.only(bottom: AppSpacing.m),
+                            child: _DateRangeButton(
+                              label: _rangeLabel(range),
+                              isSelected: state.selectedRange == range,
+                              onTap: () async {
+                                notifier.selectRange(range);
+                                if (range == ExportDateRange.custom) {
+                                  await _pickCustomRange(context, ref);
+                                }
+                              },
                             ),
-                          );
-                        }),
+                          ),
+                        ),
+                        Builder(
+                          builder: (_) {
+                            final show = state.selectedRange == ExportDateRange.custom && state.customStart != null && state.customEnd != null;
+                            return Center(
+                              child: Text(
+                                show ? '${_fmtDate(state.customStart!)} – ${_fmtDate(state.customEnd!)}' : ' ',
+                                style: AppTextStyles.body16.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w600),
+                              ),
+                            );
+                          },
+                        ),
                       ],
                     ),
                   ),
@@ -83,7 +103,10 @@ class ExportPdfDateRangeScreen extends ConsumerWidget {
                           side: BorderSide(color: AppColors.textSecondary),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadii.pill)),
                         ),
-                        child: Text(tr(LocaleKeys.export_csv), style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                        child: Text(
+                          tr(LocaleKeys.export_csv),
+                          style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+                        ),
                       ),
                     ),
                   ],
@@ -109,10 +132,7 @@ class ExportPdfDateRangeScreen extends ConsumerWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => _CalendarRangeSheet(
-        initialStart: state.customStart,
-        initialEnd: state.customEnd,
-      ),
+      builder: (_) => _CalendarRangeSheet(initialStart: state.customStart, initialEnd: state.customEnd),
     );
     if (result != null) {
       ref.read(exportProvider.notifier).setCustomDates(result.$1, result.$2);
@@ -153,7 +173,15 @@ class _CalendarRangeSheetState extends State<_CalendarRangeSheet> {
   late final List<DateTime> _months;
   late final ScrollController _scrollController;
 
-  List<String> get _weekdays => [tr(LocaleKeys.day_mon), tr(LocaleKeys.day_tue), tr(LocaleKeys.day_wed), tr(LocaleKeys.day_thu), tr(LocaleKeys.day_fri), tr(LocaleKeys.day_sat), tr(LocaleKeys.day_sun)];
+  List<String> get _weekdays => [
+    tr(LocaleKeys.day_mon),
+    tr(LocaleKeys.day_tue),
+    tr(LocaleKeys.day_wed),
+    tr(LocaleKeys.day_thu),
+    tr(LocaleKeys.day_fri),
+    tr(LocaleKeys.day_sat),
+    tr(LocaleKeys.day_sun),
+  ];
   static final _monthFmt = DateFormat('MMMM yyyy');
   static const _cellSize = 48.0;
   static final _rangeBg = AppColors.rangeBg;
@@ -249,10 +277,7 @@ class _CalendarRangeSheetState extends State<_CalendarRangeSheet> {
               children: [
                 Text(
                   _start != null ? _fmtDateShort(_start!) : tr(LocaleKeys.export_start_date),
-                  style: AppTextStyles.body14.copyWith(
-                    color: _start != null ? AppColors.textPrimary : AppColors.textTertiary,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: AppTextStyles.body14.copyWith(color: _start != null ? AppColors.textPrimary : AppColors.textTertiary, fontWeight: FontWeight.w600),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
@@ -260,10 +285,7 @@ class _CalendarRangeSheetState extends State<_CalendarRangeSheet> {
                 ),
                 Text(
                   _end != null ? _fmtDateShort(_end!) : tr(LocaleKeys.export_end_date),
-                  style: AppTextStyles.body14.copyWith(
-                    color: _end != null ? AppColors.textPrimary : AppColors.textTertiary,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: AppTextStyles.body14.copyWith(color: _end != null ? AppColors.textPrimary : AppColors.textTertiary, fontWeight: FontWeight.w600),
                 ),
               ],
             ),
@@ -275,11 +297,16 @@ class _CalendarRangeSheetState extends State<_CalendarRangeSheet> {
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
             child: Row(
               children: _weekdays
-                  .map((d) => Expanded(
-                        child: Center(
-                          child: Text(d, style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w600, color: AppColors.textSecondary)),
+                  .map(
+                    (d) => Expanded(
+                      child: Center(
+                        child: Text(
+                          d,
+                          style: AppTextStyles.body14.copyWith(fontWeight: FontWeight.w600, color: AppColors.textSecondary),
                         ),
-                      ))
+                      ),
+                    ),
+                  )
                   .toList(),
             ),
           ),
@@ -299,10 +326,7 @@ class _CalendarRangeSheetState extends State<_CalendarRangeSheet> {
           // ── Apply button ──
           Padding(
             padding: EdgeInsets.fromLTRB(AppSpacing.screen, AppSpacing.s, AppSpacing.screen, AppSpacing.bottom + MediaQuery.of(context).padding.bottom),
-            child: ProfilePrimaryButton(
-              label: tr(LocaleKeys.common_apply),
-              onPressed: (_start != null && _end != null) ? () => Navigator.of(context).pop((_start!, _end!)) : null,
-            ),
+            child: ProfilePrimaryButton(label: tr(LocaleKeys.common_apply), onPressed: (_start != null && _end != null) ? () => Navigator.of(context).pop((_start!, _end!)) : null),
           ),
         ],
       ),
@@ -319,10 +343,7 @@ class _CalendarRangeSheetState extends State<_CalendarRangeSheet> {
         // Month header
         Padding(
           padding: const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.l, AppSpacing.m, AppSpacing.s),
-          child: Text(
-            _monthFmt.format(month),
-            style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w700),
-          ),
+          child: Text(_monthFmt.format(month), style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w700)),
         ),
         Divider(height: 1, color: AppColors.outline.withValues(alpha: 0.3)),
         const SizedBox(height: AppSpacing.xs),
@@ -358,7 +379,12 @@ class _CalendarRangeSheetState extends State<_CalendarRangeSheet> {
         }
       }
 
-      rows.add(SizedBox(height: _cellSize, child: Row(children: cells)));
+      rows.add(
+        SizedBox(
+          height: _cellSize,
+          child: Row(children: cells),
+        ),
+      );
     }
 
     return Column(children: rows);
@@ -381,10 +407,7 @@ class _CalendarRangeSheetState extends State<_CalendarRangeSheet> {
       final isLeft = isStart;
       decoration = BoxDecoration(
         color: _rangeBg,
-        borderRadius: BorderRadius.horizontal(
-          left: isLeft ? const Radius.circular(AppRadii.xs) : Radius.zero,
-          right: !isLeft ? const Radius.circular(AppRadii.xs) : Radius.zero,
-        ),
+        borderRadius: BorderRadius.horizontal(left: isLeft ? const Radius.circular(AppRadii.xs) : Radius.zero, right: !isLeft ? const Radius.circular(AppRadii.xs) : Radius.zero),
         border: Border(
           top: BorderSide(color: _edgeBorderColor, width: 1.5),
           bottom: BorderSide(color: _edgeBorderColor, width: 1.5),
@@ -424,7 +447,10 @@ class _CalendarRangeSheetState extends State<_CalendarRangeSheet> {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (isToday)
-                Text(tr(LocaleKeys.common_today), style: AppTextStyles.caption12.copyWith(fontWeight: FontWeight.w700, color: AppColors.textSecondary, fontSize: 9, height: 1)),
+                Text(
+                  tr(LocaleKeys.common_today),
+                  style: AppTextStyles.caption12.copyWith(fontWeight: FontWeight.w700, color: AppColors.textSecondary, fontSize: 9, height: 1),
+                ),
               Text(
                 '${date.day}',
                 style: AppTextStyles.body16.copyWith(fontWeight: isEdge || isToday ? FontWeight.w700 : FontWeight.w500, color: textColor),
@@ -465,10 +491,7 @@ class _DateRangeButton extends StatelessWidget {
         alignment: Alignment.center,
         child: Text(
           label,
-          style: AppTextStyles.body16.copyWith(
-            fontWeight: FontWeight.w600,
-            color: isSelected ? AppColors.onPrimary : AppColors.textPrimary,
-          ),
+          style: AppTextStyles.body16.copyWith(fontWeight: FontWeight.w600, color: isSelected ? AppColors.onPrimary : AppColors.textPrimary),
         ),
       ),
     );

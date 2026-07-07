@@ -42,160 +42,165 @@ class ProfileScreen extends ConsumerWidget {
       body: SafeArea(
         top: false,
         bottom: false,
-        child: Builder(builder: (context) {
-          final bottomInset = Platform.isAndroid ? MediaQuery.of(context).padding.bottom : 0.0;
-          final topInset = Platform.isAndroid ? AppSpacing.mega - 8 : AppSpacing.mega + AppSpacing.s;
-          return VariableBlurScrollView(
-          topBlurSigma: 52,
-          topFadeHeight: 40,
-          backgroundColor: Colors.transparent,
-          fadeColor: AppColors.meshBase,
-          backgroundWidget: const MeshGradientBackground(),
-          padding: EdgeInsets.fromLTRB(AppSpacing.m, topInset, AppSpacing.m, AppSpacing.mega + 42 + bottomInset),
-          //collapsedHeader: Text(tr(LocaleKeys.profile_title), style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w700)),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              //CollapsibleTitle(child: Text(tr(LocaleKeys.profile_title), style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w700))),
-              //const SizedBox(height: AppSpacing.s),
-              // const _ProfileHeaderCard(),
-              // const SizedBox(height: AppSpacing.l),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: sectionHeaderPaddingEnabled ? AppSpacing.s : 0),
-                child: ProfileSectionHeader(title: tr(LocaleKeys.profile_account)),
-              ),
-              const SizedBox(height: AppSpacing.s),
-              _ProfileGroupCard(
+        child: Builder(
+          builder: (context) {
+            final bottomInset = Platform.isAndroid ? MediaQuery.of(context).padding.bottom : 0.0;
+            final topInset = Platform.isAndroid ? AppSpacing.mega - 8 : AppSpacing.mega + AppSpacing.s;
+            return VariableBlurScrollView(
+              topBlurSigma: 52,
+              topFadeHeight: 40,
+              backgroundColor: Colors.transparent,
+              fadeColor: AppColors.meshBase,
+              backgroundWidget: const MeshGradientBackground(),
+              padding: EdgeInsets.fromLTRB(AppSpacing.m, topInset, AppSpacing.m, AppSpacing.mega + 42 + bottomInset),
+              //collapsedHeader: Text(tr(LocaleKeys.profile_title), style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w700)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _ProfileActionRow(
-                    title: tr(LocaleKeys.profile_personal_details),
-                    icon: CupertinoIcons.person,
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PersonalDetailsScreen())),
+                  //CollapsibleTitle(child: Text(tr(LocaleKeys.profile_title), style: AppTextStyles.h1.copyWith(fontWeight: FontWeight.w700))),
+                  //const SizedBox(height: AppSpacing.s),
+                  // const _ProfileHeaderCard(),
+                  // const SizedBox(height: AppSpacing.l),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: sectionHeaderPaddingEnabled ? AppSpacing.s : 0),
+                    child: ProfileSectionHeader(title: tr(LocaleKeys.profile_account)),
                   ),
-                  _ProfileActionRow(
-                    title: tr(LocaleKeys.profile_preferences),
-                    icon: CupertinoIcons.gear,
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PreferencesScreen())),
+                  const SizedBox(height: AppSpacing.s),
+                  _ProfileGroupCard(
+                    children: [
+                      _ProfileActionRow(
+                        title: tr(LocaleKeys.profile_personal_details),
+                        icon: CupertinoIcons.person,
+                        onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PersonalDetailsScreen())),
+                      ),
+                      _ProfileActionRow(
+                        title: tr(LocaleKeys.profile_preferences),
+                        icon: CupertinoIcons.gear,
+                        onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PreferencesScreen())),
+                      ),
+                      _ProfileActionRow(title: tr(LocaleKeys.profile_language), icon: CupertinoIcons.globe, showDivider: false, onTap: () => _showLanguageSheet(context, ref)),
+                    ],
                   ),
-                  _ProfileActionRow(title: tr(LocaleKeys.profile_language), icon: CupertinoIcons.globe, showDivider: false, onTap: () => _showLanguageSheet(context, ref)),
+                  const SizedBox(height: AppSpacing.l),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: sectionHeaderPaddingEnabled ? AppSpacing.s : 0),
+                    child: ProfileSectionHeader(title: tr(LocaleKeys.profile_goals_tracking)),
+                  ),
+                  const SizedBox(height: AppSpacing.s),
+                  _ProfileGroupCard(
+                    children: [
+                      _ProfileActionRow(
+                        title: tr(LocaleKeys.nutrition_goals_title),
+                        icon: CupertinoIcons.location,
+                        onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const EditNutritionGoalsScreen())),
+                      ),
+                      _ProfileActionRow(
+                        title: tr(LocaleKeys.profile_tracking_reminders),
+                        icon: CupertinoIcons.bell,
+                        onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const TrackingRemindersScreen())),
+                      ),
+                      _ProfileActionRow(
+                        title: tr(LocaleKeys.profile_motivational_summary),
+                        icon: CupertinoIcons.star,
+                        onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MotivationalSummaryScreen())),
+                      ),
+                      _ProfileActionRow(
+                        title: Platform.isIOS ? tr(LocaleKeys.health_apple_health) : tr(LocaleKeys.health_health_connect),
+                        icon: CupertinoIcons.heart,
+                        onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const HealthIntegrationScreen())),
+                      ),
+                      _ProfileActionRow(
+                        title: tr(LocaleKeys.profile_ring_colors),
+                        icon: CupertinoIcons.circle,
+                        showDivider: false,
+                        onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const RingColorsExplainedScreen())),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.l),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: sectionHeaderPaddingEnabled ? AppSpacing.s : 0),
+                    child: ProfileSectionHeader(title: tr(LocaleKeys.profile_progress_data)),
+                  ),
+                  const SizedBox(height: AppSpacing.s),
+                  _ProfileGroupCard(
+                    children: [
+                      _ProfileActionRow(
+                        title: tr(LocaleKeys.profile_export_summary),
+                        icon: CupertinoIcons.share,
+                        onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ExportPdfIntroScreen())),
+                      ),
+                      _ProfileActionRow(
+                        title: tr(LocaleKeys.profile_ask_ai),
+                        icon: CupertinoIcons.sparkles,
+                        onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AskAiScreen())),
+                      ),
+                      _ProfileActionRow(
+                        title: tr(LocaleKeys.profile_faq),
+                        icon: CupertinoIcons.question_circle,
+                        showDivider: false,
+                        onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const FaqScreen())),
+                      ),
+                    ],
+                  ),
+                  // TODO: Test section — hidden, re-enable for development
+                  // const SizedBox(height: AppSpacing.l),
+                  // Padding(
+                  //   padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
+                  //   child: ProfileSectionHeader(title: 'Test'),
+                  // ),
+                  // const SizedBox(height: AppSpacing.s),
+                  // _ProfileGroupCard(
+                  //   children: [
+                  //     _ProfileActionRow(title: 'Glass Test', icon: CupertinoIcons.circle_filled, onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const GlassTestScreen()))),
+                  //     _ProfileActionRow(title: 'Liquid Glass Widgets Test', icon: CupertinoIcons.sparkles, onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const LiquidGlassWidgetsTestScreen()))),
+                  //     _ProfileActionRow(title: 'Test Onboarding', icon: CupertinoIcons.play_circle, onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const OnboardingFlowScreen()))),
+                  //     _ProfileActionRow(title: 'Test Scanning Onboarding', icon: CupertinoIcons.viewfinder, showDivider: false, onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ScanOnboardingScreen(forceShow: true)))),
+                  //   ],
+                  // ),
+                  // TODO: Account Actions section — hidden for now, will be needed later
+                  // const SizedBox(height: AppSpacing.l),
+                  // Padding(
+                  //   padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
+                  //   child: ProfileSectionHeader(title: tr(LocaleKeys.profile_account_actions)),
+                  // ),
+                  // const SizedBox(height: AppSpacing.s),
+                  // _ProfileGroupCard(
+                  //   children: [
+                  //     _ProfileActionRow(
+                  //       title: tr(LocaleKeys.profile_logout),
+                  //       icon: CupertinoIcons.square_arrow_right,
+                  //       onTap: () => showSnackBar(message: tr(LocaleKeys.profile_logout), subtitle: tr(LocaleKeys.profile_logout_stub), type: SnackBarType.info),
+                  //     ),
+                  //     _ProfileActionRow(
+                  //       title: tr(LocaleKeys.profile_delete_account),
+                  //       icon: CupertinoIcons.person_badge_minus,
+                  //       showDivider: false,
+                  //       onTap: () => showSnackBar(message: tr(LocaleKeys.profile_delete_account), subtitle: tr(LocaleKeys.profile_delete_account_stub), type: SnackBarType.info),
+                  //     ),
+                  //   ],
+                  // ),
+                  const SizedBox(height: AppSpacing.s),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: sectionHeaderPaddingEnabled ? AppSpacing.s : 0),
+                    child: Center(
+                      child: Text(
+                        tr(LocaleKeys.profile_version, namedArgs: {'version': '0.0.0'}),
+                        style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary),
+                      ),
+                    ),
+                  ),
                 ],
               ),
-              const SizedBox(height: AppSpacing.l),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: sectionHeaderPaddingEnabled ? AppSpacing.s : 0),
-                child: ProfileSectionHeader(title: tr(LocaleKeys.profile_goals_tracking)),
-              ),
-              const SizedBox(height: AppSpacing.s),
-              _ProfileGroupCard(
-                children: [
-                  _ProfileActionRow(
-                    title: tr(LocaleKeys.nutrition_goals_title),
-                    icon: CupertinoIcons.location,
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const EditNutritionGoalsScreen())),
-                  ),
-                  _ProfileActionRow(
-                    title: tr(LocaleKeys.profile_tracking_reminders),
-                    icon: CupertinoIcons.bell,
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const TrackingRemindersScreen())),
-                  ),
-                  _ProfileActionRow(
-                    title: tr(LocaleKeys.profile_motivational_summary),
-                    icon: CupertinoIcons.star,
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MotivationalSummaryScreen())),
-                  ),
-                  _ProfileActionRow(
-                    title: Platform.isIOS ? tr(LocaleKeys.health_apple_health) : tr(LocaleKeys.health_health_connect),
-                    icon: CupertinoIcons.heart,
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const HealthIntegrationScreen())),
-                  ),
-                  _ProfileActionRow(
-                    title: tr(LocaleKeys.profile_ring_colors),
-                    icon: CupertinoIcons.circle,
-                    showDivider: false,
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const RingColorsExplainedScreen())),
-                  ),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.l),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: sectionHeaderPaddingEnabled ? AppSpacing.s : 0),
-                child: ProfileSectionHeader(title: tr(LocaleKeys.profile_progress_data)),
-              ),
-              const SizedBox(height: AppSpacing.s),
-              _ProfileGroupCard(
-                children: [
-                  _ProfileActionRow(
-                    title: tr(LocaleKeys.profile_export_summary),
-                    icon: CupertinoIcons.share,
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ExportPdfIntroScreen())),
-                  ),
-                  _ProfileActionRow(
-                    title: tr(LocaleKeys.profile_ask_ai),
-                    icon: CupertinoIcons.sparkles,
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AskAiScreen())),
-                  ),
-                  _ProfileActionRow(
-                    title: tr(LocaleKeys.profile_faq),
-                    icon: CupertinoIcons.question_circle,
-                    showDivider: false,
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const FaqScreen())),
-                  ),
-                ],
-              ),
-              // TODO: Test section — hidden, re-enable for development
-              // const SizedBox(height: AppSpacing.l),
-              // Padding(
-              //   padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
-              //   child: ProfileSectionHeader(title: 'Test'),
-              // ),
-              // const SizedBox(height: AppSpacing.s),
-              // _ProfileGroupCard(
-              //   children: [
-              //     _ProfileActionRow(title: 'Glass Test', icon: CupertinoIcons.circle_filled, onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const GlassTestScreen()))),
-              //     _ProfileActionRow(title: 'Liquid Glass Widgets Test', icon: CupertinoIcons.sparkles, onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const LiquidGlassWidgetsTestScreen()))),
-              //     _ProfileActionRow(title: 'Test Onboarding', icon: CupertinoIcons.play_circle, onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const OnboardingFlowScreen()))),
-              //     _ProfileActionRow(title: 'Test Scanning Onboarding', icon: CupertinoIcons.viewfinder, showDivider: false, onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ScanOnboardingScreen(forceShow: true)))),
-              //   ],
-              // ),
-              // TODO: Account Actions section — hidden for now, will be needed later
-              // const SizedBox(height: AppSpacing.l),
-              // Padding(
-              //   padding: EdgeInsets.symmetric(horizontal: SessionManager.to.sectionHeaderPaddingEnabled.value ? AppSpacing.s : 0),
-              //   child: ProfileSectionHeader(title: tr(LocaleKeys.profile_account_actions)),
-              // ),
-              // const SizedBox(height: AppSpacing.s),
-              // _ProfileGroupCard(
-              //   children: [
-              //     _ProfileActionRow(
-              //       title: tr(LocaleKeys.profile_logout),
-              //       icon: CupertinoIcons.square_arrow_right,
-              //       onTap: () => showSnackBar(message: tr(LocaleKeys.profile_logout), subtitle: tr(LocaleKeys.profile_logout_stub), type: SnackBarType.info),
-              //     ),
-              //     _ProfileActionRow(
-              //       title: tr(LocaleKeys.profile_delete_account),
-              //       icon: CupertinoIcons.person_badge_minus,
-              //       showDivider: false,
-              //       onTap: () => showSnackBar(message: tr(LocaleKeys.profile_delete_account), subtitle: tr(LocaleKeys.profile_delete_account_stub), type: SnackBarType.info),
-              //     ),
-              //   ],
-              // ),
-              const SizedBox(height: AppSpacing.s),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: sectionHeaderPaddingEnabled ? AppSpacing.s : 0),
-                child: Center(
-                  child: Text(tr(LocaleKeys.profile_version, namedArgs: {'version': '0.0.0'}), style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary)),
-                ),
-              ),
-            ],
-          ),
-        );
-        }),
+            );
+          },
+        ),
       ),
     );
   }
 
   void _showLanguageSheet(BuildContext context, WidgetRef ref) {
-    ref.read(languageSettingsProvider.notifier).initializeFromContext(context);
+    ref.read(languageSettingsProvider.notifier).initialize(context.locale.languageCode);
 
     showModalBottomSheet<void>(
       context: context,
@@ -390,76 +395,76 @@ class _WidgetSection extends ConsumerWidget {
     final progress = record.calorieGoal <= 0 ? 0.0 : (record.totalCalories / record.calorieGoal).clamp(0.0, 1.0);
 
     return Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 5,
-            child: ProfileCard(
-              radius: AppRadii.l,
-              shadow: AppShadows.screenCard,
-              border: AppBorders.screenCard,
-              padding: const EdgeInsets.all(AppSpacing.m),
-              child: Row(
-                children: [
-                  ProgressRing(
-                    size: 96,
-                    strokeWidth: 8,
-                    value: progress,
-                    backgroundColor: AppColors.outline.withValues(alpha: 0.7),
-                    foregroundColor: AppColors.textPrimary,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(caloriesText, style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w700)),
-                        Text(tr(LocaleKeys.common_calories), style: AppTextStyles.caption12.copyWith(color: AppColors.textSecondary)),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.m),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _MacroLeftRow(icon: AppIcons.protein, color: AppColors.macroProtein, value: proteinText, label: tr(LocaleKeys.dashboard_protein_eaten)),
-                        const SizedBox(height: AppSpacing.s),
-                        _MacroLeftRow(icon: AppIcons.carbs, color: AppColors.macroCarbs, value: carbsText, label: tr(LocaleKeys.dashboard_carbs_eaten)),
-                        const SizedBox(height: AppSpacing.s),
-                        _MacroLeftRow(icon: AppIcons.fats, color: AppColors.macroFats, value: fatText, label: tr(LocaleKeys.dashboard_fat_eaten)),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(width: AppSpacing.s),
-          Expanded(
-            flex: 2,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          flex: 5,
+          child: ProfileCard(
+            radius: AppRadii.l,
+            shadow: AppShadows.screenCard,
+            border: AppBorders.screenCard,
+            padding: const EdgeInsets.all(AppSpacing.m),
+            child: Row(
               children: [
-                _WidgetShortcutCard(
-                  icon: CupertinoIcons.viewfinder,
-                  label: tr(LocaleKeys.profile_scan_food),
-                  onTap: () {
-                    if (scanOnboardingComplete) {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ScanCameraScreen()));
-                    } else {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ScanOnboardingScreen()));
-                    }
-                  },
+                ProgressRing(
+                  size: 96,
+                  strokeWidth: 8,
+                  value: progress,
+                  backgroundColor: AppColors.outline.withValues(alpha: 0.7),
+                  foregroundColor: AppColors.textPrimary,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(caloriesText, style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w700)),
+                      Text(tr(LocaleKeys.common_calories), style: AppTextStyles.caption12.copyWith(color: AppColors.textSecondary)),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: AppSpacing.s),
-                _WidgetShortcutCard(
-                  icon: CupertinoIcons.qrcode,
-                  label: tr(LocaleKeys.profile_barcode),
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ScanCameraScreen(initialMode: ScanMode.barcode))),
+                const SizedBox(width: AppSpacing.m),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _MacroLeftRow(icon: AppIcons.protein, color: AppColors.macroProtein, value: proteinText, label: tr(LocaleKeys.dashboard_protein_eaten)),
+                      const SizedBox(height: AppSpacing.s),
+                      _MacroLeftRow(icon: AppIcons.carbs, color: AppColors.macroCarbs, value: carbsText, label: tr(LocaleKeys.dashboard_carbs_eaten)),
+                      const SizedBox(height: AppSpacing.s),
+                      _MacroLeftRow(icon: AppIcons.fats, color: AppColors.macroFats, value: fatText, label: tr(LocaleKeys.dashboard_fat_eaten)),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
-        ],
-      );
+        ),
+        const SizedBox(width: AppSpacing.s),
+        Expanded(
+          flex: 2,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _WidgetShortcutCard(
+                icon: CupertinoIcons.viewfinder,
+                label: tr(LocaleKeys.profile_scan_food),
+                onTap: () {
+                  if (scanOnboardingComplete) {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ScanCameraScreen()));
+                  } else {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ScanOnboardingScreen()));
+                  }
+                },
+              ),
+              const SizedBox(height: AppSpacing.s),
+              _WidgetShortcutCard(
+                icon: CupertinoIcons.qrcode,
+                label: tr(LocaleKeys.profile_barcode),
+                onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ScanCameraScreen(initialMode: ScanMode.barcode))),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 
   String _formatMacro(double value) {
