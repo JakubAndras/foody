@@ -22,14 +22,22 @@ import 'app.dart';
 /// SQLite (busy/locked) naopak krátce zkusíme znovu, aby se DB-backed providery
 /// (váha, šablony, streak) nezasekly natrvalo v error stavu po souběhu při startu.
 /// Ostatní DB chyby (constraint, syntax, no such table...) jsou trvalé → neopakovat.
+///
+/// Přechodnost se pozná z textu hlášky, ne z `getResultCode()`: ten parsuje kód
+/// z hlášky a při neznámém formátu vrací null (přeskočil by legitimní busy),
+/// navíc by číselné porovnání mohlo splést ne-SQLite kód. SQLite hlásí zámek
+/// napříč platformami textem „database is locked" / „database table is locked".
 Duration? _rootRetry(int retryCount, Object error) {
   const maxRetries = 3;
   if (retryCount >= maxRetries) return null;
   if (error is! DatabaseException) return null;
-  // Nízký bajt SQLite result kódu: SQLITE_BUSY = 5, SQLITE_LOCKED = 6 (i extended kódy).
-  final code = error.getResultCode();
-  final primary = code == null ? null : code & 0xFF;
-  if (primary != 5 && primary != 6) return null;
+  final message = error.toString().toLowerCase();
+  final isTransient = message.contains('database is locked') ||
+      message.contains('database table is locked') ||
+      message.contains('database is busy') ||
+      message.contains('sqlite_busy') ||
+      message.contains('sqlite_locked');
+  if (!isTransient) return null;
   return Duration(milliseconds: 200 * (1 << retryCount)); // 200 / 400 / 800 ms
 }
 
