@@ -1,4 +1,11 @@
-A mobile application for calorie tracking using AI, developed as part of a diploma thesis.
+# Foody
+
+**A mobile application for calorie tracking using AI**, developed as the practical part of a diploma thesis. Photograph a meal or describe it in text, and the app estimates its nutritional values using a publicly available large language model.
+
+![Flutter](https://img.shields.io/badge/Flutter-3.24-02569B?logo=flutter&logoColor=white)
+![Dart](https://img.shields.io/badge/Dart-3.5-0175C2?logo=dart&logoColor=white)
+![State](https://img.shields.io/badge/state-GetX-8A2BE2)
+![Platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS-lightgrey)
 
 ## Overview
 
@@ -10,75 +17,82 @@ The application was developed and tested primarily on iOS. It also runs on Andro
 
 ## Features
 
- - Automatic food analysis from a photograph using an external AI.
- - Automatic food analysis based on text description using an external AI.
- - Display of estimated calories, macronutrients, and ingredients.
- - Barcode scanning for quick product entry.
- - Tracking of daily calorie intake and goals.
- - Display of statistics and intake history.
- - Simple and cross-platform user interface thanks to Flutter.
+- Automatic food analysis from a photograph using an external AI
+- Automatic food analysis based on a text description using an external AI
+- Display of estimated calories, macronutrients, and ingredients
+- Barcode scanning for quick product entry
+- Tracking of daily calorie intake and goals
+- Display of statistics and intake history
+- Simple and cross-platform user interface thanks to Flutter
 
-## Requirements
+## Tech stack
 
- - Flutter SDK 3.0+ (3.24.1)
- - Dart SDK 3.0+ (3.5.1)
- - Visual Studio Code or Android Studio
- - A valid API key for a public AI service (e.g., Google Gemini API)
+| Area | Choice |
+|------|--------|
+| UI & logic | Flutter / Dart |
+| State management | GetX |
+| AI | Publicly available AI (Google Gemini) for image analysis |
+| Networking | Dio |
+| Barcode data | Open Food Facts API |
 
-## Development
+## Core functionality
 
-This project uses the following technologies:
- - Flutter for the user interface and application logic.
- - Dart as the programming language.
- - Publicly Available AI (Google Gemini) for image analysis.
- - Dio package for network communication with the API.
- - GetX package for application state management.
+1. **AI food analysis**
+   - The user takes a photo of the food directly in the app, or writes a description of the food.
+   - The image is sent to the multimodal artificial intelligence API (e.g., Gemini API).
+   - The AI analyzes the input and returns structured data in JSON format.
+   - The JSON contains the estimated dish name, a list of ingredients, weight, and nutritional values (calories, proteins, carbohydrates, fats).
+   - The app processes the data and displays it to the user for confirmation and logging into the daily summary, then stores it in the user database.
+2. **Barcode logging**
+   - The application allows barcode scanning (EAN) for quick lookup of commercial foods in the external Open Food Facts (OFF) database.
+   - After successful code recognition, the nutritional values for the product are automatically retrieved and stored in the user database.
+3. **Dashboard and statistics**
+   - The main screen (dashboard) displays a daily summary of calories and nutritional values consumed versus the set goal.
+   - The user has access to history and charts that visualize their eating habits over time.
 
-## Core Functionality
+## Getting started
 
-1. AI Food Analysis
-   1. The user takes a photo of the food directly in the app OR he writes a description of the food in the app.
-   2. The image is sent to the multimodal artificial intelligence API (e.g., Gemini API).
-   3. The AI analyzes the image and returns structured data in JSON format.
-   4. The JSON contains the estimated dish name, a list of ingredients, weight, and nutritional values (calories, proteins, carbohydrates, fats).
-   5. The app processes the data and displays it to the user for confirmation and logging into the daily summary and stored it in the user database. 
-2. Barcode Logging
-   1. The application allows barcode scanning (EAN) for quick searching of commercial foods in an external database Open Food Facts (OFF).
-   2. After successful code recognition, the nutritional values for the product are automatically retrieved and stored in the user database.
-3. Dashboard and Statistics
-   1. The main screen (dashboard) displays a daily summary of calories and nutritional values consumed versus the set goal.
-   2. The user has access to history and charts that visualize their eating habits over time.
+### Requirements
 
-## Project Structure
+- Flutter SDK **3.0+** (developed on 3.24.1)
+- Dart SDK **3.0+** (developed on 3.5.1)
+- Visual Studio Code or Android Studio
+- A valid API key for a public AI service (e.g., Google Gemini API)
 
-This project has the following basic structure (subject to change and expansion).
-1. lib
-   1. controller (directory)
-   2. database (directory)
-   3. generated (directory)
-   4. model (directory)
-   5. screens (directory)
-   6. services (directory)
-   7. utils (directory)
-   8. widgets (directory)
-   9. app_theme.dart
-   10. main.dart
+### Useful commands
 
-## UI Reference
+```bash
+flutter pub get                                                  # install dependencies
+flutter pub run build_runner build --delete-conflicting-outputs  # regenerate DB / models
+flutter run                                                      # run the app
+```
 
-This project follows a design style inspired by existing calorie tracking applications.  
-To ensure consistency, several screenshots are provided in the `assets/reference_ui/` directory as reference material.  
-These screenshots are only for design inspiration and are not part of the functional application.
+## Project structure
+
+The project has the following basic structure (subject to change and expansion):
+
+```
+lib/
+├── controller/    # GetX controllers (state + logic)
+├── database/      # local database
+├── generated/     # auto-generated code
+├── model/         # data models
+├── screens/       # UI screens
+├── services/      # app services
+├── utils/         # helpers
+├── widgets/       # reusable UI components
+├── app_theme.dart
+└── main.dart
+```
+
+## UI reference
+
+This project follows a design style inspired by existing calorie tracking applications. To ensure consistency, several screenshots are provided in the `assets/reference_ui/` directory as reference material. These screenshots are only for design inspiration and are not part of the functional application.
 
 ## License
 
-This project is being developed for the purposes of a diploma thesis.
+Developed for the purposes of a diploma thesis. Not licensed for production or commercial use.
 
 ## Contact
 
-Created by Jakub Andras.
-
-## Useful commands
-
- - generate db -> flutter pub run build_runner build --delete-conflicting-outputs
-
+Created by **Jakub Andras**.
