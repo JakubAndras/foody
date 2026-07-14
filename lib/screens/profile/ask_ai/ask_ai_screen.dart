@@ -294,6 +294,7 @@ class _AskAiScreenState extends ConsumerState<AskAiScreen> with SingleTickerProv
 
   Future<void> _handleAsk() async {
     if (_isListening) await _stopListening();
+    if (!mounted) return;
 
     final query = _textController.text.trim();
     if (query.isEmpty) return;
@@ -328,6 +329,7 @@ class _AskAiScreenState extends ConsumerState<AskAiScreen> with SingleTickerProv
     try {
       await AppShareService.shareText(text: text, title: tr(LocaleKeys.ask_ai_title), subject: tr(LocaleKeys.ask_ai_share_subject), context: context);
     } catch (_) {
+      if (!mounted) return;
       showSnackBar(context: context, message: tr(LocaleKeys.ask_ai_share_unavailable), subtitle: tr(LocaleKeys.ask_ai_share_error), type: SnackBarType.error);
     }
   }

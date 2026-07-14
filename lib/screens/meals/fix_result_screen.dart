@@ -356,6 +356,7 @@ class _FixResultScreenState extends ConsumerState<FixResultScreen> with SingleTi
 
   Future<void> _handleUpdate() async {
     if (_isListening) await _stopListening();
+    if (!mounted) return;
     _showAnalyzeHint = false;
     _analyzeHintTimer?.cancel();
 

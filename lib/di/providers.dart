@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:diplomka/database/app_database.dart';
 
@@ -21,6 +22,15 @@ import 'package:diplomka/database/app_database.dart';
 /// Databáze. Staví se v `main()` a injektuje se přes
 /// `ProviderScope(overrides: [databaseProvider.overrideWithValue(db)])`.
 final databaseProvider = Provider<AppDatabase>(
+  (ref) => throw UnimplementedError('Override v main() přes ProviderScope.'),
+);
+
+/// Načtená instance SharedPreferences. Staví se v `main()` a injektuje se přes
+/// `ProviderScope(overrides: [sharedPreferencesProvider.overrideWithValue(prefs)])`.
+/// Umožňuje synchronní přístup ke SharedPreferences ve zbytku grafu providerů
+/// (např. `deviceIdentityServiceProvider`). Async `SharedPreferencesService`
+/// zůstává pro ostatní kód beze změny.
+final sharedPreferencesProvider = Provider<SharedPreferences>(
   (ref) => throw UnimplementedError('Override v main() přes ProviderScope.'),
 );
 

@@ -32,28 +32,9 @@ class CurrentWeightCard extends ConsumerWidget {
   final bool isLogToday;
   final List<WeightEntry> weightEntries;
 
-  String? _computeGoalEta() {
-    if (goalWeight == null || weightEntries.length < 2) return null;
-    final latest = weightEntries.first;
-    final earliest = weightEntries.last;
-    final daysBetween = latest.date.difference(earliest.date).inDays;
-    if (daysBetween <= 0) return null;
-    final weightChange = latest.weight - earliest.weight;
-    if (weightChange == 0) return null;
-    final ratePerDay = weightChange / daysBetween;
-    final remaining = goalWeight! - latest.weight;
-    if (remaining == 0) return null;
-    if ((remaining > 0 && ratePerDay <= 0) || (remaining < 0 && ratePerDay >= 0)) return null;
-    final daysToGoal = (remaining / ratePerDay).ceil();
-    if (daysToGoal <= 0 || daysToGoal > 3650) return null;
-    final etaDate = DateTime.now().add(Duration(days: daysToGoal));
-    return DateFormat.yMMMd().format(etaDate);
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final hasData = currentWeight != null;
-    final etaLabel = _computeGoalEta();
 
     return GestureDetector(
       onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const WeightHistoryScreen())),

@@ -1,0 +1,91 @@
+--- User Profile ---
+Height (cm),175
+Weight (kg),86.0
+Goal Weight (kg),80.0
+Sex,male
+Goal,lose
+Diet Type,classic
+Custom Diet Preferences,
+Weight Change Rate (kg/week),0.6
+Prefers Metric,yes
+Date of Birth,2000-01-15
+
+--- Daily Summary ---
+Date,Calories,Protein (g),Carbs (g),Fat (g),Calorie Goal,Protein Goal (g),Carbs Goal (g),Fat Goal (g),Exercise Calories,Net Calories,Meal Count,Exercise Count
+2026-04-20,380,19,49,12,2000,150,250,70,0,380,1,0
+2026-04-24,773,27,119,21,2000,150,250,70,0,773,3,0
+2026-04-25,760,38,97,24,2000,150,250,70,576,184,2,2
+2026-04-26,0,0,0,0,2000,150,250,70,975,-975,0,3
+2026-04-27,3538,235,268,167,2000,150,250,70,215,3323,4,1
+2026-04-28,2498,108,325,79,2233,172,221,74,1519,979,6,3
+
+Consumed:,7949 kcal
+Burned:,3285 kcal
+Balance:,4664 kcal
+
+--- Meal Details ---
+Date,Meal,Meal Timestamp,Meal AI Confidence,Has Photo,input_source,ai_provider,ai_model,barcode,meal_was_edited_by_user,meal_edited_at,meal_ai_original_name,meal_ai_original_calories,meal_ai_original_proteins,meal_ai_original_carbs,meal_ai_original_fats,meal_ai_original_confidence,Ingredients,Weight,Amount (pcs),Calories,Protein (g),Carbs (g),Fat (g),Ingredient AI Confidence,ing_was_edited_by_user,ing_ai_original_name,ing_ai_original_weight,ing_ai_original_amount,ing_ai_original_calories,ing_ai_original_proteins,ing_ai_original_carbs,ing_ai_original_fats,ing_ai_original_confidence
+2026-04-20,Ham cream cheese rolls,2026-04-20 13:15,0.93,yes,photo_ai,openai,gpt-5.4,,no,,Ham cream cheese rolls,380,19,49,12,0.93,white bread rolls,90,2.0,239,8,48,3,0.95,no,white bread rolls,90,2.0,239,8,48,3,0.95
+2026-04-20,Ham cream cheese rolls,2026-04-20 13:15,0.93,yes,photo_ai,openai,gpt-5.4,,no,,Ham cream cheese rolls,380,19,49,12,0.93,cream cheese spread,22,2.0,75,1,1,8,0.89,no,cream cheese spread,22,2.0,75,1,1,8,0.89
+2026-04-20,Ham cream cheese rolls,2026-04-20 13:15,0.93,yes,photo_ai,openai,gpt-5.4,,no,,Ham cream cheese rolls,380,19,49,12,0.93,ham slices,45,2.0,66,10,0,2,0.96,no,ham slices,45,2.0,66,10,0,2,0.96
+2026-04-24,Double-scoop ice cream,2026-04-24 13:03,,yes,manual,,,,no,,,,,,,,Fruit sorbet scoop,75,1.0,96,1,23,0,,no,,,,,,,,
+2026-04-24,Double-scoop ice cream,2026-04-24 13:03,,yes,manual,,,,no,,,,,,,,Ice cream scoop,70,1.0,176,4,21,8,,no,,,,,,,,
+2026-04-24,Double-scoop ice cream,2026-04-24 13:03,,yes,manual,,,,no,,,,,,,,Waffle cone,22,1.0,38,1,6,2,,no,,,,,,,,
+2026-04-24,Bread rolls,2026-04-24 13:03,,yes,manual,,,,no,,,,,,,,White bread roll,120,1.0,320,10,62,3,,no,,,,,,,,
+2026-04-24,Tavený lahodný sýr lightning,2026-04-24 13:03,,no,manual,,,,no,,,,,,,,Tavený lahodný sýr lightning,100,1.0,143,11,7,8,,no,,,,,,,,
+2026-04-25,Ham cream cheese rolls,2026-04-25 13:16,,yes,manual,,,,no,,,,,,,,white bread rolls,90,1.0,239,8,48,3,,no,,,,,,,,
+2026-04-25,Ham cream cheese rolls,2026-04-25 13:16,,yes,manual,,,,no,,,,,,,,cream cheese spread,22,1.0,75,1,1,8,,no,,,,,,,,
+2026-04-25,Ham cream cheese rolls,2026-04-25 13:16,,yes,manual,,,,no,,,,,,,,ham slices,45,1.0,66,10,0,2,,no,,,,,,,,
+2026-04-25,Ham cream cheese rolls,2026-04-25 13:16,,yes,manual,,,,no,,,,,,,,white bread rolls,90,1.0,239,8,48,3,,no,,,,,,,,
+2026-04-25,Ham cream cheese rolls,2026-04-25 13:16,,yes,manual,,,,no,,,,,,,,cream cheese spread,22,1.0,75,1,1,8,,no,,,,,,,,
+2026-04-25,Ham cream cheese rolls,2026-04-25 13:16,,yes,manual,,,,no,,,,,,,,ham slices,45,1.0,66,10,0,2,,no,,,,,,,,
+2026-04-27,Tavený lahodný sýr lightning,2026-04-27 13:16,,no,manual,,,,no,,,,,,,,Tavený lahodný sýr lightning,1900,19.0,2717,209,131,148,,no,,,,,,,,
+2026-04-27,Double-scoop ice cream,2026-04-27 13:16,,yes,manual,,,,no,,,,,,,,Fruit sorbet scoop,75,1.0,96,1,23,0,,no,,,,,,,,
+2026-04-27,Double-scoop ice cream,2026-04-27 13:16,,yes,manual,,,,no,,,,,,,,Ice cream scoop,70,1.0,176,4,21,8,,no,,,,,,,,
+2026-04-27,Double-scoop ice cream,2026-04-27 13:16,,yes,manual,,,,no,,,,,,,,Waffle cone,22,1.0,38,1,6,2,,no,,,,,,,,
+2026-04-27,Bread rolls,2026-04-27 13:16,,yes,manual,,,,no,,,,,,,,White bread roll,120,1.0,320,10,62,3,,no,,,,,,,,
+2026-04-27,Ham cream cheese rolls,2026-04-27 13:16,,yes,manual,,,,no,,,,,,,,white bread rolls,45,0.5,120,4,24,1,,no,,,,,,,,
+2026-04-27,Ham cream cheese rolls,2026-04-27 13:16,,yes,manual,,,,no,,,,,,,,cream cheese spread,11,0.5,38,1,1,4,,no,,,,,,,,
+2026-04-27,Ham cream cheese rolls,2026-04-27 13:16,,yes,manual,,,,no,,,,,,,,ham slices,23,0.5,33,5,0,1,,no,,,,,,,,
+2026-04-28,Bread rolls,2026-04-28 12:54,0.84,yes,photo_ai,openai,gpt-5.4,,no,,Bread rolls,320,10,62,3,0.84,White bread roll,120,2.0,320,10,62,3,0.90,no,White bread roll,120,2.0,320,10,62,3,0.90
+2026-04-28,Gelato cone,2026-04-28 12:55,0.92,yes,fix_with_ai_rerun,openai,gpt-5.4,,no,,Gelato cone,284,5,49,8,0.92,fruit gelato,75,1.0,125,2,27,2,0.78,no,fruit gelato,75,1.0,125,2,27,2,0.78
+2026-04-28,Gelato cone,2026-04-28 12:55,0.92,yes,fix_with_ai_rerun,openai,gpt-5.4,,no,,Gelato cone,284,5,49,8,0.92,milk-based gelato,70,1.0,124,3,15,6,0.81,no,milk-based gelato,70,1.0,124,3,15,6,0.81
+2026-04-28,Gelato cone,2026-04-28 12:55,0.92,yes,fix_with_ai_rerun,openai,gpt-5.4,,no,,Gelato cone,284,5,49,8,0.92,waffle cone,20,1.0,35,1,6,1,0.96,no,waffle cone,20,1.0,35,1,6,1,0.96
+2026-04-28,Tavený lahodný sýr lightning,2026-04-28 12:58,,no,barcode,,,8590421329771,no,,,,,,,,Tavený lahodný sýr lightning,100,1.0,143,11,7,8,,no,,,,,,,,
+2026-04-28,Double zmrzlina ,2026-04-28 13:00,,yes,manual,,,,no,,,,,,,,Fruit sorbet scoop,75,1.0,96,1,23,0,,no,,,,,,,,
+2026-04-28,Double zmrzlina ,2026-04-28 13:00,,yes,manual,,,,no,,,,,,,,Ice cream scoop,70,1.0,176,4,21,8,,no,,,,,,,,
+2026-04-28,Double zmrzlina ,2026-04-28 13:00,,yes,manual,,,,no,,,,,,,,Waffle cone,22,1.0,38,1,6,2,,no,,,,,,,,
+2026-04-28,Kuřecí maso s rýží,2026-04-28 14:21,0.62,no,voice_ai,openai,gpt-5.4,,no,,Kuřecí maso s rýží,377,31,31,9,0.62,kuřecí maso,120,1.0,198,28,0,4,0.71,no,kuřecí maso,120,1.0,198,28,0,4,0.71
+2026-04-28,Kuřecí maso s rýží,2026-04-28 14:21,0.62,no,voice_ai,openai,gpt-5.4,,no,,Kuřecí maso s rýží,377,31,31,9,0.62,rýže,110,1.0,143,3,31,0,0.75,no,rýže,110,1.0,143,3,31,0,0.75
+2026-04-28,Kuřecí maso s rýží,2026-04-28 14:21,0.62,no,voice_ai,openai,gpt-5.4,,no,,Kuřecí maso s rýží,377,31,31,9,0.62,olej na přípravu,4,1.0,36,0,0,4,0.45,no,olej na přípravu,4,1.0,36,0,0,4,0.45
+2026-04-28,Aha Hawaii Pizza,2026-04-28 14:22,0.92,no,voice_ai,openai,gpt-5.4,,yes,2026-04-28 14:22,Aha Hawaii Pizza,266,12,32,10,0.92,Hawaiian pizza slice,440,4.0,1064,46,126,42,0.92,yes,Hawaiian pizza slice,110,1.0,266,12,32,10,0.92
+
+--- Exercise Log ---
+Date,Name,Duration,Calories,Source
+2026-04-25 13:03,Běh,60,400,manual
+2026-04-25 12:00,Apple Health,,176,apple_health
+2026-04-26 14:13,Běh,60,400,manual
+2026-04-26 14:13,Běh,60,400,manual
+2026-04-26 12:00,Apple Health,,175,apple_health
+2026-04-27 12:00,Apple Health,,215,apple_health
+2026-04-28 14:22,běh do kopce,60,1032,manual
+2026-04-28 12:56,Běh,60,400,manual
+2026-04-28 12:00,Apple Health,,87,apple_health
+
+--- Weight Progress ---
+Date,Weight (kg),Has Photo
+2026-04-28,86.0,no
+2026-04-28,85.2,no
+
+--- Summary Statistics ---
+Total Days,6
+Total Meals,16
+Total Ingredients,34
+Total Exercises,9
+Total Weight Entries,2
+Avg Calories/Day,1325
+Avg Protein/Day (g),71
+Avg Carbs/Day (g),143
+Avg Fat/Day (g),50
+Avg Meals/Day,2.7
+Avg Exercises/Day,1.5

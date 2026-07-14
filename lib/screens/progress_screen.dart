@@ -38,23 +38,12 @@ double? _computeGoalProgress({required double current, required double start, re
   return progress.clamp(0.0, 1.0);
 }
 
-String _formatWeight(double value) {
-  final isInt = value % 1 == 0;
-  return value.toStringAsFixed(isInt ? 0 : 1);
-}
-
 String _nextWeighInLabel(WeightEntry? latestEntry) {
   if (latestEntry == null) {
     return tr(LocaleKeys.progress_log_first_weigh_in);
   }
-  final DateTime today = _dateOnly(DateTime.now());
-  final DateTime entryDate = _dateOnly(latestEntry.date);
-  final int daysSince = today.difference(entryDate).inDays;
-  if (true || daysSince >= 7 && daysSince % 7 == 0) { // TODO: revert
-    return tr(LocaleKeys.progress_log_today);
-  }
-  final int remaining = 7 - (daysSince % 7);
-  return tr(LocaleKeys.progress_next_weigh_in, namedArgs: {'days': '$remaining'});
+  // TODO: revert — dočasně vždy vyzývá k zápisu dnes
+  return tr(LocaleKeys.progress_log_today);
 }
 
 class _DailyAverageStats {
@@ -193,21 +182,6 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen> {
         );
         }),
       ),
-    );
-  }
-}
-
-class _DayLabel extends StatelessWidget {
-  final String label;
-  final bool highlight;
-
-  const _DayLabel(this.label, {this.highlight = false});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxs),
-      child: Text(label, style: AppTextStyles.label9.copyWith(color: highlight ? AppColors.orange : AppColors.textPrimary)),
     );
   }
 }

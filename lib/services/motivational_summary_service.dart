@@ -3,6 +3,7 @@ import 'package:diplomka/model/motivational_summary_setting.dart';
 import 'package:diplomka/services/shared_preferences_manager.dart';
 import 'package:diplomka/services/tracking_reminder_service.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -126,8 +127,7 @@ class MotivationalSummaryService {
     final resolved = tr(key);
     assert(() {
       if (resolved == key) {
-        // ignore: avoid_print
-        print('[Notifications] WARNING: tr() returned the raw key "$key" — EasyLocalization not ready.');
+        debugPrint('[Notifications] WARNING: tr() returned the raw key "$key" — EasyLocalization not ready.');
       }
       return true;
     }());

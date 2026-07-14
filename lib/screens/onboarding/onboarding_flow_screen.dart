@@ -57,7 +57,7 @@ class _OnboardingFlowScreenState extends ConsumerState<OnboardingFlowScreen> {
   }
 
   void _skipOnboarding()  {
-    print('[SKIP] _skipOnboarding called');
+    debugPrint('[SKIP] _skipOnboarding called');
     try {
       if (ref.read(sessionProvider).dietType == null) {
         unawaited(ref.read(sessionProvider.notifier).setDietType(ProfileDietType.classic));
@@ -65,7 +65,7 @@ class _OnboardingFlowScreenState extends ConsumerState<OnboardingFlowScreen> {
       unawaited(ref.read(sessionProvider.notifier).setOnboardingComplete(true));
       Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MainScreen()));
     } catch (e, st) {
-      print('[SKIP] ERROR: $e\n$st');
+      debugPrint('[SKIP] ERROR: $e\n$st');
     }
   }
 

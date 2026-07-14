@@ -1,6 +1,7 @@
 
 import 'package:diplomka/network/openai_rest_client.dart';
 import 'package:diplomka/utils/app_limits.dart';
+import 'package:flutter/foundation.dart';
 
 /// Three-state result of regex pattern classification.
 /// - [clean]: no suspicious patterns detected
@@ -19,10 +20,10 @@ class PromptSanitizer {
     final beforeTagStrip = cleaned;
     cleaned = cleaned.replaceAll(RegExp(r'</?user_input>', caseSensitive: false), '');
     if (cleaned != beforeTagStrip) {
-      print('[PromptSanitizer] WARNING: Stripped <user_input> tags from user input');
+      debugPrint('[PromptSanitizer] WARNING: Stripped <user_input> tags from user input');
     }
     if (cleaned.length > maxLength) {
-      print('[PromptSanitizer] Input truncated from ${cleaned.length} to $maxLength chars');
+      debugPrint('[PromptSanitizer] Input truncated from ${cleaned.length} to $maxLength chars');
       cleaned = cleaned.substring(0, maxLength);
     }
     return cleaned;

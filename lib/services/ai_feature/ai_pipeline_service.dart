@@ -17,6 +17,7 @@ import 'package:diplomka/utils/app_limits.dart';
 import 'package:diplomka/utils/openai_usage.dart';
 import 'package:diplomka/utils/prompt_sanitizer.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AiPipelineService {
@@ -40,15 +41,15 @@ class AiPipelineService {
       if (sanitizedDescription != null) {
         final classification = PromptSanitizer.classifyInput(sanitizedDescription);
         if (classification == InjectionClassification.explicitAttack) {
-          print('[AiPipeline] EXPLICIT INJECTION REJECTED in meal description: "${sanitizedDescription.substring(0, sanitizedDescription.length.clamp(0, 80))}..."');
+          debugPrint('[AiPipeline] EXPLICIT INJECTION REJECTED in meal description: "${sanitizedDescription.substring(0, sanitizedDescription.length.clamp(0, 80))}..."');
           _logMealAttempt(modality: modality, status: AiAttemptStatus.injectionRejected, errorMessage: 'explicit_attack');
           return AiAnalysisResult.failure(message: tr(LocaleKeys.error_ai_input_rejected));
         }
         if (classification == InjectionClassification.ambiguous) {
-          print('[AiPipeline] AMBIGUOUS PATTERN — LLM pre-screening meal description');
+          debugPrint('[AiPipeline] AMBIGUOUS PATTERN — LLM pre-screening meal description');
           final isInjection = await PromptSanitizer.preScreenWithLlm(_ref.read(openaiRestClientProvider), sanitizedDescription);
           if (isInjection) {
-            print('[AiPipeline] LLM PRE-SCREEN REJECTED meal description');
+            debugPrint('[AiPipeline] LLM PRE-SCREEN REJECTED meal description');
             _logMealAttempt(modality: modality, status: AiAttemptStatus.injectionRejected, errorMessage: 'llm_prescreen_rejected');
             return AiAnalysisResult.failure(message: tr(LocaleKeys.error_ai_input_rejected));
           }
@@ -146,15 +147,15 @@ class AiPipelineService {
 
     final classification = PromptSanitizer.classifyInput(trimmedDescription);
     if (classification == InjectionClassification.explicitAttack) {
-      print('[AiPipeline] EXPLICIT INJECTION REJECTED in exercise description: "${trimmedDescription.substring(0, trimmedDescription.length.clamp(0, 80))}..."');
+      debugPrint('[AiPipeline] EXPLICIT INJECTION REJECTED in exercise description: "${trimmedDescription.substring(0, trimmedDescription.length.clamp(0, 80))}..."');
       _logExerciseAttempt(status: AiAttemptStatus.injectionRejected, errorMessage: 'explicit_attack');
       return AiExerciseAnalysisResult.failure(message: tr(LocaleKeys.error_ai_input_rejected));
     }
     if (classification == InjectionClassification.ambiguous) {
-      print('[AiPipeline] AMBIGUOUS PATTERN — LLM pre-screening exercise description');
+      debugPrint('[AiPipeline] AMBIGUOUS PATTERN — LLM pre-screening exercise description');
       final isInjection = await PromptSanitizer.preScreenWithLlm(_ref.read(openaiRestClientProvider), trimmedDescription);
       if (isInjection) {
-        print('[AiPipeline] LLM PRE-SCREEN REJECTED exercise description');
+        debugPrint('[AiPipeline] LLM PRE-SCREEN REJECTED exercise description');
         _logExerciseAttempt(status: AiAttemptStatus.injectionRejected, errorMessage: 'llm_prescreen_rejected');
         return AiExerciseAnalysisResult.failure(message: tr(LocaleKeys.error_ai_input_rejected));
       }
@@ -346,7 +347,7 @@ class AiPipelineService {
       customDietPreferences = PromptSanitizer.sanitize(rawDietPreferences);
       final classification = PromptSanitizer.classifyInput(customDietPreferences);
       if (classification != InjectionClassification.clean) {
-        print('[AiPipeline] Suspicious pattern in goals diet preferences (${classification.name}): "${customDietPreferences.substring(0, customDietPreferences.length.clamp(0, 80))}..."');
+        debugPrint('[AiPipeline] Suspicious pattern in goals diet preferences (${classification.name}): "${customDietPreferences.substring(0, customDietPreferences.length.clamp(0, 80))}..."');
       }
       customDietPreferences = PromptSanitizer.wrapUserInput(customDietPreferences);
     }
@@ -409,7 +410,7 @@ class AiPipelineService {
       customPreferences = PromptSanitizer.sanitize(rawPreferences);
       final classification = PromptSanitizer.classifyInput(customPreferences);
       if (classification != InjectionClassification.clean) {
-        print('[AiPipeline] Suspicious pattern in meal diet preferences (${classification.name}): "${customPreferences.substring(0, customPreferences.length.clamp(0, 80))}..."');
+        debugPrint('[AiPipeline] Suspicious pattern in meal diet preferences (${classification.name}): "${customPreferences.substring(0, customPreferences.length.clamp(0, 80))}..."');
       }
       customPreferences = PromptSanitizer.wrapUserInput(customPreferences);
     }

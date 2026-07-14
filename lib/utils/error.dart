@@ -92,7 +92,7 @@ class Error {
             serverCode = errorJson["code"] as int?;
           } else {
             if (kDebugMode) {
-              print('error.dart fromDioError: ${errorJson["code"]}');
+              debugPrint('error.dart fromDioError: ${errorJson["code"]}');
               // todo Logger class
             }
           }

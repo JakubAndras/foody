@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:diplomka/model/ai_response.dart';
 import 'package:diplomka/network/gemini_rest_client.dart';
@@ -27,7 +28,7 @@ class GeminiService implements AiService {
       );
       return responseContentParser(data);
     } catch (e) {
-      print(e.toString());
+      debugPrint(e.toString());
     }
     return null;
   }
@@ -53,7 +54,7 @@ class GeminiService implements AiService {
       }
       return null;
     } catch (e) {
-      print('Error parsing Gemini response: $e');
+      debugPrint('Error parsing Gemini response: $e');
       return null;
     }
   }

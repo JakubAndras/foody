@@ -8,6 +8,7 @@ import 'package:diplomka/navigation.dart';
 import 'package:diplomka/screens/main_screen.dart';
 import 'package:diplomka/services/shared_preferences_manager.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
@@ -43,7 +44,7 @@ class TrackingReminderService {
     await notificationsPlugin.initialize(initializationSettings, onDidReceiveNotificationResponse: _onNotificationTap);
     await _createAndroidChannel();
     _initialized = true;
-    print('[Notifications] Plugin initialized');
+    debugPrint('[Notifications] Plugin initialized');
   }
 
   Future<void> _configureLocalTimeZone() async {
@@ -75,7 +76,7 @@ class TrackingReminderService {
   Future<bool> hasExactAlarmsPermission() async {
     if (!Platform.isAndroid) return true;
     final granted = await Permission.scheduleExactAlarm.isGranted;
-    print('[Notifications] hasExactAlarms (Android): $granted');
+    debugPrint('[Notifications] hasExactAlarms (Android): $granted');
     return granted;
   }
 
@@ -86,7 +87,7 @@ class TrackingReminderService {
     if (!Platform.isAndroid) return true;
     if (await Permission.scheduleExactAlarm.isGranted) return true;
     final status = await Permission.scheduleExactAlarm.request();
-    print('[Notifications] Exact alarms permission requested: $status');
+    debugPrint('[Notifications] Exact alarms permission requested: $status');
     return status.isGranted;
   }
 
@@ -102,13 +103,13 @@ class TrackingReminderService {
     if (Platform.isAndroid) {
       final AndroidFlutterLocalNotificationsPlugin? androidImplementation = notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
       final result = await androidImplementation?.areNotificationsEnabled() ?? true;
-      print('[Notifications] hasPermission (Android): $result');
+      debugPrint('[Notifications] hasPermission (Android): $result');
       return result;
     }
 
     if (Platform.isIOS) {
       final status = await Permission.notification.status;
-      print('[Notifications] hasPermission (iOS): status=$status, isGranted=${status.isGranted}');
+      debugPrint('[Notifications] hasPermission (iOS): status=$status, isGranted=${status.isGranted}');
       return status.isGranted;
     }
 
@@ -119,22 +120,22 @@ class TrackingReminderService {
     await initialize();
     final alreadyGranted = await hasNotificationPermission();
     if (alreadyGranted) {
-      print('[Notifications] Permission already granted');
+      debugPrint('[Notifications] Permission already granted');
       return true;
     }
 
     if (Platform.isAndroid) {
       final AndroidFlutterLocalNotificationsPlugin? androidImplementation = notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
       final bool? granted = await androidImplementation?.requestNotificationsPermission();
-      print('[Notifications] Android permission requested: $granted');
+      debugPrint('[Notifications] Android permission requested: $granted');
       return granted ?? await hasNotificationPermission();
     }
 
     if (Platform.isIOS) {
       final IOSFlutterLocalNotificationsPlugin? iosImplementation = notificationsPlugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>();
-      print('[Notifications] iOS plugin resolved: ${iosImplementation != null}');
+      debugPrint('[Notifications] iOS plugin resolved: ${iosImplementation != null}');
       final bool? granted = await iosImplementation?.requestPermissions(alert: true, badge: true, sound: true);
-      print('[Notifications] iOS permission requested: $granted');
+      debugPrint('[Notifications] iOS permission requested: $granted');
       return granted ?? false;
     }
 
@@ -188,9 +189,9 @@ class TrackingReminderService {
         uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
         androidScheduleMode: scheduleMode,
       );
-      print('[Notifications] Scheduled ${setting.type.code} for $scheduledDate (id=${setting.type.notificationId}, mode=$scheduleMode)');
+      debugPrint('[Notifications] Scheduled ${setting.type.code} for $scheduledDate (id=${setting.type.notificationId}, mode=$scheduleMode)');
     } catch (e) {
-      print('[Notifications] ERROR scheduling ${setting.type.code}: $e');
+      debugPrint('[Notifications] ERROR scheduling ${setting.type.code}: $e');
     }
   }
 
@@ -233,8 +234,7 @@ class TrackingReminderService {
     final resolved = tr(key);
     assert(() {
       if (resolved == key) {
-        // ignore: avoid_print
-        print('[Notifications] WARNING: tr() returned the raw key "$key" — EasyLocalization not ready.');
+        debugPrint('[Notifications] WARNING: tr() returned the raw key "$key" — EasyLocalization not ready.');
       }
       return true;
     }());
@@ -245,7 +245,7 @@ class TrackingReminderService {
   /// proto naviguje přes globální `navigatorKey` a čte providery z root `rootContainer`.
   static void _onNotificationTap(NotificationResponse response) {
     final payload = response.payload ?? '';
-    print('[Notifications] Tap received: payload=$payload, type=${response.notificationResponseType}');
+    debugPrint('[Notifications] Tap received: payload=$payload, type=${response.notificationResponseType}');
 
     try {
       // Pop any pushed routes back to the root (MainScreen) so the tab switch is visible.
@@ -261,7 +261,7 @@ class TrackingReminderService {
         rootContainer.read(dailyRecordProvider.notifier).updateDate(DateTime.now());
       }
     } catch (e) {
-      print('[Notifications] Error handling tap: $e');
+      debugPrint('[Notifications] Error handling tap: $e');
     }
   }
 }

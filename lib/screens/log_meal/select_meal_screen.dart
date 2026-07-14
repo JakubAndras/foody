@@ -57,12 +57,10 @@ class _SelectMealScreenState extends ConsumerState<SelectMealScreen> {
   final FocusNode _searchFocusNode = FocusNode();
   Timer? _debounce;
   String _query = '';
-  bool _showSuggestions = false;
   bool _showSearch = false;
   SelectMealTab _tab = SelectMealTab.all;
   SelectMealSort _sort = SelectMealSort.mostRecent;
   late final PageController _pageController;
-  final int _selectedMealtimeIndex = 1;
 
   // Voice search
   final VoiceTranscriptionService _voiceService = VoiceTranscriptionService();
@@ -89,15 +87,10 @@ class _SelectMealScreenState extends ConsumerState<SelectMealScreen> {
   }
 
   void _onFocusChanged() {
-    setState(() {
-      _showSuggestions = _searchFocusNode.hasFocus && _searchController.text.trim().isNotEmpty;
-    });
+    setState(() {});
   }
 
   void _onSearchChanged(String value) {
-    setState(() {
-      _showSuggestions = _searchFocusNode.hasFocus && value.trim().isNotEmpty;
-    });
     _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 250), () {
       setState(() {
@@ -124,7 +117,6 @@ class _SelectMealScreenState extends ConsumerState<SelectMealScreen> {
     _searchController.clear();
     setState(() {
       _query = '';
-      _showSuggestions = false;
     });
   }
 
@@ -591,10 +583,4 @@ class _IngredientItem {
   const _IngredientItem({required this.ingredient, required this.subtitle, this.template});
 }
 
-class _SuggestionItem {
-  final String name;
-  final int frequency;
-
-  const _SuggestionItem({required this.name, required this.frequency});
-}
 

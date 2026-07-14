@@ -101,7 +101,7 @@ class HealthIntegrationNotifier extends Notifier<HealthIntegrationState> {
       state = state.copyWith(hasPermission: authorized);
       return authorized;
     } catch (e) {
-      print('HealthIntegrationService.requestPermission error: $e');
+      debugPrint('HealthIntegrationService.requestPermission error: $e');
       state = state.copyWith(hasPermission: false);
       return false;
     }
@@ -146,13 +146,13 @@ class HealthIntegrationNotifier extends Notifier<HealthIntegrationState> {
 
   Future<void> syncBurnedCalories(DateTime date) async {
     try {
-      print('HealthSync: syncing date=${date.toIso8601String()}');
+      debugPrint('HealthSync: syncing date=${date.toIso8601String()}');
       final calories = await getActiveEnergyBurned(date) ?? 0;
-      print('HealthSync: date=${date.toIso8601String()} calories=$calories');
+      debugPrint('HealthSync: date=${date.toIso8601String()} calories=$calories');
 
       final repo = ref.read(dayRecordRepositoryProvider);
       final existing = await repo.findHealthSyncExercise(date: date, source: _sourceTag);
-      print('HealthSync: existing=${existing?.id}, existingCal=${existing?.caloriesBurned}');
+      debugPrint('HealthSync: existing=${existing?.id}, existingCal=${existing?.caloriesBurned}');
 
       // Skip if record already exists and calories haven't changed.
       if (existing != null && existing.caloriesBurned == calories) return;
@@ -174,7 +174,7 @@ class HealthIntegrationNotifier extends Notifier<HealthIntegrationState> {
       state = state.copyWith(lastSyncTime: DateTime.now());
       await _persistSettings();
     } catch (e) {
-      print('HealthIntegrationService.syncBurnedCalories error: $e');
+      debugPrint('HealthIntegrationService.syncBurnedCalories error: $e');
     }
   }
 
@@ -190,12 +190,12 @@ class HealthIntegrationNotifier extends Notifier<HealthIntegrationState> {
         endTime: end,
       );
 
-      print('HealthSync: date=${date.toIso8601String()} dataPoints=${dataPoints.length}');
+      debugPrint('HealthSync: date=${date.toIso8601String()} dataPoints=${dataPoints.length}');
 
       if (dataPoints.isEmpty) return null;
 
       final cleaned = _health.removeDuplicates(dataPoints);
-      print('HealthSync: date=${date.toIso8601String()} cleaned=${cleaned.length}');
+      debugPrint('HealthSync: date=${date.toIso8601String()} cleaned=${cleaned.length}');
 
       double total = 0;
       for (final point in cleaned) {
@@ -207,7 +207,7 @@ class HealthIntegrationNotifier extends Notifier<HealthIntegrationState> {
 
       return total > 0 ? total : null;
     } catch (e) {
-      print('HealthIntegrationService.getActiveEnergyBurned error: $e');
+      debugPrint('HealthIntegrationService.getActiveEnergyBurned error: $e');
       return null;
     }
   }

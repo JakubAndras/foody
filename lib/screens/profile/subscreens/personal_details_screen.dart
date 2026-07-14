@@ -585,8 +585,6 @@ class _HeightPickerSheetState extends State<_HeightPickerSheet> {
     _values = List.generate(_maxCm - _minCm + 1, (i) => '${_minCm + i} cm');
   }
 
-  String _formatHeight(int cm) => '$cm';
-
   @override
   Widget build(BuildContext context) {
     return Container(

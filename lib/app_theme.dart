@@ -3,8 +3,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 class _LightColors {
-  static const white = Color(0xFFFFFFFF);
-  static const black = Color(0xFF0A0A0A);
   static const white1 = Color(0xFFFFFFFF);
   static const greyLight3 = Color(0xFFE8E8EA);
   static const grey4 = Color(0xFFA8A8B1);

@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_print
 // AI Accuracy Benchmark Runner — Nutrition5k Dataset
 //
 // Standalone Dart script (no Flutter dependency).

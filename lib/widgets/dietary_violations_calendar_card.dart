@@ -29,7 +29,6 @@ class _MonthlyCalendarCardState extends ConsumerState<MonthlyCalendarCard> {
   static const int _maxYear = 2035;
   static const double _calendarRowHeight = 46.0;
   static const double _dayNamesHeight = 18.0;
-  static const double _legendHeight = 16.0;
 
   @override
   void initState() {
@@ -322,21 +321,6 @@ class _DayCell extends StatelessWidget {
         ),
       ),
       ),
-    );
-  }
-}
-
-class _LegendDot extends StatelessWidget {
-  final Color color;
-
-  const _LegendDot({required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 10,
-      height: 10,
-      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
     );
   }
 }

@@ -65,15 +65,15 @@ class AskAiNotifier extends Notifier<AskAiState> {
 
     final classification = PromptSanitizer.classifyInput(trimmed);
     if (classification == InjectionClassification.explicitAttack) {
-      print('[AskAi] EXPLICIT INJECTION REJECTED in query: "${trimmed.substring(0, trimmed.length.clamp(0, 80))}..."');
+      debugPrint('[AskAi] EXPLICIT INJECTION REJECTED in query: "${trimmed.substring(0, trimmed.length.clamp(0, 80))}..."');
       _emitError(tr(LocaleKeys.error_ai_input_rejected));
       return;
     }
     if (classification == InjectionClassification.ambiguous) {
-      print('[AskAi] AMBIGUOUS PATTERN — LLM pre-screening query');
+      debugPrint('[AskAi] AMBIGUOUS PATTERN — LLM pre-screening query');
       final isInjection = await PromptSanitizer.preScreenWithLlm(ref.read(openaiRestClientProvider), trimmed);
       if (isInjection) {
-        print('[AskAi] LLM PRE-SCREEN REJECTED query');
+        debugPrint('[AskAi] LLM PRE-SCREEN REJECTED query');
         _emitError(tr(LocaleKeys.error_ai_input_rejected));
         return;
       }
@@ -124,7 +124,7 @@ class AskAiNotifier extends Notifier<AskAiState> {
 
       state = state.copyWith(lastQuery: trimmed, result: AsyncData(parsed));
     } on app_error.Error catch (e) {
-      print('AskAiNotifier.submitQuery error: $e');
+      debugPrint('AskAiNotifier.submitQuery error: $e');
       if (e.errorType == app_error.ErrorType.noInternetConnection) {
         _emitError(tr(LocaleKeys.error_no_internet));
       } else if (e.errorType == app_error.ErrorType.timeout) {
@@ -133,7 +133,7 @@ class AskAiNotifier extends Notifier<AskAiState> {
         _emitError(tr(LocaleKeys.ask_ai_fetch_error));
       }
     } catch (e) {
-      print('AskAiNotifier.submitQuery error: $e');
+      debugPrint('AskAiNotifier.submitQuery error: $e');
       _emitError(tr(LocaleKeys.ask_ai_fetch_error));
     }
   }
@@ -176,7 +176,7 @@ class AskAiNotifier extends Notifier<AskAiState> {
         }
       }
     } catch (e) {
-      print('AskAiNotifier._estimateScope fallback: $e');
+      debugPrint('AskAiNotifier._estimateScope fallback: $e');
     }
     // Fallback: last 30 days
     final fallbackFrom = todayDt.subtract(const Duration(days: 30));
@@ -193,7 +193,7 @@ class AskAiNotifier extends Notifier<AskAiState> {
       if (decoded is! Map<String, dynamic>) return null;
       return AskAiQueryResponse.fromJson(decoded);
     } catch (e) {
-      print('AskAiNotifier._parseQueryResponse error: $e');
+      debugPrint('AskAiNotifier._parseQueryResponse error: $e');
       return null;
     }
   }

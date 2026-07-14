@@ -84,7 +84,7 @@ All state management uses **Riverpod** (`flutter_riverpod`). Services are plain 
 - DAOs in `lib/database/dao/`
 - **Normalized FK schema**: `Meal.dayRecordId → DayRecord`, `Ingredient.mealId → Meal`, `Exercise.dayRecordId → DayRecord` — all CASCADE delete
 - `DayRecordRepository` assembles domain aggregates (`DayRecord` + `Meal[]` + `Ingredient[]` + `Exercise[]`) for UI — always use the repository, not DAOs directly
-- `Meal` and `Ingredient` carry research-only telemetry columns (`inputSource`, `aiProvider`, `aiModel`, `aiOriginal*`, `wasEditedByUser`, `editedAtMs`); `AiAttempt` holds per-attempt AI cost/token telemetry — see `RESEARCH_ONLY.md` for the removal plan before production.
+- `Meal` and `Ingredient` carry research-only telemetry columns (`inputSource`, `aiProvider`, `aiModel`, `aiOriginal*`, `wasEditedByUser`, `editedAtMs`); `AiAttempt` holds per-attempt AI cost/token telemetry — see `.claude/RESEARCH_ONLY.md` for the removal plan before production.
 
 **Adding DB fields/tables (dev workflow during testing phase):**
 1. Modify entity, run `build_runner`.

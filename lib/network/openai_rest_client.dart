@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:diplomka/network/backend_config.dart';
 import 'package:diplomka/services/ai_feature/ai_attempt_log_service.dart';
+import 'package:diplomka/services/device/device_identity_service.dart';
 import 'package:diplomka/utils/ai_cost_calculator.dart';
 import 'package:diplomka/utils/ai_model_constants.dart';
 import 'package:diplomka/utils/error.dart';
@@ -13,13 +16,41 @@ import 'package:diplomka/utils/prompt.dart';
 import 'package:diplomka/utils/prompt_sanitizer.dart';
 
 class OpenaiRestClient {
-  OpenaiRestClient(this._ref);
+  /// [backendConfig] a [deviceId] jsou volitelné se bezpečnými defaulty, aby
+  /// přímá konstrukce (např. v testech) nic nerozbila. Provider ale vždy
+  /// injektuje reálné hodnoty. Prázdné/nenastavené `BACKEND_BASE_URL` znamená
+  /// nezměněné přímé volání OpenAI (fallback).
+  OpenaiRestClient(this._ref, {BackendConfig? backendConfig, String? deviceId})
+      : _backendConfig = backendConfig ?? BackendConfig(),
+        _deviceId = deviceId ?? '';
 
   final Ref _ref;
+  final BackendConfig _backendConfig;
+  final String _deviceId;
 
   final Dio _dio = Dio();
   final String apiUrl = "https://api.openai.com/v1/chat/completions";
   String? chatGptApiKey = dotenv.env['OPENAI_API_KEY'];
+
+  /// Cílová URL pro daný [endpoint] label. Přes backend proxy když je
+  /// nastavené `BACKEND_BASE_URL`, jinak přímo na OpenAI.
+  String _endpointUrl(String endpoint) => _backendConfig.isConfigured ? '${_backendConfig.baseUrl}/v1/ai/openai/chat?endpoint=$endpoint' : apiUrl;
+
+  /// Hlavičky requestu. Přes backend proxy se posílá app token + device id,
+  /// jinak přesně původní přímé volání s OpenAI klíčem (fallback).
+  Map<String, String> _requestHeaders() {
+    if (_backendConfig.isConfigured) {
+      return {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${_backendConfig.appToken}",
+        "X-Device-Id": _deviceId,
+      };
+    }
+    return {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $chatGptApiKey",
+    };
+  }
 
   final String mealContext = 'You are an expert registered dietitian and food scientist with extensive experience in portion size estimation from photographs. You have deep knowledge of nutritional databases (USDA, food composition tables) and can accurately estimate per-100g nutritional values for any food. Never include anything outside of the JSON response. ${PromptSanitizer.antiInjectionDirective}';
   final String exerciseContext = 'You are an AI exercise analyzer. Never include anything outside of the JSON response. ${PromptSanitizer.antiInjectionDirective}';
@@ -52,6 +83,7 @@ class OpenaiRestClient {
         throw Error.generic(message: "Failed to fetch the ChatGPT key.");
       }
       return _postChatCompletion(
+        endpoint: "meal",
         context: mealContext,
         prompt: mealPrompt,
         textPrompt: textPrompt,
@@ -84,6 +116,7 @@ class OpenaiRestClient {
       }
 
       return _postChatCompletion(
+        endpoint: "exercise",
         context: exerciseContext,
         prompt: exercisePrompt,
         textPrompt: textPrompt,
@@ -111,6 +144,7 @@ class OpenaiRestClient {
       }
 
       return _postChatCompletion(
+        endpoint: "query_scope",
         context: queryContext,
         prompt: estimateScopePrompt,
         textPrompt: query,
@@ -142,6 +176,7 @@ class OpenaiRestClient {
       }
 
       return _postChatCompletion(
+        endpoint: "query",
         context: queryContext,
         prompt: queryPrompt,
         textPrompt: query,
@@ -172,6 +207,7 @@ class OpenaiRestClient {
       }
 
       return _postChatCompletion(
+        endpoint: "goals",
         context: goalsContext,
         prompt: goalsPrompt,
         textPrompt: null,
@@ -191,6 +227,7 @@ class OpenaiRestClient {
   }
 
   Future<Map<String, dynamic>> _postChatCompletion({
+    required String endpoint,
     required String context,
     required String prompt,
     required String? textPrompt,
@@ -199,12 +236,9 @@ class OpenaiRestClient {
     String model = aiModelMain,
   }) async {
     final response = await _dio.post(
-      apiUrl,
+      _endpointUrl(endpoint),
       options: Options(
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer $chatGptApiKey",
-        },
+        headers: _requestHeaders(),
         receiveTimeout: 30000,
       ),
       data: {
@@ -225,7 +259,7 @@ class OpenaiRestClient {
     );
 
     if (response.statusCode == 200) {
-      print(response.data.toString());
+      debugPrint(response.data.toString());
       return response.data;
     }
     throw Error.generic();
@@ -237,12 +271,9 @@ class OpenaiRestClient {
       if (chatGptApiKey == null) return false;
 
       final response = await _dio.post(
-        apiUrl,
+        _endpointUrl("injection_screen"),
         options: Options(
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer $chatGptApiKey",
-          },
+          headers: _requestHeaders(),
           receiveTimeout: 5000,
         ),
         data: {
@@ -263,7 +294,7 @@ class OpenaiRestClient {
         final content = response.data['choices']?[0]?['message']?['content'] ?? '';
         final isInjection = content.toString().contains('"is_injection": true') || content.toString().contains('"is_injection":true');
         if (isInjection) {
-          print('[PreScreen] LLM INJECTION DETECTED: "${userText.substring(0, userText.length.clamp(0, 80))}..."');
+          debugPrint('[PreScreen] LLM INJECTION DETECTED: "${userText.substring(0, userText.length.clamp(0, 80))}..."');
         }
 
         // RESEARCH-ONLY: log pre-screen call for token/cost telemetry.
@@ -283,7 +314,7 @@ class OpenaiRestClient {
         return isInjection;
       }
     } catch (e) {
-      print('[PreScreen] LLM pre-screening failed (fail-open): $e');
+      debugPrint('[PreScreen] LLM pre-screening failed (fail-open): $e');
     }
     return false;
   }
@@ -293,4 +324,10 @@ class OpenaiRestClient {
   }
 }
 
-final openaiRestClientProvider = Provider<OpenaiRestClient>((ref) => OpenaiRestClient(ref));
+final openaiRestClientProvider = Provider<OpenaiRestClient>(
+  (ref) => OpenaiRestClient(
+    ref,
+    backendConfig: ref.watch(backendConfigProvider),
+    deviceId: ref.watch(deviceIdentityServiceProvider).deviceId,
+  ),
+);

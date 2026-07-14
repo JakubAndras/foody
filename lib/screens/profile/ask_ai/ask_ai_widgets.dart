@@ -153,7 +153,7 @@ class AskAiPromptCard extends StatelessWidget {
                     alignment: Alignment.bottomRight,
                     child: ValueListenableBuilder<TextEditingValue>(
                       valueListenable: controller!,
-                      builder: (_, value, __) => Text(
+                      builder: (_, value, _) => Text(
                         '${value.text.length}/$_maxLength',
                         style: AppTextStyles.body13.copyWith(color: AppColors.textTertiary),
                       ),

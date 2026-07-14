@@ -2,6 +2,7 @@ import 'package:diplomka/services/motivational_summary_service.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'package:diplomka/services/shared_preferences_manager.dart';
 import 'package:diplomka/services/tracking_reminder_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -36,14 +37,11 @@ class NotificationBootstrap {
     await motivationalSummary.rescheduleAllFromStorage();
 
     if (ref.read(sessionProvider).onboardingComplete) {
-      // ignore: avoid_print
-      print('[Notifications] Requesting permission at startup...');
+      debugPrint('[Notifications] Requesting permission at startup...');
       final granted = await trackingReminder.ensureNotificationPermission();
-      // ignore: avoid_print
-      print('[Notifications] Permission result: $granted');
+      debugPrint('[Notifications] Permission result: $granted');
     } else {
-      // ignore: avoid_print
-      print('[Notifications] Skipping permission request (onboarding not complete)');
+      debugPrint('[Notifications] Skipping permission request (onboarding not complete)');
     }
   }
 
@@ -63,8 +61,7 @@ class NotificationBootstrap {
       await android?.deleteNotificationChannel('tracking_reminders');
       await android?.deleteNotificationChannel('motivational_summary');
     } catch (e) {
-      // ignore: avoid_print
-      print('[Notifications] Legacy channel cleanup failed: $e');
+      debugPrint('[Notifications] Legacy channel cleanup failed: $e');
     }
     await prefs.setBool(key: _channelMigrationFlag, value: true);
   }

@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app.dart';
 
@@ -26,8 +27,14 @@ Future<void> main() async {
   // Databáze se staví před UI a injektuje se do grafu providerů přes override.
   final db = await $FloorAppDatabase.databaseBuilder(AppDatabase.databaseName).addMigrations(appMigrations).build();
 
+  // Načtené SharedPreferences pro synchronní přístup v grafu providerů.
+  final prefs = await SharedPreferences.getInstance();
+
   rootContainer = ProviderContainer(
-    overrides: [databaseProvider.overrideWithValue(db)],
+    overrides: [
+      databaseProvider.overrideWithValue(db),
+      sharedPreferencesProvider.overrideWithValue(prefs),
+    ],
   );
 
   await rootContainer.read(sessionProvider.notifier).onAppInit();

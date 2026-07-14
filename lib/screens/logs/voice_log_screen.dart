@@ -160,7 +160,7 @@ class _VoiceLogScreenState extends ConsumerState<VoiceLogScreen> with WidgetsBin
       barrierLabel: 'Voice permission dialog',
       barrierColor: AppColors.overlayDark40,
       transitionDuration: const Duration(milliseconds: 180),
-      pageBuilder: (context, _, __) {
+      pageBuilder: (context, _, _) {
         return Center(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),

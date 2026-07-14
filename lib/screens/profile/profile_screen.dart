@@ -1,4 +1,3 @@
-import 'package:diplomka/widgets/logged_snackbar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,8 +7,6 @@ import 'package:diplomka/app_theme.dart';
 import 'package:diplomka/widgets/sheet_drag_handle.dart';
 import 'package:diplomka/widgets/sheet_top_bar.dart';
 import 'package:diplomka/generated/locale_keys.g.dart';
-import 'package:diplomka/state/dashboard_notifier.dart';
-import 'package:diplomka/model/day_record.dart';
 import 'package:diplomka/screens/profile/subscreens/personal_details_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/preferences_screen.dart';
 import 'package:diplomka/state/language_settings_notifier.dart';
@@ -22,13 +19,10 @@ import 'package:diplomka/screens/profile/subscreens/tracking_reminders_screen.da
 import 'package:diplomka/screens/profile/subscreens/export_pdf_intro_screen.dart';
 import 'package:diplomka/screens/profile/ask_ai/ask_ai_screen.dart';
 import 'package:diplomka/screens/profile/subscreens/faq_screen.dart';
-import 'package:diplomka/screens/scan/scan_camera_screen.dart';
-import 'package:diplomka/screens/scan/scan_onboarding_screen.dart';
 import 'package:diplomka/screens/profile/profile_widgets.dart';
 import 'package:diplomka/services/session_manager.dart';
 import 'dart:io';
 import 'package:diplomka/widgets/variable_blur_scroll_view.dart';
-import 'package:diplomka/widgets/progress_ring.dart';
 import 'package:diplomka/widgets/mesh_gradient_background.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -302,47 +296,6 @@ class _LanguageRow extends StatelessWidget {
   }
 }
 
-class _ProfileHeaderCard extends StatelessWidget {
-  const _ProfileHeaderCard();
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => showSnackBar(message: tr(LocaleKeys.common_coming_soon), subtitle: tr(LocaleKeys.common_feature_not_available), type: SnackBarType.info),
-      child: Container(
-        height: AppSizes.profileHeaderHeight,
-        decoration: BoxDecoration(color: AppColors.surface, borderRadius: BorderRadius.circular(AppRadii.l), boxShadow: AppShadows.screenCard),
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.screen),
-        child: Row(
-          children: [
-            Container(
-              width: AppSizes.avatarSize,
-              height: AppSizes.avatarSize,
-              decoration: BoxDecoration(gradient: AppGradients.primary, shape: BoxShape.circle),
-              child: Center(
-                child: Text('E', style: AppTextStyles.h3.copyWith(color: AppColors.onPrimary)),
-              ),
-            ),
-            const SizedBox(width: AppSpacing.m),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(tr(LocaleKeys.profile_username), style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w700)),
-                  const SizedBox(height: AppSpacing.xxs),
-                  Text(tr(LocaleKeys.profile_email_placeholder), style: AppTextStyles.body14.copyWith(color: AppColors.textTertiary)),
-                ],
-              ),
-            ),
-            Icon(CupertinoIcons.chevron_right, color: AppColors.textTertiary, size: AppSizes.iconSm),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class _ProfileGroupCard extends StatelessWidget {
   const _ProfileGroupCard({required this.children});
 
@@ -379,157 +332,3 @@ class _ProfileActionRow extends StatelessWidget {
   }
 }
 
-class _WidgetSection extends ConsumerWidget {
-  const _WidgetSection();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final dailyRecord = ref.watch(dailyRecordProvider);
-    final scanOnboardingComplete = ref.watch(sessionProvider).scanOnboardingComplete;
-    final record = dailyRecord.dayRecord ?? DayRecord.initial(dailyRecord.selectedDate);
-
-    final caloriesText = record.totalCalories.round().toString();
-    final proteinText = '${_formatMacro(record.totalProteins)}g';
-    final carbsText = '${_formatMacro(record.totalCarbs)}g';
-    final fatText = '${_formatMacro(record.totalFats)}g';
-    final progress = record.calorieGoal <= 0 ? 0.0 : (record.totalCalories / record.calorieGoal).clamp(0.0, 1.0);
-
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          flex: 5,
-          child: ProfileCard(
-            radius: AppRadii.l,
-            shadow: AppShadows.screenCard,
-            border: AppBorders.screenCard,
-            padding: const EdgeInsets.all(AppSpacing.m),
-            child: Row(
-              children: [
-                ProgressRing(
-                  size: 96,
-                  strokeWidth: 8,
-                  value: progress,
-                  backgroundColor: AppColors.outline.withValues(alpha: 0.7),
-                  foregroundColor: AppColors.textPrimary,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(caloriesText, style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.w700)),
-                      Text(tr(LocaleKeys.common_calories), style: AppTextStyles.caption12.copyWith(color: AppColors.textSecondary)),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.m),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _MacroLeftRow(icon: AppIcons.protein, color: AppColors.macroProtein, value: proteinText, label: tr(LocaleKeys.dashboard_protein_eaten)),
-                      const SizedBox(height: AppSpacing.s),
-                      _MacroLeftRow(icon: AppIcons.carbs, color: AppColors.macroCarbs, value: carbsText, label: tr(LocaleKeys.dashboard_carbs_eaten)),
-                      const SizedBox(height: AppSpacing.s),
-                      _MacroLeftRow(icon: AppIcons.fats, color: AppColors.macroFats, value: fatText, label: tr(LocaleKeys.dashboard_fat_eaten)),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(width: AppSpacing.s),
-        Expanded(
-          flex: 2,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _WidgetShortcutCard(
-                icon: CupertinoIcons.viewfinder,
-                label: tr(LocaleKeys.profile_scan_food),
-                onTap: () {
-                  if (scanOnboardingComplete) {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ScanCameraScreen()));
-                  } else {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ScanOnboardingScreen()));
-                  }
-                },
-              ),
-              const SizedBox(height: AppSpacing.s),
-              _WidgetShortcutCard(
-                icon: CupertinoIcons.qrcode,
-                label: tr(LocaleKeys.profile_barcode),
-                onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ScanCameraScreen(initialMode: ScanMode.barcode))),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  String _formatMacro(double value) {
-    return value.toStringAsFixed(0);
-  }
-}
-
-class _MacroLeftRow extends StatelessWidget {
-  const _MacroLeftRow({required this.icon, required this.color, required this.value, required this.label});
-
-  final IconData icon;
-  final Color color;
-  final String value;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(icon, size: AppSizes.iconSm, color: color),
-        const SizedBox(width: AppSpacing.xs),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(value, style: AppTextStyles.title17.copyWith(fontWeight: FontWeight.w700)),
-            Text(label, style: AppTextStyles.caption12.copyWith(color: AppColors.textSecondary)),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class _WidgetShortcutCard extends StatelessWidget {
-  const _WidgetShortcutCard({required this.icon, required this.label, required this.onTap});
-
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: ProfileCard(
-        radius: AppRadii.l,
-        shadow: AppShadows.screenCard,
-        border: AppBorders.screenCard,
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs, vertical: AppSpacing.xs),
-        child: SizedBox(
-          height: 62,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, size: AppSizes.iconMd, color: AppColors.textPrimary),
-              const SizedBox(height: AppSpacing.xs),
-              Text(
-                label,
-                textAlign: TextAlign.center,
-                style: AppTextStyles.caption12.copyWith(fontWeight: FontWeight.w600, color: AppColors.textPrimary),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}

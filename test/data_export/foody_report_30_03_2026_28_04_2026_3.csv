@@ -1,0 +1,139 @@
+--- User Profile ---
+Height (cm),179
+Weight (kg),87.0
+Goal Weight (kg),83.0
+Sex,male
+Goal,lose
+Diet Type,classic
+Custom Diet Preferences,
+Weight Change Rate (kg/week),0.7
+Prefers Metric,yes
+Date of Birth,2000-01-15
+
+--- Daily Summary ---
+Date,Calories,Protein (g),Carbs (g),Fat (g),Calorie Goal,Protein Goal (g),Carbs Goal (g),Fat Goal (g),Exercise Calories,Net Calories,Meal Count,Exercise Count
+2026-04-20,599,33,74,19,2000,150,250,70,0,599,1,0
+2026-04-21,599,33,74,19,2000,150,250,70,0,599,1,0
+2026-04-22,0,0,0,0,2000,150,250,70,0,0,0,0
+2026-04-23,984,41,154,22,2000,150,250,70,0,984,2,0
+2026-04-24,1198,67,148,38,2000,150,250,70,0,1198,1,0
+2026-04-25,700,28,77,30,2000,150,250,70,500,200,1,1
+2026-04-26,599,33,74,19,2000,150,250,70,0,599,1,0
+2026-04-27,1889,41,255,81,2000,150,250,70,0,1889,3,0
+2026-04-28,2811,73,295,150,2510,189,251,84,0,2811,4,0
+
+Consumed:,9379 kcal
+Burned:,500 kcal
+Balance:,8879 kcal
+
+--- Meal Details ---
+Date,Meal,Meal Timestamp,Meal AI Confidence,Has Photo,input_source,ai_provider,ai_model,barcode,meal_was_edited_by_user,meal_edited_at,meal_deleted_at,meal_ai_original_name,meal_ai_original_calories,meal_ai_original_proteins,meal_ai_original_carbs,meal_ai_original_fats,meal_ai_original_confidence,Ingredients,Weight,Amount (pcs),Calories,Protein (g),Carbs (g),Fat (g),Ingredient AI Confidence,ing_was_edited_by_user,ing_deleted_at,ing_ai_original_name,ing_ai_original_weight,ing_ai_original_amount,ing_ai_original_calories,ing_ai_original_proteins,ing_ai_original_carbs,ing_ai_original_fats,ing_ai_original_confidence
+2026-04-20,Těstoviny s vepřovým,2026-04-20 16:48,0.81,no,voice_ai,openai,gpt-5.4,,no,,,Těstoviny s vepřovým,599,33,74,19,0.81,vařené těstoviny,220,1.0,347,13,68,2,0.90,no,,vařené těstoviny,220,1.0,347,13,68,2,0.90
+2026-04-20,Těstoviny s vepřovým,2026-04-20 16:48,0.81,no,voice_ai,openai,gpt-5.4,,no,,,Těstoviny s vepřovým,599,33,74,19,0.81,trhané vepřové maso,90,1.0,194,19,0,13,0.83,no,,trhané vepřové maso,90,1.0,194,19,0,13,0.83
+2026-04-20,Těstoviny s vepřovým,2026-04-20 16:48,0.81,no,voice_ai,openai,gpt-5.4,,no,,,Těstoviny s vepřovým,599,33,74,19,0.81,rajčatová omáčka,100,1.0,40,2,6,1,0.84,no,,rajčatová omáčka,100,1.0,40,2,6,1,0.84
+2026-04-20,Těstoviny s vepřovým,2026-04-20 16:48,0.81,no,voice_ai,openai,gpt-5.4,,no,,,Těstoviny s vepřovým,599,33,74,19,0.81,olej v omáčce/přípravě,5,1.0,18,0,0,4,0.63,no,,olej v omáčce/přípravě,5,1.0,18,0,0,4,0.63
+2026-04-21,Těstoviny s vepřovým,2026-04-21 16:48,0.81,no,voice_ai,openai,gpt-5.4,,no,,,Těstoviny s vepřovým,599,33,74,19,0.81,vařené těstoviny,220,1.0,347,13,68,2,0.90,no,,vařené těstoviny,220,1.0,347,13,68,2,0.90
+2026-04-21,Těstoviny s vepřovým,2026-04-21 16:48,0.81,no,voice_ai,openai,gpt-5.4,,no,,,Těstoviny s vepřovým,599,33,74,19,0.81,trhané vepřové maso,90,1.0,194,19,0,13,0.83,no,,trhané vepřové maso,90,1.0,194,19,0,13,0.83
+2026-04-21,Těstoviny s vepřovým,2026-04-21 16:48,0.81,no,voice_ai,openai,gpt-5.4,,no,,,Těstoviny s vepřovým,599,33,74,19,0.81,rajčatová omáčka,100,1.0,40,2,6,1,0.84,no,,rajčatová omáčka,100,1.0,40,2,6,1,0.84
+2026-04-21,Těstoviny s vepřovým,2026-04-21 16:48,0.81,no,voice_ai,openai,gpt-5.4,,no,,,Těstoviny s vepřovým,599,33,74,19,0.81,olej v omáčce/přípravě,5,1.0,18,0,0,4,0.63,no,,olej v omáčce/přípravě,5,1.0,18,0,0,4,0.63
+2026-04-22,Těstoviny s vepřovým,2026-04-22 16:48,0.81,no,voice_ai,openai,gpt-5.4,,no,,2026-04-28 17:08,Těstoviny s vepřovým,599,33,74,19,0.81,vařené těstoviny,220,1.0,347,13,68,2,0.90,no,2026-04-28 17:08,vařené těstoviny,220,1.0,347,13,68,2,0.90
+2026-04-22,Těstoviny s vepřovým,2026-04-22 16:48,0.81,no,voice_ai,openai,gpt-5.4,,no,,2026-04-28 17:08,Těstoviny s vepřovým,599,33,74,19,0.81,trhané vepřové maso,90,1.0,194,19,0,13,0.83,no,2026-04-28 17:08,trhané vepřové maso,90,1.0,194,19,0,13,0.83
+2026-04-22,Těstoviny s vepřovým,2026-04-22 16:48,0.81,no,voice_ai,openai,gpt-5.4,,no,,2026-04-28 17:08,Těstoviny s vepřovým,599,33,74,19,0.81,rajčatová omáčka,100,1.0,40,2,6,1,0.84,no,2026-04-28 17:08,rajčatová omáčka,100,1.0,40,2,6,1,0.84
+2026-04-22,Těstoviny s vepřovým,2026-04-22 16:48,0.81,no,voice_ai,openai,gpt-5.4,,no,,2026-04-28 17:08,Těstoviny s vepřovým,599,33,74,19,0.81,olej v omáčce/přípravě,5,1.0,18,0,0,4,0.63,no,2026-04-28 17:08,olej v omáčce/přípravě,5,1.0,18,0,0,4,0.63
+2026-04-23,Těstoviny s vepřovým,2026-04-23 16:48,0.81,no,voice_ai,openai,gpt-5.4,,no,,,Těstoviny s vepřovým,599,33,74,19,0.81,vařené těstoviny,220,1.0,347,13,68,2,0.90,no,,vařené těstoviny,220,1.0,347,13,68,2,0.90
+2026-04-23,Těstoviny s vepřovým,2026-04-23 16:48,0.81,no,voice_ai,openai,gpt-5.4,,no,,,Těstoviny s vepřovým,599,33,74,19,0.81,trhané vepřové maso,90,1.0,194,19,0,13,0.83,no,,trhané vepřové maso,90,1.0,194,19,0,13,0.83
+2026-04-23,Těstoviny s vepřovým,2026-04-23 16:48,0.81,no,voice_ai,openai,gpt-5.4,,no,,,Těstoviny s vepřovým,599,33,74,19,0.81,rajčatová omáčka,100,1.0,40,2,6,1,0.84,no,,rajčatová omáčka,100,1.0,40,2,6,1,0.84
+2026-04-23,Těstoviny s vepřovým,2026-04-23 16:48,0.81,no,voice_ai,openai,gpt-5.4,,no,,,Těstoviny s vepřovým,599,33,74,19,0.81,olej v omáčce/přípravě,5,1.0,18,0,0,4,0.63,no,,olej v omáčce/přípravě,5,1.0,18,0,0,4,0.63
+2026-04-23,Rice Cakes Unsalted Gluten Free,2026-04-23 16:50,,yes,barcode,,,8590421063934,no,,,,,,,,,Rice Cakes Unsalted Gluten Free,100,1.0,385,8,80,3,,no,,,,,,,,,
+2026-04-23,Rice Cakes Unsalted Gluten Free,2026-04-23 16:51,,yes,manual,,,,no,,2026-04-28 17:08,,,,,,,Rice Cakes Unsalted Gluten Free,100,1.0,385,8,80,3,,no,2026-04-28 17:08,,,,,,,,
+2026-04-24,Těstoviny s vepřovým,2026-04-24 16:48,0.81,no,voice_ai,openai,gpt-5.4,,yes,2026-04-28 16:50,,Těstoviny s vepřovým,599,33,74,19,0.81,vařené těstoviny,220,1.0,347,13,68,2,0.90,no,2026-04-28 16:50,vařené těstoviny,220,1.0,347,13,68,2,0.90
+2026-04-24,Těstoviny s vepřovým,2026-04-24 16:48,0.81,no,voice_ai,openai,gpt-5.4,,yes,2026-04-28 16:50,,Těstoviny s vepřovým,599,33,74,19,0.81,trhané vepřové maso,90,1.0,194,19,0,13,0.83,no,2026-04-28 16:50,trhané vepřové maso,90,1.0,194,19,0,13,0.83
+2026-04-24,Těstoviny s vepřovým,2026-04-24 16:48,0.81,no,voice_ai,openai,gpt-5.4,,yes,2026-04-28 16:50,,Těstoviny s vepřovým,599,33,74,19,0.81,rajčatová omáčka,100,1.0,40,2,6,1,0.84,no,2026-04-28 16:50,rajčatová omáčka,100,1.0,40,2,6,1,0.84
+2026-04-24,Těstoviny s vepřovým,2026-04-24 16:48,0.81,no,voice_ai,openai,gpt-5.4,,yes,2026-04-28 16:50,,Těstoviny s vepřovým,599,33,74,19,0.81,olej v omáčce/přípravě,5,1.0,18,0,0,4,0.63,no,2026-04-28 16:50,olej v omáčce/přípravě,5,1.0,18,0,0,4,0.63
+2026-04-24,Těstoviny s vepřovým,2026-04-24 16:48,0.81,no,voice_ai,openai,gpt-5.4,,yes,2026-04-28 16:50,,Těstoviny s vepřovým,599,33,74,19,0.81,vařené těstoviny,440,2.0,694,26,136,4,0.90,yes,,vařené těstoviny,220,1.0,347,13,68,2,0.90
+2026-04-24,Těstoviny s vepřovým,2026-04-24 16:48,0.81,no,voice_ai,openai,gpt-5.4,,yes,2026-04-28 16:50,,Těstoviny s vepřovým,599,33,74,19,0.81,trhané vepřové maso,180,2.0,388,38,0,25,0.83,yes,,trhané vepřové maso,90,1.0,194,19,0,13,0.83
+2026-04-24,Těstoviny s vepřovým,2026-04-24 16:48,0.81,no,voice_ai,openai,gpt-5.4,,yes,2026-04-28 16:50,,Těstoviny s vepřovým,599,33,74,19,0.81,rajčatová omáčka,200,2.0,80,3,12,1,0.84,yes,,rajčatová omáčka,100,1.0,40,2,6,1,0.84
+2026-04-24,Těstoviny s vepřovým,2026-04-24 16:48,0.81,no,voice_ai,openai,gpt-5.4,,yes,2026-04-28 16:50,,Těstoviny s vepřovým,599,33,74,19,0.81,olej v omáčce/přípravě,10,2.0,36,0,0,8,0.63,yes,,olej v omáčce/přípravě,5,1.0,18,0,0,4,0.63
+2026-04-25,Neurčené jídlohhh44,2026-04-25 16:48,0.08,no,fix_with_ai_rerun,openai,gpt-5.4,,yes,2026-04-28 16:51,,Neurčené jídlo,700,28,77,30,0.08,vařené těstoviny,220,1.0,347,13,68,2,0.90,no,2026-04-28 16:49,vařené těstoviny,220,1.0,347,13,68,2,0.90
+2026-04-25,Neurčené jídlohhh44,2026-04-25 16:48,0.08,no,fix_with_ai_rerun,openai,gpt-5.4,,yes,2026-04-28 16:51,,Neurčené jídlo,700,28,77,30,0.08,trhané vepřové maso,90,1.0,194,19,0,13,0.83,no,2026-04-28 16:49,trhané vepřové maso,90,1.0,194,19,0,13,0.83
+2026-04-25,Neurčené jídlohhh44,2026-04-25 16:48,0.08,no,fix_with_ai_rerun,openai,gpt-5.4,,yes,2026-04-28 16:51,,Neurčené jídlo,700,28,77,30,0.08,rajčatová omáčka,100,1.0,40,2,6,1,0.84,no,2026-04-28 16:49,rajčatová omáčka,100,1.0,40,2,6,1,0.84
+2026-04-25,Neurčené jídlohhh44,2026-04-25 16:48,0.08,no,fix_with_ai_rerun,openai,gpt-5.4,,yes,2026-04-28 16:51,,Neurčené jídlo,700,28,77,30,0.08,olej v omáčce/přípravě,5,1.0,18,0,0,4,0.63,no,2026-04-28 16:49,olej v omáčce/přípravě,5,1.0,18,0,0,4,0.63
+2026-04-25,Neurčené jídlohhh44,2026-04-25 16:48,0.08,no,fix_with_ai_rerun,openai,gpt-5.4,,yes,2026-04-28 16:51,,Neurčené jídlo,700,28,77,30,0.08,Smíšené hlavní jídlo,500,1.0,700,28,77,30,0.08,no,2026-04-28 16:51,Smíšené hlavní jídlo,500,1.0,700,28,77,30,0.08
+2026-04-25,Neurčené jídlohhh44,2026-04-25 16:48,0.08,no,fix_with_ai_rerun,openai,gpt-5.4,,yes,2026-04-28 16:51,,Neurčené jídlo,700,28,77,30,0.08,Smíšené hlavní jídlo,500,1.0,700,28,77,30,0.08,no,,Smíšené hlavní jídlo,500,1.0,700,28,77,30,0.08
+2026-04-26,Těstoviny s vepřovým,2026-04-26 16:47,0.81,no,voice_ai,openai,gpt-5.4,,no,,,Těstoviny s vepřovým,599,33,74,19,0.81,vařené těstoviny,220,1.0,347,13,68,2,0.90,no,,vařené těstoviny,220,1.0,347,13,68,2,0.90
+2026-04-26,Těstoviny s vepřovým,2026-04-26 16:47,0.81,no,voice_ai,openai,gpt-5.4,,no,,,Těstoviny s vepřovým,599,33,74,19,0.81,trhané vepřové maso,90,1.0,194,19,0,13,0.83,no,,trhané vepřové maso,90,1.0,194,19,0,13,0.83
+2026-04-26,Těstoviny s vepřovým,2026-04-26 16:47,0.81,no,voice_ai,openai,gpt-5.4,,no,,,Těstoviny s vepřovým,599,33,74,19,0.81,rajčatová omáčka,100,1.0,40,2,6,1,0.84,no,,rajčatová omáčka,100,1.0,40,2,6,1,0.84
+2026-04-26,Těstoviny s vepřovým,2026-04-26 16:47,0.81,no,voice_ai,openai,gpt-5.4,,no,,,Těstoviny s vepřovým,599,33,74,19,0.81,olej v omáčce/přípravě,5,1.0,18,0,0,4,0.63,no,,olej v omáčce/přípravě,5,1.0,18,0,0,4,0.63
+2026-04-27,Breakfast Croissant,2026-04-27 16:46,,yes,manual,,,,no,,,,,,,,,croissant,80,1.0,325,6,30,17,,no,,,,,,,,,
+2026-04-27,Breakfast Croissant,2026-04-27 16:46,,yes,manual,,,,no,,,,,,,,,scrambled eggs,95,1.0,141,10,2,11,,no,,,,,,,,,
+2026-04-27,Breakfast Croissant,2026-04-27 16:46,,yes,manual,,,,no,,,,,,,,,poached egg,50,1.0,72,6,0,5,,no,,,,,,,,,
+2026-04-27,Breakfast Croissant,2026-04-27 16:46,,yes,manual,,,,no,,,,,,,,,avocado,55,1.0,88,1,5,8,,no,,,,,,,,,
+2026-04-27,Breakfast Croissant,2026-04-27 16:46,,yes,manual,,,,no,,,,,,,,,bacon,20,1.0,108,7,0,8,,no,,,,,,,,,
+2026-04-27,Breakfast Croissant,2026-04-27 16:46,,yes,manual,,,,no,,,,,,,,,hollandaise-style sauce,30,1.0,140,1,2,15,,no,,,,,,,,,
+2026-04-27,Breakfast Croissant,2026-04-27 16:46,,yes,manual,,,,no,,,,,,,,,leafy greens,10,1.0,2,0,0,0,,no,,,,,,,,,
+2026-04-27,Breakfast Croissant,2026-04-27 16:46,,yes,manual,,,,no,,,,,,,,,chives,3,1.0,1,0,1,0,,no,,,,,,,,,
+2026-04-27,Breakfast Croissant,2026-04-27 16:46,,yes,manual,,,,no,,,,,,,,,cooking butter/oil,5,1.0,45,0,0,5,,no,,,,,,,,,
+2026-04-27,Double Scoop Ice Cream,2026-04-27 16:46,,yes,manual,,,,no,,,,,,,,,Strawberry ice cream,75,1.0,154,3,25,5,,no,,,,,,,,,
+2026-04-27,Double Scoop Ice Cream,2026-04-27 16:46,,yes,manual,,,,no,,,,,,,,,Vanilla ice cream,65,1.0,135,2,22,5,,no,,,,,,,,,
+2026-04-27,Double Scoop Ice Cream,2026-04-27 16:46,,yes,manual,,,,no,,,,,,,,,Wafer cone,18,1.0,36,0,6,1,,no,,,,,,,,,
+2026-04-27,Apples and pears,2026-04-27 16:46,,yes,manual,,,,no,,,,,,,,,Apple,620,1.0,322,2,87,1,,no,,,,,,,,,
+2026-04-27,Apples and pears,2026-04-27 16:46,,yes,manual,,,,no,,,,,,,,,Pear,510,1.0,320,2,76,1,,no,,,,,,,,,
+2026-04-28,Apples and pears,2026-04-28 16:44,0.98,yes,photo_ai,openai,gpt-5.4,,no,,,Apples and pears,642,4,163,2,0.98,Apple,620,7.0,322,2,87,1,0.99,no,,Apple,620,7.0,322,2,87,1,0.99
+2026-04-28,Apples and pears,2026-04-28 16:44,0.98,yes,photo_ai,openai,gpt-5.4,,no,,,Apples and pears,642,4,163,2,0.98,Pear,510,7.0,320,2,76,1,0.99,no,,Pear,510,7.0,320,2,76,1,0.99
+2026-04-28,Double Scoop Ice Cream,2026-04-28 16:44,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Double Scoop Ice Cream,325,5,52,11,0.95,Strawberry ice cream,75,1.0,154,3,25,5,0.89,no,,Strawberry ice cream,75,1.0,154,3,25,5,0.89
+2026-04-28,Double Scoop Ice Cream,2026-04-28 16:44,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Double Scoop Ice Cream,325,5,52,11,0.95,Vanilla ice cream,65,1.0,135,2,22,5,0.76,no,,Vanilla ice cream,65,1.0,135,2,22,5,0.76
+2026-04-28,Double Scoop Ice Cream,2026-04-28 16:44,0.95,yes,photo_ai,openai,gpt-5.4,,no,,,Double Scoop Ice Cream,325,5,52,11,0.95,Wafer cone,18,1.0,36,0,6,1,0.97,no,,Wafer cone,18,1.0,36,0,6,1,0.97
+2026-04-28,Breakfast Croissant,2026-04-28 16:45,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Breakfast Croissant,922,32,40,68,0.92,croissant,80,1.0,325,6,30,17,0.98,no,,croissant,80,1.0,325,6,30,17,0.98
+2026-04-28,Breakfast Croissant,2026-04-28 16:45,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Breakfast Croissant,922,32,40,68,0.92,scrambled eggs,95,1.0,141,10,2,11,0.93,no,,scrambled eggs,95,1.0,141,10,2,11,0.93
+2026-04-28,Breakfast Croissant,2026-04-28 16:45,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Breakfast Croissant,922,32,40,68,0.92,poached egg,50,1.0,72,6,0,5,0.95,no,,poached egg,50,1.0,72,6,0,5,0.95
+2026-04-28,Breakfast Croissant,2026-04-28 16:45,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Breakfast Croissant,922,32,40,68,0.92,avocado,55,1.0,88,1,5,8,0.91,no,,avocado,55,1.0,88,1,5,8,0.91
+2026-04-28,Breakfast Croissant,2026-04-28 16:45,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Breakfast Croissant,922,32,40,68,0.92,bacon,20,1.0,108,7,0,8,0.79,no,,bacon,20,1.0,108,7,0,8,0.79
+2026-04-28,Breakfast Croissant,2026-04-28 16:45,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Breakfast Croissant,922,32,40,68,0.92,hollandaise-style sauce,30,1.0,140,1,2,15,0.88,no,,hollandaise-style sauce,30,1.0,140,1,2,15,0.88
+2026-04-28,Breakfast Croissant,2026-04-28 16:45,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Breakfast Croissant,922,32,40,68,0.92,leafy greens,10,1.0,2,0,0,0,0.72,no,,leafy greens,10,1.0,2,0,0,0,0.72
+2026-04-28,Breakfast Croissant,2026-04-28 16:45,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Breakfast Croissant,922,32,40,68,0.92,chives,3,1.0,1,0,1,0,0.90,no,,chives,3,1.0,1,0,1,0,0.90
+2026-04-28,Breakfast Croissant,2026-04-28 16:45,0.92,yes,photo_ai,openai,gpt-5.4,,no,,,Breakfast Croissant,922,32,40,68,0.92,cooking butter/oil,5,1.0,45,0,0,5,0.68,no,,cooking butter/oil,5,1.0,45,0,0,5,0.68
+2026-04-28,Breakfast Croissant,2026-04-28 16:46,,yes,manual,,,,no,,,,,,,,,croissant,80,1.0,325,6,30,17,,no,,,,,,,,,
+2026-04-28,Breakfast Croissant,2026-04-28 16:46,,yes,manual,,,,no,,,,,,,,,scrambled eggs,95,1.0,141,10,2,11,,no,,,,,,,,,
+2026-04-28,Breakfast Croissant,2026-04-28 16:46,,yes,manual,,,,no,,,,,,,,,poached egg,50,1.0,72,6,0,5,,no,,,,,,,,,
+2026-04-28,Breakfast Croissant,2026-04-28 16:46,,yes,manual,,,,no,,,,,,,,,avocado,55,1.0,88,1,5,8,,no,,,,,,,,,
+2026-04-28,Breakfast Croissant,2026-04-28 16:46,,yes,manual,,,,no,,,,,,,,,bacon,20,1.0,108,7,0,8,,no,,,,,,,,,
+2026-04-28,Breakfast Croissant,2026-04-28 16:46,,yes,manual,,,,no,,,,,,,,,hollandaise-style sauce,30,1.0,140,1,2,15,,no,,,,,,,,,
+2026-04-28,Breakfast Croissant,2026-04-28 16:46,,yes,manual,,,,no,,,,,,,,,leafy greens,10,1.0,2,0,0,0,,no,,,,,,,,,
+2026-04-28,Breakfast Croissant,2026-04-28 16:46,,yes,manual,,,,no,,,,,,,,,chives,3,1.0,1,0,1,0,,no,,,,,,,,,
+2026-04-28,Breakfast Croissant,2026-04-28 16:46,,yes,manual,,,,no,,,,,,,,,cooking butter/oil,5,1.0,45,0,0,5,,no,,,,,,,,,
+
+--- Exercise Log ---
+Date,Name,Duration,Calories,Source
+2026-04-25 16:52,Běh,60,500,manual
+
+--- Weight Progress ---
+Date,Weight (kg),Has Photo
+2026-04-28,87.0,no
+
+--- AI Attempts ---
+Timestamp,kind,modality,provider,model,status,confidence,error_message
+2026-04-28 16:44,meal,photo_ai,openai,gpt-5.4,success,0.98,
+2026-04-28 16:44,meal,photo_ai,openai,gpt-5.4,success,0.95,
+2026-04-28 16:45,meal,photo_ai,openai,gpt-5.4,success,0.92,
+2026-04-28 16:47,meal,voice_ai,openai,gpt-5.4,success,0.81,
+2026-04-28 16:49,meal,fix_with_ai_rerun,openai,gpt-5.4,low_confidence,0.08,
+2026-04-28 17:08,meal,photo_ai,openai,gpt-5.4,invalid_response,,null_response
+
+--- Summary Statistics ---
+Total Days,9
+Total Meals,14
+Total Ingredients,59
+Total Exercises,1
+Total Weight Entries,1
+Avg Calories/Day,1042
+Avg Protein/Day (g),39
+Avg Carbs/Day (g),128
+Avg Fat/Day (g),42
+Avg Meals/Day,1.6
+Avg Exercises/Day,0.1
+Soft-deleted meals,2
+Soft-deleted ingredients,14
+AI attempts (total),6
+AI attempts (success),4
+AI attempts (low_confidence),1
+AI attempts (invalid_response),1

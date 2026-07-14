@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:diplomka/model/ai_response.dart';
 import 'package:diplomka/network/openai_rest_client.dart';
@@ -33,7 +34,7 @@ class OpenAiService implements AiService {
       lastCallUsage = OpenAiUsage.fromResponse(data);
       return responseContentParser(data);
     } catch (e) {
-      print(e.toString());
+      debugPrint(e.toString());
     }
     return null;
   }

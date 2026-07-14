@@ -54,12 +54,12 @@ class WeightHistoryScreen extends ConsumerWidget {
                               entries: entries,
                               onEntryTap: (entry) => showWeightLogSheet(context, entry: entry),
                               onPhotoAction: (entry, photoPath) async {
-                                print('[WeightHistory] onPhotoAction: entryId=${entry.id}, photoPath=$photoPath');
+                                debugPrint('[WeightHistory] onPhotoAction: entryId=${entry.id}, photoPath=$photoPath');
                                 final updated = entry.copyWith(photoPath: photoPath, clearPhotoPath: photoPath == null);
-                                print('[WeightHistory] updated entry photoPath: ${updated.photoPath}');
+                                debugPrint('[WeightHistory] updated entry photoPath: ${updated.photoPath}');
                                 await ref.read(weightEntriesProvider.notifier).saveEntry(updated);
                                 final currentEntries = ref.read(weightEntriesProvider).valueOrNull ?? const <WeightEntry>[];
-                                print('[WeightHistory] saveEntry done, entries count: ${currentEntries.length}');
+                                debugPrint('[WeightHistory] saveEntry done, entries count: ${currentEntries.length}');
                                 WeightEntry? saved;
                                 for (final e in currentEntries) {
                                   if (e.id == entry.id) {
@@ -67,7 +67,7 @@ class WeightHistoryScreen extends ConsumerWidget {
                                     break;
                                   }
                                 }
-                                print('[WeightHistory] saved entry photoPath from DB: ${saved?.photoPath}');
+                                debugPrint('[WeightHistory] saved entry photoPath from DB: ${saved?.photoPath}');
                               },
                             ),
                           const SizedBox(height: AppSpacing.huge),

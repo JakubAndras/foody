@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_print
 // Nutrition5k CSV parser and dish selector.
 //
 // Usage:
