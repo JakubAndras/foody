@@ -208,7 +208,7 @@ class _DashboardStreakPill extends ConsumerWidget {
     if (daily.streak.hasError) {
       content = Icon(CupertinoIcons.exclamationmark_circle, color: AppColors.error, size: AppSizes.iconSm);
     } else {
-      final streak = daily.streak.valueOrNull?.currentStreak ?? 0;
+      final streak = daily.streak.value?.currentStreak ?? 0;
       content = Row(
         mainAxisSize: MainAxisSize.min,
         children: [

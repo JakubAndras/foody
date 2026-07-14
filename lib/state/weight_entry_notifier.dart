@@ -25,5 +25,5 @@ final weightEntriesProvider = AsyncNotifierProvider<WeightEntriesNotifier, List<
 
 /// Odvozený stav: poslední (nejnovější) záznam nebo null. Nahrazuje getter `latestEntry`.
 final latestWeightEntryProvider = Provider<WeightEntry?>(
-  (ref) => ref.watch(weightEntriesProvider).valueOrNull?.firstOrNull,
+  (ref) => ref.watch(weightEntriesProvider).value?.firstOrNull,
 );

@@ -438,7 +438,7 @@ class _EditIngredientScreenState extends ConsumerState<EditIngredientScreen> {
     setState(() => _isFavorite = next);
 
     final normalized = IngredientTemplate.normalize(_baseIngredient.name);
-    final templates = ref.read(ingredientTemplatesProvider).valueOrNull ?? const [];
+    final templates = ref.read(ingredientTemplatesProvider).value ?? const [];
     IngredientTemplate? template;
     for (final t in templates) {
       if (t.normalizedName == normalized) {

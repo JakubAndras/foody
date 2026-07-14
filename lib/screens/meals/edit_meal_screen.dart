@@ -783,7 +783,7 @@ class _EditMealScreenState extends ConsumerState<EditMealScreen> {
 
     // Always sync to template (both paths need this)
     final normalized = MealTemplate.normalize(_meal.name);
-    final templates = ref.read(mealTemplatesProvider).valueOrNull ?? const <MealTemplate>[];
+    final templates = ref.read(mealTemplatesProvider).value ?? const <MealTemplate>[];
     MealTemplate? template;
     for (final t in templates) {
       if (t.normalizedName == normalized) {

@@ -11,8 +11,27 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqflite/sqflite.dart' show DatabaseException;
 
 import 'app.dart';
+
+/// Retry politika root ProviderContaineru (Riverpod 3.0).
+///
+/// AI a síťové chyby zásadně NEopakujeme: jde o placené requesty a chceme
+/// okamžitou, viditelnou chybu místo tichého opakování. Přechodné chyby lokální
+/// SQLite (busy/locked) naopak krátce zkusíme znovu, aby se DB-backed providery
+/// (váha, šablony, streak) nezasekly natrvalo v error stavu po souběhu při startu.
+/// Ostatní DB chyby (constraint, syntax, no such table...) jsou trvalé → neopakovat.
+Duration? _rootRetry(int retryCount, Object error) {
+  const maxRetries = 3;
+  if (retryCount >= maxRetries) return null;
+  if (error is! DatabaseException) return null;
+  // Nízký bajt SQLite result kódu: SQLITE_BUSY = 5, SQLITE_LOCKED = 6 (i extended kódy).
+  final code = error.getResultCode();
+  final primary = code == null ? null : code & 0xFF;
+  if (primary != 5 && primary != 6) return null;
+  return Duration(milliseconds: 200 * (1 << retryCount)); // 200 / 400 / 800 ms
+}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,6 +50,10 @@ Future<void> main() async {
   final prefs = await SharedPreferences.getInstance();
 
   rootContainer = ProviderContainer(
+    // Riverpod 3.0 defaultně 10× retry-uje chybující providery. Nahrazeno cílenou
+    // politikou (viz `_rootRetry`): žádný retry pro AI/síť, krátký retry jen pro
+    // přechodné chyby lokální SQLite.
+    retry: _rootRetry,
     overrides: [
       databaseProvider.overrideWithValue(db),
       sharedPreferencesProvider.overrideWithValue(prefs),

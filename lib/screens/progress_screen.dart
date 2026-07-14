@@ -133,7 +133,7 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen> {
             children: [
 
               Consumer(builder: (context, ref, _) {
-                final weightEntries = (ref.watch(weightEntriesProvider).valueOrNull ?? const <WeightEntry>[]).toList(growable: false);
+                final weightEntries = (ref.watch(weightEntriesProvider).value ?? const <WeightEntry>[]).toList(growable: false);
                 final session = ref.watch(sessionProvider);
                 final double? profileWeight = session.weightKg;
                 final double? goalWeight = session.goalWeightKg;
@@ -160,7 +160,7 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen> {
               }),
               const SizedBox(height: AppSpacing.m),
               Consumer(builder: (context, ref, _) {
-                final entries = ref.watch(weightEntriesProvider).valueOrNull ?? const <WeightEntry>[];
+                final entries = ref.watch(weightEntriesProvider).value ?? const <WeightEntry>[];
                 if (entries.isEmpty) {
                   return const WeightProgressCard(entries: []);
                 }
@@ -172,7 +172,7 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen> {
               const WeeklyEnergyCard(),
               const SizedBox(height: AppSpacing.m),
               Consumer(builder: (context, ref, _) {
-                final weightEntries = (ref.watch(weightEntriesProvider).valueOrNull ?? const <WeightEntry>[]).toList(growable: false);
+                final weightEntries = (ref.watch(weightEntriesProvider).value ?? const <WeightEntry>[]).toList(growable: false);
                 final sorted = _sortWeightEntries(weightEntries);
                 final latest = sorted.isNotEmpty ? sorted.first : null;
                 return BmiCard(currentWeight: latest?.weight, heightCm: ref.watch(sessionProvider).heightCm);

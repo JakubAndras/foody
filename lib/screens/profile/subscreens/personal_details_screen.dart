@@ -39,7 +39,7 @@ class PersonalDetailsScreen extends ConsumerWidget {
       padding: const EdgeInsets.fromLTRB(AppSpacing.screen, 0, AppSpacing.screen, AppSpacing.xl),
       child: Consumer(
         builder: (context, ref, _) {
-        final entries = ref.watch(weightEntriesProvider).valueOrNull ?? const <WeightEntry>[];
+        final entries = ref.watch(weightEntriesProvider).value ?? const <WeightEntry>[];
         final session = ref.watch(sessionProvider);
         final double? profileWeight = session.weightKg;
         final double? heightCm = session.heightCm;

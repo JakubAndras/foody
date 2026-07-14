@@ -149,7 +149,7 @@ Widgety: `StatelessWidget`+`Obx`/`GetView` → `ConsumerWidget`; `StatefulWidget
 | `DashboardController.to` — jídla (newMealAnalyzeLoading, analyzeMeal*, pickImage, analyzeMealFromBarcode) | `mealAnalysisProvider` |
 | `DashboardController.to` — cvičení + scroll signály (newExerciseAnalyzeLoading, analyzeExerciseFromVoice, scrollToTodayMealsRequestId, scrollToExercisesRequestId, requestScroll*) | `activityAnalysisProvider` |
 | `NutritionGoalsService.to.goalsForDate(...)` | `ref.watch(nutritionGoalsProvider)` (mapa) / `ref.read(nutritionGoalsProvider.notifier).goalsForDate(...)` |
-| `WeightEntryController.to.entries` | `ref.watch(weightEntriesProvider)` (AsyncValue → `.when/.valueOrNull`) |
+| `WeightEntryController.to.entries` | `ref.watch(weightEntriesProvider)` (AsyncValue → `.when/.value`) |
 | `WeightEntryController.to.latestEntry` | `ref.watch(latestWeightEntryProvider)` |
 | `WeightEntryController.to.METODA(...)` | `ref.read(weightEntriesProvider.notifier).METODA(...)` |
 | `StreakController.to.getStreakInfo()` | `ref.watch(streakInfoProvider)` (AsyncValue<StreakInfo>) |
@@ -171,7 +171,9 @@ Widgety: `StatelessWidget`+`Obx`/`GetView` → `ConsumerWidget`; `StatefulWidget
 | Controller getter `progressWidget` | sdílený widget (Tier C: `AppProgressIndicator`) |
 | Controller `hasInternet()` | UI helper nad `networkStatusProvider` (Tier C) |
 
-Pozn.: metody, které dřív bývaly na controlleru a měnily stav, jsou nyní na `.notifier`. Čtení reaktivních polí přes `ref.watch(provider).pole`. Pro `AsyncNotifier` providery (weightEntries, templates, streakInfo, askAi.result) použij `.when(...)`/`.valueOrNull`.
+Pozn.: metody, které dřív bývaly na controlleru a měnily stav, jsou nyní na `.notifier`. Čtení reaktivních polí přes `ref.watch(provider).pole`. Pro `AsyncNotifier` providery (weightEntries, templates, streakInfo, askAi.result) použij `.when(...)`/`.value`.
+
+> **Riverpod 3.0 (migrace 2026-07-14):** `AsyncValue.valueOrNull` bylo přejmenováno na `AsyncValue.value` (nikdy nevyhazuje, vrací `null` mimo datový stav). Původní throwing přístup je nyní `requireValue`. Automatický retry chybujících providerů řídí cílená politika v `main()` (`ProviderContainer(retry: _rootRetry)`): AI a síťové chyby se NEopakují (placené requesty, chceme okamžitou chybu), přechodné chyby lokální SQLite (`SQLITE_BUSY`/`SQLITE_LOCKED`) se krátce 3× zopakují s backoffem, aby se DB-backed providery nezasekly v error stavu.
 
 ## 6. Otevřené body kontraktu (rozhodnout před/na začátku Tier B)
 

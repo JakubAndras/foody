@@ -236,7 +236,7 @@ class _SelectMealScreenState extends ConsumerState<SelectMealScreen> {
   }
 
   List<_IngredientItem> _resolveIngredients() {
-    final templates = ref.watch(ingredientTemplatesProvider).valueOrNull ?? const <IngredientTemplate>[];
+    final templates = ref.watch(ingredientTemplatesProvider).value ?? const <IngredientTemplate>[];
     return templates.map((t) => _IngredientItem(ingredient: t.toIngredient(), subtitle: '${t.calories.toStringAsFixed(0)} ${tr(LocaleKeys.common_kcal)}', template: t)).toList();
   }
 
@@ -335,7 +335,7 @@ class _SelectMealScreenState extends ConsumerState<SelectMealScreen> {
   }
 
   Widget _buildPage(SelectMealTab tab) {
-    final allTemplates = (ref.watch(mealTemplatesProvider).valueOrNull ?? const <MealTemplate>[]).toList();
+    final allTemplates = (ref.watch(mealTemplatesProvider).value ?? const <MealTemplate>[]).toList();
     final allIngredients = _resolveIngredients();
     final showMeals = tab == SelectMealTab.all || tab == SelectMealTab.meals || tab == SelectMealTab.favorites;
     final showIngredients = tab == SelectMealTab.all || tab == SelectMealTab.ingredients || tab == SelectMealTab.favorites;

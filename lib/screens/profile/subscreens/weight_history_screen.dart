@@ -42,7 +42,7 @@ class WeightHistoryScreen extends ConsumerWidget {
                   const SizedBox(height: AppSpacing.m),
                   Consumer(
                     builder: (context, ref, _) {
-                      final entries = ref.watch(weightEntriesProvider).valueOrNull ?? const <WeightEntry>[];
+                      final entries = ref.watch(weightEntriesProvider).value ?? const <WeightEntry>[];
                       return Column(
                         children: [
                           WeightProgressCard(entries: entries),
@@ -58,7 +58,7 @@ class WeightHistoryScreen extends ConsumerWidget {
                                 final updated = entry.copyWith(photoPath: photoPath, clearPhotoPath: photoPath == null);
                                 debugPrint('[WeightHistory] updated entry photoPath: ${updated.photoPath}');
                                 await ref.read(weightEntriesProvider.notifier).saveEntry(updated);
-                                final currentEntries = ref.read(weightEntriesProvider).valueOrNull ?? const <WeightEntry>[];
+                                final currentEntries = ref.read(weightEntriesProvider).value ?? const <WeightEntry>[];
                                 debugPrint('[WeightHistory] saveEntry done, entries count: ${currentEntries.length}');
                                 WeightEntry? saved;
                                 for (final e in currentEntries) {

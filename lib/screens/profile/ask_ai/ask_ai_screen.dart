@@ -310,7 +310,7 @@ class _AskAiScreenState extends ConsumerState<AskAiScreen> with SingleTickerProv
 
   Future<void> _handleShare() async {
     final askState = ref.read(askAiProvider);
-    final response = askState.result.valueOrNull;
+    final response = askState.result.value;
     final query = askState.lastQuery;
     if (response == null) return;
 
@@ -415,7 +415,7 @@ class _AskAiScreenState extends ConsumerState<AskAiScreen> with SingleTickerProv
               padding: EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.mega + AppSpacing.xxl, AppSpacing.m, AppSpacing.xl + AppSpacing.mega + (Platform.isAndroid ? MediaQuery.of(context).padding.bottom : 0)),
               child: Consumer(builder: (context, ref, _) {
                 final askState = ref.watch(askAiProvider);
-                final response = askState.result.valueOrNull;
+                final response = askState.result.value;
                 final loading = askState.result.isLoading;
 
                 if (response != null) {
@@ -441,7 +441,7 @@ class _AskAiScreenState extends ConsumerState<AskAiScreen> with SingleTickerProv
               left: AppSpacing.m,
               right: AppSpacing.m,
               child: Consumer(builder: (context, ref, _) {
-                final hasResponse = ref.watch(askAiProvider).result.valueOrNull != null;
+                final hasResponse = ref.watch(askAiProvider).result.value != null;
                 return ProfileTopBar(
                   title: tr(LocaleKeys.ask_ai_title),
                   onBack: () => Navigator.of(context).pop(),
@@ -466,7 +466,7 @@ class _AskAiScreenState extends ConsumerState<AskAiScreen> with SingleTickerProv
             ),
             // Bottom mic button
             Consumer(builder: (context, ref, _) {
-              final hasResponse = ref.watch(askAiProvider).result.valueOrNull != null;
+              final hasResponse = ref.watch(askAiProvider).result.value != null;
               if (hasResponse) return const SizedBox.shrink();
               return Positioned(
                 // Android-only extra bottom padding to lift the mic above the

@@ -117,7 +117,7 @@ class _ExerciseLogHomeScreenState extends ConsumerState<ExerciseLogHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final allExercises = ref.watch(exerciseTemplatesProvider).valueOrNull ?? [];
+    final allExercises = ref.watch(exerciseTemplatesProvider).value ?? [];
     final filtered = _applyFilters(allExercises);
     return ProfileGradientScaffold(
       safeBottom: false,

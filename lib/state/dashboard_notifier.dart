@@ -65,7 +65,7 @@ class DailyRecordState {
 
   /// Streak jako `AsyncValue` (loading/error/data) přebíraný z `streakInfoProvider`.
   /// Sjednocuje dřívější ruční trojici `streakInfo` + `isLoadingStreak` + `streakError`;
-  /// UI čte přímo `streak.isLoading` / `streak.hasError` / `streak.valueOrNull`.
+  /// UI čte přímo `streak.isLoading` / `streak.hasError` / `streak.value`.
   final AsyncValue<StreakInfo> streak;
 
   final double rolloverAmount;
@@ -144,7 +144,7 @@ class DailyRecordNotifier extends Notifier<DailyRecordState> {
   }
 
   void _applyStreakAsync(AsyncValue<StreakInfo> async) {
-    debugPrint('[Streak] dashboard applyStreak: loading=${async.isLoading}, current=${async.valueOrNull?.currentStreak}, hasError=${async.hasError}');
+    debugPrint('[Streak] dashboard applyStreak: loading=${async.isLoading}, current=${async.value?.currentStreak}, hasError=${async.hasError}');
     state = state.copyWith(streak: async);
   }
 

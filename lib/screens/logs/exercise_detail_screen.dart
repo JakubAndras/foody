@@ -55,7 +55,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
   }
 
   ExerciseTemplate? _findTemplate(String normalizedName) {
-    final templates = ref.read(exerciseTemplatesProvider).valueOrNull ?? const <ExerciseTemplate>[];
+    final templates = ref.read(exerciseTemplatesProvider).value ?? const <ExerciseTemplate>[];
     for (final t in templates) {
       if (t.normalizedName == normalizedName) return t;
     }
