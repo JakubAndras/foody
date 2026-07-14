@@ -15,6 +15,10 @@ Foody simplifies meal logging. Instead of searching databases and weighing porti
 
 The app is provider-agnostic on the AI side: **OpenAI is the primary provider**, with **Google Gemini** supported as an interchangeable alternative.
 
+## Platform support
+
+Foody was developed and tested primarily on **iOS**. It also runs on **Android**, but was validated on only a small number of Android devices, so platform-specific issues on Android are possible.
+
 ## Features
 
 **Meal logging**
