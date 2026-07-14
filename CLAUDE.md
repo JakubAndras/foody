@@ -68,13 +68,14 @@ dart format --line-length 180 lib/
 ## Architecture
 
 ### State Management: Riverpod
-All state management uses **Riverpod** (`flutter_riverpod`). Services are plain classes exposed via `Provider`; reactive state lives in `Notifier`/`AsyncNotifier` classes exposed via `NotifierProvider`/`AsyncNotifierProvider`. Providers are **co-located** in the file of their class (not a central registry). The only shared DI file is `lib/di/providers.dart`, which holds `databaseProvider` (overridden in `main()`), `networkStatusProvider`, and `rootContainer` (the app-level `ProviderContainer` for reading providers from outside the widget tree — notification taps, home-widget actions). The authoritative provider map is `lib/di/CONTRACT.md`.
+All state management uses **Riverpod** (`flutter_riverpod`, **3.x** — constraint `^3.0.0` in `pubspec.yaml`). The project uses **manual provider declaration, no code generation** (`@riverpod`) — this is a deliberate choice; do **not** introduce `riverpod_generator`/code-gen. Services are plain classes exposed via `Provider`; reactive state lives in `Notifier`/`AsyncNotifier` classes exposed via `NotifierProvider`/`AsyncNotifierProvider`. Providers are **co-located** in the file of their class (not a central registry). The only shared DI file is `lib/di/providers.dart`, which holds `databaseProvider` (overridden in `main()`), `networkStatusProvider`, and `rootContainer` (the app-level `ProviderContainer` for reading providers from outside the widget tree — notification taps, home-widget actions). The authoritative provider map is `lib/di/CONTRACT.md`.
 
 - Read/watch via `ref.watch(fooProvider)` (reactive) / `ref.read(fooProvider)` (one-off); never a global service locator.
 - Widgets are `ConsumerWidget`/`ConsumerStatefulWidget`; `Obx` is replaced by `ref.watch`/`Consumer`.
 - Notifiers never navigate or show dialogs — they expose state; the UI reacts via `ref.listen` + `Navigator`.
 - App root is `MaterialApp` (with global `navigatorKey`) inside `UncontrolledProviderScope(container: rootContainer, …)` in `main.dart`.
-- The project was migrated off GetX (2026-07-06); do **not** reintroduce GetX.
+- Riverpod 3.x notes: `AsyncValue.valueOrNull` is now `AsyncValue.value` (non-throwing; the throwing variant is `requireValue`). `rootContainer` sets an explicit `retry` policy (`_rootRetry` in `main.dart`): AI/network errors never retry, only transient local SQLite locks (`database is locked`/`busy`) retry 3× with backoff.
+- The project was migrated off GetX (2026-07-06) and onto Riverpod 3.x (2026-07-14); do **not** reintroduce GetX.
 
 ### Database: Floor ORM
 - Current DB version: **3** (`_databaseVersion` in `lib/database/app_database.dart`). Migrations live in `lib/database/migrations.dart`, registered via `.addMigrations(appMigrations)` in `lib/locator.dart`.
