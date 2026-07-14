@@ -4,6 +4,10 @@ A mobile application for calorie tracking using AI, developed as part of a diplo
 
 This project is a cross-platform mobile application built with the Flutter framework. Its main purpose is to simplify the process of logging meals by allowing users to take a photo of their food, which is then analyzed by a publicly available artificial intelligence (e.g., Google Gemini) to return estimated nutritional values. The application serves as the practical part of a diploma thesis.
 
+## Platform support
+
+The application was developed and tested primarily on iOS. It also runs on Android, but was validated on only a small number of Android devices, so platform-specific issues on Android are possible.
+
 ## Features
 
  - Automatic food analysis from a photograph using an external AI.
